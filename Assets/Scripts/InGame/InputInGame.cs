@@ -19,7 +19,7 @@ namespace InGame
         private void Start()
         {
             var cursor = Instantiate(ShotCursorManager.Instance.GetPrefab(ShotCursorType.SINGLE), canvas.transform);
-            mouseInput = new MoveSingleShot(cam, cursor.transform);
+            mouseInput = new MoveSingleShot(cam, (RectTransform)cursor.transform);
         }
 
         private void Update()
