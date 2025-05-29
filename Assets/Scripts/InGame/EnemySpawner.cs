@@ -23,6 +23,7 @@ namespace InGame
                 var enemy = Instantiate(enemyPref, transform.position, Quaternion.identity);
                 enemy.Target = target;
                 enemy.transform.localScale = Vector3.one * Random.Range(0.4f, 1f);
+                enemy.Init(100f);
                 
                 yield return new WaitForSeconds(spawnCd);
             }

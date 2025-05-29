@@ -5,13 +5,13 @@ using UnityEngine;
 
 namespace InGame.MouseInput
 {
-    public class MoveSingleShot : IMouseInput
+    public class MoveBoxShot : IMouseInput
     {
         private Camera Cam { get; set; }
         private RectTransform cursor;
         private Vector3 mousePosition;
         
-        public MoveSingleShot(Camera cam, RectTransform cursor)
+        public MoveBoxShot(Camera cam, RectTransform cursor)
         {
             Cam = cam;
             this.cursor = cursor;
@@ -22,22 +22,14 @@ namespace InGame.MouseInput
             // Check hit enemy, only nearest enemy is hit
             var mousePos = Cam.ScreenToWorldPoint(mousePosition);
             var hits = Physics2D.BoxCastAll(mousePos, WorldUtility.GetWorldSize(Cam, cursor), 0, Vector2.zero, 0f, LayerMask.GetMask("Entity"));
-            var minDistance = float.MaxValue;
-            EnemyEntity nearestEnemy = null;
+            var damage = Random.Range(15f, 30f);
             foreach (var hit in hits)
             {
                 if (hit.collider != null && hit.transform.TryGetComponent<EnemyEntity>(out var enemyEntity))
                 {
-                    var distance = Vector2.Distance(Cam.WorldToScreenPoint(enemyEntity.transform.position),
-                        mousePosition);
-                    if (distance >= minDistance) continue;
-                    minDistance = distance;
-                    nearestEnemy = enemyEntity;
+                    enemyEntity.OnHit(damage);
                 }
             }
-            if (nearestEnemy != null)
-                nearestEnemy?.OnHit(Random.Range(15f, 30f));
-            
             // Do cursor effect
             DOTween.Complete(this);
             var seq = DOTween.Sequence(this);
