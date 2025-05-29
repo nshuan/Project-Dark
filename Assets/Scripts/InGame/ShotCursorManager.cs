@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
+using InGame.MouseInput;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 
 namespace InGame
@@ -7,11 +10,11 @@ namespace InGame
     [CreateAssetMenu(menuName = "Scriptable Objects/ShotCursorManager", fileName = "ShotCursorManager", order = 1)]
     public class ShotCursorManager : SerializedScriptableObject
     {
-        [SerializeField] private Dictionary<ShotCursorType, GameObject> cursorPrefs = new();
+        [NonSerialized, OdinSerialize] private Dictionary<ShotCursorType, MonoCursor> cursorPrefabs = new();
 
-        public GameObject GetPrefab(ShotCursorType cursorType)
+        public MonoCursor GetPrefab(ShotCursorType cursorType)
         {
-            return cursorPrefs.GetValueOrDefault(cursorType);
+            return cursorPrefabs.GetValueOrDefault(cursorType);
         }
         
         #region Singleton
