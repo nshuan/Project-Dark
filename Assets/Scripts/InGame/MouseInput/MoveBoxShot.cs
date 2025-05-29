@@ -1,6 +1,7 @@
 using System.Linq;
 using DefaultNamespace;
 using DG.Tweening;
+using InGame.Effects;
 using UnityEngine;
 
 namespace InGame.MouseInput
@@ -10,10 +11,12 @@ namespace InGame.MouseInput
         private Camera Cam { get; set; }
         private RectTransform cursor;
         private Vector3 mousePosition;
+        private CameraShake effectCamShake;
         
         public MoveBoxShot(Camera cam, RectTransform cursor)
         {
             Cam = cam;
+            effectCamShake = new CameraShake() { Cam = cam };
             this.cursor = cursor;
         }
         
@@ -32,6 +35,7 @@ namespace InGame.MouseInput
             }
             // Do cursor effect
             DOTween.Complete(this);
+            EffectHelper.Instance.PlayEffect(effectCamShake);
             var seq = DOTween.Sequence(this);
             seq.Append(cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f))
                 .Join(cursor.transform.DOShakeRotation(0.13f, new Vector3(0f, 0f, 10f)));
