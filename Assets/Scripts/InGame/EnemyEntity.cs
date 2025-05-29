@@ -65,7 +65,7 @@ namespace InGame
 
         public void OnHit()
         {
-            
+            gameObject.SetActive(false);
         }
     }
 }
