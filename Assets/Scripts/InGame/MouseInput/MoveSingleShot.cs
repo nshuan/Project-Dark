@@ -52,12 +52,15 @@ namespace InGame.MouseInput
 
             // Draw the ray in Scene view
             Debug.DrawLine(ray.origin, rayEnd, Color.green);
-            
-            DrawBoxGizmo(Cam.ScreenToWorldPoint(mousePosition), WorldUtility.GetWorldSize(Cam, cursor), 0f, Color.cyan);
 #endif
         }
+
+        public void OnDrawGizmos()
+        {
+            DrawBoxGizmo(Cam.ScreenToWorldPoint(mousePosition), WorldUtility.GetWorldSize(Cam, cursor), 0f, Color.cyan);
+        }
         
-        void DrawBoxGizmo(Vector2 center, Vector2 size, float angle, Color color)
+        private void DrawBoxGizmo(Vector2 center, Vector2 size, float angle, Color color)
         {
             var half = size / 2f;
 

@@ -4,5 +4,6 @@ namespace InGame
     {
         void OnMouseClick();
         void OnUpdate();
+        void OnDrawGizmos();
     }
 }

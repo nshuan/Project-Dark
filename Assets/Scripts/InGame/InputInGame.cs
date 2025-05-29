@@ -31,5 +31,10 @@ namespace InGame
         {
             mouseInput?.OnMouseClick();
         }
+
+        private void OnDrawGizmos()
+        {
+            mouseInput?.OnDrawGizmos();
+        }
     }
 }
