@@ -2,6 +2,7 @@ using System.Linq;
 using DefaultNamespace;
 using DG.Tweening;
 using InGame.Effects;
+using InGame.Trap;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,13 +30,9 @@ namespace InGame.MouseInput
                     enemyEntity.OnHit(damage);
                 }
             }
-            
-            // Lightning burst effect
-            var lightning = RadialLightningPool.Instance.Get(null);
-            mousePos.z = 0;
-            lightning.transform.position = mousePos;
-            lightning.Init();
-            lightning.Execute(0.5f);
+
+            var trap = LightningTrapPool.Instance.Get(null);
+            trap.Setup(Cam, mousePos, 3f * Vector2.one, damage, 1f);
             
             base.OnMouseClick();
         }

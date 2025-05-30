@@ -5,11 +5,11 @@ namespace Core
 {
     public class Pool<T, K> : MonoSingleton<K> where T : MonoBehaviour where K : Pool<T, K>
     {
-        [SerializeField] private T _prefab;
+        [SerializeField] protected T _prefab;
         
-        private Queue<T> pool = new();
+        protected Queue<T> pool = new();
 
-        public T Get(Transform targetParent, bool active = true)
+        public virtual T Get(Transform targetParent, bool active = true)
         {
             if (pool.TryDequeue(out var obj))
             {

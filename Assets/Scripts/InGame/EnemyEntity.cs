@@ -6,6 +6,7 @@ using UnityEngine.Serialization;
 
 namespace InGame
 {
+    [RequireComponent(typeof(EnemyMovementBehaviour))]
     public class EnemyEntity : MonoBehaviour
     {
         public Transform Target { get; set; }
@@ -15,12 +16,18 @@ namespace InGame
         public float MaxHealth { get; private set; }
         private float CurrentHealth { get; set; }
         
-        [FormerlySerializedAs("health")]
         [Space, Header("Visual")] 
         [SerializeField] private Transform uiHealth;
+
+        private EnemyMovementBehaviour movementBehaviour;
         
         private bool inAttackRange;
         private Coroutine attackCoroutine;
+
+        private void Awake()
+        {
+            movementBehaviour = GetComponent<EnemyMovementBehaviour>();
+        }
 
         private void Start()
         {
@@ -49,12 +56,7 @@ namespace InGame
             if (Vector3.Distance(transform.position, target.position) < AttackRange)
                 inAttackRange = true;
             else
-            {
-                transform.position = Vector3.Lerp(transform.position, target.position, Time.deltaTime * MoveSpeed);
-                transform.rotation = Quaternion.Euler(Vector3.Lerp(transform.eulerAngles,
-                    transform.eulerAngles + new Vector3(0f, 0f, 180f), Time.deltaTime * MoveSpeed));
-                inAttackRange = false;
-            }
+                movementBehaviour.Move(target, MoveSpeed, AttackRange);
         }
 
         private void StartAttackCoroutine()
