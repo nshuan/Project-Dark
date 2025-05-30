@@ -32,7 +32,8 @@ namespace InGame.MouseInput
             }
 
             var trap = LightningTrapPool.Instance.Get(null);
-            trap.Setup(Cam, mousePos, 3f * Vector2.one, damage, 1f);
+            trap.Setup(Cam, mousePos, 3f * Vector2.one, damage, 0.8f);
+            effectCamShake.Duration = 0.8f;
             
             base.OnMouseClick();
         }
