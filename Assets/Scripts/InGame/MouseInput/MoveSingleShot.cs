@@ -9,15 +9,13 @@ namespace InGame.MouseInput
 {
     public class MoveSingleShot : BaseMoveShot
     {
-        public MoveSingleShot(Camera cam, MonoCursor cursor, float cooldown) : base(cam, cursor, cooldown)
+        public MoveSingleShot(Camera cam, MonoCursor cursor) : base(cam, cursor)
         {
 
         }
         
         public override void OnMouseClick()
         {
-            base.OnMouseClick();
-            
             if (!CanShoot) return;
             
             // Check hit enemy, only nearest enemy is hit
@@ -36,15 +34,18 @@ namespace InGame.MouseInput
                     nearestEnemy = enemyEntity;
                 }
             }
+            var damage = CalculateDmg();
             if (nearestEnemy != null)
-                nearestEnemy?.OnHit(Random.Range(15f, 30f));
+                nearestEnemy?.OnHit(damage);
+            
+            base.OnMouseClick();
         }
 
         public override void OnUpdate()
         {
             base.OnUpdate();
             
-            // Cooldown if can not shoot
+            // Cooldown if player can not shoot
             if (!CanShoot)
             {
                 cdCounter -= Time.deltaTime;
@@ -53,7 +54,7 @@ namespace InGame.MouseInput
                 
                 // Update UI
                 if (uiCursorCd)
-                    uiCursorCd.fillAmount = Mathf.Clamp(cdCounter / cooldown, 0f, 1f);
+                    uiCursorCd.fillAmount = Mathf.Clamp(cdCounter / Cooldown, 0f, 1f);
             }
         }
 
@@ -65,8 +66,7 @@ namespace InGame.MouseInput
         private void DrawBoxGizmo(Vector2 center, Vector2 size, float angle, Color color)
         {
             var half = size / 2f;
-
-            var rot = Quaternion.Euler(0, 0, angle);
+            
             var corners = new Vector2[4]
             {
                 center + new Vector2(-half.x, -half.y),

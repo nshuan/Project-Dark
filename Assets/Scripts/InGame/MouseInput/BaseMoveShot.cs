@@ -14,18 +14,17 @@ namespace InGame.MouseInput
         protected Image uiCursorCd;
         protected Vector3 mousePosition;
         protected CameraShake effectCamShake;
-        protected float cooldown;
-
+        
+        protected float Cooldown => LevelManager.Instance.GameStats.pShotCooldown;
         public bool CanShoot { get; set; }
         protected float cdCounter;
         
-        protected BaseMoveShot(Camera cam, MonoCursor cursor, float cooldown)
+        protected BaseMoveShot(Camera cam, MonoCursor cursor)
         {
             Cam = cam;
             effectCamShake = new CameraShake() { Cam = cam };
             this.cursor = (RectTransform)cursor.transform;
             this.uiCursorCd = cursor.UICooldown;
-            this.cooldown = cooldown;
         }
         
         public virtual void OnMouseClick()
@@ -33,7 +32,7 @@ namespace InGame.MouseInput
             if (!CanShoot) return;
             
             CanShoot = false;
-            cdCounter = cooldown;
+            cdCounter = LevelManager.Instance.GameStats.pShotCooldown;
             
             // Do cursor effect
             DOTween.Complete(this);
@@ -70,6 +69,11 @@ namespace InGame.MouseInput
             // Draw the ray in Scene view
             Debug.DrawLine(ray.origin, rayEnd, Color.green);
 #endif
+        }
+
+        protected virtual float CalculateDmg()
+        {
+            return LevelManager.Instance.GameStats.pDmgPerShot;
         }
 
         public virtual void OnDrawGizmos()

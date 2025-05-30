@@ -1,10 +1,38 @@
 using System;
+using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace InGame
 {
     [Serializable]
     public class GameStats
     {
+        // Enemy
+        [Header("Enemy")]
+        public float eSpawnRate = 0.5f; // Enemies spawned per seconds
+        public float eBaseHp = 100f;
+        public float eBaseMoveSpeed = 10f;
+        public float eBaseAttackRange = 2f;
+        public float eBaseAttackCd = 2f;
         
+        // Player
+        [Space]
+        [Header("Player")]
+        public float pShotCooldown = 1f;
+        public float pDmgPerShot = 15f;
+
+        #region FUNCTION
+
+        public static T CalculateStat<T>(T baseStat, params Func<T, T>[] effects)
+        {
+            var result = baseStat;
+            foreach (var effect in effects)
+            {
+                result = effect(result);
+            }
+            return result;
+        }
+
+        #endregion
     }
 }

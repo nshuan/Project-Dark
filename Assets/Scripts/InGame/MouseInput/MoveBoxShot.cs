@@ -9,21 +9,19 @@ namespace InGame.MouseInput
 {
     public class MoveBoxShot : BaseMoveShot
     {
-        public MoveBoxShot(Camera cam, MonoCursor cursor, float cooldown) : base(cam, cursor, cooldown)
+        public MoveBoxShot(Camera cam, MonoCursor cursor) : base(cam, cursor)
         {
 
         }
         
         public override void OnMouseClick()
         {
-            base.OnMouseClick();
-            
             if (!CanShoot) return;
             
-            // Check hit enemy, only nearest enemy is hit
+            // Check hit enemy, all enemies are hit
             var mousePos = Cam.ScreenToWorldPoint(mousePosition);
             var hits = Physics2D.BoxCastAll(mousePos, WorldUtility.GetWorldSize(Cam, cursor), 0, Vector2.zero, 0f, LayerMask.GetMask("Entity"));
-            var damage = Random.Range(15f, 30f);
+            var damage = CalculateDmg();
             foreach (var hit in hits)
             {
                 if (hit.collider != null && hit.transform.TryGetComponent<EnemyEntity>(out var enemyEntity))
@@ -31,13 +29,22 @@ namespace InGame.MouseInput
                     enemyEntity.OnHit(damage);
                 }
             }
+            
+            // Lightning burst effect
+            var lightning = RadialLightningPool.Instance.Get(null);
+            mousePos.z = 0;
+            lightning.transform.position = mousePos;
+            lightning.Init();
+            lightning.Execute(0.5f);
+            
+            base.OnMouseClick();
         }
 
         public override void OnUpdate()
         {
             base.OnUpdate();
             
-            // Cooldown if can not shoot
+            // Cooldown if player can not shoot
             if (!CanShoot)
             {
                 cdCounter -= Time.deltaTime;
@@ -46,7 +53,7 @@ namespace InGame.MouseInput
                 
                 // Update UI
                 if (uiCursorCd)
-                    uiCursorCd.fillAmount = Mathf.Clamp(cdCounter / cooldown, 0f, 1f);
+                    uiCursorCd.fillAmount = Mathf.Clamp(cdCounter / Cooldown, 0f, 1f);
             }
         }
 

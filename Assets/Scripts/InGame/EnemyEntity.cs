@@ -9,9 +9,9 @@ namespace InGame
     public class EnemyEntity : MonoBehaviour
     {
         public Transform Target { get; set; }
-        [field: SerializeField] public float AttackRange { get; set; } = 2f; 
-        [field: SerializeField] public float MoveSpeed { get; set; } = 10f;
-        [field: SerializeField] public float AttackCd { get; set; } = 2f;
+        public float AttackRange => GameStats.CalculateStat(LevelManager.Instance.GameStats.eBaseAttackRange); 
+        public float MoveSpeed => GameStats.CalculateStat(LevelManager.Instance.GameStats.eBaseMoveSpeed);
+        public float AttackCd => GameStats.CalculateStat(LevelManager.Instance.GameStats.eBaseAttackCd);
         public float MaxHealth { get; private set; }
         private float CurrentHealth { get; set; }
         
@@ -40,7 +40,7 @@ namespace InGame
 
         private void Update()
         {
-            if (Target == null) return;
+            if (!Target) return;
             MoveTo(Target);
         }
 
@@ -51,6 +51,8 @@ namespace InGame
             else
             {
                 transform.position = Vector3.Lerp(transform.position, target.position, Time.deltaTime * MoveSpeed);
+                transform.rotation = Quaternion.Euler(Vector3.Lerp(transform.eulerAngles,
+                    transform.eulerAngles + new Vector3(0f, 0f, 180f), Time.deltaTime * MoveSpeed));
                 inAttackRange = false;
             }
         }
@@ -106,7 +108,7 @@ namespace InGame
             DOTween.Complete(this);
             var seq = DOTween.Sequence(this);
             seq.Append(transform.DOPunchScale(0.5f * Vector3.one, 0.2f))
-                .Join(uiHealth.DOScaleY(CurrentHealth / MaxHealth, 0.2f));
+                .Join(uiHealth.DOScaleY(Mathf.Clamp(CurrentHealth, 0f, MaxHealth) / MaxHealth, 0.2f));
             seq.Play();
         }
 
