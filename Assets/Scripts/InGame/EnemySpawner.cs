@@ -7,7 +7,6 @@ namespace InGame
 {
     public class EnemySpawner : MonoBehaviour
     {
-        [SerializeField] private EnemyEntity enemyPref;
         [SerializeField] private Transform target;
         private float SpawnRate => LevelManager.Instance.GameStats.eSpawnRate;
         
@@ -21,7 +20,8 @@ namespace InGame
             while (true)
             {
                 var spawnCd = 1 / SpawnRate;
-                var enemy = Instantiate(enemyPref, transform.position, Quaternion.identity);
+                var enemy = EnemyPool.Instance.Get(null);
+                enemy.transform.position = transform.position;
                 enemy.Target = target;
                 enemy.transform.localScale = Vector3.one * Random.Range(0.4f, 1f);
                 enemy.Init(CalculateHealth());

@@ -13,7 +13,8 @@ namespace InGame.Effects
         public IEnumerator DoEffect()
         {
             if (!Cam) yield break;
-            var originalPos = Cam.transform.localPosition;
+            var originalPos = Vector3.zero;
+            originalPos.z = -10;
             var elapsed = 0f;
 
             while (elapsed < Duration)
@@ -28,6 +29,14 @@ namespace InGame.Effects
             }
 
             Cam.transform.localPosition = originalPos;
+        }
+
+        public void CloneStats(IEffect target)
+        {
+            var casted = (CameraShake)target;
+            Cam = casted.Cam;
+            Duration = casted.Duration;
+            Magnitude = casted.Magnitude;
         }
     }
 }

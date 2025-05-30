@@ -16,6 +16,9 @@ namespace InGame
         public float MaxHealth { get; private set; }
         private float CurrentHealth { get; set; }
         
+        // Elemental effect
+        public bool IsInLightning { get; set; }
+        
         [Space, Header("Visual")] 
         [SerializeField] private Transform uiHealth;
 
@@ -43,6 +46,9 @@ namespace InGame
         {
             MaxHealth = maxHealth;
             CurrentHealth = MaxHealth;   
+            
+            // Update health ui
+            UIUpdateHealth();
         }
 
         private void Update()
@@ -92,7 +98,6 @@ namespace InGame
             if (CurrentHealth <= 0)
             {
                 OnDie();
-                UIDie();
             }
             else
             {
@@ -102,7 +107,8 @@ namespace InGame
         
         private void OnDie()
         {
-            
+            IsInLightning = false;
+            EnemyPool.Instance.Release(this);
         }
         
         private void UIUpdateHealth()
@@ -113,11 +119,5 @@ namespace InGame
                 .Join(uiHealth.DOScaleY(Mathf.Clamp(CurrentHealth, 0f, MaxHealth) / MaxHealth, 0.2f));
             seq.Play();
         }
-
-        private void UIDie()
-        {
-            Destroy(gameObject);
-        }
-
     }
 }

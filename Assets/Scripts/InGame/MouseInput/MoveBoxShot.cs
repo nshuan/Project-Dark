@@ -25,15 +25,23 @@ namespace InGame.MouseInput
             var damage = CalculateDmg();
             foreach (var hit in hits)
             {
-                if (hit.collider != null && hit.transform.TryGetComponent<EnemyEntity>(out var enemyEntity))
+                if (hit.collider && hit.transform.TryGetComponent<EnemyEntity>(out var enemyEntity))
                 {
                     enemyEntity.OnHit(damage);
+                    
+                    // Chance to create lightning burst
+                    if (!enemyEntity.IsInLightning && Random.Range(0f, 1f) <= LevelManager.Instance.GameStats.sLightningBurstChance)
+                    {
+                        enemyEntity.IsInLightning = true;
+                        var lb = LightningTrapPool.Instance.Get(null);
+                        lb.Setup(Cam, enemyEntity.transform.position, 3f * Vector2.one, damage, 0.5f, () =>
+                        {
+                            enemyEntity.IsInLightning = false;
+                        });
+                        effectCamShake.Duration = 0.5f;
+                    }
                 }
             }
-
-            var trap = LightningTrapPool.Instance.Get(null);
-            trap.Setup(Cam, mousePos, 3f * Vector2.one, damage, 0.8f);
-            effectCamShake.Duration = 0.8f;
             
             base.OnMouseClick();
         }

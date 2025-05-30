@@ -21,6 +21,12 @@ namespace InGame
         public float pShotCooldown = 1f;
         public float pDmgPerShot = 15f;
 
+        // Elemental Skills
+        [Space] 
+        [Header("Elemental")] 
+        public float sLightningBurstChance = 0.5f;
+        public float sLightningBurstDamage = 5f;
+        
         #region FUNCTION
 
         public static T CalculateStat<T>(T baseStat, params Func<T, T>[] effects)

@@ -25,7 +25,7 @@ namespace InGame.MouseInput
             EnemyEntity nearestEnemy = null;
             foreach (var hit in hits)
             {
-                if (hit.collider != null && hit.transform.TryGetComponent<EnemyEntity>(out var enemyEntity))
+                if (hit.collider&& hit.transform.TryGetComponent<EnemyEntity>(out var enemyEntity))
                 {
                     var distance = Vector2.Distance(Cam.WorldToScreenPoint(enemyEntity.transform.position),
                         mousePosition);
@@ -35,9 +35,8 @@ namespace InGame.MouseInput
                 }
             }
             var damage = CalculateDmg();
-            if (nearestEnemy != null)
-                nearestEnemy?.OnHit(damage);
-            
+            if (nearestEnemy) nearestEnemy.OnHit(damage);
+
             base.OnMouseClick();
         }
 
