@@ -27,6 +27,7 @@ namespace Core
         {
             obj.transform.SetParent(transform);
             obj.gameObject.SetActive(false);
+            if (pool.Contains(obj)) return;
             pool.Enqueue(obj);
         }
     }

@@ -51,6 +51,7 @@ namespace InGame.Trap
                             enemyEntity.OnDead += () =>
                             {
                                 lightning.ForceStop();
+                                LightningPool.Instance.Release(lightning);
                                 lightningEffects.Remove(pair);
                             };
                             
@@ -77,13 +78,20 @@ namespace InGame.Trap
             }
             
             onComplete?.Invoke();
+            Target = null;
+            trapCoroutine = null;
+            lightningEffects.Clear();
             LightningTrapPool.Instance.Release(this);
         }
 
         private void OnTrappedEnemyDead()
         {
             Target = null;
-            if (trapCoroutine != null) StopCoroutine(trapCoroutine);
+            if (trapCoroutine != null)
+            {
+                StopCoroutine(trapCoroutine);
+                trapCoroutine = null;
+            }
             foreach (var effect in lightningEffects)
             {
                 effect.Item1.ForceStop();
@@ -91,6 +99,7 @@ namespace InGame.Trap
                 effect.Item2.IsInLightning = false;
             }
             lightningEffects.Clear();
+            LightningTrapPool.Instance.Release(this);
         }
     }
 }

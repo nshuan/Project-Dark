@@ -60,6 +60,7 @@ namespace InGame.Effects
                     isAnimating = false;
                     lightningMesh.Clear(); // Hide lightning when done
                     points.Clear();
+                    LightningPool.Instance.Release(this);
                 }
             }
         }
