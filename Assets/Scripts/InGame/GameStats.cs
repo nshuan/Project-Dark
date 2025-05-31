@@ -24,6 +24,8 @@ namespace InGame
         // Elemental Skills
         [Space] 
         [Header("Elemental")] 
+        public float sLightningChance = 0.5f;
+        public float sLightningDamage = 5f;
         public float sLightningBurstChance = 0.5f;
         public float sLightningBurstDamage = 5f;
         

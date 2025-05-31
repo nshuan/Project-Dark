@@ -332,15 +332,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <GameStats>k__BackingField:
-    eSpawnRate: 0.5
+    eSpawnRate: 0.2
     eBaseHp: 100
     eBaseMoveSpeed: 0.1
     eBaseAttackRange: 2
     eBaseAttackCd: 2
     pShotCooldown: 1
     pDmgPerShot: 10
-    sLightningBurstChance: 0.1
-    sLightningBurstDamage: 1
+    sLightningChance: 1
+    sLightningDamage: 5
+    sLightningBurstChance: 1
+    sLightningBurstDamage: 5
 --- !u!4 &355993393
 Transform:
   m_ObjectHideFlags: 0
@@ -1298,7 +1300,7 @@ GameObject:
   - component: {fileID: 2035464805}
   - component: {fileID: 2035464806}
   m_Layer: 0
-  m_Name: RadialLightningPool
+  m_Name: LightningPool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1328,10 +1330,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2035464804}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 125c79e284314805a28bf6dd6e198b81, type: 3}
+  m_Script: {fileID: 11500000, guid: 71fc8cfe47e34fa8828b3a426a1a9ebd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 1827304613944996765, guid: 9fa06608391ea8c4b9ffff1be87a276f, type: 3}
+  _prefab: {fileID: 1567639391320844974, guid: 2d95f4d7f476da54cb9f14369253bf75, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

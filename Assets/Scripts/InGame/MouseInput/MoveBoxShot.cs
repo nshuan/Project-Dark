@@ -28,18 +28,7 @@ namespace InGame.MouseInput
                 if (hit.collider && hit.transform.TryGetComponent<EnemyEntity>(out var enemyEntity))
                 {
                     enemyEntity.OnHit(damage);
-                    
-                    // Chance to create lightning burst
-                    if (!enemyEntity.IsInLightning && Random.Range(0f, 1f) <= LevelManager.Instance.GameStats.sLightningBurstChance)
-                    {
-                        enemyEntity.IsInLightning = true;
-                        var lb = LightningTrapPool.Instance.Get(null);
-                        lb.Setup(Cam, enemyEntity.transform.position, 3f * Vector2.one, damage, 0.5f, () =>
-                        {
-                            enemyEntity.IsInLightning = false;
-                        });
-                        effectCamShake.Duration = 0.5f;
-                    }
+                    CheckElemental(enemyEntity);
                 }
             }
             

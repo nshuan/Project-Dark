@@ -35,7 +35,11 @@ namespace InGame.MouseInput
                 }
             }
             var damage = CalculateDmg();
-            if (nearestEnemy) nearestEnemy.OnHit(damage);
+            if (nearestEnemy)
+            {
+                nearestEnemy.OnHit(damage);
+                CheckElemental(nearestEnemy);
+            }
 
             base.OnMouseClick();
         }

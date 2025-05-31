@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace InGame.Effects
 {
@@ -31,11 +33,13 @@ namespace InGame.Effects
         private List<float> currentAngles = new List<float>();
         private List<float> targetAngles = new List<float>();
 
+        private Action onComplete;
+        
         public void Init()
         {
             mesh = new Mesh();
             meshFilter.mesh = mesh;
-            if (lightningMaterial != null)
+            if (lightningMaterial)
             {
                 meshRenderer.material = new Material(lightningMaterial);
             }
@@ -49,7 +53,7 @@ namespace InGame.Effects
             }
         }
 
-        public void Execute(float duration)
+        public void Execute(float duration, Action onComplete)
         {
             burstDuration = duration;
             isBurstActive = true;
@@ -58,6 +62,7 @@ namespace InGame.Effects
             fadeTimer = 0f;
             alpha = 1f;
             meshRenderer.enabled = true;
+            this.onComplete = onComplete;
         }
         
         private void Update()
@@ -91,7 +96,8 @@ namespace InGame.Effects
 
             if (!isBurstActive && !isFadingOut)
             {
-                RadialLightningPool.Instance.Release(this);
+                onComplete?.Invoke();
+                onComplete = null;
                 return;
             }
 

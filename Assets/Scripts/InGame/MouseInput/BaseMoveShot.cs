@@ -2,6 +2,7 @@ using System.Linq;
 using DefaultNamespace;
 using DG.Tweening;
 using InGame.Effects;
+using InGame.Trap;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -41,6 +42,22 @@ namespace InGame.MouseInput
             seq.Append(cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f))
                 .Join(cursor.transform.DOShakeRotation(0.13f, new Vector3(0f, 0f, 10f)));
             seq.Play();
+        }
+
+        // Check if can spawn elemental effect on hit enemy
+        protected virtual void CheckElemental(EnemyEntity enemyEntity)
+        {
+            // Chance to create lightning burst
+            if (!enemyEntity.IsInLightning && !enemyEntity.IsDead && Random.Range(0f, 1f) <= LevelManager.Instance.GameStats.sLightningChance)
+            {
+                enemyEntity.IsInLightning = true;
+                var lightningTrap = LightningTrapPool.Instance.Get(null);
+                lightningTrap.Setup(Cam, enemyEntity, 3f * Vector2.one, LevelManager.Instance.GameStats.sLightningDamage, 0.5f, () =>
+                {
+                    enemyEntity.IsInLightning = false;
+                });
+                effectCamShake.Duration = 0.5f;
+            }
         }
 
         public virtual void OnUpdate()

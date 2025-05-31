@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using InGame.Effects;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -9,40 +10,52 @@ namespace InGame.Trap
     public class LightningTrap : MonoTrap
     {
         private Coroutine trapCoroutine;
+
+        private List<(Lightning, EnemyEntity)> lightningEffects;
         
-        public override void Setup(Camera cam, Vector3 position, Vector2 size, float damage, float duration, Action onComplete)
+        private EnemyEntity Target { get; set; }
+        
+        public override void Setup(Camera cam, EnemyEntity target, Vector2 size, float damage, float duration, Action onComplete)
         {
+            Target = target;
+            Target.OnDead += OnTrappedEnemyDead;
+            lightningEffects = new List<(Lightning, EnemyEntity)>();
+            
             if (trapCoroutine != null) StopCoroutine(trapCoroutine);
-            trapCoroutine = StartCoroutine(IETrap(cam, position, size.x, damage, duration, onComplete));
+            trapCoroutine = StartCoroutine(IETrap(cam, size.x, damage, duration, onComplete));
         }
 
-        private IEnumerator IETrap(Camera cam, Vector3 position, float radius, float damage, float duration, Action onComplete)
+        private IEnumerator IETrap(Camera cam, float radius, float damage, float duration, Action onComplete)
         {
-            // Lightning burst effect
-            var lightning = RadialLightningPool.Instance.Get(null);
-            position.z = 0;
-            lightning.transform.position = position;
-            lightning.Init();
-            lightning.length = radius;
-            lightning.Execute(duration);
-            
             var checkCount = duration * RefreshRate;
             var cd = 1 / RefreshRate;
-            while (checkCount > 0)
+            while (checkCount > 0 && Target)
             {
-                var hits = Physics2D.CircleCastAll(position, radius, Vector2.zero, 0f, LayerMask.GetMask("Entity"));
+                var target = Target.transform;
+                var hits = Physics2D.CircleCastAll(target.position, radius, Vector2.zero, 0f, LayerMask.GetMask("Entity"));
                 foreach (var hit in hits)
                 {
                     if (hit.collider && hit.transform.TryGetComponent<EnemyEntity>(out var enemyEntity))
                     {
-                        enemyEntity.OnHit(GameStats.CalculateStat(LevelManager.Instance.GameStats.sLightningBurstDamage));
-                        
                         // Chance to create lightning burst
-                        if (!enemyEntity.IsInLightning && Random.Range(0f, 1f) <= LevelManager.Instance.GameStats.sLightningBurstChance)
+                        if (!enemyEntity.IsInLightning && !enemyEntity.IsDead && Random.Range(0f, 1f) <= LevelManager.Instance.GameStats.sLightningChance)
                         {
+                            // Lightning ray effect
+                            var lightning = LightningPool.Instance.Get(null);
+                            lightning.points = new List<Transform>() { target, enemyEntity.transform };
+                            var pair = (lightning, enemyEntity);
+                            lightningEffects.Add(pair);
+                            lightning.Execute(duration);
+                            
                             enemyEntity.IsInLightning = true;
-                            var lb = LightningTrapPool.Instance.Get(null);
-                            lb.Setup(cam, enemyEntity.transform.position, 3f * Vector2.one, damage, 0.5f, () =>
+                            enemyEntity.OnDead += () =>
+                            {
+                                lightning.ForceStop();
+                                lightningEffects.Remove(pair);
+                            };
+                            
+                            var skill = LightningTrapPool.Instance.Get(null);
+                            skill.Setup(cam, enemyEntity, 3f * Vector2.one, damage, 0.5f, () =>
                             {
                                 enemyEntity.IsInLightning = false;
                             });
@@ -53,6 +66,9 @@ namespace InGame.Trap
                             };
                             EffectHelper.Instance.PlayEffect(effectCamShake);
                         }
+                        
+                        enemyEntity.OnHit(GameStats.CalculateStat(LevelManager.Instance.GameStats.sLightningDamage));
+
                     }
                 }
 
@@ -62,6 +78,19 @@ namespace InGame.Trap
             
             onComplete?.Invoke();
             LightningTrapPool.Instance.Release(this);
+        }
+
+        private void OnTrappedEnemyDead()
+        {
+            Target = null;
+            if (trapCoroutine != null) StopCoroutine(trapCoroutine);
+            foreach (var effect in lightningEffects)
+            {
+                effect.Item1.ForceStop();
+                LightningPool.Instance.Release(effect.Item1);
+                effect.Item2.IsInLightning = false;
+            }
+            lightningEffects.Clear();
         }
     }
 }

@@ -15,6 +15,8 @@ namespace InGame
         public float AttackCd => GameStats.CalculateStat(LevelManager.Instance.GameStats.eBaseAttackCd);
         public float MaxHealth { get; private set; }
         private float CurrentHealth { get; set; }
+        public bool IsDead => CurrentHealth <= 0;
+        public Action OnDead { get; set; }
         
         // Elemental effect
         public bool IsInLightning { get; set; }
@@ -94,6 +96,7 @@ namespace InGame
 
         public void OnHit(float damage)
         {
+            if (IsDead) return;
             CurrentHealth -= damage;
             if (CurrentHealth <= 0)
             {
@@ -108,6 +111,8 @@ namespace InGame
         private void OnDie()
         {
             IsInLightning = false;
+            OnDead?.Invoke();
+            OnDead = null;
             EnemyPool.Instance.Release(this);
         }
         
