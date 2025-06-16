@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e36aedf812e24bb88d3be08b25591dcb, type: 3}
-  m_Name: DefaultFlockBehaviour
+  m_Script: {fileID: 11500000, guid: 2137c5ae9c26452f933c8c670cf601f7, type: 3}
+  m_Name: StayInRadius
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -21,10 +21,5 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  behaviours:
-  - behaviour: {fileID: 11400000, guid: 59c74096ca4a3fe43a2ecb3ece83615e, type: 2}
-    weight: 4
-  - behaviour: {fileID: 11400000, guid: 969e2523dd0b3d942b4de080b5c55062, type: 2}
-    weight: 1
-  - behaviour: {fileID: 11400000, guid: d2b0cb9af7ea5b041a757ebbaea6c1b5, type: 2}
-    weight: 2
+  center: {x: 0, y: 0}
+  radius: 15
