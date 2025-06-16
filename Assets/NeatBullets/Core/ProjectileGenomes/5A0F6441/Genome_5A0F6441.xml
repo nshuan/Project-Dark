@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Root>
+  <ActivationFunctions>
+    <Fn id="0" name="Linear" prob="0.1" />
+    <Fn id="1" name="Sine" prob="0.1" />
+    <Fn id="2" name="ArcTan" prob="0.1" />
+    <Fn id="3" name="BipolarGaussian" prob="0.1" />
+    <Fn id="4" name="BipolarSigmoid" prob="0.1" />
+    <Fn id="5" name="LogisticFunction" prob="0.1" />
+    <Fn id="6" name="QuadraticSigmoid" prob="0.1" />
+    <Fn id="7" name="TanH" prob="0.1" />
+    <Fn id="8" name="ArcSinH" prob="0.1" />
+    <Fn id="9" name="ReLU" prob="0.1" />
+  </ActivationFunctions>
+  <Networks>
+    <Network id="0" birthGen="0" fitness="0">
+      <Nodes>
+        <Node type="bias" id="0" fnId="0" />
+        <Node type="in" id="1" fnId="0" />
+        <Node type="in" id="2" fnId="0" />
+        <Node type="in" id="3" fnId="0" />
+        <Node type="out" id="4" fnId="0" />
+        <Node type="out" id="5" fnId="0" />
+        <Node type="out" id="6" fnId="0" />
+        <Node type="out" id="7" fnId="0" />
+        <Node type="out" id="8" fnId="0" />
+      </Nodes>
+      <Connections>
+        <Con id="9" src="0" tgt="4" wght="1.4861625977407489" />
+        <Con id="10" src="0" tgt="5" wght="3.8298101461485148" />
+        <Con id="11" src="0" tgt="6" wght="1.7579679311955743" />
+        <Con id="12" src="0" tgt="7" wght="4.3643196559645663" />
+        <Con id="13" src="0" tgt="8" wght="2.4984287016636033" />
+        <Con id="14" src="1" tgt="4" wght="1.4869117225620021" />
+        <Con id="15" src="1" tgt="5" wght="2.1710083953392143" />
+        <Con id="16" src="1" tgt="6" wght="-0.51777082684634212" />
+        <Con id="17" src="1" tgt="7" wght="-1.2260028479639307" />
+        <Con id="18" src="1" tgt="8" wght="1.9984262732510627" />
+        <Con id="19" src="2" tgt="4" wght="-4.4334876555964868" />
+        <Con id="20" src="2" tgt="5" wght="4.6234988556649945" />
+        <Con id="21" src="2" tgt="6" wght="-2.3661344245028193" />
+        <Con id="22" src="2" tgt="7" wght="3.1986490503755185" />
+        <Con id="23" src="2" tgt="8" wght="0.53519871313253309" />
+        <Con id="24" src="3" tgt="4" wght="-1.459920148726277" />
+        <Con id="25" src="3" tgt="5" wght="-4.0563520403019249" />
+        <Con id="26" src="3" tgt="6" wght="-1.5723372152729154" />
+        <Con id="27" src="3" tgt="7" wght="-1.2001339671272893" />
+        <Con id="28" src="3" tgt="8" wght="-0.16809721219335549" />
+      </Connections>
+    </Network>
+  </Networks>
+</Root>

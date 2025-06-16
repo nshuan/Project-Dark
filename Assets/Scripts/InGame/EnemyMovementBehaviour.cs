@@ -4,6 +4,8 @@ namespace InGame
 {
     public abstract class EnemyMovementBehaviour : MonoBehaviour
     {
-        public abstract void Move(Transform target, float speed, float minDistance);
+        protected const float MinDelta = 0.001f;
+        public abstract void Init();
+        public abstract void Move(Vector2 target, float speed);
     }
 }

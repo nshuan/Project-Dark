@@ -4,11 +4,16 @@ namespace InGame.EnemyMovement
 {
     public class EnemyMoveStraight : EnemyMovementBehaviour
     {
-        public override void Move(Transform target, float speed, float minDistance)
+        public override void Init()
         {
-            if (Vector3.Distance(transform.position, target.position) > minDistance)
+            
+        }
+
+        public override void Move(Vector2 target, float speed)
+        {
+            if (Vector3.Distance(transform.position, target) > MinDelta)
             {
-                transform.position = Vector3.Lerp(transform.position, target.position, Time.deltaTime * speed);
+                transform.position = Vector3.Lerp(transform.position, target, Time.deltaTime * speed);
                 transform.rotation = Quaternion.Euler(Vector3.Lerp(transform.eulerAngles,
                     transform.eulerAngles + new Vector3(0f, 0f, 180f), Time.deltaTime * speed));
             }

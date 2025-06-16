@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -8,6 +10,8 @@ namespace InGame
     public class EnemySpawner : MonoBehaviour
     {
         [SerializeField] private Transform target;
+        [SerializeField] private EnemyType spawnType;
+        
         private float SpawnRate => LevelManager.Instance.GameStats.eSpawnRate;
         
         private void Start()
@@ -20,9 +24,9 @@ namespace InGame
             while (true)
             {
                 var spawnCd = 1 / SpawnRate;
-                var enemy = EnemyPool.Instance.Get(null);
+                var enemy = EnemyPool.Instance.Get(spawnType, null);
                 enemy.transform.position = transform.position;
-                enemy.Target = target;
+                enemy.SetTarget(target);
                 enemy.transform.localScale = Vector3.one * Random.Range(0.4f, 1f);
                 enemy.Init(CalculateHealth());
                 

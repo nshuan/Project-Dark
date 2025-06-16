@@ -3,13 +3,14 @@ using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 namespace InGame
 {
     [RequireComponent(typeof(EnemyMovementBehaviour))]
     public class EnemyEntity : MonoBehaviour
     {
-        public Transform Target { get; set; }
+        public Transform Target { get; private set; }
         public float AttackRange => GameStats.CalculateStat(LevelManager.Instance.GameStats.eBaseAttackRange); 
         public float MoveSpeed => GameStats.CalculateStat(LevelManager.Instance.GameStats.eBaseMoveSpeed);
         public float AttackCd => GameStats.CalculateStat(LevelManager.Instance.GameStats.eBaseAttackCd);
@@ -17,6 +18,7 @@ namespace InGame
         private float CurrentHealth { get; set; }
         public bool IsDead => CurrentHealth <= 0;
         public Action OnDead { get; set; }
+        public EnemyType Type { get; set; }
         
         // Elemental effect
         public bool IsInLightning { get; set; }
@@ -25,6 +27,7 @@ namespace InGame
         [SerializeField] private Transform uiHealth;
 
         private EnemyMovementBehaviour movementBehaviour;
+        private Vector2 attackPosition;
         
         private bool inAttackRange;
         private Coroutine attackCoroutine;
@@ -48,9 +51,18 @@ namespace InGame
         {
             MaxHealth = maxHealth;
             CurrentHealth = MaxHealth;   
+            movementBehaviour.Init();
             
             // Update health ui
             UIUpdateHealth();
+        }
+
+        public void SetTarget(Transform target)
+        {
+            Target = target;
+            attackPosition = (Quaternion.Euler(0f, 0f, Random.Range(-30f, 30f)) *
+                              (transform.position - target.position).normalized).normalized * (0.9f * AttackRange)
+                             + Target.position;
         }
 
         private void Update()
@@ -64,7 +76,7 @@ namespace InGame
             if (Vector3.Distance(transform.position, target.position) < AttackRange)
                 inAttackRange = true;
             else
-                movementBehaviour.Move(target, MoveSpeed, AttackRange);
+                movementBehaviour.Move(attackPosition, MoveSpeed);
         }
 
         private void StartAttackCoroutine()
@@ -113,7 +125,7 @@ namespace InGame
             IsInLightning = false;
             OnDead?.Invoke();
             OnDead = null;
-            EnemyPool.Instance.Release(this);
+            EnemyPool.Instance.Release(Type, this);
         }
         
         private void UIUpdateHealth()
@@ -121,7 +133,7 @@ namespace InGame
             DOTween.Complete(this);
             var seq = DOTween.Sequence(this);
             seq.Append(transform.DOPunchScale(0.5f * Vector3.one, 0.2f))
-                .Join(uiHealth.DOScaleY(Mathf.Clamp(CurrentHealth, 0f, MaxHealth) / MaxHealth, 0.2f));
+                .Join(uiHealth.DOScale(Mathf.Clamp(CurrentHealth, 0f, MaxHealth) / MaxHealth, 0.2f));
             seq.Play();
         }
     }
