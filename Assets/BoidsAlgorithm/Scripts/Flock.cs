@@ -47,6 +47,7 @@ namespace Boids
                     transform
                     );
                 newAgent.name = "Agent " + i;
+                newAgent.Initialize(this);
                 agents.Add(newAgent);
             }
         }

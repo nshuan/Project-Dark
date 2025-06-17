@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Boids.Behaviours
 {
     [CreateAssetMenu(menuName = "Boids/Behaviour/Cohesion")]
-    public class CohesionBehaviour : FlockBehaviour
+    public class CohesionBehaviour : FilterFlockBehaviour
     {
         public override Vector2 CalculateMove(FlockAgent agent, List<Transform> context, Flock flock)
         {
@@ -14,7 +14,8 @@ namespace Boids.Behaviours
             
             // add all points together and average
             var cohesionMove = Vector2.zero;
-            foreach (var item in context)
+            var filteredContext = filter ? context : filter.Filter(agent, context);
+            foreach (var item in filteredContext)
             {
                 cohesionMove += (Vector2)item.position;
             }
