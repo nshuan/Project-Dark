@@ -10,10 +10,8 @@ namespace InGame
     [RequireComponent(typeof(EnemyMovementBehaviour))]
     public class EnemyEntity : MonoBehaviour
     {
-        public Transform Target { get; private set; }
-        public float AttackRange => GameStats.CalculateStat(LevelManager.Instance.GameStats.eBaseAttackRange); 
-        public float MoveSpeed => GameStats.CalculateStat(LevelManager.Instance.GameStats.eBaseMoveSpeed);
-        public float AttackCd => GameStats.CalculateStat(LevelManager.Instance.GameStats.eBaseAttackCd);
+        public Transform Target { get; set; }
+        public EnemyBehaviour config;
         public float MaxHealth { get; private set; }
         private float CurrentHealth { get; set; }
         public bool IsDead => CurrentHealth <= 0;
@@ -61,7 +59,7 @@ namespace InGame
         {
             Target = target;
             attackPosition = (Quaternion.Euler(0f, 0f, Random.Range(-30f, 30f)) *
-                              (transform.position - target.position).normalized).normalized * (0.9f * AttackRange)
+                              (transform.position - target.position).normalized).normalized * (0.9f * config.attackRange)
                              + Target.position;
         }
 
@@ -73,10 +71,10 @@ namespace InGame
 
         private void MoveTo(Transform target)
         {
-            if (Vector3.Distance(transform.position, target.position) < AttackRange)
+            if (Vector3.Distance(transform.position, target.position) < config.attackRange)
                 inAttackRange = true;
             else
-                movementBehaviour.Move(attackPosition, MoveSpeed);
+                movementBehaviour.Move(target.position, config.moveSpeed);
         }
 
         private void StartAttackCoroutine()
@@ -94,7 +92,7 @@ namespace InGame
                 if (inAttackRange)
                 {
                     Attack();
-                    yield return new WaitForSeconds(AttackCd);
+                    yield return new WaitForSeconds(1 / config.attackSpeed);
                 }
                 else
                     yield return new WaitUntil(() => inAttackRange);
