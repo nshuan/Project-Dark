@@ -16,31 +16,34 @@ namespace InGame
         public bool IsDead => CurrentHealth <= 0;
         public Action OnDead { get; set; }
         public EnemyType Type { get; set; }
+        public EnemyState State { get; set; }
         
         // Elemental effect
         public bool IsInLightning { get; set; }
         
         [Space, Header("Visual")] 
         [SerializeField] private Transform uiHealth;
-
-        private Vector2 attackPosition;
         
         private bool inAttackRange;
         private Coroutine attackCoroutine;
 
+        private Vector2 attackPosition;
+        
         #region Initialize
 
-        public void Init(Transform target, float hpMultiplier)
+        public void Init(Transform target, EnemyType type, float hpMultiplier)
         {
             // Set target and attack position
             Target = target;
-            attackPosition = (Quaternion.Euler(0f, 0f, Random.Range(-30f, 30f)) *
-                              (transform.position - target.position).normalized).normalized * (0.9f * config.attackRange)
-                             + Target.position;
+            Type = type;
+            attackPosition = (Vector2)((Quaternion.Euler(0f, 0f, Random.Range(-75f, 75f)) *
+                                      (Vector2)(transform.position - target.position).normalized).normalized * (0.9f * config.attackRange)
+                            + target.position);
             
             MaxHealth = config.hp * hpMultiplier;
             CurrentHealth = MaxHealth;
-            config.Init(this);
+            State = EnemyState.Spawn;
+            config.Init(transform);
             
             // Update health ui
             UIUpdateHealth();
@@ -57,10 +60,10 @@ namespace InGame
         
         public void Activate()
         {
-            config.Spawn(() =>
+            config.Spawn(transform, () =>
             {
                 StartAttackCoroutine();
-                config.State = EnemyState.Move;
+                State = EnemyState.Move;
             });
         }
 
@@ -69,7 +72,7 @@ namespace InGame
         private void Update()
         {
             if (!Target) return;
-            if (config.State != EnemyState.Move) return;
+            if (State != EnemyState.Move) return;
             MoveTo(Target);
         }
 
@@ -78,7 +81,7 @@ namespace InGame
             if (Vector3.Distance(transform.position, target.position) < config.attackRange)
                 inAttackRange = true;
             else
-                config.moveBehaviour.Move(transform, target.position, config.moveSpeed);
+                config.moveBehaviour.Move(transform, attackPosition, config.attackRange, config.moveSpeed);
         }
 
         private void StartAttackCoroutine()
@@ -105,7 +108,7 @@ namespace InGame
 
         private void Attack()
         {
-            Debug.Log("Enemy Attack!!!");
+            Debug.Log($"Enemy {name} Attack!!!");
         }
 
         public void OnHit(float damage)

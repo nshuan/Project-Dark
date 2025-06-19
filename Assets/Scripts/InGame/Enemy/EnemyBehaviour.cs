@@ -17,20 +17,16 @@ namespace InGame
         public float dmg; // Base damage
         public float moveSpeed;
         
-        private EnemyEntity Enemy { get; set; }
-        public EnemyState State { get; set; }
-
-        public void Init(EnemyEntity enemy)
+        public void Init(Transform enemy)
         {
-            Enemy = enemy;
+            spawnBehaviour.Init(enemy);
             moveBehaviour.Init();
-            State = EnemyState.Spawn;
         }
         
-        public void Spawn(Action completeCallback)
+        public void Spawn(Transform enemy, Action completeCallback)
         {
-            DOTween.Kill(this);
-            spawnBehaviour?.DoSpawn(Enemy.transform).OnComplete(() => completeCallback?.Invoke()).SetTarget(this);
+            DOTween.Kill(enemy);
+            spawnBehaviour?.DoSpawn(enemy).OnComplete(() => completeCallback?.Invoke()).SetTarget(enemy);
         }
     }
 

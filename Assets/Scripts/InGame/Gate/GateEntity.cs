@@ -23,7 +23,7 @@ namespace InGame
                 var spawnCd = 1 / SpawnRate;
                 var enemy = EnemyPool.Instance.Get(spawnType, null);
                 enemy.transform.position = transform.position;
-                enemy.Init(target, CalculateHpMultiplier());
+                enemy.Init(target, spawnType, CalculateHpMultiplier());
                 enemy.Activate();
                 
                 yield return new WaitForSeconds(spawnCd);

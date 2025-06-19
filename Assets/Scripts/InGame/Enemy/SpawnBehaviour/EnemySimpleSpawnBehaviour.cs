@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace InGame.SpawnBehaviour
 {
-    [CreateAssetMenu(menuName = "InGame/Enemy/Enemy Simple Spawn", fileName = "EnemySimpleSpawn")]
+    [CreateAssetMenu(menuName = "InGame/Enemy/Spawn/Enemy Simple Spawn", fileName = "EnemySimpleSpawn")]
     public class EnemySimpleSpawnBehaviour : EnemySpawnBehaviour
     {
         public override void Init(Transform enemy)

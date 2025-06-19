@@ -2,8 +2,8 @@ namespace InGame
 {
     public enum EnemyType
     {
-        NORMAL,
-        NORMAL15,
-        BIG
+        Normal,
+        Normal15,
+        Big
     }
 }
