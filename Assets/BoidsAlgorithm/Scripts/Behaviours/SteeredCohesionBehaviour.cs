@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Boids.Behaviours
 {
-    [CreateAssetMenu(menuName = "Boids/Behaviour/SteeredCohesion")]
+    [CreateAssetMenu(menuName = "Boids/Behaviour/Steered Cohesion")]
     public class SteeredCohesionBehaviour : FilterFlockBehaviour
     {
         public float agentSmoothTime = 0.5f;

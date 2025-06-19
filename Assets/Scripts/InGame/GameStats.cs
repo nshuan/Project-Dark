@@ -10,7 +10,7 @@ namespace InGame
         // Enemy
         [Header("Enemy")]
         public float eSpawnRate = 0.5f; // Enemies spawned per seconds
-        public float eBaseHp = 100f;
+        public float eHpMultiplier = 1f;
         public float eBaseMoveSpeed = 10f;
         public float eBaseAttackRange = 2f;
         public float eBaseAttackCd = 2f;

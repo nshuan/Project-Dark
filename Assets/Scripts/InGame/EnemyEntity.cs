@@ -7,12 +7,11 @@ using Random = UnityEngine.Random;
 
 namespace InGame
 {
-    [RequireComponent(typeof(EnemyMovementBehaviour))]
     public class EnemyEntity : MonoBehaviour
     {
         public Transform Target { get; set; }
         public EnemyBehaviour config;
-        public float MaxHealth { get; private set; }
+        private float MaxHealth { get; set; }
         private float CurrentHealth { get; set; }
         public bool IsDead => CurrentHealth <= 0;
         public Action OnDead { get; set; }
@@ -24,48 +23,53 @@ namespace InGame
         [Space, Header("Visual")] 
         [SerializeField] private Transform uiHealth;
 
-        private EnemyMovementBehaviour movementBehaviour;
         private Vector2 attackPosition;
         
         private bool inAttackRange;
         private Coroutine attackCoroutine;
 
-        private void Awake()
-        {
-            movementBehaviour = GetComponent<EnemyMovementBehaviour>();
-        }
+        #region Initialize
 
-        private void Start()
+        public void Init(Transform target, float hpMultiplier)
         {
-            StartAttackCoroutine();
-        }
-
-        private void OnDestroy()
-        {
-            DOTween.Kill(this);
-        }
-
-        public void Init(float maxHealth)
-        {
-            MaxHealth = maxHealth;
-            CurrentHealth = MaxHealth;   
-            movementBehaviour.Init();
+            // Set target and attack position
+            Target = target;
+            attackPosition = (Quaternion.Euler(0f, 0f, Random.Range(-30f, 30f)) *
+                              (transform.position - target.position).normalized).normalized * (0.9f * config.attackRange)
+                             + Target.position;
+            
+            MaxHealth = config.hp * hpMultiplier;
+            CurrentHealth = MaxHealth;
+            config.Init(this);
             
             // Update health ui
             UIUpdateHealth();
         }
 
-        public void SetTarget(Transform target)
+        #endregion
+
+        #region Core function
+
+        private void OnDestroy()
         {
-            Target = target;
-            attackPosition = (Quaternion.Euler(0f, 0f, Random.Range(-30f, 30f)) *
-                              (transform.position - target.position).normalized).normalized * (0.9f * config.attackRange)
-                             + Target.position;
+            DOTween.Kill(this);
         }
+        
+        public void Activate()
+        {
+            config.Spawn(() =>
+            {
+                StartAttackCoroutine();
+                config.State = EnemyState.Move;
+            });
+        }
+
+        #endregion
 
         private void Update()
         {
             if (!Target) return;
+            if (config.State != EnemyState.Move) return;
             MoveTo(Target);
         }
 
@@ -74,7 +78,7 @@ namespace InGame
             if (Vector3.Distance(transform.position, target.position) < config.attackRange)
                 inAttackRange = true;
             else
-                movementBehaviour.Move(target.position, config.moveSpeed);
+                config.moveBehaviour.Move(transform, target.position, config.moveSpeed);
         }
 
         private void StartAttackCoroutine()

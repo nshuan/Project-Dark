@@ -3,6 +3,7 @@ namespace InGame
     public enum EnemyType
     {
         NORMAL,
-        ORBIT
+        NORMAL15,
+        BIG
     }
 }
