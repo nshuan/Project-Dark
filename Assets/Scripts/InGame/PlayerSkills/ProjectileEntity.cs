@@ -7,6 +7,7 @@ namespace InGame
     {
         private const float MaxLifeTime = 5f;
         private float speed = 5f;
+        private float damageRange = 1f;
         private Vector2 direction;
         private Vector2 target;
 
@@ -43,6 +44,16 @@ namespace InGame
 
         private void ProjectileHit()
         {
+            // Check hit enemy, all enemies are hit
+            var hits = Physics2D.CircleCastAll(transform.position, damageRange, Vector2.zero, 0f, LayerMask.GetMask("Entity"));
+            var damage = LevelManager.Instance.GameStats.pDmgPerShot;
+            foreach (var hit in hits)
+            {
+                if (hit.collider && hit.transform.TryGetComponent<EnemyEntity>(out var enemyEntity))
+                {
+                    enemyEntity.OnHit(damage);
+                }
+            }
             Destroy(gameObject);
         }
     }
