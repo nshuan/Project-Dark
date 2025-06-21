@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using InGame.MouseInput;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
@@ -11,12 +10,26 @@ namespace InGame
     public class ShotCursorManager : SerializedScriptableObject
     {
         [NonSerialized, OdinSerialize] private Dictionary<ShotCursorType, MonoCursor> cursorPrefabs = new();
+        [NonSerialized, OdinSerialize] private Dictionary<ShotCursorType, IMouseInput> moveCursorMap = new();
 
-        public MonoCursor GetPrefab(ShotCursorType cursorType)
-        {
-            return cursorPrefabs.GetValueOrDefault(cursorType);
-        }
+        private Dictionary<ShotCursorType, MonoCursor> cursorCache = new();
         
+        public MonoCursor GetPrefab(ShotCursorType cursorType, Transform parent = null)
+        {
+            if (cursorCache.ContainsKey(cursorType))
+                cursorCache[cursorType].gameObject.SetActive(true);
+            else
+                cursorCache[cursorType] = Instantiate(cursorPrefabs.GetValueOrDefault(cursorType), parent);
+
+            return cursorCache[cursorType];
+        }
+
+        public IMouseInput GetCursorMoveLogic(ShotCursorType cursorType, Camera cam, MonoCursor cursor)
+        {
+            if (!moveCursorMap.ContainsKey(cursorType)) return null;
+            return Activator.CreateInstance(moveCursorMap[cursorType].GetType(), cam, cursor) as IMouseInput;
+        }
+
         #region Singleton
 
         private const string Path = "ScriptableObjects/ShotCursorManager";

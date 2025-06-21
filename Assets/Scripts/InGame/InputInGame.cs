@@ -1,5 +1,4 @@
 using System;
-using InGame.MouseInput;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -14,12 +13,20 @@ namespace InGame
         private void Awake()
         {
             cam = Camera.main;
+
+            LevelManager.Instance.OnChangeSkill += OnSkillChanged;
         }
 
-        private void Start()
+        private void OnSkillChanged(PlayerSkillConfig skillConfig)
         {
-            var cursor = Instantiate(ShotCursorManager.Instance.GetPrefab(ShotCursorType.BOX), canvas.transform);
-            mouseInput = new MoveBoxShot(cam, cursor);
+            if (!skillConfig) return;
+            if (mouseInput != null)
+            {
+                mouseInput.Dispose();
+                mouseInput = null;
+            }
+            var cursor = ShotCursorManager.Instance.GetPrefab(skillConfig.shootLogic.cursorType, canvas.transform);
+            mouseInput = ShotCursorManager.Instance.GetCursorMoveLogic(skillConfig.shootLogic.cursorType, cam, cursor);
         }
 
         private void Update()
