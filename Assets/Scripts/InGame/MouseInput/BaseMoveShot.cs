@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using DefaultNamespace;
 using DG.Tweening;
@@ -5,10 +6,11 @@ using InGame.Effects;
 using InGame.Trap;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
-namespace InGame.MouseInput
+namespace InGame
 {
-    public class BaseMoveShot : IMouseInput
+    public abstract class BaseMoveShot : IMouseInput
     {
         protected Camera Cam { get; set; }
         protected RectTransform cursor;
@@ -19,6 +21,11 @@ namespace InGame.MouseInput
         protected float Cooldown => LevelManager.Instance.GameStats.pShotCooldown;
         public bool CanShoot { get; set; }
         protected float cdCounter;
+
+        public BaseMoveShot()
+        {
+            
+        }
         
         protected BaseMoveShot(Camera cam, MonoCursor cursor)
         {
@@ -96,6 +103,12 @@ namespace InGame.MouseInput
         public virtual void OnDrawGizmos()
         {
             
+        }
+
+        public void Dispose()
+        {
+            cursor.gameObject.SetActive(false);
+            effectCamShake = null;
         }
     }
 }

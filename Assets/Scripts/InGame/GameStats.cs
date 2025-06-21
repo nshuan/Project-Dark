@@ -20,6 +20,7 @@ namespace InGame
         [Header("Player")]
         public float pShotCooldown = 1f;
         public float pDmgPerShot = 15f;
+        public float cursorScale = 1f;
 
         // Elemental Skills
         [Space] 

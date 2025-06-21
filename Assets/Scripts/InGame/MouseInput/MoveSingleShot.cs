@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using DefaultNamespace;
 using DG.Tweening;
@@ -5,10 +6,16 @@ using InGame.Effects;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace InGame.MouseInput
+namespace InGame
 {
+    [Serializable]
     public class MoveSingleShot : BaseMoveShot
     {
+        public MoveSingleShot()
+        {
+            
+        }
+        
         public MoveSingleShot(Camera cam, MonoCursor cursor) : base(cam, cursor)
         {
 

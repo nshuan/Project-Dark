@@ -1,4 +1,4 @@
-namespace InGame.MouseInput
+namespace InGame
 {
     public class MoveProjectileShot
     {

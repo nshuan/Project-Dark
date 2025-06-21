@@ -1,6 +1,8 @@
+using System;
+
 namespace InGame
 {
-    public interface IMouseInput
+    public interface IMouseInput : IDisposable
     {
         void OnMouseClick();
         void OnUpdate();

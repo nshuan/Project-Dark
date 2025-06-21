@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using DefaultNamespace;
 using DG.Tweening;
@@ -6,10 +7,16 @@ using InGame.Trap;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace InGame.MouseInput
+namespace InGame
 {
+    [Serializable]
     public class MoveBoxShot : BaseMoveShot
     {
+        public MoveBoxShot()
+        {
+            
+        }
+        
         public MoveBoxShot(Camera cam, MonoCursor cursor) : base(cam, cursor)
         {
 
