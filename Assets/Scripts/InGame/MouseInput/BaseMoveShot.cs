@@ -12,6 +12,8 @@ namespace InGame
 {
     public abstract class BaseMoveShot : IMouseInput
     {
+        public InputInGame InputManager { get; set; }
+        
         protected Camera Cam { get; set; }
         protected RectTransform cursor;
         protected Image uiCursorCd;
@@ -20,6 +22,7 @@ namespace InGame
         
         protected float Cooldown => LevelManager.Instance.GameStats.pShotCooldown;
         public bool CanShoot { get; set; }
+        private bool OutOfRange { get; set; }
         protected float cdCounter;
 
         public BaseMoveShot()
@@ -34,10 +37,11 @@ namespace InGame
             this.cursor = (RectTransform)cursor.transform;
             this.uiCursorCd = cursor.UICooldown;
         }
-        
+
         public virtual void OnMouseClick()
         {
             if (!CanShoot) return;
+            if (OutOfRange) return;
             
             CanShoot = false;
             cdCounter = LevelManager.Instance.GameStats.pShotCooldown;
@@ -69,6 +73,30 @@ namespace InGame
 
         public virtual void OnUpdate()
         {
+            if (OutOfRange)
+            {
+                if (Vector2.Distance(Cam.ScreenToWorldPoint(Input.mousePosition),
+                        InputManager.cursorRangeCenter.position) <=
+                    InputManager.cursorRangeRadius)
+                {
+                    OutOfRange = false;
+                    mousePosition = Input.mousePosition;
+                    mousePosition.z = 0; // Set z to 0 for 2D
+                    cursor.position = mousePosition;
+                    cursor.gameObject.SetActive(true);
+                }
+                return;
+            }
+
+            if (Vector2.Distance(Cam.ScreenToWorldPoint(Input.mousePosition),
+                    InputManager.cursorRangeCenter.position) >
+                InputManager.cursorRangeRadius)
+            {
+                OutOfRange = true;
+                cursor.gameObject.SetActive(false);
+                return;
+            }
+            
             mousePosition = Input.mousePosition;
             mousePosition.z = 0; // Set z to 0 for 2D
             cursor.position = mousePosition;

@@ -1,10 +1,13 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace InGame
 {
-    [CreateAssetMenu(menuName = "InGame/Player/Player Skill Behaviour", fileName = "PlayerSKillBehaviour")]   
-    public class PlayerSkillBehaviour : ScriptableObject
+    public abstract class PlayerSkillBehaviour : ScriptableObject
     {
         public ShotCursorType cursorType;
+        public ProjectileEntity projectilePrefab;
+
+        public abstract void Shoot(Vector2 spawnPos, Vector2 target);
     }
 }
