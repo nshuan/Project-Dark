@@ -1,15 +1,26 @@
 using System;
 using System.Collections;
+using System.Linq;
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 
 namespace InGame
 {
-    public class GateEntity : MonoBehaviour
+    public class GateEntity : SerializedMonoBehaviour
     {
         [SerializeField] private Transform target;
+
+        #region Gate config
+
+        [Space] [Header("Gate config")] 
+        [SerializeField] private float startTime; // delay before the gate start spawning
+        [SerializeField] private float duration; // gate life time
         [SerializeField] private EnemyType spawnType;
-        
-        private float SpawnRate => LevelManager.Instance.GameStats.eSpawnRate;
+        [SerializeField] private float intervalLoop = 4f; // duration between 2 spawns
+        [NonSerialized, OdinSerialize] private IGateSpawner spawnLogic; // pattern for enemy appearance
+
+        #endregion
         
         private void Start()
         {
@@ -18,15 +29,18 @@ namespace InGame
 
         private IEnumerator IESpawn()
         {
+            yield return new WaitForSeconds(startTime);
+            
             while (true)
             {
-                var spawnCd = 1 / SpawnRate;
-                var enemy = EnemyPool.Instance.Get(spawnType, null);
-                enemy.transform.position = transform.position;
-                enemy.Init(target, spawnType, CalculateHpMultiplier());
-                enemy.Activate();
+                var enemies = spawnLogic.Spawn(transform.position, spawnType);
+                foreach (var enemy in enemies)
+                {
+                    enemy.Init(target, spawnType, CalculateHpMultiplier());
+                    enemy.Activate();
+                }
                 
-                yield return new WaitForSeconds(spawnCd);
+                yield return new WaitForSeconds(intervalLoop);
             }
         }
 

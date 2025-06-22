@@ -26,7 +26,8 @@ namespace InGame
         public void Spawn(Transform enemy, Action completeCallback)
         {
             DOTween.Kill(enemy);
-            spawnBehaviour?.DoSpawn(enemy).OnComplete(() => completeCallback?.Invoke()).SetTarget(enemy);
+            if (spawnBehaviour)
+                spawnBehaviour.DoSpawn(enemy).OnComplete(() => completeCallback?.Invoke()).SetTarget(enemy);
         }
     }
 
