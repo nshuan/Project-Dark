@@ -1,6 +1,7 @@
 using System;
 using Core;
 using Sirenix.OdinInspector;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace InGame
@@ -10,9 +11,11 @@ namespace InGame
         [field: SerializeField] public GameStats GameStats { get; private set; }
         [SerializeField] private PlayerSkillConfig skillConfig;
 
-        [SerializeField] private Transform[] towers;
+        [SerializeField] private GateEntity gatePrefab;
+        
+        [SerializeField] private TowerEntity[] towers;
         private int currentTowerIndex = 0;
-        public Transform CurrentTower
+        public TowerEntity CurrentTower
         {
             get
             {
@@ -30,8 +33,7 @@ namespace InGame
 
         private void Start()
         {
-            OnChangeTower?.Invoke(CurrentTower);
-            OnChangeSkill?.Invoke(skillConfig);
+            TestLoadLevel();
         }
 
         protected override void OnDestroy()
@@ -42,6 +44,31 @@ namespace InGame
             OnChangeTower = null;
         }
 
+        public void LoadLevel(LevelConfig level)
+        {
+            // Create gate objects
+            foreach (var gateCfg in level.gates)
+            {
+                var gateEntity = Instantiate(gatePrefab, gateCfg.position, quaternion.identity, null);
+                gateEntity.Initialize(gateCfg, towers[gateCfg.targetBaseIndex].transform);
+            }
+            
+            TeleportTower(0);
+            OnChangeSkill?.Invoke(skillConfig);
+        }
+
+        private void TeleportTower(int towerIndex)
+        {
+            for (var i = 0; i < towers.Length; i++)
+            {
+                if (i == towerIndex) towers[i].EnterTower();
+                else towers[i].LeaveTower();
+            }
+            
+            currentTowerIndex = towerIndex;
+            OnChangeTower?.Invoke(CurrentTower.transform);
+        }
+        
         private void Update()
         {
 #if UNITY_EDITOR
@@ -65,8 +92,14 @@ namespace InGame
         [Button]
         public void TestTowerChange(int towerIndex)
         {
-            currentTowerIndex = towerIndex;
-            OnChangeTower?.Invoke(CurrentTower);
+            TeleportTower(towerIndex);   
+        }
+
+        public LevelConfig testLevel;
+        [Button]
+        public void TestLoadLevel()
+        {
+            LoadLevel(testLevel);
         }
     }
 }

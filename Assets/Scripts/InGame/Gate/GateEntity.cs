@@ -4,21 +4,18 @@ using System.Linq;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace InGame
 {
     public class GateEntity : SerializedMonoBehaviour
     {
-        [SerializeField] private Transform target;
+        [ReadOnly] public Transform target;
 
         #region Gate config
 
         [Space] [Header("Gate config")] 
-        [SerializeField] private float startTime; // delay before the gate start spawning
-        [SerializeField] private float duration; // gate life time
-        [SerializeField] private EnemyType spawnType;
-        [SerializeField] private float intervalLoop = 4f; // duration between 2 spawns
-        [NonSerialized, OdinSerialize] private IGateSpawner spawnLogic; // pattern for enemy appearance
+        [NonSerialized, OdinSerialize, ReadOnly] private GateConfig config;
 
         #endregion
         
@@ -27,36 +24,32 @@ namespace InGame
             StartCoroutine(IESpawn());  
         }
 
+        public void Initialize(GateConfig cfg, Transform targetBase)
+        {
+            config = cfg;
+            target = targetBase;
+        }
+        
         private IEnumerator IESpawn()
         {
-            yield return new WaitForSeconds(startTime);
+            yield return new WaitForSeconds(config.startTime);
             
             while (true)
             {
-                var enemies = spawnLogic.Spawn(transform.position, spawnType);
+                var enemies = config.spawnLogic.Spawn(transform.position, config.spawnType);
                 foreach (var enemy in enemies)
                 {
-                    enemy.Init(target, spawnType, CalculateHpMultiplier());
+                    enemy.Init(target, config.spawnType, CalculateHpMultiplier());
                     enemy.Activate();
                 }
                 
-                yield return new WaitForSeconds(intervalLoop);
+                yield return new WaitForSeconds(config.intervalLoop);
             }
         }
 
-        protected virtual float CalculateHpMultiplier()
+        protected float CalculateHpMultiplier()
         {
             return LevelManager.Instance.GameStats.eHpMultiplier;
         }
-    }
-
-    [Serializable]
-    public class GateData
-    {
-        public float startTime; // Time to wait before start spawning
-        public float duration; // Gate lifetime
-        public GameObject enemy; // prefab of the enemy that spawn from this gate
-        public float intervalLoop; // spawn cooldown
-        public int groupPattern; // pattern for enemy appearing phase
     }
 }

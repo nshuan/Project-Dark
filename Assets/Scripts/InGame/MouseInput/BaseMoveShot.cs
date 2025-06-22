@@ -76,8 +76,8 @@ namespace InGame
             if (OutOfRange)
             {
                 if (Vector2.Distance(Cam.ScreenToWorldPoint(Input.mousePosition),
-                        InputManager.cursorRangeCenter.position) <=
-                    InputManager.cursorRangeRadius)
+                        InputManager.CursorRangeCenter.position) <=
+                    InputManager.CursorRangeRadius)
                 {
                     OutOfRange = false;
                     mousePosition = Input.mousePosition;
@@ -89,8 +89,8 @@ namespace InGame
             }
 
             if (Vector2.Distance(Cam.ScreenToWorldPoint(Input.mousePosition),
-                    InputManager.cursorRangeCenter.position) >
-                InputManager.cursorRangeRadius)
+                    InputManager.CursorRangeCenter.position) >
+                InputManager.CursorRangeRadius)
             {
                 OutOfRange = true;
                 cursor.gameObject.SetActive(false);

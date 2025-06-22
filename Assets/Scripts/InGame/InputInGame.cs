@@ -9,9 +9,9 @@ namespace InGame
         private Camera cam;
         [SerializeField] private Canvas canvas;
         private IMouseInput mouseInput;
-        public PlayerSkillConfig currentSkillConfig;
-        public Transform cursorRangeCenter;
-        public float cursorRangeRadius;
+        public PlayerSkillConfig CurrentSkillConfig { get; set; }
+        public Transform CursorRangeCenter { get; set; }
+        public float CursorRangeRadius { get; set; }
 
         private void Awake()
         {
@@ -25,8 +25,8 @@ namespace InGame
         {
             if (!skillConfig) return;
 
-            currentSkillConfig = skillConfig;
-            cursorRangeRadius = skillConfig.range;
+            CurrentSkillConfig = skillConfig;
+            CursorRangeRadius = skillConfig.range;
             
             if (mouseInput != null)
             {
@@ -40,7 +40,7 @@ namespace InGame
 
         private void OnTowerChanged(Transform towerTransform)
         {
-            cursorRangeCenter = towerTransform;
+            CursorRangeCenter = towerTransform;
         }
 
         private void Update()

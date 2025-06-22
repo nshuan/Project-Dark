@@ -42,7 +42,7 @@ namespace InGame
             
             CanShoot = false;
             cdCounter = LevelManager.Instance.GameStats.pShotCooldown;
-            InputManager.currentSkillConfig.shootLogic.Shoot(InputManager.cursorRangeCenter.position, Cam.ScreenToWorldPoint(mousePosition));
+            InputManager.CurrentSkillConfig.shootLogic.Shoot(InputManager.CursorRangeCenter.position, Cam.ScreenToWorldPoint(mousePosition));
             
             // Do cursor effect
             DOTween.Complete(this);
@@ -57,8 +57,8 @@ namespace InGame
             if (OutOfRange)
             {
                 if (Vector2.Distance(Cam.ScreenToWorldPoint(Input.mousePosition),
-                        InputManager.cursorRangeCenter.position) <=
-                    InputManager.cursorRangeRadius)
+                        InputManager.CursorRangeCenter.position) <=
+                    InputManager.CursorRangeRadius)
                 {
                     OutOfRange = false;
                     mousePosition = Input.mousePosition;
@@ -70,8 +70,8 @@ namespace InGame
             }
 
             if (Vector2.Distance(Cam.ScreenToWorldPoint(Input.mousePosition),
-                    InputManager.cursorRangeCenter.position) >
-                InputManager.cursorRangeRadius)
+                    InputManager.CursorRangeCenter.position) >
+                InputManager.CursorRangeRadius)
             {
                 OutOfRange = true;
                 cursor.gameObject.SetActive(false);

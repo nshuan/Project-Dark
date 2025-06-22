@@ -6,6 +6,7 @@ namespace InGame
 {
     public class ProjectileEntity : MonoBehaviour
     {
+        [SerializeField] private LayerMask enemyLayer;
         private const float MaxLifeTime = 5f;
         private float speed = 5f;
         [SerializeField] private float damageRange = 0.1f;
@@ -46,7 +47,7 @@ namespace InGame
             
             // Check hit enemy
             var count = Physics2D.CircleCastNonAlloc(transform.position, damageRange, Vector2.zero, hits, 0f,
-                LayerMask.GetMask("Entity"));
+                enemyLayer);
             if (count > 0)
                 ProjectileHit(hits[0].transform);
         }
