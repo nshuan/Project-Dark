@@ -3,7 +3,7 @@ using UnityEngine.Serialization;
 
 namespace InGame
 {
-    public abstract class PlayerSkillBehaviour : ScriptableObject
+    public abstract class PlayerSkillBehaviour
     {
         public ShotCursorType cursorType;
         public ProjectileEntity projectilePrefab;

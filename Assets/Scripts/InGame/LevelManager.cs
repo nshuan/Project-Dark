@@ -50,24 +50,48 @@ namespace InGame
             foreach (var gateCfg in level.gates)
             {
                 var gateEntity = Instantiate(gatePrefab, gateCfg.position, quaternion.identity, null);
-                gateEntity.Initialize(gateCfg, towers[gateCfg.targetBaseIndex].transform);
+                gateEntity.Initialize(gateCfg, towers[gateCfg.targetBaseIndex]);
             }
-            
+
+            InitTowers();
             TeleportTower(0);
             OnChangeSkill?.Invoke(skillConfig);
         }
 
+        #region Towers
+
+        private void InitTowers()
+        {
+            foreach (var tower in towers)
+            {
+                tower.Initialize();
+                tower.OnDestroyed += OnTowerDestroyed; 
+            }
+        }
+
+        private void OnTowerDestroyed(TowerEntity tower)
+        {
+            Debug.LogError($"Tower {tower.name} is destroyed");
+        }
+        
         private void TeleportTower(int towerIndex)
         {
+            if (towers[Math.Clamp(towerIndex, 0, towers.Length - 1)].IsDestroyed) return;
+            
             for (var i = 0; i < towers.Length; i++)
             {
-                if (i == towerIndex) towers[i].EnterTower();
+                if (i == towerIndex)
+                {
+                    towers[i].EnterTower();
+                }
                 else towers[i].LeaveTower();
             }
             
             currentTowerIndex = towerIndex;
             OnChangeTower?.Invoke(CurrentTower.transform);
         }
+
+        #endregion
         
         private void Update()
         {

@@ -10,7 +10,7 @@ namespace InGame
 {
     public class GateEntity : SerializedMonoBehaviour
     {
-        [ReadOnly] public Transform target;
+        [ReadOnly] public TowerEntity target;
 
         #region Gate config
 
@@ -24,7 +24,7 @@ namespace InGame
             StartCoroutine(IESpawn());  
         }
 
-        public void Initialize(GateConfig cfg, Transform targetBase)
+        public void Initialize(GateConfig cfg, TowerEntity targetBase)
         {
             config = cfg;
             target = targetBase;

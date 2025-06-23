@@ -1,13 +1,16 @@
+using System;
 using Redzen.Structures;
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 
 namespace InGame
 {
     [CreateAssetMenu(menuName = "InGame/Player/Player Skill Config", fileName = "PlayerSKillConfig")]   
-    public class PlayerSkillConfig : ScriptableObject
+    public class PlayerSkillConfig : SerializedScriptableObject
     {
         public PlayerSkillType skillType;
-        public PlayerSkillBehaviour shootLogic;
+        [NonSerialized, OdinSerialize] public PlayerSkillBehaviour shootLogic;
         public float damePerBullet; // bullet base damage
         public int numberOfBullets; // number of bullets in each shot
         public float cooldown;  // time between shots

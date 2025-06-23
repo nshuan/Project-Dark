@@ -13,14 +13,13 @@ namespace InGame
         public EnemyAttackBehaviour attackBehaviour;
         public float attackRange; // Distance to start attacking
         public float attackSpeed; // Attack speed
-        public float hp;
-        public float dmg; // Base damage
+        public int hp;
+        public int dmg; // Base damage
         public float moveSpeed;
         
         public void Init(Transform enemy)
         {
             spawnBehaviour.Init(enemy);
-            moveBehaviour.Init();
         }
         
         public void Spawn(Transform enemy, Action completeCallback)

@@ -8,6 +8,9 @@ namespace InGame
 {
     public class EffectHelper : MonoSingleton<EffectHelper>
     {
+        [SerializeField] private Camera defaultCamera;
+        public Camera DefaultCamera => defaultCamera;
+        
         private Dictionary<Type, IEffect> effectMap;
         private Dictionary<Type, Coroutine> effectCoroutineMap;
 

@@ -5,11 +5,6 @@ namespace InGame
     [CreateAssetMenu(menuName = "InGame/Enemy/Move/Enemy Move Straight", fileName = "EnemyMoveStraight")]
     public class EnemyMoveStraightBehaviour : EnemyMoveBehaviour
     {
-        public override void Init()
-        {
-            
-        }
-
         public override void Move(Transform enemy, Vector2 target, float stopRange, float speed)
         {
             if (Vector3.Distance(enemy.position, target) > MinDelta)

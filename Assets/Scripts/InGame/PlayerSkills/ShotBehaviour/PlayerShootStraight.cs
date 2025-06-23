@@ -1,14 +1,17 @@
+using System;
+using InGame.Pool;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace InGame
 {
-    [CreateAssetMenu(menuName = "InGame/Player Skill/Player Shoot Straight", fileName = "PlayerShootStraight")]
+    [Serializable]
     public class PlayerShootStraight : PlayerSkillBehaviour
     {
         public override void Shoot(Vector2 spawnPos, Vector2 target)
         {
-            var p = Object.Instantiate(projectilePrefab, spawnPos, Quaternion.identity, null);
-            p.gameObject.SetActive(false);
+            var p = ProjectilePool.Instance.Get(projectilePrefab, null, false);
+            p.transform.position = spawnPos;
             p.Init(5f, target);
             p.Activate();
         }

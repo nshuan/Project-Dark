@@ -10,6 +10,7 @@ namespace InGame
     public class EnemyEntity : MonoBehaviour
     {
         public Transform Target { get; set; }
+        public IDamageable TargetDamageable { get; set; }
         public EnemyBehaviour config;
         private float MaxHealth { get; set; }
         private float CurrentHealth { get; set; }
@@ -31,14 +32,15 @@ namespace InGame
         
         #region Initialize
 
-        public void Init(Transform target, EnemyType type, float hpMultiplier)
+        public void Init(TowerEntity target, EnemyType type, float hpMultiplier)
         {
             // Set target and attack position
-            Target = target;
+            Target = target.transform;
+            TargetDamageable = target;
             Type = type;
-            attackPosition = (Vector2)((Quaternion.Euler(0f, 0f, Random.Range(-75f, 75f)) *
-                                      (Vector2)(transform.position - target.position).normalized).normalized * (0.9f * config.attackRange)
-                            + target.position);
+            attackPosition = ((Quaternion.Euler(0f, 0f, Random.Range(-75f, 75f)) *
+                                      (Vector2)(transform.position - Target.position).normalized).normalized * (0.9f * config.attackRange)
+                            + Target.position);
             
             MaxHealth = config.hp * hpMultiplier;
             CurrentHealth = MaxHealth;
@@ -73,6 +75,7 @@ namespace InGame
         {
             if (!Target) return;
             if (State != EnemyState.Move) return;
+            
             MoveTo(Target);
         }
 
@@ -99,7 +102,7 @@ namespace InGame
                 if (inAttackRange)
                 {
                     Attack();
-                    yield return new WaitForSeconds(1 / config.attackSpeed);
+                    yield return new WaitForSeconds(config.attackSpeed);
                 }
                 else
                     yield return new WaitUntil(() => inAttackRange);
@@ -108,7 +111,8 @@ namespace InGame
 
         private void Attack()
         {
-            Debug.Log($"Enemy {name} Attack!!!");
+            if (TargetDamageable.IsDestroyed) return;
+            config.attackBehaviour.Attack(TargetDamageable, config.dmg);
         }
 
         public void OnHit(float damage)

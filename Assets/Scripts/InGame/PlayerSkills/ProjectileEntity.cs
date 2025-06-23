@@ -1,4 +1,5 @@
 using System;
+using InGame.Pool;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -59,7 +60,8 @@ namespace InGame
                 if (hitTransform.TryGetComponent<EnemyEntity>(out var enemy))
                     enemy.OnHit(LevelManager.Instance.GameStats.pDmgPerShot);
             }
-            Destroy(gameObject);
+            
+            ProjectilePool.Instance.Release(this);
         }
 
         private void OnDrawGizmos()

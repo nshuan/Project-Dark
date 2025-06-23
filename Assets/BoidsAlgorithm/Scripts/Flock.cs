@@ -18,10 +18,10 @@ namespace Boids
         [Range(1f, 100f)] 
         public float driveFactor = 10f;
 
-        [Range(1f, 100f)] 
+        [Range(0.1f, 100f)] 
         public float maxSpeed = 5f;
 
-        [Range(1f, 10f)] 
+        [Range(0.1f, 10f)] 
         public float neighborRadius = 1.5f;
         
         [Range(0f, 1f)]
