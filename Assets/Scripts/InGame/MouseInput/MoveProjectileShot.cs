@@ -41,8 +41,12 @@ namespace InGame
             if (OutOfRange) return;
             
             CanShoot = false;
-            cdCounter = LevelManager.Instance.GameStats.pShotCooldown;
-            InputManager.CurrentSkillConfig.shootLogic.Shoot(InputManager.CursorRangeCenter.position, Cam.ScreenToWorldPoint(mousePosition));
+            cdCounter = InputManager.CurrentSkillConfig.cooldown;
+            InputManager.CurrentSkillConfig.shootLogic.Shoot(
+                InputManager.CursorRangeCenter.position, 
+                Cam.ScreenToWorldPoint(mousePosition),
+                LevelUtility.GetPlayerBulletDamage(InputManager.CurrentSkillConfig),
+                InputManager.CurrentSkillConfig.numberOfBullets);
             
             // Do cursor effect
             DOTween.Complete(this);

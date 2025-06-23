@@ -26,6 +26,7 @@ namespace InGame
 
         #region Action
 
+        public Action<LevelConfig> OnLevelLoaded;
         public Action<PlayerSkillConfig> OnChangeSkill;
         public Action<Transform> OnChangeTower;
 
@@ -56,6 +57,7 @@ namespace InGame
             InitTowers();
             TeleportTower(0);
             OnChangeSkill?.Invoke(skillConfig);
+            OnLevelLoaded?.Invoke(level);
         }
 
         #region Towers
@@ -64,7 +66,7 @@ namespace InGame
         {
             foreach (var tower in towers)
             {
-                tower.Initialize();
+                tower.Initialize(skillConfig.range);
                 tower.OnDestroyed += OnTowerDestroyed; 
             }
         }

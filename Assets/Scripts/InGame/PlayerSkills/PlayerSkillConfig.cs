@@ -11,10 +11,10 @@ namespace InGame
     {
         public PlayerSkillType skillType;
         [NonSerialized, OdinSerialize] public PlayerSkillBehaviour shootLogic;
-        public float damePerBullet; // bullet base damage
-        public int numberOfBullets; // number of bullets in each shot
-        public float cooldown;  // time between shots
-        public float range; // Max damage range, also max distance from player to mouse aimìng position
+        public int damePerBullet; // bullet base damage
+        public int numberOfBullets = 1; // number of bullets in each shot
+        public float cooldown = 0.5f;  // time between shots
+        public float range = 5f; // Max damage range, also max distance from player to mouse aimìng position
         public float size; // size of the aiming field
         public float chargeDameMax = -1;
         public float chargeDameTime = -1;

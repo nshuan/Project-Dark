@@ -39,7 +39,7 @@ namespace InGame
             TargetDamageable = target;
             Type = type;
             attackPosition = ((Quaternion.Euler(0f, 0f, Random.Range(-75f, 75f)) *
-                                      (Vector2)(transform.position - Target.position).normalized).normalized * (0.9f * config.attackRange)
+                                      (Vector2)(transform.position - Target.position).normalized) * (0.9f * config.attackRange)
                             + Target.position);
             
             MaxHealth = config.hp * hpMultiplier;
