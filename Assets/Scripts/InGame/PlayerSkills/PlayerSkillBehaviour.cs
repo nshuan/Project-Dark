@@ -8,6 +8,6 @@ namespace InGame
         public ShotCursorType cursorType;
         public ProjectileEntity projectilePrefab;
 
-        public abstract void Shoot(Vector2 spawnPos, Vector2 target);
+        public abstract void Shoot(Vector2 spawnPos, Vector2 target, int damagePerBullet, int numberOfBullets);
     }
 }

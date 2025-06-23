@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using InGame.Pool;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -13,6 +14,7 @@ namespace InGame
         [SerializeField] private float damageRange = 0.1f;
         private Vector2 direction;
         private Vector2 target;
+        private int Damage { get; set; }
 
         private bool activated = false;
         private float lifeTime = 0f;
@@ -22,20 +24,28 @@ namespace InGame
         private void OnDisable()
         {
             activated = false;
+            StopAllCoroutines();
         }
 
-        public void Init(float spe, Vector2 targetPos)
+        public void Init(float spe, Vector2 targetPos, int damage)
         {
             speed = spe;
             target = targetPos;
             direction = (target - (Vector2)transform.position).normalized;
             lifeTime = 0f;
+            Damage = damage;
         }
 
-        public void Activate()
+        public void Activate(float delay)
         {
-            activated = true;
             gameObject.SetActive(true);
+            StartCoroutine(IEActivate(delay));
+        }
+
+        private IEnumerator IEActivate(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            activated = true;
         }
 
         private void Update()
@@ -58,7 +68,7 @@ namespace InGame
             if (hitTransform)
             {
                 if (hitTransform.TryGetComponent<EnemyEntity>(out var enemy))
-                    enemy.OnHit(LevelManager.Instance.GameStats.pDmgPerShot);
+                    enemy.OnHit(Damage);
             }
             
             ProjectilePool.Instance.Release(this);

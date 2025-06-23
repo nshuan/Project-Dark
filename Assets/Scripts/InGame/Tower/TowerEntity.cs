@@ -15,13 +15,16 @@ namespace InGame
         
         public Action<TowerEntity> OnDestroyed;
         
-        public void Initialize()
+        public void Initialize(float radius)
         {
             MaxHp = config.hp;
             CurrentHp = MaxHp;
             IsDestroyed = false;
 
             OnDestroyed = null;
+            
+            // Update UI
+            towerRange.transform.localScale = 2 * radius * Vector3.one;
         }
         
         public void EnterTower()

@@ -39,7 +39,7 @@ namespace InGame
             enemies[2].transform.position =
                 gatePosition + (Vector2)(Quaternion.Euler(0f, 0f, -120f + rotation) * Vector2.up).normalized * radius;
             
-            return enemies;
+            return enemies; 
         }
     }
 }
