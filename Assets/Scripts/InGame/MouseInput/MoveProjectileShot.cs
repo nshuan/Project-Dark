@@ -39,13 +39,19 @@ namespace InGame
         {
             if (!CanShoot) return;
             if (OutOfRange) return;
-            
+
+            var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(
+                InputManager.PlayerStats.damage,
+                InputManager.CurrentSkillConfig.damePerBullet,
+                InputManager.PlayerStats.criticalDamage);
             CanShoot = false;
             cdCounter = InputManager.CurrentSkillConfig.cooldown;
             InputManager.CurrentSkillConfig.shootLogic.Shoot(
                 InputManager.CursorRangeCenter.position, 
                 Cam.ScreenToWorldPoint(mousePosition),
-                LevelUtility.GetPlayerBulletDamage(InputManager.CurrentSkillConfig),
+                damage,
+                criticalDamage,
+                InputManager.PlayerStats.criticalRate,
                 InputManager.CurrentSkillConfig.numberOfBullets);
             
             // Do cursor effect

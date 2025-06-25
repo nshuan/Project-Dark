@@ -9,6 +9,7 @@ namespace InGame
         private Camera cam;
         [SerializeField] private Canvas canvas;
         private IMouseInput mouseInput;
+        public PlayerStats PlayerStats { get; set; }
         public PlayerSkillConfig CurrentSkillConfig { get; set; }
         public Transform CursorRangeCenter { get; set; }
         public float CursorRangeRadius { get; set; }
@@ -17,6 +18,7 @@ namespace InGame
         {
             cam = Camera.main;
 
+            LevelManager.Instance.OnLevelLoaded += (level) => { PlayerStats = LevelManager.Instance.PlayerStats; };
             LevelManager.Instance.OnChangeTower += OnTowerChanged;
             LevelManager.Instance.OnChangeSkill += OnSkillChanged;
         }

@@ -6,7 +6,6 @@ namespace InGame
 {
     public class TowerEntity : MonoBehaviour, IDamageable
     {
-        [SerializeField] private TowerConfig config;
         [SerializeField] private GameObject towerRange;
 
         public int MaxHp { get; private set; }
@@ -15,9 +14,9 @@ namespace InGame
         
         public Action<TowerEntity> OnDestroyed;
         
-        public void Initialize(float radius)
+        public void Initialize(int hp, float radius)
         {
-            MaxHp = config.hp;
+            MaxHp = hp;
             CurrentHp = MaxHp;
             IsDestroyed = false;
 

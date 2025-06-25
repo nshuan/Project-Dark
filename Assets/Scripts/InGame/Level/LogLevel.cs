@@ -44,7 +44,7 @@ namespace InGame
         private void OnChangedSkill(PlayerSkillConfig skillConfig)
         {
             txtSkill.SetText($"Skill: {skillConfig.name}");
-            txtBulletDamage.SetText($"Dmg per bullet: {LevelUtility.GetPlayerBulletDamage(skillConfig)}");
+            txtBulletDamage.SetText($"Base dmg per bullet: {LevelManager.Instance.PlayerStats.damage + skillConfig.damePerBullet}");
             txtSkillCooldown.SetText($"Skill cooldown: {skillConfig.cooldown}");
             txtAttackRange.SetText($"Attack range: {skillConfig.range}");
         }

@@ -8,14 +8,14 @@ namespace InGame
     [Serializable]
     public class PlayerShootStraight : PlayerSkillBehaviour
     {
-        public override void Shoot(Vector2 spawnPos, Vector2 target, int damageperBullet, int numberOfBullets)
+        public override void Shoot(Vector2 spawnPos, Vector2 target, int damagePerBullet, int criticalDamagePerBullet, float criticalRatePerBullet, int numberOfBullets)
         {
             const float delayEachBullet = 0.1f;
             for (var i = 0; i < numberOfBullets; i++)
             {
                 var p = ProjectilePool.Instance.Get(projectilePrefab, null, false);
                 p.transform.position = spawnPos;
-                p.Init(5f, target, damageperBullet);
+                p.Init(5f, target, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet);
                 p.Activate(delayEachBullet * i);
             }
         }

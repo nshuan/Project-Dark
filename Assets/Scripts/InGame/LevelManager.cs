@@ -9,6 +9,7 @@ namespace InGame
     public class LevelManager : MonoSingleton<LevelManager>
     {
         [field: SerializeField] public GameStats GameStats { get; private set; }
+        [SerializeField] private PlayerStats playerStats;
         [SerializeField] private PlayerSkillConfig skillConfig;
 
         [SerializeField] private GateEntity gatePrefab;
@@ -25,7 +26,8 @@ namespace InGame
             }
         }
         public GateEntity[] Gates { get; private set; }
-
+        public PlayerStats PlayerStats => playerStats;
+        
         #region Action
 
         public Action<LevelConfig> OnLevelLoaded;
@@ -71,7 +73,7 @@ namespace InGame
         {
             foreach (var tower in towers)
             {
-                tower.Initialize(skillConfig.range);
+                tower.Initialize(playerStats.hp, skillConfig.range);
                 tower.OnDestroyed += OnTowerDestroyed; 
             }
         }

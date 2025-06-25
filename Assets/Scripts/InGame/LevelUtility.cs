@@ -1,10 +1,13 @@
+using UnityEngine;
+
 namespace InGame
 {
     public class LevelUtility
     {
-        public static int GetPlayerBulletDamage(PlayerSkillConfig skillConfig)
+        public static (int, int) GetPlayerBulletDamage(int playerDamage, int skillDamage, float criticalDame)
         {
-            return skillConfig.damePerBullet;
+            var bulletDamage = playerDamage + skillDamage;
+            return (bulletDamage, Mathf.RoundToInt(bulletDamage * criticalDame));
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using InGame.Pool;
 using Unity.VisualScripting;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace InGame
 {
@@ -15,6 +16,8 @@ namespace InGame
         private Vector2 direction;
         private Vector2 target;
         private int Damage { get; set; }
+        private int CriticalDamage { get; set; }
+        private float CriticalRate { get; set; }
 
         private bool activated = false;
         private float lifeTime = 0f;
@@ -27,13 +30,15 @@ namespace InGame
             StopAllCoroutines();
         }
 
-        public void Init(float spe, Vector2 targetPos, int damage)
+        public void Init(float spe, Vector2 targetPos, int damage, int criticalDamage, float criticalRate)
         {
             speed = spe;
             target = targetPos;
             direction = (target - (Vector2)transform.position).normalized;
             lifeTime = 0f;
             Damage = damage;
+            CriticalDamage = criticalDamage;
+            CriticalRate = criticalRate;
         }
 
         public void Activate(float delay)
@@ -68,7 +73,14 @@ namespace InGame
             if (hitTransform)
             {
                 if (hitTransform.TryGetComponent<EnemyEntity>(out var enemy))
-                    enemy.OnHit(Damage);
+                {
+                    // Check critical hit
+                    var critical = Random.Range(0f, 1f) <= CriticalRate;
+                    enemy.OnHit(critical ? CriticalDamage : Damage);
+                   
+                    if (critical)
+                        DebugUtility.LogWarning($"Projectile {name} deals critical damage {CriticalDamage} to {enemy.name}!!");
+                }
             }
             
             ProjectilePool.Instance.Release(this);
