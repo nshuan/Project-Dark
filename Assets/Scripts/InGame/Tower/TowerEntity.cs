@@ -9,8 +9,8 @@ namespace InGame
         [SerializeField] private TowerConfig config;
         [SerializeField] private GameObject towerRange;
 
-        private int MaxHp { get; set; }
-        private int CurrentHp { get; set; }
+        public int MaxHp { get; private set; }
+        public int CurrentHp { get; private set; }
         public bool IsDestroyed { get; set; }
         
         public Action<TowerEntity> OnDestroyed;

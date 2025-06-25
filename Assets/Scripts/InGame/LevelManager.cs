@@ -14,6 +14,7 @@ namespace InGame
         [SerializeField] private GateEntity gatePrefab;
         
         [SerializeField] private TowerEntity[] towers;
+        public TowerEntity[] Towers => towers;
         private int currentTowerIndex = 0;
         public TowerEntity CurrentTower
         {
@@ -23,6 +24,7 @@ namespace InGame
                 return towers[currentTowerIndex];
             }
         }
+        public GateEntity[] Gates { get; private set; }
 
         #region Action
 
@@ -41,6 +43,7 @@ namespace InGame
         {
             base.OnDestroy();
 
+            OnLevelLoaded = null;
             OnChangeSkill = null;
             OnChangeTower = null;
         }
@@ -48,10 +51,12 @@ namespace InGame
         public void LoadLevel(LevelConfig level)
         {
             // Create gate objects
-            foreach (var gateCfg in level.gates)
+            Gates = new GateEntity[level.gates.Length];
+            for (var i = 0; i < level.gates.Length; i++)
             {
-                var gateEntity = Instantiate(gatePrefab, gateCfg.position, quaternion.identity, null);
-                gateEntity.Initialize(gateCfg, towers[gateCfg.targetBaseIndex]);
+                var gateCfg = level.gates[i];
+                Gates[i] = Instantiate(gatePrefab, gateCfg.position, quaternion.identity, null);
+                Gates[i].Initialize(gateCfg, towers[gateCfg.targetBaseIndex]);
             }
 
             InitTowers();
