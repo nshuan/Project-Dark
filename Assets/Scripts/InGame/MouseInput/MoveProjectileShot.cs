@@ -52,7 +52,8 @@ namespace InGame
                 damage,
                 criticalDamage,
                 InputManager.PlayerStats.criticalRate,
-                InputManager.CurrentSkillConfig.numberOfBullets);
+                InputManager.CurrentSkillConfig.numberOfBullets,
+                InputManager.CurrentSkillConfig.speedScale);
             
             // Do cursor effect
             DOTween.Complete(this);

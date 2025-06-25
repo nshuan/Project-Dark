@@ -9,15 +9,19 @@ namespace InGame
 {
     public class ProjectileEntity : MonoBehaviour
     {
+        private const float MaxLifeTime = 10f;
+        
         [SerializeField] private LayerMask enemyLayer;
-        private const float MaxLifeTime = 5f;
-        private float speed = 5f;
         [SerializeField] private float damageRange = 0.1f;
+        
+        [Space] [Header("Bullet config")]
+        [SerializeField] private float baseSpeed = 5f;
         private Vector2 direction;
         private Vector2 target;
         private int Damage { get; set; }
         private int CriticalDamage { get; set; }
         private float CriticalRate { get; set; }
+        private float Speed { get; set; }
 
         private bool activated = false;
         private float lifeTime = 0f;
@@ -30,9 +34,9 @@ namespace InGame
             StopAllCoroutines();
         }
 
-        public void Init(float spe, Vector2 targetPos, int damage, int criticalDamage, float criticalRate)
+        public void Init(float speedScale, Vector2 targetPos, int damage, int criticalDamage, float criticalRate)
         {
-            speed = spe;
+            Speed = baseSpeed * speedScale;
             target = targetPos;
             direction = (target - (Vector2)transform.position).normalized;
             lifeTime = 0f;
@@ -57,7 +61,7 @@ namespace InGame
         {
             if (!activated) return;
             if (Vector2.Distance(transform.position, target) < 0.1f) ProjectileHit(null);
-            transform.position += (Vector3)(speed * Time.deltaTime * direction);
+            transform.position += (Vector3)(Speed * Time.deltaTime * direction);
             lifeTime += Time.deltaTime;
             if (lifeTime > MaxLifeTime) Destroy(gameObject);
             

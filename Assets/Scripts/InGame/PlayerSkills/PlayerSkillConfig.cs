@@ -24,6 +24,7 @@ namespace InGame
         public float chargeRangeTime = -1;
         public float chargeBulletInterval = -1;
         public float chargeBulletMaxAdd = -1;
+        public float speedScale = 1f; // Scale speed of bullets
     }
 
     public enum PlayerSkillType
