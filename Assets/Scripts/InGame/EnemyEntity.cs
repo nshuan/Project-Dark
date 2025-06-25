@@ -18,6 +18,7 @@ namespace InGame
         public Action OnDead { get; set; }
         public EnemyType Type { get; set; }
         public EnemyState State { get; set; }
+        public int Id { get; set; }
         
         // Elemental effect
         public bool IsInLightning { get; set; }

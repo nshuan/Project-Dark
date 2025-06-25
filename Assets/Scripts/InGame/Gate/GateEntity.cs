@@ -18,8 +18,6 @@ namespace InGame
         [NonSerialized, OdinSerialize, ReadOnly] private GateConfig config;
 
         #endregion
-
-        public Action<EnemyEntity> OnEnemySpawn;
         
         private void Start()
         {
@@ -43,7 +41,12 @@ namespace InGame
                 {
                     enemy.Init(target, config.spawnType, CalculateHpMultiplier());
                     enemy.Activate();
-                    OnEnemySpawn?.Invoke(enemy);
+                    enemy.Id = EnemyManager.Instance.CurrentEnemyIndex;
+                    EnemyManager.Instance.OnEnemySpawn(enemy);
+                    enemy.OnDead += () =>
+                    {
+                        EnemyManager.Instance.OnEnemyDead(enemy);
+                    };
                 }
                 
                 yield return new WaitForSeconds(config.intervalLoop);

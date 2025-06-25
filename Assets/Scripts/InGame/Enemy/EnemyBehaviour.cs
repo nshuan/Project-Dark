@@ -26,7 +26,10 @@ namespace InGame
         {
             DOTween.Kill(enemy);
             if (spawnBehaviour)
+            {
+                enemy.gameObject.SetActive(true);
                 spawnBehaviour.DoSpawn(enemy).OnComplete(() => completeCallback?.Invoke()).SetTarget(enemy);
+            }
         }
     }
 

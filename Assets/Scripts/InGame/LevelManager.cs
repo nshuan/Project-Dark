@@ -52,6 +52,8 @@ namespace InGame
 
         public void LoadLevel(LevelConfig level)
         {
+            EnemyManager.Instance.Initialize();
+            
             // Create gate objects
             Gates = new GateEntity[level.gates.Length];
             for (var i = 0; i < level.gates.Length; i++)
