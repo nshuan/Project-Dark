@@ -32,8 +32,6 @@ namespace InGame
         private void OnLoadLevel(LevelConfig level)
         {
             txtLevel.SetText($"Level: {level.name}");
-            
-            totalGate.SetText($"Total gates: {level.gates.Length}");
         }
 
         private void OnChangedTower(Transform tower)

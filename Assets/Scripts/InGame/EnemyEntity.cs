@@ -14,6 +14,7 @@ namespace InGame
         public EnemyBehaviour config;
         private float MaxHealth { get; set; }
         private float CurrentHealth { get; set; }
+        private int CurrentDamage { get; set; }
         public bool IsDead => CurrentHealth <= 0;
         public Action OnDead { get; set; }
         public EnemyType Type { get; set; }
@@ -33,7 +34,7 @@ namespace InGame
         
         #region Initialize
 
-        public void Init(TowerEntity target, EnemyType type, float hpMultiplier)
+        public void Init(TowerEntity target, EnemyType type, float hpMultiplier, float dmgMultiplier)
         {
             // Set target and attack position
             Target = target.transform;
@@ -45,6 +46,7 @@ namespace InGame
             
             MaxHealth = config.hp * hpMultiplier;
             CurrentHealth = MaxHealth;
+            CurrentDamage = Mathf.RoundToInt(config.dmg * dmgMultiplier);
             State = EnemyState.Spawn;
             config.Init(transform);
             
@@ -113,7 +115,7 @@ namespace InGame
         private void Attack()
         {
             if (TargetDamageable.IsDestroyed) return;
-            config.attackBehaviour.Attack(TargetDamageable, config.dmg);
+            config.attackBehaviour.Attack(TargetDamageable, CurrentDamage);
         }
 
         public void OnHit(float damage)

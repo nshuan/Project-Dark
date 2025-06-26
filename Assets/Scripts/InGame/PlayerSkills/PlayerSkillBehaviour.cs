@@ -6,9 +6,9 @@ namespace InGame
     public abstract class PlayerSkillBehaviour
     {
         public ShotCursorType cursorType;
-        public ProjectileEntity projectilePrefab;
 
         public abstract void Shoot(
+            ProjectileEntity projectilePrefab,
             Vector2 spawnPos, 
             Vector2 target,
             int damagePerBullet, 

@@ -8,7 +8,7 @@ namespace InGame
     [Serializable]
     public class PlayerShootStraight : PlayerSkillBehaviour
     {
-        public override void Shoot(Vector2 spawnPos, Vector2 target, int damagePerBullet, int criticalDamagePerBullet, float criticalRatePerBullet, int numberOfBullets, float bulletSpeedScale)
+        public override void Shoot(ProjectileEntity projectilePrefab, Vector2 spawnPos, Vector2 target, int damagePerBullet, int criticalDamagePerBullet, float criticalRatePerBullet, int numberOfBullets, float bulletSpeedScale)
         {
             const float delayEachBullet = 0.1f;
             for (var i = 0; i < numberOfBullets; i++)

@@ -46,14 +46,12 @@ namespace InGame
                 InputManager.PlayerStats.criticalDamage);
             CanShoot = false;
             cdCounter = InputManager.CurrentSkillConfig.cooldown;
-            InputManager.CurrentSkillConfig.shootLogic.Shoot(
+            InputManager.CurrentSkillConfig.Shoot(
                 InputManager.CursorRangeCenter.position, 
                 Cam.ScreenToWorldPoint(mousePosition),
                 damage,
                 criticalDamage,
-                InputManager.PlayerStats.criticalRate,
-                InputManager.CurrentSkillConfig.numberOfBullets,
-                InputManager.CurrentSkillConfig.speedScale);
+                InputManager.PlayerStats.criticalRate);
             
             // Do cursor effect
             DOTween.Complete(this);

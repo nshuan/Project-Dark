@@ -15,258 +15,121 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects: []
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 678223356e3758c478f93b96bac17397, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: gates
+    - Name: waveInfos
       Entry: 7
-      Data: 0|InGame.GateConfig[], Assembly-CSharp
+      Data: 0|InGame.IWaveInfo[], Assembly-CSharp
     - Name: 
       Entry: 12
-      Data: 6
+      Data: 3
     - Name: 
       Entry: 7
-      Data: 1|InGame.GateConfig, Assembly-CSharp
-    - Name: position
-      Entry: 7
-      Data: UnityEngine.Vector2, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 0
-    - Name: 
-      Entry: 4
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: targetBaseIndex
+      Data: 1|InGame.SingleWaveInfo, Assembly-CSharp
+    - Name: <WaveIndex>k__BackingField
       Entry: 3
       Data: 0
-    - Name: startTime
+    - Name: scaleHp
       Entry: 4
       Data: 1
-    - Name: duration
-      Entry: 4
-      Data: 0
-    - Name: spawnType
-      Entry: 3
-      Data: 0
-    - Name: intervalLoop
-      Entry: 4
-      Data: 6
-    - Name: spawnLogic
-      Entry: 7
-      Data: 2|InGame.GateSpawnSingle, Assembly-CSharp
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 3|InGame.GateConfig, Assembly-CSharp
-    - Name: position
-      Entry: 7
-      Data: UnityEngine.Vector2, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 0
-    - Name: 
-      Entry: 4
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: targetBaseIndex
-      Entry: 3
-      Data: 0
-    - Name: startTime
+    - Name: scaleDmg
       Entry: 4
       Data: 1
-    - Name: duration
+    - Name: timeToEnd
       Entry: 4
+      Data: 25
+    - Name: waveConfig
+      Entry: 10
       Data: 0
-    - Name: spawnType
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 2|InGame.SingleWaveInfo, Assembly-CSharp
+    - Name: <WaveIndex>k__BackingField
       Entry: 3
       Data: 1
-    - Name: intervalLoop
-      Entry: 4
-      Data: 10
-    - Name: spawnLogic
-      Entry: 7
-      Data: 4|InGame.GateSpawnTriangle, Assembly-CSharp
-    - Name: radius
-      Entry: 4
-      Data: 1.5
-    - Name: rotation
-      Entry: 4
-      Data: 48
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 5|InGame.GateConfig, Assembly-CSharp
-    - Name: position
-      Entry: 7
-      Data: UnityEngine.Vector2, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 0
-    - Name: 
-      Entry: 4
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: targetBaseIndex
-      Entry: 3
-      Data: 1
-    - Name: startTime
+    - Name: scaleHp
       Entry: 4
       Data: 1
-    - Name: duration
+    - Name: scaleDmg
       Entry: 4
-      Data: 0
-    - Name: spawnType
-      Entry: 3
-      Data: 0
-    - Name: intervalLoop
-      Entry: 4
-      Data: 5
-    - Name: spawnLogic
-      Entry: 7
-      Data: 6|InGame.GateSpawnSingle, Assembly-CSharp
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 7|InGame.GateConfig, Assembly-CSharp
-    - Name: position
-      Entry: 7
-      Data: UnityEngine.Vector2, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 0
-    - Name: 
-      Entry: 4
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: targetBaseIndex
-      Entry: 3
       Data: 1
-    - Name: startTime
+    - Name: timeToEnd
       Entry: 4
-      Data: 2
-    - Name: duration
-      Entry: 4
+      Data: 35
+    - Name: waveConfig
+      Entry: 10
       Data: 0
-    - Name: spawnType
-      Entry: 3
-      Data: 2
-    - Name: intervalLoop
-      Entry: 4
-      Data: 10
-    - Name: spawnLogic
-      Entry: 7
-      Data: 8|InGame.GateSpawnSingle, Assembly-CSharp
-    - Name: 
-      Entry: 8
-      Data: 
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 9|InGame.GateConfig, Assembly-CSharp
-    - Name: position
+      Data: 3|InGame.CompositeWaveInfo, Assembly-CSharp
+    - Name: <WaveIndex>k__BackingField
+      Entry: 3
+      Data: 2
+    - Name: timeToEnd
+      Entry: 4
+      Data: 30
+    - Name: subWaves
       Entry: 7
-      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+      Data: 4|InGame.SingleWaveInfo[], Assembly-CSharp
     - Name: 
-      Entry: 4
-      Data: 0
-    - Name: 
-      Entry: 4
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: targetBaseIndex
-      Entry: 3
+      Entry: 12
       Data: 2
-    - Name: startTime
-      Entry: 4
-      Data: 2
-    - Name: duration
-      Entry: 4
-      Data: 0
-    - Name: spawnType
+    - Name: 
+      Entry: 7
+      Data: 5|InGame.SingleWaveInfo, Assembly-CSharp
+    - Name: <WaveIndex>k__BackingField
       Entry: 3
+      Data: 0
+    - Name: scaleHp
+      Entry: 4
       Data: 1
-    - Name: intervalLoop
+    - Name: scaleDmg
       Entry: 4
-      Data: 8
-    - Name: spawnLogic
-      Entry: 7
-      Data: 10|InGame.GateSpawnTriangle, Assembly-CSharp
-    - Name: radius
+      Data: 1
+    - Name: timeToEnd
       Entry: 4
-      Data: 1.549
-    - Name: rotation
-      Entry: 4
+      Data: 20
+    - Name: waveConfig
+      Entry: 10
       Data: 0
     - Name: 
       Entry: 8
       Data: 
     - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
       Entry: 7
-      Data: 11|InGame.GateConfig, Assembly-CSharp
-    - Name: position
-      Entry: 7
-      Data: UnityEngine.Vector2, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 0
-    - Name: 
-      Entry: 4
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: targetBaseIndex
+      Data: 6|InGame.SingleWaveInfo, Assembly-CSharp
+    - Name: <WaveIndex>k__BackingField
       Entry: 3
-      Data: 2
-    - Name: startTime
-      Entry: 4
-      Data: 2
-    - Name: duration
-      Entry: 4
       Data: 0
-    - Name: spawnType
-      Entry: 3
-      Data: 2
-    - Name: intervalLoop
+    - Name: scaleHp
       Entry: 4
-      Data: 10
-    - Name: spawnLogic
-      Entry: 7
-      Data: 12|InGame.GateSpawnSingle, Assembly-CSharp
+      Data: 1
+    - Name: scaleDmg
+      Entry: 4
+      Data: 1
+    - Name: timeToEnd
+      Entry: 4
+      Data: 35
+    - Name: waveConfig
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
     - Name: 
       Entry: 8
       Data: 

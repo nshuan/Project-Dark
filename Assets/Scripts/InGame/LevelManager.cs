@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Core;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
@@ -25,7 +26,7 @@ namespace InGame
                 return towers[currentTowerIndex];
             }
         }
-        public GateEntity[] Gates { get; private set; }
+   
         public PlayerStats PlayerStats => playerStats;
         
         #region Action
@@ -54,21 +55,38 @@ namespace InGame
         {
             EnemyManager.Instance.Initialize();
             
-            // Create gate objects
-            Gates = new GateEntity[level.gates.Length];
-            for (var i = 0; i < level.gates.Length; i++)
-            {
-                var gateCfg = level.gates[i];
-                Gates[i] = Instantiate(gatePrefab, gateCfg.position, quaternion.identity, null);
-                Gates[i].Initialize(gateCfg, towers[gateCfg.targetBaseIndex]);
-            }
-
             InitTowers();
             TeleportTower(0);
+            
+            // Start waves
+            if (waveCoroutine != null) StopCoroutine(waveCoroutine);
+            waveCoroutine = StartCoroutine(IEWave(level.waveInfos));
+            
             OnChangeSkill?.Invoke(skillConfig);
             OnLevelLoaded?.Invoke(level);
         }
 
+        #region Waves
+
+        private Coroutine waveCoroutine;
+        private IEnumerator IEWave(IWaveInfo[] waves)
+        {
+            if (waves == null || waves.Length == 0) yield break;
+            yield return new WaitForEndOfFrame();
+           
+            var currentWaveIndex = 0;
+            IWaveInfo currentWave = null;
+            while (currentWaveIndex < waves.Length)
+            {
+                currentWave = waves[currentWaveIndex];
+                currentWave.SetupWave(gatePrefab, Towers);
+                yield return currentWave.IEActivateWave();
+                currentWaveIndex += 1;
+            }
+        }
+
+        #endregion
+        
         #region Towers
 
         private void InitTowers()

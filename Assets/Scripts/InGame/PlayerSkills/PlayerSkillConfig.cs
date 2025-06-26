@@ -10,6 +10,7 @@ namespace InGame
     public class PlayerSkillConfig : SerializedScriptableObject
     {
         public PlayerSkillType skillType;
+        public ProjectileEntity projectilePrefab;
         [NonSerialized, OdinSerialize] public PlayerSkillBehaviour shootLogic;
         public int damePerBullet; // bullet base damage
         public int numberOfBullets = 1; // number of bullets in each shot
@@ -25,6 +26,24 @@ namespace InGame
         public float chargeBulletInterval = -1;
         public float chargeBulletMaxAdd = -1;
         public float speedScale = 1f; // Scale speed of bullets
+
+        public void Shoot(
+            Vector2 spawnPos, 
+            Vector2 target, 
+            int damagePerBullet, 
+            int criticalDamagePerBullet,
+            float criticalRatePerBullet)
+        {
+            shootLogic.Shoot(
+                projectilePrefab,
+                spawnPos, 
+                target,
+                damagePerBullet,
+                criticalDamagePerBullet,
+                criticalRatePerBullet,
+                numberOfBullets,
+                speedScale);
+        }
     }
 
     public enum PlayerSkillType
