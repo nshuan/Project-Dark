@@ -15,11 +15,15 @@ namespace InGame
         public float timeToEnd;
         [NonSerialized, OdinSerialize] public SingleWaveInfo[] subWaves;
         
-        public void SetupWave(GateEntity gatePrefab, TowerEntity[] towers)
+        public Action OnWaveForceStop { get; set; }
+        
+        public void SetupWave(GateEntity gatePrefab, TowerEntity[] towers, Action onWaveForceEnded)
         {
+            OnWaveForceStop = onWaveForceEnded;
+            
             foreach (var wave in subWaves)
             {
-                wave.SetupWave(gatePrefab, towers);
+                wave.SetupWave(gatePrefab, towers, OnSingleWaveForceEnded);
             }
         }
 
@@ -72,6 +76,11 @@ namespace InGame
             {
                 wave.StopWave();
             }
+        }
+
+        private void OnSingleWaveForceEnded()
+        {
+            
         }
     }
 }

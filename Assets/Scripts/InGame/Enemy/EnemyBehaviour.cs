@@ -8,6 +8,7 @@ namespace InGame
     public class EnemyBehaviour : ScriptableObject
     {
         public int enemyId;
+        public EnemyEntity enemyPrefab;
         public EnemySpawnBehaviour spawnBehaviour;
         public EnemyMoveBehaviour moveBehaviour;
         public EnemyAttackBehaviour attackBehaviour;

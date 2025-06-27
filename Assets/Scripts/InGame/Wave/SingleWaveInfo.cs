@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
+using System.Linq;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using Unity.Mathematics;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace InGame
 {
@@ -18,23 +20,29 @@ namespace InGame
         public WaveConfig waveConfig;
 
         public GateEntity[] Gates { get; private set; }
+        public Action OnWaveForceStop { get; set; }
         
-        public void SetupWave(GateEntity gatePrefab, TowerEntity[] towers)
+        public void SetupWave(GateEntity gatePrefab, TowerEntity[] towers, Action onWaveForceEnded)
         {
             Gates = new GateEntity[waveConfig.gateConfigs.Length];
             for (var i = 0; i < waveConfig.gateConfigs.Length; i++)
             {
                 var gateCfg = waveConfig.gateConfigs[i];
-                Gates[i] = GameObject.Instantiate(gatePrefab, gateCfg.position, quaternion.identity, null);
+                Gates[i] = Object.Instantiate(gatePrefab, gateCfg.position, quaternion.identity, null);
                 Gates[i].Initialize(gateCfg, towers[gateCfg.targetBaseIndex], scaleHp, scaleDmg);
             }
+
+            OnWaveForceStop = onWaveForceEnded;
         }
 
         public void ActivateWave()
         {
+            DebugUtility.LogError($"Activate wave {WaveIndex}");
+            
             foreach (var gate in Gates)
             {
                 gate.Activate();
+                gate.OnAllEnemiesDead += CheckStopAllGate;
             }
         }
         
@@ -43,6 +51,8 @@ namespace InGame
             ActivateWave();
             
             yield return new WaitForSeconds(timeToEnd);
+            OnWaveForceStop = null;
+            DebugUtility.LogError($"Stop wave {WaveIndex}: End duration");
             StopWave();
         }
 
@@ -51,6 +61,16 @@ namespace InGame
             foreach (var gate in Gates)
             {
                 gate.Deactivate();
+            }
+        }
+
+        private void CheckStopAllGate()
+        {
+            if (Gates.All((gate) => gate.IsActive == false))
+            {
+                DebugUtility.LogError($"Stop wave {WaveIndex}: All enemies are dead");
+                OnWaveForceStop?.Invoke();
+                OnWaveForceStop = null;
             }
         }
     }

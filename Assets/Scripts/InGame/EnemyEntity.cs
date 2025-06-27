@@ -17,7 +17,6 @@ namespace InGame
         private int CurrentDamage { get; set; }
         public bool IsDead => CurrentHealth <= 0;
         public Action OnDead { get; set; }
-        public EnemyType Type { get; set; }
         public EnemyState State { get; set; }
         public int Id { get; set; }
         
@@ -34,12 +33,11 @@ namespace InGame
         
         #region Initialize
 
-        public void Init(TowerEntity target, EnemyType type, float hpMultiplier, float dmgMultiplier)
+        public void Init(TowerEntity target, float hpMultiplier, float dmgMultiplier)
         {
             // Set target and attack position
             Target = target.transform;
             TargetDamageable = target;
-            Type = type;
             attackPosition = ((Quaternion.Euler(0f, 0f, Random.Range(-75f, 75f)) *
                                       (Vector2)(transform.position - Target.position).normalized) * (0.9f * config.attackRange)
                             + Target.position);
@@ -137,7 +135,7 @@ namespace InGame
             IsInLightning = false;
             OnDead?.Invoke();
             OnDead = null;
-            EnemyPool.Instance.Release(Type, this);
+            EnemyPool.Instance.Release(this);
         }
         
         private void UIUpdateHealth()

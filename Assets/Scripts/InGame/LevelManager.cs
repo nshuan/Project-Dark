@@ -27,6 +27,7 @@ namespace InGame
             }
         }
    
+        private LevelConfig Level { get; set; }
         public PlayerStats PlayerStats => playerStats;
         
         #region Action
@@ -53,12 +54,14 @@ namespace InGame
 
         public void LoadLevel(LevelConfig level)
         {
+            Level = level;
             EnemyManager.Instance.Initialize();
             
             InitTowers();
             TeleportTower(0);
             
             // Start waves
+            currentWaveIndex = 0;
             if (waveCoroutine != null) StopCoroutine(waveCoroutine);
             waveCoroutine = StartCoroutine(IEWave(level.waveInfos));
             
@@ -68,21 +71,27 @@ namespace InGame
 
         #region Waves
 
+        private int currentWaveIndex;
         private Coroutine waveCoroutine;
         private IEnumerator IEWave(IWaveInfo[] waves)
         {
             if (waves == null || waves.Length == 0) yield break;
             yield return new WaitForEndOfFrame();
-           
-            var currentWaveIndex = 0;
+            
             IWaveInfo currentWave = null;
             while (currentWaveIndex < waves.Length)
             {
                 currentWave = waves[currentWaveIndex];
-                currentWave.SetupWave(gatePrefab, Towers);
-                yield return currentWave.IEActivateWave();
+                currentWave.SetupWave(gatePrefab, Towers, OnWaveForceStop);
                 currentWaveIndex += 1;
+                yield return currentWave.IEActivateWave();
             }
+        }
+
+        private void OnWaveForceStop()
+        {
+            if (waveCoroutine != null) StopCoroutine(waveCoroutine);
+            waveCoroutine = StartCoroutine(IEWave(Level.waveInfos));
         }
 
         #endregion
