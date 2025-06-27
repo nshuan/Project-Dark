@@ -23,22 +23,19 @@ MonoBehaviour:
     SerializationNodes:
     - Name: shootLogic
       Entry: 7
-      Data: 0|InGame.PlayerShootDouble, Assembly-CSharp
+      Data: 0|InGame.PlayerShootStraight, Assembly-CSharp
     - Name: cursorType
       Entry: 3
       Data: 0
-    - Name: angle
-      Entry: 4
-      Data: 30
     - Name: 
       Entry: 8
       Data: 
   skillType: 0
   projectilePrefab: {fileID: 6844351392576462872, guid: 5bf387a4936339542a95d194cf62d737, type: 3}
-  damePerBullet: 10
-  numberOfBullets: 3
-  cooldown: 0
-  range: 7
+  damePerBullet: 15
+  numberOfBullets: 2
+  cooldown: 0.7
+  range: 10
   size: 0
   chargeDameMax: -1
   chargeDameTime: -1
@@ -48,4 +45,4 @@ MonoBehaviour:
   chargeRangeTime: -1
   chargeBulletInterval: -1
   chargeBulletMaxAdd: -1
-  speedScale: 3
+  speedScale: 6
