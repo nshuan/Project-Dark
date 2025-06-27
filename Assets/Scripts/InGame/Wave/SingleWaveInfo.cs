@@ -29,7 +29,7 @@ namespace InGame
             {
                 var gateCfg = waveConfig.gateConfigs[i];
                 Gates[i] = Object.Instantiate(gatePrefab, gateCfg.position, quaternion.identity, null);
-                Gates[i].Initialize(gateCfg, towers[gateCfg.targetBaseIndex], scaleHp, scaleDmg);
+                Gates[i].Initialize(gateCfg, gateCfg.targetBaseIndex.Select((index) => towers[index]).ToArray(), scaleHp, scaleDmg);
             }
 
             OnWaveForceStop = onWaveForceEnded;

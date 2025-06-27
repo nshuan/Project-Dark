@@ -40,5 +40,10 @@ namespace InGame
         {
             Destroy(obj.gameObject);
         }
+
+        public void Release(EnemyEntity obj, float delay)
+        {
+            Destroy(obj.gameObject, delay);
+        }
     }
 }

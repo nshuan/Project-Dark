@@ -5,12 +5,13 @@ using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 namespace InGame
 {
     public class GateEntity : SerializedMonoBehaviour
     {
-        [ReadOnly] public TowerEntity target;
+        [ReadOnly] public TowerEntity[] target;
         private float WaveHpMultiplier { get; set; }
         private float WaveDmgMultiplier { get; set; }
         public bool IsActive { get; set; } = false;
@@ -46,7 +47,7 @@ namespace InGame
             gameObject.SetActive(false);
         }
         
-        public void Initialize(GateConfig cfg, TowerEntity targetBase, float waveHpMultiplier, float waveDmgMultiplier)
+        public void Initialize(GateConfig cfg, TowerEntity[] targetBase, float waveHpMultiplier, float waveDmgMultiplier)
         {
             config = cfg;
             target = targetBase;
@@ -74,7 +75,7 @@ namespace InGame
                 for (var i = 0; i < enemies.Length; i++)
                 {
                     var enemy = enemies[i];
-                    enemy.Init(target, WaveHpMultiplier, WaveDmgMultiplier);
+                    enemy.Init(target[Random.Range(0, target.Length)], WaveHpMultiplier, WaveDmgMultiplier);
                     enemy.Activate();
                     enemy.Id = EnemyManager.Instance.CurrentEnemyIndex;
                     AliveEnemyCount += 1;

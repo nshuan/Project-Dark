@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using DG.Tweening;
+using InGame.EnemyEffect;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -25,6 +26,7 @@ namespace InGame
         
         [Space, Header("Visual")] 
         [SerializeField] private Transform uiHealth;
+        [SerializeField] private AnimController animController;
         
         private bool inAttackRange;
         private Coroutine attackCoroutine;
@@ -67,6 +69,7 @@ namespace InGame
             {
                 StartAttackCoroutine();
                 State = EnemyState.Move;
+                animController.PlayRun();
             });
         }
 
@@ -114,6 +117,7 @@ namespace InGame
         {
             if (TargetDamageable.IsDestroyed) return;
             config.attackBehaviour.Attack(TargetDamageable, CurrentDamage);
+            animController.PlayAttack();
         }
 
         public void OnHit(float damage)
@@ -126,7 +130,8 @@ namespace InGame
             }
             else
             {
-                UIUpdateHealth();
+                // UIUpdateHealth();
+                animController.PlayHit();
             }
         }
         
@@ -135,7 +140,8 @@ namespace InGame
             IsInLightning = false;
             OnDead?.Invoke();
             OnDead = null;
-            EnemyPool.Instance.Release(this);
+            animController.PlayDie();
+            EnemyPool.Instance.Release(this, 1f);
         }
         
         private void UIUpdateHealth()
