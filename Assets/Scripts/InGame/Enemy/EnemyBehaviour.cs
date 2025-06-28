@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
@@ -17,6 +18,7 @@ namespace InGame
         public int hp;
         public int dmg; // Base damage
         public float moveSpeed;
+        public List<ActionEffectConfig> effects; 
         
         public void Init(Transform enemy)
         {

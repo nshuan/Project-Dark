@@ -32,9 +32,9 @@ namespace InGame
 
         public void OnEnemyDead(EnemyEntity enemy)
         {
-            if (!Enemies.ContainsKey(enemy.Id)) return;
+            if (!Enemies.ContainsKey(enemy.UniqueId)) return;
 
-            Enemies.Remove(enemy.Id);
+            Enemies.Remove(enemy.UniqueId);
         }
     }
 }

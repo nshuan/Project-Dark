@@ -15,7 +15,7 @@ namespace InGame
 
         Vector2Int GetCell(Vector3 pos)
         {
-            return new Vector2Int(Mathf.FloorToInt(pos.x / cellSize), Mathf.FloorToInt(pos.z / cellSize));
+            return new Vector2Int(Mathf.FloorToInt(pos.x / cellSize), Mathf.FloorToInt(pos.y / cellSize));
         }
         
         public void Register(EnemyBoidAgent agent)
@@ -51,6 +51,37 @@ namespace InGame
             }
 
             return result;
+        }
+        
+        // 🔧 Visualize partial grid with Gizmos
+        public void DrawGizmos()
+        {
+            int maxAgentsInAnyCell = 1;
+            foreach (var kvp in cells)
+                if (kvp.Value.Count > maxAgentsInAnyCell)
+                    maxAgentsInAnyCell = kvp.Value.Count;
+
+            foreach (var kvp in cells)
+            {
+                Vector2Int cell = kvp.Key;
+                int count = kvp.Value.Count;
+
+                float normalized = (float)count / maxAgentsInAnyCell;
+                var color = Color.Lerp(Color.green, Color.red, normalized);
+                color.a = 0.23f;
+                Gizmos.color = color;
+
+                Vector3 center = new Vector3(
+                    (cell.x + 0.5f) * cellSize,
+                    (cell.y + 0.5f) * cellSize,
+                    0
+                );
+
+                Vector3 size = new Vector3(cellSize, cellSize, 0);
+                Gizmos.DrawCube(center, size);               // Filled cell
+                Gizmos.color = Color.black;
+                Gizmos.DrawWireCube(center, size);           // Wireframe outline
+            }
         }
     }
 }

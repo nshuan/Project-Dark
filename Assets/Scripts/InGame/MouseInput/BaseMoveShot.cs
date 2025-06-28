@@ -58,17 +58,17 @@ namespace InGame
         // Check if can spawn elemental effect on hit enemy
         protected virtual void CheckElemental(EnemyEntity enemyEntity)
         {
-            // Chance to create lightning burst
-            if (!enemyEntity.IsInLightning && !enemyEntity.IsDead && Random.Range(0f, 1f) <= LevelManager.Instance.GameStats.sLightningChance)
-            {
-                enemyEntity.IsInLightning = true;
-                var lightningTrap = LightningTrapPool.Instance.Get(null);
-                lightningTrap.Setup(Cam, enemyEntity, 3f * Vector2.one, LevelManager.Instance.GameStats.sLightningDamage, 0.5f, () =>
-                {
-                    enemyEntity.IsInLightning = false;
-                });
-                effectCamShake.Duration = 0.5f;
-            }
+            // // Chance to create lightning burst
+            // if (!enemyEntity.IsInLightning && !enemyEntity.IsDead && Random.Range(0f, 1f) <= LevelManager.Instance.GameStats.sLightningChance)
+            // {
+            //     enemyEntity.IsInLightning = true;
+            //     var lightningTrap = LightningTrapPool.Instance.Get(null);
+            //     lightningTrap.Setup(Cam, enemyEntity, 3f * Vector2.one, LevelManager.Instance.GameStats.sLightningDamage, 0.5f, () =>
+            //     {
+            //         enemyEntity.IsInLightning = false;
+            //     });
+            //     effectCamShake.Duration = 0.5f;
+            // }
         }
 
         public virtual void OnUpdate()
@@ -123,9 +123,9 @@ namespace InGame
 #endif
         }
 
-        protected virtual float CalculateDmg()
+        protected virtual int CalculateDmg()
         {
-            return LevelManager.Instance.GameStats.pDmgPerShot;
+            return (int)LevelManager.Instance.GameStats.pDmgPerShot;
         }
 
         public virtual void OnDrawGizmos()

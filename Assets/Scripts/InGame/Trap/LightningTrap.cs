@@ -37,38 +37,38 @@ namespace InGame.Trap
                 {
                     if (hit.collider && hit.transform.TryGetComponent<EnemyEntity>(out var enemyEntity))
                     {
-                        // Chance to create lightning burst
-                        if (!enemyEntity.IsInLightning && !enemyEntity.IsDead && Random.Range(0f, 1f) <= LevelManager.Instance.GameStats.sLightningChance)
-                        {
-                            // Lightning ray effect
-                            var lightning = LightningPool.Instance.Get(null);
-                            lightning.points = new List<Transform>() { target, enemyEntity.transform };
-                            var pair = (lightning, enemyEntity);
-                            lightningEffects.Add(pair);
-                            lightning.Execute(duration);
-                            
-                            enemyEntity.IsInLightning = true;
-                            enemyEntity.OnDead += () =>
-                            {
-                                lightning.ForceStop();
-                                LightningPool.Instance.Release(lightning);
-                                lightningEffects.Remove(pair);
-                            };
-                            
-                            var skill = LightningTrapPool.Instance.Get(null);
-                            skill.Setup(cam, enemyEntity, 3f * Vector2.one, damage, 0.5f, () =>
-                            {
-                                enemyEntity.IsInLightning = false;
-                            });
-                            var effectCamShake = new CameraShake
-                            {
-                                Cam = cam,
-                                Duration = 0.5f
-                            };
-                            EffectHelper.Instance.PlayEffect(effectCamShake);
-                        }
-                        
-                        enemyEntity.OnHit(GameStats.CalculateStat(LevelManager.Instance.GameStats.sLightningDamage));
+                        // // Chance to create lightning burst
+                        // if (!enemyEntity.IsInLightning && !enemyEntity.IsDead && Random.Range(0f, 1f) <= LevelManager.Instance.GameStats.sLightningChance)
+                        // {
+                        //     // Lightning ray effect
+                        //     var lightning = LightningPool.Instance.Get(null);
+                        //     lightning.points = new List<Transform>() { target, enemyEntity.transform };
+                        //     var pair = (lightning, enemyEntity);
+                        //     lightningEffects.Add(pair);
+                        //     lightning.Execute(duration);
+                        //     
+                        //     enemyEntity.IsInLightning = true;
+                        //     enemyEntity.OnDead += () =>
+                        //     {
+                        //         lightning.ForceStop();
+                        //         LightningPool.Instance.Release(lightning);
+                        //         lightningEffects.Remove(pair);
+                        //     };
+                        //     
+                        //     var skill = LightningTrapPool.Instance.Get(null);
+                        //     skill.Setup(cam, enemyEntity, 3f * Vector2.one, damage, 0.5f, () =>
+                        //     {
+                        //         enemyEntity.IsInLightning = false;
+                        //     });
+                        //     var effectCamShake = new CameraShake
+                        //     {
+                        //         Cam = cam,
+                        //         Duration = 0.5f
+                        //     };
+                        //     EffectHelper.Instance.PlayEffect(effectCamShake);
+                        // }
+                        //
+                        // enemyEntity.Damage(GameStats.CalculateStat((int)LevelManager.Instance.GameStats.sLightningDamage));
 
                     }
                 }
@@ -96,7 +96,7 @@ namespace InGame.Trap
             {
                 effect.Item1.ForceStop();
                 LightningPool.Instance.Release(effect.Item1);
-                effect.Item2.IsInLightning = false;
+                // effect.Item2.IsInLightning = false;
             }
             lightningEffects.Clear();
             LightningTrapPool.Instance.Release(this);

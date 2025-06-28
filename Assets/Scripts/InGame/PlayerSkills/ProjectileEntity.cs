@@ -80,7 +80,7 @@ namespace InGame
                 {
                     // Check critical hit
                     var critical = Random.Range(0f, 1f) <= CriticalRate;
-                    enemy.OnHit(critical ? CriticalDamage : Damage);
+                    enemy.Damage(critical ? CriticalDamage : Damage);
                    
                     if (critical)
                         DebugUtility.LogWarning($"Projectile {name} deals critical damage {CriticalDamage} to {enemy.name}!!");

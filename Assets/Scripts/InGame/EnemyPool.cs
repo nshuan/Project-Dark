@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Core;
 using Sirenix.Serialization;
@@ -8,19 +9,19 @@ namespace InGame
 {
     public class EnemyPool : SerializedMonoSingleton<EnemyPool>
     {
-        private Dictionary<EnemyEntity, Queue<EnemyEntity>> queueDict;
+        private Dictionary<int, Queue<EnemyEntity>> queueDict;
 
         protected override void Awake()
         {
             base.Awake();
             
-            queueDict = new Dictionary<EnemyEntity, Queue<EnemyEntity>>();
+            queueDict = new Dictionary<int, Queue<EnemyEntity>>();
         }
         
-        public EnemyEntity Get(EnemyEntity prefab, Transform targetParent, bool active = true)
+        public EnemyEntity Get(EnemyEntity prefab, int typeId, Transform targetParent, bool active = true)
         {
             EnemyEntity obj = null;
-            if (queueDict.TryGetValue(prefab, out var pool))
+            if (queueDict.TryGetValue(typeId, out var pool))
             {
                 if (pool.TryDequeue(out obj))
                 {
@@ -36,9 +37,12 @@ namespace InGame
 
         }
 
-        public void Release(EnemyEntity obj)
+        public void Release(EnemyEntity obj, int typeId)
         {
-            Destroy(obj.gameObject);
+            obj.gameObject.SetActive(false);
+            obj.transform.SetParent(transform);
+            queueDict.TryAdd(typeId, new Queue<EnemyEntity>());
+            queueDict[typeId].Enqueue(obj);
         }
 
         public void Release(EnemyEntity obj, float delay)

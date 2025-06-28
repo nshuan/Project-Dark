@@ -23,6 +23,9 @@ namespace InGame
         [Space] [Header("Gate config")] 
         [NonSerialized, OdinSerialize, ReadOnly] private GateConfig config;
 
+        [Space] [Header("Visual")] 
+        [SerializeField] private GameObject visual;
+
         #endregion
 
         public Action OnAllEnemiesDead { get; set; }
@@ -62,6 +65,8 @@ namespace InGame
                 StopCoroutine(lifeTimeCoroutine);
             if (spawnCoroutine != null)
                 StopCoroutine(spawnCoroutine);
+            
+            visual.SetActive(false);
         }
         
         private Coroutine spawnCoroutine;
@@ -69,15 +74,17 @@ namespace InGame
         {
             yield return new WaitForSeconds(config.startTime);
             
+            visual.SetActive(true);
+            
             while (TotalSpawnTurn == -1 || currentSpawnTurn < TotalSpawnTurn)
             {
-                var enemies = config.spawnLogic.Spawn(transform.position, config.spawnType.enemyPrefab);
+                var enemies = config.spawnLogic.Spawn(transform.position, config.spawnType.enemyId, config.spawnType.enemyPrefab);
                 for (var i = 0; i < enemies.Length; i++)
                 {
                     var enemy = enemies[i];
-                    enemy.Init(target[Random.Range(0, target.Length)], WaveHpMultiplier, WaveDmgMultiplier);
+                    enemy.Init(config.spawnType, target[Random.Range(0, target.Length)], WaveHpMultiplier, WaveDmgMultiplier);
                     enemy.Activate();
-                    enemy.Id = EnemyManager.Instance.CurrentEnemyIndex;
+                    enemy.UniqueId = EnemyManager.Instance.CurrentEnemyIndex;
                     AliveEnemyCount += 1;
                     EnemyManager.Instance.OnEnemySpawn(enemy);
                     enemy.OnDead += () =>

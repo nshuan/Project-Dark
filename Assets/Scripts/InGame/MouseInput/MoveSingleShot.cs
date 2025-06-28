@@ -44,7 +44,7 @@ namespace InGame
             var damage = CalculateDmg();
             if (nearestEnemy)
             {
-                nearestEnemy.OnHit(damage);
+                nearestEnemy.Damage(damage);
                 CheckElemental(nearestEnemy);
             }
 

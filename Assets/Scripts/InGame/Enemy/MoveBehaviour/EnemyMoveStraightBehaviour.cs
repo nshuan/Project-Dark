@@ -33,10 +33,9 @@ namespace InGame
                 var dirX = target.x - enemyPos.x;
                 var dirY = target.y - enemyPos.y;
                 var magnitude = Mathf.Sqrt(dirX * dirX + dirY * dirY);
-                direction = new Vector3(
-                    dirX + directionAdder.x * magnitude, 
-                    dirY + directionAdder.y * magnitude,
-                    0f);
+                direction.x = dirX + directionAdder.x * magnitude;
+                direction.y = dirY + directionAdder.y * magnitude;
+                direction.z = 0;
                 // Similar to Vector3.Lerp
                 enemy.position = enemyPos + direction * (Time.deltaTime * speed);
             }

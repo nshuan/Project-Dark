@@ -8,22 +8,20 @@ using Random = UnityEngine.Random;
 
 namespace InGame
 {
-    public class EnemyEntity : MonoBehaviour
+    public class EnemyEntity : MonoBehaviour, IDamageable
     {
         public Transform Target { get; set; }
         public IDamageable TargetDamageable { get; set; }
-        public EnemyBehaviour config;
+        private EnemyBehaviour config;
         private float MaxHealth { get; set; }
         private float CurrentHealth { get; set; }
         private int CurrentDamage { get; set; }
         public bool IsDead => CurrentHealth <= 0;
         public Action OnDead { get; set; }
         public EnemyState State { get; set; }
-        public int Id { get; set; }
-        private Vector3 direction;
-        
-        // Elemental effect
-        public bool IsInLightning { get; set; }
+        public int UniqueId { get; set; }
+        private Vector3 direction = new Vector3();
+        [SerializeField] private EnemyActionEffectTrigger effectTrigger;
 
         [Space, Header("Visual")] 
         [SerializeField] private EnemyBoidAgent boidAgent;
@@ -37,8 +35,10 @@ namespace InGame
         
         #region Initialize
 
-        public void Init(TowerEntity target, float hpMultiplier, float dmgMultiplier)
+        public void Init(EnemyBehaviour eConfig, TowerEntity target, float hpMultiplier, float dmgMultiplier)
         {
+            config = eConfig;
+            
             // Set target and attack position
             Target = target.transform;
             TargetDamageable = target;
@@ -55,6 +55,9 @@ namespace InGame
             CurrentHealth = MaxHealth;
             CurrentDamage = Mathf.RoundToInt(config.dmg * dmgMultiplier);
             State = EnemyState.Spawn;
+            IsDestroyed = false;
+            effectTrigger.Enemy = this;
+            effectTrigger.Setup(config.effects);
             config.Init(transform);
             EnemyBoidManager.Instance.RegisterAgent(boidAgent);
             
@@ -130,7 +133,7 @@ namespace InGame
             animController.PlayAttack();
         }
 
-        public void OnHit(float damage)
+        public void Damage(int damage)
         {
             if (IsDead) return;
             CurrentHealth -= damage;
@@ -144,15 +147,23 @@ namespace InGame
                 animController.PlayHit();
             }
         }
-        
+
+        public bool IsDestroyed { get; set; }
+
         private void OnDie()
         {
-            IsInLightning = false;
+            IsDestroyed = true;
             OnDead?.Invoke();
             OnDead = null;
             animController.PlayDie();
             boidAgent.IsActive = false;
-            EnemyPool.Instance.Release(this, 1f);
+            StartCoroutine(IEDie());
+        }
+
+        private IEnumerator IEDie()
+        {
+            yield return new WaitForSeconds(1f);
+            EnemyPool.Instance.Release(this, config.enemyId);
         }
         
         private void UIUpdateHealth()
