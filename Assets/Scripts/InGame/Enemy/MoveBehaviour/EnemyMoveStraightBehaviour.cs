@@ -7,15 +7,38 @@ namespace InGame
     {
         public override void Move(Transform enemy, Vector2 target, Vector2 directionAdder, float stopRange, float speed)
         {
-            if (Vector3.Distance(enemy.position, target) > MinDelta)
+            var enemyPos = enemy.position;
+            var distance = Vector2.Distance(enemyPos, target);
+            if (distance > MinDelta)
             {
-                var enemyPos = enemy.position;
-                var direction = target - (Vector2)enemyPos;
-                var calculatedTarget = direction.normalized + directionAdder;
-                enemyPos = Vector3.Lerp(enemyPos, enemyPos + (Vector3)(direction.magnitude * calculatedTarget), Time.deltaTime * speed);
-                enemy.position = enemyPos;
-                // enemy.rotation = Quaternion.Euler(Vector3.Lerp(enemy.eulerAngles,
-                //     enemy.eulerAngles + new Vector3(0f, 0f, 180f), Time.deltaTime * speed));
+                var dirX = target.x - enemyPos.x;
+                var dirY = target.y - enemyPos.y;
+                var magnitude = Mathf.Sqrt(dirX * dirX + dirY * dirY);
+                var calculatedDir = new Vector3(
+                    dirX + directionAdder.x * magnitude, 
+                    dirY + directionAdder.y * magnitude,
+                    0f);
+                // Similar to Vector3.Lerp
+                enemy.position = enemyPos + calculatedDir * (Time.deltaTime * speed);
+            }
+        }
+
+        public override void MoveNonAlloc(Transform enemy, Vector2 target, Vector2 directionAdder, float stopRange, float speed,
+            ref Vector3 direction)
+        {
+            var enemyPos = enemy.position;
+            var distance = Vector2.Distance(enemyPos, target);
+            if (distance > MinDelta)
+            {
+                var dirX = target.x - enemyPos.x;
+                var dirY = target.y - enemyPos.y;
+                var magnitude = Mathf.Sqrt(dirX * dirX + dirY * dirY);
+                direction = new Vector3(
+                    dirX + directionAdder.x * magnitude, 
+                    dirY + directionAdder.y * magnitude,
+                    0f);
+                // Similar to Vector3.Lerp
+                enemy.position = enemyPos + direction * (Time.deltaTime * speed);
             }
         }
     }

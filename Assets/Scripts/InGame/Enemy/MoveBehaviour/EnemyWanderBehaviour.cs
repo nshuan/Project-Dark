@@ -19,5 +19,21 @@ namespace InGame
                 enemy.rotation = Quaternion.Euler(0, 0, angle);
             }
         }
+
+        public override void MoveNonAlloc(Transform enemy, Vector2 target, Vector2 directionAdder, float stopRange, float speed,
+            ref Vector3 direction)
+        {
+            if (Vector2.Distance(enemy.position, target) > MinDelta)
+            {
+                direction = (target - (Vector2)enemy.position).normalized;
+                Vector2 currentDirection = enemy.right;
+                Vector2 curvedDirection = Vector2.Lerp(currentDirection, direction, Time.deltaTime * speed).normalized;
+
+                enemy.position += (Vector3)(speed * Time.deltaTime * curvedDirection);
+
+                float angle = Mathf.Atan2(curvedDirection.y, curvedDirection.x) * Mathf.Rad2Deg;
+                enemy.rotation = Quaternion.Euler(0, 0, angle);
+            }
+        }
     }
 }

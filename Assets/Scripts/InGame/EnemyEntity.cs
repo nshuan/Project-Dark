@@ -20,6 +20,7 @@ namespace InGame
         public Action OnDead { get; set; }
         public EnemyState State { get; set; }
         public int Id { get; set; }
+        private Vector3 direction;
         
         // Elemental effect
         public bool IsInLightning { get; set; }
@@ -97,7 +98,7 @@ namespace InGame
             if (Vector3.Distance(transform.position, target.position) < config.attackRange)
                 inAttackRange = true;
             else
-                config.moveBehaviour.Move(transform, attackPosition, directionAdder, config.attackRange, config.moveSpeed);
+                config.moveBehaviour.MoveNonAlloc(transform, attackPosition, directionAdder, config.attackRange, config.moveSpeed, ref direction);
         }
 
         private void StartAttackCoroutine()
