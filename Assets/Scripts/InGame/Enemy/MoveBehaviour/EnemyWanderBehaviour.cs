@@ -5,7 +5,7 @@ namespace InGame
     [CreateAssetMenu(menuName = "InGame/Enemy/Move/Enemy Wander", fileName = "EnemyWander")]
     public class EnemyWanderBehaviour : EnemyMoveBehaviour
     {
-        public override void Move(Transform enemy, Vector2 target, float stopRange, float speed)
+        public override void Move(Transform enemy, Vector2 target, Vector2 directionAdder, float stopRange, float speed)
         {
             if (Vector2.Distance(enemy.position, target) > MinDelta)
             {

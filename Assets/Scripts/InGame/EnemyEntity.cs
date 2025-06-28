@@ -23,8 +23,9 @@ namespace InGame
         
         // Elemental effect
         public bool IsInLightning { get; set; }
-        
+
         [Space, Header("Visual")] 
+        [SerializeField] private EnemyBoidAgent boidAgent;
         [SerializeField] private Transform uiHealth;
         [SerializeField] private AnimController animController;
         
@@ -40,15 +41,21 @@ namespace InGame
             // Set target and attack position
             Target = target.transform;
             TargetDamageable = target;
+            
+            var myPos = transform.position;
+            var targetPos = Target.position;
             attackPosition = ((Quaternion.Euler(0f, 0f, Random.Range(-75f, 75f)) *
-                                      (Vector2)(transform.position - Target.position).normalized) * (0.9f * config.attackRange)
-                            + Target.position);
+                               (Vector2)(myPos - targetPos).normalized) * (0.9f * config.attackRange)
+                              + targetPos);
+            animController.transform.localScale =
+                new Vector3(Mathf.Sign((attackPosition - (Vector2)myPos).x), 1f, 1f);
             
             MaxHealth = config.hp * hpMultiplier;
             CurrentHealth = MaxHealth;
             CurrentDamage = Mathf.RoundToInt(config.dmg * dmgMultiplier);
             State = EnemyState.Spawn;
             config.Init(transform);
+            EnemyBoidManager.Instance.RegisterAgent(boidAgent);
             
             // Update health ui
             UIUpdateHealth();
@@ -70,6 +77,7 @@ namespace InGame
                 StartAttackCoroutine();
                 State = EnemyState.Move;
                 animController.PlayRun();
+                boidAgent.IsActive = true;
             });
         }
 
@@ -78,17 +86,18 @@ namespace InGame
         private void Update()
         {
             if (!Target) return;
+            if (IsDead) return;
             if (State != EnemyState.Move) return;
             
-            MoveTo(Target);
+            MoveTo(Target, boidAgent.GetBoidAddition());
         }
 
-        private void MoveTo(Transform target)
+        private void MoveTo(Transform target, Vector2 directionAdder)
         {
             if (Vector3.Distance(transform.position, target.position) < config.attackRange)
                 inAttackRange = true;
             else
-                config.moveBehaviour.Move(transform, attackPosition, config.attackRange, config.moveSpeed);
+                config.moveBehaviour.Move(transform, attackPosition, directionAdder, config.attackRange, config.moveSpeed);
         }
 
         private void StartAttackCoroutine()
@@ -141,6 +150,7 @@ namespace InGame
             OnDead?.Invoke();
             OnDead = null;
             animController.PlayDie();
+            boidAgent.IsActive = false;
             EnemyPool.Instance.Release(this, 1f);
         }
         

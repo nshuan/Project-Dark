@@ -18,7 +18,7 @@ namespace InGame
             {
                 foreach (var enemy in Enemies)
                 {
-                    GameObject.Destroy(enemy.Value.gameObject);
+                    Object.Destroy(enemy.Value.gameObject);
                 }
                 Enemies.Clear();
             }

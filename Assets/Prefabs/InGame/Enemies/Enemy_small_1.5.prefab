@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2189210148331816725}
   - component: {fileID: 3140594308172958890}
   - component: {fileID: 8131059031516112919}
+  - component: {fileID: 8462679166867049497}
   m_Layer: 3
   m_Name: Enemy_small_1.5
   m_TagString: Untagged
@@ -47,8 +48,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   config: {fileID: 11400000, guid: a6e7b19182615cd49b494bab621fa0b0, type: 2}
+  boidAgent: {fileID: 8462679166867049497}
   uiHealth: {fileID: 2775015567938810026}
-  animController: {fileID: 0}
+  animController: {fileID: 6657011251685399174}
 --- !u!70 &8131059031516112919
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -84,6 +86,24 @@ CapsuleCollider2D:
   m_Offset: {x: -0.13711478, y: -0.046619702}
   m_Size: {x: 1.0703962, y: 0.5987256}
   m_Direction: 1
+--- !u!114 &8462679166867049497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2026576607495002774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe84e76b1ffa40869eab561e5f017094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  separationRadius: 0.7
+  alignmentRadius: 1.5
+  cohesionRadius: 2
+  separationWeight: 1.5
+  alignmentWeight: 1
+  cohesionWeight: 1
 --- !u!1 &3147115551789549321
 GameObject:
   m_ObjectHideFlags: 0
