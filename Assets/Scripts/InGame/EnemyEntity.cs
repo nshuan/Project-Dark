@@ -55,6 +55,7 @@ namespace InGame
             CurrentHealth = MaxHealth;
             CurrentDamage = Mathf.RoundToInt(config.dmg * dmgMultiplier);
             State = EnemyState.Spawn;
+            inAttackRange = false;
             IsDestroyed = false;
             effectTrigger.Enemy = this;
             effectTrigger.Setup(config.effects);
