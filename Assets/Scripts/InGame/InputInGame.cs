@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -8,24 +9,35 @@ namespace InGame
     {
         private Camera cam;
         [SerializeField] private Canvas canvas;
+        public float holdThreshold = 0.5f;
+        [SerializeField] private InputInGameDelayInfo delayInfo;
         private IMouseInput mouseInput;
         public PlayerStats PlayerStats { get; set; }
         public PlayerSkillConfig CurrentSkillConfig { get; set; }
         public Transform CursorRangeCenter { get; set; }
         public float CursorRangeRadius { get; set; }
-        public float holdThreshold = 0.5f;
         private bool IsMousePressing;
         private bool IsMousePressingStarted;
         private float holdTime;
         private float holdDelayTime;
 
+        #region Action
+
+        public Action<Vector2> OnShootStart { get; set; }
+
+        #endregion
+        
         private void Awake()
         {
             cam = Camera.main;
 
             LevelManager.Instance.OnLevelLoaded += (level) => { PlayerStats = LevelManager.Instance.PlayerStats; };
-            LevelManager.Instance.OnChangeTower += OnTowerChanged;
             LevelManager.Instance.OnChangeSkill += OnSkillChanged;
+        }
+
+        private void OnDestroy()
+        {
+            OnShootStart = null;
         }
 
         private void OnSkillChanged(PlayerSkillConfig skillConfig)
@@ -44,11 +56,6 @@ namespace InGame
             mouseInput = ShotCursorManager.Instance.GetCursorMoveLogic(skillConfig.shootLogic.cursorType, cam, cursor);
             mouseInput.InputManager = this;
             mouseInput.ResetChargeVariable();
-        }
-
-        private void OnTowerChanged(Transform towerTransform)
-        {
-            CursorRangeCenter = towerTransform;
         }
 
         private void Update()
@@ -77,7 +84,7 @@ namespace InGame
         
         public void OnPointerClick(PointerEventData eventData)
         {
-            mouseInput?.OnMouseClick();
+            mouseInput?.OnMouseClick(delayInfo.skillDelay);
         }
 
         private void OnDrawGizmos()
@@ -99,5 +106,23 @@ namespace InGame
 
             mouseInput?.OnHoldReleased();
         }
+
+        public void DelayCall(float delay, Action callback)
+        {
+            StartCoroutine(IEDelayCall(delay, callback));
+        }
+
+        private IEnumerator IEDelayCall(float delay, Action callback)
+        {
+            yield return new WaitForSeconds(delay);
+            callback?.Invoke();
+        }
+    }
+
+    [Serializable]
+    public class InputInGameDelayInfo
+    {
+        public float skillDelay;
+        public float specialSkillDelay;
     }
 }

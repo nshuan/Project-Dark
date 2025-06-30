@@ -26,6 +26,7 @@ namespace InGame
                 return towers[currentTowerIndex];
             }
         }
+        private bool canTeleportTower;
    
         private LevelConfig Level { get; set; }
         public PlayerStats PlayerStats => playerStats;
@@ -114,7 +115,9 @@ namespace InGame
         
         private void TeleportTower(int towerIndex)
         {
+            if (!canTeleportTower) return;
             if (towers[Math.Clamp(towerIndex, 0, towers.Length - 1)].IsDestroyed) return;
+            if (towerIndex == currentTowerIndex) return;
             
             for (var i = 0; i < towers.Length; i++)
             {
@@ -129,6 +132,10 @@ namespace InGame
             OnChangeTower?.Invoke(CurrentTower.transform);
         }
 
+        public void SetTeleportTowerState(bool enable)
+        {
+            canTeleportTower = enable;
+        }
         #endregion
         
         private void Update()

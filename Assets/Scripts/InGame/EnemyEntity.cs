@@ -26,7 +26,7 @@ namespace InGame
         [Space, Header("Visual")] 
         [SerializeField] private EnemyBoidAgent boidAgent;
         [SerializeField] private Transform uiHealth;
-        [SerializeField] private AnimController animController;
+        [SerializeField] private EnemyAnimController animController;
         
         private bool inAttackRange;
         private Coroutine attackCoroutine;
@@ -49,7 +49,7 @@ namespace InGame
                                (Vector2)(myPos - targetPos).normalized) * (0.9f * config.attackRange)
                               + targetPos);
             animController.transform.localScale =
-                new Vector3(Mathf.Sign((attackPosition - (Vector2)myPos).x), 1f, 1f);
+                new Vector3(Mathf.Sign(attackPosition.x - myPos.x), 1f, 1f);
             
             MaxHealth = config.hp * hpMultiplier;
             CurrentHealth = MaxHealth;

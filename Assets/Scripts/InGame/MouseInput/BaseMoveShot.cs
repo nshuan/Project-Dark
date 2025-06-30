@@ -24,7 +24,7 @@ namespace InGame
         public bool CanShoot { get; set; }
         private bool OutOfRange { get; set; }
         protected float cdCounter;
-
+        
         public BaseMoveShot()
         {
             
@@ -39,6 +39,11 @@ namespace InGame
         }
 
         public virtual void OnMouseClick()
+        {
+           OnMouseClick(0f);
+        }
+
+        public void OnMouseClick(float delay)
         {
             if (!CanShoot) return;
             if (OutOfRange) return;

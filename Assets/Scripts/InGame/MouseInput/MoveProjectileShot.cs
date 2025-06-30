@@ -17,6 +17,7 @@ namespace InGame
         protected MonoCursor cursor;
         protected RectTransform cursorRect;
         protected Vector3 mousePosition;
+        protected Vector3 worldMousePosition;
         
         protected float Cooldown => LevelManager.Instance.GameStats.pShotCooldown;
         public bool CanShoot { get; set; }
@@ -24,14 +25,18 @@ namespace InGame
         protected float cdCounter;
 
         #region Charge
-
-        private bool isCharging;
         
+        private bool isChargingBullet;
         private int bulletAdd;
         private int maxBulletAdd;
         private float bulletAddInterval;
         private float bulletAddTimer;
 
+        private bool isChargingDame;
+        private float maxDameMultiplierAdd;
+        private float maxDameChargeTime;
+        private float dameChargeTime;
+        
         #endregion
 
         public MoveProjectileShot()
@@ -48,22 +53,38 @@ namespace InGame
 
         public virtual void OnMouseClick()
         {
+            OnMouseClick(0f);
+        }
+        
+        public virtual void OnMouseClick(float delay)
+        {
             if (!CanShoot) return;
             if (OutOfRange) return;
 
             var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(
                 InputManager.PlayerStats.damage,
                 InputManager.CurrentSkillConfig.damePerBullet,
-                InputManager.PlayerStats.criticalDamage);
+                InputManager.PlayerStats.criticalDamage,
+                1 + Mathf.Min(dameChargeTime / maxDameChargeTime, 1f) * maxDameMultiplierAdd);
+            
             CanShoot = false;
             cdCounter = InputManager.CurrentSkillConfig.cooldown;
-            InputManager.CurrentSkillConfig.Shoot(
-                InputManager.CursorRangeCenter.position, 
-                Cam.ScreenToWorldPoint(mousePosition),
-                damage,
-                InputManager.CurrentSkillConfig.numberOfBullets + bulletAdd,
-                criticalDamage,
-                InputManager.PlayerStats.criticalRate);
+
+            var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
+            LevelManager.Instance.SetTeleportTowerState(false);
+            InputManager.OnShootStart?.Invoke(worldMousePosition);
+            InputManager.DelayCall(delay, () =>
+            {
+                InputManager.CurrentSkillConfig.Shoot(
+                    InputManager.CursorRangeCenter.position, 
+                    tempMousePos,
+                    damage,
+                    InputManager.CurrentSkillConfig.numberOfBullets + bulletAdd,
+                    criticalDamage,
+                    InputManager.PlayerStats.criticalRate);
+
+                LevelManager.Instance.SetTeleportTowerState(true);
+            });
             
             // Do cursor effect
             DOTween.Complete(this);
@@ -76,31 +97,42 @@ namespace InGame
         public void OnHoldStarted()
         {
             if (!CanShoot) return;
-            if (isCharging) return; 
+            if (isChargingBullet
+                || isChargingDame) return; 
             ResetChargeVariable();
-            isCharging = true;
+            
+            isChargingBullet = true;
+            if (maxDameMultiplierAdd > 0) isChargingDame = true;
         }
 
         public void OnHoldReleased()
         {
-            isCharging = false;
+            isChargingBullet = false;
+            isChargingDame = false;
         }
 
         public void ResetChargeVariable()
         {
+            // bullet number
             bulletAdd = 0;
             maxBulletAdd = InputManager.CurrentSkillConfig.chargeBulletMaxAdd;
             bulletAddInterval = InputManager.CurrentSkillConfig.chargeBulletInterval;
             bulletAddTimer = bulletAddInterval;
+            
+            // damage
+            maxDameMultiplierAdd = InputManager.CurrentSkillConfig.chargeDameMax;
+            maxDameChargeTime = InputManager.CurrentSkillConfig.chargeDameTime;
+            dameChargeTime = 0f;
         }
 
         public virtual void OnUpdate()
         {
+            worldMousePosition = Cam.ScreenToWorldPoint(Input.mousePosition);
+            
             if (OutOfRange)
             {
-                if (Vector2.Distance(Cam.ScreenToWorldPoint(Input.mousePosition),
-                        InputManager.CursorRangeCenter.position) <=
-                    InputManager.CursorRangeRadius)
+                if (Vector2.Distance(worldMousePosition, InputManager.CursorRangeCenter.position)
+                    <= InputManager.CursorRangeRadius)
                 {
                     OutOfRange = false;
                     mousePosition = Input.mousePosition;
@@ -111,9 +143,8 @@ namespace InGame
                 return;
             }
 
-            if (Vector2.Distance(Cam.ScreenToWorldPoint(Input.mousePosition),
-                    InputManager.CursorRangeCenter.position) >
-                InputManager.CursorRangeRadius)
+            if (Vector2.Distance(worldMousePosition, InputManager.CursorRangeCenter.position) 
+                > InputManager.CursorRangeRadius)
             {
                 OutOfRange = true;
                 cursor.gameObject.SetActive(false);
@@ -135,23 +166,33 @@ namespace InGame
                 cursor.UpdateCooldown(Mathf.Clamp(cdCounter / Cooldown, 0f, 1f));
                 cursor.UpdateBulletAdd(false);
             }
-            else if (isCharging)
-            {
-                if (bulletAddTimer > 0)
-                    bulletAddTimer -= Time.deltaTime;
-                else if (bulletAdd < maxBulletAdd)
-                {
-                    bulletAdd += 1;
-                    bulletAddTimer = bulletAddInterval;
-                }
-                
-                // Update UI
-                cursor.UpdateBulletAdd(true, bulletAdd);
-            }
             else
             {
-                // Update UI
-                cursor.UpdateBulletAdd(false);
+                // Charge bullets
+                if (isChargingBullet)
+                {
+                    if (bulletAddTimer > 0)
+                        bulletAddTimer -= Time.deltaTime;
+                    else if (bulletAdd < maxBulletAdd)
+                    {
+                        bulletAdd += 1;
+                        bulletAddTimer = bulletAddInterval;
+                    }
+                
+                    // Update UI
+                    cursor.UpdateBulletAdd(true, bulletAdd);
+                }
+                else
+                {
+                    // Update UI
+                    cursor.UpdateBulletAdd(false);
+                }
+                
+                // Charge dame
+                if (isChargingDame)
+                {
+                    dameChargeTime += Time.deltaTime;
+                }
             }
             
 #if UNITY_EDITOR

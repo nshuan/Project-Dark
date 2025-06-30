@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace InGame.EnemyEffect
 {
-    public class AnimController : MonoBehaviour
+    public class EnemyAnimController : MonoBehaviour
     {
         [SerializeField] private MonoEnemyHitEffect enemyHitEffect;
         [SerializeField] private EnemySpritesAnimation spritesAnim;
