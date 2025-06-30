@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,14 +8,17 @@ namespace InGame
     public class MonoCursor : MonoBehaviour
     {
         [SerializeField] private Image cooldown;
+        [SerializeField] private TextMeshProUGUI txtChargeBulletAdd;
 
-        private RectTransform rectCursor;
-
-        private void Awake()
+        public void UpdateCooldown(float value)
         {
-            rectCursor = GetComponent<RectTransform>();
+            cooldown.fillAmount = value;
         }
 
-        public Image UICooldown => cooldown;
+        public void UpdateBulletAdd(bool active, int value = 1)
+        {
+            txtChargeBulletAdd.gameObject.SetActive(active);
+            txtChargeBulletAdd.SetText($"+{value}");
+        }
     }
 }

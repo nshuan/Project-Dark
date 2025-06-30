@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace InGame
 {
-    public class InputInGame : MonoBehaviour, IPointerClickHandler
+    public class InputInGame : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
     {
         private Camera cam;
         [SerializeField] private Canvas canvas;
@@ -13,6 +13,11 @@ namespace InGame
         public PlayerSkillConfig CurrentSkillConfig { get; set; }
         public Transform CursorRangeCenter { get; set; }
         public float CursorRangeRadius { get; set; }
+        public float holdThreshold = 0.5f;
+        private bool IsMousePressing;
+        private bool IsMousePressingStarted;
+        private float holdTime;
+        private float holdDelayTime;
 
         private void Awake()
         {
@@ -38,6 +43,7 @@ namespace InGame
             var cursor = ShotCursorManager.Instance.GetPrefab(skillConfig.shootLogic.cursorType, canvas.transform);
             mouseInput = ShotCursorManager.Instance.GetCursorMoveLogic(skillConfig.shootLogic.cursorType, cam, cursor);
             mouseInput.InputManager = this;
+            mouseInput.ResetChargeVariable();
         }
 
         private void OnTowerChanged(Transform towerTransform)
@@ -48,6 +54,25 @@ namespace InGame
         private void Update()
         {
             mouseInput?.OnUpdate();
+
+            if (IsMousePressingStarted)
+            {
+                if (holdDelayTime < holdThreshold)
+                {
+                    holdDelayTime += Time.deltaTime;
+                }
+                else
+                {
+                    IsMousePressingStarted = false;
+                    IsMousePressing = true;
+                    mouseInput?.OnHoldStarted();
+                }
+            }
+
+            if (IsMousePressing)
+            {
+                holdTime += Time.deltaTime;
+            }
         }
         
         public void OnPointerClick(PointerEventData eventData)
@@ -58,6 +83,21 @@ namespace InGame
         private void OnDrawGizmos()
         {
             mouseInput?.OnDrawGizmos();
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            holdTime = 0f;
+            holdDelayTime = 0f;
+            IsMousePressingStarted = true;
+        }
+
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            if (!IsMousePressing) return;
+            IsMousePressing = false;
+
+            mouseInput?.OnHoldReleased();
         }
     }
 }

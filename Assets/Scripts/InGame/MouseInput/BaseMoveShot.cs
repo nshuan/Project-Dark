@@ -15,8 +15,8 @@ namespace InGame
         public InputInGame InputManager { get; set; }
         
         protected Camera Cam { get; set; }
-        protected RectTransform cursor;
-        protected Image uiCursorCd;
+        protected MonoCursor cursor;
+        protected RectTransform cursorRect;
         protected Vector3 mousePosition;
         protected CameraShake effectCamShake;
         
@@ -34,8 +34,8 @@ namespace InGame
         {
             Cam = cam;
             effectCamShake = new CameraShake() { Cam = cam };
-            this.cursor = (RectTransform)cursor.transform;
-            this.uiCursorCd = cursor.UICooldown;
+            this.cursor = cursor;
+            cursorRect = (RectTransform)cursor.transform;
         }
 
         public virtual void OnMouseClick()
@@ -53,6 +53,21 @@ namespace InGame
             seq.Append(cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f))
                 .Join(cursor.transform.DOShakeRotation(0.13f, new Vector3(0f, 0f, 10f)));
             seq.Play();
+        }
+
+        public void OnHoldStarted()
+        {
+            
+        }
+
+        public void OnHoldReleased()
+        {
+            
+        }
+
+        public void ResetChargeVariable()
+        {
+            
         }
 
         // Check if can spawn elemental effect on hit enemy
@@ -82,7 +97,7 @@ namespace InGame
                     OutOfRange = false;
                     mousePosition = Input.mousePosition;
                     mousePosition.z = 0; // Set z to 0 for 2D
-                    cursor.position = mousePosition;
+                    cursorRect.position = mousePosition;
                     cursor.gameObject.SetActive(true);
                 }
                 return;
@@ -99,11 +114,11 @@ namespace InGame
             
             mousePosition = Input.mousePosition;
             mousePosition.z = 0; // Set z to 0 for 2D
-            cursor.position = mousePosition;
+            cursorRect.position = mousePosition;
             
 #if UNITY_EDITOR
             var corners = new Vector3[4];
-            cursor.GetWorldCorners(corners);
+            cursorRect.GetWorldCorners(corners);
             corners = corners.Select((corner) => Cam.ScreenToWorldPoint(corner)).ToArray();
             
             // Draw lines between corners to visualize the box

@@ -24,13 +24,14 @@ namespace InGame
         public float chargeRangeMax = -1;
         public float chargeRangeTime = -1;
         public float chargeBulletInterval = -1;
-        public float chargeBulletMaxAdd = -1;
+        public int chargeBulletMaxAdd = -1;
         public float speedScale = 1f; // Scale speed of bullets
 
         public void Shoot(
             Vector2 spawnPos, 
             Vector2 target, 
             int damagePerBullet, 
+            int bulletNumber,
             int criticalDamagePerBullet,
             float criticalRatePerBullet)
         {
@@ -41,7 +42,7 @@ namespace InGame
                 damagePerBullet,
                 criticalDamagePerBullet,
                 criticalRatePerBullet,
-                numberOfBullets,
+                bulletNumber,
                 speedScale);
         }
     }

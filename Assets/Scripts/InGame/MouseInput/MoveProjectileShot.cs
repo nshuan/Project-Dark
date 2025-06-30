@@ -14,14 +14,25 @@ namespace InGame
         public InputInGame InputManager { get; set; }
         
         protected Camera Cam { get; set; }
-        protected RectTransform cursor;
-        protected Image uiCursorCd;
+        protected MonoCursor cursor;
+        protected RectTransform cursorRect;
         protected Vector3 mousePosition;
         
         protected float Cooldown => LevelManager.Instance.GameStats.pShotCooldown;
         public bool CanShoot { get; set; }
         private bool OutOfRange { get; set; }
         protected float cdCounter;
+
+        #region Charge
+
+        private bool isCharging;
+        
+        private int bulletAdd;
+        private int maxBulletAdd;
+        private float bulletAddInterval;
+        private float bulletAddTimer;
+
+        #endregion
 
         public MoveProjectileShot()
         {
@@ -31,8 +42,8 @@ namespace InGame
         public MoveProjectileShot(Camera cam, MonoCursor cursor)
         {
             Cam = cam;
-            this.cursor = (RectTransform)cursor.transform;
-            this.uiCursorCd = cursor.UICooldown;
+            this.cursor = cursor;
+            cursorRect = cursor.GetComponent<RectTransform>();
         }
 
         public virtual void OnMouseClick()
@@ -50,6 +61,7 @@ namespace InGame
                 InputManager.CursorRangeCenter.position, 
                 Cam.ScreenToWorldPoint(mousePosition),
                 damage,
+                InputManager.CurrentSkillConfig.numberOfBullets + bulletAdd,
                 criticalDamage,
                 InputManager.PlayerStats.criticalRate);
             
@@ -59,6 +71,27 @@ namespace InGame
             seq.Append(cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f))
                 .Join(cursor.transform.DOShakeRotation(0.13f, new Vector3(0f, 0f, 10f)));
             seq.Play();
+        }
+
+        public void OnHoldStarted()
+        {
+            if (!CanShoot) return;
+            if (isCharging) return; 
+            ResetChargeVariable();
+            isCharging = true;
+        }
+
+        public void OnHoldReleased()
+        {
+            isCharging = false;
+        }
+
+        public void ResetChargeVariable()
+        {
+            bulletAdd = 0;
+            maxBulletAdd = InputManager.CurrentSkillConfig.chargeBulletMaxAdd;
+            bulletAddInterval = InputManager.CurrentSkillConfig.chargeBulletInterval;
+            bulletAddTimer = bulletAddInterval;
         }
 
         public virtual void OnUpdate()
@@ -72,7 +105,7 @@ namespace InGame
                     OutOfRange = false;
                     mousePosition = Input.mousePosition;
                     mousePosition.z = 0; // Set z to 0 for 2D
-                    cursor.position = mousePosition;
+                    cursorRect.position = mousePosition;
                     cursor.gameObject.SetActive(true);
                 }
                 return;
@@ -89,7 +122,7 @@ namespace InGame
             
             mousePosition = Input.mousePosition;
             mousePosition.z = 0; // Set z to 0 for 2D
-            cursor.position = mousePosition;
+            cursorRect.position = mousePosition;
             
             // Cooldown if player can not shoot
             if (!CanShoot)
@@ -99,12 +132,31 @@ namespace InGame
                     CanShoot = true;
                 
                 // Update UI
-                if (uiCursorCd)
-                    uiCursorCd.fillAmount = Mathf.Clamp(cdCounter / Cooldown, 0f, 1f);
+                cursor.UpdateCooldown(Mathf.Clamp(cdCounter / Cooldown, 0f, 1f));
+                cursor.UpdateBulletAdd(false);
             }
+            else if (isCharging)
+            {
+                if (bulletAddTimer > 0)
+                    bulletAddTimer -= Time.deltaTime;
+                else if (bulletAdd < maxBulletAdd)
+                {
+                    bulletAdd += 1;
+                    bulletAddTimer = bulletAddInterval;
+                }
+                
+                // Update UI
+                cursor.UpdateBulletAdd(true, bulletAdd);
+            }
+            else
+            {
+                // Update UI
+                cursor.UpdateBulletAdd(false);
+            }
+            
 #if UNITY_EDITOR
             var corners = new Vector3[4];
-            cursor.GetWorldCorners(corners);
+            cursorRect.GetWorldCorners(corners);
             corners = corners.Select((corner) => Cam.ScreenToWorldPoint(corner)).ToArray();
             
             // Draw lines between corners to visualize the box

@@ -28,7 +28,7 @@ namespace InGame
             
             // Check hit enemy, all enemies are hit
             var mousePos = Cam.ScreenToWorldPoint(mousePosition);
-            var hits = Physics2D.BoxCastAll(mousePos, WorldUtility.GetWorldSize(Cam, cursor), 0, Vector2.zero, 0f, LayerMask.GetMask("Entity"));
+            var hits = Physics2D.BoxCastAll(mousePos, WorldUtility.GetWorldSize(Cam, cursorRect), 0, Vector2.zero, 0f, LayerMask.GetMask("Entity"));
             var damage = CalculateDmg();
             foreach (var hit in hits)
             {
@@ -54,14 +54,13 @@ namespace InGame
                     CanShoot = true;
                 
                 // Update UI
-                if (uiCursorCd)
-                    uiCursorCd.fillAmount = Mathf.Clamp(cdCounter / Cooldown, 0f, 1f);
+                cursor.UpdateCooldown(Mathf.Clamp(cdCounter / Cooldown, 0f, 1f));
             }
         }
 
         public override void OnDrawGizmos()
         {
-            DrawBoxGizmo(Cam.ScreenToWorldPoint(mousePosition), WorldUtility.GetWorldSize(Cam, cursor), 0f, Color.cyan);
+            DrawBoxGizmo(Cam.ScreenToWorldPoint(mousePosition), WorldUtility.GetWorldSize(Cam, cursorRect), 0f, Color.cyan);
         }
         
         private void DrawBoxGizmo(Vector2 center, Vector2 size, float angle, Color color)

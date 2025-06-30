@@ -27,7 +27,7 @@ namespace InGame
             
             // Check hit enemy, only nearest enemy is hit
             var mousePos = Cam.ScreenToWorldPoint(mousePosition);
-            var hits = Physics2D.CircleCastAll(mousePos, WorldUtility.GetWorldSize(Cam, cursor).x, Vector2.zero, 0f, LayerMask.GetMask("Entity"));
+            var hits = Physics2D.CircleCastAll(mousePos, WorldUtility.GetWorldSize(Cam, cursorRect).x, Vector2.zero, 0f, LayerMask.GetMask("Entity"));
             var minDistance = float.MaxValue;
             EnemyEntity nearestEnemy = null;
             foreach (var hit in hits)
@@ -63,14 +63,13 @@ namespace InGame
                     CanShoot = true;
                 
                 // Update UI
-                if (uiCursorCd)
-                    uiCursorCd.fillAmount = Mathf.Clamp(cdCounter / Cooldown, 0f, 1f);
+                cursor.UpdateCooldown(Mathf.Clamp(cdCounter / Cooldown, 0f, 1f));
             }
         }
 
         public override void OnDrawGizmos()
         {
-            DrawBoxGizmo(Cam.ScreenToWorldPoint(mousePosition), WorldUtility.GetWorldSize(Cam, cursor), 0f, Color.cyan);
+            DrawBoxGizmo(Cam.ScreenToWorldPoint(mousePosition), WorldUtility.GetWorldSize(Cam, cursorRect), 0f, Color.cyan);
         }
         
         private void DrawBoxGizmo(Vector2 center, Vector2 size, float angle, Color color)
