@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 namespace InGame
 {
-    public class InputInGame : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
+    public class InputInGame : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         private Camera cam;
         [SerializeField] private Canvas canvas;
@@ -82,10 +82,10 @@ namespace InGame
             }
         }
         
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            mouseInput?.OnMouseClick(delayInfo.skillDelay);
-        }
+        // public void OnPointerClick(PointerEventData eventData)
+        // {
+        //     mouseInput?.OnMouseClick(delayInfo.skillDelay);
+        // }
 
         private void OnDrawGizmos()
         {
@@ -101,10 +101,16 @@ namespace InGame
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            if (!IsMousePressing) return;
+            if (!IsMousePressing)
+            {
+                mouseInput?.ResetChargeVariable();
+                mouseInput?.OnMouseClick(delayInfo.skillDelay);
+                return;
+            }
             IsMousePressing = false;
 
             mouseInput?.OnHoldReleased();
+            mouseInput?.OnMouseClick(delayInfo.skillDelay);
         }
 
         public void DelayCall(float delay, Action callback)

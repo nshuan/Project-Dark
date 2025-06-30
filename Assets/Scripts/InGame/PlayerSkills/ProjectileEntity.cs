@@ -17,7 +17,8 @@ namespace InGame
         [Space] [Header("Bullet config")]
         [SerializeField] private float baseSpeed = 5f;
         private Vector2 direction;
-        private Vector2 target;
+        private Vector2 startPos;
+        private float maxDistance;
         private int Damage { get; set; }
         private int CriticalDamage { get; set; }
         private float CriticalRate { get; set; }
@@ -34,11 +35,12 @@ namespace InGame
             StopAllCoroutines();
         }
 
-        public void Init(float speedScale, Vector2 targetPos, int damage, int criticalDamage, float criticalRate)
+        public void Init(Vector2 startPos, Vector2 direction, float maxDistance, float speedScale, int damage, int criticalDamage, float criticalRate)
         {
             Speed = baseSpeed * speedScale;
-            target = targetPos;
-            direction = (target - (Vector2)transform.position).normalized;
+            this.startPos = startPos;
+            this.direction = direction;
+            this.maxDistance = maxDistance;
             lifeTime = 0f;
             Damage = damage;
             CriticalDamage = criticalDamage;
@@ -60,7 +62,7 @@ namespace InGame
         private void Update()
         {
             if (!activated) return;
-            if (Vector2.Distance(transform.position, target) < 0.1f) ProjectileHit(null);
+            if (Vector2.Distance(transform.position, startPos) > maxDistance) ProjectileHit(null);
             transform.position += (Vector3)(Speed * Time.deltaTime * direction);
             lifeTime += Time.deltaTime;
             if (lifeTime > MaxLifeTime) Destroy(gameObject);
