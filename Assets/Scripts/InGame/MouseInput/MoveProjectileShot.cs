@@ -68,7 +68,7 @@ namespace InGame
                 1 + Mathf.Min(dameChargeTime / maxDameChargeTime, 1f) * maxDameMultiplierAdd);
             
             CanShoot = false;
-            cdCounter = InputManager.CurrentSkillConfig.cooldown;
+            cdCounter = InputManager.CurrentSkillConfig.cooldown + delay;
 
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             LevelManager.Instance.SetTeleportTowerState(false);
@@ -148,10 +148,20 @@ namespace InGame
             if (Vector2.Distance(worldMousePosition, InputManager.CursorRangeCenter.position) 
                 > InputManager.CursorRangeRadius)
             {
-                OutOfRange = true;
                 cursor.gameObject.SetActive(false);
                 InputManager.playerVisual.SetRangeVisual(true);
-                return;
+
+                if (CanShoot)
+                {
+                    OutOfRange = true;
+                    ResetChargeVariable();
+                    return;
+                }
+            }
+            else
+            {
+                cursor.gameObject.SetActive(true);
+                InputManager.playerVisual.SetRangeVisual(false);
             }
             
             mousePosition = Input.mousePosition;

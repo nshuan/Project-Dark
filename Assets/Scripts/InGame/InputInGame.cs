@@ -19,7 +19,6 @@ namespace InGame
         public float CursorRangeRadius { get; set; }
         private bool IsMousePressing;
         private bool IsMousePressingStarted;
-        private float holdTime;
         private float holdDelayTime;
         
         private void Awake()
@@ -50,8 +49,6 @@ namespace InGame
 
         private void Update()
         {
-            mouseInput?.OnUpdate();
-
             if (IsMousePressingStarted)
             {
                 if (holdDelayTime < holdThreshold)
@@ -65,13 +62,13 @@ namespace InGame
                     mouseInput?.OnHoldStarted();
                 }
             }
-
-            if (IsMousePressing)
-            {
-                holdTime += Time.deltaTime;
-            }
         }
-        
+
+        private void LateUpdate()
+        {
+            mouseInput?.OnUpdate();
+        }
+
         // public void OnPointerClick(PointerEventData eventData)
         // {
         //     mouseInput?.OnMouseClick(delayInfo.skillDelay);
@@ -84,21 +81,24 @@ namespace InGame
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            holdTime = 0f;
             holdDelayTime = 0f;
+            IsMousePressing = false;
             IsMousePressingStarted = true;
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
+            IsMousePressingStarted = false;
+            
             if (!IsMousePressing)
             {
                 mouseInput?.ResetChargeVariable();
                 mouseInput?.OnMouseClick(delayInfo.skillDelay);
                 return;
             }
+            
             IsMousePressing = false;
-
+            
             mouseInput?.OnHoldReleased();
             mouseInput?.OnMouseClick(delayInfo.skillDelay);
         }
