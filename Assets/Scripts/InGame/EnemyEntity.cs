@@ -159,8 +159,11 @@ namespace InGame
             }
             else
             {
-                staggerDirection = (stagger - config.staggerResist) * damageDirection ;
-                staggerDuration = (stagger - config.staggerResist) * StaggerMaxDuration;
+                if (stagger - config.staggerResist > 0)
+                {
+                    staggerDirection = (stagger - config.staggerResist) * damageDirection ;
+                    staggerDuration = (stagger - config.staggerResist) * StaggerMaxDuration;
+                }
                 
                 animController.PlayHit();
             }

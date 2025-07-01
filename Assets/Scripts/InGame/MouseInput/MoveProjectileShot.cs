@@ -102,7 +102,8 @@ namespace InGame
                 || isChargingDame) return; 
             ResetChargeVariable();
             
-            isChargingBullet = true;
+            if (InputManager.CurrentSkillConfig.chargeBulletMaxAdd > 0)
+                isChargingBullet = true;
             if (maxDameMultiplierAdd > 0) isChargingDame = true;
         }
 
