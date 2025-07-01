@@ -10,11 +10,6 @@ namespace Home
     {
         [SerializeField] private UpgradeTreeConfig upgradeTree;
         
-        [Button]
-        public void ActivateTree()
-        {
-            upgradeTree.Activate();   
-        }
     }
 
     [Serializable]

@@ -11,32 +11,18 @@ namespace InGame.Upgrade
     public class UpgradeTreeConfig : SerializedScriptableObject
     {
         public List<UpgradeNodeConfig> upgradeNodes = new List<UpgradeNodeConfig>();
-        [ReadOnly, NonSerialized, OdinSerialize] private Dictionary<int, UpgradeNodeConfig[]> upgradeNodesMapByLevel = new Dictionary<int, UpgradeNodeConfig[]>();
-        
-        public void Activate()
-        {
-            foreach (var pair in upgradeNodesMapByLevel)
-            {
-                foreach (var node in pair.Value)
-                {
-                    if (node.Activated) continue;
-                    node.ActivateNode();
-                }
-            }
-        }
+        [ReadOnly, NonSerialized, OdinSerialize] private Dictionary<int, UpgradeNodeConfig> upgradeNodesMapByIndex = new Dictionary<int, UpgradeNodeConfig>();
 
         private void OnValidate()
         {
             if (upgradeNodes == null || upgradeNodes.Count == 0)
             {
-                upgradeNodesMapByLevel.Clear();
-                upgradeNodesMapByLevel = null;
+                upgradeNodesMapByIndex.Clear();
+                upgradeNodesMapByIndex = null;
                 return;
             }
 
-            upgradeNodesMapByLevel = upgradeNodes
-                .GroupBy((node) => node.levelInTree)
-                .ToDictionary(node => node.Key, node => node.ToArray());
+            upgradeNodesMapByIndex = upgradeNodes.ToDictionary((node) => node.nodeIndex, (node) => node);
         }
     }
 }

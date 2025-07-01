@@ -314,7 +314,6 @@ namespace DefaultNamespace.Editor.UpgradeTreeEditor
                     {
                         UpgradeNodeConfig newNode = (UpgradeNodeConfig)ScriptableObject.CreateInstance(type);
                         newNode.nodeName = type.Name;
-                        newNode.levelInTree = 0;
 
                         string nodePath = EditorUtility.SaveFilePanelInProject("Save Node", newNode.nodeName, "asset", "Save new node asset");
                         if (!string.IsNullOrEmpty(nodePath))
@@ -482,7 +481,6 @@ namespace DefaultNamespace.Editor.UpgradeTreeEditor
                 {
                     var newNode = (UpgradeNodeConfig)ScriptableObject.CreateInstance(type);
                     newNode.nodeName = type.Name;
-                    newNode.levelInTree = prereqNode?.nodeConfig.levelInTree + 1 ?? 0;
 
                     string nodePath = EditorUtility.SaveFilePanelInProject("Save Node", newNode.nodeName, "asset", "Save new node asset");
                     if (!string.IsNullOrEmpty(nodePath))
