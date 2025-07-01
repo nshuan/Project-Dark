@@ -72,7 +72,7 @@ namespace InGame
 
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             LevelManager.Instance.SetTeleportTowerState(false);
-            InputManager.OnShootStart?.Invoke(worldMousePosition);
+            InputManager.playerVisual.PlayShoot(worldMousePosition);
             InputManager.DelayCall(delay, () =>
             {
                 InputManager.CurrentSkillConfig.Shoot(
@@ -97,6 +97,7 @@ namespace InGame
         public void OnHoldStarted()
         {
             if (!CanShoot) return;
+            if (OutOfRange) return;
             if (isChargingBullet
                 || isChargingDame) return; 
             ResetChargeVariable();
@@ -139,6 +140,7 @@ namespace InGame
                     mousePosition.z = 0; // Set z to 0 for 2D
                     cursorRect.position = mousePosition;
                     cursor.gameObject.SetActive(true);
+                    InputManager.playerVisual.SetRangeVisual(false);
                 }
                 return;
             }
@@ -148,6 +150,7 @@ namespace InGame
             {
                 OutOfRange = true;
                 cursor.gameObject.SetActive(false);
+                InputManager.playerVisual.SetRangeVisual(true);
                 return;
             }
             

@@ -43,7 +43,8 @@ namespace InGame
                 effectConfig.effectId,
                 position,
                 effectConfig.size,
-                effectConfig.value);
+                effectConfig.value,
+                effectConfig.stagger);
             yield return new WaitForSeconds(effectConfig.cooldown);
             effectPendingMap[effectConfig.effectId] = false;
         }

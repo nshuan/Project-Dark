@@ -6,8 +6,6 @@ namespace InGame
 {
     public class TowerEntity : MonoBehaviour, IDamageable
     {
-        [SerializeField] private GameObject towerRange;
-
         public int MaxHp { get; private set; }
         public int CurrentHp { get; private set; }
         public bool IsDestroyed { get; set; }
@@ -21,24 +19,22 @@ namespace InGame
             IsDestroyed = false;
 
             OnDestroyed = null;
-            
-            // Update UI
-            towerRange.transform.localScale = 2 * radius * Vector3.one;
         }
         
         public void EnterTower()
         {
-            towerRange.SetActive(true);    
+          
         }
 
         public void LeaveTower()
         {
-            towerRange.SetActive(false);
+            
         }
 
-        public void Damage(int damage)
+        public void Damage(int damage, Vector2 damageDirection, float stagger)
         {
             if (IsDestroyed) return;
+            stagger = 0;
             CurrentHp -= damage;
             if (CurrentHp <= 0)
             {

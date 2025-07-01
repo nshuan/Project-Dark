@@ -15,6 +15,7 @@ namespace InGame
         [Range(0f, 1f)] public float chance;
         public float size;
         public float value;
+        public float stagger;
     }
 
     public enum ActionEffectTriggerType

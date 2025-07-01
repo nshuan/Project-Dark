@@ -9,6 +9,8 @@ namespace InGame
         [SerializeField] private ActionEffectEntity effectEntity;
         [SerializeField] private LayerMask targetLayer;
 
+        private Vector2 Position { get; set; }
+        private float Stagger { get; set; }
         private RaycastHit2D[] hits = new RaycastHit2D[50];
         private IDamageable hitTarget;
 
@@ -17,8 +19,11 @@ namespace InGame
             hits = new RaycastHit2D[50];
         }
 
-        public void TriggerEffect(int effectId, Vector2 position, float size, float value)
+        public void TriggerEffect(int effectId, Vector2 position, float size, float value, float stagger)
         {
+            this.Position = position;
+            this.Stagger = stagger;
+            
             // Check hit target
             var count = Physics2D.CircleCastNonAlloc(position, size, Vector2.zero, hits, 0f,
                 targetLayer);
@@ -37,7 +42,7 @@ namespace InGame
             {
                 if (hitTransform.TryGetComponent(out hitTarget))
                 {
-                    hitTarget.Damage((int)value);
+                    hitTarget.Damage((int)value, ((Vector2)hitTransform.position - Position).normalized, Stagger);
                 }
             }
         }

@@ -18,6 +18,7 @@ namespace InGame
         public int hp;
         public int dmg; // Base damage
         public float moveSpeed;
+        public float staggerResist; // Reduce projectile stagger
         public List<ActionEffectConfig> effects; 
         
         public void Init(Transform enemy)

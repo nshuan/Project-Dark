@@ -7,7 +7,7 @@ namespace InGame
     {
         public override void Attack(IDamageable target, int damage)
         {
-            target.Damage(damage);
+            target.Damage(damage, Vector2.zero, 0f);
         }
     }
 }

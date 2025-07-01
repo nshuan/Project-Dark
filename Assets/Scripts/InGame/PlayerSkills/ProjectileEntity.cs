@@ -23,6 +23,7 @@ namespace InGame
         private int CriticalDamage { get; set; }
         private float CriticalRate { get; set; }
         private float Speed { get; set; }
+        private float Stagger { get; set; }
 
         private bool activated = false;
         private float lifeTime = 0f;
@@ -35,7 +36,15 @@ namespace InGame
             StopAllCoroutines();
         }
 
-        public void Init(Vector2 startPos, Vector2 direction, float maxDistance, float speedScale, int damage, int criticalDamage, float criticalRate)
+        public void Init(
+            Vector2 startPos, 
+            Vector2 direction, 
+            float maxDistance, 
+            float speedScale, 
+            int damage, 
+            int criticalDamage, 
+            float criticalRate,
+            float stagger)
         {
             Speed = baseSpeed * speedScale;
             this.startPos = startPos;
@@ -45,6 +54,7 @@ namespace InGame
             Damage = damage;
             CriticalDamage = criticalDamage;
             CriticalRate = criticalRate;
+            Stagger = stagger;
         }
 
         public void Activate(float delay)
@@ -82,7 +92,7 @@ namespace InGame
                 {
                     // Check critical hit
                     var critical = Random.Range(0f, 1f) <= CriticalRate;
-                    enemy.Damage(critical ? CriticalDamage : Damage);
+                    enemy.Damage(critical ? CriticalDamage : Damage, direction, Stagger);
                    
                     if (critical)
                         DebugUtility.LogWarning($"Projectile {name} deals critical damage {CriticalDamage} to {enemy.name}!!");

@@ -9,23 +9,18 @@ namespace InGame
     {
         private Camera cam;
         [SerializeField] private Canvas canvas;
+        [SerializeField] public PlayerCharacter playerVisual;
         public float holdThreshold = 0.5f;
         [SerializeField] private InputInGameDelayInfo delayInfo;
         private IMouseInput mouseInput;
         public PlayerStats PlayerStats { get; set; }
         public PlayerSkillConfig CurrentSkillConfig { get; set; }
-        public Transform CursorRangeCenter { get; set; }
+        public Transform CursorRangeCenter => playerVisual.transform;
         public float CursorRangeRadius { get; set; }
         private bool IsMousePressing;
         private bool IsMousePressingStarted;
         private float holdTime;
         private float holdDelayTime;
-
-        #region Action
-
-        public Action<Vector2> OnShootStart { get; set; }
-
-        #endregion
         
         private void Awake()
         {
@@ -33,11 +28,6 @@ namespace InGame
 
             LevelManager.Instance.OnLevelLoaded += (level) => { PlayerStats = LevelManager.Instance.PlayerStats; };
             LevelManager.Instance.OnChangeSkill += OnSkillChanged;
-        }
-
-        private void OnDestroy()
-        {
-            OnShootStart = null;
         }
 
         private void OnSkillChanged(PlayerSkillConfig skillConfig)

@@ -26,6 +26,7 @@ namespace InGame
         public float chargeBulletInterval = -1;
         public int chargeBulletMaxAdd = -1;
         public float speedScale = 1f; // Scale speed of bullets
+        public float stagger; // Push enemy away when projectile hit
 
         public void Shoot(
             Vector2 spawnPos, 
@@ -44,7 +45,8 @@ namespace InGame
                 criticalDamagePerBullet,
                 criticalRatePerBullet,
                 bulletNumber,
-                speedScale);
+                speedScale,
+                stagger);
         }
     }
 

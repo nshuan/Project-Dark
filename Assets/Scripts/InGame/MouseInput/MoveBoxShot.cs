@@ -34,7 +34,7 @@ namespace InGame
             {
                 if (hit.collider && hit.transform.TryGetComponent<EnemyEntity>(out var enemyEntity))
                 {
-                    enemyEntity.Damage(damage);
+                    enemyEntity.Damage(damage, (hit.transform.position - mousePos).normalized, 0f);
                     CheckElemental(enemyEntity);
                 }
             }

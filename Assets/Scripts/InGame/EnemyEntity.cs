@@ -10,6 +10,8 @@ namespace InGame
 {
     public class EnemyEntity : MonoBehaviour, IDamageable
     {
+        private static float StaggerMaxDuration = 0.5f; // Hit back 1f on 0.5s
+        
         public Transform Target { get; set; }
         public IDamageable TargetDamageable { get; set; }
         private EnemyBehaviour config;
@@ -21,6 +23,10 @@ namespace InGame
         public EnemyState State { get; set; }
         public int UniqueId { get; set; }
         private Vector3 direction = new Vector3();
+        private float staggerDuration;
+        private Vector2 staggerDirection;
+        
+        
         [SerializeField] private EnemyActionEffectTrigger effectTrigger;
 
         [Space, Header("Visual")] 
@@ -93,8 +99,17 @@ namespace InGame
             if (!Target) return;
             if (IsDead) return;
             if (State != EnemyState.Move) return;
-            
-            MoveTo(Target, boidAgent.GetBoidAddition());
+
+            if (staggerDuration > 0)
+            {
+                staggerDuration -= Time.deltaTime;
+                var startPos = (Vector2)transform.position;
+                transform.position = Vector2.MoveTowards(startPos, startPos + staggerDirection, 0.5f * Time.deltaTime);
+            }
+            else
+            {
+                MoveTo(Target, boidAgent.GetBoidAddition());
+            }
         }
 
         private void MoveTo(Transform target, Vector2 directionAdder)
@@ -134,7 +149,7 @@ namespace InGame
             animController.PlayAttack();
         }
 
-        public void Damage(int damage)
+        public void Damage(int damage, Vector2 damageDirection, float stagger)
         {
             if (IsDead) return;
             CurrentHealth -= damage;
@@ -144,7 +159,9 @@ namespace InGame
             }
             else
             {
-                // UIUpdateHealth();
+                staggerDirection = (stagger - config.staggerResist) * damageDirection ;
+                staggerDuration = (stagger - config.staggerResist) * StaggerMaxDuration;
+                
                 animController.PlayHit();
             }
         }

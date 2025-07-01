@@ -7,6 +7,6 @@ namespace InGame
     public interface IActionEffectLogic
     {
         void Initialize();
-        void TriggerEffect(int effectId, Vector2 center, float size, float value);
+        void TriggerEffect(int effectId, Vector2 center, float size, float value, float stagger);
     }
 }
