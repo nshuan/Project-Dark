@@ -41,7 +41,7 @@ namespace InGame
 
         private void Start()
         {
-            TestLoadLevel();
+            LoadLevel(1);
         }
 
         protected override void OnDestroy()
@@ -53,6 +53,13 @@ namespace InGame
             OnChangeTower = null;
         }
 
+        public void LoadLevel(int level)
+        {
+            var levelConfig = LevelManifest.Instance.GetLevel(level);
+            if (levelConfig == null) return;
+            LoadLevel(levelConfig);
+        }
+        
         public void LoadLevel(LevelConfig level)
         {
             Level = level;
@@ -164,7 +171,7 @@ namespace InGame
             TeleportTower(towerIndex);   
         }
 
-        public LevelConfig testLevel;
+        public int testLevel;
         [Button]
         public void TestLoadLevel()
         {

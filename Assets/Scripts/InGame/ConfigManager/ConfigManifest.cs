@@ -39,31 +39,14 @@ namespace InGame.ConfigManager
         [Button]
         public void ValidatePlayerConfig()
         {
-            playerConfig = LoadAllScriptableObjectsInFolder<PlayerStats>(PATH_PLAYER_CONFIG)[0];
+            playerConfig = AssetUtility.LoadAllScriptableObjectsInFolder<PlayerStats>(PATH_PLAYER_CONFIG)[0];
         }
         
         private const string PATH_SKILL_CONFIG = "Assets/Config/PlayerSkill";
         [Button]
         public void ValidateSkillConfig()
         {
-            skillConfig = LoadAllScriptableObjectsInFolder<PlayerSkillConfig>(PATH_SKILL_CONFIG).ToArray();
-        }
-        
-        private List<T> LoadAllScriptableObjectsInFolder<T>(string folderPath) where T : ScriptableObject
-        {
-            List<T> results = new List<T>();
-
-            string[] guids = AssetDatabase.FindAssets("t:" + typeof(T).Name, new[] { folderPath });
-
-            foreach (string guid in guids)
-            {
-                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
-                T asset = AssetDatabase.LoadAssetAtPath<T>(assetPath);
-                if (asset != null)
-                    results.Add(asset);
-            }
-
-            return results;
+            skillConfig = AssetUtility.LoadAllScriptableObjectsInFolder<PlayerSkillConfig>(PATH_SKILL_CONFIG).ToArray();
         }
 #endif
     }

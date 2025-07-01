@@ -8,6 +8,7 @@ namespace InGame
     [CreateAssetMenu(menuName = "InGame/Level/Level Config", fileName = "Level")]
     public class LevelConfig : SerializedScriptableObject
     {
+        [ReadOnly] public int level;
         [NonSerialized, OdinSerialize] public IWaveInfo[] waveInfos;
 
         private void OnValidate()

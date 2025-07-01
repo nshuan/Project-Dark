@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using InGame.Upgrade;
@@ -231,6 +232,7 @@ namespace DefaultNamespace.Editor.UpgradeTreeEditor
             if (isDraggingLink && Event.current.type == EventType.MouseUp)
             {
                 isDraggingLink = false;
+                if (linkSourceNode == null) return;
 
                 foreach (var targetNode in nodes)
                 {
@@ -240,7 +242,7 @@ namespace DefaultNamespace.Editor.UpgradeTreeEditor
                     if (targetNode.rect.Contains(Event.current.mousePosition))
                     {
                         // Add dependency
-                        var deps = new List<UpgradeNodeConfig>(targetNode.nodeConfig.preRequire ?? new UpgradeNodeConfig[0]);
+                        var deps = new List<UpgradeNodeConfig>(targetNode.nodeConfig.preRequire ?? Array.Empty<UpgradeNodeConfig>());
                         if (!deps.Contains(linkSourceNode.nodeConfig))
                         {
                             deps.Add(linkSourceNode.nodeConfig);
