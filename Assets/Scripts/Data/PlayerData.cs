@@ -1,6 +1,6 @@
 using System;
 
-namespace Database
+namespace Data
 {
     [Serializable]
     public class PlayerData

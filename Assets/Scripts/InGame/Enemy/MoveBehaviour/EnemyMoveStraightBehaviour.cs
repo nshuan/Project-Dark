@@ -18,8 +18,8 @@ namespace InGame
                     dirX + directionAdder.x * magnitude, 
                     dirY + directionAdder.y * magnitude,
                     0f);
-                // Similar to Vector3.Lerp
-                enemy.position = enemyPos + calculatedDir * (Time.deltaTime * speed);
+                // Remove normalized to make it similar to Vector3.Lerp
+                enemy.position = enemyPos + calculatedDir.normalized * (Time.deltaTime * speed);
             }
         }
 
@@ -36,8 +36,8 @@ namespace InGame
                 direction.x = dirX + directionAdder.x * magnitude;
                 direction.y = dirY + directionAdder.y * magnitude;
                 direction.z = 0;
-                // Similar to Vector3.Lerp
-                enemy.position = enemyPos + direction * (Time.deltaTime * speed);
+                // Remove normalized to make it similar to Vector3.Lerp
+                enemy.position = enemyPos + direction.normalized * (Time.deltaTime * speed);
             }
         }
     }

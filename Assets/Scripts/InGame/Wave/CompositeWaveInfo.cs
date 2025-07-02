@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
@@ -14,6 +15,8 @@ namespace InGame
         [Tooltip("After this time finished, stop all waves that belongs to this composite wave.")]
         public float timeToEnd;
         [NonSerialized, OdinSerialize] public SingleWaveInfo[] subWaves;
+
+        public bool WaveEndedCompletely => subWaves.All((wave) => wave.WaveEndedCompletely);
         
         public void SetupWave(GateEntity gatePrefab, TowerEntity[] towers, Action onWaveForceEnded)
         {

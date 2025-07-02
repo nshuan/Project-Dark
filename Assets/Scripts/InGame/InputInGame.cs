@@ -81,26 +81,32 @@ namespace InGame
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            holdDelayTime = 0f;
-            IsMousePressing = false;
-            IsMousePressingStarted = true;
+            if (eventData.button == PointerEventData.InputButton.Left)
+            {
+                holdDelayTime = 0f;
+                IsMousePressing = false;
+                IsMousePressingStarted = true;
+            }
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            IsMousePressingStarted = false;
-            
-            if (!IsMousePressing)
+            if (eventData.button == PointerEventData.InputButton.Left)
             {
-                mouseInput?.ResetChargeVariable();
+                IsMousePressingStarted = false;
+                
+                if (!IsMousePressing)
+                {
+                    mouseInput?.ResetChargeVariable();
+                    mouseInput?.OnMouseClick(delayInfo.skillDelay);
+                    return;
+                }
+                
+                IsMousePressing = false;
+                
+                mouseInput?.OnHoldReleased();
                 mouseInput?.OnMouseClick(delayInfo.skillDelay);
-                return;
             }
-            
-            IsMousePressing = false;
-            
-            mouseInput?.OnHoldReleased();
-            mouseInput?.OnMouseClick(delayInfo.skillDelay);
         }
 
         public void DelayCall(float delay, Action callback)

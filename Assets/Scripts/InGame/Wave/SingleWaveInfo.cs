@@ -21,6 +21,7 @@ namespace InGame
 
         public GateEntity[] Gates { get; private set; }
         public Action OnWaveForceStop { get; set; }
+        public bool WaveEndedCompletely { get; set; }
         
         public void SetupWave(GateEntity gatePrefab, TowerEntity[] towers, Action onWaveForceEnded)
         {
@@ -32,6 +33,7 @@ namespace InGame
                 Gates[i].Initialize(gateCfg, gateCfg.targetBaseIndex.Select((index) => towers[index]).ToArray(), scaleHp, scaleDmg);
             }
 
+            WaveEndedCompletely = false;
             OnWaveForceStop = onWaveForceEnded;
         }
 
@@ -51,7 +53,6 @@ namespace InGame
             ActivateWave();
             
             yield return new WaitForSeconds(timeToEnd);
-            OnWaveForceStop = null;
             DebugUtility.LogError($"Stop wave {WaveIndex}: End duration");
             StopWave();
         }
@@ -69,6 +70,7 @@ namespace InGame
             if (Gates.All((gate) => gate.IsActive == false))
             {
                 DebugUtility.LogError($"Stop wave {WaveIndex}: All enemies are dead");
+                WaveEndedCompletely = true;
                 OnWaveForceStop?.Invoke();
                 OnWaveForceStop = null;
             }

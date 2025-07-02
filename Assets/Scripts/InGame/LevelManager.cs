@@ -28,8 +28,9 @@ namespace InGame
         }
         private bool canTeleportTower;
    
-        private LevelConfig Level { get; set; }
+        public LevelConfig Level { get; private set; }
         public PlayerStats PlayerStats => playerStats;
+        private bool IsEndLevel { get; set; }
         
         #region Action
 
@@ -37,20 +38,23 @@ namespace InGame
         public Action<PlayerSkillConfig> OnChangeSkill;
         public Action<Transform> OnChangeTower;
 
+        public event Action OnWin;
+        public event Action OnLose;
+
         #endregion
+        
+        private WinLoseManager winLoseManager;
 
         private void Start()
         {
-            LoadLevel(1);
+            LoadLevel(2);
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
 
-            OnLevelLoaded = null;
-            OnChangeSkill = null;
-            OnChangeTower = null;
+            ClearAction();
         }
 
         public void LoadLevel(int level)
@@ -64,6 +68,8 @@ namespace InGame
         {
             Level = level;
             EnemyManager.Instance.Initialize();
+            winLoseManager = new WinLoseManager();
+            IsEndLevel = false;
             
             InitTowers();
             TeleportTower(0);
@@ -77,6 +83,33 @@ namespace InGame
             OnLevelLoaded?.Invoke(level);
         }
 
+        public void WinLevel()
+        {
+            if (IsEndLevel) return;
+            DebugUtility.LogError($"Level {Level.level} is ended: WIN");
+            IsEndLevel = true;
+            OnWin?.Invoke();
+            ClearAction();
+        }
+
+        public void LoseLevel()
+        {
+            if (IsEndLevel) return;
+            DebugUtility.LogError($"Level {Level.level} is ended: LOSE");
+            IsEndLevel = true;
+            OnLose?.Invoke();    
+            ClearAction();
+        }
+
+        private void ClearAction()
+        {
+            OnWin = null;
+            OnLose = null;
+            OnLevelLoaded = null;
+            OnChangeSkill = null;
+            OnChangeTower = null;
+        }
+        
         #region Waves
 
         private int currentWaveIndex;
@@ -98,6 +131,7 @@ namespace InGame
 
         private void OnWaveForceStop()
         {
+            winLoseManager.CheckWin(this);
             if (waveCoroutine != null) StopCoroutine(waveCoroutine);
             waveCoroutine = StartCoroutine(IEWave(Level.waveInfos));
         }
@@ -118,6 +152,7 @@ namespace InGame
         private void OnTowerDestroyed(TowerEntity tower)
         {
             Debug.LogError($"Tower {tower.name} is destroyed");
+            winLoseManager.CheckLose(this);
         }
         
         private void TeleportTower(int towerIndex)

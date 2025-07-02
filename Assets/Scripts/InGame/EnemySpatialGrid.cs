@@ -6,6 +6,7 @@ namespace InGame
     public class EnemySpatialGrid
     {
         private Dictionary<Vector2Int, List<EnemyBoidAgent>> cells = new Dictionary<Vector2Int, List<EnemyBoidAgent>>();
+        private Dictionary<EnemyBoidAgent, Vector2Int> agentCellMap = new Dictionary<EnemyBoidAgent, Vector2Int>();
         private float cellSize;
         
         public EnemySpatialGrid(float width, float height, float cellSize)
@@ -13,44 +14,67 @@ namespace InGame
             this.cellSize = cellSize;
         }
 
-        Vector2Int GetCell(Vector3 pos)
+        void GetCellNonAlloc(Vector3 pos, ref Vector2Int cell)
         {
-            return new Vector2Int(Mathf.FloorToInt(pos.x / cellSize), Mathf.FloorToInt(pos.y / cellSize));
+            cell.x = Mathf.FloorToInt(pos.x / cellSize);
+            cell.y = Mathf.FloorToInt(pos.y / cellSize);
         }
         
-        public void Register(EnemyBoidAgent agent)
+        public void Register(EnemyBoidAgent agent, ref Vector2Int cell)
         {
-            var cell = GetCell(agent.transform.position);
+            if (agentCellMap.TryGetValue(agent, out cell))
+            {
+                cells[cell].Remove(agent);
+            }
+            
+            GetCellNonAlloc(agent.transform.position, ref cell);
+            agentCellMap[agent] = cell;
+            
             if (!cells.ContainsKey(cell)) cells[cell] = new List<EnemyBoidAgent>();
-            if (!cells[cell].Contains(agent))
-                cells[cell].Add(agent);
+            cells[cell].Add(agent);
         }
         
         public void Clear() => cells.Clear();
 
-        public List<EnemyBoidAgent> GetNearby(EnemyBoidAgent agent, float radius)
+        public int GetNearbyNonAlloc(EnemyBoidAgent agent, float radius, ref Vector2Int agentCell, ref List<EnemyBoidAgent> neighbors)
         {
-            var result = new List<EnemyBoidAgent>();
-            var baseCell = GetCell(agent.transform.position);
+            var count = 0;
+            GetCellNonAlloc(agent.transform.position, ref agentCell);
             var r = Mathf.CeilToInt(radius / cellSize);
 
             for (var x = -r; x <= r; x++)
             {
                 for (var y = -r; y <= r; y++)
                 {
-                    var checkCell = baseCell + new Vector2Int(x, y);
-                    if (cells.TryGetValue(checkCell, out var agents))
+                    agentCell.x += x;
+                    agentCell.y += y;
+                    // if (cells.TryGetValue(agentCell, out var agents))
+                    // {
+                    //     foreach (var a in agents)
+                    //     {
+                    //         if (a != agent && a.IsActive &&
+                    //             Vector3.Distance(a.transform.position, agent.transform.position) < radius)
+                    //         {
+                    //             if (count >= neighbors.Count)
+                    //                 neighbors.Add(a);
+                    //             else
+                    //                 neighbors[count] = a;
+                    //             count += 1;
+                    //         }
+                    //     }
+                    // }
+                    if (cells.ContainsKey(agentCell))
                     {
-                        foreach (var a in agents)
-                        {
-                            if (a != agent && a.IsActive && Vector3.Distance(a.transform.position, agent.transform.position) < radius)
-                                result.Add(a);
-                        }
+                        neighbors = cells[agentCell];
+                        count = neighbors.Count;
                     }
+                    
+                    agentCell.x -= x;
+                    agentCell.y -= y;
                 }
             }
 
-            return result;
+            return count;
         }
         
         // 🔧 Visualize partial grid with Gizmos

@@ -78,6 +78,8 @@ namespace InGame
             
             while (TotalSpawnTurn == -1 || currentSpawnTurn < TotalSpawnTurn)
             {
+                yield return new WaitForSeconds(config.intervalLoop);
+                
                 var enemies = config.spawnLogic.Spawn(transform.position, config.spawnType.enemyId, config.spawnType.enemyPrefab);
                 for (var i = 0; i < enemies.Length; i++)
                 {
@@ -96,7 +98,6 @@ namespace InGame
                 }
 
                 currentSpawnTurn += 1;
-                yield return new WaitForSeconds(config.intervalLoop);
             }
         }
         
@@ -105,14 +106,14 @@ namespace InGame
         {
             yield return new WaitForSeconds(duration);
             Deactivate();
+            CheckAllEnemiesDead();
         }
 
         private void CheckAllEnemiesDead()
         {
-            if (TotalSpawnTurn == -1 || currentSpawnTurn < TotalSpawnTurn) return;
+            if (IsActive || currentSpawnTurn < TotalSpawnTurn) return;
             if (AliveEnemyCount == 0)
             {
-                Deactivate();
                 OnAllEnemiesDead?.Invoke();
                 OnAllEnemiesDead = null;
             }

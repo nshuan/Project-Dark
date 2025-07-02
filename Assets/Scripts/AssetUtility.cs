@@ -7,6 +7,8 @@ public class AssetUtility
     public static List<T> LoadAllScriptableObjectsInFolder<T>(string folderPath) where T : ScriptableObject
     {
         List<T> results = new List<T>();
+        
+#if UNITY_EDITOR
 
         string[] guids = AssetDatabase.FindAssets("t:" + typeof(T).Name, new[] { folderPath });
 
@@ -17,6 +19,8 @@ public class AssetUtility
             if (asset != null)
                 results.Add(asset);
         }
+
+#endif
 
         return results;
     }

@@ -237,7 +237,7 @@ namespace DefaultNamespace.Editor.UpgradeTreeEditor
                 foreach (var targetNode in nodes)
                 {
                     if (targetNode == linkSourceNode) continue;
-                    if (linkSourceNode.nodeConfig.preRequire.Contains(targetNode.nodeConfig)) continue;
+                    if (linkSourceNode.nodeConfig.preRequire != null && linkSourceNode.nodeConfig.preRequire.Contains(targetNode.nodeConfig)) continue;
 
                     if (targetNode.rect.Contains(Event.current.mousePosition))
                     {

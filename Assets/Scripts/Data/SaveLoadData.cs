@@ -1,7 +1,7 @@
 using System.IO;
 using UnityEngine;
 
-namespace Database
+namespace Data
 {
     public class SaveLoadData : MonoBehaviour
     {
