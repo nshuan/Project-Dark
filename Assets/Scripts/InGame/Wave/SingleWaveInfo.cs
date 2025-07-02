@@ -53,8 +53,8 @@ namespace InGame
             ActivateWave();
             
             yield return new WaitForSeconds(timeToEnd);
-            DebugUtility.LogError($"Stop wave {WaveIndex}: End duration");
-            StopWave();
+            DebugUtility.LogError($"Wave {WaveIndex}: End duration");
+            CheckStopAllGate();
         }
 
         public void StopWave()
@@ -63,11 +63,13 @@ namespace InGame
             {
                 gate.Deactivate();
             }
+            
+            CheckStopAllGate();
         }
 
         private void CheckStopAllGate()
         {
-            if (Gates.All((gate) => gate.IsActive == false))
+            if (Gates.All((gate) => gate.AllEnemyDead))
             {
                 DebugUtility.LogError($"Stop wave {WaveIndex}: All enemies are dead");
                 WaveEndedCompletely = true;

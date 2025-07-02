@@ -131,8 +131,8 @@ namespace InGame
 
         private void OnWaveForceStop()
         {
-            winLoseManager.CheckWin(this);
             if (waveCoroutine != null) StopCoroutine(waveCoroutine);
+            winLoseManager.CheckWin(this);
             waveCoroutine = StartCoroutine(IEWave(Level.waveInfos));
         }
 

@@ -15,6 +15,7 @@ namespace InGame
         private float WaveHpMultiplier { get; set; }
         private float WaveDmgMultiplier { get; set; }
         public bool IsActive { get; set; } = false;
+        public bool AllEnemyDead { get; set; }
         private int TotalSpawnTurn { get; set; } // unlimited = -1
         private int currentSpawnTurn = 0;
         private int AliveEnemyCount { get; set; }
@@ -32,17 +33,12 @@ namespace InGame
         
         public void Activate()
         {
-            spawnCoroutine = StartCoroutine(IESpawn());
-            // Duration < 0 thì spawn mãi mãi
-            if (config.duration >= 0)
-                lifeTimeCoroutine = StartCoroutine(IELifeTime(config.duration + config.startTime));
             IsActive = true;
+            spawnCoroutine = StartCoroutine(IESpawn());
         }
 
         public void Deactivate()
         {
-            if (lifeTimeCoroutine != null)
-                StopCoroutine(lifeTimeCoroutine);
             if (spawnCoroutine != null)
                 StopCoroutine(spawnCoroutine);
 
@@ -60,9 +56,8 @@ namespace InGame
             currentSpawnTurn = 0;
             AliveEnemyCount = 0;
             IsActive = false;
-            
-            if (lifeTimeCoroutine != null)
-                StopCoroutine(lifeTimeCoroutine);
+            AllEnemyDead = false;
+
             if (spawnCoroutine != null)
                 StopCoroutine(spawnCoroutine);
             
@@ -92,28 +87,24 @@ namespace InGame
                     enemy.OnDead += () =>
                     {
                         AliveEnemyCount -= 1;
-                        CheckAllEnemiesDead();
                         EnemyManager.Instance.OnEnemyDead(enemy);
+                        CheckAllEnemiesDead();
                     };
                 }
 
                 currentSpawnTurn += 1;
             }
-        }
-        
-        private Coroutine lifeTimeCoroutine;
-        private IEnumerator IELifeTime(float duration)
-        {
-            yield return new WaitForSeconds(duration);
+            
             Deactivate();
             CheckAllEnemiesDead();
         }
-
+        
         private void CheckAllEnemiesDead()
         {
             if (IsActive || currentSpawnTurn < TotalSpawnTurn) return;
             if (AliveEnemyCount == 0)
             {
+                AllEnemyDead = true;
                 OnAllEnemiesDead?.Invoke();
                 OnAllEnemiesDead = null;
             }
