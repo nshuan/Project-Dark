@@ -1,5 +1,3 @@
-using Home;
-using InGame.ConfigManager;
 using UnityEngine;
 
 namespace InGame.Upgrade.Nodes

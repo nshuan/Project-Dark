@@ -1127,20 +1127,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2352541c7b5a4c60a2841f450f4c8f66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <GameStats>k__BackingField:
-    eHpMultiplier: 1
-    eBaseMoveSpeed: 0.2
-    eBaseAttackRange: 2.5
-    eBaseAttackCd: 2
-    pShotCooldown: 0.5
-    pDmgPerShot: 25
-    cursorScale: 1
-    sLightningChance: 0
-    sLightningDamage: 5
-    sLightningBurstChance: 1
-    sLightningBurstDamage: 5
   playerStats: {fileID: 11400000, guid: 830856e84733a004993eaec8e05af9a9, type: 2}
   skillConfig: {fileID: 11400000, guid: 8993295d416a3934ba6aac2af34b47c1, type: 2}
+  upgradeTreeInGameManager: {fileID: 1349892349}
   gatePrefab: {fileID: 3134462521366388888, guid: 6b6d6548c9a28704f9cbabd97a6d9cbf, type: 3}
   towers:
   - {fileID: 495117603}
@@ -2909,6 +2898,62 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!1 &1349892348
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1349892350}
+  - component: {fileID: 1349892349}
+  m_Layer: 0
+  m_Name: UpgradeTreeManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1349892349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1349892348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c166dd39cbd8422da833517c85a4073f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: bonusInfo
+      Entry: 6
+      Data: 
+--- !u!4 &1349892350
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1349892348}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1419489090
 GameObject:
   m_ObjectHideFlags: 0
@@ -3858,3 +3903,4 @@ SceneRoots:
   - {fileID: 355993393}
   - {fileID: 426610612}
   - {fileID: 253350855}
+  - {fileID: 1349892350}

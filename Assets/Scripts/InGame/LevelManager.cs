@@ -1,10 +1,10 @@
 using System;
 using System.Collections;
 using Core;
-using Home;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace InGame
 {
@@ -12,7 +12,7 @@ namespace InGame
     {
         [SerializeField] private PlayerStats playerStats;
         [SerializeField] private PlayerSkillConfig skillConfig;
-        [SerializeField] private UpgradeTreeManager upgradeTreeManager;
+        [SerializeField] private UpgradeTreeInGameManager upgradeTreeInGameManager;
 
         [SerializeField] private GateEntity gatePrefab;
         
@@ -68,7 +68,7 @@ namespace InGame
         public void LoadLevel(LevelConfig level)
         {
             Level = level;
-            upgradeTreeManager.ActivateTree();
+            upgradeTreeInGameManager.ActivateTree();
             EnemyManager.Instance.Initialize();
             winLoseManager = new WinLoseManager();
             IsEndLevel = false;

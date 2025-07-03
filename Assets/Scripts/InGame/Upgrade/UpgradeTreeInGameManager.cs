@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Core;
+using Data;
 using InGame;
 using InGame.Upgrade;
 using InGame.Upgrade.UIDummy;
@@ -8,9 +9,9 @@ using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
 
-namespace Home
+namespace InGame
 {
-    public class UpgradeTreeManager : SerializedMonoBehaviour
+    public class UpgradeTreeInGameManager : SerializedMonoBehaviour
     {
         private const string UpgradeTreePath = "DummyUpgradeTreeConfig";
         
@@ -28,7 +29,7 @@ namespace Home
 
         public void ActivateTree()
         {
-            upgradeTree.ActivateTree(upgradeTree.nodeMapById.Keys.ToList(), ref bonusInfo);
+            upgradeTree.ActivateTree(PlayerDataManager.Instance.GetUnlockedUpgradeNodes(), ref bonusInfo);
         }
     }
 
