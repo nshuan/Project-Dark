@@ -79,8 +79,8 @@ namespace InGame
             if (waveCoroutine != null) StopCoroutine(waveCoroutine);
             waveCoroutine = StartCoroutine(IEWave(level.waveInfos));
             
-            OnChangeSkill?.Invoke(skillConfig);
             OnLevelLoaded?.Invoke(level);
+            OnChangeSkill?.Invoke(skillConfig);
         }
 
         public void WinLevel()

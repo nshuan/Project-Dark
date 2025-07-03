@@ -7,7 +7,7 @@ namespace InGame.Upgrade
 {
     public abstract class UpgradeNodeConfig : SerializedScriptableObject
     {
-        [ReadOnly] public int nodeIndex;
+        [ReadOnly] public int nodeId;
         public string nodeName; // Name to display
         public UpgradeNodeConfig[] preRequire;
         public string description; // Description to display

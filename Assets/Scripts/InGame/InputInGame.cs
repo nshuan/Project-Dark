@@ -43,7 +43,7 @@ namespace InGame
             }
             var cursor = ShotCursorManager.Instance.GetPrefab(skillConfig.shootLogic.cursorType, canvas.transform);
             mouseInput = ShotCursorManager.Instance.GetCursorMoveLogic(skillConfig.shootLogic.cursorType, cam, cursor);
-            mouseInput.InputManager = this;
+            mouseInput.Initialize(this);
             mouseInput.ResetChargeVariable();
         }
 

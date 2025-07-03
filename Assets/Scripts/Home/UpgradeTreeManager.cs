@@ -2,6 +2,7 @@ using System;
 using Core;
 using InGame.Upgrade;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 
 namespace Home
@@ -10,38 +11,42 @@ namespace Home
     {
         [SerializeField] private UpgradeTreeConfig upgradeTree;
         
+        [field: ReadOnly, NonSerialized, OdinSerialize] public UpgradeBonusInfo BonusInfo { get; private set; }
     }
 
     [Serializable]
     public class UpgradeBonusInfo
     {
-        public int damePlus;
-        public float dameMultiply;
+        public int damePlus = 0;
+        public float dameMultiply = 0f;
         
         [Space]
-        public int skillDamePlus;
-        public float skillDameMultiply;
+        public int skillDamePlus = 0;
+        public float skillDameMultiply = 0f;
         
         [Space]
-        public float criticalRatePlus;
-        public int criticalDame;
+        public float criticalRatePlus = 0f;
+        public int criticalDame = 0;
 
         [Space] 
-        public float cooldownPlus;
-        public float cooldownMultiply;
+        public float cooldownPlus = 0f;
 
         [Space] 
-        public float skillSizeMultiply;
-        public float skillRangeMultiply;
+        public float skillCooldownPlus = 0f;
+        public float skillCooldownMultiply = 0f;
 
         [Space] 
-        public int bulletPlus;
+        public float skillSizeMultiply = 0f;
+        public float skillRangeMultiply = 0f;
+
+        [Space] 
+        public int bulletPlus = 0;
 
         [Space]
-        public int hpPlus;
-        public float hpMultiply;
+        public int hpPlus = 0;
+        public float hpMultiply = 0f;
 
         [Space] 
-        public float staggerMultiply;
+        public float staggerMultiply = 0f;
     }
 }

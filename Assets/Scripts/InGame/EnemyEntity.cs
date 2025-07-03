@@ -18,7 +18,6 @@ namespace InGame
         private float MaxHealth { get; set; }
         private float CurrentHealth { get; set; }
         private int CurrentDamage { get; set; }
-        public bool IsDead => CurrentHealth <= 0;
         public Action OnDead { get; set; }
         public EnemyState State { get; set; }
         public int UniqueId { get; set; }
@@ -97,7 +96,7 @@ namespace InGame
         private void Update()
         {
             if (!Target) return;
-            if (IsDead) return;
+            if (IsDestroyed) return;
             if (State != EnemyState.Move) return;
 
             if (staggerDuration > 0)
@@ -151,7 +150,7 @@ namespace InGame
 
         public void Damage(int damage, Vector2 damageDirection, float stagger)
         {
-            if (IsDead) return;
+            if (IsDestroyed) return;
             CurrentHealth -= damage;
             if (CurrentHealth <= 0)
             {

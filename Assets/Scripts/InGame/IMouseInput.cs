@@ -4,7 +4,7 @@ namespace InGame
 {
     public interface IMouseInput : IDisposable
     {
-        InputInGame InputManager { get; set; }
+        void Initialize(InputInGame manager);
         void OnMouseClick();
         void OnMouseClick(float delay);
         void OnHoldStarted();

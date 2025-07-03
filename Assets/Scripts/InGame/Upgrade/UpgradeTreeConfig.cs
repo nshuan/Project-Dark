@@ -7,7 +7,6 @@ using UnityEngine;
 
 namespace InGame.Upgrade
 {
-    [CreateAssetMenu(menuName = "InGame/Upgrade/Upgrade Tree", fileName = "UpgradeTreeConfig")]
     public class UpgradeTreeConfig : SerializedScriptableObject
     {
         public List<UpgradeNodeConfig> upgradeNodes = new List<UpgradeNodeConfig>();
@@ -22,7 +21,7 @@ namespace InGame.Upgrade
                 return;
             }
 
-            upgradeNodesMapByIndex = upgradeNodes.ToDictionary((node) => node.nodeIndex, (node) => node);
+            upgradeNodesMapByIndex = upgradeNodes.ToDictionary((node) => node.nodeId, (node) => node);
         }
     }
 }

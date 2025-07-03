@@ -38,6 +38,11 @@ namespace InGame
             cursorRect = (RectTransform)cursor.transform;
         }
 
+        public void Initialize(InputInGame manager)
+        {
+            InputManager = manager;
+        }
+
         public virtual void OnMouseClick()
         {
            OnMouseClick(0f);

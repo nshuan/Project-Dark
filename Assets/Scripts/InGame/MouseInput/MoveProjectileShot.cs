@@ -1,31 +1,27 @@
 using System;
 using System.Linq;
 using DG.Tweening;
-using InGame.Effects;
-using InGame.Trap;
 using UnityEngine;
-using UnityEngine.UI;
-
 namespace InGame
 {
     [Serializable]
     public class MoveProjectileShot : IMouseInput
     {
-        public InputInGame InputManager { get; set; }
-        
+        private InputInGame InputManager { get; set; }
+
         protected Camera Cam { get; set; }
         protected MonoCursor cursor;
         protected RectTransform cursorRect;
         protected Vector3 mousePosition;
         protected Vector3 worldMousePosition;
         
-        protected float Cooldown => LevelManager.Instance.GameStats.pShotCooldown;
         public bool CanShoot { get; set; }
         private bool OutOfRange { get; set; }
+        protected float Cooldown { get; set; }
         protected float cdCounter;
 
         #region Charge
-        
+
         private bool isChargingBullet;
         private int bulletAdd;
         private int maxBulletAdd;
@@ -36,19 +32,26 @@ namespace InGame
         private float maxDameMultiplierAdd;
         private float maxDameChargeTime;
         private float dameChargeTime;
-        
+
         #endregion
 
         public MoveProjectileShot()
         {
-            
+
         }
-        
+
         public MoveProjectileShot(Camera cam, MonoCursor cursor)
         {
             Cam = cam;
             this.cursor = cursor;
             cursorRect = cursor.GetComponent<RectTransform>();
+        }
+
+        public void Initialize(InputInGame manager)
+        {
+            InputManager = manager;
+            Cooldown = LevelUtility.GetSkillCooldown(InputManager.PlayerStats.cooldown,
+                InputManager.CurrentSkillConfig.cooldown);
         }
 
         public virtual void OnMouseClick()
@@ -60,15 +63,18 @@ namespace InGame
         {
             if (!CanShoot) return;
             if (OutOfRange) return;
-
+            
+            CanShoot = false;
+            cdCounter = Cooldown;
+            cdCounter += delay;
+            
             var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(
                 InputManager.PlayerStats.damage,
                 InputManager.CurrentSkillConfig.damePerBullet,
                 InputManager.PlayerStats.criticalDamage,
                 1 + Mathf.Min(dameChargeTime / maxDameChargeTime, 1f) * maxDameMultiplierAdd);
-            
-            CanShoot = false;
-            cdCounter = InputManager.CurrentSkillConfig.cooldown + delay;
+            var critRate = LevelUtility.GetCriticalRate(InputManager.PlayerStats.criticalRate);
+            var bulletNum = LevelUtility.GetNumberOfBullets(InputManager.CurrentSkillConfig.numberOfBullets, bulletAdd);
 
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             LevelManager.Instance.SetTeleportTowerState(false);
@@ -79,9 +85,9 @@ namespace InGame
                     InputManager.CursorRangeCenter.position, 
                     tempMousePos,
                     damage,
-                    InputManager.CurrentSkillConfig.numberOfBullets + bulletAdd,
+                    bulletNum,
                     criticalDamage,
-                    InputManager.PlayerStats.criticalRate);
+                    critRate);
 
                 LevelManager.Instance.SetTeleportTowerState(true);
             });
