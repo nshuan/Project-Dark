@@ -237,11 +237,6 @@ namespace InGame
 #endif
         }
 
-        protected virtual float CalculateDmg()
-        {
-            return LevelManager.Instance.GameStats.pDmgPerShot;
-        }
-
         public virtual void OnDrawGizmos()
         {
             

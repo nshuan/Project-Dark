@@ -20,7 +20,7 @@ namespace InGame
         protected Vector3 mousePosition;
         protected CameraShake effectCamShake;
         
-        protected float Cooldown => LevelManager.Instance.GameStats.pShotCooldown;
+        protected float Cooldown => LevelManager.Instance.PlayerStats.cooldown;
         public bool CanShoot { get; set; }
         private bool OutOfRange { get; set; }
         protected float cdCounter;
@@ -54,7 +54,7 @@ namespace InGame
             if (OutOfRange) return;
             
             CanShoot = false;
-            cdCounter = LevelManager.Instance.GameStats.pShotCooldown;
+            cdCounter = Cooldown;
             
             // Do cursor effect
             DOTween.Complete(this);
@@ -150,7 +150,7 @@ namespace InGame
 
         protected virtual int CalculateDmg()
         {
-            return (int)LevelManager.Instance.GameStats.pDmgPerShot;
+            return (int)LevelManager.Instance.PlayerStats.damage;
         }
 
         public virtual void OnDrawGizmos()

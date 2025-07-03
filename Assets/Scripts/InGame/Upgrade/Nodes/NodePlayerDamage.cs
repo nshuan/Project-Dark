@@ -1,3 +1,4 @@
+using Home;
 using InGame.ConfigManager;
 using UnityEngine;
 
@@ -9,11 +10,12 @@ namespace InGame.Upgrade.Nodes
         public int value;
         public bool isMultiply;
         
-        public override void ActivateNode()
+        public override void ActivateNode(ref UpgradeBonusInfo bonusInfo)
         {
-            var baseValue = ConfigManifest.Instance.PlayerConfig.damage;
-            var addValue = isMultiply ? baseValue * value / 100 : value;
-            ConfigManifest.Instance.PlayerConfig.damage += addValue;     
+            if (isMultiply)
+                bonusInfo.dameMultiply += value;
+            else
+                bonusInfo.damePlus += value;
         }
     }
 }

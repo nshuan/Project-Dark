@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using InGame.Upgrade.UI;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEditor;
@@ -15,13 +14,13 @@ namespace InGame.Upgrade.UIDummy
         [SerializeField] private DummyUpgradeTreeConfig upgradeTreeConfig; 
         
         [Space]
-        [SerializeField] private UIUpgradeTree treePrefab;
-        [SerializeField] private UIUpgradeNode nodePrefab;
+        [SerializeField] private DummyUpgradeTree treePrefab;
+        [SerializeField] private DummyUpgradeNode nodePrefab;
         
-        private UIUpgradeNode[] allNodes;
+        private DummyUpgradeNode[] allNodes;
 
         [field: ReadOnly, NonSerialized, OdinSerialize]
-        public Dictionary<UpgradeNodeConfig, UIUpgradeNode> NodeMapByConfig { get; private set; } = new Dictionary<UpgradeNodeConfig, UIUpgradeNode>();
+        public Dictionary<UpgradeNodeConfig, DummyUpgradeNode> NodeMapByConfig { get; private set; } = new Dictionary<UpgradeNodeConfig, DummyUpgradeNode>();
 
         private void OnDrawGizmos()
         {
@@ -56,7 +55,7 @@ namespace InGame.Upgrade.UIDummy
                 return;
             }
             
-            var node = PrefabUtility.InstantiatePrefab(nodePrefab) as UIUpgradeNode;
+            var node = PrefabUtility.InstantiatePrefab(nodePrefab) as DummyUpgradeNode;
             node.nodeConfig = config;
             EditorGetAllNodes();
         }
@@ -64,7 +63,7 @@ namespace InGame.Upgrade.UIDummy
         [Button]
         public void EditorGetAllNodes()
         {
-            allNodes = FindObjectsByType<UIUpgradeNode>(FindObjectsSortMode.None).Where((node) => node.nodeConfig != null).ToArray();
+            allNodes = FindObjectsByType<DummyUpgradeNode>(FindObjectsSortMode.None).Where((node) => node.nodeConfig != null).ToArray();
             NodeMapByConfig = allNodes.ToDictionary((node) => node.nodeConfig, (node) => node);
         }
 
@@ -152,7 +151,7 @@ namespace InGame.Upgrade.UIDummy
             }
             
             var allExistTree =
-                FindObjectsByType<UIUpgradeTree>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+                FindObjectsByType<DummyUpgradeTree>(FindObjectsInactive.Include, FindObjectsSortMode.None);
             foreach (var existTree in allExistTree)
             {
                 if (PrefabUtility.IsPartOfPrefabInstance(existTree.gameObject))
@@ -181,7 +180,7 @@ namespace InGame.Upgrade.UIDummy
             // Create new tree
             var tree = Instantiate(treePrefab);
             tree.name = treeName;
-            tree.Nodes = new UIUpgradeNode[allNodes.Length];
+            tree.Nodes = new DummyUpgradeNode[allNodes.Length];
             for (var i = 0; i < allNodes.Length; i++)
             {
                 allNodes[i].transform.SetParent(tree.transform);
@@ -222,7 +221,7 @@ namespace InGame.Upgrade.UIDummy
             }
             
             var prefab = PrefabUtility.SaveAsPrefabAssetAndConnect(treeGameObject, path, InteractionMode.UserAction);
-            upgradeTreeConfig.treePrefab = prefab.transform.GetComponent<UIUpgradeTree>();
+            upgradeTreeConfig.treePrefab = prefab.transform.GetComponent<DummyUpgradeTree>();
             
             // Copy dictionary too config
             upgradeTreeConfig.nodeMapById = new Dictionary<int, UpgradeNodeConfig>();

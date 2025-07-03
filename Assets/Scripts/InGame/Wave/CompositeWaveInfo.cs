@@ -61,7 +61,6 @@ namespace InGame
                         yield break;
                     }
                 }
-                    
                 
                 subWaves[i].StopWave();
             }

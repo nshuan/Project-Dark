@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace InGame.Upgrade.UIDummy
 {
@@ -10,7 +11,10 @@ namespace InGame.Upgrade.UIDummy
     {
         static DummyUpgradeTreeUtility()
         {
-            var editor = GameObject.FindObjectOfType<DummyUpgradeTreeEditor>();
+            if (SceneManager.GetActiveScene().name != "DummyUpgradeTree")
+                return;
+            
+            var editor = Object.FindObjectOfType<DummyUpgradeTreeEditor>();
             if (editor == null)
             {
                 DebugUtility.LogError("There is no Dummy Upgrade Tree Editor in the scene!!!");

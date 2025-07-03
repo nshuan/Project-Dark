@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Home;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 
@@ -17,7 +18,7 @@ namespace InGame.Upgrade
         public UpgradeNodeState State { get; set; }
         public bool Activated { get; set; }
 
-        public abstract void ActivateNode();
+        public abstract void ActivateNode(ref UpgradeBonusInfo bonusInfo);
 
 #if UNITY_EDITOR
         

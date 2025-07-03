@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using InGame.Upgrade.UI;
+using Home;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
@@ -15,6 +15,17 @@ namespace InGame.Upgrade.UIDummy
         
         [Space]
         [ReadOnly]
-        public UIUpgradeTree treePrefab;
+        public DummyUpgradeTree treePrefab;
+
+        public void ActivateTree(List<int> activatedNodes, ref UpgradeBonusInfo bonusInfo)
+        {
+            foreach (var nodeId in activatedNodes)
+            {
+                if (nodeMapById.TryGetValue(nodeId, out var nodeConfig))
+                {
+                    nodeConfig.ActivateNode(ref bonusInfo);
+                }
+            }
+        }
     }
 }

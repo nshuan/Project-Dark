@@ -1,23 +1,34 @@
 using System;
+using System.Linq;
 using Core;
+using InGame;
 using InGame.Upgrade;
+using InGame.Upgrade.UIDummy;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
 
 namespace Home
 {
-    public class UpgradeTreeManager : Singleton<UpgradeTreeManager>
+    public class UpgradeTreeManager : SerializedMonoBehaviour
     {
         private const string UpgradeTreePath = "DummyUpgradeTreeConfig";
         
-        private UpgradeTreeConfig upgradeTree;
-        
-        public UpgradeBonusInfo BonusInfo { get; private set; }
+        private DummyUpgradeTreeConfig upgradeTree;
 
-        public UpgradeTreeManager()
+        [ReadOnly, NonSerialized, OdinSerialize] private UpgradeBonusInfo bonusInfo;
+        public UpgradeBonusInfo BonusInfo => bonusInfo;
+
+        protected void Awake()
+        {   
+            upgradeTree = Resources.Load<DummyUpgradeTreeConfig>(UpgradeTreePath);
+            bonusInfo = new UpgradeBonusInfo();
+            LevelUtility.BonusInfo = BonusInfo;
+        }
+
+        public void ActivateTree()
         {
-            upgradeTree = Resources.Load<UpgradeTreeConfig>(UpgradeTreePath);
+            upgradeTree.ActivateTree(upgradeTree.nodeMapById.Keys.ToList(), ref bonusInfo);
         }
     }
 
