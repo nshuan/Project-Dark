@@ -21,7 +21,7 @@ namespace InGame.Upgrade.UIDummy
         private UIUpgradeNode[] allNodes;
 
         [field: ReadOnly, NonSerialized, OdinSerialize]
-        public Dictionary<UpgradeNodeConfig, UIUpgradeNode> NodeMapByConfig { get; private set; }= new Dictionary<UpgradeNodeConfig, UIUpgradeNode>();
+        public Dictionary<UpgradeNodeConfig, UIUpgradeNode> NodeMapByConfig { get; private set; } = new Dictionary<UpgradeNodeConfig, UIUpgradeNode>();
 
         private void OnDrawGizmos()
         {
@@ -41,12 +41,12 @@ namespace InGame.Upgrade.UIDummy
             }
         }
 
+#if UNITY_EDITOR
         private void OnValidate()
         {
             EditorGetAllNodes();
         }
 
-#if UNITY_EDITOR
         [Button]
         public void EditorCreateNode(UpgradeNodeConfig config)
         {
@@ -60,7 +60,6 @@ namespace InGame.Upgrade.UIDummy
             node.nodeConfig = config;
             EditorGetAllNodes();
         }
-#endif
         
         [Button]
         public void EditorGetAllNodes()
@@ -170,6 +169,8 @@ namespace InGame.Upgrade.UIDummy
             }
             
             EditorGetAllNodes();
+            if (!Validate())
+                return;
 
             if (allNodes == null || allNodes.Length == 0)
             {
@@ -194,7 +195,6 @@ namespace InGame.Upgrade.UIDummy
                 return;
             }
             
-#if UNITY_EDITOR
             GameObject treeGameObject = tree.gameObject;
       
             string path = "Assets/Prefabs/UpgradeTrees/" + treeGameObject.name + ".prefab";
@@ -233,9 +233,9 @@ namespace InGame.Upgrade.UIDummy
             
             Debug.Log($"Saved prefab at: {path}");
             AssetDatabase.Refresh();
-#endif
             
             DebugUtility.LogWarning("Generate tree successfully!!!");
         }
+#endif
     }
 }

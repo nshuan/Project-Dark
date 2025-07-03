@@ -7,11 +7,18 @@ using UnityEngine;
 
 namespace Home
 {
-    public class UpgradeTreeManager : MonoSingleton<UpgradeTreeManager>
+    public class UpgradeTreeManager : Singleton<UpgradeTreeManager>
     {
-        [SerializeField] private UpgradeTreeConfig upgradeTree;
+        private const string UpgradeTreePath = "DummyUpgradeTreeConfig";
         
-        [field: ReadOnly, NonSerialized, OdinSerialize] public UpgradeBonusInfo BonusInfo { get; private set; }
+        private UpgradeTreeConfig upgradeTree;
+        
+        public UpgradeBonusInfo BonusInfo { get; private set; }
+
+        public UpgradeTreeManager()
+        {
+            upgradeTree = Resources.Load<UpgradeTreeConfig>(UpgradeTreePath);
+        }
     }
 
     [Serializable]
