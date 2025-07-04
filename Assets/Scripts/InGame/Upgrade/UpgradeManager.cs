@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Core;
 using Data;
+using InGame.ConfigManager;
 using InGame.Upgrade.UIDummy;
 using UnityEngine;
 
@@ -67,6 +68,13 @@ namespace InGame.Upgrade
         
         public void ActivateTree(ref UpgradeBonusInfo bonusInfo)
         {
+            // Init bonus infor
+            bonusInfo = new UpgradeBonusInfo();
+            foreach (var config in ConfigManifest.Instance.SkillConfig)
+            {
+                bonusInfo.skillBonusMapById.TryAdd(config.skillId, new UpgradeBonusSkillInfo());
+            }
+                
             TreeConfig.ActivateTree(Data.nodes, ref bonusInfo);
         }
         

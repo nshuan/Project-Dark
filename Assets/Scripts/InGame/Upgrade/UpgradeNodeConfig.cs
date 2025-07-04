@@ -25,6 +25,7 @@ namespace InGame.Upgrade
 
         public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)
         {
+            if (nodeLogic == null) return;
             if (level <= 0 || level > levelNum) return;
             for (var i = 1; i <= level; i++)
             {

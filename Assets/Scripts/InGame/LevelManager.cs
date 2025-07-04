@@ -10,7 +10,7 @@ using UnityEngine.Serialization;
 
 namespace InGame
 {
-    public class LevelManager : MonoSingleton<LevelManager>
+    public class LevelManager : SerializedMonoSingleton<LevelManager>
     {
         [SerializeField] private PlayerStats playerStats;
         [SerializeField] private PlayerSkillConfig skillConfig;
@@ -36,16 +36,16 @@ namespace InGame
 
         #region Upgrade
 
-        [ReadOnly, SerializeField] private UpgradeBonusInfo bonusInfo;
+        [ReadOnly, NonSerialized, OdinSerialize] private UpgradeBonusInfo bonusInfo;
         public UpgradeBonusInfo BonusInfo => bonusInfo;
 
         #endregion
         
         #region Action
 
-        public Action<LevelConfig> OnLevelLoaded;
-        public Action<PlayerSkillConfig> OnChangeSkill;
-        public Action<Transform> OnChangeTower;
+        public Action<LevelConfig> OnLevelLoaded { get; set; }
+        public Action<PlayerSkillConfig> OnChangeSkill { get; set; }
+        public Action<Transform> OnChangeTower { get; set; }
 
         public event Action OnWin;
         public event Action OnLose;
@@ -76,8 +76,8 @@ namespace InGame
         public void LoadLevel(LevelConfig level)
         {
             Level = level;
-            bonusInfo = new UpgradeBonusInfo();
             UpgradeManager.Instance.ActivateTree(ref bonusInfo);
+            LevelUtility.BonusInfo = bonusInfo;
             EnemyManager.Instance.Initialize();
             winLoseManager = new WinLoseManager();
             IsEndLevel = false;

@@ -16,6 +16,7 @@ namespace InGame.ConfigManager
 
         [Space, Header("Player Skills")] [ReadOnly, NonSerialized, OdinSerialize]
         private PlayerSkillConfig[] skillConfig;
+        public PlayerSkillConfig[] SkillConfig => skillConfig;
 
         #region SINGTON
 
