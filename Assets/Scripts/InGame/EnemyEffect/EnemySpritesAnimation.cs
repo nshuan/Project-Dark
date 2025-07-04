@@ -10,6 +10,7 @@ namespace InGame.EnemyEffect
         [SerializeField] private EnemySpritesAnimationInfo attackAnim;
         [SerializeField] private EnemySpritesAnimationInfo hitAnim;
         [SerializeField] private EnemySpritesAnimationInfo dieAnim;
+        [SerializeField] private EnemySpritesAnimationInfo spawnAnim;
         [SerializeField] private bool isDefaultRun;
         
         private SpriteRenderer spriteRenderer;
@@ -20,6 +21,15 @@ namespace InGame.EnemyEffect
         private void Awake()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
+        }
+
+        public float PlaySpawn()
+        {
+            currentAnim = spawnAnim;
+            currentFrame = 0;
+            spriteRenderer.sprite = currentAnim.frames[0];
+            timer = 0;
+            return spawnAnim.frames.Length * spawnAnim.frameRate;
         }
         
         public void PlayIdle()

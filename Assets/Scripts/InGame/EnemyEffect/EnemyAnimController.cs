@@ -11,6 +11,11 @@ namespace InGame.EnemyEffect
         {
                 
         }
+
+        public float PlaySpawn()
+        {
+            return spritesAnim.PlaySpawn();
+        }
         
         public void PlayIdle()
         {

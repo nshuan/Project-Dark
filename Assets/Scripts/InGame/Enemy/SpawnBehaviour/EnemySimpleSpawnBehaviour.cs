@@ -7,15 +7,15 @@ namespace InGame.SpawnBehaviour
     [CreateAssetMenu(menuName = "InGame/Enemy/Spawn/Enemy Simple Spawn", fileName = "EnemySimpleSpawn")]
     public class EnemySimpleSpawnBehaviour : EnemySpawnBehaviour
     {
-        public override void Init(Transform enemy)
+        public override void Init(EnemyEntity enemy)
         {
-            enemy.localScale = Vector3.zero;
+            enemy.transform.localScale = Vector3.zero;
         }
 
-        public override Tween DoSpawn(Transform enemy)
+        public override Tween DoSpawn(EnemyEntity enemy)
         {
-            enemy.localScale = 0.3f * Vector3.one;
-            return enemy.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
+            enemy.transform.localScale = 0.3f * Vector3.one;
+            return enemy.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
         }
     }
 }

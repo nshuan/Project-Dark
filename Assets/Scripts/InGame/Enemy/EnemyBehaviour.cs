@@ -21,12 +21,12 @@ namespace InGame
         public float staggerResist; // Reduce projectile stagger
         public List<ActionEffectConfig> effects; 
         
-        public void Init(Transform enemy)
+        public void Init(EnemyEntity enemy)
         {
             spawnBehaviour.Init(enemy);
         }
         
-        public void Spawn(Transform enemy, Action completeCallback)
+        public void Spawn(EnemyEntity enemy, Action completeCallback)
         {
             DOTween.Kill(enemy);
             if (spawnBehaviour)

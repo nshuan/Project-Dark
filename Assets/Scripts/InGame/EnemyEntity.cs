@@ -31,7 +31,7 @@ namespace InGame
         [Space, Header("Visual")] 
         [SerializeField] private EnemyBoidAgent boidAgent;
         [SerializeField] private Transform uiHealth;
-        [SerializeField] private EnemyAnimController animController;
+        public EnemyAnimController animController;
         
         private bool inAttackRange;
         private Coroutine attackCoroutine;
@@ -64,7 +64,7 @@ namespace InGame
             IsDestroyed = false;
             effectTrigger.Enemy = this;
             effectTrigger.Setup(config.effects);
-            config.Init(transform);
+            config.Init(this);
             EnemyBoidManager.Instance.RegisterAgent(boidAgent);
             
             // Update health ui
@@ -82,7 +82,7 @@ namespace InGame
         
         public void Activate()
         {
-            config.Spawn(transform, () =>
+            config.Spawn(this, () =>
             {
                 StartAttackCoroutine();
                 State = EnemyState.Move;
