@@ -31,6 +31,7 @@ namespace InGame
         public Dictionary<int, UpgradeBonusSkillInfo> skillBonusMapById = new Dictionary<int, UpgradeBonusSkillInfo>();
 
         #endregion
+        
         #region Effect
 
         [Space] 

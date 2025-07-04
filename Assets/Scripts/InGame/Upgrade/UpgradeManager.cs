@@ -27,7 +27,7 @@ namespace InGame.Upgrade
 
         private void InitData()
         {
-            data = DataHandler.Load<UpgradeData>(DataKey, new UpgradeData());
+            data = DataHandler.Load<UpgradeData>(DataKey, new UpgradeData(TreeConfig.nodeMapById));
             nodeMapById = new Dictionary<int, UpgradeNodeData>();
             foreach (var node in data.nodes)
             {
@@ -38,6 +38,11 @@ namespace InGame.Upgrade
         private void Save()
         {
             DataHandler.Save(DataKey, data);
+        }
+
+        public UpgradeManager()
+        {
+            InitData();
         }
 
         #endregion
@@ -65,11 +70,19 @@ namespace InGame.Upgrade
             TreeConfig.ActivateTree(Data.nodes, ref bonusInfo);
         }
         
-        public void UpgradeNode(int nodeId)
+        public bool UpgradeNode(int nodeId)
         {
-            if (!nodeMapById.ContainsKey(nodeId)) return;
+            if (!nodeMapById.ContainsKey(nodeId)) return false;
+            if (nodeMapById[nodeId].level >= treeConfig.nodeMapById[nodeId].levelNum) return false;
+            
             nodeMapById[nodeId].Upgrade();
             Save();
+            return true;
+        }
+
+        public UpgradeNodeData GetData(int nodeId)
+        {
+            return nodeMapById.GetValueOrDefault(nodeId);
         }
     }
 
@@ -78,9 +91,17 @@ namespace InGame.Upgrade
     {
         public List<UpgradeNodeData> nodes;
 
-        public UpgradeData()
+        public UpgradeData(Dictionary<int, UpgradeNodeConfig> nodeMap)
         {
             nodes = new List<UpgradeNodeData>();
+            foreach (var pair in nodeMap)
+            {
+                nodes.Add(new UpgradeNodeData()
+                {
+                    id = pair.Key,
+                    level = 0
+                });
+            }
         }
     }
 

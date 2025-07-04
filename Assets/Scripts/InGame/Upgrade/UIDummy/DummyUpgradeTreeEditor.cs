@@ -16,7 +16,7 @@ namespace InGame.Upgrade.UIDummy
         [SerializeField] private DummyUpgradeTreeConfig upgradeTreeConfig; 
         
         [Space]
-        [SerializeField] private DummyUpgradeTree treePrefab;
+        [SerializeField] private UIUpgradeTree treePrefab;
         [SerializeField] private DummyUpgradeNode nodePrefab;
         
         private DummyUpgradeNode[] allNodes;
@@ -60,6 +60,7 @@ namespace InGame.Upgrade.UIDummy
             
             var node = PrefabUtility.InstantiatePrefab(nodePrefab, canvas.transform) as DummyUpgradeNode;
             node.nodeConfig = config;
+            node.name = $"NODE [{config.nodeName}]";
             EditorGetAllNodes();
         }
         
@@ -68,6 +69,10 @@ namespace InGame.Upgrade.UIDummy
         {
             allNodes = FindObjectsByType<DummyUpgradeNode>(FindObjectsSortMode.None).Where((node) => node.nodeConfig != null).ToArray();
             NodeMapByConfig = allNodes.ToDictionary((node) => node.nodeConfig, (node) => node);
+            foreach (var node in allNodes)
+            {
+                node.UpdateUI();
+            }
         }
 
         [Button]
@@ -76,16 +81,23 @@ namespace InGame.Upgrade.UIDummy
             if (allNodes == null) return;
             foreach (var node in allNodes)
             {
-                while (node.transform.childCount > 0)
+                foreach (Transform child in node.transform)
+                {
+                    if (child.name != "Editor") continue;
+                    child.SetAsLastSibling();
+                    break;
+                }
+
+                while (node.transform.childCount > 1)
                 {
                     DestroyImmediate(node.transform.GetChild(0).gameObject);
                 }
                 
                 var nodeVisual = PrefabUtility.InstantiatePrefab(node.nodeConfig.nodePrefab, node.transform) as UIUpgradeNode;
-                nodeVisual.nodeConfig = node.nodeConfig;
                 nodeVisual.transform.localPosition = Vector3.zero;
                 nodeVisual.gameObject.hideFlags = HideFlags.NotEditable;
                 node.nodeUI = nodeVisual;
+                nodeVisual.transform.SetSiblingIndex(0);
                 node.HidePlaceHolder();
             }
         }
@@ -189,11 +201,13 @@ namespace InGame.Upgrade.UIDummy
             // Create new tree
             var tree = Instantiate(treePrefab, canvas.transform);
             tree.name = treeName;
-            tree.Nodes = new DummyUpgradeNode[allNodes.Length];
+            tree.NodesMap = new Dictionary<int, UIUpgradeNode>();
+            tree.NodeConfigsMap = new Dictionary<int, UpgradeNodeConfig>();
             for (var i = 0; i < allNodes.Length; i++)
             {
-                allNodes[i].transform.SetParent(tree.transform);
-                tree.Nodes[i] = allNodes[i];
+                allNodes[i].nodeUI.transform.SetParent(tree.transform);
+                tree.NodesMap.TryAdd(allNodes[i].nodeConfig.nodeId, allNodes[i].nodeUI);
+                tree.NodeConfigsMap.TryAdd(allNodes[i].nodeConfig.nodeId, allNodes[i].nodeConfig);
             }
             
             // Save prefab
@@ -230,7 +244,7 @@ namespace InGame.Upgrade.UIDummy
             }
             
             var prefab = PrefabUtility.SaveAsPrefabAssetAndConnect(treeGameObject, path, InteractionMode.UserAction);
-            upgradeTreeConfig.treePrefab = prefab.transform.GetComponent<DummyUpgradeTree>();
+            upgradeTreeConfig.treePrefab = prefab.transform.GetComponent<UIUpgradeTree>();
             
             // Copy dictionary too config
             upgradeTreeConfig.nodeMapById = new Dictionary<int, UpgradeNodeConfig>();

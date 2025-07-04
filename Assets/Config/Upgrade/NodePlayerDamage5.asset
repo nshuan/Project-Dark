@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8fe4c048a1f4c168bb31672ead8a329, type: 3}
+  m_Script: {fileID: 11500000, guid: 9f1427934e97420e88cdf1eeb6547fc2, type: 3}
   m_Name: NodePlayerDamage5
   m_EditorClassIdentifier: 
   serializationData:
@@ -20,15 +20,16 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: nodeLogic
+      Entry: 6
+      Data: 
   nodeId: 2
   nodeName: Node 5
   preRequire:
   - {fileID: 11400000, guid: 95e26e003c990584899d7eb4942764e0, type: 2}
   description: 
   costType: 0
-  costValue: 0
-  levelNum: 0
+  costValue: 
+  levelNum: 1
   nodePrefab: {fileID: 2421989148176486716, guid: 6c198e86fc5c7e9418ccde0533ca83e9, type: 3}
-  value: 6
-  isMultiply: 0

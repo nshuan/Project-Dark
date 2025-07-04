@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using InGame.Upgrade.UI;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
@@ -14,7 +15,7 @@ namespace InGame.Upgrade.UIDummy
         
         [Space]
         [ReadOnly]
-        public DummyUpgradeTree treePrefab;
+        public UIUpgradeTree treePrefab;
 
         public void ActivateTree(List<UpgradeNodeData> nodeData, ref UpgradeBonusInfo bonusInfo)
         {

@@ -76,6 +76,7 @@ namespace InGame
         public void LoadLevel(LevelConfig level)
         {
             Level = level;
+            bonusInfo = new UpgradeBonusInfo();
             UpgradeManager.Instance.ActivateTree(ref bonusInfo);
             EnemyManager.Instance.Initialize();
             winLoseManager = new WinLoseManager();

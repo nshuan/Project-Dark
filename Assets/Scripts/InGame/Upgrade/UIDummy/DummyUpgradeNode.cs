@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using InGame.Upgrade.UI;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,17 +12,33 @@ namespace InGame.Upgrade.UIDummy
         public UpgradeNodeConfig nodeConfig;
         public UIUpgradeNode nodeUI;
 
-        [SerializeField] private Image nodePlaceHolder;
+        [SerializeField] private GameObject nodeEditor;
+        [SerializeField] private Image nodeImage;
+        [SerializeField] private TextMeshProUGUI txtId;
+        [SerializeField] private TextMeshProUGUI txtName;
+        [SerializeField] private TextMeshProUGUI txtPreRequiredIds;
+        [SerializeField] private TextMeshProUGUI txtLevel;
 
-        private void OnEnable()
+        public void UpdateUI()
         {
-            nodeUI.UpdateUI(new UpgradeNodeData());
+            txtId.SetText($"ID: {nodeConfig.nodeId}");
+            txtName.SetText($"Name: {nodeConfig.nodeName}");
+            if (nodeConfig.preRequire != null && nodeConfig.preRequire.Length > 0)
+            {
+                var txtPreRequire = nodeConfig.preRequire.Aggregate("", (current, node) => current + (node.nodeId + ", "));
+                txtPreRequire = txtPreRequire.Remove(txtPreRequire.Length - 2);
+                txtPreRequiredIds.SetText($"Pre Require: {txtPreRequire}");
+            }
+            else
+            {
+                txtPreRequiredIds.SetText($"Pre Require:");
+            }
+            txtLevel.SetText($"{0}/{nodeConfig.levelNum}");
         }
 
         public void HidePlaceHolder()
         {
-            nodePlaceHolder.color -= new Color(0f, 0f, 0f, 1f);
-            nodePlaceHolder.enabled = false;
+            nodeImage.enabled = false;
         }
     }
 }
