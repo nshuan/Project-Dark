@@ -9,6 +9,7 @@ namespace InGame
     [CreateAssetMenu(menuName = "InGame/Player/Player Skill Config", fileName = "PlayerSKillConfig")]   
     public class PlayerSkillConfig : SerializedScriptableObject
     {
+        public int skillId;
         public PlayerSkillType skillType;
         public ProjectileEntity projectilePrefab;
         [NonSerialized, OdinSerialize] public PlayerSkillBehaviour shootLogic;

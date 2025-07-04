@@ -50,7 +50,9 @@ namespace InGame
         public void Initialize(InputInGame manager)
         {
             InputManager = manager;
-            Cooldown = LevelUtility.GetSkillCooldown(InputManager.PlayerStats.cooldown,
+            Cooldown = LevelUtility.GetSkillCooldown(
+                InputManager.CurrentSkillConfig.skillId,
+                InputManager.PlayerStats.cooldown,
                 InputManager.CurrentSkillConfig.cooldown);
         }
 
@@ -69,12 +71,13 @@ namespace InGame
             cdCounter += delay;
             
             var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(
+                InputManager.CurrentSkillConfig.skillId,
                 InputManager.PlayerStats.damage,
                 InputManager.CurrentSkillConfig.damePerBullet,
                 InputManager.PlayerStats.criticalDamage,
                 1 + Mathf.Min(dameChargeTime / maxDameChargeTime, 1f) * maxDameMultiplierAdd);
             var critRate = LevelUtility.GetCriticalRate(InputManager.PlayerStats.criticalRate);
-            var bulletNum = LevelUtility.GetNumberOfBullets(InputManager.CurrentSkillConfig.numberOfBullets, bulletAdd);
+            var bulletNum = LevelUtility.GetNumberOfBullets(InputManager.CurrentSkillConfig.skillId, InputManager.CurrentSkillConfig.numberOfBullets, bulletAdd);
 
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             LevelManager.Instance.SetTeleportTowerState(false);

@@ -12,7 +12,7 @@ namespace Data
             File.WriteAllText(filePath, jsonData);
         }
 
-        public static T Load<T>(string key)
+        public static T Load<T>(string key, T defaultValue = default(T))
         {
             string filePath = Application.dataPath + "/" + key + ".json";
             if (File.Exists(filePath))
@@ -20,7 +20,7 @@ namespace Data
                 string jsonData = File.ReadAllText(filePath);
                 return JsonUtility.FromJson<T>(jsonData);
             }
-            return default;
+            return defaultValue;
         }
     }
 }

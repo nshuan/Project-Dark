@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using InGame.Upgrade.UI;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEditor;
@@ -11,6 +12,7 @@ namespace InGame.Upgrade.UIDummy
 {
     public class DummyUpgradeTreeEditor : SerializedMonoBehaviour
     {
+        [SerializeField] private Canvas canvas;
         [SerializeField] private DummyUpgradeTreeConfig upgradeTreeConfig; 
         
         [Space]
@@ -33,6 +35,7 @@ namespace InGame.Upgrade.UIDummy
                 if (node.nodeConfig == null || node.nodeConfig.preRequire == null) continue;
                 foreach (var preNodeConfig in node.nodeConfig.preRequire)
                 {
+                    if (preNodeConfig == null) continue;
                     if (!NodeMapByConfig.TryGetValue(preNodeConfig, out var preNode)) continue;
                     if (preNode == null) continue;
                     Gizmos.DrawLine(node.transform.position, preNode.transform.position);
@@ -55,7 +58,7 @@ namespace InGame.Upgrade.UIDummy
                 return;
             }
             
-            var node = PrefabUtility.InstantiatePrefab(nodePrefab) as DummyUpgradeNode;
+            var node = PrefabUtility.InstantiatePrefab(nodePrefab, canvas.transform) as DummyUpgradeNode;
             node.nodeConfig = config;
             EditorGetAllNodes();
         }
@@ -65,6 +68,26 @@ namespace InGame.Upgrade.UIDummy
         {
             allNodes = FindObjectsByType<DummyUpgradeNode>(FindObjectsSortMode.None).Where((node) => node.nodeConfig != null).ToArray();
             NodeMapByConfig = allNodes.ToDictionary((node) => node.nodeConfig, (node) => node);
+        }
+
+        [Button]
+        public void EditorShowNodeVisual()
+        {
+            if (allNodes == null) return;
+            foreach (var node in allNodes)
+            {
+                while (node.transform.childCount > 0)
+                {
+                    DestroyImmediate(node.transform.GetChild(0).gameObject);
+                }
+                
+                var nodeVisual = PrefabUtility.InstantiatePrefab(node.nodeConfig.nodePrefab, node.transform) as UIUpgradeNode;
+                nodeVisual.nodeConfig = node.nodeConfig;
+                nodeVisual.transform.localPosition = Vector3.zero;
+                nodeVisual.gameObject.hideFlags = HideFlags.NotEditable;
+                node.nodeUI = nodeVisual;
+                node.HidePlaceHolder();
+            }
         }
 
         [Button]
@@ -89,20 +112,6 @@ namespace InGame.Upgrade.UIDummy
             if (rootCount < 1)
             {
                 DebugUtility.LogError(message + "There is no ROOT NODE!!!\n(Root node is a node with no pre-required nodes.");
-                return false;
-            }
-            if (rootCount > 1)
-            {
-                message = message + "There is more than 1 ROOT NODE!!!" +
-                    "\n(Root node is a node with no pre-required nodes." +
-                    "\n\n";
-                
-                foreach (var node in allNodes.Where((node) => node.nodeConfig.preRequire == null || node.nodeConfig.preRequire.Length == 0))
-                {
-                    message += node.name + "\n";    
-                }
-                
-                DebugUtility.LogError(message);
                 return false;
             }
 
@@ -178,7 +187,7 @@ namespace InGame.Upgrade.UIDummy
             }
             
             // Create new tree
-            var tree = Instantiate(treePrefab);
+            var tree = Instantiate(treePrefab, canvas.transform);
             tree.name = treeName;
             tree.Nodes = new DummyUpgradeNode[allNodes.Length];
             for (var i = 0; i < allNodes.Length; i++)

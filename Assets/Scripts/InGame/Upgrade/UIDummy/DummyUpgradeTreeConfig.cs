@@ -16,13 +16,13 @@ namespace InGame.Upgrade.UIDummy
         [ReadOnly]
         public DummyUpgradeTree treePrefab;
 
-        public void ActivateTree(List<int> activatedNodes, ref UpgradeBonusInfo bonusInfo)
+        public void ActivateTree(List<UpgradeNodeData> nodeData, ref UpgradeBonusInfo bonusInfo)
         {
-            foreach (var nodeId in activatedNodes)
+            foreach (var node in nodeData)
             {
-                if (nodeMapById.TryGetValue(nodeId, out var nodeConfig))
+                if (nodeMapById.TryGetValue(node.id, out var nodeConfig))
                 {
-                    nodeConfig.ActivateNode(ref bonusInfo);
+                    nodeConfig.ActivateNode(node.level, ref bonusInfo);
                 }
             }
         }

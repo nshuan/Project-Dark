@@ -1,23 +1,36 @@
 using System;
 using System.Linq;
+using InGame.Upgrade.UI;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using UnityEngine;
 
 namespace InGame.Upgrade
 {
-    public abstract class UpgradeNodeConfig : SerializedScriptableObject
+    [CreateAssetMenu(menuName = "InGame/Upgrade/Node Config", fileName = "NodeConfig")]
+    public class UpgradeNodeConfig : SerializedScriptableObject
     {
-        [ReadOnly] public int nodeId;
+        public int nodeId;
         public string nodeName; // Name to display
         public UpgradeNodeConfig[] preRequire;
         public string description; // Description to display
         public int costType; // Type of resource needed to unlock this node
-        public int costValue; 
+        public int[] costValue;
+        public int levelNum = 1;
+        public UIUpgradeNode nodePrefab;
+        [NonSerialized, OdinSerialize] public INodeActivateLogic[] nodeLogic;
         
         public UpgradeNodeState State { get; set; }
         public bool Activated { get; set; }
 
-        public abstract void ActivateNode(ref UpgradeBonusInfo bonusInfo);
+        public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)
+        {
+            if (level <= 0 || level > levelNum) return;
+            foreach (var logic in nodeLogic)
+            {
+                logic.ActivateNode(level, ref bonusInfo);
+            }
+        }
 
 #if UNITY_EDITOR
         
