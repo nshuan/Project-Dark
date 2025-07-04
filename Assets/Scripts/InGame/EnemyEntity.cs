@@ -114,9 +114,15 @@ namespace InGame
         private void MoveTo(Transform target, Vector2 directionAdder)
         {
             if (Vector3.Distance(transform.position, target.position) < config.attackRange)
+            {
                 inAttackRange = true;
+                animController.SetDefaultRun(false);
+            }
             else
+            {
                 config.moveBehaviour.MoveNonAlloc(transform, attackPosition, directionAdder, config.attackRange, config.moveSpeed, ref direction);
+                animController.SetDefaultRun(true);
+            }
         }
 
         private void StartAttackCoroutine()

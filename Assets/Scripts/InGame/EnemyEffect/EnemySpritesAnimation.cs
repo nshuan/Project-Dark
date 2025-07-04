@@ -11,7 +11,7 @@ namespace InGame.EnemyEffect
         [SerializeField] private EnemySpritesAnimationInfo hitAnim;
         [SerializeField] private EnemySpritesAnimationInfo dieAnim;
         [SerializeField] private EnemySpritesAnimationInfo spawnAnim;
-        [SerializeField] private bool isDefaultRun;
+        public bool isDefaultRun;
         
         private SpriteRenderer spriteRenderer;
         private EnemySpritesAnimationInfo currentAnim;

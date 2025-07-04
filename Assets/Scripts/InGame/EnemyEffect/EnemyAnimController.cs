@@ -7,9 +7,9 @@ namespace InGame.EnemyEffect
         [SerializeField] private MonoEnemyHitEffect enemyHitEffect;
         [SerializeField] private EnemySpritesAnimation spritesAnim;
 
-        public void SetDefaultRun()
+        public void SetDefaultRun(bool defaultRun)
         {
-                
+            spritesAnim.isDefaultRun = defaultRun;
         }
 
         public float PlaySpawn()
