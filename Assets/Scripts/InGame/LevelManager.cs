@@ -134,7 +134,7 @@ namespace InGame
             while (currentWaveIndex < waves.Length)
             {
                 currentWave = waves[currentWaveIndex];
-                currentWave.SetupWave(gatePrefab, Towers, OnWaveForceStop);
+                currentWave.SetupWave(gatePrefab, Towers, Level.levelExpRatio, Level.levelDarkRatio, OnWaveForceStop);
                 currentWaveIndex += 1;
                 yield return currentWave.IEActivateWave();
             }

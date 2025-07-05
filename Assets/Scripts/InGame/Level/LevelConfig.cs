@@ -9,6 +9,8 @@ namespace InGame
     public class LevelConfig : SerializedScriptableObject
     {
         [ReadOnly] public int level;
+        public float levelExpRatio = 1f;
+        public float levelDarkRatio = 1f;
         [NonSerialized, OdinSerialize] public IWaveInfo[] waveInfos;
 
         private void OnValidate()

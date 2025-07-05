@@ -23,14 +23,14 @@ namespace InGame
         public Action OnWaveForceStop { get; set; }
         public bool WaveEndedCompletely { get; set; }
         
-        public void SetupWave(GateEntity gatePrefab, TowerEntity[] towers, Action onWaveForceEnded)
+        public void SetupWave(GateEntity gatePrefab, TowerEntity[] towers, float levelExpRatio, float levelDarkRatio, Action onWaveForceEnded)
         {
             Gates = new GateEntity[waveConfig.gateConfigs.Length];
             for (var i = 0; i < waveConfig.gateConfigs.Length; i++)
             {
                 var gateCfg = waveConfig.gateConfigs[i];
                 Gates[i] = Object.Instantiate(gatePrefab, gateCfg.position, quaternion.identity, null);
-                Gates[i].Initialize(gateCfg, gateCfg.targetBaseIndex.Select((index) => towers[index]).ToArray(), scaleHp, scaleDmg);
+                Gates[i].Initialize(gateCfg, gateCfg.targetBaseIndex.Select((index) => towers[index]).ToArray(), scaleHp, scaleDmg, levelExpRatio, levelDarkRatio);
             }
 
             WaveEndedCompletely = false;

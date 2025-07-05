@@ -37,9 +37,9 @@ namespace InGame.EnemyEffect
             spritesAnim.PlayAttack();
         }
 
-        public void PlayDie()
+        public float PlayDie()
         {
-            spritesAnim.PlayDie();   
+            return spritesAnim.PlayDie();   
         }
     }
 }

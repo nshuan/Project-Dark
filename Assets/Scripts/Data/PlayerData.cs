@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 
 namespace Data
 {
@@ -7,12 +8,18 @@ namespace Data
     public class PlayerData
     {
         public int level;
-        public List<int> unlockedUpgradeNodes;
+        
+        // Resources
+        public int grade;
+        public int exp;
+        public int levelPoint;
+        public int dark;
+        public int bossPoint;
 
         public PlayerData()
         {
             level = 1;
-            unlockedUpgradeNodes = new List<int>();
+            grade = 1;
         }
     }
 }

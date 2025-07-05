@@ -14,6 +14,8 @@ namespace InGame
         [ReadOnly] public TowerEntity[] target;
         private float WaveHpMultiplier { get; set; }
         private float WaveDmgMultiplier { get; set; }
+        private float LevelExpRatio { get; set; }
+        private float LevelDarkRatio { get; set; }
         public bool IsActive { get; set; } = false;
         public bool AllEnemyDead { get; set; }
         private int TotalSpawnTurn { get; set; } // unlimited = -1
@@ -46,12 +48,14 @@ namespace InGame
             gameObject.SetActive(false);
         }
         
-        public void Initialize(GateConfig cfg, TowerEntity[] targetBase, float waveHpMultiplier, float waveDmgMultiplier)
+        public void Initialize(GateConfig cfg, TowerEntity[] targetBase, float waveHpMultiplier, float waveDmgMultiplier, float levelExpRatio, float levelDarkRatio)
         {
             config = cfg;
             target = targetBase;
             WaveHpMultiplier = waveHpMultiplier;
             WaveDmgMultiplier = waveDmgMultiplier;
+            LevelExpRatio = levelExpRatio;
+            LevelDarkRatio = levelDarkRatio;
             TotalSpawnTurn = cfg.duration >= 0 ? (int)(cfg.duration / cfg.intervalLoop) : -1;
             currentSpawnTurn = 0;
             AliveEnemyCount = 0;
@@ -79,7 +83,7 @@ namespace InGame
                 for (var i = 0; i < enemies.Length; i++)
                 {
                     var enemy = enemies[i];
-                    enemy.Init(config.spawnType, target[Random.Range(0, target.Length)], WaveHpMultiplier, WaveDmgMultiplier);
+                    enemy.Init(config.spawnType, target[Random.Range(0, target.Length)], WaveHpMultiplier, WaveDmgMultiplier, LevelExpRatio, LevelDarkRatio);
                     enemy.Activate();
                     enemy.UniqueId = EnemyManager.Instance.CurrentEnemyIndex;
                     AliveEnemyCount += 1;

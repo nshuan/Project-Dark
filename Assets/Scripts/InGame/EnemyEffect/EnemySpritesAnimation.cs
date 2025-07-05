@@ -64,12 +64,13 @@ namespace InGame.EnemyEffect
             timer = 0f;
         }
 
-        public void PlayDie()
+        public float PlayDie()
         {
             currentAnim = dieAnim;
             currentFrame = 0;
             spriteRenderer.sprite = currentAnim.frames[0];
             timer = 0f;
+            return dieAnim.frames.Length * dieAnim.frameRate;
         }
 
         private void Update()

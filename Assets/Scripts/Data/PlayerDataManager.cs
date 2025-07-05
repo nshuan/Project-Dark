@@ -10,33 +10,29 @@ namespace Data
         private const string SavePath = "/playerData.json";
         
         private PlayerData data;
-
-#if UNITY_EDITOR
+        public PlayerData Data => data;
+        
         public PlayerDataManager()
         {
             Initialize();
         }
-#endif
         
         public void Initialize()
         {
             data = DataHandler.Load<PlayerData>(SavePath) ?? new PlayerData();
         }
-
-        #region Methods
-
-        public List<int> GetUnlockedUpgradeNodes()
-        {
-            return data.unlockedUpgradeNodes;
-        }
-
-        #endregion
         
         #region SAVE LOAD
 
         public void Save()
         {
             DataHandler.Save(SavePath, data);    
+        }
+
+        public void Save(PlayerData newData)
+        {
+            data = newData;
+            Save();
         }
         
         #endregion

@@ -7,7 +7,7 @@ namespace InGame
     {
         int WaveIndex { get; set; }
         bool WaveEndedCompletely { get; }
-        void SetupWave(GateEntity gatePrefab, TowerEntity[] towers, Action onWaveForceEnded);
+        void SetupWave(GateEntity gatePrefab, TowerEntity[] towers, float levelExpRatio, float levelDarkRatio, Action onWaveForceEnded);
         IEnumerator IEActivateWave();
         void StopWave();
     }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using DG.Tweening;
+using Economic;
 using InGame.EnemyEffect;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -11,13 +12,24 @@ namespace InGame
     public class EnemyEntity : MonoBehaviour, IDamageable
     {
         private static float StaggerMaxDuration = 0.5f; // Hit back 1f on 0.5s
+
+        [SerializeField] private Collider2D collider2d;
         
         public Transform Target { get; set; }
         public IDamageable TargetDamageable { get; set; }
         private EnemyBehaviour config;
+
+        #region Stats
         private float MaxHealth { get; set; }
         private float CurrentHealth { get; set; }
         private int CurrentDamage { get; set; }
+        private int Exp { get; set; }
+        private int Dark { get; set; }
+        private float DarkRatio { get; set; }
+        private int BossPoint { get; set; }
+
+        #endregion
+        
         public Action OnDead { get; set; }
         public EnemyState State { get; set; }
         public int UniqueId { get; set; }
@@ -40,13 +52,15 @@ namespace InGame
         
         #region Initialize
 
-        public void Init(EnemyBehaviour eConfig, TowerEntity target, float hpMultiplier, float dmgMultiplier)
+        public void Init(EnemyBehaviour eConfig, TowerEntity target, float hpMultiplier, float dmgMultiplier, float levelExpRatio, float levelDarkRatio)
         {
             config = eConfig;
             
             // Set target and attack position
             Target = target.transform;
             TargetDamageable = target;
+
+            collider2d.enabled = false;
             
             var myPos = transform.position;
             var targetPos = Target.position;
@@ -59,6 +73,11 @@ namespace InGame
             MaxHealth = config.hp * hpMultiplier;
             CurrentHealth = MaxHealth;
             CurrentDamage = Mathf.RoundToInt(config.dmg * dmgMultiplier);
+            Exp = Mathf.RoundToInt(config.exp * levelExpRatio);
+            Dark = Mathf.RoundToInt(config.dark * levelDarkRatio);
+            DarkRatio = config.darkRatio;
+            BossPoint = config.bossPoint;
+            
             State = EnemyState.Spawn;
             inAttackRange = false;
             IsDestroyed = false;
@@ -88,6 +107,7 @@ namespace InGame
                 State = EnemyState.Move;
                 animController.PlayRun();
                 boidAgent.IsActive = true;
+                collider2d.enabled = true;
             });
         }
 
@@ -178,18 +198,26 @@ namespace InGame
 
         private void OnDie()
         {
+            collider2d.enabled = false;
             IsDestroyed = true;
             OnDead?.Invoke();
             OnDead = null;
-            animController.PlayDie();
             boidAgent.IsActive = false;
-            StartCoroutine(IEDie());
+            StartCoroutine(IEDie(
+                animController.PlayDie(), 0.5f
+                ));
         }
 
-        private IEnumerator IEDie()
+        private IEnumerator IEDie(float delayAnim, float delayRelease)
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(delayAnim);
+            WealthManager.Instance.AddExp(Exp);
+            WealthManager.Instance.AddDark(Dark);
+            WealthManager.Instance.AddBossPoint(BossPoint);
+            
+            yield return new WaitForSeconds(delayRelease);
             EnemyPool.Instance.Release(this, config.enemyId);
+            
         }
         
         private void UIUpdateHealth()

@@ -19,6 +19,10 @@ namespace InGame
         public int dmg; // Base damage
         public float moveSpeed;
         public float staggerResist; // Reduce projectile stagger
+        public int exp;
+        public int dark;
+        [Range(0f, 1f)] public float darkRatio;
+        public int bossPoint;
         public List<ActionEffectConfig> effects; 
         
         public void Init(EnemyEntity enemy)

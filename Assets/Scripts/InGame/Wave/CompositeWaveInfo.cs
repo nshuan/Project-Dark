@@ -18,11 +18,11 @@ namespace InGame
 
         public bool WaveEndedCompletely => subWaves.All((wave) => wave.WaveEndedCompletely);
         
-        public void SetupWave(GateEntity gatePrefab, TowerEntity[] towers, Action onWaveForceEnded)
+        public void SetupWave(GateEntity gatePrefab, TowerEntity[] towers, float levelExpRatio, float levelDarkRatio, Action onWaveForceEnded)
         {
             foreach (var wave in subWaves)
             {
-                wave.SetupWave(gatePrefab, towers, onWaveForceEnded);
+                wave.SetupWave(gatePrefab, towers, levelExpRatio, levelDarkRatio, onWaveForceEnded);
             }
         }
 
