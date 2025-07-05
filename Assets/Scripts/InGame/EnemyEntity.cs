@@ -212,7 +212,8 @@ namespace InGame
         {
             yield return new WaitForSeconds(delayAnim);
             WealthManager.Instance.AddExp(Exp);
-            WealthManager.Instance.AddDark(Dark);
+            if (Random.Range(0f, 0f) <= DarkRatio)
+                WealthManager.Instance.AddDark(Dark);
             WealthManager.Instance.AddBossPoint(BossPoint);
             
             yield return new WaitForSeconds(delayRelease);
