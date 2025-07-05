@@ -34,6 +34,7 @@ namespace InGame
         public EnemyState State { get; set; }
         public int UniqueId { get; set; }
         private Vector3 direction = new Vector3();
+        private Vector2 directionAddition = new Vector2();
         private float staggerDuration;
         private Vector2 staggerDirection;
         
@@ -84,7 +85,6 @@ namespace InGame
             effectTrigger.Enemy = this;
             effectTrigger.Setup(config.effects);
             config.Init(this);
-            EnemyBoidManager.Instance.RegisterAgent(boidAgent);
             
             // Update health ui
             UIUpdateHealth();
@@ -127,11 +127,12 @@ namespace InGame
             }
             else
             {
-                MoveTo(Target, boidAgent.GetBoidAddition());
+                boidAgent.GetBoidAdditionNonAlloc(ref directionAddition);
+                MoveTo(Target);
             }
         }
 
-        private void MoveTo(Transform target, Vector2 directionAdder)
+        private void MoveTo(Transform target)
         {
             if (Vector3.Distance(transform.position, target.position) < config.attackRange)
             {
@@ -140,7 +141,7 @@ namespace InGame
             }
             else
             {
-                config.moveBehaviour.MoveNonAlloc(transform, attackPosition, directionAdder, config.attackRange, config.moveSpeed, ref direction);
+                config.moveBehaviour.MoveNonAlloc(transform, attackPosition, directionAddition, config.attackRange, config.moveSpeed, ref direction);
                 animController.SetDefaultRun(true);
             }
         }

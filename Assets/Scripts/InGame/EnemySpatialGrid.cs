@@ -65,8 +65,20 @@ namespace InGame
                     // }
                     if (cells.ContainsKey(agentCell))
                     {
-                        neighbors = cells[agentCell];
-                        count = neighbors.Count;
+                        foreach (var a in cells[agentCell])
+                        {
+                            if (a != agent && a.IsActive &&
+                                Vector3.Distance(a.transform.position, agent.transform.position) < radius)
+                            {
+                                if (count >= neighbors.Count)
+                                    neighbors.Add(a);
+                                else
+                                    neighbors[count] = a;
+                                count += 1;
+                            }
+                        }
+                        // neighbors = cells[agentCell];
+                        // count = neighbors.Count;
                     }
                     
                     agentCell.x -= x;
