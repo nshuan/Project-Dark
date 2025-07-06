@@ -34,7 +34,7 @@ namespace InGame
             txtLevel.SetText($"Level: {level.name}");
         }
 
-        private void OnChangedTower(Transform tower)
+        private void OnChangedTower(TowerEntity tower)
         {
             currentTower.SetText($"Current tower: {tower.name} [{LevelManager.Instance.CurrentTower.CurrentHp}]");
         }

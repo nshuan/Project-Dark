@@ -55,20 +55,13 @@ namespace InGame
                 InputManager.PlayerStats.cooldown,
                 InputManager.CurrentSkillConfig.cooldown);
         }
-
-        public virtual void OnMouseClick()
-        {
-            OnMouseClick(0f);
-        }
         
-        public virtual void OnMouseClick(float delay)
+        public virtual void OnMouseClick()
         {
             if (!CanShoot) return;
             if (OutOfRange) return;
             
             CanShoot = false;
-            cdCounter = Cooldown;
-            cdCounter += delay;
             
             var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(
                 InputManager.CurrentSkillConfig.skillId,
@@ -81,8 +74,8 @@ namespace InGame
 
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             LevelManager.Instance.SetTeleportTowerState(false);
-            InputManager.playerVisual.PlayShoot(worldMousePosition);
-            InputManager.DelayCall(delay, () =>
+            var delayShot = InputManager.playerVisual.PlayShoot(worldMousePosition);
+            InputManager.DelayCall(delayShot, () =>
             {
                 InputManager.CurrentSkillConfig.Shoot(
                     InputManager.CursorRangeCenter.position, 
@@ -94,6 +87,9 @@ namespace InGame
 
                 LevelManager.Instance.SetTeleportTowerState(true);
             });
+            
+            cdCounter = Cooldown;
+            cdCounter += delayShot;
             
             // Do cursor effect
             DOTween.Complete(this);

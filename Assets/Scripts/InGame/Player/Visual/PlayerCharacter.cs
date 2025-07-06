@@ -19,16 +19,17 @@ namespace InGame
             LevelManager.Instance.OnChangeSkill += OnChangeSkill;
         }
 
-        public void PlayShoot(Vector2 target)
+        // Return the duration to finish the 1st animation phase, when the skill is actually strike
+        public float PlayShoot(Vector2 target)
         {
             transform.localScale =
                 new Vector3(Mathf.Sign(target.x - transform.position.x), 1f, 1f);
-            animController.PlayAttack();
+            return animController.PlayAttack();
         }
 
-        private void OnChangeTower(Transform tower)
+        private void OnChangeTower(TowerEntity tower)
         {
-            transform.position = tower.position + (Vector3)offset;
+            transform.position = tower.transform.position + (Vector3)offset;
         }
 
         private void OnChangeSkill(PlayerSkillConfig skillConfig)

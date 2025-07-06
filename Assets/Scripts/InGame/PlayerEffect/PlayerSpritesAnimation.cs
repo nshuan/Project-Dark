@@ -6,7 +6,7 @@ namespace InGame
     public class PlayerSpritesAnimation : MonoBehaviour
     {
         [SerializeField] private PlayerSpritesAnimationInfo idleAnim;
-        [SerializeField] private PlayerSpritesAnimationInfo attackAnim;
+        [SerializeField] private PlayerSpritesAttackAnimationInfo attackAnim;
         [SerializeField] private PlayerSpritesAnimationInfo specialAttackAnim;
         
         private SpriteRenderer spriteRenderer;
@@ -27,12 +27,13 @@ namespace InGame
             timer = 0f;
         }
 
-        public void PlayAttack()
+        public float PlayAttack()
         {
             currentAnim = attackAnim;
             currentFrame = 0;
             spriteRenderer.sprite = currentAnim.frames[0];
             timer = 0f;
+            return attackAnim.frameRate * attackAnim.strikeFrameIndex;
         }
         
         public void PlaySpecialAttack()
@@ -78,5 +79,11 @@ namespace InGame
         public bool isLoop;
         public float frameRate = 0.1f;
         public bool autoExit = true;
+    }
+
+    [Serializable]
+    public class PlayerSpritesAttackAnimationInfo : PlayerSpritesAnimationInfo
+    {
+        public int strikeFrameIndex;
     }
 }

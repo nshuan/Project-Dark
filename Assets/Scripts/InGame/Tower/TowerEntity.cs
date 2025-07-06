@@ -6,14 +6,16 @@ namespace InGame
 {
     public class TowerEntity : MonoBehaviour, IDamageable
     {
+        public int Id { get; private set; }
         public int MaxHp { get; private set; }
         public int CurrentHp { get; private set; }
         public bool IsDestroyed { get; set; }
         
         public Action<TowerEntity> OnDestroyed;
         
-        public void Initialize(int hp, float radius)
+        public void Initialize(int id, int hp)
         {
+            Id = id;
             MaxHp = hp;
             CurrentHp = MaxHp;
             IsDestroyed = false;
@@ -45,6 +47,18 @@ namespace InGame
             // Do damage effect
             var camShakeEffect = new CameraShake() { Cam = EffectHelper.Instance.DefaultCamera };
             EffectHelper.Instance.PlayEffect(camShakeEffect);
+        }
+
+        [SerializeField] private GameObject objHighlight;
+        public void Highlight(bool highlighted)
+        {
+            objHighlight.SetActive(highlighted);
+        }
+
+        [SerializeField] private GameObject objHover;
+        public void Hover(bool hovering)
+        {
+            objHover.SetActive(hovering);
         }
     }
 }

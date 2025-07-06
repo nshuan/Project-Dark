@@ -6,7 +6,6 @@ namespace InGame
     {
         void Initialize(InputInGame manager);
         void OnMouseClick();
-        void OnMouseClick(float delay);
         void OnHoldStarted();
         void OnHoldReleased();
         void ResetChargeVariable();

@@ -14,6 +14,8 @@ namespace InGame
     {
         [SerializeField] private PlayerStats playerStats;
         [SerializeField] private PlayerSkillConfig skillConfig;
+        public MoveTowersConfig shortTeleConfig;
+        public MoveTowersConfig longTeleConfig;
 
         [SerializeField] private GateEntity gatePrefab;
         
@@ -45,7 +47,7 @@ namespace InGame
 
         public Action<LevelConfig> OnLevelLoaded { get; set; }
         public Action<PlayerSkillConfig> OnChangeSkill { get; set; }
-        public Action<Transform> OnChangeTower { get; set; }
+        public Action<TowerEntity> OnChangeTower { get; set; }
 
         public event Action OnWin;
         public event Action OnLose;
@@ -153,10 +155,10 @@ namespace InGame
 
         private void InitTowers()
         {
-            foreach (var tower in towers)
+            for (var i = 0; i < towers.Length; i++)
             {
-                tower.Initialize(playerStats.hp, skillConfig.range);
-                tower.OnDestroyed += OnTowerDestroyed; 
+                towers[i].Initialize(i, playerStats.hp);
+                towers[i].OnDestroyed += OnTowerDestroyed;
             }
         }
 
@@ -166,7 +168,7 @@ namespace InGame
             winLoseManager.CheckLose(this);
         }
         
-        private void TeleportTower(int towerIndex)
+        public void TeleportTower(int towerIndex)
         {
             if (!canTeleportTower) return;
             if (towers[Math.Clamp(towerIndex, 0, towers.Length - 1)].IsDestroyed) return;
@@ -182,7 +184,7 @@ namespace InGame
             }
             
             currentTowerIndex = towerIndex;
-            OnChangeTower?.Invoke(CurrentTower.transform);
+            OnChangeTower?.Invoke(CurrentTower);
         }
 
         public void SetTeleportTowerState(bool enable)
