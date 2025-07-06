@@ -61,6 +61,7 @@ namespace InGame
         /// <summary>
         /// Number_Of_Bullet = Bullet + Total (Bullet_Plus) + Max [ RoundDown (Charge_Time / Charge_Bullet_Interval), Max_Bullet_Add ]
         /// </summary>
+        /// <param name="skillId"></param>
         /// <param name="baseBulletNum"></param>
         /// <param name="chargeBulletNum"></param>
         /// <returns></returns>
@@ -68,6 +69,19 @@ namespace InGame
         {
             return baseBulletNum + BonusInfo.skillBonusMapById[skillId].bulletPlus + chargeBulletNum;
         }
+
+        /// <summary>
+        /// Skill_Size = Size * [1 + Total (Skill_Size_Multiple) ] * [ 1 + ( Charge_Size_Max / Charge_Size_Time ) * Charge_Time ]
+        /// </summary>
+        /// <param name="skillId"></param>
+        /// <param name="baseSkillSize"></param>
+        /// <param name="chargeSkillSize"></param>
+        /// <returns></returns>
+        public static float GetBulletSize(int skillId, float baseSkillSize, float chargeSkillSize)
+        {
+            return baseSkillSize * (1 + BonusInfo.skillBonusMapById[skillId].skillSizeMultiply) * chargeSkillSize;
+        }
+        
 
         /// <summary>
         /// Player_Cooldown = Base_Cooldown + Total (Cooldown_Plus)

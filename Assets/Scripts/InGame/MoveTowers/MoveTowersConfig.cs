@@ -10,5 +10,6 @@ namespace InGame
         public float delayMove;
         public float cooldown;
         public int damage;
+        public float size;
     }
 }

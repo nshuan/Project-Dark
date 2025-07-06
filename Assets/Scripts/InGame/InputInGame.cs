@@ -18,6 +18,7 @@ namespace InGame
         private bool IsMousePressing;
         private bool IsMousePressingStarted;
         private float holdDelayTime;
+        private bool blockInput;
         private IMouseInput mouseInput;
         private IRightMouseInput teleMouseInput;
 

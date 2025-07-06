@@ -9,7 +9,7 @@ namespace InGame
     {
         [Range(0f, 180f)] public float angle;
         
-        public override void Shoot(ProjectileEntity projectilePrefab, Vector2 spawnPos, float bulletRange, Vector2 target, int damagePerBullet, int criticalDamagePerBullet, float criticalRatePerBullet, int numberOfBullets, float bulletSpeedScale, float stagger)
+        public override void Shoot(ProjectileEntity projectilePrefab, Vector2 spawnPos, float bulletRange, Vector2 target, int damagePerBullet, int criticalDamagePerBullet, float criticalRatePerBullet, int numberOfBullets, float bulletSize, float bulletSpeedScale, float stagger)
         {
             const float delayEachBullet = 0.1f;
             

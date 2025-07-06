@@ -32,6 +32,12 @@ namespace InGame
         private float maxDameMultiplierAdd;
         private float maxDameChargeTime;
         private float dameChargeTime;
+        
+        private bool isChargingSize;
+        private float maxSizeMultiplierAdd;
+        private float maxSizeChargeTime;
+        private float sizeChargeTime;
+        
 
         #endregion
 
@@ -71,6 +77,9 @@ namespace InGame
                 1 + Mathf.Min(dameChargeTime / maxDameChargeTime, 1f) * maxDameMultiplierAdd);
             var critRate = LevelUtility.GetCriticalRate(InputManager.PlayerStats.criticalRate);
             var bulletNum = LevelUtility.GetNumberOfBullets(InputManager.CurrentSkillConfig.skillId, InputManager.CurrentSkillConfig.numberOfBullets, bulletAdd);
+            var bulletSize = LevelUtility.GetBulletSize(InputManager.CurrentSkillConfig.skillId,
+                InputManager.CurrentSkillConfig.size,
+                1 + Mathf.Min(sizeChargeTime / maxSizeChargeTime, 1f) * maxSizeMultiplierAdd);
 
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             LevelManager.Instance.SetTeleportTowerState(false);
@@ -82,6 +91,7 @@ namespace InGame
                     tempMousePos,
                     damage,
                     bulletNum,
+                    bulletSize,
                     criticalDamage,
                     critRate);
 
@@ -104,18 +114,21 @@ namespace InGame
             if (!CanShoot) return;
             if (OutOfRange) return;
             if (isChargingBullet
-                || isChargingDame) return; 
+                || isChargingDame
+                || isChargingSize) return; 
             ResetChargeVariable();
             
             if (InputManager.CurrentSkillConfig.chargeBulletMaxAdd > 0)
                 isChargingBullet = true;
             if (maxDameMultiplierAdd > 0) isChargingDame = true;
+            if (maxSizeMultiplierAdd > 0) isChargingSize = true;
         }
 
         public void OnHoldReleased()
         {
             isChargingBullet = false;
             isChargingDame = false;
+            isChargingSize = false;
         }
 
         public void ResetChargeVariable()
@@ -130,6 +143,11 @@ namespace InGame
             maxDameMultiplierAdd = InputManager.CurrentSkillConfig.chargeDameMax;
             maxDameChargeTime = InputManager.CurrentSkillConfig.chargeDameTime;
             dameChargeTime = 0f;
+            
+            // Size
+            maxSizeMultiplierAdd = InputManager.CurrentSkillConfig.size;
+            maxSizeChargeTime = InputManager.CurrentSkillConfig.chargeSizeTime;
+            sizeChargeTime = 0f;
         }
 
         public virtual void OnUpdate()
@@ -211,6 +229,12 @@ namespace InGame
                 if (isChargingDame)
                 {
                     dameChargeTime += Time.deltaTime;
+                }
+                
+                // Charge size
+                if (isChargingSize)
+                {
+                    sizeChargeTime += Time.deltaTime;
                 }
             }
             

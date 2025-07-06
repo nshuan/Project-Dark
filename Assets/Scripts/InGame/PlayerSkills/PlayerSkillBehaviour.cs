@@ -16,6 +16,7 @@ namespace InGame
             int criticalDamagePerBullet,
             float criticalRatePerBullet,
             int numberOfBullets,
+            float bulletSize,
             float bulletSpeedScale,
             float stagger);
     }

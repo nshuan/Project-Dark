@@ -34,6 +34,7 @@ namespace InGame
             Vector2 target, 
             int damagePerBullet, 
             int bulletNumber,
+            float bulletSize,
             int criticalDamagePerBullet,
             float criticalRatePerBullet)
         {
@@ -46,6 +47,7 @@ namespace InGame
                 criticalDamagePerBullet,
                 criticalRatePerBullet,
                 bulletNumber,
+                bulletSize,
                 speedScale,
                 stagger);
         }
