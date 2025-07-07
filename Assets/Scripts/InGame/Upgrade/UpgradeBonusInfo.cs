@@ -65,5 +65,8 @@ namespace InGame
 
         [Space] 
         public float staggerMultiply = 0f;
+        
+        [Space]
+        public List<ActionEffectConfig> bulletEffectsOnCharge = new List<ActionEffectConfig>();
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using InGame.Pool;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -9,26 +10,36 @@ namespace InGame
 {
     public class ProjectileEntity : MonoBehaviour
     {
-        private const float MaxLifeTime = 10f;
-        
-        [SerializeField] private LayerMask enemyLayer;
-        [SerializeField] private float damageRange = 0.1f;
+        protected const float MaxLifeTime = 10f;
+
+        [SerializeField] private ProjectileActionEffectTrigger effectTrigger;
+        [SerializeField] protected LayerMask enemyLayer;
+        [SerializeField] protected float damageRange = 0.1f;
         
         [Space] [Header("Bullet config")]
         [SerializeField] private float baseSpeed = 5f;
-        private Vector2 direction;
-        private Vector2 startPos;
-        private float maxDistance;
+        protected Vector2 direction;
+        protected Vector2 startPos;
+        protected float maxDistance;
         private int Damage { get; set; }
         private int CriticalDamage { get; set; }
         private float CriticalRate { get; set; }
-        private float Speed { get; set; }
+        protected float Speed { get; set; }
         private float Stagger { get; set; }
+        private List<ActionEffectConfig> HitEffects { get; set; }
 
-        private bool activated = false;
-        private float lifeTime = 0f;
+        protected bool blockHit = false;
+        protected bool activated = false;
+        protected float lifeTime = 0f;
+        protected EnemyEntity hitEnemy;
 
-        private RaycastHit2D[] hits = new RaycastHit2D[1];
+        protected RaycastHit2D[] hits = new RaycastHit2D[1];
+
+        #region Actions
+
+        public Action OnHit;
+
+        #endregion
         
         private void OnDisable()
         {
@@ -44,7 +55,8 @@ namespace InGame
             int damage, 
             int criticalDamage, 
             float criticalRate,
-            float stagger)
+            float stagger,
+            List<ActionEffectConfig> hitEffects)
         {
             Speed = baseSpeed * speedScale;
             this.startPos = startPos;
@@ -55,6 +67,9 @@ namespace InGame
             CriticalDamage = criticalDamage;
             CriticalRate = criticalRate;
             Stagger = stagger;
+            HitEffects = hitEffects;
+            effectTrigger.Projectile = this;
+            effectTrigger.Setup(HitEffects);
         }
 
         public void Activate(float delay)
@@ -63,13 +78,13 @@ namespace InGame
             StartCoroutine(IEActivate(delay));
         }
 
-        private IEnumerator IEActivate(float delay)
+        protected virtual IEnumerator IEActivate(float delay)
         {
             yield return new WaitForSeconds(delay);
             activated = true;
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             if (!activated) return;
             if (Vector2.Distance(transform.position, startPos) > maxDistance) ProjectileHit(null);
@@ -83,19 +98,23 @@ namespace InGame
             if (count > 0)
                 ProjectileHit(hits[0].transform);
         }
-
+        
         protected virtual void ProjectileHit(Transform hitTransform)
         {
+            if (blockHit) return;
             if (hitTransform)
             {
-                if (hitTransform.TryGetComponent<EnemyEntity>(out var enemy))
+                if (hitTransform.TryGetComponent<EnemyEntity>(out hitEnemy))
                 {
                     // Check critical hit
                     var critical = Random.Range(0f, 1f) <= CriticalRate;
-                    enemy.Damage(critical ? CriticalDamage : Damage, direction, Stagger);
+                    hitEnemy.Damage(critical ? CriticalDamage : Damage, direction, Stagger);
                    
                     if (critical)
-                        DebugUtility.LogWarning($"Projectile {name} deals critical damage {CriticalDamage} to {enemy.name}!!");
+                        DebugUtility.LogWarning($"Projectile {name} deals critical damage {CriticalDamage} to {hitEnemy.name}!!");
+                    
+                    OnHit?.Invoke();
+                    OnHit = null;
                 }
             }
             

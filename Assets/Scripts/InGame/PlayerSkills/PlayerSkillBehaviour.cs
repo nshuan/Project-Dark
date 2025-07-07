@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -16,8 +17,10 @@ namespace InGame
             int criticalDamagePerBullet,
             float criticalRatePerBullet,
             int numberOfBullets,
-            float bulletSize,
+            float skillSize,
+            float skillRange,
             float bulletSpeedScale,
-            float stagger);
+            float stagger,
+            List<ActionEffectConfig> hitEffects);
     }
 }

@@ -71,19 +71,6 @@ namespace InGame
         }
 
         /// <summary>
-        /// Skill_Size = Size * [1 + Total (Skill_Size_Multiple) ] * [ 1 + ( Charge_Size_Max / Charge_Size_Time ) * Charge_Time ]
-        /// </summary>
-        /// <param name="skillId"></param>
-        /// <param name="baseSkillSize"></param>
-        /// <param name="chargeSkillSize"></param>
-        /// <returns></returns>
-        public static float GetBulletSize(int skillId, float baseSkillSize, float chargeSkillSize)
-        {
-            return baseSkillSize * (1 + BonusInfo.skillBonusMapById[skillId].skillSizeMultiply) * chargeSkillSize;
-        }
-        
-
-        /// <summary>
         /// Player_Cooldown = Base_Cooldown + Total (Cooldown_Plus)
         /// Skill_Cooldown = [Skill_Cooldown_Base - Total (Skill_Cooldown_Plus) ] * [ 1 - Total (Skill_Cooldown_Multiple) ]
         /// Final_Cooldown = Skill_Cooldown * Player_Cooldown

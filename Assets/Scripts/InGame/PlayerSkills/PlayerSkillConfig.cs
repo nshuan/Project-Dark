@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Redzen.Structures;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -34,9 +35,11 @@ namespace InGame
             Vector2 target, 
             int damagePerBullet, 
             int bulletNumber,
-            float bulletSize,
+            float skillSize,
+            float skillRange,
             int criticalDamagePerBullet,
-            float criticalRatePerBullet)
+            float criticalRatePerBullet,
+            List<ActionEffectConfig> chargeEffects)
         {
             shootLogic.Shoot(
                 projectilePrefab,
@@ -47,9 +50,11 @@ namespace InGame
                 criticalDamagePerBullet,
                 criticalRatePerBullet,
                 bulletNumber,
-                bulletSize,
+                skillSize,
+                skillRange,
                 speedScale,
-                stagger);
+                stagger,
+                chargeEffects);
         }
     }
 

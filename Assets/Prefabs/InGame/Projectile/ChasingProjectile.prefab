@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6844351392576462872}
   - component: {fileID: 7452188291282449498}
   m_Layer: 0
-  m_Name: MonoProjectile
+  m_Name: ChasingProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,7 +44,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 302550039386543899}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 800240112ae449e58353f74a23b00ef9, type: 3}
+  m_Script: {fileID: 11500000, guid: ea154d6727b14e278fb0fb31676f547f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   effectTrigger: {fileID: 8162969709079823345}
@@ -53,6 +53,7 @@ MonoBehaviour:
     m_Bits: 8
   damageRange: 0.1
   baseSpeed: 5
+  rotateSpeed: 300
 --- !u!96 &7452188291282449498
 TrailRenderer:
   serializedVersion: 3
@@ -240,7 +241,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.19607843, g: 0.91764706, b: 1, a: 0.5019608}
+  m_Color: {r: 1, g: 0.19607843, b: 0.22745098, a: 0.5019608}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

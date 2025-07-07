@@ -20,6 +20,7 @@ namespace InGame
 
     public enum ActionEffectTriggerType
     {
-        TriggerOnDie
+        TriggerOnDie,
+        TriggerOnStart
     }
 }

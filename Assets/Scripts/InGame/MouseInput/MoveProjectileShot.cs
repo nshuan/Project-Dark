@@ -19,6 +19,7 @@ namespace InGame
         private bool OutOfRange { get; set; }
         protected float Cooldown { get; set; }
         protected float cdCounter;
+        private ProjectileEntity skillBaseProjectile;
 
         #region Charge
 
@@ -37,7 +38,11 @@ namespace InGame
         private float maxSizeMultiplierAdd;
         private float maxSizeChargeTime;
         private float sizeChargeTime;
-        
+
+        private bool isChargingRange;
+        private float maxRangeMultiplierAdd;
+        private float maxRangeChargeTime;
+        private float rangeChargeTime;
 
         #endregion
 
@@ -53,6 +58,11 @@ namespace InGame
             cursorRect = cursor.GetComponent<RectTransform>();
         }
 
+        ~MoveProjectileShot()
+        {
+            InputManager.CurrentSkillConfig.projectilePrefab = skillBaseProjectile;
+        }
+
         public void Initialize(InputInGame manager)
         {
             InputManager = manager;
@@ -60,6 +70,20 @@ namespace InGame
                 InputManager.CurrentSkillConfig.skillId,
                 InputManager.PlayerStats.cooldown,
                 InputManager.CurrentSkillConfig.cooldown);
+            
+            skillBaseProjectile = InputManager.CurrentSkillConfig.projectilePrefab;
+            
+            // Update skill bullet type
+            var skillChargeEffects = LevelUtility.BonusInfo.skillBonusMapById[InputManager.CurrentSkillConfig.skillId]
+                .bulletEffectsOnCharge;
+            foreach (var effect in skillChargeEffects)
+            {
+                if (effect.logicType is EffectChangeProjectile changeProjectile)
+                {
+                    InputManager.CurrentSkillConfig.projectilePrefab = changeProjectile.newProjectile;
+                    break;
+                }
+            }
         }
         
         public virtual void OnMouseClick()
@@ -77,9 +101,12 @@ namespace InGame
                 1 + Mathf.Min(dameChargeTime / maxDameChargeTime, 1f) * maxDameMultiplierAdd);
             var critRate = LevelUtility.GetCriticalRate(InputManager.PlayerStats.criticalRate);
             var bulletNum = LevelUtility.GetNumberOfBullets(InputManager.CurrentSkillConfig.skillId, InputManager.CurrentSkillConfig.numberOfBullets, bulletAdd);
-            var bulletSize = LevelUtility.GetBulletSize(InputManager.CurrentSkillConfig.skillId,
+            var skillSize = LevelUtility.GetSkillSize(InputManager.CurrentSkillConfig.skillId,
                 InputManager.CurrentSkillConfig.size,
                 1 + Mathf.Min(sizeChargeTime / maxSizeChargeTime, 1f) * maxSizeMultiplierAdd);
+            var skillRange = LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId,
+                InputManager.CurrentSkillConfig.range,
+                1 + Mathf.Min(rangeChargeTime / maxRangeChargeTime, 1f) * maxRangeMultiplierAdd);
 
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             LevelManager.Instance.SetTeleportTowerState(false);
@@ -91,9 +118,11 @@ namespace InGame
                     tempMousePos,
                     damage,
                     bulletNum,
-                    bulletSize,
+                    skillSize,
+                    skillRange,
                     criticalDamage,
-                    critRate);
+                    critRate,
+                    LevelUtility.BonusInfo.skillBonusMapById[InputManager.CurrentSkillConfig.skillId].bulletEffectsOnCharge);
 
                 LevelManager.Instance.SetTeleportTowerState(true);
             });
@@ -115,13 +144,15 @@ namespace InGame
             if (OutOfRange) return;
             if (isChargingBullet
                 || isChargingDame
-                || isChargingSize) return; 
+                || isChargingSize
+                || isChargingRange) return; 
             ResetChargeVariable();
             
             if (InputManager.CurrentSkillConfig.chargeBulletMaxAdd > 0)
                 isChargingBullet = true;
             if (maxDameMultiplierAdd > 0) isChargingDame = true;
             if (maxSizeMultiplierAdd > 0) isChargingSize = true;
+            if (maxRangeMultiplierAdd > 0) isChargingRange = true;
         }
 
         public void OnHoldReleased()
@@ -129,6 +160,7 @@ namespace InGame
             isChargingBullet = false;
             isChargingDame = false;
             isChargingSize = false;
+            isChargingRange = false;
         }
 
         public void ResetChargeVariable()
@@ -235,6 +267,12 @@ namespace InGame
                 if (isChargingSize)
                 {
                     sizeChargeTime += Time.deltaTime;
+                }
+                
+                // Charge range
+                if (isChargingRange)
+                {
+                    rangeChargeTime += Time.deltaTime;
                 }
             }
             
