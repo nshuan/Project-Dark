@@ -67,6 +67,7 @@ namespace InGame
         public float staggerMultiply = 0f;
         
         [Space]
-        public List<ActionEffectConfig> bulletEffectsOnCharge = new List<ActionEffectConfig>();
+        public bool unlockedChargeProjectile = true;
+        [NonSerialized, OdinSerialize] public List<IProjectileHit> projectileHitActions = new List<IProjectileHit>();
     }
 }

@@ -21,6 +21,6 @@ namespace InGame
             float skillRange,
             float bulletSpeedScale,
             float stagger,
-            List<ActionEffectConfig> hitEffects);
+            List<IProjectileHit> hitEffects);
     }
 }

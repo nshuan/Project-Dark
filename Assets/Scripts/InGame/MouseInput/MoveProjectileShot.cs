@@ -19,7 +19,6 @@ namespace InGame
         private bool OutOfRange { get; set; }
         protected float Cooldown { get; set; }
         protected float cdCounter;
-        private ProjectileEntity skillBaseProjectile;
 
         #region Charge
 
@@ -58,11 +57,6 @@ namespace InGame
             cursorRect = cursor.GetComponent<RectTransform>();
         }
 
-        ~MoveProjectileShot()
-        {
-            InputManager.CurrentSkillConfig.projectilePrefab = skillBaseProjectile;
-        }
-
         public void Initialize(InputInGame manager)
         {
             InputManager = manager;
@@ -70,20 +64,6 @@ namespace InGame
                 InputManager.CurrentSkillConfig.skillId,
                 InputManager.PlayerStats.cooldown,
                 InputManager.CurrentSkillConfig.cooldown);
-            
-            skillBaseProjectile = InputManager.CurrentSkillConfig.projectilePrefab;
-            
-            // Update skill bullet type
-            var skillChargeEffects = LevelUtility.BonusInfo.skillBonusMapById[InputManager.CurrentSkillConfig.skillId]
-                .bulletEffectsOnCharge;
-            foreach (var effect in skillChargeEffects)
-            {
-                if (effect.logicType is EffectChangeProjectile changeProjectile)
-                {
-                    InputManager.CurrentSkillConfig.projectilePrefab = changeProjectile.newProjectile;
-                    break;
-                }
-            }
         }
         
         public virtual void OnMouseClick()
@@ -114,6 +94,9 @@ namespace InGame
             InputManager.DelayCall(delayShot, () =>
             {
                 InputManager.CurrentSkillConfig.Shoot(
+                    LevelUtility.BonusInfo.skillBonusMapById[InputManager.CurrentSkillConfig.skillId].unlockedChargeProjectile
+                        ? InputManager.CurrentSkillConfig.chargeProjectilePrefab
+                        : InputManager.CurrentSkillConfig.projectilePrefab,
                     InputManager.CursorRangeCenter.position, 
                     tempMousePos,
                     damage,
@@ -122,7 +105,7 @@ namespace InGame
                     skillRange,
                     criticalDamage,
                     critRate,
-                    LevelUtility.BonusInfo.skillBonusMapById[InputManager.CurrentSkillConfig.skillId].bulletEffectsOnCharge);
+                    LevelUtility.BonusInfo.skillBonusMapById[InputManager.CurrentSkillConfig.skillId].projectileHitActions);
 
                 LevelManager.Instance.SetTeleportTowerState(true);
             });

@@ -26,7 +26,7 @@ namespace InGame
         private float CriticalRate { get; set; }
         protected float Speed { get; set; }
         private float Stagger { get; set; }
-        private List<ActionEffectConfig> HitEffects { get; set; }
+        private List<IProjectileHit> HitActions { get; set; }
 
         protected bool blockHit = false;
         protected bool activated = false;
@@ -56,7 +56,7 @@ namespace InGame
             int criticalDamage, 
             float criticalRate,
             float stagger,
-            List<ActionEffectConfig> hitEffects)
+            List<IProjectileHit> hitActions)
         {
             Speed = baseSpeed * speedScale;
             this.startPos = startPos;
@@ -67,9 +67,7 @@ namespace InGame
             CriticalDamage = criticalDamage;
             CriticalRate = criticalRate;
             Stagger = stagger;
-            HitEffects = hitEffects;
-            effectTrigger.Projectile = this;
-            effectTrigger.Setup(HitEffects);
+            HitActions = hitActions;
         }
 
         public void Activate(float delay)
@@ -112,6 +110,14 @@ namespace InGame
                    
                     if (critical)
                         DebugUtility.LogWarning($"Projectile {name} deals critical damage {CriticalDamage} to {hitEnemy.name}!!");
+
+                    if (HitActions != null)
+                    {
+                        foreach (var action in HitActions)
+                        {
+                            action.DoAction(transform.position);
+                        }
+                    }
                     
                     OnHit?.Invoke();
                     OnHit = null;

@@ -13,6 +13,7 @@ namespace InGame
         public int skillId;
         public PlayerSkillType skillType;
         public ProjectileEntity projectilePrefab;
+        public ProjectileEntity chargeProjectilePrefab;
         [NonSerialized, OdinSerialize] public PlayerSkillBehaviour shootLogic;
         public int damePerBullet; // bullet base damage
         public int numberOfBullets = 1; // number of bullets in each shot
@@ -31,6 +32,7 @@ namespace InGame
         public float stagger; // Push enemy away when projectile hit
 
         public void Shoot(
+            ProjectileEntity projectile,
             Vector2 spawnPos, 
             Vector2 target, 
             int damagePerBullet, 
@@ -39,10 +41,10 @@ namespace InGame
             float skillRange,
             int criticalDamagePerBullet,
             float criticalRatePerBullet,
-            List<ActionEffectConfig> chargeEffects)
+            List<IProjectileHit> hitActions)
         {
             shootLogic.Shoot(
-                projectilePrefab,
+                projectile,
                 spawnPos, 
                 range,
                 target,
@@ -54,7 +56,7 @@ namespace InGame
                 skillRange,
                 speedScale,
                 stagger,
-                chargeEffects);
+                hitActions);
         }
     }
 
