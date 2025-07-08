@@ -9,6 +9,7 @@ namespace InGame
     {
         private const float HoverRadius = 2f;
         
+        private PlayerCharacter Character { get; set; }
         private MoveTowersConfig ShortConfig { get; set; }
         private MoveTowersConfig LongConfig { get; set; }
         private TowerEntity[] Towers { get; set; }
@@ -17,7 +18,9 @@ namespace InGame
         private Func<float, Action, bool> DelayCallFunction { get; set; }
         public bool IsActivate { get; set; } 
 
+        private bool CanMoveLong { get; set; }
         public bool CanMove { get; set; }
+        private bool CanCountdown { get; set; }
         protected float Cooldown { get; set; }
         protected float cdCounter;
         
@@ -27,15 +30,19 @@ namespace InGame
         private Action<TowerEntity> actionTowerChanged;
         private int selectingTower = -1;
 
-        public MoveToTower(Camera cam, MoveTowersConfig shortConfig, MoveTowersConfig longConfig, TowerEntity[] towers, int currentTowerIndex, Func<float, Action, bool> delayCallFunction)
+        public MoveToTower(Camera cam, PlayerCharacter player, MoveTowersConfig shortConfig, MoveTowersConfig longConfig, TowerEntity[] towers, int currentTowerIndex, Func<float, Action, bool> delayCallFunction)
         {
             Cam = cam;
+            Character = player;
             ShortConfig = shortConfig;
             LongConfig = longConfig;
             Towers = towers;
             CurrentTowerIndex = currentTowerIndex;
             DelayCallFunction = delayCallFunction;
             actionTowerChanged = OnTowerChanged;
+            CanMove = false;
+            CanCountdown = true;
+            CanMoveLong = LevelUtility.BonusInfo.unlockedLongMoveToTower;
 
             LevelManager.Instance.OnChangeTower += actionTowerChanged;
         }
@@ -48,36 +55,49 @@ namespace InGame
         public void OnMouseClick(bool isLongTele)
         {
             if (!CanMove) return;
+            if (isLongTele && !CanMoveLong) return;
             if (selectingTower > -1)
             {
                 CanMove = false;
+                CanCountdown = false;
                 if (isLongTele)
                 {
-                    DelayCallFunction(LongConfig.delayMove, () =>
-                    {
-                        LevelManager.Instance.TeleportTower(selectingTower);
-                    });
-                    Cooldown = LongConfig.cooldown;
-                    cdCounter = Cooldown;
-                    cdCounter += LongConfig.delayMove;
+                    Character.StartCoroutine(LongConfig.moveLogic.IEMove(
+                        Character, 
+                        Character.transform.position, 
+                        Towers[selectingTower].transform.position + Towers[selectingTower].standOffset,
+                        () =>
+                        {
+                            LevelManager.Instance.TeleportTower(selectingTower);
+                            Cooldown = LongConfig.cooldown;
+                            cdCounter = Cooldown;
+                            CanCountdown = true;
+                            CurrentTowerIndex = selectingTower;
+                        }));
                 }
                 else
                 {
-                    DelayCallFunction(ShortConfig.delayMove, () =>
-                    {
-                        LevelManager.Instance.TeleportTower(selectingTower);
-                    });
-                    Cooldown = ShortConfig.cooldown;
-                    cdCounter = Cooldown;
-                    cdCounter += ShortConfig.delayMove;
+                    Character.StartCoroutine(ShortConfig.moveLogic.IEMove(
+                        Character, 
+                        Character.transform.position, 
+                        Towers[selectingTower].transform.position + Towers[selectingTower].standOffset,
+                        () =>
+                        {
+                            LevelManager.Instance.TeleportTower(selectingTower);
+                            Cooldown = ShortConfig.cooldown;
+                            cdCounter = Cooldown;
+                            CanCountdown = true;
+                            CurrentTowerIndex = selectingTower;
+                        }));
                 }
             }
         }
 
-        public void OnActivated()
+        public void OnActivated(bool isLongTele)
         {
             if (Towers == null) return;
             if (!CanMove) return;
+            if (isLongTele && !CanMoveLong) return;
             IsActivate = true;
             foreach (var tower in Towers)
             {
@@ -131,9 +151,12 @@ namespace InGame
 
             if (!CanMove)
             {
-                cdCounter -= Time.deltaTime;
-                if (cdCounter <= 0)
-                    CanMove = true;
+                if (CanCountdown)
+                {
+                    cdCounter -= Time.deltaTime;
+                    if (cdCounter <= 0)
+                        CanMove = true;
+                }
             }
         }
 

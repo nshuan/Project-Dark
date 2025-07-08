@@ -41,12 +41,11 @@ namespace InGame
             // Change direction slowly to target
             if (targetToChase)
             {
-                // direction = Quaternion.Euler(0f, 0f, angle / 2) * dir;
-                direction = Vector3.RotateTowards(direction, targetToChase.position - transform.position,
-                    Mathf.Deg2Rad * rotateSpeed * Time.deltaTime, 0f);
-                
-                if (targetToChase.gameObject.activeInHierarchy == false)
-                    FindNextTarget();
+                if (targetToChase.gameObject.activeInHierarchy)
+                {
+                    direction = Vector3.RotateTowards(direction, targetToChase.position - transform.position,
+                        Mathf.Deg2Rad * rotateSpeed * Time.deltaTime, 0f);
+                }
             }
             
             transform.position += (Vector3)(Speed * Time.deltaTime * direction);
@@ -58,12 +57,12 @@ namespace InGame
             }
             
             // Check hit enemy
-            var count = Physics2D.CircleCastNonAlloc(transform.position, damageRange, Vector2.zero, hits, 0f,
+            var count = Physics2D.CircleCastNonAlloc(transform.position, DamageHitBoundRadius, Vector2.zero, hits, 0f,
                 enemyLayer);
-            if (count > 0 && targetToChase && hits.Select((hit => hit.transform)).Contains(targetToChase))
+            if (count > 0)
             {
                 blockHit = false;
-                ProjectileHit(targetToChase);
+                ProjectileHit(hits[0].transform);
             }
         }
 

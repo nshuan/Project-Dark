@@ -6,6 +6,8 @@ namespace InGame
 {
     public class TowerEntity : MonoBehaviour, IDamageable
     {
+        [SerializeField] public Vector3 standOffset;
+        
         public int Id { get; private set; }
         public int MaxHp { get; private set; }
         public int CurrentHp { get; private set; }

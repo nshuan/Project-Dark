@@ -16,7 +16,7 @@ namespace InGame
             {
                 var p = ProjectilePool.Instance.Get(projectilePrefab, null, false);
                 p.transform.position = spawnPos;
-                p.Init(spawnPos, (target - spawnPos).normalized, bulletRange, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, projectileHitActions);
+                p.Init(spawnPos, (target - spawnPos).normalized, bulletRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, projectileHitActions);
                 p.Activate(delayEachBullet * i);
             }
         }

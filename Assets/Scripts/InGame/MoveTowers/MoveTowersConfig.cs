@@ -1,4 +1,6 @@
+using System;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 
 namespace InGame
@@ -11,5 +13,6 @@ namespace InGame
         public float cooldown;
         public int damage;
         public float size;
+        [NonSerialized, OdinSerialize] public IMoveTowersLogic moveLogic;
     }
 }

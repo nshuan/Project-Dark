@@ -17,13 +17,13 @@ namespace InGame
             var pDir = (Vector2)(Quaternion.Euler(0f, 0f, angle / 2) * dir);
             var p = ProjectilePool.Instance.Get(projectilePrefab, null, false);
             p.transform.position = spawnPos;
-            p.Init(spawnPos, pDir.normalized, bulletRange, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, projectileHitActions);
+            p.Init(spawnPos, pDir.normalized, bulletRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, projectileHitActions);
             p.Activate(0);
             
             pDir = Quaternion.Euler(0f, 0f, - angle / 2) * dir;
             p = ProjectilePool.Instance.Get(projectilePrefab, null, false);
             p.transform.position = spawnPos;
-            p.Init(spawnPos, pDir.normalized, bulletRange, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, projectileHitActions);
+            p.Init(spawnPos, pDir.normalized, bulletRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, projectileHitActions);
             p.Activate(0);
         }
     }

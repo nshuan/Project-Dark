@@ -2,12 +2,20 @@ using System;
 using System.Collections.Generic;
 using Sirenix.Serialization;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace InGame
 {
     [Serializable]
     public class UpgradeBonusInfo
     {
+        #region Teleport
+
+        public bool upgradedShortMoveToTower;
+        public bool unlockedLongMoveToTower;
+
+        #endregion
+        
         #region Bonus
 
         public int damePlus = 0;
@@ -65,9 +73,12 @@ namespace InGame
 
         [Space] 
         public float staggerMultiply = 0f;
-        
-        [Space]
-        public bool unlockedChargeProjectile = true;
+
+        [Space] 
+        public bool unlockedChargeDame;
+        public bool unlockedChargeBullet;
+        public bool unlockedChargeSize;
+        public bool unlockedChargeRange;
         [NonSerialized, OdinSerialize] public List<IProjectileHit> projectileHitActions = new List<IProjectileHit>();
     }
 }

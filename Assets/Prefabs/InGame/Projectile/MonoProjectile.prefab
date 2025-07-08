@@ -31,7 +31,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 5150861539064606742}
+  - {fileID: 7251696399891678742}
   - {fileID: 455679670203670160}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -47,11 +47,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 800240112ae449e58353f74a23b00ef9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  visual: {fileID: 7251696399891678742}
   effectTrigger: {fileID: 8162969709079823345}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 8
-  damageRange: 0.1
+  baseDamageRange: 0.051
   baseSpeed: 5
 --- !u!96 &7452188291282449498
 TrailRenderer:
@@ -166,6 +167,38 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
+--- !u!1 &1578718975738887276
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7251696399891678742}
+  m_Layer: 0
+  m_Name: Visual
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7251696399891678742
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1578718975738887276}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5150861539064606742}
+  m_Father: {fileID: 1569795731929869319}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3849850416665878182
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,7 +210,7 @@ GameObject:
   - component: {fileID: 5150861539064606742}
   - component: {fileID: 6723245218660057478}
   m_Layer: 0
-  m_Name: Visual
+  m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -196,7 +229,7 @@ Transform:
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 1569795731929869319}
+  m_Father: {fileID: 7251696399891678742}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6723245218660057478
 SpriteRenderer:

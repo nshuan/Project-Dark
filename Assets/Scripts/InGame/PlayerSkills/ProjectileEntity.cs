@@ -12,9 +12,10 @@ namespace InGame
     {
         protected const float MaxLifeTime = 10f;
 
+        [SerializeField] private Transform visual;
         [SerializeField] private ProjectileActionEffectTrigger effectTrigger;
         [SerializeField] protected LayerMask enemyLayer;
-        [SerializeField] protected float damageRange = 0.1f;
+        [SerializeField] private float baseDamageRange = 0.1f;
         
         [Space] [Header("Bullet config")]
         [SerializeField] private float baseSpeed = 5f;
@@ -22,6 +23,7 @@ namespace InGame
         protected Vector2 startPos;
         protected float maxDistance;
         private int Damage { get; set; }
+        protected float DamageHitBoundRadius { get; set; } = 1f;
         private int CriticalDamage { get; set; }
         private float CriticalRate { get; set; }
         protected float Speed { get; set; }
@@ -51,6 +53,7 @@ namespace InGame
             Vector2 startPos, 
             Vector2 direction, 
             float maxDistance, 
+            float size,
             float speedScale, 
             int damage, 
             int criticalDamage, 
@@ -58,12 +61,14 @@ namespace InGame
             float stagger,
             List<IProjectileHit> hitActions)
         {
+            visual.localScale = size * Vector3.one;
             Speed = baseSpeed * speedScale;
             this.startPos = startPos;
             this.direction = direction;
             this.maxDistance = maxDistance;
             lifeTime = 0f;
             Damage = damage;
+            DamageHitBoundRadius = baseDamageRange * size;
             CriticalDamage = criticalDamage;
             CriticalRate = criticalRate;
             Stagger = stagger;
@@ -91,7 +96,7 @@ namespace InGame
             if (lifeTime > MaxLifeTime) Destroy(gameObject);
             
             // Check hit enemy
-            var count = Physics2D.CircleCastNonAlloc(transform.position, damageRange, Vector2.zero, hits, 0f,
+            var count = Physics2D.CircleCastNonAlloc(transform.position, DamageHitBoundRadius, Vector2.zero, hits, 0f,
                 enemyLayer);
             if (count > 0)
                 ProjectileHit(hits[0].transform);
@@ -129,7 +134,7 @@ namespace InGame
 
         private void OnDrawGizmos()
         {
-            Gizmos.DrawWireSphere(transform.position, damageRange);
+            Gizmos.DrawWireSphere(transform.position, baseDamageRange);
         }
     }
 }

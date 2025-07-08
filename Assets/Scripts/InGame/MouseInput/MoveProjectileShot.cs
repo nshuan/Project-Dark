@@ -22,22 +22,26 @@ namespace InGame
 
         #region Charge
 
+        private bool canChargeBullet;
         private bool isChargingBullet;
         private int bulletAdd;
         private int maxBulletAdd;
         private float bulletAddInterval;
         private float bulletAddTimer;
 
+        private bool canChargeDame;
         private bool isChargingDame;
         private float maxDameMultiplierAdd;
         private float maxDameChargeTime;
         private float dameChargeTime;
-        
+
+        private bool canChargeSize;
         private bool isChargingSize;
         private float maxSizeMultiplierAdd;
         private float maxSizeChargeTime;
         private float sizeChargeTime;
 
+        private bool canChargeRange;
         private bool isChargingRange;
         private float maxRangeMultiplierAdd;
         private float maxRangeChargeTime;
@@ -64,6 +68,12 @@ namespace InGame
                 InputManager.CurrentSkillConfig.skillId,
                 InputManager.PlayerStats.cooldown,
                 InputManager.CurrentSkillConfig.cooldown);
+
+            var skillBonusInfo = LevelUtility.BonusInfo.skillBonusMapById[InputManager.CurrentSkillConfig.skillId];
+            canChargeBullet = skillBonusInfo.unlockedChargeBullet;
+            canChargeDame = skillBonusInfo.unlockedChargeDame;
+            canChargeSize = skillBonusInfo.unlockedChargeSize;
+            canChargeRange = skillBonusInfo.unlockedChargeRange;
         }
         
         public virtual void OnMouseClick()
@@ -94,7 +104,7 @@ namespace InGame
             InputManager.DelayCall(delayShot, () =>
             {
                 InputManager.CurrentSkillConfig.Shoot(
-                    LevelUtility.BonusInfo.skillBonusMapById[InputManager.CurrentSkillConfig.skillId].unlockedChargeProjectile
+                    canChargeBullet
                         ? InputManager.CurrentSkillConfig.chargeProjectilePrefab
                         : InputManager.CurrentSkillConfig.projectilePrefab,
                     InputManager.CursorRangeCenter.position, 
@@ -131,11 +141,11 @@ namespace InGame
                 || isChargingRange) return; 
             ResetChargeVariable();
             
-            if (InputManager.CurrentSkillConfig.chargeBulletMaxAdd > 0)
+            if (canChargeBullet && InputManager.CurrentSkillConfig.chargeBulletMaxAdd > 0)
                 isChargingBullet = true;
-            if (maxDameMultiplierAdd > 0) isChargingDame = true;
-            if (maxSizeMultiplierAdd > 0) isChargingSize = true;
-            if (maxRangeMultiplierAdd > 0) isChargingRange = true;
+            if (canChargeDame && maxDameMultiplierAdd > 0) isChargingDame = true;
+            if (canChargeSize && maxSizeMultiplierAdd > 0) isChargingSize = true;
+            if (canChargeRange && maxRangeMultiplierAdd > 0) isChargingRange = true;
         }
 
         public void OnHoldReleased()
@@ -163,6 +173,11 @@ namespace InGame
             maxSizeMultiplierAdd = InputManager.CurrentSkillConfig.size;
             maxSizeChargeTime = InputManager.CurrentSkillConfig.chargeSizeTime;
             sizeChargeTime = 0f;
+            
+            // Range
+            maxRangeMultiplierAdd = InputManager.CurrentSkillConfig.range;
+            maxRangeChargeTime = InputManager.CurrentSkillConfig.chargeRangeTime;
+            rangeChargeTime = 0f;
         }
 
         public virtual void OnUpdate()
@@ -220,40 +235,43 @@ namespace InGame
             }
             else
             {
-                // Charge bullets
-                if (isChargingBullet)
+                if (canChargeBullet)
                 {
-                    if (bulletAddTimer > 0)
-                        bulletAddTimer -= Time.deltaTime;
-                    else if (bulletAdd < maxBulletAdd)
+                    // Charge bullets
+                    if (isChargingBullet)
                     {
-                        bulletAdd += 1;
-                        bulletAddTimer = bulletAddInterval;
+                        if (bulletAddTimer > 0)
+                            bulletAddTimer -= Time.deltaTime;
+                        else if (bulletAdd < maxBulletAdd)
+                        {
+                            bulletAdd += 1;
+                            bulletAddTimer = bulletAddInterval;
+                        }
+                    
+                        // Update UI
+                        cursor.UpdateBulletAdd(true, bulletAdd);
                     }
-                
-                    // Update UI
-                    cursor.UpdateBulletAdd(true, bulletAdd);
-                }
-                else
-                {
-                    // Update UI
-                    cursor.UpdateBulletAdd(false);
+                    else
+                    {
+                        // Update UI
+                        cursor.UpdateBulletAdd(false);
+                    }
                 }
                 
                 // Charge dame
-                if (isChargingDame)
+                if (canChargeDame && isChargingDame)
                 {
                     dameChargeTime += Time.deltaTime;
                 }
                 
                 // Charge size
-                if (isChargingSize)
+                if (canChargeSize && isChargingSize)
                 {
                     sizeChargeTime += Time.deltaTime;
                 }
                 
                 // Charge range
-                if (isChargingRange)
+                if (canChargeRange && isChargingRange)
                 {
                     rangeChargeTime += Time.deltaTime;
                 }

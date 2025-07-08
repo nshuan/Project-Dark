@@ -1,4 +1,5 @@
 using System;
+using InGame.Effects;
 using UnityEngine;
 
 namespace InGame
@@ -6,6 +7,7 @@ namespace InGame
     public class PlayerCharacter : MonoBehaviour
     {
         [SerializeField] private PlayerAnimController animController;
+        [SerializeField] private DashGhostEffect dashEffect;
 
         [Space] [Header("Config")] 
         [SerializeField] private Vector2 offset;
@@ -15,7 +17,6 @@ namespace InGame
         
         private void Start()
         {
-            LevelManager.Instance.OnChangeTower += OnChangeTower;
             LevelManager.Instance.OnChangeSkill += OnChangeSkill;
         }
 
@@ -27,11 +28,6 @@ namespace InGame
             return animController.PlayAttack();
         }
 
-        private void OnChangeTower(TowerEntity tower)
-        {
-            transform.position = tower.transform.position + (Vector3)offset;
-        }
-
         private void OnChangeSkill(PlayerSkillConfig skillConfig)
         {
             range.localScale = skillConfig.range * Vector3.one;
@@ -40,6 +36,16 @@ namespace InGame
         public void SetRangeVisual(bool active)
         {
             range.gameObject.SetActive(active);
+        }
+
+        public void PlayDashEffect()
+        {
+            dashEffect.DoEffect();
+        }
+
+        public void StopDashEffect()
+        {
+            dashEffect.StopEffect();
         }
     }
 }

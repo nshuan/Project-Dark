@@ -19,19 +19,19 @@ namespace InGame
                 var dir = target - spawnPos;
                 var p = ProjectilePool.Instance.Get(projectilePrefab, null, false);
                 p.transform.position = spawnPos;
-                p.Init(spawnPos, dir.normalized, bulletRange, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, projectileHitActions);
+                p.Init(spawnPos, dir.normalized, bulletRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, projectileHitActions);
                 p.Activate(delayEachBullet * i);
                 
                 var pDir = (Vector2)(Quaternion.Euler(0f, 0f, angle / 2) * dir);
                 p = ProjectilePool.Instance.Get(projectilePrefab, null, false);
                 p.transform.position = spawnPos;
-                p.Init(spawnPos, pDir.normalized, bulletRange, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, projectileHitActions);
+                p.Init(spawnPos, pDir.normalized, bulletRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, projectileHitActions);
                 p.Activate(delayEachBullet * i);
             
                 pDir = Quaternion.Euler(0f, 0f, - angle / 2) * dir;
                 p = ProjectilePool.Instance.Get(projectilePrefab, null, false);
                 p.transform.position = spawnPos;
-                p.Init(spawnPos, pDir.normalized, bulletRange, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, projectileHitActions);
+                p.Init(spawnPos, pDir.normalized, bulletRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, projectileHitActions);
                 p.Activate(delayEachBullet * i);
             }
             

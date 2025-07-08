@@ -3,7 +3,7 @@ namespace InGame
     public interface IRightMouseInput
     {
         void OnMouseClick(bool isLongTele);
-        void OnActivated();
+        void OnActivated(bool isLongTele);
         void OnDeactivated();
         void OnUpdate();
     }

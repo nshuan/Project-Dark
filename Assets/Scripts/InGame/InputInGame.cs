@@ -40,7 +40,7 @@ namespace InGame
             LevelManager.Instance.OnLevelLoaded += (level) =>
             {
                 PlayerStats = LevelManager.Instance.PlayerStats;
-                teleMouseInput = new MoveToTower(cam, LevelManager.Instance.shortTeleConfig, LevelManager.Instance.longTeleConfig, LevelManager.Instance.Towers, LevelManager.Instance.CurrentTower.Id, DelayCall);
+                teleMouseInput = new MoveToTower(cam, playerVisual, LevelManager.Instance.shortTeleConfig, LevelManager.Instance.longTeleConfig, LevelManager.Instance.Towers, LevelManager.Instance.CurrentTower.Id, DelayCall);
             };
             LevelManager.Instance.OnChangeSkill += OnSkillChanged;
         }
@@ -78,7 +78,7 @@ namespace InGame
                     if (holdTeleDelayTime >= holdTeleThreshold)
                     {
                         teleKeyPressing = true;
-                        teleMouseInput.OnActivated();
+                        teleMouseInput.OnActivated(true);
                     }
                 }
             }
@@ -89,7 +89,7 @@ namespace InGame
                 if (holdTeleDelayTime < holdTeleThreshold)
                 {
                     teleKeyPressed = true;
-                    teleMouseInput.OnActivated();
+                    teleMouseInput.OnActivated(false);
                 }
                 else
                 {
