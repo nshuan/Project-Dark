@@ -6,6 +6,7 @@ using Core;
 using InGame.Upgrade;
 using Sirenix.Serialization;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace InGame
 {
@@ -50,8 +51,12 @@ namespace InGame
             if (possibleEffectMap[triggerType] == null) return;
             foreach (var effectConfig in possibleEffectMap[triggerType].Select(effectType => effectConfigsMap[triggerType][effectType]))
             {
-                pool.Get(effectConfig.effectPrefab, effectConfig.effectId, null, true)
-                    .TriggerEffect(effectConfig.effectId, position, effectConfig.size, effectConfig.value, effectConfig.stagger, pool);
+                // Calculate chance
+                if (Random.Range(0f, 1f) <= effectConfig.chance)
+                {
+                    pool.Get(effectConfig.effectPrefab, effectConfig.effectId, null, true)
+                        .TriggerEffect(effectConfig.effectId, position, effectConfig.size, effectConfig.value, effectConfig.stagger, pool);
+                }
             }
         }
 

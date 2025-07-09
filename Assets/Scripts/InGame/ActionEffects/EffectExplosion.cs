@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace InGame
@@ -14,22 +15,36 @@ namespace InGame
         
         public override void TriggerEffect(int effectId, Vector2 position, float size, float value, float stagger, ActionEffectPool pool)
         {
+            transform.position = position;
             hits = new RaycastHit2D[50];
             this.Position = position;
             this.Stagger = stagger;
-            
-            // Check hit target
-            var count = Physics2D.CircleCastNonAlloc(position, size, Vector2.zero, hits, 0f,
-                targetLayer);
-            if (count > 0)
+
+            StartCoroutine(IEExplode(() =>
             {
-                for (int i = 0; i < count; i++)
+                // Check hit target
+                var count = Physics2D.CircleCastNonAlloc(Vector2.zero, size, Vector2.zero, hits, 0f,
+                    targetLayer);
+                if (count > 0)
                 {
-                    ExplosionHit(hits[i].transform, value);
+                    for (int i = 0; i < count; i++)
+                    {
+                        ExplosionHit(hits[i].transform, value);
+                    }
                 }
-            }
-            
-            pool.Release(this, effectId);
+            }, () =>
+            {
+                pool.Release(this, effectId);
+            }));
+        }
+
+        private IEnumerator IEExplode(Action actionDamage, Action actionComplete)
+        {
+            yield return new WaitForSeconds(0.5f);
+            actionDamage?.Invoke();
+
+            yield return new WaitForSeconds(1f);
+            actionComplete?.Invoke();
         }
 
         private void ExplosionHit(Transform hitTransform, float value)
