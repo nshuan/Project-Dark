@@ -43,13 +43,12 @@ namespace InGame
         #region Effect
 
         [Space] 
-        [NonSerialized, OdinSerialize] public Dictionary<int, List<int>> bonusEnemyEffectsMapById;
-        [NonSerialized, OdinSerialize] public Dictionary<int, List<int>> bonusProjectileEffectsMapById;
-        [NonSerialized, OdinSerialize] public Dictionary<int, float> effectsBonusCooldownMapById;
-        [NonSerialized, OdinSerialize] public Dictionary<int, float> effectsBonusChanceMapById;
-        [NonSerialized, OdinSerialize] public Dictionary<int, float> effectsBonusSizeMapById;
-        [NonSerialized, OdinSerialize] public Dictionary<int, float> effectsBonusValueMapById;
-        [NonSerialized, OdinSerialize] public Dictionary<int, float> effectsBonusStaggerMapById;
+        [NonSerialized, OdinSerialize] public Dictionary<EffectTriggerType, List<EffectType>> effectsMapByTriggerType;
+        [NonSerialized, OdinSerialize] public Dictionary<EffectType, float> effectsBonusCooldownMapByType;
+        [NonSerialized, OdinSerialize] public Dictionary<EffectType, float> effectsBonusChanceMapByType;
+        [NonSerialized, OdinSerialize] public Dictionary<EffectType, float> effectsBonusSizeMapByType;
+        [NonSerialized, OdinSerialize] public Dictionary<EffectType, float> effectsBonusValueMapByType;
+        [NonSerialized, OdinSerialize] public Dictionary<EffectType, float> effectsBonusStaggerMapByType;
 
         #endregion
     }

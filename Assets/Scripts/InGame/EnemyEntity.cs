@@ -30,6 +30,7 @@ namespace InGame
 
         #endregion
         
+        public Action OnHit { get; set; }
         public Action OnDead { get; set; }
         public EnemyState State { get; set; }
         public int UniqueId { get; set; }
@@ -37,9 +38,6 @@ namespace InGame
         private Vector2 directionAddition = new Vector2();
         private float staggerDuration;
         private Vector2 staggerDirection;
-        
-        
-        [SerializeField] private EnemyActionEffectTrigger effectTrigger;
 
         [Space, Header("Visual")] 
         [SerializeField] private EnemyBoidAgent boidAgent;
@@ -82,8 +80,6 @@ namespace InGame
             State = EnemyState.Spawn;
             inAttackRange = false;
             IsDestroyed = false;
-            effectTrigger.Enemy = this;
-            effectTrigger.Setup(config.effects);
             config.Init(this);
             
             // Update health ui
@@ -179,6 +175,7 @@ namespace InGame
         {
             if (IsDestroyed) return;
             CurrentHealth -= damage;
+            OnHit?.Invoke();
             if (CurrentHealth <= 0)
             {
                 OnDie();

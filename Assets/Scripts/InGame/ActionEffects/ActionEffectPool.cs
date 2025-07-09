@@ -1,23 +1,23 @@
+using System;
 using System.Collections.Generic;
 using Core;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace InGame
 {
-    public class ActionEffectPool : Singleton<ActionEffectPool>
+    public class ActionEffectPool : MonoBehaviour
     {
-        private Transform poolObject;
-        private Dictionary<int, Queue<ActionEffectEntity>> queueDict;
+        private Dictionary<int, Queue<MonoEffectEntity>> queueDict;
 
-        public ActionEffectPool()
+        private void Awake()
         {
-            queueDict = new Dictionary<int, Queue<ActionEffectEntity>>();
-            poolObject = new GameObject("Action Effect Pool").transform;
+            queueDict = new Dictionary<int, Queue<MonoEffectEntity>>();
         }
-        
-        public ActionEffectEntity Get(ActionEffectEntity prefab, int effectId, Transform targetParent, bool active = true)
+
+        public MonoEffectEntity Get(MonoEffectEntity prefab, int effectId, Transform targetParent, bool active = true)
         {
-            ActionEffectEntity obj = null;
+            MonoEffectEntity obj = null;
             if (queueDict.TryGetValue(effectId, out var pool))
             {
                 if (pool.TryDequeue(out obj))
@@ -28,17 +28,17 @@ namespace InGame
                 }
             } 
             
-            obj = Object.Instantiate(prefab, targetParent);
+            obj = Instantiate(prefab, targetParent);
             obj.gameObject.SetActive(active);
             return obj;
 
         }
 
-        public void Release(ActionEffectEntity obj, int effectId)
+        public void Release(MonoEffectEntity obj, int effectId)
         {
             obj.gameObject.SetActive(false);
-            obj.transform.SetParent(poolObject);
-            queueDict.TryAdd(effectId, new Queue<ActionEffectEntity>());
+            obj.transform.SetParent(transform);
+            queueDict.TryAdd(effectId, new Queue<MonoEffectEntity>());
             queueDict[effectId].Enqueue(obj);
         }
     }

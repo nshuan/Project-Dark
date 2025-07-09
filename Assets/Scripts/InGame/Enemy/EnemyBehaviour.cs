@@ -23,7 +23,6 @@ namespace InGame
         public int dark;
         [Range(0f, 1f)] public float darkRatio;
         public int bossPoint;
-        public List<ActionEffectConfig> effects; 
         
         public void Init(EnemyEntity enemy)
         {

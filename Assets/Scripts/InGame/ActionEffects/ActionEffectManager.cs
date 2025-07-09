@@ -1,52 +1,76 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Core;
+using InGame.Upgrade;
+using Sirenix.Serialization;
 using UnityEngine;
 
 namespace InGame
 {
-    public class ActionEffectManager : MonoSingleton<ActionEffectManager>
+    public class ActionEffectManager : SerializedMonoSingleton<ActionEffectManager>
     {
-        private Dictionary<int, bool> effectPendingMap;
-        private Dictionary<int, Coroutine> effectCoroutineMap;
+        [NonSerialized, OdinSerialize] private Dictionary<EffectTriggerType, Dictionary<EffectType, ActionEffectConfig>> effectConfigsMap;
+        [SerializeField] private ActionEffectPool pool;
+        
+        private Dictionary<EffectTriggerType, List<EffectType>> possibleEffectMap;
 
         protected override void Awake()
         {
             base.Awake();
-
-            effectPendingMap = new Dictionary<int, bool>();
-            effectCoroutineMap = new Dictionary<int, Coroutine>();
+            possibleEffectMap = new Dictionary<EffectTriggerType, List<EffectType>>()
+            {
+                { EffectTriggerType.DameByNormalAttack , new List<EffectType>() },
+                { EffectTriggerType.DameByChargeAttack , new List<EffectType>() },
+                { EffectTriggerType.DameByMoveSKill , new List<EffectType>() },
+                { EffectTriggerType.TowerTakeDame , new List<EffectType>() }
+            };
+            
+            UpgradeManager.Instance.OnActivated += OnBonusActivated;
         }
 
-        public void CheckAndTrigger(Vector2 position, ActionEffectConfig effectConfig)
+        private void OnBonusActivated(UpgradeBonusInfo bonusInfo)
         {
-            effectPendingMap.TryAdd(effectConfig.effectId, false);
-
-            if (effectPendingMap[effectConfig.effectId] == false)
+            foreach (var pair in bonusInfo.effectsMapByTriggerType)
             {
-                // Check trigger chance
-                if (Random.Range(0f, 1f) > effectConfig.chance) return;
+                foreach (var effect in pair.Value)
+                {
+                    possibleEffectMap[pair.Key].Add(effect);
+                }
+            }
+            
+            possibleEffectMap[EffectTriggerType.DameByNormalAttack].Add(EffectType.Explosion);
+        }
 
-                effectCoroutineMap.TryAdd(effectConfig.effectId, null);
-                var coroutine = effectCoroutineMap[effectConfig.effectId];
-                if (coroutine != null)
-                    StopCoroutine(coroutine);
-                effectPendingMap[effectConfig.effectId] = true;
-                coroutine = StartCoroutine(IETrigger(position, effectConfig));
-                effectCoroutineMap[effectConfig.effectId] = coroutine;
+        #region Trigger
+
+        public void TriggerEffect(EffectTriggerType triggerType, Vector2 position)
+        {
+            if (possibleEffectMap[triggerType] == null) return;
+            foreach (var effectConfig in possibleEffectMap[triggerType].Select(effectType => effectConfigsMap[triggerType][effectType]))
+            {
+                pool.Get(effectConfig.effectPrefab, effectConfig.effectId, null, true)
+                    .TriggerEffect(effectConfig.effectId, position, effectConfig.size, effectConfig.value, effectConfig.stagger, pool);
             }
         }
 
-        private IEnumerator IETrigger(Vector2 position, ActionEffectConfig effectConfig)
-        {
-            effectConfig.logicType.TriggerEffect(
-                effectConfig.effectId,
-                position,
-                effectConfig.size,
-                effectConfig.value,
-                effectConfig.stagger);
-            yield return new WaitForSeconds(effectConfig.cooldown);
-            effectPendingMap[effectConfig.effectId] = false;
-        }
+        #endregion
+    }
+
+    public enum EffectTriggerType
+    {
+        DameByNormalAttack,
+        DameByChargeAttack,
+        DameByMoveSKill,
+        TowerTakeDame
+    }
+
+    public enum EffectType
+    {
+        Explosion,
+        Lightning,
+        Burning,
+        Thunder
     }
 }

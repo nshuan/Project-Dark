@@ -3,24 +3,18 @@ using UnityEngine;
 
 namespace InGame
 {
-    [Serializable]
-    public class EffectExplosion : IActionEffectLogic
+    public class EffectExplosion : MonoEffectEntity
     {
-        [SerializeField] private ActionEffectEntity effectEntity;
         [SerializeField] private LayerMask targetLayer;
 
         private Vector2 Position { get; set; }
         private float Stagger { get; set; }
         private RaycastHit2D[] hits = new RaycastHit2D[50];
         private IDamageable hitTarget;
-
-        public void Initialize()
+        
+        public override void TriggerEffect(int effectId, Vector2 position, float size, float value, float stagger, ActionEffectPool pool)
         {
             hits = new RaycastHit2D[50];
-        }
-
-        public void TriggerEffect(int effectId, Vector2 position, float size, float value, float stagger)
-        {
             this.Position = position;
             this.Stagger = stagger;
             
@@ -34,6 +28,8 @@ namespace InGame
                     ExplosionHit(hits[i].transform, value);
                 }
             }
+            
+            pool.Release(this, effectId);
         }
 
         private void ExplosionHit(Transform hitTransform, float value)

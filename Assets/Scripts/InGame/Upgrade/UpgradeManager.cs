@@ -10,6 +10,12 @@ namespace InGame.Upgrade
 {
     public class UpgradeManager : Singleton<UpgradeManager>
     {
+        #region Actions
+
+        public Action<UpgradeBonusInfo> OnActivated;
+
+        #endregion
+        
         #region Data
 
         private const string DataKey = "UpgradeData";
@@ -74,8 +80,11 @@ namespace InGame.Upgrade
             {
                 bonusInfo.skillBonusMapById.TryAdd(config.skillId, new UpgradeBonusSkillInfo());
             }
+
+            bonusInfo.effectsMapByTriggerType = new Dictionary<EffectTriggerType, List<EffectType>>();
                 
             TreeConfig.ActivateTree(Data.nodes, ref bonusInfo);
+            OnActivated?.Invoke(bonusInfo);
         }
         
         public bool UpgradeNode(int nodeId)

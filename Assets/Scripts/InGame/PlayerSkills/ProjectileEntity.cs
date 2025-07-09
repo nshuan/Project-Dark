@@ -13,7 +13,6 @@ namespace InGame
         protected const float MaxLifeTime = 10f;
 
         [SerializeField] private Transform visual;
-        [SerializeField] private ProjectileActionEffectTrigger effectTrigger;
         [SerializeField] protected LayerMask enemyLayer;
         [SerializeField] private float baseDamageRange = 0.1f;
         
@@ -23,6 +22,7 @@ namespace InGame
         protected Vector2 startPos;
         protected float maxDistance;
         private int Damage { get; set; }
+        private bool IsCharge { get; set; }
         protected float DamageHitBoundRadius { get; set; } = 1f;
         private int CriticalDamage { get; set; }
         private float CriticalRate { get; set; }
@@ -59,6 +59,7 @@ namespace InGame
             int criticalDamage, 
             float criticalRate,
             float stagger,
+            bool isCharge,
             List<IProjectileHit> hitActions)
         {
             visual.localScale = size * Vector3.one;
@@ -72,6 +73,7 @@ namespace InGame
             CriticalDamage = criticalDamage;
             CriticalRate = criticalRate;
             Stagger = stagger;
+            IsCharge = isCharge;
             HitActions = hitActions;
         }
 
@@ -112,7 +114,8 @@ namespace InGame
                     // Check critical hit
                     var critical = Random.Range(0f, 1f) <= CriticalRate;
                     hitEnemy.Damage(critical ? CriticalDamage : Damage, direction, Stagger);
-                   
+                    ActionEffectManager.Instance.TriggerEffect(IsCharge ? EffectTriggerType.DameByChargeAttack : EffectTriggerType.DameByNormalAttack, hitTransform.position);
+                    
                     if (critical)
                         DebugUtility.LogWarning($"Projectile {name} deals critical damage {CriticalDamage} to {hitEnemy.name}!!");
 

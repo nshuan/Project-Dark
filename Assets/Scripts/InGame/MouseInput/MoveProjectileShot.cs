@@ -115,6 +115,7 @@ namespace InGame
                     skillRange,
                     criticalDamage,
                     critRate,
+                    canChargeBullet || canChargeDame || canChargeSize || canChargeRange,
                     LevelUtility.BonusInfo.skillBonusMapById[InputManager.CurrentSkillConfig.skillId].projectileHitActions);
 
                 LevelManager.Instance.SetTeleportTowerState(true);
