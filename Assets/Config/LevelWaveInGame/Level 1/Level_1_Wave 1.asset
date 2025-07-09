@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f37e2e92c06d44f4b3ef3e428d98117c, type: 3}
-  m_Name: Wave_4
+  m_Name: Level_1_Wave 1
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
+    - {fileID: 11400000, guid: ff66082d35a8786429078ae8cc5e9433, type: 2}
     - {fileID: 11400000, guid: bfd0b90c58376274fa2a63998fec8aa5, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
@@ -24,7 +25,8 @@ MonoBehaviour:
     SerializationNodes:
     - Name: gateConfigs
       Entry: 7
-      Data: 0|InGame.GateConfig[], Assembly-CSharp
+      Data: 0|System.Collections.Generic.List`1[[InGame.GateConfig, Assembly-CSharp]],
+        mscorlib
     - Name: 
       Entry: 12
       Data: 2
@@ -36,10 +38,10 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: 9.91
+      Data: 0
     - Name: 
       Entry: 4
-      Data: -0.08
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -48,10 +50,16 @@ MonoBehaviour:
       Data: 2|System.Int32[], mscorlib
     - Name: 
       Entry: 14
-      Data: 1
+      Data: 3
+    - Name: 
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 3
       Data: 1
+    - Name: 
+      Entry: 3
+      Data: 2
     - Name: 
       Entry: 13
       Data: 
@@ -63,7 +71,7 @@ MonoBehaviour:
       Data: 2
     - Name: duration
       Entry: 4
-      Data: 12
+      Data: -1
     - Name: spawnType
       Entry: 10
       Data: 0
@@ -72,7 +80,13 @@ MonoBehaviour:
       Data: 4
     - Name: spawnLogic
       Entry: 7
-      Data: 3|InGame.GateSpawnSingle, Assembly-CSharp
+      Data: 3|InGame.GateSpawnTriangle, Assembly-CSharp
+    - Name: radius
+      Entry: 4
+      Data: 1.5
+    - Name: rotation
+      Entry: 4
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -87,10 +101,10 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: 9.91
+      Data: 0
     - Name: 
       Entry: 4
-      Data: -0.08
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -99,6 +113,12 @@ MonoBehaviour:
       Data: 5|System.Int32[], mscorlib
     - Name: 
       Entry: 14
+      Data: 3
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 3
       Data: 1
     - Name: 
       Entry: 3
@@ -111,19 +131,25 @@ MonoBehaviour:
       Data: 
     - Name: startTime
       Entry: 4
-      Data: 0
+      Data: 4
     - Name: duration
       Entry: 4
-      Data: 12
+      Data: -1
     - Name: spawnType
       Entry: 10
-      Data: 0
+      Data: 1
     - Name: intervalLoop
       Entry: 4
       Data: 4
     - Name: spawnLogic
       Entry: 7
-      Data: 6|InGame.GateSpawnSingle, Assembly-CSharp
+      Data: 6|InGame.GateSpawnTriangle, Assembly-CSharp
+    - Name: radius
+      Entry: 4
+      Data: 1.377
+    - Name: rotation
+      Entry: 4
+      Data: 37
     - Name: 
       Entry: 8
       Data: 

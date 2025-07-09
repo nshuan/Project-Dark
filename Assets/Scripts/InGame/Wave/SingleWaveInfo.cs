@@ -25,8 +25,8 @@ namespace InGame
         
         public void SetupWave(GateEntity gatePrefab, TowerEntity[] towers, float levelExpRatio, float levelDarkRatio, Action onWaveForceEnded)
         {
-            Gates = new GateEntity[waveConfig.gateConfigs.Length];
-            for (var i = 0; i < waveConfig.gateConfigs.Length; i++)
+            Gates = new GateEntity[waveConfig.gateConfigs.Count];
+            for (var i = 0; i < waveConfig.gateConfigs.Count; i++)
             {
                 var gateCfg = waveConfig.gateConfigs[i];
                 Gates[i] = Object.Instantiate(gatePrefab, gateCfg.position, quaternion.identity, null);
