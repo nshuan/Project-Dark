@@ -40,8 +40,6 @@ namespace InGame
                     possibleEffectMap[pair.Key].Add(effect);
                 }
             }
-            
-            possibleEffectMap[EffectTriggerType.DameByNormalAttack].Add(EffectType.Explosion);
         }
 
         #region Trigger
