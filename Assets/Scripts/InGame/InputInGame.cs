@@ -158,28 +158,13 @@ namespace InGame
                 mouseInput?.OnHoldReleased();
                 mouseInput?.OnMouseClick();
             }
-            // else if (eventData.button == PointerEventData.InputButton.Right)
-            // {
-            //     teleMouseInput?.OnDeactivated();
-            //     
-            //     if (teleKeyPressing)
-            //     {
-            //         teleKeyPressing = false;
-            //         teleKeyPressed = false;
-            //         teleMouseInput?.OnMouseClick(isLongTele: true);
-            //         DebugUtility.LogWarning("Use LONG teleport!!!");
-            //         return;
-            //     }
-            //
-            //     if (teleKeyPressed)
-            //     {
-            //         teleKeyPressing = false;
-            //         teleKeyPressed = false;
-            //         teleMouseInput?.OnMouseClick(isLongTele: false);
-            //         DebugUtility.LogWarning("Use SHORT teleport!!!");
-            //         return;
-            //     }
-            // }
+            else if (eventData.button == PointerEventData.InputButton.Right)
+            {
+                teleKeyPressed = false;
+                teleMouseInput?.OnMouseClick(true);
+                teleMouseInput?.OnDeactivated();
+                ResetTimeScale();
+            }
         }
 
         public bool DelayCall(float delay, Action callback)
