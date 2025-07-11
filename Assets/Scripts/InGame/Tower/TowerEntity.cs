@@ -7,6 +7,7 @@ namespace InGame
     public class TowerEntity : MonoBehaviour, IDamageable
     {
         [SerializeField] public Vector3 standOffset;
+        [SerializeField] private SpriteRenderer towerVisual;
         
         public int Id { get; private set; }
         public int MaxHp { get; private set; }
@@ -47,8 +48,13 @@ namespace InGame
             }
             
             // Do damage effect
-            var camShakeEffect = new CameraShake() { Cam = EffectHelper.Instance.DefaultCamera };
-            EffectHelper.Instance.PlayEffect(camShakeEffect);
+            var flashRed = new FlashColor()
+            {
+                SpriteRendererTarget = towerVisual,
+                FlashDuration = 0.1f,
+                Color = Color.red
+            };
+            EffectHelper.Instance.PlayEffect(flashRed);
         }
 
         [SerializeField] private GameObject objHighlight;

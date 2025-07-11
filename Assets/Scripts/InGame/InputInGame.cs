@@ -26,10 +26,7 @@ namespace InGame
 
         [Space, Header("Move Towers")] 
         private KeyCode activateTeleKey = KeyCode.LeftShift;
-        private bool teleKeyPressing;
         private bool teleKeyPressed;
-        public float holdTeleThreshold = 0.5f;
-        private float holdTeleDelayTime;
 
         #endregion
         
@@ -65,38 +62,35 @@ namespace InGame
 
         private void Update()
         {
-            if (Input.GetKey(activateTeleKey))
+#if UNITY_EDITOR
+            // Test tower change
+            for (var i = 1; i <= 3; i++)
             {
-                IsMousePressingStarted = false;
-                IsMousePressing = false;
-                mouseInput.ResetChargeVariable();
-                mouseInput.OnHoldReleased();
-
-                holdTeleDelayTime += Time.deltaTime;
-                if (teleKeyPressing == false)
+                if (Input.GetKeyDown(i.ToString()))
                 {
-                    if (holdTeleDelayTime >= holdTeleThreshold)
-                    {
-                        teleKeyPressing = true;
-                        teleMouseInput.OnActivated(true);
-                    }
+                    teleMouseInput?.OnActivated();
+                    teleMouseInput?.OnMouseClick(false);
+                    return;
+                }
+            }
+#endif
+            
+            if (Input.GetKeyDown(activateTeleKey))
+            {
+                if (teleMouseInput.CanMove)
+                {
+                    IsMousePressingStarted = false;
+                    IsMousePressing = false;
+                    mouseInput.ResetChargeVariable();
+                    mouseInput.OnHoldReleased();
+                    teleKeyPressed = true;
+                    FreezeTimeScale();
                 }
             }
 
             if (Input.GetKeyUp(activateTeleKey))
             {
-                teleKeyPressing = false;
-                if (holdTeleDelayTime < holdTeleThreshold)
-                {
-                    teleKeyPressed = true;
-                    teleMouseInput.OnActivated(false);
-                }
-                else
-                {
-                    teleMouseInput?.OnDeactivated();
-                }
-
-                holdTeleDelayTime = 0f;
+                teleMouseInput.OnActivated();
             }
             
             if (IsMousePressingStarted)
@@ -129,7 +123,7 @@ namespace InGame
         {
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                if (teleKeyPressing) return;
+                if (teleKeyPressed) return;
                 
                 holdDelayTime = 0f;
                 IsMousePressing = false;
@@ -141,17 +135,13 @@ namespace InGame
         {
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                if (teleKeyPressing)
-                {
-                    IsMousePressingStarted = false;
-                    IsMousePressing = false;
-                    return;
-                }
-                
                 if (teleKeyPressed)
                 {
                     teleKeyPressed = false;
+                    teleMouseInput?.OnMouseClick(false);
                     teleMouseInput?.OnDeactivated();
+                    ResetTimeScale();
+                    return;
                 }
                 
                 IsMousePressingStarted = false;
@@ -168,28 +158,28 @@ namespace InGame
                 mouseInput?.OnHoldReleased();
                 mouseInput?.OnMouseClick();
             }
-            else if (eventData.button == PointerEventData.InputButton.Right)
-            {
-                teleMouseInput?.OnDeactivated();
-                
-                if (teleKeyPressing)
-                {
-                    teleKeyPressing = false;
-                    teleKeyPressed = false;
-                    teleMouseInput?.OnMouseClick(isLongTele: true);
-                    DebugUtility.LogWarning("Use LONG teleport!!!");
-                    return;
-                }
-
-                if (teleKeyPressed)
-                {
-                    teleKeyPressing = false;
-                    teleKeyPressed = false;
-                    teleMouseInput?.OnMouseClick(isLongTele: false);
-                    DebugUtility.LogWarning("Use SHORT teleport!!!");
-                    return;
-                }
-            }
+            // else if (eventData.button == PointerEventData.InputButton.Right)
+            // {
+            //     teleMouseInput?.OnDeactivated();
+            //     
+            //     if (teleKeyPressing)
+            //     {
+            //         teleKeyPressing = false;
+            //         teleKeyPressed = false;
+            //         teleMouseInput?.OnMouseClick(isLongTele: true);
+            //         DebugUtility.LogWarning("Use LONG teleport!!!");
+            //         return;
+            //     }
+            //
+            //     if (teleKeyPressed)
+            //     {
+            //         teleKeyPressing = false;
+            //         teleKeyPressed = false;
+            //         teleMouseInput?.OnMouseClick(isLongTele: false);
+            //         DebugUtility.LogWarning("Use SHORT teleport!!!");
+            //         return;
+            //     }
+            // }
         }
 
         public bool DelayCall(float delay, Action callback)
@@ -202,6 +192,16 @@ namespace InGame
         {
             yield return new WaitForSeconds(delay);
             callback?.Invoke();
+        }
+
+        private void FreezeTimeScale()
+        {
+            Time.timeScale = 0.3f;
+        }
+
+        private void ResetTimeScale()
+        {
+            Time.timeScale = 1f;
         }
     }
 }

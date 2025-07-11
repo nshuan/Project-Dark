@@ -192,31 +192,12 @@ namespace InGame
             canTeleportTower = enable;
         }
         #endregion
-        
-        private void Update()
-        {
-#if UNITY_EDITOR
-            // Test tower change
-            for (var i = 1; i <= 3; i++)
-            {
-                if (Input.GetKeyDown(i.ToString()))
-                {
-                    TestTowerChange(i - 1);
-                }
-            }
-#endif
-        }
+
 
         [Button]
         public void TestSkillChange()
         {
             OnChangeSkill?.Invoke(skillConfig);
-        }
-
-        [Button]
-        public void TestTowerChange(int towerIndex)
-        {
-            TeleportTower(towerIndex);   
         }
 
         public int testLevel;

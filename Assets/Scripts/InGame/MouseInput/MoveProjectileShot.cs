@@ -16,7 +16,6 @@ namespace InGame
         protected Vector3 worldMousePosition;
         
         public bool CanShoot { get; set; }
-        private bool OutOfRange { get; set; }
         protected float Cooldown { get; set; }
         protected float cdCounter;
 
@@ -70,7 +69,8 @@ namespace InGame
                 InputManager.CurrentSkillConfig.cooldown);
 
             var skillBonusInfo = LevelUtility.BonusInfo.skillBonusMapById[InputManager.CurrentSkillConfig.skillId];
-            canChargeBullet = skillBonusInfo.unlockedChargeBullet;
+            // canChargeBullet = skillBonusInfo.unlockedChargeBullet;
+            canChargeBullet = true;
             canChargeDame = skillBonusInfo.unlockedChargeDame;
             canChargeSize = skillBonusInfo.unlockedChargeSize;
             canChargeRange = skillBonusInfo.unlockedChargeRange;
@@ -79,7 +79,6 @@ namespace InGame
         public virtual void OnMouseClick()
         {
             if (!CanShoot) return;
-            if (OutOfRange) return;
             
             CanShoot = false;
             
@@ -135,7 +134,6 @@ namespace InGame
         public void OnHoldStarted()
         {
             if (!CanShoot) return;
-            if (OutOfRange) return;
             if (isChargingBullet
                 || isChargingDame
                 || isChargingSize
@@ -184,40 +182,6 @@ namespace InGame
         public virtual void OnUpdate()
         {
             worldMousePosition = Cam.ScreenToWorldPoint(Input.mousePosition);
-            
-            if (OutOfRange)
-            {
-                if (Vector2.Distance(worldMousePosition, InputManager.CursorRangeCenter.position)
-                    <= InputManager.CursorRangeRadius)
-                {
-                    OutOfRange = false;
-                    mousePosition = Input.mousePosition;
-                    mousePosition.z = 0; // Set z to 0 for 2D
-                    cursorRect.position = mousePosition;
-                    cursor.gameObject.SetActive(true);
-                    InputManager.playerVisual.SetRangeVisual(false);
-                }
-                return;
-            }
-
-            if (Vector2.Distance(worldMousePosition, InputManager.CursorRangeCenter.position) 
-                > InputManager.CursorRangeRadius)
-            {
-                cursor.gameObject.SetActive(false);
-                InputManager.playerVisual.SetRangeVisual(true);
-
-                if (CanShoot)
-                {
-                    OutOfRange = true;
-                    ResetChargeVariable();
-                    return;
-                }
-            }
-            else
-            {
-                cursor.gameObject.SetActive(true);
-                InputManager.playerVisual.SetRangeVisual(false);
-            }
             
             mousePosition = Input.mousePosition;
             mousePosition.z = 0; // Set z to 0 for 2D

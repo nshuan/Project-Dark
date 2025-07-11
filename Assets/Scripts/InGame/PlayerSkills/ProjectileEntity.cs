@@ -95,7 +95,11 @@ namespace InGame
             if (Vector2.Distance(transform.position, startPos) > maxDistance) ProjectileHit(null);
             transform.position += (Vector3)(Speed * Time.deltaTime * direction);
             lifeTime += Time.deltaTime;
-            if (lifeTime > MaxLifeTime) Destroy(gameObject);
+            if (lifeTime > MaxLifeTime)
+            {
+                blockHit = false;
+                ProjectileHit(null);
+            }
             
             // Check hit enemy
             var count = Physics2D.CircleCastNonAlloc(transform.position, DamageHitBoundRadius, Vector2.zero, hits, 0f,

@@ -19,7 +19,7 @@ namespace InGame
         public bool IsActivate { get; set; } 
 
         private bool CanMoveLong { get; set; }
-        public bool CanMove { get; set; }
+        public bool CanMove { get; private set; }
         private bool CanCountdown { get; set; }
         protected float Cooldown { get; set; }
         protected float cdCounter;
@@ -93,11 +93,10 @@ namespace InGame
             }
         }
 
-        public void OnActivated(bool isLongTele)
+        public void OnActivated()
         {
             if (Towers == null) return;
             if (!CanMove) return;
-            if (isLongTele && !CanMoveLong) return;
             IsActivate = true;
             foreach (var tower in Towers)
             {
