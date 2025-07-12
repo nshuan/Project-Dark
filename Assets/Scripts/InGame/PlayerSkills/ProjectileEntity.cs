@@ -49,7 +49,7 @@ namespace InGame
             StopAllCoroutines();
         }
 
-        public void Init(
+        public virtual void Init(
             Vector2 startPos, 
             Vector2 direction, 
             float maxDistance, 

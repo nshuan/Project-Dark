@@ -69,8 +69,8 @@ namespace InGame
                 InputManager.CurrentSkillConfig.cooldown);
 
             var skillBonusInfo = LevelUtility.BonusInfo.skillBonusMapById[InputManager.CurrentSkillConfig.skillId];
-            // canChargeBullet = skillBonusInfo.unlockedChargeBullet;
-            canChargeBullet = true;
+            canChargeBullet = skillBonusInfo.unlockedChargeBullet;
+            // canChargeBullet = true;
             canChargeDame = skillBonusInfo.unlockedChargeDame;
             canChargeSize = skillBonusInfo.unlockedChargeSize;
             canChargeRange = skillBonusInfo.unlockedChargeRange;
@@ -102,6 +102,8 @@ namespace InGame
             var delayShot = InputManager.playerVisual.PlayShoot(worldMousePosition);
             InputManager.DelayCall(delayShot, () =>
             {
+                InputManager.playerVisual.Weapon.GetAllEnemiesInRange(skillRange);
+                
                 InputManager.CurrentSkillConfig.Shoot(
                     canChargeBullet
                         ? InputManager.CurrentSkillConfig.chargeProjectilePrefab

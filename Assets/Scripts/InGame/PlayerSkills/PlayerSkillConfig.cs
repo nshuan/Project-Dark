@@ -47,7 +47,6 @@ namespace InGame
             shootLogic.Shoot(
                 projectile,
                 spawnPos, 
-                range,
                 target,
                 damagePerBullet,
                 criticalDamagePerBullet,

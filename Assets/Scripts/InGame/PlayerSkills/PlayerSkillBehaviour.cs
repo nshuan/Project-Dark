@@ -11,7 +11,6 @@ namespace InGame
         public abstract void Shoot(
             ProjectileEntity projectilePrefab,
             Vector2 spawnPos, 
-            float bulletRange,
             Vector2 target,
             int damagePerBullet, 
             int criticalDamagePerBullet,

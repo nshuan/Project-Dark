@@ -12,7 +12,6 @@ namespace InGame
         public override void Shoot(
             ProjectileEntity projectilePrefab,
             Vector2 spawnPos, 
-            float bulletRange,
             Vector2 target,
             int damagePerBullet, 
             int criticalDamagePerBullet, 
@@ -30,7 +29,7 @@ namespace InGame
             {
                 var p = ProjectilePool.Instance.Get(projectilePrefab, null, false);
                 p.transform.position = spawnPos;
-                p.Init(spawnPos, (target - spawnPos).normalized, bulletRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, isCharge, projectileHitActions);
+                p.Init(spawnPos, (target - spawnPos).normalized, skillRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, isCharge, projectileHitActions);
                 p.Activate(delayEachBullet * i);
             }
         }

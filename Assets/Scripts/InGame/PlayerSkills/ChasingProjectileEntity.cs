@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -8,7 +9,20 @@ namespace InGame
     {
         [SerializeField] private float rotateSpeed; // Degree per seconds
         private Transform targetToChase;
-        
+        private bool canChase = false;
+
+        public override void Init(Vector2 startPos, Vector2 direction, float maxDistance, float size, float speedScale, int damage,
+            int criticalDamage, float criticalRate, float stagger, bool isCharge, List<IProjectileHit> hitActions)
+        {
+            base.Init(startPos, direction, maxDistance, size, speedScale, damage, criticalDamage, criticalRate, stagger, isCharge, hitActions);
+
+            if (WeaponSupporter.EnemyTargetingIndex < WeaponSupporter.EnemiesCountInRange)
+            {
+                targetToChase = WeaponSupporter.EnemiesInRange[WeaponSupporter.EnemyTargetingIndex].transform;
+                WeaponSupporter.EnemyTargetingIndex += 1;
+            }
+        }
+
         protected override IEnumerator IEActivate(float delay)
         {
             yield return new WaitForSeconds(delay);
@@ -17,18 +31,9 @@ namespace InGame
             activated = true;
 
             yield return new WaitForSeconds(0.2f);
-            
-            FindNextTarget();
+            canChase = true;
         }
-
-        private void FindNextTarget()
-        {
-            // Find target to chase
-            var count = Physics2D.CircleCastNonAlloc(startPos, maxDistance, Vector2.zero, hits, 0f,
-                enemyLayer);
-            targetToChase = hits[Random.Range(0, count)].transform;
-        }
-
+        
         protected override void Update()
         {
             if (!activated) return;
@@ -39,7 +44,7 @@ namespace InGame
             }
             
             // Change direction slowly to target
-            if (targetToChase)
+            if (canChase && targetToChase)
             {
                 if (targetToChase.gameObject.activeInHierarchy)
                 {

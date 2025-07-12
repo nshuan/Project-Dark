@@ -9,6 +9,9 @@ namespace InGame
         [SerializeField] private PlayerAnimController animController;
         [SerializeField] private DashGhostEffect dashEffect;
 
+        [Space] [SerializeField] private WeaponSupporter weapon;
+        public WeaponSupporter Weapon => weapon;
+
         [Space] [Header("Config")] 
         [SerializeField] private Vector2 offset;
 

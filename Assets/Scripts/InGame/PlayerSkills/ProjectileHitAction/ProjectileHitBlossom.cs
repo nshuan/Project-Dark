@@ -5,6 +5,9 @@ using Random = UnityEngine.Random;
 
 namespace InGame
 {
+    /// <summary>
+    /// Prefab của projectile sẽ được set ở trong upgrade node
+    /// </summary>
     [Serializable]
     public class ProjectileHitBlossom : IProjectileHit
     {
