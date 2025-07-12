@@ -23,7 +23,7 @@ namespace InGame
             StartCoroutine(IEExplode(() =>
             {
                 // Check hit target
-                var count = Physics2D.CircleCastNonAlloc(Vector2.zero, size, Vector2.zero, hits, 0f,
+                var count = Physics2D.CircleCastNonAlloc(transform.position, size, Vector2.zero, hits, 0f,
                     targetLayer);
                 if (count > 0)
                 {
@@ -47,15 +47,15 @@ namespace InGame
             actionComplete?.Invoke();
         }
 
-        private void ExplosionHit(Transform hitTransform, float value)
-        {
-            if (hitTransform)
+            private void ExplosionHit(Transform hitTransform, float value)
             {
-                if (hitTransform.TryGetComponent(out hitTarget))
+                if (hitTransform)
                 {
-                    hitTarget.Damage((int)value, ((Vector2)hitTransform.position - Position).normalized, Stagger);
+                    if (hitTransform.TryGetComponent(out hitTarget))
+                    {
+                        hitTarget.Damage((int)value, ((Vector2)hitTransform.position - Position).normalized, Stagger);
+                    }
                 }
             }
-        }
     }
 }

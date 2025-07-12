@@ -28,6 +28,11 @@ namespace InGame
         private KeyCode activateTeleKey = KeyCode.LeftShift;
         private bool teleKeyPressed;
 
+#if UNITY_EDITOR
+        [Space, Header("Editor cheat")] 
+        [SerializeField] private bool forceEnableDash;
+#endif
+
         #endregion
         
         private void Awake()
@@ -36,6 +41,9 @@ namespace InGame
 
             LevelManager.Instance.OnLevelLoaded += (level) =>
             {
+#if UNITY_EDITOR
+                if (forceEnableDash) LevelUtility.BonusInfo.unlockedLongMoveToTower = true;
+#endif
                 PlayerStats = LevelManager.Instance.PlayerStats;
                 teleMouseInput = new MoveToTower(cam, playerVisual, LevelManager.Instance.shortTeleConfig, LevelManager.Instance.longTeleConfig, LevelManager.Instance.Towers, LevelManager.Instance.CurrentTower.Id, DelayCall);
             };
@@ -181,7 +189,7 @@ namespace InGame
 
         private void FreezeTimeScale()
         {
-            Time.timeScale = 0.3f;
+            Time.timeScale = 0.1f;
         }
 
         private void ResetTimeScale()

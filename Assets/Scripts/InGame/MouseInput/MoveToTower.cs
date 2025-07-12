@@ -42,8 +42,7 @@ namespace InGame
             actionTowerChanged = OnTowerChanged;
             CanMove = false;
             CanCountdown = true;
-            // CanMoveLong = LevelUtility.BonusInfo.unlockedLongMoveToTower;
-            CanMoveLong = true;
+            CanMoveLong = LevelUtility.BonusInfo.unlockedLongMoveToTower;
 
             LevelManager.Instance.OnChangeTower += actionTowerChanged;
         }
