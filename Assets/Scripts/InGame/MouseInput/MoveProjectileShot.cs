@@ -70,7 +70,6 @@ namespace InGame
 
             var skillBonusInfo = LevelUtility.BonusInfo.skillBonusMapById[InputManager.CurrentSkillConfig.skillId];
             canChargeBullet = skillBonusInfo.unlockedChargeBullet;
-            // canChargeBullet = true;
             canChargeDame = skillBonusInfo.unlockedChargeDame;
             canChargeSize = skillBonusInfo.unlockedChargeSize;
             canChargeRange = skillBonusInfo.unlockedChargeRange;

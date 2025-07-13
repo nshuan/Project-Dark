@@ -30,7 +30,7 @@ namespace InGame
 
         #endregion
         
-        public Action OnHit { get; set; }
+        public Action<int> OnHit { get; set; }
         public Action OnDead { get; set; }
         public EnemyState State { get; set; }
         public int UniqueId { get; set; }
@@ -175,7 +175,7 @@ namespace InGame
         {
             if (IsDestroyed) return;
             CurrentHealth -= damage;
-            OnHit?.Invoke();
+            OnHit?.Invoke(damage);
             if (CurrentHealth <= 0)
             {
                 OnDie();

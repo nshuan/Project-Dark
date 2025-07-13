@@ -76,7 +76,7 @@ namespace InGame
         [Space] 
         public bool unlockedChargeDame;
         public bool unlockedChargeBullet;
-        public bool unlockedChargeSize;
+        public bool unlockedChargeSize = true;
         public bool unlockedChargeRange;
         [NonSerialized, OdinSerialize] public List<IProjectileHit> projectileHitActions = new List<IProjectileHit>();
     }

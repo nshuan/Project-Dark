@@ -14,6 +14,7 @@ namespace InGame
         public int CurrentHp { get; private set; }
         public bool IsDestroyed { get; set; }
         
+        public Action<int> OnHit { get; set; }
         public Action<TowerEntity> OnDestroyed;
         
         public void Initialize(int id, int hp)
@@ -41,6 +42,7 @@ namespace InGame
             if (IsDestroyed) return;
             stagger = 0;
             CurrentHp -= damage;
+            OnHit?.Invoke(damage);
             if (CurrentHp <= 0)
             {
                 IsDestroyed = true;
