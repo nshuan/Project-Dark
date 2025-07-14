@@ -6,8 +6,6 @@ namespace InGame
 {
     public class EffectExplosion : MonoEffectEntity
     {
-        [SerializeField] private LayerMask targetLayer;
-
         private Vector2 Position { get; set; }
         private float Stagger { get; set; }
         private RaycastHit2D[] hits = new RaycastHit2D[50];
@@ -16,7 +14,6 @@ namespace InGame
         public override void TriggerEffect(int effectId, Vector2 position, float size, float value, float stagger, ActionEffectPool pool)
         {
             transform.position = position;
-            hits = new RaycastHit2D[50];
             this.Position = position;
             this.Stagger = stagger;
 
@@ -47,15 +44,15 @@ namespace InGame
             actionComplete?.Invoke();
         }
 
-            private void ExplosionHit(Transform hitTransform, float value)
+        private void ExplosionHit(Transform hitTransform, float value)
+        {
+            if (hitTransform)
             {
-                if (hitTransform)
+                if (hitTransform.TryGetComponent(out hitTarget))
                 {
-                    if (hitTransform.TryGetComponent(out hitTarget))
-                    {
-                        hitTarget.Damage((int)value, Position, Stagger);
-                    }
+                    hitTarget.Damage((int)value, Position, Stagger);
                 }
             }
+        }
     }
 }

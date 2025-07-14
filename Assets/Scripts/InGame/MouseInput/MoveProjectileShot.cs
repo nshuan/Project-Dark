@@ -115,7 +115,7 @@ namespace InGame
                     skillRange,
                     criticalDamage,
                     critRate,
-                    canChargeBullet || canChargeDame || canChargeSize || canChargeRange,
+                    (canChargeBullet && bulletAdd > 0) || (canChargeDame && dameChargeTime > 0) || (canChargeSize && sizeChargeTime > 0) || (canChargeRange && rangeChargeTime > 0),
                     LevelUtility.BonusInfo.skillBonusMapById[InputManager.CurrentSkillConfig.skillId].projectileHitActions);
 
                 LevelManager.Instance.SetTeleportTowerState(true);
@@ -167,7 +167,7 @@ namespace InGame
             // damage
             maxDameMultiplierAdd = InputManager.CurrentSkillConfig.chargeDameMax;
             maxDameChargeTime = InputManager.CurrentSkillConfig.chargeDameTime;
-            dameChargeTime = 0f;
+            dameChargeTime = -1f;
             
             // Size
             maxSizeMultiplierAdd = InputManager.CurrentSkillConfig.chargeSizeMax;

@@ -68,7 +68,7 @@ namespace InGame
                         Towers[selectingTower].transform.position + Towers[selectingTower].standOffset,
                         () =>
                         {
-                            LevelManager.Instance.TeleportTower(selectingTower);
+                            LevelManager.Instance.TeleportTower(selectingTower); 
                             Cooldown = LongConfig.cooldown;
                             cdCounter = Cooldown;
                             CanCountdown = true;

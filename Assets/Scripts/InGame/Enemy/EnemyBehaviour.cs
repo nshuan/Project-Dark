@@ -19,6 +19,7 @@ namespace InGame
         public int dmg; // Base damage
         public float moveSpeed;
         public float staggerResist; // Reduce projectile stagger
+        public float invisibleDuration;
         public int exp;
         public int dark;
         [Range(0f, 1f)] public float darkRatio;
@@ -43,6 +44,7 @@ namespace InGame
     public enum EnemyState
     {
         Spawn,
-        Move
+        Move,
+        Invisible
     }
 }

@@ -50,6 +50,8 @@ namespace InGame
         private Vector2 attackPosition;
         private Vector3 hitDirection = new Vector3();
         
+        private float invisibleTimer;
+        
         #region Initialize
 
         public void Init(EnemyBehaviour eConfig, TowerEntity target, float hpMultiplier, float dmgMultiplier, float levelExpRatio, float levelDarkRatio)
@@ -114,7 +116,12 @@ namespace InGame
         {
             if (!Target) return;
             if (IsDestroyed) return;
-            if (State != EnemyState.Move) return;
+            if (State == EnemyState.Spawn) return;
+            if (State == EnemyState.Invisible)
+            {
+                invisibleTimer -= Time.deltaTime;
+                if (invisibleTimer <= 0) State = EnemyState.Move;
+            }
 
             if (staggerDuration > 0)
             {
@@ -175,6 +182,7 @@ namespace InGame
         public void Damage(int damage, Vector2 attackerPos, float stagger)
         {
             if (IsDestroyed) return;
+            if (State == EnemyState.Invisible) return;
             
             CurrentHealth -= damage;
             hitDirection.x = transform.position.x - attackerPos.x;
@@ -196,6 +204,8 @@ namespace InGame
                 }
                 
                 animController.PlayHit();
+                invisibleTimer = config.invisibleDuration;
+                State = EnemyState.Invisible;
             }
         }
 
