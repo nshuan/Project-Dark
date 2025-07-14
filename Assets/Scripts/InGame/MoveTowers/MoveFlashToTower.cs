@@ -52,7 +52,7 @@ namespace InGame
             {
                 if (hitTransform.TryGetComponent(out hitTarget))
                 {
-                    hitTarget.Damage((int)value, (hitTransform.position - characterTransform.position).normalized, stagger);
+                    hitTarget.Damage((int)value, characterTransform.position, stagger);
                 }
             }
         }

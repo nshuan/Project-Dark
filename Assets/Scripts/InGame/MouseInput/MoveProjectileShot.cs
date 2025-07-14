@@ -86,15 +86,15 @@ namespace InGame
                 InputManager.PlayerStats.damage,
                 InputManager.CurrentSkillConfig.damePerBullet,
                 InputManager.PlayerStats.criticalDamage,
-                1 + Mathf.Min(dameChargeTime / maxDameChargeTime, 1f) * maxDameMultiplierAdd);
+                maxDameMultiplierAdd > 0 ? 1 + Mathf.Min(dameChargeTime / maxDameChargeTime, 1f) * maxDameMultiplierAdd : 1f);
             var critRate = LevelUtility.GetCriticalRate(InputManager.PlayerStats.criticalRate);
             var bulletNum = LevelUtility.GetNumberOfBullets(InputManager.CurrentSkillConfig.skillId, InputManager.CurrentSkillConfig.numberOfBullets, bulletAdd);
             var skillSize = LevelUtility.GetSkillSize(InputManager.CurrentSkillConfig.skillId,
                 InputManager.CurrentSkillConfig.size,
-                1 + Mathf.Min(sizeChargeTime / maxSizeChargeTime, 1f) * maxSizeMultiplierAdd);
+                maxSizeMultiplierAdd > 0 ? 1 + Mathf.Min(sizeChargeTime / maxSizeChargeTime, 1f) * maxSizeMultiplierAdd : 1f);
             var skillRange = LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId,
                 InputManager.CurrentSkillConfig.range,
-                1 + Mathf.Min(rangeChargeTime / maxRangeChargeTime, 1f) * maxRangeMultiplierAdd);
+                maxRangeMultiplierAdd > 0 ? 1 + Mathf.Min(rangeChargeTime / maxRangeChargeTime, 1f) * maxRangeMultiplierAdd : 1f);
 
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             LevelManager.Instance.SetTeleportTowerState(false);
@@ -104,7 +104,7 @@ namespace InGame
                 InputManager.playerVisual.Weapon.GetAllEnemiesInRange(skillRange);
                 
                 InputManager.CurrentSkillConfig.Shoot(
-                    canChargeBullet
+                    bulletAdd > 0
                         ? InputManager.CurrentSkillConfig.chargeProjectilePrefab
                         : InputManager.CurrentSkillConfig.projectilePrefab,
                     InputManager.CursorRangeCenter.position, 
@@ -170,12 +170,12 @@ namespace InGame
             dameChargeTime = 0f;
             
             // Size
-            maxSizeMultiplierAdd = InputManager.CurrentSkillConfig.size;
+            maxSizeMultiplierAdd = InputManager.CurrentSkillConfig.chargeSizeMax;
             maxSizeChargeTime = InputManager.CurrentSkillConfig.chargeSizeTime;
             sizeChargeTime = 0f;
             
             // Range
-            maxRangeMultiplierAdd = InputManager.CurrentSkillConfig.range;
+            maxRangeMultiplierAdd = InputManager.CurrentSkillConfig.chargeRangeMax;
             maxRangeChargeTime = InputManager.CurrentSkillConfig.chargeRangeTime;
             rangeChargeTime = 0f;
         }

@@ -44,7 +44,7 @@ namespace InGame
             var damage = CalculateDmg();
             if (nearestEnemy)
             {
-                nearestEnemy.Damage(damage, (nearestEnemy.transform.position - mousePos).normalized, 0f);
+                nearestEnemy.Damage(damage, mousePos, 0f);
                 CheckElemental(nearestEnemy);
             }
 

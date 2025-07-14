@@ -84,6 +84,19 @@ namespace InGame.Upgrade
             bonusInfo.effectsMapByTriggerType = new Dictionary<EffectTriggerType, List<EffectType>>();
                 
             TreeConfig.ActivateTree(Data.nodes, ref bonusInfo);
+
+#if UNITY_EDITOR
+            if (testBonusInfo != null)
+            {
+                bonusInfo = testBonusInfo;
+                foreach (var config in ConfigManifest.Instance.SkillConfig)
+                {
+                    bonusInfo.skillBonusMapById.TryAdd(config.skillId, new UpgradeBonusSkillInfo());
+                }
+                bonusInfo.effectsMapByTriggerType ??= new Dictionary<EffectTriggerType, List<EffectType>>();
+            }
+#endif
+            
             OnActivated?.Invoke(bonusInfo);
         }
         
@@ -101,6 +114,14 @@ namespace InGame.Upgrade
         {
             return nodeMapById.GetValueOrDefault(nodeId);
         }
+
+#if UNITY_EDITOR
+        private UpgradeBonusInfo testBonusInfo;
+        public void ForceTestBonusInfo(UpgradeBonusInfo bonusInfo)
+        {
+            testBonusInfo = bonusInfo;
+        }
+#endif
     }
 
     [Serializable]

@@ -29,6 +29,7 @@ namespace InGame
         protected float Speed { get; set; }
         private float Stagger { get; set; }
         private List<IProjectileHit> HitActions { get; set; }
+        public bool BlockDestroy { get; set; } // Block destroy so that the projectile can go through enemies but still deal damage
 
         protected bool blockHit = false;
         protected bool activated = false;
@@ -98,6 +99,7 @@ namespace InGame
             if (lifeTime > MaxLifeTime)
             {
                 blockHit = false;
+                BlockDestroy = false;
                 ProjectileHit(null);
             }
             
@@ -117,7 +119,7 @@ namespace InGame
                 {
                     // Check critical hit
                     var critical = Random.Range(0f, 1f) <= CriticalRate;
-                    hitEnemy.Damage(critical ? CriticalDamage : Damage, direction, Stagger);
+                    hitEnemy.Damage(critical ? CriticalDamage : Damage, transform.position, Stagger);
                     ActionEffectManager.Instance.TriggerEffect(IsCharge ? EffectTriggerType.DameByChargeAttack : EffectTriggerType.DameByNormalAttack, hitTransform.position);
                     
                     if (critical)
@@ -132,11 +134,13 @@ namespace InGame
                     }
                     
                     OnHit?.Invoke();
-                    OnHit = null;
+                    if (!BlockDestroy)
+                        OnHit = null;
                 }
             }
             
-            ProjectilePool.Instance.Release(this);
+            if (!BlockDestroy)
+                ProjectilePool.Instance.Release(this);
         }
 
         private void OnDrawGizmos()

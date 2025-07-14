@@ -36,6 +36,7 @@ namespace InGame
 
         #region Skill
 
+        public TowerCounterConfig unlockedTowerCounter;
         public Dictionary<int, UpgradeBonusSkillInfo> skillBonusMapById = new Dictionary<int, UpgradeBonusSkillInfo>();
 
         #endregion

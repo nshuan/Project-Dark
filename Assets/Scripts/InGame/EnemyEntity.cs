@@ -48,6 +48,7 @@ namespace InGame
         private Coroutine attackCoroutine;
 
         private Vector2 attackPosition;
+        private Vector3 hitDirection = new Vector3();
         
         #region Initialize
 
@@ -171,10 +172,16 @@ namespace InGame
             animController.PlayAttack();
         }
 
-        public void Damage(int damage, Vector2 damageDirection, float stagger)
+        public void Damage(int damage, Vector2 attackerPos, float stagger)
         {
             if (IsDestroyed) return;
+            
             CurrentHealth -= damage;
+            hitDirection.x = transform.position.x - attackerPos.x;
+            hitDirection.y = transform.position.y - attackerPos.y;
+            hitDirection.x /= hitDirection.magnitude;
+            hitDirection.y /= hitDirection.magnitude;
+            
             OnHit?.Invoke(damage);
             if (CurrentHealth <= 0)
             {
@@ -184,7 +191,7 @@ namespace InGame
             {
                 if (stagger - config.staggerResist > 0)
                 {
-                    staggerDirection = (stagger - config.staggerResist) * damageDirection ;
+                    staggerDirection = (stagger - config.staggerResist) * hitDirection;
                     staggerDuration = (stagger - config.staggerResist) * StaggerMaxDuration;
                 }
                 

@@ -152,6 +152,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1722187161}
   - {fileID: 1030158273}
   - {fileID: 730503588}
   - {fileID: 1343564674}
@@ -1618,7 +1619,6 @@ MonoBehaviour:
   canvas: {fileID: 303447259}
   playerVisual: {fileID: 280279239}
   holdThreshold: 0.5
-  forceEnableDash: 0
 --- !u!1 &331053906
 GameObject:
   m_ObjectHideFlags: 0
@@ -2078,6 +2078,53 @@ Transform:
   - {fileID: 544949212}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &474431899
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 474431900}
+  - component: {fileID: 474431901}
+  m_Layer: 0
+  m_Name: Counter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &474431900
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 474431899}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 495117602}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &474431901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 474431899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a2b64d77cf54be6816e0d68f5f56580, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tower: {fileID: 495117603}
+  canCounter: 0
+  config: {fileID: 0}
 --- !u!1 &483794132
 GameObject:
   m_ObjectHideFlags: 0
@@ -2285,6 +2332,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 474431900}
   - {fileID: 205261339}
   - {fileID: 856780442}
   - {fileID: 300793387}
@@ -5099,6 +5147,269 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1419489090}
   m_CullTransparentMesh: 1
+--- !u!1 &1568595443
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1568595445}
+  - component: {fileID: 1568595444}
+  m_Layer: 0
+  m_Name: TestUpgradeBonus
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1568595444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1568595443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f38329b873642b2b90ef7cd5388dec8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 6844351392576462872, guid: 5bf387a4936339542a95d194cf62d737, type: 3}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: testBonusInfo
+      Entry: 7
+      Data: 0|InGame.UpgradeBonusInfo, Assembly-CSharp
+    - Name: upgradedShortMoveToTower
+      Entry: 5
+      Data: false
+    - Name: unlockedLongMoveToTower
+      Entry: 5
+      Data: false
+    - Name: damePlus
+      Entry: 3
+      Data: 0
+    - Name: dameMultiply
+      Entry: 4
+      Data: 0
+    - Name: criticalRatePlus
+      Entry: 4
+      Data: 0
+    - Name: criticalDame
+      Entry: 3
+      Data: 0
+    - Name: cooldownPlus
+      Entry: 4
+      Data: 0
+    - Name: hpPlus
+      Entry: 3
+      Data: 0
+    - Name: hpMultiply
+      Entry: 4
+      Data: 0
+    - Name: unlockedTowerCounter
+      Entry: 6
+      Data: 
+    - Name: skillBonusMapById
+      Entry: 7
+      Data: 1|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[InGame.UpgradeBonusSkillInfo,
+        Assembly-CSharp]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 2|System.Collections.Generic.GenericEqualityComparer`1[[System.Int32,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 7
+      Data: 3|InGame.UpgradeBonusSkillInfo, Assembly-CSharp
+    - Name: skillDamePlus
+      Entry: 3
+      Data: 0
+    - Name: skillDameMultiply
+      Entry: 4
+      Data: 0
+    - Name: skillCooldownPlus
+      Entry: 4
+      Data: 0
+    - Name: skillCooldownMultiply
+      Entry: 4
+      Data: 0
+    - Name: skillSizeMultiply
+      Entry: 4
+      Data: 0
+    - Name: skillRangeMultiply
+      Entry: 4
+      Data: 0
+    - Name: bulletPlus
+      Entry: 3
+      Data: 0
+    - Name: staggerMultiply
+      Entry: 4
+      Data: 0
+    - Name: unlockedChargeDame
+      Entry: 5
+      Data: true
+    - Name: unlockedChargeBullet
+      Entry: 5
+      Data: true
+    - Name: unlockedChargeSize
+      Entry: 5
+      Data: true
+    - Name: unlockedChargeRange
+      Entry: 5
+      Data: true
+    - Name: projectileHitActions
+      Entry: 7
+      Data: 4|System.Collections.Generic.List`1[[InGame.IProjectileHit, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 5|InGame.ProjectileHitBlossom, Assembly-CSharp
+    - Name: projectile
+      Entry: 10
+      Data: 0
+    - Name: bulletAmount
+      Entry: 3
+      Data: 8
+    - Name: blossomSize
+      Entry: 4
+      Data: 3
+    - Name: damage
+      Entry: 3
+      Data: 0
+    - Name: stagger
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: effectsMapByTriggerType
+      Entry: 7
+      Data: 6|System.Collections.Generic.Dictionary`2[[InGame.EffectTriggerType,
+        Assembly-CSharp],[System.Collections.Generic.List`1[[InGame.EffectType, Assembly-CSharp]],
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 7|System.Collections.Generic.EnumEqualityComparer`1[[InGame.EffectTriggerType,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 7
+      Data: 8|System.Collections.Generic.List`1[[InGame.EffectType, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: effectsBonusCooldownMapByType
+      Entry: 6
+      Data: 
+    - Name: effectsBonusChanceMapByType
+      Entry: 6
+      Data: 
+    - Name: effectsBonusSizeMapByType
+      Entry: 6
+      Data: 
+    - Name: effectsBonusValueMapByType
+      Entry: 6
+      Data: 
+    - Name: effectsBonusStaggerMapByType
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  enableTest: 1
+--- !u!4 &1568595445
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1568595443}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1615678661
 GameObject:
   m_ObjectHideFlags: 0
@@ -5753,6 +6064,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1692892613}
   m_CullTransparentMesh: 1
+--- !u!1 &1707428596
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1707428597}
+  - component: {fileID: 1707428598}
+  m_Layer: 0
+  m_Name: Counter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1707428597
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1707428596}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2016680610}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1707428598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1707428596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a2b64d77cf54be6816e0d68f5f56580, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tower: {fileID: 2016680611}
+  canCounter: 0
+  config: {fileID: 0}
 --- !u!1 &1711167273
 GameObject:
   m_ObjectHideFlags: 0
@@ -5898,6 +6256,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1711167273}
   m_CullTransparentMesh: 1
+--- !u!1 &1722187160
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1722187161}
+  - component: {fileID: 1722187162}
+  m_Layer: 0
+  m_Name: Counter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1722187161
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1722187160}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 38852584}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1722187162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1722187160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a2b64d77cf54be6816e0d68f5f56580, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tower: {fileID: 38852585}
+  canCounter: 0
+  config: {fileID: 0}
 --- !u!1 &1738889639
 GameObject:
   m_ObjectHideFlags: 0
@@ -6357,6 +6762,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1707428597}
   - {fileID: 1615678662}
   - {fileID: 1669214438}
   - {fileID: 1637122095}
@@ -6576,3 +6982,4 @@ SceneRoots:
   - {fileID: 426610612}
   - {fileID: 253350855}
   - {fileID: 1405331109}
+  - {fileID: 1568595445}
