@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 
 namespace InGame
 {
-    public class EnemyEntity : MonoBehaviour, IDamageable
+    public class EnemyEntity : MonoBehaviour, IDamageable, IEffectTarget
     {
         private static float StaggerMaxDuration = 0.5f; // Hit back 1f on 0.5s
 
@@ -29,7 +29,7 @@ namespace InGame
         private int BossPoint { get; set; }
 
         #endregion
-        
+
         public Action<int> OnHit { get; set; }
         public Action OnDead { get; set; }
         public EnemyState State { get; set; }
@@ -84,9 +84,6 @@ namespace InGame
             inAttackRange = false;
             IsDestroyed = false;
             config.Init(this);
-            
-            // Update health ui
-            UIUpdateHealth();
         }
 
         #endregion
@@ -235,14 +232,27 @@ namespace InGame
             EnemyPool.Instance.Release(this, config.enemyId);
             
         }
-        
-        private void UIUpdateHealth()
+
+        #region Effect 
+
+        public Transform TargetTransform => transform;
+        public void Burn(float duration, float delayEachBurn, int damage)
         {
-            DOTween.Complete(this);
-            var seq = DOTween.Sequence(this);
-            seq.Append(transform.DOPunchScale(0.5f * Vector3.one, 0.2f))
-                .Join(uiHealth.DOScale(Mathf.Clamp(CurrentHealth, 0f, MaxHealth) / MaxHealth, 0.2f));
-            seq.Play();
+            StartCoroutine(IEBurn(duration, delayEachBurn, damage));
         }
+
+        private IEnumerator IEBurn(float duration, float delayEachBurn, int damage)
+        {
+            var totalBurn = (int)(duration / delayEachBurn);
+
+            while (totalBurn > 0)
+            {
+                yield return new WaitForSeconds(delayEachBurn);
+                Damage(damage, transform.position, 0f);
+                totalBurn -= 1;
+            }
+        }
+
+        #endregion
     }
 }

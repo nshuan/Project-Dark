@@ -31,6 +31,8 @@ namespace InGame
         private List<IProjectileHit> HitActions { get; set; }
         public bool BlockDestroy { get; set; } // Block destroy so that the projectile can go through enemies but still deal damage
 
+        public Transform TargetTransform => transform;
+        
         protected bool blockHit = false;
         protected bool activated = false;
         protected float lifeTime = 0f;
@@ -120,7 +122,7 @@ namespace InGame
                     // Check critical hit
                     var critical = Random.Range(0f, 1f) <= CriticalRate;
                     hitEnemy.Damage(critical ? CriticalDamage : Damage, transform.position, Stagger);
-                    ActionEffectManager.Instance.TriggerEffect(IsCharge ? EffectTriggerType.DameByChargeAttack : EffectTriggerType.DameByNormalAttack, hitTransform.position);
+                    ActionEffectManager.Instance.TriggerEffect(IsCharge ? EffectTriggerType.DameByChargeAttack : EffectTriggerType.DameByNormalAttack, hitEnemy);
                     
                     if (critical)
                         DebugUtility.LogWarning($"Projectile {name} deals critical damage {CriticalDamage} to {hitEnemy.name}!!");

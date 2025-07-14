@@ -26,10 +26,10 @@ namespace InGame
             hitOrder = new Transform[maxHit];
         }
 
-        public override void TriggerEffect(int effectId, Vector2 position, float size, float value, float stagger, ActionEffectPool pool)
+        public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, ActionEffectPool pool)
         {
-            transform.position = position;
-            this.Position = position;
+            transform.position = target.Position;
+            this.Position = target.Position;
             this.Stagger = stagger;
 
             var count = Physics2D.CircleCastNonAlloc(transform.position, size, Vector2.zero, hits, 0f, targetLayer);
@@ -38,8 +38,8 @@ namespace InGame
                 unorderedHits[i] = hits[i].transform;
             }
 
-            anchorForOrdering.x = position.x;
-            anchorForOrdering.y = position.y;
+            anchorForOrdering.x = target.Position.x;
+            anchorForOrdering.y = target.Position.y;
             orderCount = 0;
             while (orderCount < maxHit && orderCount < count)
             {

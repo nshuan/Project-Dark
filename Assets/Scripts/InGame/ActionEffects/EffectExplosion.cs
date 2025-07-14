@@ -11,10 +11,10 @@ namespace InGame
         private RaycastHit2D[] hits = new RaycastHit2D[50];
         private IDamageable hitTarget;
         
-        public override void TriggerEffect(int effectId, Vector2 position, float size, float value, float stagger, ActionEffectPool pool)
+        public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, ActionEffectPool pool)
         {
-            transform.position = position;
-            this.Position = position;
+            transform.position = target.Position;
+            this.Position = target.Position;
             this.Stagger = stagger;
 
             StartCoroutine(IEExplode(() =>
