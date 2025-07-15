@@ -16,6 +16,7 @@ namespace InGame
         [SerializeField] private ActionEffectPool pool;
         
         private Dictionary<EffectTriggerType, List<EffectType>> possibleEffectMap;
+        private Dictionary<EffectTriggerType, Dictionary<EffectType, bool>> cooldownEffectMap;
 
         protected override void Awake()
         {
@@ -27,6 +28,16 @@ namespace InGame
                 { EffectTriggerType.DameByMoveSKill , new List<EffectType>() },
                 { EffectTriggerType.TowerTakeDame , new List<EffectType>() }
             };
+            cooldownEffectMap = new Dictionary<EffectTriggerType, Dictionary<EffectType, bool>>();
+            foreach (EffectTriggerType triggerType in Enum.GetValues(typeof(EffectTriggerType)))
+            {
+                var effectMap = new Dictionary<EffectType, bool>();
+                foreach (EffectType effectType in Enum.GetValues(typeof(EffectType)))
+                {
+                    effectMap[effectType] = false;
+                }
+                cooldownEffectMap.Add(triggerType, effectMap);
+            }
             
             UpgradeManager.Instance.OnActivated += OnBonusActivated;
         }
@@ -49,13 +60,27 @@ namespace InGame
             if (possibleEffectMap[triggerType] == null) return;
             foreach (var effectConfig in possibleEffectMap[triggerType].Select(effectType => effectConfigsMap[triggerType][effectType]))
             {
+                // Skip if in cooldown
+                if (cooldownEffectMap[triggerType][effectConfig.logicType]) continue;
+                
                 // Calculate chance
                 if (Random.Range(0f, 1f) <= effectConfig.chance)
                 {
                     pool.Get(effectConfig.effectPrefab, effectConfig.effectId, null, true)
                         .TriggerEffect(effectConfig.effectId, target, effectConfig.size, effectConfig.value, effectConfig.stagger, pool);
+
+                    cooldownEffectMap[triggerType][effectConfig.logicType] = true;
+                    StartCoroutine(IECooldown(effectConfig.cooldown, () => cooldownEffectMap[triggerType][effectConfig.logicType] = false));
+                    
+                    CombatActions.OnEffectTriggered?.Invoke(triggerType, effectConfig.logicType, effectConfig.cooldown);
                 }
             }
+        }
+
+        private IEnumerator IECooldown(float cooldown, Action completeCallback)
+        {
+            yield return new WaitForSeconds(cooldown);
+            completeCallback?.Invoke();
         }
 
         #endregion

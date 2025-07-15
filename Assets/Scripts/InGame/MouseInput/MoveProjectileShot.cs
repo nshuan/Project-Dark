@@ -27,6 +27,7 @@ namespace InGame
         private int maxBulletAdd;
         private float bulletAddInterval;
         private float bulletAddTimer;
+        
 
         private bool canChargeDame;
         private bool isChargingDame;
@@ -68,7 +69,7 @@ namespace InGame
                 InputManager.PlayerStats.cooldown,
                 InputManager.CurrentSkillConfig.cooldown);
 
-            var skillBonusInfo = LevelUtility.BonusInfo.skillBonusMapById[InputManager.CurrentSkillConfig.skillId];
+            var skillBonusInfo = LevelUtility.BonusInfo.skillBonus;
             canChargeBullet = skillBonusInfo.unlockedChargeBullet;
             canChargeDame = skillBonusInfo.unlockedChargeDame;
             canChargeSize = skillBonusInfo.unlockedChargeSize;
@@ -95,6 +96,8 @@ namespace InGame
             var skillRange = LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId,
                 InputManager.CurrentSkillConfig.range,
                 maxRangeMultiplierAdd > 0 ? 1 + Mathf.Min(rangeChargeTime / maxRangeChargeTime, 1f) * maxRangeMultiplierAdd : 1f);
+            var isCharge = (canChargeBullet && bulletAdd > 0) || (canChargeDame && dameChargeTime > 0) ||
+                           (canChargeSize && sizeChargeTime > 0) || (canChargeRange && rangeChargeTime > 0);
 
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             LevelManager.Instance.SetTeleportTowerState(false);
@@ -115,11 +118,16 @@ namespace InGame
                     skillRange,
                     criticalDamage,
                     critRate,
-                    (canChargeBullet && bulletAdd > 0) || (canChargeDame && dameChargeTime > 0) || (canChargeSize && sizeChargeTime > 0) || (canChargeRange && rangeChargeTime > 0),
-                    LevelUtility.BonusInfo.skillBonusMapById[InputManager.CurrentSkillConfig.skillId].projectileHitActions);
+                    isCharge,
+                    LevelUtility.BonusInfo.skillBonus.projectileHitActions);
 
                 LevelManager.Instance.SetTeleportTowerState(true);
             });
+
+            if (isCharge)
+                CombatActions.OnAttackCharge?.Invoke(Cooldown);
+            else
+                CombatActions.OnAttackNormal?.Invoke(Cooldown);
             
             cdCounter = Cooldown;
             cdCounter += delayShot;

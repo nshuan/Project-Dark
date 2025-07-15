@@ -73,7 +73,9 @@ namespace InGame
                             cdCounter = Cooldown;
                             CanCountdown = true;
                             CurrentTowerIndex = selectingTower;
+                            CombatActions.OnMoveTower?.Invoke(Cooldown);
                         }));
+                    
                 }
                 else
                 {
@@ -88,6 +90,7 @@ namespace InGame
                             cdCounter = Cooldown;
                             CanCountdown = true;
                             CurrentTowerIndex = selectingTower;
+                            CombatActions.OnMoveTower?.Invoke(Cooldown);
                         }));
                 }
             }

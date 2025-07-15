@@ -76,10 +76,7 @@ namespace InGame.Upgrade
         {
             // Init bonus infor
             bonusInfo = new UpgradeBonusInfo();
-            foreach (var config in ConfigManifest.Instance.SkillConfig)
-            {
-                bonusInfo.skillBonusMapById.TryAdd(config.skillId, new UpgradeBonusSkillInfo());
-            }
+            bonusInfo.skillBonus = new UpgradeBonusSkillInfo();
 
             bonusInfo.effectsMapByTriggerType = new Dictionary<EffectTriggerType, List<EffectType>>();
                 
@@ -89,10 +86,7 @@ namespace InGame.Upgrade
             if (testBonusInfo != null)
             {
                 bonusInfo = testBonusInfo;
-                foreach (var config in ConfigManifest.Instance.SkillConfig)
-                {
-                    bonusInfo.skillBonusMapById.TryAdd(config.skillId, new UpgradeBonusSkillInfo());
-                }
+                bonusInfo.skillBonus ??= new UpgradeBonusSkillInfo();
                 bonusInfo.effectsMapByTriggerType ??= new Dictionary<EffectTriggerType, List<EffectType>>();
             }
 #endif

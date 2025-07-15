@@ -41,6 +41,7 @@ namespace InGame
             if (!canCounter) return;
             if (counterCooldown) return;
             OnOneTowerHit?.Invoke(attackerPos);
+            CombatActions.OnTowerCounter?.Invoke(config.cooldown);
         }
 
         private void OnTowerDestroyed(TowerEntity destroyedTower)

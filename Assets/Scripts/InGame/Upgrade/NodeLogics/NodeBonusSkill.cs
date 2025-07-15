@@ -17,30 +17,27 @@ namespace InGame.Upgrade
 
         private void BonusSkill(int id, int level, ref UpgradeBonusInfo bonusInfo)
         {
-            if (!bonusInfo.skillBonusMapById.ContainsKey(id))
-                bonusInfo.skillBonusMapById.Add(id, new UpgradeBonusSkillInfo());
-            
             switch (bonusType)
             {
                 case BonusSkillType.Damage:
-                    if (isMultiply) bonusInfo.skillBonusMapById[id].skillDameMultiply += value[level - 1];
-                    else bonusInfo.skillBonusMapById[id].skillDamePlus += (int)value[level - 1];
+                    if (isMultiply) bonusInfo.skillBonus.skillDameMultiply += value[level - 1];
+                    else bonusInfo.skillBonus.skillDamePlus += (int)value[level - 1];
                     break;
                 case BonusSkillType.Cooldown:
-                    if (isMultiply) bonusInfo.skillBonusMapById[id].skillCooldownMultiply += value[level - 1];
-                    else bonusInfo.skillBonusMapById[id].skillCooldownPlus += value[level - 1];
+                    if (isMultiply) bonusInfo.skillBonus.skillCooldownMultiply += value[level - 1];
+                    else bonusInfo.skillBonus.skillCooldownPlus += value[level - 1];
                     break;
                 case BonusSkillType.Size:
-                    bonusInfo.skillBonusMapById[id].skillSizeMultiply += value[level - 1];
+                    bonusInfo.skillBonus.skillSizeMultiply += value[level - 1];
                     break;
                 case BonusSkillType.Range:
-                    bonusInfo.skillBonusMapById[id].skillRangeMultiply += value[level - 1];
+                    bonusInfo.skillBonus.skillRangeMultiply += value[level - 1];
                     break;
                 case BonusSkillType.BulletNum:
-                    bonusInfo.skillBonusMapById[id].bulletPlus += (int)value[level - 1];
+                    bonusInfo.skillBonus.bulletPlus += (int)value[level - 1];
                     break;
                 case BonusSkillType.Stagger:
-                    bonusInfo.skillBonusMapById[id].staggerMultiply += value[level - 1];
+                    bonusInfo.skillBonus.staggerMultiply += value[level - 1];
                     break;
             }
         }
