@@ -2,9 +2,9 @@ using System;
 
 namespace InGame.Upgrade
 {
+    [Serializable]
     public class NodeBonusSkill : INodeActivateLogic
     {
-        public int skillId;
         public BonusSkillType bonusType;
         public float[] value;
         public bool isMultiply;
@@ -12,10 +12,10 @@ namespace InGame.Upgrade
         public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)
         {
             if (level <= 0 || level > value.Length) return;
-            BonusSkill(skillId, level, ref bonusInfo);
+            BonusSkill(level, ref bonusInfo);
         }
 
-        private void BonusSkill(int id, int level, ref UpgradeBonusInfo bonusInfo)
+        private void BonusSkill(int level, ref UpgradeBonusInfo bonusInfo)
         {
             switch (bonusType)
             {
