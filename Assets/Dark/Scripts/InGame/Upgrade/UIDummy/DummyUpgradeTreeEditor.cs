@@ -219,12 +219,12 @@ namespace InGame.Upgrade.UIDummy
             
             GameObject treeGameObject = tree.gameObject;
       
-            string path = "Assets/Prefabs/UpgradeTrees/" + treeGameObject.name + ".prefab";
+            string path = "Assets/Dark/Prefabs/UpgradeTrees/" + treeGameObject.name + ".prefab";
 
-            if (!AssetDatabase.IsValidFolder("Assets/Prefabs"))
-                AssetDatabase.CreateFolder("Assets", "Prefabs");
-            if (!AssetDatabase.IsValidFolder("Assets/Prefabs/UpgradeTrees"))
-                AssetDatabase.CreateFolder("Assets/Prefabs", "UpgradeTrees");
+            if (!AssetDatabase.IsValidFolder("Assets/Dark/Prefabs"))
+                AssetDatabase.CreateFolder("Assets/Dark", "Prefabs");
+            if (!AssetDatabase.IsValidFolder("Assets/Dark/Prefabs/UpgradeTrees"))
+                AssetDatabase.CreateFolder("Assets/Dark/Prefabs", "UpgradeTrees");
             
             if (File.Exists(path))
             {
