@@ -1,141 +1,120 @@
-// This is a premultiply-alpha adaptation of the built-in Unity shader "UI/Default" in Unity 5.6.2 to allow Unity UI stencil masking.
-
 Shader "MyShader/Shader_Dissolve"
 {
-	Properties
-	{
-		 //_MainTex ("Sprite Texture", 2D) = "white" {}
+Properties
+{
+[PerRendererData] _MainTex("Sprite Texture", 2D) = "white" {}
+Disolve_Value("Disolve_Value", Range(0, 1)) = 0.509
+Seed("Seed", Range(-8, 8)) = 0.5
+_SpriteFade("SpriteFade", Range(0, 1)) = 1.0
 
-		 [PerRendererData] _Tex ("Base (RGB)", 2D) = "white" { }
-        _DissolveNoiseTex ("Dissolve Noise Texture", 2D) = "black" { }
-        _DissolveAmount ("Dissolve Amount", Range(0, 1)) = 0.0
-        _DissolveColor ("Dissolve Color", Color) = (0, 0, 0, 1)
-        _Cutoff ("Dissolve Cutoff", Range(0, 1)) = 0
-		_Size ("_Size", Float) = 0
+// required for UI.Mask
+[HideInInspector]_StencilComp("Stencil Comparison", Float) = 8
+[HideInInspector]_Stencil("Stencil ID", Float) = 0
+[HideInInspector]_StencilOp("Stencil Operation", Float) = 0
+[HideInInspector]_StencilWriteMask("Stencil Write Mask", Float) = 255
+[HideInInspector]_StencilReadMask("Stencil Read Mask", Float) = 255
+[HideInInspector]_ColorMask("Color Mask", Float) = 15
 
-		[Toggle(_STRAIGHT_ALPHA_INPUT)] _StraightAlphaInput("Straight Alpha Texture", Int) = 0
-		[Toggle(_CANVAS_GROUP_COMPATIBLE)] _CanvasGroupCompatible("CanvasGroup Compatible", Int) = 1
+}
 
-		[HideInInspector][Enum(UnityEngine.Rendering.CompareFunction)] _StencilComp ("Stencil Comparison", Float) = 8
-		[HideInInspector] _Stencil ("Stencil ID", Float) = 0
-		[HideInInspector][Enum(UnityEngine.Rendering.StencilOp)] _StencilOp ("Stencil Operation", Float) = 0
-		[HideInInspector] _StencilWriteMask ("Stencil Write Mask", Float) = 255
-		[HideInInspector] _StencilReadMask ("Stencil Read Mask", Float) = 255
+SubShader
+{
 
-		[HideInInspector] _ColorMask ("Color Mask", Float) = 15
+Tags {"Queue" = "Transparent" "IgnoreProjector" = "true" "RenderType" = "Transparent" "PreviewType"="Plane" "CanUseSpriteAtlas"="True" }
+ZWrite Off Blend One One Cull Off
 
-		[Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
+// required for UI.Mask
+Stencil
+{
+Ref [_Stencil]
+Comp [_StencilComp]
+Pass [_StencilOp]
+ReadMask [_StencilReadMask]
+WriteMask [_StencilWriteMask]
+}
 
-		// Outline properties are drawn via custom editor.
-		[HideInInspector] _OutlineWidth("Outline Width", Range(0,8)) = 3.0
-		[HideInInspector] _OutlineColor("Outline Color", Color) = (1,1,0,1)
-		[HideInInspector] _OutlineReferenceTexWidth("Reference Texture Width", Int) = 1024
-		[HideInInspector] _ThresholdEnd("Outline Threshold", Range(0,1)) = 0.25
-		[HideInInspector] _OutlineSmoothness("Outline Smoothness", Range(0,1)) = 1.0
-		[HideInInspector][MaterialToggle(_USE8NEIGHBOURHOOD_ON)] _Use8Neighbourhood("Sample 8 Neighbours", Float) = 1
-		[HideInInspector] _OutlineMipLevel("Outline Mip Level", Range(0,3)) = 0
-	}
+Pass
+{
 
-	SubShader
-	{
-		Tags
-		{
-			"Queue"="Transparent"
-			"IgnoreProjector"="True"
-			"RenderType"="Transparent"
-			"PreviewType"="Plane"
-			"CanUseSpriteAtlas"="True"
-		}
+CGPROGRAM
+#pragma vertex vert
+#pragma fragment frag
+#pragma fragmentoption ARB_precision_hint_fastest
+#include "UnityCG.cginc"
 
-		Stencil
-		{
-			Ref [_Stencil]
-			Comp [_StencilComp]
-			Pass [_StencilOp]
-			ReadMask [_StencilReadMask]
-			WriteMask [_StencilWriteMask]
-		}
+struct appdata_t{
+float4 vertex   : POSITION;
+float4 color    : COLOR;
+float2 texcoord : TEXCOORD0;
+};
 
-		Cull Off
-		Lighting Off
-		ZWrite Off
-		ZTest [unity_GUIZTestMode]
-		Fog { Mode Off }
-		Blend SrcAlpha OneMinusSrcAlpha
-		ColorMask [_ColorMask]
+struct v2f
+{
+float2 texcoord  : TEXCOORD0;
+float4 vertex   : SV_POSITION;
+float4 color    : COLOR;
+};
 
-		Pass
-		{
-			Name "Normal"
+sampler2D _MainTex;
+float _SpriteFade;
+float Disolve_Value;
+float Seed;
 
-		CGPROGRAM
-			#pragma shader_feature _ _STRAIGHT_ALPHA_INPUT
-			#pragma shader_feature _ _CANVAS_GROUP_COMPATIBLE
-			#pragma vertex vert
-			#pragma fragment frag
-			#pragma target 2.0
+v2f vert(appdata_t IN)
+{
+v2f OUT;
+OUT.vertex = UnityObjectToClipPos(IN.vertex);
+OUT.texcoord = IN.texcoord;
+OUT.color = IN.color;
+return OUT;
+}
 
-            #include "UnityCG.cginc"
-			#include "Assets/Spine/Runtime/spine-unity/Shaders/SkeletonGraphic/CGIncludes/Spine-SkeletonGraphic-NormalPass.cginc"
 
-			struct appdata
-            {
-                float4 vertex : POSITION;
-                float4 color : COLOR;
-                float4 uv : TEXCOORD0;
-			};
+float BFXr (float2 c, float seed)
+{
+return frac(43.*sin(c.x+7.*c.y)* seed);
+}
 
-            struct v2f
-            {
-                float4 pos : POSITION;
-                float4 uv : TEXCOORD0;
-                float4 color : COLOR;
-				float localPos : TEXCOORD1;
-            };
+float BFXn (float2 p, float seed)
+{
+float2 i = floor(p), w = p-i, j = float2 (1.,0.);
+w = w*w*(3.-w-w);
+return lerp(lerp(BFXr(i, seed), BFXr(i+j, seed), w.x), lerp(BFXr(i+j.yx, seed), BFXr(i+1., seed), w.x), w.y);
+}
 
-			sampler2D _Tex;  // Base texture for the skeleton
-			float4 _Tex_ST;
-            sampler2D _DissolveNoiseTex;  // Noise texture used for dissolving
-			float4 _DissolveNoiseTex_ST;
-            float _DissolveAmount;  // Controls the dissolve strength
-            float4 _DissolveColor;  // Color of the dissolved part
-            float _Cutoff;  // Threshold to control dissolve
-			float _Size;
+float BFXa (float2 p, float seed)
+{
+float m = 0., f = 2.;
+for ( int i=0; i<9; i++ ){ m += BFXn(f*p, seed)/f; f+=f; }
+return m;
+}
 
-			v2f vert (appdata v)
-            {
-                v2f o;
-                o.pos = UnityObjectToClipPos(v.vertex);
-                o.uv.xy = TRANSFORM_TEX(v.uv,_Tex);
-				o.uv.zw = TRANSFORM_TEX(v.uv,_DissolveNoiseTex);
-                o.color = v.color;
-				o.localPos = v.vertex.xy;
-                return o;
-            }
+float4 BurnFX(float4 txt, float2 uv, float value, float seed, float HDR)
+{
+float t = frac(value*0.9999);
+float4 c = smoothstep(t / 1.2, t + .1, BFXa(3.5*uv, seed));
+c = txt*c;
+c.r = lerp(c.r, c.r*15.0*(1 - c.a), value);
+c.g = lerp(c.g, c.g*10.0*(1 - c.a), value);
+c.b = lerp(c.b, c.b*5.0*(1 - c.a), value);
+c.rgb += txt.rgb*value;
+c.rgb = lerp(saturate(c.rgb),c.rgb,HDR);
+return c;
+}
+float4 frag (v2f i) : COLOR
+{
+float4 _MainTex_1 = tex2D(_MainTex, i.texcoord);
+float4 _Burn_1 = BurnFX(_MainTex_1,i.texcoord,Disolve_Value,Seed,2);
+float4 FinalResult = _Burn_1;
+FinalResult.rgb *= i.color.rgb;
+FinalResult.a = FinalResult.a * _SpriteFade * i.color.a;
+FinalResult.rgb *= FinalResult.a;
+FinalResult.a = saturate(FinalResult.a);
+return FinalResult;
+}
 
-            half4  frag (v2f i) : SV_Target
-            {
-				float2 Coord = lerp(i.uv.xy, i.localPos, _Size);
-                 // Sample the main texture and noise texture
-				 half4 texColor = tex2D(_Tex, Coord);
-				 half noiseValue = tex2D(_DissolveNoiseTex, i.uv.zw).r;
- 
-				 // Apply dissolve based on the dissolve amount and noise texture
-				 float dissolveFactor = smoothstep(_Cutoff - _DissolveAmount, _Cutoff + _DissolveAmount, noiseValue);
- 
-				 // If the dissolve factor is low, apply dissolve color; otherwise, show the original texture
-				 if (dissolveFactor < 0.5)
-				 {
-					 texColor += (_DissolveColor * texColor.a);  // Use the dissolve color for dissolved parts
-				 }
- 
-				 // Apply transparency based on dissolve factor
-				 texColor.a *= dissolveFactor;
- 
-				 return texColor;
-			}
-			ENDCG
-		}
-	}
-	CustomEditor "SpineShaderWithOutlineGUI"
+ENDCG
+}
+}
+Fallback "Sprites/Default"
 }
