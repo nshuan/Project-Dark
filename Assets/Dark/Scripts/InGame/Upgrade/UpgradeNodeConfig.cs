@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Economic;
 using InGame.Upgrade.UI;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -14,8 +15,7 @@ namespace InGame.Upgrade
         public string nodeName; // Name to display
         public UpgradeNodeConfig[] preRequire;
         public string description; // Description to display
-        public int costType; // Type of resource needed to unlock this node
-        public int[] costValue;
+        public UpgradeNodeCostInfo[] costInfo; 
         public int levelNum = 1;
         public UIUpgradeNode nodePrefab;
         [NonSerialized, OdinSerialize] public INodeActivateLogic[] nodeLogic;
@@ -49,6 +49,13 @@ namespace InGame.Upgrade
         }
 
 #endif
+    }
+
+    [Serializable]
+    public class UpgradeNodeCostInfo
+    {
+        public WealthType costType; // Type of resource needed to unlock this node
+        public int[] costValue;
     }
 
     public enum UpgradeNodeState

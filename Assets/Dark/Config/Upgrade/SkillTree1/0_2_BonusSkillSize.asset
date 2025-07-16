@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f1427934e97420e88cdf1eeb6547fc2, type: 3}
-  m_Name: NodePlayerDamage
+  m_Name: 0_2_BonusSkillSize
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -26,18 +26,45 @@ MonoBehaviour:
       Data: 0|InGame.Upgrade.INodeActivateLogic[], Assembly-CSharp
     - Name: 
       Entry: 12
-      Data: 0
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 1|InGame.Upgrade.NodeBonusSkill, Assembly-CSharp
+    - Name: bonusType
+      Entry: 3
+      Data: 2
+    - Name: value
+      Entry: 7
+      Data: 2|System.Single[], mscorlib
+    - Name: 
+      Entry: 14
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 2
     - Name: 
       Entry: 13
       Data: 
     - Name: 
       Entry: 8
       Data: 
-  nodeId: 3
-  nodeName: Node 1
+    - Name: isMultiply
+      Entry: 5
+      Data: true
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  nodeId: 6
+  nodeName: Bonus Skill Size
   preRequire:
-  - {fileID: 11400000, guid: 2363ac40e22384d499d961510d0c2106, type: 2}
+  - {fileID: 11400000, guid: 1a895f024f239ea44980484415f2036a, type: 2}
   description: 
   costInfo: []
   levelNum: 1
-  nodePrefab: {fileID: 2421989148176486716, guid: 6c198e86fc5c7e9418ccde0533ca83e9, type: 3}
+  nodePrefab: {fileID: 5066087006269562924, guid: a2a9a6e8fb3af92499cdbe2f9c55589e, type: 3}

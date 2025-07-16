@@ -137,4 +137,11 @@ namespace Economic
             PlayerDataManager.Instance.Save(data);
         }
     }
+
+    public enum WealthType
+    {
+        Vestige,
+        Echoes,
+        Sigils
+    }
 }
