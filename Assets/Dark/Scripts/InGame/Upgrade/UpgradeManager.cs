@@ -79,7 +79,7 @@ namespace InGame.Upgrade
             bonusInfo = new UpgradeBonusInfo();
             bonusInfo.skillBonus = new UpgradeBonusSkillInfo();
 
-            bonusInfo.effectsMapByTriggerType = new Dictionary<EffectTriggerType, List<EffectType>>();
+            bonusInfo.effectsMapByTriggerType = new Dictionary<PassiveTriggerType, List<PassiveType>>();
                 
             TreeConfig.ActivateTree(Data.nodes, ref bonusInfo);
 
@@ -88,7 +88,7 @@ namespace InGame.Upgrade
             {
                 bonusInfo = testBonusInfo;
                 bonusInfo.skillBonus ??= new UpgradeBonusSkillInfo();
-                bonusInfo.effectsMapByTriggerType ??= new Dictionary<EffectTriggerType, List<EffectType>>();
+                bonusInfo.effectsMapByTriggerType ??= new Dictionary<PassiveTriggerType, List<PassiveType>>();
             }
 #endif
             

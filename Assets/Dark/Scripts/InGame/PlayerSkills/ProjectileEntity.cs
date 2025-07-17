@@ -122,7 +122,7 @@ namespace InGame
                     // Check critical hit
                     var critical = Random.Range(0f, 1f) <= CriticalRate;
                     hitEnemy.Damage(critical ? CriticalDamage : Damage, transform.position, Stagger);
-                    ActionEffectManager.Instance.TriggerEffect(IsCharge ? EffectTriggerType.DameByChargeAttack : EffectTriggerType.DameByNormalAttack, hitEnemy);
+                    PassiveEffectManager.Instance.TriggerEffect(IsCharge ? PassiveTriggerType.DameByChargeAttack : PassiveTriggerType.DameByNormalAttack, hitEnemy);
                     
                     if (critical)
                         DebugUtility.LogWarning($"Projectile {name} deals critical damage {CriticalDamage} to {hitEnemy.name}!!");

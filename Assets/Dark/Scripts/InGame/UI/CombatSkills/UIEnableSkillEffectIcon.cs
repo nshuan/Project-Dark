@@ -6,8 +6,8 @@ namespace InGame.UI.CombatSkills
 {
     public class UIEnableSkillEffectIcon : MonoBehaviour
     {
-        [SerializeField] private EffectTriggerType triggerType;
-        [SerializeField] private UISkillEffectIcon[] effectIcons;
+        [SerializeField] private PassiveTriggerType triggerType;
+        [SerializeField] private UISkillPassiveIcon[] effectIcons;
 
         private void Awake()
         {
@@ -28,7 +28,7 @@ namespace InGame.UI.CombatSkills
                 foreach (var icon in effectIcons)
                 {
                     icon.gameObject.SetActive(false);
-                    if (effectTypes.Any(effectType => icon.effectType == effectType))
+                    if (effectTypes.Any(effectType => icon.passiveType == effectType))
                     {
                         icon.gameObject.SetActive(true);
                     }

@@ -20,8 +20,8 @@ namespace InGame
         private EnemyBehaviour config;
 
         #region Stats
-        private float MaxHealth { get; set; }
-        private float CurrentHealth { get; set; }
+        private int MaxHealth { get; set; }
+        private int CurrentHealth { get; set; }
         private int CurrentDamage { get; set; }
         private int Exp { get; set; }
         private int Dark { get; set; }
@@ -30,6 +30,7 @@ namespace InGame
 
         #endregion
 
+        public float PercentageHpLeft => CurrentHealth / MaxHealth * 100f;
         public Action<int> OnHit { get; set; }
         public Action OnDead { get; set; }
         public EnemyState State { get; set; }
@@ -72,7 +73,7 @@ namespace InGame
             animController.transform.localScale =
                 new Vector3(Mathf.Sign(attackPosition.x - myPos.x), 1f, 1f);
             
-            MaxHealth = config.hp * hpMultiplier;
+            MaxHealth = (int)(config.hp * hpMultiplier);
             CurrentHealth = MaxHealth;
             CurrentDamage = Mathf.RoundToInt(config.dmg * dmgMultiplier);
             Exp = Mathf.RoundToInt(config.exp * levelExpRatio);
@@ -253,6 +254,10 @@ namespace InGame
             }
         }
 
+        public void Kill()
+        {
+            Damage(CurrentHealth, transform.position, 0f);
+        }
         #endregion
     }
 }

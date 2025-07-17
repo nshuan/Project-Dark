@@ -2,11 +2,11 @@ using UnityEngine;
 
 namespace InGame
 {
-    public class EffectBurn : MonoEffectEntity
+    public class PassiveBurn : MonoPassiveEntity
     {
         [SerializeField] private float delayEachBurn = 1f;
         
-        public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, ActionEffectPool pool)
+        public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool)
         {
             target.Burn(size, delayEachBurn, (int)value);
         }

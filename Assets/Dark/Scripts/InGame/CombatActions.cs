@@ -8,6 +8,6 @@ namespace InGame
         public static Action<float> OnAttackCharge { get; set; }
         public static Action<float> OnMoveTower { get; set; }
         public static Action<float> OnTowerCounter { get; set; }
-        public static Action<EffectTriggerType, EffectType, float> OnEffectTriggered { get; set; }
+        public static Action<PassiveTriggerType, PassiveType, float> OnEffectTriggered { get; set; }
     }
 }

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe4ca987c046441a908aae53ed6a9761, type: 3}
-  m_Name: EffectLightningOnHit
+  m_Name: PassiveBurnOnHit
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -23,10 +23,10 @@ MonoBehaviour:
     SerializationNodes: []
   effectId: 1
   triggerType: 0
-  logicType: 1
-  cooldown: 5
+  logicType: 2
+  cooldown: 0
   chance: 1
-  size: 4
-  value: 10
+  size: 5
+  value: 13
   stagger: 0
-  effectPrefab: {fileID: -3467292178509076920, guid: 02efcce4cc6bb3348b298515d4b97b12, type: 3}
+  passivePrefab: {fileID: -8775249359162179865, guid: df8156f692de29746b6af9a581954155, type: 3}
