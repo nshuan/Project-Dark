@@ -6,18 +6,18 @@ using Object = UnityEngine.Object;
 
 namespace InGame
 {
-    public class ActionEffectPool : MonoBehaviour
+    public class PassiveEffectPool : MonoBehaviour
     {
-        private Dictionary<int, Queue<MonoEffectEntity>> queueDict;
+        private Dictionary<int, Queue<MonoPassiveEntity>> queueDict;
 
         private void Awake()
         {
-            queueDict = new Dictionary<int, Queue<MonoEffectEntity>>();
+            queueDict = new Dictionary<int, Queue<MonoPassiveEntity>>();
         }
 
-        public MonoEffectEntity Get(MonoEffectEntity prefab, int effectId, Transform targetParent, bool active = true)
+        public MonoPassiveEntity Get(MonoPassiveEntity prefab, int effectId, Transform targetParent, bool active = true)
         {
-            MonoEffectEntity obj = null;
+            MonoPassiveEntity obj = null;
             if (queueDict.TryGetValue(effectId, out var pool))
             {
                 if (pool.TryDequeue(out obj))
@@ -34,11 +34,11 @@ namespace InGame
 
         }
 
-        public void Release(MonoEffectEntity obj, int effectId)
+        public void Release(MonoPassiveEntity obj, int effectId)
         {
             obj.gameObject.SetActive(false);
             obj.transform.SetParent(transform);
-            queueDict.TryAdd(effectId, new Queue<MonoEffectEntity>());
+            queueDict.TryAdd(effectId, new Queue<MonoPassiveEntity>());
             queueDict[effectId].Enqueue(obj);
         }
     }

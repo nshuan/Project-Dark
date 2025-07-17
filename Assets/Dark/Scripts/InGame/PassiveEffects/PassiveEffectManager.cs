@@ -10,29 +10,29 @@ using Random = UnityEngine.Random;
 
 namespace InGame
 {
-    public class ActionEffectManager : SerializedMonoSingleton<ActionEffectManager>
+    public class PassiveEffectManager : SerializedMonoSingleton<PassiveEffectManager>
     {
-        [NonSerialized, OdinSerialize] private Dictionary<EffectTriggerType, Dictionary<EffectType, ActionEffectConfig>> effectConfigsMap;
-        [SerializeField] private ActionEffectPool pool;
+        [NonSerialized, OdinSerialize] private Dictionary<PassiveTriggerType, Dictionary<PassiveType, PassiveConfig>> effectConfigsMap;
+        [SerializeField] private PassiveEffectPool pool;
         
-        private Dictionary<EffectTriggerType, List<EffectType>> possibleEffectMap;
-        private Dictionary<EffectTriggerType, Dictionary<EffectType, bool>> cooldownEffectMap;
+        private Dictionary<PassiveTriggerType, List<PassiveType>> possibleEffectMap;
+        private Dictionary<PassiveTriggerType, Dictionary<PassiveType, bool>> cooldownEffectMap;
 
         protected override void Awake()
         {
             base.Awake();
-            possibleEffectMap = new Dictionary<EffectTriggerType, List<EffectType>>()
+            possibleEffectMap = new Dictionary<PassiveTriggerType, List<PassiveType>>()
             {
-                { EffectTriggerType.DameByNormalAttack , new List<EffectType>() },
-                { EffectTriggerType.DameByChargeAttack , new List<EffectType>() },
-                { EffectTriggerType.DameByMoveSKill , new List<EffectType>() },
-                { EffectTriggerType.TowerTakeDame , new List<EffectType>() }
+                { PassiveTriggerType.DameByNormalAttack , new List<PassiveType>() },
+                { PassiveTriggerType.DameByChargeAttack , new List<PassiveType>() },
+                { PassiveTriggerType.DameByMoveSKill , new List<PassiveType>() },
+                { PassiveTriggerType.TowerTakeDame , new List<PassiveType>() }
             };
-            cooldownEffectMap = new Dictionary<EffectTriggerType, Dictionary<EffectType, bool>>();
-            foreach (EffectTriggerType triggerType in Enum.GetValues(typeof(EffectTriggerType)))
+            cooldownEffectMap = new Dictionary<PassiveTriggerType, Dictionary<PassiveType, bool>>();
+            foreach (PassiveTriggerType triggerType in Enum.GetValues(typeof(PassiveTriggerType)))
             {
-                var effectMap = new Dictionary<EffectType, bool>();
-                foreach (EffectType effectType in Enum.GetValues(typeof(EffectType)))
+                var effectMap = new Dictionary<PassiveType, bool>();
+                foreach (PassiveType effectType in Enum.GetValues(typeof(PassiveType)))
                 {
                     effectMap[effectType] = false;
                 }
@@ -55,7 +55,7 @@ namespace InGame
 
         #region Trigger
 
-        public void TriggerEffect(EffectTriggerType triggerType, IEffectTarget target)
+        public void TriggerEffect(PassiveTriggerType triggerType, IEffectTarget target)
         {
             if (possibleEffectMap[triggerType] == null) return;
             foreach (var effectConfig in possibleEffectMap[triggerType].Select(effectType => effectConfigsMap[triggerType][effectType]))
@@ -66,7 +66,7 @@ namespace InGame
                 // Calculate chance
                 if (Random.Range(0f, 1f) <= effectConfig.chance)
                 {
-                    pool.Get(effectConfig.effectPrefab, effectConfig.effectId, null, true)
+                    pool.Get(effectConfig.passivePrefab, effectConfig.effectId, null, true)
                         .TriggerEffect(effectConfig.effectId, target, effectConfig.size, effectConfig.value, effectConfig.stagger, pool);
 
                     cooldownEffectMap[triggerType][effectConfig.logicType] = true;
@@ -86,7 +86,7 @@ namespace InGame
         #endregion
     }
 
-    public enum EffectTriggerType
+    public enum PassiveTriggerType
     {
         DameByNormalAttack,
         DameByChargeAttack,
@@ -94,7 +94,7 @@ namespace InGame
         TowerTakeDame
     }
 
-    public enum EffectType
+    public enum PassiveType
     {
         Explosion,
         Lightning,

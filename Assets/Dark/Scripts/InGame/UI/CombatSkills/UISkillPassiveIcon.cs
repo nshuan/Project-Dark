@@ -2,15 +2,16 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace InGame.UI.CombatSkills
 {
-    public class UISkillEffectIcon : MonoBehaviour
+    public class UISkillPassiveIcon : MonoBehaviour
     {
         [SerializeField] private Image imgFillCooldown;
-        [SerializeField] private EffectTriggerType triggerType;
-        public EffectType effectType;
+        [SerializeField] private PassiveTriggerType triggerType;
+        [FormerlySerializedAs("effectType")] public PassiveType passiveType;
 
         private void Start()
         {
@@ -28,9 +29,9 @@ namespace InGame.UI.CombatSkills
             imgFillCooldown.gameObject.SetActive(false);
         }
 
-        private void OnEffectTriggered(EffectTriggerType triggerType, EffectType effectType, float cooldown)
+        private void OnEffectTriggered(PassiveTriggerType triggerType, PassiveType passiveType, float cooldown)
         {
-            if (triggerType == this.triggerType && effectType == this.effectType)
+            if (triggerType == this.triggerType && passiveType == this.passiveType)
             {
                 StartCoroutine(IECooldown(cooldown));
             }

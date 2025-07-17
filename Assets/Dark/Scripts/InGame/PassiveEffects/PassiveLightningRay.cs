@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace InGame
 {
-    public class EffectLightningRay : MonoEffectEntity
+    public class PassiveLightningRay : MonoPassiveEntity
     {
         [SerializeField] private int maxHit = 5;
         [SerializeField] private float delayEachHit = 0.05f;
@@ -26,7 +26,7 @@ namespace InGame
             hitOrder = new Transform[maxHit];
         }
 
-        public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, ActionEffectPool pool)
+        public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool)
         {
             transform.position = target.Position;
             this.Position = target.Position;

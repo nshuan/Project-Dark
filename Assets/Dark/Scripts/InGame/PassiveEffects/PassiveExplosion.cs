@@ -4,14 +4,14 @@ using UnityEngine;
 
 namespace InGame
 {
-    public class EffectExplosion : MonoEffectEntity
+    public class PassiveExplosion : MonoPassiveEntity
     {
         private Vector2 Position { get; set; }
         private float Stagger { get; set; }
         private RaycastHit2D[] hits = new RaycastHit2D[50];
         private IDamageable hitTarget;
         
-        public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, ActionEffectPool pool)
+        public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool)
         {
             transform.position = target.Position;
             this.Position = target.Position;
@@ -24,7 +24,7 @@ namespace InGame
                     targetLayer);
                 if (count > 0)
                 {
-                    for (int i = 0; i < count; i++)
+                    for (var i = 0; i < count; i++)
                     {
                         ExplosionHit(hits[i].transform, value);
                     }
