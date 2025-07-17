@@ -6,6 +6,8 @@ namespace InGame
 {
     public class PassiveExplosion : MonoPassiveEntity
     {
+        [SerializeField] private float vfxDuration = 1f;
+        
         private Vector2 Position { get; set; }
         private float Stagger { get; set; }
         private RaycastHit2D[] hits = new RaycastHit2D[50];
@@ -37,10 +39,10 @@ namespace InGame
 
         private IEnumerator IEExplode(Action actionDamage, Action actionComplete)
         {
-            yield return new WaitForSeconds(0.5f);
+            // yield return new WaitForSeconds(0.5f);
             actionDamage?.Invoke();
 
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(vfxDuration);
             actionComplete?.Invoke();
         }
 
