@@ -1,12 +1,7 @@
-using System;
 using System.Linq;
-using DefaultNamespace;
 using DG.Tweening;
 using InGame.Effects;
-using InGame.Trap;
 using UnityEngine;
-using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 namespace InGame
 {
