@@ -34,8 +34,10 @@ namespace InGame.Upgrade
 
         private void InitData()
         {
-            // data = DataHandler.Load<UpgradeData>(DataKey, new UpgradeData(TreeConfig.nodeMapById));
+            data = DataHandler.Load<UpgradeData>(DataKey, new UpgradeData(TreeConfig.nodeMapById));
+#if UNITY_EDITOR
             data = new UpgradeData(TreeConfig.nodeMapById);
+#endif
             nodeMapById = new Dictionary<int, UpgradeNodeData>();
             foreach (var node in data.nodes)
             {

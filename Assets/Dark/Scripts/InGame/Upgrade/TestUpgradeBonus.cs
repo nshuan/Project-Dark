@@ -9,7 +9,7 @@ namespace InGame.Upgrade
     {
         [SerializeField] private bool enableTest;
         
-        [NonSerialized, OdinSerialize] private UpgradeBonusInfo testBonusInfo;
+        [NonSerialized, OdinSerialize] public UpgradeBonusInfo testBonusInfo;
 
         private void Awake()
         {
