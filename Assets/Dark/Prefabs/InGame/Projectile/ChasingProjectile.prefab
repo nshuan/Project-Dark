@@ -43,7 +43,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 302550039386543899}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea154d6727b14e278fb0fb31676f547f, type: 3}
+  m_Script: {fileID: 11500000, guid: fb586f328b7b46238302b830809db73e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   visual: {fileID: 4061838904119107088}
@@ -52,7 +52,34 @@ MonoBehaviour:
     m_Bits: 8
   baseDamageRange: 0.051
   baseSpeed: 5
+  activateTime: 0.7
+  activateSpeed: 1.5
   rotateSpeed: 420
+  speedCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  timeToReachMaxSpeed: 1.5
 --- !u!96 &7452188291282449498
 TrailRenderer:
   serializedVersion: 3
