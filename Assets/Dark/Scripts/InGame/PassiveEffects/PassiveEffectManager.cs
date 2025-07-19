@@ -21,13 +21,7 @@ namespace InGame
         protected override void Awake()
         {
             base.Awake();
-            possibleEffectMap = new Dictionary<PassiveTriggerType, List<PassiveType>>()
-            {
-                { PassiveTriggerType.DameByNormalAttack , new List<PassiveType>() },
-                { PassiveTriggerType.DameByChargeAttack , new List<PassiveType>() },
-                { PassiveTriggerType.DameByMoveSKill , new List<PassiveType>() },
-                { PassiveTriggerType.TowerTakeDame , new List<PassiveType>() }
-            };
+            
             cooldownEffectMap = new Dictionary<PassiveTriggerType, Dictionary<PassiveType, bool>>();
             foreach (PassiveTriggerType triggerType in Enum.GetValues(typeof(PassiveTriggerType)))
             {
@@ -44,6 +38,14 @@ namespace InGame
 
         private void OnBonusActivated(UpgradeBonusInfo bonusInfo)
         {
+            possibleEffectMap = new Dictionary<PassiveTriggerType, List<PassiveType>>()
+            {
+                { PassiveTriggerType.DameByNormalAttack , new List<PassiveType>() },
+                { PassiveTriggerType.DameByChargeAttack , new List<PassiveType>() },
+                { PassiveTriggerType.DameByMoveSKill , new List<PassiveType>() },
+                { PassiveTriggerType.TowerTakeDame , new List<PassiveType>() }
+            };
+            
             foreach (var pair in bonusInfo.effectsMapByTriggerType)
             {
                 foreach (var effect in pair.Value)
