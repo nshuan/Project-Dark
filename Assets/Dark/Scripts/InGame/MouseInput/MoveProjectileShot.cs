@@ -195,6 +195,7 @@ namespace InGame
             mousePosition = Input.mousePosition;
             mousePosition.z = 0; // Set z to 0 for 2D
             cursorRect.position = mousePosition;    
+            InputManager.playerVisual.SetDirection(worldMousePosition);
             
             // Cooldown if player can not shoot
             if (!CanShoot)

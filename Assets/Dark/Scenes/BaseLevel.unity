@@ -875,7 +875,7 @@ GameObject:
   m_Component:
   - component: {fileID: 195428014}
   - component: {fileID: 195428016}
-  - component: {fileID: 195428015}
+  - component: {fileID: 195428017}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -892,100 +892,12 @@ Transform:
   m_GameObject: {fileID: 195428013}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.44, y: 0.15, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 802371195}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &195428015
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 195428013}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1696d66978c6449897aa3bacfcacdbe9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  idleAnim:
-    frames:
-    - {fileID: -2093557937, guid: e848ebc9503489a4bb2d027a4915f9c4, type: 3}
-    - {fileID: 1829308760, guid: e848ebc9503489a4bb2d027a4915f9c4, type: 3}
-    - {fileID: 1841339217, guid: e848ebc9503489a4bb2d027a4915f9c4, type: 3}
-    - {fileID: 2016077914, guid: e848ebc9503489a4bb2d027a4915f9c4, type: 3}
-    - {fileID: -965166234, guid: e848ebc9503489a4bb2d027a4915f9c4, type: 3}
-    - {fileID: -979421664, guid: e848ebc9503489a4bb2d027a4915f9c4, type: 3}
-    - {fileID: 1922438614, guid: e848ebc9503489a4bb2d027a4915f9c4, type: 3}
-    - {fileID: -1812518846, guid: e848ebc9503489a4bb2d027a4915f9c4, type: 3}
-    - {fileID: 962038340, guid: e848ebc9503489a4bb2d027a4915f9c4, type: 3}
-    - {fileID: 1081855088, guid: e848ebc9503489a4bb2d027a4915f9c4, type: 3}
-    - {fileID: -30804288, guid: e848ebc9503489a4bb2d027a4915f9c4, type: 3}
-    - {fileID: 989293019, guid: e848ebc9503489a4bb2d027a4915f9c4, type: 3}
-    - {fileID: -604690825, guid: e848ebc9503489a4bb2d027a4915f9c4, type: 3}
-    - {fileID: 1868361036, guid: e848ebc9503489a4bb2d027a4915f9c4, type: 3}
-    - {fileID: -1358636500, guid: e848ebc9503489a4bb2d027a4915f9c4, type: 3}
-    - {fileID: -1580850109, guid: e848ebc9503489a4bb2d027a4915f9c4, type: 3}
-    - {fileID: 1732968924, guid: e848ebc9503489a4bb2d027a4915f9c4, type: 3}
-    - {fileID: -627138735, guid: e848ebc9503489a4bb2d027a4915f9c4, type: 3}
-    - {fileID: -745495964, guid: e848ebc9503489a4bb2d027a4915f9c4, type: 3}
-    - {fileID: -2090195947, guid: e848ebc9503489a4bb2d027a4915f9c4, type: 3}
-    isLoop: 1
-    frameRate: 0.1
-    autoExit: 0
-  attackAnim:
-    frames:
-    - {fileID: -2111933021, guid: da4f624d2b64bbb4ba910510258b50d8, type: 3}
-    - {fileID: 1986416122, guid: da4f624d2b64bbb4ba910510258b50d8, type: 3}
-    - {fileID: 237594898, guid: da4f624d2b64bbb4ba910510258b50d8, type: 3}
-    - {fileID: 777093355, guid: da4f624d2b64bbb4ba910510258b50d8, type: 3}
-    - {fileID: 1476311051, guid: da4f624d2b64bbb4ba910510258b50d8, type: 3}
-    - {fileID: 451470494, guid: da4f624d2b64bbb4ba910510258b50d8, type: 3}
-    - {fileID: -464815260, guid: da4f624d2b64bbb4ba910510258b50d8, type: 3}
-    - {fileID: 1197328464, guid: da4f624d2b64bbb4ba910510258b50d8, type: 3}
-    - {fileID: -1234983883, guid: da4f624d2b64bbb4ba910510258b50d8, type: 3}
-    - {fileID: -1185127316, guid: da4f624d2b64bbb4ba910510258b50d8, type: 3}
-    - {fileID: -2096479279, guid: da4f624d2b64bbb4ba910510258b50d8, type: 3}
-    - {fileID: 1219550886, guid: da4f624d2b64bbb4ba910510258b50d8, type: 3}
-    - {fileID: 391598119, guid: da4f624d2b64bbb4ba910510258b50d8, type: 3}
-    - {fileID: 831072957, guid: da4f624d2b64bbb4ba910510258b50d8, type: 3}
-    isLoop: 0
-    frameRate: 0.1
-    autoExit: 1
-    strikeFrameIndex: 0
-  specialAttackAnim:
-    frames:
-    - {fileID: 357234197, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: 214274736, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: 1711956354, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: -1440978692, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: -831097459, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: -1547307834, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: 138296435, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: -178920933, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: -1454642921, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: 133085273, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: -607740150, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: -1577919113, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: -1176132612, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: 1735896226, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: -1488054011, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: -619451982, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: -1944272976, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: 10305627, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: 753337695, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: -205822296, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: -1834711927, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: -170635327, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: -1050324003, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: -379870418, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: 1578770378, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    - {fileID: -1401123459, guid: ebcebf85770126c4c89e985fe4e9b1d4, type: 3}
-    isLoop: 0
-    frameRate: 0.1
-    autoExit: 1
 --- !u!212 &195428016
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1027,7 +939,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -2093557937, guid: e848ebc9503489a4bb2d027a4915f9c4, type: 3}
+  m_Sprite: {fileID: -976981357, guid: c1b20a6b80e620049ab0bd32bc9f8e30, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1038,6 +950,1070 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &195428017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 195428013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73b26ff238084b638c5f04b56f8a722a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 1070497854, guid: c1b20a6b80e620049ab0bd32bc9f8e30, type: 3}
+    - {fileID: 410906656, guid: c1b20a6b80e620049ab0bd32bc9f8e30, type: 3}
+    - {fileID: -1595772851, guid: c1b20a6b80e620049ab0bd32bc9f8e30, type: 3}
+    - {fileID: -92842698, guid: c1b20a6b80e620049ab0bd32bc9f8e30, type: 3}
+    - {fileID: -976981357, guid: c1b20a6b80e620049ab0bd32bc9f8e30, type: 3}
+    - {fileID: -1105399820, guid: c1b20a6b80e620049ab0bd32bc9f8e30, type: 3}
+    - {fileID: -1496024495, guid: c1b20a6b80e620049ab0bd32bc9f8e30, type: 3}
+    - {fileID: 56270223, guid: c1b20a6b80e620049ab0bd32bc9f8e30, type: 3}
+    - {fileID: 17870180, guid: c1b20a6b80e620049ab0bd32bc9f8e30, type: 3}
+    - {fileID: -787819051, guid: c1b20a6b80e620049ab0bd32bc9f8e30, type: 3}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: directionInfo
+      Entry: 7
+      Data: 0|System.Collections.Generic.List`1[[InGame.Player8DirectionsAnimation+DirectionInfo,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 10
+    - Name: 
+      Entry: 7
+      Data: 1|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
+    - Name: idleAnim
+      Entry: 7
+      Data: 2|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 3|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: true
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attackAnim
+      Entry: 7
+      Data: 4|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 5|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: specialAttackAnim
+      Entry: 7
+      Data: 6|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 7|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 8|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
+    - Name: idleAnim
+      Entry: 7
+      Data: 9|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 10|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: true
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attackAnim
+      Entry: 7
+      Data: 11|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 12|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: specialAttackAnim
+      Entry: 7
+      Data: 13|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 14|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 15|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
+    - Name: idleAnim
+      Entry: 7
+      Data: 16|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 17|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 2
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: true
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attackAnim
+      Entry: 7
+      Data: 18|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 19|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 2
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: specialAttackAnim
+      Entry: 7
+      Data: 20|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 21|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 2
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 22|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
+    - Name: idleAnim
+      Entry: 7
+      Data: 23|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 24|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 3
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: true
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attackAnim
+      Entry: 7
+      Data: 25|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 26|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 3
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: specialAttackAnim
+      Entry: 7
+      Data: 27|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 28|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 3
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 29|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
+    - Name: idleAnim
+      Entry: 7
+      Data: 30|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 31|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 4
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: true
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attackAnim
+      Entry: 7
+      Data: 32|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 33|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 4
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: specialAttackAnim
+      Entry: 7
+      Data: 34|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 35|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 4
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 36|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
+    - Name: idleAnim
+      Entry: 7
+      Data: 37|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 38|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 5
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: true
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attackAnim
+      Entry: 7
+      Data: 39|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 40|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 5
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: specialAttackAnim
+      Entry: 7
+      Data: 41|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 42|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 5
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 43|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
+    - Name: idleAnim
+      Entry: 7
+      Data: 44|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 45|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 6
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: true
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attackAnim
+      Entry: 7
+      Data: 46|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 47|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 6
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: specialAttackAnim
+      Entry: 7
+      Data: 48|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 49|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 6
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 50|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
+    - Name: idleAnim
+      Entry: 7
+      Data: 51|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 52|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 7
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: true
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attackAnim
+      Entry: 7
+      Data: 53|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 54|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 7
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: specialAttackAnim
+      Entry: 7
+      Data: 55|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 56|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 7
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 57|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
+    - Name: idleAnim
+      Entry: 7
+      Data: 58|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 59|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 8
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: true
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attackAnim
+      Entry: 7
+      Data: 60|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 61|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 8
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: specialAttackAnim
+      Entry: 7
+      Data: 62|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 63|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 8
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 64|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
+    - Name: idleAnim
+      Entry: 7
+      Data: 65|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 66|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 9
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: true
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attackAnim
+      Entry: 7
+      Data: 67|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 68|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 9
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: specialAttackAnim
+      Entry: 7
+      Data: 69|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: frames
+      Entry: 7
+      Data: 70|UnityEngine.Sprite[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 9
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
 --- !u!1 &201206796
 GameObject:
   m_ObjectHideFlags: 0
@@ -1845,7 +2821,6 @@ MonoBehaviour:
   dashEffect: {fileID: 128225124}
   weapon: {fileID: 975210443}
   offset: {x: 0, y: 0}
-  range: {fileID: 201206797}
 --- !u!1 &294182788
 GameObject:
   m_ObjectHideFlags: 0
@@ -2803,51 +3778,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 375364689}
   m_CullTransparentMesh: 1
---- !u!1 &392527631
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 392527632}
-  - component: {fileID: 392527633}
-  m_Layer: 0
-  m_Name: LightningTrapPool
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &392527632
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 392527631}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 486853529}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &392527633
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 392527631}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab0e307b11b1482fb36988263884d7fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _prefab: {fileID: 0}
 --- !u!1 &423805650
 GameObject:
   m_ObjectHideFlags: 0
@@ -2970,7 +3900,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1851111459}
-  - {fileID: 486853529}
   - {fileID: 152635618}
   - {fileID: 544949212}
   m_Father: {fileID: 0}
@@ -3022,38 +3951,6 @@ MonoBehaviour:
   tower: {fileID: 495117603}
   canCounter: 0
   config: {fileID: 0}
---- !u!1 &486853528
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 486853529}
-  m_Layer: 0
-  m_Name: TrapPools
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &486853529
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 486853528}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 392527632}
-  m_Father: {fileID: 426610612}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &495117600
 GameObject:
   m_ObjectHideFlags: 0
@@ -4470,7 +5367,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f911c3b9b69241209bc499fa5a3a7ae3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spritesAnim: {fileID: 195428015}
+  spritesAnim: {fileID: 195428017}
 --- !u!1 &813175323
 GameObject:
   m_ObjectHideFlags: 0
@@ -8555,7 +9452,7 @@ MonoBehaviour:
       Data: 1
     - Name: 
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: 
       Entry: 13
       Data: 

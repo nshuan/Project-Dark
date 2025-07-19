@@ -4,7 +4,7 @@ namespace InGame
 {
     public class PlayerAnimController : MonoBehaviour
     {
-        [SerializeField] private PlayerSpritesAnimation spritesAnim;
+        [SerializeField] private Player8DirectionsAnimation spritesAnim;
         
         public void PlayIdle()
         {
@@ -12,7 +12,8 @@ namespace InGame
         }
 
         // Return the duration to finish the 1st animation phase, when the skill is actually strike
-        public float PlayAttack()
+        // (1st anim phase, full duration)
+        public (float, float) PlayAttack()
         {
             return spritesAnim.PlayAttack();
         }
@@ -20,6 +21,11 @@ namespace InGame
         public void PlayDie()
         {
             spritesAnim.PlaySpecialAttack();   
+        }
+
+        public void SetDirection(Vector2 direction)
+        {
+            spritesAnim.UpdateRotation(direction);
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using InGame.Effects;
 using UnityEngine;
 
@@ -15,30 +16,29 @@ namespace InGame
         [Space] [Header("Config")] 
         [SerializeField] private Vector2 offset;
 
-        [Space] [Header("Visual")] 
-        [SerializeField] private Transform range;
+        private bool blockRotate;
         
-        private void Start()
-        {
-            LevelManager.Instance.OnChangeSkill += OnChangeSkill;
-        }
-
         // Return the duration to finish the 1st animation phase, when the skill is actually strike
         public float PlayShoot(Vector2 target)
         {
-            transform.localScale =
-                new Vector3(Mathf.Sign(target.x - transform.position.x), 1f, 1f);
-            return animController.PlayAttack();
+            // transform.localScale =
+            //     new Vector3(Mathf.Sign(target.x - transform.position.x), 1f, 1f);
+            var attackDuration = animController.PlayAttack();
+            blockRotate = true;
+            StartCoroutine(IEBlockRotate(attackDuration.Item2));
+            return attackDuration.Item1;
         }
 
-        private void OnChangeSkill(PlayerSkillConfig skillConfig)
+        private IEnumerator IEBlockRotate(float duration)
         {
-            range.localScale = skillConfig.range * Vector3.one;
+            yield return new WaitForSeconds(duration);
+            blockRotate = false;
         }
 
-        public void SetRangeVisual(bool active)
+        public void SetDirection(Vector3 target)
         {
-            range.gameObject.SetActive(active);
+            if (blockRotate) return;
+            animController.SetDirection(target - transform.position);
         }
 
         public void PlayDashEffect()
