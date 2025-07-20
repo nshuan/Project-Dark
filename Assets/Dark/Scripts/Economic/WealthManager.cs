@@ -125,7 +125,7 @@ namespace Economic
             bossPoint = data.bossPoint;
         }
 
-        private void Save()
+        public void Save()
         {
             var data = PlayerDataManager.Instance.Data;
             data.grade = grade;

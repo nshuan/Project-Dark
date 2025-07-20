@@ -22,7 +22,13 @@ namespace InGame.UI.Economic
             WealthManager.Instance.OnUpGrade += OnUpGrade;
             WealthManager.Instance.OnExpChanged += OnExpChanged;
         }
-        
+
+        private void OnDestroy()
+        {
+            WealthManager.Instance.OnUpGrade -= OnUpGrade;
+            WealthManager.Instance.OnExpChanged -= OnExpChanged;
+        }
+
         private void OnUpGrade(int newGrade)
         {
             grade = newGrade;

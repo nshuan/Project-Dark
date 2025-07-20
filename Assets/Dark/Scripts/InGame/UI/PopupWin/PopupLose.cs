@@ -1,27 +1,27 @@
-using System;
 using Dark.Scripts.CoreUI;
 using Dark.Scripts.SceneNavigation;
 using Economic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace InGame.UI
 {
-    public class PopupWin : MonoBehaviour
+    public class PopupLose : MonoBehaviour
     {
         [SerializeField] private UIPopup ui;
         [SerializeField] private GameObject imgBlockRaycast;
         
         [Space]
         [SerializeField] private Button btnBackToTree;
-        [SerializeField] private Button btnNextLevel;
+        [SerializeField] private Button btnReplay;
 
         private void Start()
         {
-            LevelManager.Instance.OnWin += OnWin;
+            LevelManager.Instance.OnLose += OnLose;
         }
 
-        private void OnWin()
+        private void OnLose()
         {
             WealthManager.Instance.Save();
             UpdateUI();

@@ -10,9 +10,7 @@ namespace InGame
     public class PlayerSkillConfig : SerializedScriptableObject
     {
         public int skillId;
-        public PlayerSkillType skillType;
-        public ProjectileEntity projectilePrefab;
-        public ProjectileEntity chargeProjectilePrefab;
+        public Dictionary<PlayerProjectileType, ProjectileEntity> projectiles;
         [NonSerialized, OdinSerialize] public PlayerSkillBehaviour shootLogic;
         public int damePerBullet; // bullet base damage
         public int numberOfBullets = 1; // number of bullets in each shot
@@ -60,8 +58,11 @@ namespace InGame
         }
     }
 
-    public enum PlayerSkillType
+    public enum PlayerProjectileType
     {
-        
+        Normal,
+        ChargeBullet,
+        NormalDame,
+        NormalAttackSpeed
     }
 }

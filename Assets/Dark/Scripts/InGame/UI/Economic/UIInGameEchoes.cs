@@ -17,6 +17,11 @@ namespace InGame.UI.Economic
             WealthManager.Instance.OnLevelPointChanged += OnLevelPointChanged;
         }
         
+        private void OnDestroy()
+        {
+            WealthManager.Instance.OnLevelPointChanged -= OnLevelPointChanged;
+        }
+        
         private void UpdateUI()
         {
             txtLevelPoint.SetText($"{levelPoint}");

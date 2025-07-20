@@ -1,3 +1,4 @@
+using System;
 using Economic;
 using TMPro;
 using UnityEngine;
@@ -17,7 +18,12 @@ namespace InGame.UI.Economic
 
             WealthManager.Instance.OnBossPointChanged += OnBossPointChanged;
         }
-        
+
+        private void OnDestroy()
+        {
+            WealthManager.Instance.OnBossPointChanged -= OnBossPointChanged;
+        }
+
         private void UpdateUI()
         {
             txtBossPoint.SetText($"{bossPoint}");

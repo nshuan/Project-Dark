@@ -224,6 +224,7 @@ namespace InGame
         private IEnumerator IEDie(float delayAnim, float delayRelease)
         {
             yield return new WaitForSeconds(delayAnim);
+            
             WealthManager.Instance.AddExp(Exp);
             if (Random.Range(0f, 0f) <= DarkRatio)
                 WealthManager.Instance.AddDark(Dark);

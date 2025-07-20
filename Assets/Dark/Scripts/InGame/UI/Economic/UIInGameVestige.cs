@@ -17,7 +17,12 @@ namespace InGame.UI.Economic
             
             WealthManager.Instance.OnDarkChanged += OnDarkChanged;
         }
-        
+
+        private void OnDestroy()
+        {
+            WealthManager.Instance.OnDarkChanged -= OnDarkChanged;
+        }
+
         private void UpdateUI()
         {
             txtDark.SetText($"{dark}");

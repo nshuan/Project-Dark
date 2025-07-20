@@ -108,8 +108,8 @@ namespace InGame
                 
                 InputManager.CurrentSkillConfig.Shoot(
                     bulletAdd > 0
-                        ? InputManager.CurrentSkillConfig.chargeProjectilePrefab
-                        : InputManager.CurrentSkillConfig.projectilePrefab,
+                        ? InputManager.CurrentSkillConfig.projectiles[PlayerProjectileType.ChargeBullet]
+                        : InputManager.CurrentSkillConfig.projectiles[PlayerProjectileType.Normal],
                     InputManager.CursorRangeCenter.position, 
                     tempMousePos,
                     damage,

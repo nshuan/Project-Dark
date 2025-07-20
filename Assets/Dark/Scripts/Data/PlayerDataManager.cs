@@ -7,7 +7,7 @@ namespace Data
 {
     public class PlayerDataManager : Singleton<PlayerDataManager>
     {
-        private const string SavePath = "/playerData.json";
+        private const string DataKey = "playerData";
         
         private PlayerData data;
         public PlayerData Data => data;
@@ -19,14 +19,14 @@ namespace Data
         
         public void Initialize()
         {
-            data = DataHandler.Load<PlayerData>(SavePath) ?? new PlayerData();
+            data = DataHandler.Load<PlayerData>(DataKey) ?? new PlayerData();
         }
         
         #region SAVE LOAD
 
         public void Save()
         {
-            DataHandler.Save(SavePath, data);    
+            DataHandler.Save(DataKey, data);    
         }
 
         public void Save(PlayerData newData)
