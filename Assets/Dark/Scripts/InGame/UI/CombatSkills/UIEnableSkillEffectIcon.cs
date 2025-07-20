@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using InGame.Upgrade;
 using UnityEngine;
@@ -17,6 +18,11 @@ namespace InGame.UI.CombatSkills
             }
 
             UpgradeManager.Instance.OnActivated += OnUpgradeBonusActivated;
+        }
+
+        private void OnDestroy()
+        {
+            UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
         }
 
         private void OnUpgradeBonusActivated(UpgradeBonusInfo bonusInfo)

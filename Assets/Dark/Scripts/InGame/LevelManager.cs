@@ -55,11 +55,11 @@ namespace InGame
         #endregion
         
         private WinLoseManager winLoseManager;
-
-        private void Start()
-        {
-            LoadLevel(testLevel);
-        }
+        
+        // private void Start()
+        // {
+        //     LoadLevel(testLevel);
+        // }
 
         protected override void OnDestroy()
         {

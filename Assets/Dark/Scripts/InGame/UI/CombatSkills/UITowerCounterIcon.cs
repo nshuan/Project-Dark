@@ -16,6 +16,13 @@ namespace InGame.UI.CombatSkills
             
             UpgradeManager.Instance.OnActivated += OnUpgradeBonusActivated;
         }
+        
+        private void OnDestroy()
+        {
+            if (!available) return;
+            CombatActions.OnTowerCounter -= OnSkillUsed;
+            UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
+        }
 
         private void OnUpgradeBonusActivated(UpgradeBonusInfo bonusInfo)
         {
@@ -33,12 +40,6 @@ namespace InGame.UI.CombatSkills
                 skillIcon.SetActive(false);
                 effectIconParent.SetActive(false);
             }
-        }
-
-        private void OnDestroy()
-        {
-            if (!available) return;
-            CombatActions.OnTowerCounter -= OnSkillUsed;
         }
     }
 }

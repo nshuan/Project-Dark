@@ -17,6 +17,13 @@ namespace InGame.UI.CombatSkills
             UpgradeManager.Instance.OnActivated += OnUpgradeBonusActivated;
         }
 
+        private void OnDestroy()
+        {
+            if (!available) return;
+            CombatActions.OnAttackCharge -= OnSkillUsed;
+            UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
+        }
+
         private void OnUpgradeBonusActivated(UpgradeBonusInfo bonusInfo)
         {
             if (bonusInfo.skillBonus.unlockedChargeDame ||
@@ -36,12 +43,6 @@ namespace InGame.UI.CombatSkills
                 skillIcon.SetActive(false);
                 effectIconParent.SetActive(false);
             }
-        }
-
-        private void OnDestroy()
-        {
-            if (!available) return;
-            CombatActions.OnAttackCharge -= OnSkillUsed;
         }
     }
 }
