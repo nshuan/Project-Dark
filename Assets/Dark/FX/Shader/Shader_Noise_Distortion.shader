@@ -20,6 +20,13 @@ Shader "MyShader/Shader_Noise_Distortion"
 
         _ColorMask ("Color Mask", Float) = 15
 
+        [Enum(UnityEngine.Rendering.BlendMode)]
+        _SrcFactor("Src Factor", Float) = 5
+        [Enum(UnityEngine.Rendering.BlendMode)]
+        _DstFactor("Dst Factor", Float) = 10
+        [Enum(UnityEngine.Rendering.BlendOp)]
+        _Opp("Operation", Float) = 0
+
         [Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
     }
 
@@ -47,7 +54,8 @@ Shader "MyShader/Shader_Noise_Distortion"
         Lighting Off
         ZWrite Off
         ZTest [unity_GUIZTestMode]
-        Blend SrcAlpha OneMinusSrcAlpha
+        Blend [_SrcFactor] [_DstFactor]
+        BlendOp [_Opp]
         ColorMask [_ColorMask]
 
         Pass

@@ -3,7 +3,7 @@ Shader "MyShader/Shader_UV_Offset"
 {
 Properties
 {
-[PerRendererData] _MainTex("Sprite Texture", 2D) = "white" {}
+_MainTex("Sprite Texture", 2D) = "white" {}
 AnimatedMouvementUV_X_1("AnimatedMouvementUV_X_1", Range(-1, 1)) = 0.268
 AnimatedMouvementUV_Y_1("AnimatedMouvementUV_Y_1", Range(-1, 1)) = 0.554
 AnimatedMouvementUV_Speed_1("AnimatedMouvementUV_Speed_1", Range(-1, 1)) = 0.239
@@ -23,8 +23,7 @@ _SpriteFade("SpriteFade", Range(0, 1)) = 1.0
 SubShader
 {
 
-Tags {"Queue" = "Transparent" "IgnoreProjector" = "true" "RenderType" = "Transparent" "PreviewType"="Plane" "CanUseSpriteAtlas"="True" }
-ZWrite Off Blend SrcAlpha OneMinusSrcAlpha Cull Off
+Tags {"Queue" = "Transparent" "IgnoreProjector" = "True" "RenderType" = "Transparent" "PreviewType"="Plane" "CanUseSpriteAtlas"="True" }
 
 // required for UI.Mask
 Stencil
@@ -36,6 +35,13 @@ ReadMask [_StencilReadMask]
 WriteMask [_StencilWriteMask]
 }
 
+ZWrite Off
+Blend One One
+Cull Off
+Lighting Off
+ZTest [unity_GUIZTestMode]
+ColorMask [_ColorMask]
+
 Pass
 {
 
@@ -45,7 +51,8 @@ CGPROGRAM
 #pragma fragmentoption ARB_precision_hint_fastest
 #include "UnityCG.cginc"
 
-struct appdata_t{
+struct appdata_t
+{
 float4 vertex   : POSITION;
 float4 color    : COLOR;
 float2 texcoord : TEXCOORD0;
@@ -59,6 +66,7 @@ float4 color    : COLOR;
 };
 
 sampler2D _MainTex;
+float4 _MainTex_ST;
 float _SpriteFade;
 float AnimatedMouvementUV_X_1;
 float AnimatedMouvementUV_Y_1;
@@ -69,7 +77,7 @@ v2f vert(appdata_t IN)
 {
 v2f OUT;
 OUT.vertex = UnityObjectToClipPos(IN.vertex);
-OUT.texcoord = IN.texcoord;
+OUT.texcoord = TRANSFORM_TEX(IN.texcoord, _MainTex);
 OUT.color = IN.color;
 return OUT;
 }
