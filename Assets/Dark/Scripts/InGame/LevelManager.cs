@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Core;
+using Economic;
 using InGame.Upgrade;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -56,10 +57,10 @@ namespace InGame
         
         private WinLoseManager winLoseManager;
         
-        // private void Start()
-        // {
-        //     LoadLevel(testLevel);
-        // }
+        private void Start()
+        {
+            LoadLevel(testLevel);
+        }
 
         protected override void OnDestroy()
         {
@@ -99,6 +100,9 @@ namespace InGame
         public void WinLevel()
         {
             if (IsEndLevel) return;
+            
+            WealthManager.Instance.Save();
+            
             DebugUtility.LogError($"Level {Level.level} is ended: WIN");
             IsEndLevel = true;
             OnWin?.Invoke();
@@ -108,6 +112,9 @@ namespace InGame
         public void LoseLevel()
         {
             if (IsEndLevel) return;
+            
+            WealthManager.Instance.Save();
+            
             DebugUtility.LogError($"Level {Level.level} is ended: LOSE");
             IsEndLevel = true;
             OnLose?.Invoke();    

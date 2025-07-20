@@ -101,12 +101,6 @@ namespace InGame
             if (Towers == null) return;
             if (!CanMove) return;
             IsActivate = true;
-            foreach (var tower in Towers)
-            {
-                if (tower.IsDestroyed) continue;
-                if (tower.Id == CurrentTowerIndex) continue;
-                tower.Highlight(true);
-            }
         }
 
         public void OnDeactivated()
@@ -115,7 +109,6 @@ namespace InGame
             IsActivate = false;
             foreach (var tower in Towers)
             {
-                tower.Highlight(false);
                 tower.Hover(false);
             }
         }

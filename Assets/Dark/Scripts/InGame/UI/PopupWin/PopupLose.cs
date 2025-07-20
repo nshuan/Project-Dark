@@ -23,7 +23,6 @@ namespace InGame.UI
 
         private void OnLose()
         {
-            WealthManager.Instance.Save();
             UpdateUI();
             imgBlockRaycast.SetActive(true);
             ui.DoOpen();

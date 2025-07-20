@@ -32,12 +32,12 @@ namespace InGame
         
         public void EnterTower()
         {
-          
+            selected.SetActive(true);
         }
 
         public void LeaveTower()
         {
-            
+            selected.SetActive(false);
         }
 
         public void Damage(int damage, Vector2 attackerPos, float stagger)
@@ -64,17 +64,12 @@ namespace InGame
             {
                 SpriteRendererTarget = towerVisual,
                 FlashDuration = 0.1f,
-                Color = Color.red
+                Color = new Color(1f, 0.6f, 0.6f, 1f)
             };
             EffectHelper.Instance.PlayEffect(flashRed);
         }
 
-        [SerializeField] private GameObject objHighlight;
-        public void Highlight(bool highlighted)
-        {
-            objHighlight.SetActive(highlighted);
-        }
-
+        [SerializeField] private GameObject selected;
         [SerializeField] private GameObject objHover;
         public void Hover(bool hovering)
         {
