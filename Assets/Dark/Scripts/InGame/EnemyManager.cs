@@ -12,22 +12,10 @@ namespace InGame
         public int CurrentEnemyIndex { get; private set; } // index is stored as enemy id
         
         public void Initialize()
-        {
-            if (Enemies == null)
-            {
-                Enemies = new Dictionary<int, EnemyEntity>();
-                EnemiesAliveMap = new Dictionary<int, bool>();
-            }
-            
-            if (Enemies.Count > 0)
-            {
-                foreach (var enemy in Enemies)
-                {
-                    Object.Destroy(enemy.Value.gameObject);
-                }
-                Enemies.Clear();
-                EnemiesAliveMap.Clear();
-            }
+        { 
+            Enemies = new Dictionary<int, EnemyEntity>(); 
+            EnemiesAliveMap = new Dictionary<int, bool>();
+            CurrentEnemyIndex = 0;
         }
         
         public void OnEnemySpawn(EnemyEntity enemy)

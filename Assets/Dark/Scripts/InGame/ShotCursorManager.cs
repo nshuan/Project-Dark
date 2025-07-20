@@ -11,17 +11,10 @@ namespace InGame
     {
         [NonSerialized, OdinSerialize] private Dictionary<ShotCursorType, MonoCursor> cursorPrefabs = new();
         [NonSerialized, OdinSerialize] private Dictionary<ShotCursorType, IMouseInput> moveCursorMap = new();
-
-        private Dictionary<ShotCursorType, MonoCursor> cursorCache = new();
         
         public MonoCursor GetPrefab(ShotCursorType cursorType, Transform parent = null)
         {
-            if (cursorCache.ContainsKey(cursorType))
-                cursorCache[cursorType].gameObject.SetActive(true);
-            else
-                cursorCache[cursorType] = Instantiate(cursorPrefabs.GetValueOrDefault(cursorType), parent);
-
-            return cursorCache[cursorType];
+            return Instantiate(cursorPrefabs.GetValueOrDefault(cursorType), parent);
         }
 
         public IMouseInput GetCursorMoveLogic(ShotCursorType cursorType, Camera cam, MonoCursor cursor)

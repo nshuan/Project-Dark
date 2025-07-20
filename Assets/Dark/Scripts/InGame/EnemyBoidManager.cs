@@ -4,12 +4,14 @@ using UnityEngine;
 
 namespace InGame
 {
-    public class EnemyBoidManager : Singleton<EnemyBoidManager>
+    public class EnemyBoidManager : MonoSingleton<EnemyBoidManager>
     {
         public EnemySpatialGrid grid;
 
-        public EnemyBoidManager()
+        protected override void Awake()
         {
+            base.Awake();
+        
             grid = new EnemySpatialGrid(100, 100, 5);
         }
     }
