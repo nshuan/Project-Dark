@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace InGame
 {
-    public class EffectHelper : MonoSingleton<EffectHelper>
+    public class VisualEffectHelper : MonoSingleton<VisualEffectHelper>
     {
         [SerializeField] private Camera defaultCamera;
         public Camera DefaultCamera => defaultCamera;

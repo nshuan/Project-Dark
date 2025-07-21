@@ -53,7 +53,7 @@ namespace InGame
             
             // Do cursor effect
             DOTween.Complete(this);
-            EffectHelper.Instance.PlayEffect(effectCamShake);
+            VisualEffectHelper.Instance.PlayEffect(effectCamShake);
             var seq = DOTween.Sequence(this);
             seq.Append(cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f))
                 .Join(cursor.transform.DOShakeRotation(0.13f, new Vector3(0f, 0f, 10f)));

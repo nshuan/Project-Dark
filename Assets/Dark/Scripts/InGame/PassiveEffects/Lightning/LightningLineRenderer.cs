@@ -13,6 +13,7 @@ namespace InGame
         private int targetCount;
         private Transform[] targets;
         private Vector3[] targetPositions;
+        private Transform[] lightningBalls;
         private int startLineIndex;
         private int endLineIndex;
         
@@ -25,6 +26,7 @@ namespace InGame
             
             targets = new Transform[maxAnchor];
             targetPositions = new Vector3[maxAnchor];
+            lightningBalls = new Transform[maxAnchor];
             for (var i = 0; i < maxAnchor; i++)
             {
                 targetPositions[i] = new Vector3();
@@ -40,6 +42,7 @@ namespace InGame
                 targetPositions[i].x = targets[i].position.x;
                 targetPositions[i].y = targets[i].position.y;
                 targetPositions[i].z = targets[i].position.z;
+                lightningBalls[i].gameObject.SetActive(true);
             }
             for (int i = 0; i < startLineIndex; i++)
             {
@@ -65,6 +68,20 @@ namespace InGame
             {
                 line.SetPositions(targetPositions);
             }
+            
+            for (var i = 0; i < lightningBalls.Length; i++)
+            {
+                if (!lightningBalls[i]) break;
+                
+                if (i < startLineIndex || i > endLineIndex)
+                {
+                    lightningBalls[i].gameObject.SetActive(false);
+                    continue;
+                }
+                
+                lightningBalls[i].position = targetPositions[i];
+                lightningBalls[i].gameObject.SetActive(true);
+            }
         }
 
         public void ResetLine(int maxAnchor, Transform[] target, int targetValidCount)
@@ -81,6 +98,7 @@ namespace InGame
                     targetPositions[i].x = target[i].position.x;
                     targetPositions[i].y = target[i].position.y;
                     targetPositions[i].z = target[i].position.z;
+                    lightningBalls[i] ??= LightningBallPool.Instance.Get(transform.parent, false).transform;
                 }
             }
             

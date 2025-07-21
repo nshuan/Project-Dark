@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using InGame.Effects;
 using UnityEngine;
 
 namespace InGame
@@ -7,6 +8,7 @@ namespace InGame
     public class PassiveLightningRay : MonoPassiveEntity
     {
         [SerializeField] private LightningLineRenderer lineRenderer;
+        [SerializeField] private Transform vfxImpact;
         [SerializeField] private int maxHit = 5;
         [SerializeField] private float delayEachHit = 0.05f;
         [SerializeField] private float durationEachHit = 0.13f;
@@ -22,11 +24,13 @@ namespace InGame
         private float tempDistance;
         private int orderCount;
         private IDamageable hitTarget;
+        private CameraShake cameraShakeEffect;
 
         public override void Initialize()
         {
             hitOrder = new Transform[maxHit];
             lineRenderer.Initialize(maxHit);
+            cameraShakeEffect = new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera };
         }
 
         public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool)
@@ -70,6 +74,11 @@ namespace InGame
             lineRenderer.ResetLine(maxHit, hitOrder, orderCount);
 
             StartCoroutine(IELightningRay(value, () => pool.Release(this, effectId)));
+            vfxImpact.position = Position;
+            vfxImpact.gameObject.SetActive(true);
+            StartCoroutine(IEDelayHideVfxImpact(durationEachHit));
+            cameraShakeEffect.Duration = Mathf.Max(orderCount * delayEachHit, durationEachHit);
+            VisualEffectHelper.Instance.PlayEffect(cameraShakeEffect);
         }
 
         private IEnumerator IELightningRay(float damage, Action actionComplete)
@@ -80,7 +89,7 @@ namespace InGame
                 StartCoroutine(IEDelayHideAnchor(i, durationEachHit));
                 if (hitOrder[i].TryGetComponent(out hitTarget))
                 {
-                    hitTarget.Damage((int)damage, Position, Stagger);
+                    hitTarget.Damage((int)damage, i == 0 ? Position : hitOrder[i - 1].position, Stagger);
                 }
 
                 yield return new WaitForSeconds(delayEachHit);
@@ -94,6 +103,12 @@ namespace InGame
         {
             yield return new WaitForSeconds(delay);
             lineRenderer.ActiveAnchor(index, false);
+        }
+
+        private IEnumerator IEDelayHideVfxImpact(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            vfxImpact.gameObject.SetActive(false);
         }
     }
 }

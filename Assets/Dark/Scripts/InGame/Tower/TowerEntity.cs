@@ -66,7 +66,7 @@ namespace InGame
                 FlashDuration = 0.1f,
                 Color = new Color(1f, 0.6f, 0.6f, 1f)
             };
-            EffectHelper.Instance.PlayEffect(flashRed);
+            VisualEffectHelper.Instance.PlayEffect(flashRed);
         }
 
         [SerializeField] private GameObject selected;
