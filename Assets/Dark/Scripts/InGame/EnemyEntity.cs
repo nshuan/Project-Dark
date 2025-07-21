@@ -122,7 +122,7 @@ namespace InGame
             if (staggerDuration > 0)
             {
                 staggerDuration -= Time.deltaTime;
-                transform.position = Vector2.MoveTowards(transform.position, (Vector2)transform.position + staggerDirection, 0.5f * Time.deltaTime);
+                transform.position = Vector2.MoveTowards(transform.position, (Vector2)transform.position + staggerDirection, 5f * Time.deltaTime);
             }
             else
             {
