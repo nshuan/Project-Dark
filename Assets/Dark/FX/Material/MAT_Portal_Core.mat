@@ -7,14 +7,13 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MAT_Lightning
+  m_Name: MAT_Portal_Core
   m_Shader: {fileID: 4800000, guid: 28f245a4e34998d46b10d12557f0a12b, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - UNITY_UI_ALPHACLIP
-  m_InvalidKeywords:
-  - _CANVAS_GROUP_COMPATIBLE
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -27,36 +26,24 @@ Material:
     m_TexEnvs:
     - _MainNoise:
         m_Texture: {fileID: 2800000, guid: c3ba872455e7c6540b3ad3698f2bd544, type: 3}
-        m_Scale: {x: 0, y: 0}
-        m_Offset: {x: 0, y: 0}
+        m_Scale: {x: 0.8, y: 0.2}
+        m_Offset: {x: 0.91, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 9af93c1c10ad599409a9d35dc54d8482, type: 3}
-        m_Scale: {x: 1, y: 1.51}
-        m_Offset: {x: 0, y: 0}
-    - _Tex:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex:
+        m_Texture: {fileID: 2800000, guid: 229b6e14b340cbe48837c1c3f16cc258, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - AnimatedMouvementUV_Speed_1: 0.4
-    - AnimatedMouvementUV_X_1: -0.31
-    - AnimatedMouvementUV_Y_1: 0
-    - Disolve_Value: 0.509
-    - Effect_Fade: 1
-    - LiquidUV_DistanceX_1: 0.148
-    - LiquidUV_DistanceY_1: 0.148
-    - LiquidUV_Speed_1: -0.04
-    - LiquidUV_WaveX_1: 2
-    - LiquidUV_WaveY_1: 2
-    - Seed: 0.5
-    - _CanvasGroupCompatible: 1
     - _ColorMask: 15
+    - _DarknessFactor: 0
+    - _DistortionFactor: 0
     - _DstFactor: 1
-    - _LerpUV_Fade_1: 1
-    - _NoiseValue: 3.13
+    - _NoiseValue: 1
     - _Opp: 0
-    - _SpriteFade: 1
     - _SrcFactor: 1
     - _Stencil: 0
     - _StencilComp: 8
@@ -65,7 +52,7 @@ Material:
     - _StencilWriteMask: 255
     - _UseUIAlphaClip: 1
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _NoiseSpeed: {r: 0, g: 0, b: 0, a: 0}
-    - _Speed: {r: 50, g: 0, b: 0, a: 0}
+    - _Color: {r: 1, g: 1, b: 1, a: 0.05490196}
+    - _NoiseSpeed: {r: 1, g: 0, b: 0, a: 0}
+    - _Speed: {r: 0, g: 0.3, b: 0, a: 0}
   m_BuildTextureStacks: []
