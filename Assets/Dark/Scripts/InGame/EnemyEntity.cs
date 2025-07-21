@@ -211,6 +211,8 @@ namespace InGame
 
         private void OnDie()
         {
+            if (attackCoroutine != null)
+                StopCoroutine(attackCoroutine);
             collider2d.enabled = false;
             IsDestroyed = true;
             OnDead?.Invoke();

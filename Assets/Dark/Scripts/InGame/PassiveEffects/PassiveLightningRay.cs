@@ -6,8 +6,10 @@ namespace InGame
 {
     public class PassiveLightningRay : MonoPassiveEntity
     {
+        [SerializeField] private LightningLineRenderer lineRenderer;
         [SerializeField] private int maxHit = 5;
         [SerializeField] private float delayEachHit = 0.05f;
+        [SerializeField] private float durationEachHit = 0.13f;
         
         private Vector2 Position { get; set; }
         private float Stagger { get; set; }
@@ -21,18 +23,20 @@ namespace InGame
         private int orderCount;
         private IDamageable hitTarget;
 
-        private void Awake()
+        public override void Initialize()
         {
             hitOrder = new Transform[maxHit];
+            lineRenderer.Initialize(maxHit);
         }
 
         public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool)
         {
-            transform.position = target.Position;
+            lineRenderer.ResetLine(maxHit, null, 0);
+            transform.position = Vector3.zero;
             this.Position = target.Position;
             this.Stagger = stagger;
 
-            var count = Physics2D.CircleCastNonAlloc(transform.position, size, Vector2.zero, hits, 0f, targetLayer);
+            var count = Physics2D.CircleCastNonAlloc(Position, size, Vector2.zero, hits, 0f, targetLayer);
             for (var i = 0; i < count; i++)
             {
                 unorderedHits[i] = hits[i].transform;
@@ -62,6 +66,8 @@ namespace InGame
                 tempMinDistance = 100f;
                 orderCount += 1;
             }
+            
+            lineRenderer.ResetLine(maxHit, hitOrder, orderCount);
 
             StartCoroutine(IELightningRay(value, () => pool.Release(this, effectId)));
         }
@@ -70,6 +76,8 @@ namespace InGame
         {
             for (var i = 0; i < orderCount; i++)
             {
+                lineRenderer.ActiveAnchor(i, true);
+                StartCoroutine(IEDelayHideAnchor(i, durationEachHit));
                 if (hitOrder[i].TryGetComponent(out hitTarget))
                 {
                     hitTarget.Damage((int)damage, Position, Stagger);
@@ -80,6 +88,12 @@ namespace InGame
             
             yield return new WaitForSeconds(1f);
             actionComplete?.Invoke();
+        }
+
+        private IEnumerator IEDelayHideAnchor(int index, float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            lineRenderer.ActiveAnchor(index, false);
         }
     }
 }
