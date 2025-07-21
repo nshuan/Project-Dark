@@ -170,7 +170,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   standOffset: {x: 0, y: 0, z: 0}
   towerVisual: {fileID: 0}
-  objHighlight: {fileID: 0}
+  selected: {fileID: 0}
   objHover: {fileID: 0}
 --- !u!1 &201206796
 GameObject:
@@ -438,7 +438,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   standOffset: {x: 0, y: 0, z: 0}
   towerVisual: {fileID: 0}
-  objHighlight: {fileID: 0}
+  selected: {fileID: 0}
   objHover: {fileID: 0}
 --- !u!1 &519420028
 GameObject:
@@ -870,7 +870,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &802371194
@@ -1000,7 +1000,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &951381370
@@ -1289,7 +1289,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &2016680609
@@ -1339,7 +1339,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   standOffset: {x: 0, y: 0, z: 0}
   towerVisual: {fileID: 0}
-  objHighlight: {fileID: 0}
+  selected: {fileID: 0}
   objHover: {fileID: 0}
 --- !u!1001 &716692160351592295
 PrefabInstance:
