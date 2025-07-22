@@ -29,6 +29,7 @@ namespace InGame
             } 
             
             obj = Instantiate(prefab, targetParent);
+            obj.Initialize();
             obj.gameObject.SetActive(active);
             return obj;
 
