@@ -8,6 +8,10 @@ namespace InGame
     {
         [SerializeField] public Vector3 standOffset;
         [SerializeField] private SpriteRenderer towerVisual;
+        [SerializeField] private Sprite[] spriteStates;
+        [SerializeField] private float[] thresholdState = new[] { 0f, 0.3f, 0.7f };
+
+        private int currentState;
         
         public int Id { get; private set; }
         public int MaxHp { get; private set; }
@@ -19,6 +23,7 @@ namespace InGame
         public Action<TowerEntity> OnDestroyed;
 
         private Vector3 hitDirection = new Vector3();
+        private FlashColor damageEffect;
         
         public void Initialize(int id, int hp)
         {
@@ -28,6 +33,14 @@ namespace InGame
             IsDestroyed = false;
 
             OnDestroyed = null;
+            damageEffect = new FlashColor() 
+            {
+                SpriteRendererTarget = towerVisual,
+                FlashDuration = 0.1f,
+                Color = new Color(1f, 0.6f, 0.6f, 1f)
+            };
+            currentState = spriteStates.Length - 1;
+            towerVisual.sprite = spriteStates[currentState];
         }
         
         public void EnterTower()
@@ -58,15 +71,17 @@ namespace InGame
                 IsDestroyed = true;
                 OnDestroyed?.Invoke(this);
             }
+            else
+            {
+                if ((float)CurrentHp / MaxHp < thresholdState[currentState])
+                {
+                    currentState -= 1;
+                    towerVisual.sprite = spriteStates[currentState];
+                }
+            }
             
             // Do damage effect
-            var flashRed = new FlashColor()
-            {
-                SpriteRendererTarget = towerVisual,
-                FlashDuration = 0.1f,
-                Color = new Color(1f, 0.6f, 0.6f, 1f)
-            };
-            VisualEffectHelper.Instance.PlayEffect(flashRed);
+            VisualEffectHelper.Instance.PlayEffect(damageEffect);
         }
 
         [SerializeField] private GameObject selected;

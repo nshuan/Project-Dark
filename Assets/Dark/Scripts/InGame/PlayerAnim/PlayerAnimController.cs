@@ -4,7 +4,7 @@ namespace InGame
 {
     public class PlayerAnimController : MonoBehaviour
     {
-        [SerializeField] private PlayerSpineAnimation spritesAnim;
+        [SerializeField] private Player8DirectionsAnimation spritesAnim;
         
         public void PlayIdle()
         {
