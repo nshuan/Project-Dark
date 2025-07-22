@@ -19,7 +19,6 @@ namespace InGame.UI.CombatSkills
 
         private void OnDestroy()
         {
-            if (!available) return;
             CombatActions.OnAttackCharge -= OnSkillUsed;
             UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
         }
