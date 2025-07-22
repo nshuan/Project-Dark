@@ -11,8 +11,6 @@ namespace InGame
 {
     public class EnemyEntity : MonoBehaviour, IDamageable, IEffectTarget
     {
-        private static float StaggerMaxDuration = 0.5f; // Hit back 1f on 0.5s
-
         [SerializeField] private Collider2D collider2d;
         
         public Transform Target { get; set; }
@@ -124,8 +122,7 @@ namespace InGame
             if (staggerDuration > 0)
             {
                 staggerDuration -= Time.deltaTime;
-                var startPos = (Vector2)transform.position;
-                transform.position = Vector2.MoveTowards(startPos, startPos + staggerDirection, 0.5f * Time.deltaTime);
+                transform.position = Vector2.MoveTowards(transform.position, (Vector2)transform.position + staggerDirection, 5f * Time.deltaTime);
             }
             else
             {
@@ -198,7 +195,7 @@ namespace InGame
                 if (stagger - config.staggerResist > 0)
                 {
                     staggerDirection = (stagger - config.staggerResist) * hitDirection;
-                    staggerDuration = (stagger - config.staggerResist) * StaggerMaxDuration;
+                    staggerDuration = (stagger - config.staggerResist) * config.staggerMaxDuration;
                 }
                 
                 animController.PlayHit();
@@ -211,6 +208,8 @@ namespace InGame
 
         private void OnDie()
         {
+            if (attackCoroutine != null)
+                StopCoroutine(attackCoroutine);
             collider2d.enabled = false;
             IsDestroyed = true;
             OnDead?.Invoke();

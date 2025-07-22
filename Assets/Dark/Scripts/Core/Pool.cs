@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Core
 {
-    public class Pool<T, K> : MonoSingleton<K> where T : MonoBehaviour where K : Pool<T, K>
+    public class Pool<T, K> : MonoSingleton<K> where T : Component where K : Pool<T, K>
     {
         [SerializeField] protected T _prefab;
         

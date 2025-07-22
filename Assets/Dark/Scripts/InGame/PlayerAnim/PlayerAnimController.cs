@@ -12,7 +12,7 @@ namespace InGame
         }
 
         // Return the duration to finish the 1st animation phase, when the skill is actually strike
-        // (1st anim phase, full duration)
+        // (before attack, full duration)
         public (float, float) PlayAttack()
         {
             return spritesAnim.PlayAttack();

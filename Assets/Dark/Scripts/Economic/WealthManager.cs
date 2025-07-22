@@ -136,12 +136,43 @@ namespace Economic
             
             PlayerDataManager.Instance.Save(data);
         }
+
+        public bool CanSpend(WealthType type, int amount)
+        {
+            switch (type)
+            {
+                case WealthType.Vestige:
+                    return Dark >= amount;
+                case WealthType.Echoes:
+                    return LevelPoint >= amount;
+                case WealthType.Sigils:
+                    return BossPoint >= amount;
+                default:
+                    return false;
+            }    
+        }
+        
+        public void Spend(WealthType type, int amount)
+        {
+            switch (type)
+            {
+                case WealthType.Vestige:
+                    UseDark(amount);
+                    break;
+                case WealthType.Echoes:
+                    UseLevelPoint(amount);
+                    break;
+                case WealthType.Sigils:
+                    UseLevelPoint(amount);
+                    break;
+            }    
+        }
     }
 
     public enum WealthType
     {
-        Vestige,
-        Echoes,
-        Sigils
+        Vestige, // Dark
+        Echoes, // Level Point
+        Sigils // Boss Point
     }
 }

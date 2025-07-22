@@ -7,7 +7,7 @@ namespace InGame
 {
     public class InputInGame : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
-        private Camera cam;
+        [SerializeField] private Camera cam;
         [SerializeField] private Canvas canvas;
         [SerializeField] public PlayerCharacter playerVisual;
         public float holdThreshold = 0.5f;
@@ -32,8 +32,6 @@ namespace InGame
         
         private void Awake()
         {
-            cam = Camera.main;
-
             LevelManager.Instance.OnLevelLoaded += (level) =>
             {
                 PlayerStats = LevelManager.Instance.PlayerStats;

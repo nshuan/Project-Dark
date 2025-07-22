@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Core;
 using Data;
+using Economic;
 using InGame.ConfigManager;
 using InGame.Upgrade.UIDummy;
 using UnityEngine;
@@ -30,7 +32,7 @@ namespace InGame.Upgrade
             }
         }
 
-        private Dictionary<int, UpgradeNodeData> nodeMapById;
+        private Dictionary<int, UpgradeNodeData> dataMapById;
 
         private void InitData()
         {
@@ -38,10 +40,10 @@ namespace InGame.Upgrade
 #if UNITY_EDITOR
             data = new UpgradeData(TreeConfig.nodeMapById);
 #endif
-            nodeMapById = new Dictionary<int, UpgradeNodeData>();
+            dataMapById = new Dictionary<int, UpgradeNodeData>();
             foreach (var node in data.nodes)
             {
-                nodeMapById.TryAdd(node.id, node);
+                dataMapById.TryAdd(node.id, node);
             }
         }
 
@@ -99,17 +101,27 @@ namespace InGame.Upgrade
         
         public bool UpgradeNode(int nodeId)
         {
-            if (!nodeMapById.ContainsKey(nodeId)) return false;
-            if (nodeMapById[nodeId].level >= treeConfig.nodeMapById[nodeId].levelNum) return false;
+            if (!dataMapById.ContainsKey(nodeId)) return false;
+            if (dataMapById[nodeId].level >= treeConfig.nodeMapById[nodeId].levelNum) return false;
+
+            var currentLevel = dataMapById[nodeId].level;
+            var costInfo = treeConfig.nodeMapById[nodeId].costInfo;
+            if (costInfo.Any((cost) =>
+                    WealthManager.Instance.CanSpend(cost.costType, cost.costValue[currentLevel]) == false))
+                return false;
             
-            nodeMapById[nodeId].Upgrade();
+            foreach (var cost in treeConfig.nodeMapById[nodeId].costInfo)
+            {
+                WealthManager.Instance.Spend(cost.costType, cost.costValue[currentLevel]);    
+            }
+            dataMapById[nodeId].Upgrade();
             Save();
             return true;
         }
 
         public UpgradeNodeData GetData(int nodeId)
         {
-            return nodeMapById.GetValueOrDefault(nodeId);
+            return dataMapById.GetValueOrDefault(nodeId);
         }
 
 #if UNITY_EDITOR
