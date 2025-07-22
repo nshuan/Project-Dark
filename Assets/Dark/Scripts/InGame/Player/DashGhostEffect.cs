@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace InGame.Effects
+namespace InGame
 {
     public class DashGhostEffect : MonoBehaviour
     {

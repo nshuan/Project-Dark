@@ -14,11 +14,11 @@ namespace InGame
         public PlayerStats PlayerStats { get; set; }
         public PlayerSkillConfig CurrentSkillConfig { get; set; }
         public Transform CursorRangeCenter => playerVisual.transform;
+        private bool BlockAllInput { get; set; }
         public float CursorRangeRadius { get; set; }
         private bool IsMousePressing;
         private bool IsMousePressingStarted;
         private float holdDelayTime;
-        private bool blockInput;
         private IMouseInput mouseInput;
         private IRightMouseInput teleMouseInput;
 
@@ -32,14 +32,27 @@ namespace InGame
         
         private void Awake()
         {
+            BlockAllInput = true;
             LevelManager.Instance.OnLevelLoaded += (level) =>
             {
                 PlayerStats = LevelManager.Instance.PlayerStats;
                 teleMouseInput = new MoveToTower(cam, playerVisual, LevelManager.Instance.shortTeleConfig, LevelManager.Instance.longTeleConfig, LevelManager.Instance.Towers, LevelManager.Instance.CurrentTower.Id, DelayCall);
+                BlockAllInput = false;
             };
             LevelManager.Instance.OnChangeSkill += OnSkillChanged;
+            LevelManager.Instance.OnWin += OnLevelCompleted;
+            LevelManager.Instance.OnLose += OnLevelCompleted;
         }
 
+        private void OnLevelCompleted()
+        {
+            BlockAllInput = true;
+            IsMousePressing = false;
+            IsMousePressingStarted = false;
+            teleKeyPressed = false;
+            ResetTimeScale();
+        }
+        
         private void OnSkillChanged(PlayerSkillConfig skillConfig)
         {
             if (!skillConfig) return;
@@ -60,6 +73,8 @@ namespace InGame
 
         private void Update()
         {
+            if (BlockAllInput) return;
+            
 #if UNITY_EDITOR
             // Test tower change
             for (var i = 1; i <= 3; i++)
@@ -108,6 +123,8 @@ namespace InGame
 
         private void LateUpdate()
         {
+            if (BlockAllInput) return;
+            
             mouseInput?.OnUpdate();
             teleMouseInput?.OnUpdate();
         }
@@ -119,6 +136,8 @@ namespace InGame
 
         public void OnPointerDown(PointerEventData eventData)
         {
+            if (BlockAllInput) return;
+            
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 if (teleKeyPressed) return;
@@ -131,6 +150,7 @@ namespace InGame
 
         public void OnPointerUp(PointerEventData eventData)
         {
+            if (BlockAllInput) return;
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 if (teleKeyPressed)

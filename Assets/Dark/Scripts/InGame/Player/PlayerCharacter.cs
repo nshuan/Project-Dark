@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using DG.Tweening;
 using InGame.Effects;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ namespace InGame
     {
         [SerializeField] private PlayerAnimController animController;
         [SerializeField] private DashGhostEffect dashEffect;
+        [SerializeField] private PLayerFlashEffect flashEffect;
+        [SerializeField] private SpriteRenderer spriteRenderer;
 
         [Space] [SerializeField] private WeaponSupporter weapon;
         public WeaponSupporter Weapon => weapon;
@@ -49,6 +52,26 @@ namespace InGame
         public void StopDashEffect()
         {
             dashEffect.StopEffect();
+        }
+
+        private Sequence flashSequence;
+        public Tween PLayFlashEffect()
+        {
+            flashSequence.Kill();
+            flashSequence = DOTween.Sequence();
+            flashEffect.PLayStart();
+            return flashSequence.Append(spriteRenderer.DOFade(0f, 0.2f))
+                .AppendInterval(Mathf.Max(0f, flashEffect.startDuration - 0.2f));
+        }
+
+        public Tween StopFlashEffect(Action onLanded)
+        {
+            flashSequence.Kill();
+            flashSequence = DOTween.Sequence();
+            flashEffect.PLayEnd();
+            return flashSequence.AppendInterval(Mathf.Max(0f, flashEffect.startDuration - 0.2f))
+                .AppendCallback(() => onLanded?.Invoke())
+                .Append(spriteRenderer.DOFade(1f, 0.2f));
         }
     }
 }

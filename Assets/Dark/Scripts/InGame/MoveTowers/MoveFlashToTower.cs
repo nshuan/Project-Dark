@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using DG.Tweening;
+using InGame.Effects;
 using UnityEngine;
 
 namespace InGame
@@ -21,26 +23,24 @@ namespace InGame
             hits ??= new RaycastHit2D[50];
             characterTransform = character.transform;
             
-            // Jump up
-            var jumpPeak = startPos + new Vector2(0f, 2f);
-            while (Vector2.Distance(character.transform.position, jumpPeak) > 0.2f)
-            {
-                character.transform.position = Vector2.Lerp(character.transform.position, jumpPeak, Time.deltaTime * 4f);
-                yield return null;
-            }
+            yield return character.PLayFlashEffect().WaitForCompletion(); 
             
             character.transform.position = endPos;
             yield return new WaitForEndOfFrame();
             
-            var count = Physics2D.CircleCastNonAlloc(character.transform.position, explodeSize, Vector2.zero, hits, 0f,
-                enemyLayer);
-            if (count > 0)
+            yield return character.StopFlashEffect(() =>
             {
-                for (int i = 0; i < count; i++)
+                var count = Physics2D.CircleCastNonAlloc(character.transform.position, explodeSize, Vector2.zero, hits,
+                    0f,
+                    enemyLayer);
+                if (count > 0)
                 {
-                    ExplosionHit(hits[i].transform, damage);
+                    for (int i = 0; i < count; i++)
+                    {
+                        ExplosionHit(hits[i].transform, damage);
+                    }
                 }
-            }
+            }).WaitForCompletion();
             
             yield return new WaitForEndOfFrame();
             onComplete?.Invoke();

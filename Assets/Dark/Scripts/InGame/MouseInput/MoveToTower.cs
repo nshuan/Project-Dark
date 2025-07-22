@@ -93,6 +93,11 @@ namespace InGame
                             CombatActions.OnMoveTower?.Invoke(Cooldown);
                         }));
                 }
+                
+                foreach (var tower in Towers)
+                {
+                    tower.Hover(false);
+                }
             }
         }
 
