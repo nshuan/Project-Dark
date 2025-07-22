@@ -16,11 +16,8 @@ namespace InGame.Upgrade.UI
         [SerializeField] private TextMeshProUGUI txtLevel;
         [SerializeField] private Button btnUpgrade;
 
-        private UpgradeNodeData cacheData;
-
         public virtual void UpdateUI(UpgradeNodeData data, UpgradeNodeConfig nodeConfig, Action onUpgradeSuccessCallback = null, Action onUpgradeFailureCallback = null)
         {
-            cacheData = data;
             txtId.SetText($"ID: {nodeConfig.nodeId}");
             txtName.SetText($"Name: {nodeConfig.nodeName}");
             if (nodeConfig.preRequire != null && nodeConfig.preRequire.Length > 0)
@@ -38,6 +35,9 @@ namespace InGame.Upgrade.UI
             btnUpgrade.onClick.RemoveAllListeners();
             btnUpgrade.onClick.AddListener(() =>
             {
+                if (nodeConfig.preRequire.Select((node) => node.nodeId).Any((id) => UpgradeManager.Instance.GetData(id).level == 0))
+                    return;
+                
                 var success = UpgradeManager.Instance.UpgradeNode(nodeConfig.nodeId);
                 if (success)    
                     onUpgradeSuccessCallback?.Invoke();

@@ -9,6 +9,9 @@ namespace Data
     {
         public int level;
         
+        // Class
+        public int characterClass;
+        
         // Resources
         public int grade;
         public int exp;
@@ -20,6 +23,9 @@ namespace Data
         {
             level = 1;
             grade = 1;
+            
+            // Remove later
+            characterClass = 1;
         }
     }
 }
