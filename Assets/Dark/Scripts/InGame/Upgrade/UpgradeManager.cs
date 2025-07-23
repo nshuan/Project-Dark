@@ -101,7 +101,13 @@ namespace InGame.Upgrade
         
         public bool UpgradeNode(int nodeId)
         {
-            if (!dataMapById.ContainsKey(nodeId)) return false;
+            if (!dataMapById.ContainsKey(nodeId))
+            {
+                var newNodeData = new UpgradeNodeData() { id = nodeId, level = 0 };
+                data.nodes.Add(newNodeData);
+                dataMapById.Add(nodeId, newNodeData);
+            }
+            
             if (dataMapById[nodeId].level >= treeConfig.nodeMapById[nodeId].levelNum) return false;
 
             var currentLevel = dataMapById[nodeId].level;
@@ -141,14 +147,14 @@ namespace InGame.Upgrade
         public UpgradeData(Dictionary<int, UpgradeNodeConfig> nodeMap)
         {
             nodes = new List<UpgradeNodeData>();
-            foreach (var pair in nodeMap)
-            {
-                nodes.Add(new UpgradeNodeData()
-                {
-                    id = pair.Key,
-                    level = 0
-                });
-            }
+            // foreach (var pair in nodeMap)
+            // {
+            //     nodes.Add(new UpgradeNodeData()
+            //     {
+            //         id = pair.Key,
+            //         level = 0
+            //     });
+            // }
         }
     }
 

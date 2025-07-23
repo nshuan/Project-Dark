@@ -11,8 +11,7 @@ namespace InGame
     {
         #region Teleport
 
-        public bool upgradedShortMoveToTower;
-        public bool unlockedLongMoveToTower;
+        public List<int> unlockedMoveToTower; // 1 for Flash and 2 for Dash
 
         #endregion
         

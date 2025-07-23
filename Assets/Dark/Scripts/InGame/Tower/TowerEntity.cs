@@ -1,6 +1,7 @@
 using System;
 using InGame.Effects;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace InGame
 {
@@ -45,12 +46,12 @@ namespace InGame
         
         public void EnterTower()
         {
-            selected.SetActive(true);
+            selected.gameObject.SetActive(true);
         }
 
         public void LeaveTower()
         {
-            selected.SetActive(false);
+            selected.gameObject.SetActive(false);
         }
 
         public void Damage(int damage, Vector2 attackerPos, float stagger)
@@ -84,11 +85,28 @@ namespace InGame
             VisualEffectHelper.Instance.PlayEffect(damageEffect);
         }
 
-        [SerializeField] private GameObject selected;
-        [SerializeField] private GameObject objHover;
+        [SerializeField] private SpriteRenderer selected;
+        [SerializeField] private SpriteRenderer hover;
         public void Hover(bool hovering)
         {
-            objHover.SetActive(hovering);
+            hover.gameObject.SetActive(hovering);
+        }
+
+        [Space]
+        [SerializeField] private string highestSortingLayer;
+        [SerializeField] private string defaultSortingLayer;
+        public void SetHighestSortingLayer()
+        {
+            towerVisual.sortingLayerName = highestSortingLayer;
+            selected.sortingLayerName = highestSortingLayer;
+            hover.sortingLayerName = highestSortingLayer;
+        }
+
+        public void ResetSortingLayer()
+        {
+            towerVisual.sortingLayerName = defaultSortingLayer;
+            selected.sortingLayerName = defaultSortingLayer;
+            hover.sortingLayerName = defaultSortingLayer;
         }
     }
 }

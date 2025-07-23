@@ -25,8 +25,7 @@ namespace InGame.UI.CombatSkills
 
         private void OnUpgradeBonusActivated(UpgradeBonusInfo bonusInfo)
         {
-            if (bonusInfo.upgradedShortMoveToTower ||
-                bonusInfo.unlockedLongMoveToTower)
+            if (bonusInfo.unlockedMoveToTower != null && bonusInfo.unlockedMoveToTower.Count > 0)
             {
                 available = true;
                 skillIcon.SetActive(true);

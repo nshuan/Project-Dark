@@ -42,7 +42,7 @@ namespace InGame
             actionTowerChanged = OnTowerChanged;
             CanMove = false;
             CanCountdown = true;
-            CanMoveLong = LevelUtility.BonusInfo.unlockedLongMoveToTower;
+            CanMoveLong = longConfig != null;
 
             LevelManager.Instance.OnChangeTower += actionTowerChanged;
         }
@@ -127,6 +127,7 @@ namespace InGame
                 {
                     foreach (var tower in Towers)
                     {
+                        if (tower.Id == CurrentTowerIndex) continue;
                         if (Vector2.Distance(tower.transform.position, worldMousePosition) < HoverRadius)
                         {
                             hovering = true;

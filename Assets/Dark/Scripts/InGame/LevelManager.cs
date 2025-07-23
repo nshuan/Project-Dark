@@ -15,6 +15,7 @@ namespace InGame
     {
         [SerializeField] private PlayerStats playerStats;
         [SerializeField] private PlayerSkillConfig skillConfig;
+        public MoveTowersConfig defaultTeleConfig;
         public MoveTowersConfig shortTeleConfig;
         public MoveTowersConfig longTeleConfig;
 
@@ -22,7 +23,7 @@ namespace InGame
         
         [SerializeField] private TowerEntity[] towers;
         public TowerEntity[] Towers => towers;
-        private int currentTowerIndex = 0;
+        private int currentTowerIndex;
         public TowerEntity CurrentTower
         {
             get
@@ -31,7 +32,6 @@ namespace InGame
                 return towers[currentTowerIndex];
             }
         }
-        private bool canTeleportTower;
    
         public LevelConfig Level { get; private set; }
         public PlayerStats PlayerStats => playerStats;
@@ -177,7 +177,6 @@ namespace InGame
         
         public void TeleportTower(int towerIndex)
         {
-            if (!canTeleportTower) return;
             if (towers[Math.Clamp(towerIndex, 0, towers.Length - 1)].IsDestroyed) return;
             if (towerIndex == currentTowerIndex) return;
             
@@ -192,11 +191,6 @@ namespace InGame
             
             currentTowerIndex = towerIndex;
             OnChangeTower?.Invoke(CurrentTower);
-        }
-
-        public void SetTeleportTowerState(bool enable)
-        {
-            canTeleportTower = enable;
         }
         #endregion
 
