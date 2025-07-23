@@ -8,12 +8,7 @@ namespace InGame.UI.HitShowDamage
     [RequireComponent(typeof(Canvas))]
     public class UIHitDameCanvas : MonoBehaviour
     {
-        private Camera cam;
-
-        private void Awake()
-        {
-            cam = Camera.main;
-        }
+        [SerializeField] private Camera cam;
 
         public void ShowDamage(TextMeshProUGUI txtDamage, int damage, Vector3 worldPos)
         {

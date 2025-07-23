@@ -100,7 +100,7 @@ namespace InGame
                            (canChargeSize && sizeChargeTime > 0) || (canChargeRange && rangeChargeTime > 0);
 
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
-            LevelManager.Instance.SetTeleportTowerState(false);
+            InputManager.BlockTeleport = true;
             var delayShot = InputManager.playerVisual.PlayShoot(worldMousePosition);
             InputManager.DelayCall(delayShot, () =>
             {
@@ -121,7 +121,7 @@ namespace InGame
                     isCharge,
                     LevelUtility.BonusInfo.skillBonus.projectileHitActions);
 
-                LevelManager.Instance.SetTeleportTowerState(true);
+                InputManager.BlockTeleport = false;
             });
 
             if (isCharge)

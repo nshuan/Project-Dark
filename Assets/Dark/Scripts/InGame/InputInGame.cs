@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -11,12 +12,14 @@ namespace InGame
         [SerializeField] private Camera cam;
         [SerializeField] private Canvas canvas;
         [SerializeField] public PlayerCharacter playerVisual;
+		[SerializeField] private CanvasGroup motionBlur;
         public float holdThreshold = 0.5f;
         public PlayerStats PlayerStats { get; set; }
         public PlayerSkillConfig CurrentSkillConfig { get; set; }
         public Transform CursorRangeCenter => playerVisual.transform;
         private List<MoveTowersConfig> availableTeleConfigs;
         private bool BlockAllInput { get; set; }
+        public bool BlockTeleport { get; set; }
         public float CursorRangeRadius { get; set; }
         private bool IsMousePressing;
         private bool IsMousePressingStarted;
@@ -66,6 +69,8 @@ namespace InGame
             IsMousePressing = false;
             IsMousePressingStarted = false;
             teleKeyPressed = false;
+
+            ResetMotionBlur();
             ResetTimeScale();
         }
         
@@ -103,23 +108,35 @@ namespace InGame
                 }
             }
 #endif
-            
-            if (Input.GetKeyDown(activateTeleKey))
-            {
-                if (teleMouseInput.CanMove)
-                {
-                    IsMousePressingStarted = false;
-                    IsMousePressing = false;
-                    mouseInput.ResetChargeVariable();
-                    mouseInput.OnHoldReleased();
-                    teleKeyPressed = true;
-                    FreezeTimeScale();
-                }
-            }
 
-            if (Input.GetKeyUp(activateTeleKey))
+            if (!BlockTeleport)
             {
-                teleMouseInput.OnActivated();
+                if (Input.GetKey(activateTeleKey))
+                {
+                    if (teleMouseInput.CanMove)
+                    {
+                        IsMousePressingStarted = false;
+                        IsMousePressing = false;
+                        mouseInput.ResetChargeVariable();
+                        mouseInput.OnHoldReleased();
+                        teleKeyPressed = true;
+                        
+                        teleMouseInput.OnActivated();
+                    
+                        DOTween.Kill(motionBlur);
+                        DOTween.Sequence(motionBlur).AppendCallback(() =>
+                            {
+                                foreach (var tower in LevelManager.Instance.Towers)
+                                {
+                                    if (tower.Id == LevelManager.Instance.CurrentTower.Id) continue;
+                                    tower.SetHighestSortingLayer();
+                                }
+                            
+                                motionBlur.gameObject.SetActive(true);
+                            }).Append(motionBlur.DOFade(1f, 0.16f))
+                            .OnComplete(FreezeTimeScale);
+                    }
+                }
             }
             
             if (IsMousePressingStarted)
@@ -172,8 +189,10 @@ namespace InGame
                 if (teleKeyPressed)
                 {
                     teleKeyPressed = false;
-                    teleMouseInput?.OnMouseClick(false);
+                    if (!BlockTeleport)
+                        teleMouseInput?.OnMouseClick(false);
                     teleMouseInput?.OnDeactivated();
+                    ResetMotionBlur();
                     ResetTimeScale();
                     return;
                 }
@@ -197,6 +216,7 @@ namespace InGame
                 teleKeyPressed = false;
                 teleMouseInput?.OnMouseClick(true);
                 teleMouseInput?.OnDeactivated();
+                ResetMotionBlur();
                 ResetTimeScale();
             }
         }
@@ -221,6 +241,21 @@ namespace InGame
         private void ResetTimeScale()
         {
             Time.timeScale = 1f;
+        }
+
+        private void ResetMotionBlur()
+        {
+            DOTween.Kill(motionBlur);
+            DOTween.Sequence(motionBlur).Append(motionBlur.DOFade(0f, 0.16f))
+                .OnComplete(() =>
+                {
+                    motionBlur.gameObject.SetActive(false);
+                    foreach (var tower in LevelManager.Instance.Towers)
+                    {
+                        tower.ResetSortingLayer();
+                    }
+                })
+                .Play();
         }
     }
 }
