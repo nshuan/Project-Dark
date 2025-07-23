@@ -4842,7 +4842,7 @@ GameObject:
   - component: {fileID: 6735049161544191899}
   - component: {fileID: 944945146327995021}
   - component: {fileID: 4870474645071542172}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Impact_SD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5054,7 +5054,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 0.51933235, g: 0.2028302, b: 1, a: 1}
-      maxColor: {r: 0, g: 0, b: 0, a: 1}
+      maxColor: {r: 0.28496808, g: 0.20674619, b: 0.4339623, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -5119,7 +5119,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 3
       scalar: 0.5
-      minScalar: 1
+      minScalar: 2
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -5171,8 +5171,8 @@ ParticleSystem:
     startSizeY:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.2
-      minScalar: 3
+      scalar: 4
+      minScalar: 2
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -9674,7 +9674,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 85de15b46765a7245af31aea639c1ea5, type: 2}
+  - {fileID: 2100000, guid: d3e4d0cf971920e418bddfc6182b87f4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10331,7 +10331,7 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     gravitySource: 1
-    maxNumParticles: 5
+    maxNumParticles: 6
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
@@ -14589,7 +14589,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 554
+  m_SortingOrder: 558
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -15226,7 +15226,7 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     gravitySource: 1
-    maxNumParticles: 10
+    maxNumParticles: 15
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
@@ -17256,8 +17256,8 @@ ParticleSystem:
     magnitude:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 5
-      minScalar: 1
+      scalar: 1
+      minScalar: 0
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -17310,7 +17310,7 @@ ParticleSystem:
     inWorldSpace: 0
     multiplyDragByParticleSize: 0
     multiplyDragByParticleVelocity: 0
-    dampen: 0.6
+    dampen: 0.7
     drag:
       serializedVersion: 2
       minMaxState: 0
@@ -19477,7 +19477,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 552
+  m_SortingOrder: 556
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -19521,8 +19521,8 @@ GameObject:
   - component: {fileID: 994848906665818720}
   - component: {fileID: 8911887749590703295}
   - component: {fileID: 1656427948098157492}
-  m_Layer: 0
-  m_Name: Main
+  m_Layer: 10
+  m_Name: Main_SD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19733,7 +19733,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 0.7319126, g: 0, b: 1, a: 1}
-      maxColor: {r: 0.514151, g: 0.5480474, b: 1, a: 0.31764707}
+      maxColor: {r: 0.35763812, g: 0.13817197, b: 0.6509434, a: 0.7529412}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -19797,7 +19797,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2.04
+      scalar: 3.18
       minScalar: 0.05
       maxCurve:
         serializedVersion: 2
@@ -20114,7 +20114,7 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     gravitySource: 1
-    maxNumParticles: 4
+    maxNumParticles: 2
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
@@ -20490,7 +20490,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 4
+        scalar: 1
         minScalar: 30
         maxCurve:
           serializedVersion: 2
@@ -21064,7 +21064,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: 21300000, guid: c61426940b95a4a43bd0baeec1f1aeaf, type: 3}
+    - sprite: {fileID: 21300000, guid: f4e525489bce2e8469ce6e03256a98c3, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -24440,9 +24440,9 @@ Transform:
   m_Children:
   - {fileID: 1953003719896723561}
   - {fileID: 6735049161544191899}
+  - {fileID: 994848906665818720}
   - {fileID: 6707597844865959258}
   - {fileID: 5281822440592022498}
-  - {fileID: 994848906665818720}
   - {fileID: 5247204607963083967}
   m_Father: {fileID: 4864616543950116908}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -29531,7 +29531,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 3
       scalar: 0.5
-      minScalar: 1
+      minScalar: 2
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -29583,8 +29583,8 @@ ParticleSystem:
     startSizeY:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.2
-      minScalar: 3
+      scalar: 4
+      minScalar: 2
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -29847,7 +29847,7 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     gravitySource: 1
-    maxNumParticles: 3
+    maxNumParticles: 6
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 1
     rotation3D: 0
@@ -30223,7 +30223,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 3
+        scalar: 6
         minScalar: 30
         maxCurve:
           serializedVersion: 2
@@ -34106,7 +34106,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 550
+  m_SortingOrder: 554
   m_RenderMode: 1
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -34150,7 +34150,7 @@ GameObject:
   - component: {fileID: 1953003719896723561}
   - component: {fileID: 4499307923576722037}
   - component: {fileID: 2234515757611533583}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Lightning_SD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34362,7 +34362,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 0.56207925, g: 0.3726415, b: 1, a: 1}
-      maxColor: {r: 0, g: 0, b: 0, a: 1}
+      maxColor: {r: 0.28977945, g: 0, b: 0.5188679, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -34743,7 +34743,7 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     gravitySource: 1
-    maxNumParticles: 5
+    maxNumParticles: 2
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
@@ -38981,7 +38981,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 85de15b46765a7245af31aea639c1ea5, type: 2}
+  - {fileID: 2100000, guid: d3e4d0cf971920e418bddfc6182b87f4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -39001,7 +39001,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 555
+  m_SortingOrder: 540
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
