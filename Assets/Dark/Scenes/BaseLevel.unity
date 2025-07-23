@@ -1931,6 +1931,89 @@ MonoBehaviour:
   imgFillCooldown: {fileID: 1641957405}
   triggerType: 0
   passiveType: 0
+--- !u!1 &328986982
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 328986983}
+  - component: {fileID: 328986984}
+  m_Layer: 0
+  m_Name: LowerVfxCamera
+  m_TagString: MainCamera
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &328986983
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 328986982}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 519420032}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &328986984
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 328986982}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.15471691, g: 0.15471691, b: 0.15471691, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_Iso: 200
+  m_ShutterSpeed: 0.005
+  m_Aperture: 16
+  m_FocusDistance: 10
+  m_FocalLength: 50
+  m_BladeCount: 5
+  m_Curvature: {x: 2, y: 11}
+  m_BarrelClipping: 0.25
+  m_Anamorphism: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 1
+  orthographic size: 8
+  m_Depth: -1
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 2048
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 8400000, guid: bd7ae32d9a645544aa39cd4675ec9836, type: 2}
+  m_TargetDisplay: 0
+  m_TargetEye: 0
+  m_HDR: 1
+  m_AllowMSAA: 0
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 0
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
 --- !u!1 &331053906
 GameObject:
   m_ObjectHideFlags: 0
@@ -2093,6 +2176,7 @@ MonoBehaviour:
       Data: 
   playerStats: {fileID: 11400000, guid: 830856e84733a004993eaec8e05af9a9, type: 2}
   skillConfig: {fileID: 11400000, guid: 8993295d416a3934ba6aac2af34b47c1, type: 2}
+  defaultTeleConfig: {fileID: 0}
   shortTeleConfig: {fileID: 11400000, guid: bd153cf97d2f7e8439006a265d8ac9de, type: 2}
   longTeleConfig: {fileID: 11400000, guid: f9152b0524b07414a8e42f9f76bfc137, type: 2}
   gatePrefab: {fileID: 3134462521366388888, guid: 6b6d6548c9a28704f9cbabd97a6d9cbf, type: 3}
@@ -2613,6 +2697,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1604732162}
+  - {fileID: 328986983}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &526923754
@@ -3847,21 +3932,17 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7739058977564152157, guid: c7c32f2213925344abe57070303dc8b1, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.4100001
-      objectReference: {fileID: 0}
     - target: {fileID: 8249688804626138219, guid: c7c32f2213925344abe57070303dc8b1, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.8
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8249688804626138219, guid: c7c32f2213925344abe57070303dc8b1, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.8
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8249688804626138219, guid: c7c32f2213925344abe57070303dc8b1, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.8
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8540445364392104723, guid: c7c32f2213925344abe57070303dc8b1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4667,8 +4748,8 @@ Canvas:
   m_GameObject: {fileID: 950333404}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 519420031}
   m_PlaneDistance: 100
   m_PixelPerfect: 1
   m_ReceivesEvents: 1
@@ -4678,7 +4759,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: 279785053
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!224 &950333408
@@ -4694,6 +4775,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1962528845}
+  - {fileID: 1200895203}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -5945,6 +6027,102 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!1 &1200895202
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1200895203}
+  - component: {fileID: 1200895205}
+  - component: {fileID: 1200895204}
+  - component: {fileID: 1200895206}
+  m_Layer: 5
+  m_Name: LowerVfxCameraRender
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1200895203
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1200895202}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 950333408}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1200895204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1200895202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 8400000, guid: bd7ae32d9a645544aa39cd4675ec9836, type: 2}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+--- !u!222 &1200895205
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1200895202}
+  m_CullTransparentMesh: 1
+--- !u!223 &1200895206
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1200895202}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!1 &1204619583
 GameObject:
   m_ObjectHideFlags: 0
@@ -7268,21 +7446,17 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7739058977564152157, guid: c7c32f2213925344abe57070303dc8b1, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.4100001
-      objectReference: {fileID: 0}
     - target: {fileID: 8249688804626138219, guid: c7c32f2213925344abe57070303dc8b1, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.9
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8249688804626138219, guid: c7c32f2213925344abe57070303dc8b1, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.9
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8249688804626138219, guid: c7c32f2213925344abe57070303dc8b1, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.9
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8540445364392104723, guid: c7c32f2213925344abe57070303dc8b1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7898,12 +8072,24 @@ MonoBehaviour:
     - Name: testBonusInfo
       Entry: 7
       Data: 0|InGame.UpgradeBonusInfo, Assembly-CSharp
-    - Name: upgradedShortMoveToTower
-      Entry: 5
-      Data: true
-    - Name: unlockedLongMoveToTower
-      Entry: 5
-      Data: false
+    - Name: unlockedMoveToTower
+      Entry: 7
+      Data: 1|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: damePlus
       Entry: 3
       Data: 0
@@ -7930,7 +8116,7 @@ MonoBehaviour:
       Data: 
     - Name: skillBonus
       Entry: 7
-      Data: 1|InGame.UpgradeBonusSkillInfo, Assembly-CSharp
+      Data: 2|InGame.UpgradeBonusSkillInfo, Assembly-CSharp
     - Name: skillDamePlus
       Entry: 3
       Data: 0
@@ -7969,7 +8155,7 @@ MonoBehaviour:
       Data: false
     - Name: projectileHitActions
       Entry: 7
-      Data: 2|System.Collections.Generic.List`1[[InGame.IProjectileHit, Assembly-CSharp]],
+      Data: 3|System.Collections.Generic.List`1[[InGame.IProjectileHit, Assembly-CSharp]],
         mscorlib
     - Name: 
       Entry: 12
@@ -7985,12 +8171,12 @@ MonoBehaviour:
       Data: 
     - Name: effectsMapByTriggerType
       Entry: 7
-      Data: 3|System.Collections.Generic.Dictionary`2[[InGame.PassiveTriggerType,
+      Data: 4|System.Collections.Generic.Dictionary`2[[InGame.PassiveTriggerType,
         Assembly-CSharp],[System.Collections.Generic.List`1[[InGame.PassiveType,
         Assembly-CSharp]], mscorlib]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 4|System.Collections.Generic.EnumEqualityComparer`1[[InGame.PassiveTriggerType,
+      Data: 5|System.Collections.Generic.EnumEqualityComparer`1[[InGame.PassiveTriggerType,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
@@ -8012,7 +8198,7 @@ MonoBehaviour:
       Data: 0
     - Name: $v
       Entry: 7
-      Data: 5|System.Collections.Generic.List`1[[InGame.PassiveType, Assembly-CSharp]],
+      Data: 6|System.Collections.Generic.List`1[[InGame.PassiveType, Assembly-CSharp]],
         mscorlib
     - Name: 
       Entry: 12
@@ -8037,7 +8223,7 @@ MonoBehaviour:
       Data: 1
     - Name: $v
       Entry: 7
-      Data: 6|System.Collections.Generic.List`1[[InGame.PassiveType, Assembly-CSharp]],
+      Data: 7|System.Collections.Generic.List`1[[InGame.PassiveType, Assembly-CSharp]],
         mscorlib
     - Name: 
       Entry: 12
@@ -8439,7 +8625,7 @@ GameObject:
   - component: {fileID: 1604732162}
   - component: {fileID: 1604732161}
   m_Layer: 0
-  m_Name: VfxCamera
+  m_Name: HigherVfxCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9606,7 +9792,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1886179419}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -9923,7 +10109,7 @@ GameObject:
   - component: {fileID: 1962528847}
   - component: {fileID: 1962528846}
   m_Layer: 5
-  m_Name: VfxCamera
+  m_Name: HigherVfxCameraRender
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10860,6 +11046,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 655408977626516025, guid: c7c32f2213925344abe57070303dc8b1, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1357971312626547846, guid: c7c32f2213925344abe57070303dc8b1, type: 3}
       propertyPath: m_Name
       value: Tower
@@ -10939,7 +11129,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8748002566143027518, guid: f762f00d86aa35843bd867f87183bf11, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.36
+      value: 1.96
       objectReference: {fileID: 0}
     - target: {fileID: 8748002566143027518, guid: f762f00d86aa35843bd867f87183bf11, type: 3}
       propertyPath: m_LocalPosition.z
@@ -10998,6 +11188,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1104483872}
     m_Modifications:
+    - target: {fileID: 3545481876255443723, guid: c01da5ce49d251b4ab041c740f3859f6, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 6.5999985
+      objectReference: {fileID: 0}
     - target: {fileID: 4168429949272867031, guid: c01da5ce49d251b4ab041c740f3859f6, type: 3}
       propertyPath: m_Pivot.x
       value: 0

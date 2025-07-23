@@ -15,6 +15,7 @@ namespace InGame
     {
         [SerializeField] private PlayerStats playerStats;
         [SerializeField] private PlayerSkillConfig skillConfig;
+        public MoveTowersConfig defaultTeleConfig;
         public MoveTowersConfig shortTeleConfig;
         public MoveTowersConfig longTeleConfig;
 
@@ -22,7 +23,7 @@ namespace InGame
         
         [SerializeField] private TowerEntity[] towers;
         public TowerEntity[] Towers => towers;
-        private int currentTowerIndex = 0;
+        private int currentTowerIndex;
         public TowerEntity CurrentTower
         {
             get

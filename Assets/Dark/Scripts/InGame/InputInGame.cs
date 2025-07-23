@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -14,6 +15,7 @@ namespace InGame
         public PlayerStats PlayerStats { get; set; }
         public PlayerSkillConfig CurrentSkillConfig { get; set; }
         public Transform CursorRangeCenter => playerVisual.transform;
+        private List<MoveTowersConfig> availableTeleConfigs;
         private bool BlockAllInput { get; set; }
         public float CursorRangeRadius { get; set; }
         private bool IsMousePressing;
@@ -33,10 +35,24 @@ namespace InGame
         private void Awake()
         {
             BlockAllInput = true;
+            
+            availableTeleConfigs = new List<MoveTowersConfig>();
+            
             LevelManager.Instance.OnLevelLoaded += (level) =>
             {
                 PlayerStats = LevelManager.Instance.PlayerStats;
-                teleMouseInput = new MoveToTower(cam, playerVisual, LevelManager.Instance.shortTeleConfig, LevelManager.Instance.longTeleConfig, LevelManager.Instance.Towers, LevelManager.Instance.CurrentTower.Id, DelayCall);
+                
+                if (LevelUtility.BonusInfo.unlockedMoveToTower == null || LevelUtility.BonusInfo.unlockedMoveToTower.Count == 0)
+                    availableTeleConfigs.Add(LevelManager.Instance.defaultTeleConfig);
+                else
+                {
+                    foreach (var moveId in LevelUtility.BonusInfo.unlockedMoveToTower)
+                    {
+                        if (moveId == 1) availableTeleConfigs.Add(LevelManager.Instance.shortTeleConfig);
+                        else if (moveId == 2) availableTeleConfigs.Add(LevelManager.Instance.longTeleConfig);
+                    }
+                }
+                teleMouseInput = new MoveToTower(cam, playerVisual, availableTeleConfigs[0], availableTeleConfigs.Count > 1 ? availableTeleConfigs[1] : null, LevelManager.Instance.Towers, LevelManager.Instance.CurrentTower.Id, DelayCall);
                 BlockAllInput = false;
             };
             LevelManager.Instance.OnChangeSkill += OnSkillChanged;
