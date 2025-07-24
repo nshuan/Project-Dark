@@ -18,6 +18,16 @@ namespace InGame
             return spritesAnim.PlayAttack();
         }
 
+        public float PlayCharge()
+        {
+            return spritesAnim.PlayCharge();
+        }
+
+        public void EndChargeAndShoot()
+        {
+            spritesAnim.EndChargeAndShoot();
+        }
+
         public void PlayDie()
         {
             spritesAnim.PlaySpecialAttack();   

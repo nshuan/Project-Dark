@@ -11,6 +11,7 @@ namespace InGame
         [SerializeField] private PlayerAnimController animController;
         [SerializeField] private DashGhostEffect dashEffect;
         [SerializeField] private PLayerFlashEffect flashEffect;
+        [SerializeField] private GameObject chargeEffect;
         [SerializeField] private SpriteRenderer spriteRenderer;
 
         [Space] [SerializeField] private WeaponSupporter weapon;
@@ -30,6 +31,23 @@ namespace InGame
             blockRotate = true;
             StartCoroutine(IEBlockRotate(attackDuration.Item2));
             return attackDuration.Item1;
+        }
+
+        public void PlayCharge()
+        {
+            StartCoroutine(IEChargeEffect(animController.PlayCharge()));
+        }
+
+        private IEnumerator IEChargeEffect(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            chargeEffect.SetActive(true);
+        }
+
+        public void EndChargeAndShoot()
+        {
+            chargeEffect.SetActive(false);
+            animController.EndChargeAndShoot();
         }
 
         private IEnumerator IEBlockRotate(float duration)

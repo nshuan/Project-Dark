@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Dark.Scripts.FrameByFrameAnimation;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
@@ -12,40 +13,88 @@ namespace InGame
         
         private float rotationThresholdGap; // Angle from up Vector
         private SpriteRenderer spriteRenderer;
-        private DirectionInfo currentDirection;
-        private PlayerSpritesAnimationInfo currentAnim;
+        private int currentDirection;
+
+        private PlayerSpritesAnimationInfo CurrentAnim { get; set; }
         private int currentFrame;
         private float timer;
+        private bool charging;
 
         private void Awake()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
             rotationThresholdGap = 360f / directionInfo.Count;
+
+            foreach (var info in directionInfo)
+            {
+                info.chargeAnim = new PlayerSpritesAnimationInfo()
+                {
+                    data = ScriptableObject.CreateInstance<FrameByFrameAnimation>(),
+                    frameRate = info.attackAnim.frameRate,
+                    autoExit = false
+                };
+                info.chargeAnim.data.frames = new Sprite[info.attackAnim.strikeFrameIndex];
+                for (var i = 0; i < info.attackAnim.strikeFrameIndex; i++)
+                {
+                    info.chargeAnim.data.frames[i] = info.attackAnim.data.frames[i];
+                }
+
+                info.chargeAttackAnim = new PlayerSpritesAnimationInfo()
+                {
+                    data = ScriptableObject.CreateInstance<FrameByFrameAnimation>(),
+                    frameRate = info.attackAnim.frameRate,
+                    autoExit = true
+                };
+                info.chargeAttackAnim.data.frames = new Sprite[info.attackAnim.data.frames.Length - info.attackAnim.strikeFrameIndex];
+                for (var i = info.attackAnim.strikeFrameIndex; i < info.attackAnim.data.frames.Length; i++)
+                {
+                    info.chargeAttackAnim.data.frames[i - info.attackAnim.strikeFrameIndex] = info.attackAnim.data.frames[i];
+                }
+            }
         }
         
         public void PlayIdle()
         {
-            currentAnim = currentDirection.idleAnim;
+            CurrentAnim = directionInfo[currentDirection].idleAnim;
             currentFrame = 0;
-            spriteRenderer.sprite = currentAnim.frames[0];
+            spriteRenderer.sprite = CurrentAnim.data.frames[0];
             timer = 0f;
         }
 
         public (float, float) PlayAttack()
         {
-            currentAnim = currentDirection.attackAnim;
+            CurrentAnim = directionInfo[currentDirection].attackAnim;
             currentFrame = 0;
-            spriteRenderer.sprite = currentAnim.frames[0];
+            spriteRenderer.sprite = CurrentAnim.data.frames[0];
             timer = 0f;
-            return (currentDirection.attackAnim.frameRate * currentDirection.attackAnim.strikeFrameIndex,
-                    currentDirection.attackAnim.frameRate * currentDirection.attackAnim.frames.Length);
+            return (CurrentAnim.frameRate * directionInfo[currentDirection].attackAnim.strikeFrameIndex,
+                CurrentAnim.frameRate * CurrentAnim.data.frames.Length);
+        }
+        
+        public float PlayCharge()
+        {
+            charging = true;
+            CurrentAnim = directionInfo[currentDirection].chargeAnim;
+            currentFrame = 0;
+            spriteRenderer.sprite = CurrentAnim.data.frames[0];
+            timer = 0f;
+            return CurrentAnim.frameRate * CurrentAnim.data.frames.Length;
+        }
+
+        public void EndChargeAndShoot()
+        {
+            charging = false;
+            CurrentAnim = directionInfo[currentDirection].chargeAttackAnim;
+            currentFrame = 0;
+            spriteRenderer.sprite = CurrentAnim.data.frames[0];
+            timer = 0f;
         }
         
         public void PlaySpecialAttack()
         {
-            currentAnim = currentDirection.specialAttackAnim;
+            CurrentAnim = directionInfo[currentDirection].specialAttackAnim;
             currentFrame = 0;
-            spriteRenderer.sprite = currentAnim.frames[0];
+            spriteRenderer.sprite = CurrentAnim.data.frames[0];
             timer = 0f;
         }
 
@@ -55,35 +104,45 @@ namespace InGame
             if (mag > 1e-5f) {
                 var angle = Mathf.Acos(Mathf.Clamp(direction.y / mag, -1f, 1f)) * Mathf.Rad2Deg;
                 angle = direction.x < 0 ? 360f - angle : angle;
-                currentDirection = directionInfo[(int)(angle / rotationThresholdGap + 1) % directionInfo.Count];
-                currentAnim = currentDirection.idleAnim;
+                var newDirection = (int)(angle / rotationThresholdGap + 1) % directionInfo.Count;
+                if (newDirection != currentDirection)
+                {
+                    currentDirection = newDirection;
+                    CurrentAnim = charging ? directionInfo[currentDirection].chargeAnim : directionInfo[currentDirection].idleAnim;
+                    if (charging && currentFrame < CurrentAnim.data.frames.Length) spriteRenderer.sprite = CurrentAnim.data.frames[currentFrame];
+                }
             }
         }
         
         private void Update()
         {
-            if (currentAnim == null) return;
+            if (CurrentAnim == null) return;
             timer += Time.deltaTime;
 
-            if (timer >= currentAnim.frameRate)
+            if (charging)
+            {
+                
+            }
+            if (timer >= CurrentAnim.frameRate)
             {
                 currentFrame += 1;
-                if (currentFrame >= currentAnim.frames.Length)
+                if (currentFrame >= CurrentAnim.data.frames.Length)
                 {
-                    if (currentAnim.isLoop) currentFrame = 0;
-                    else if (currentAnim.autoExit)
+                    if (CurrentAnim.isLoop) currentFrame = 0;
+                    else if (CurrentAnim.autoExit)
                     {
                         PlayIdle();
                         return;
                     }
                     else
                     {
-                        timer -= currentAnim.frameRate;
+                        timer -= CurrentAnim.frameRate;
+                        currentFrame -= 1;
                         return;
                     }
                 }
-                spriteRenderer.sprite = currentAnim.frames[currentFrame];
-                timer -= currentAnim.frameRate; // subtract instead of reset to avoid drift
+                spriteRenderer.sprite = CurrentAnim.data.frames[currentFrame];
+                timer -= CurrentAnim.frameRate; // subtract instead of reset to avoid drift
             }
         }
         
@@ -93,6 +152,8 @@ namespace InGame
             public PlayerSpritesAnimationInfo idleAnim;
             public PlayerSpritesAttackAnimationInfo attackAnim;
             public PlayerSpritesAnimationInfo specialAttackAnim;
+            public PlayerSpritesAnimationInfo chargeAnim;
+            public PlayerSpritesAnimationInfo chargeAttackAnim;
         }
     }
 }
