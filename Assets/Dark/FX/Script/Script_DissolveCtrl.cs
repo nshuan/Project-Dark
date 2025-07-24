@@ -16,31 +16,14 @@ public class Script_DissolveCtrl : MonoBehaviour
     [Range(0, 1)]
     public float initialDissolveValue = 0f;
 
-    void ResetEffects()
+	void Start () {
+		
+	}
+	
+	// Update is called once per frame
+	void Update ()
     {
-        // Reset Particle System
-        if (particleSystem != null)
-        {
-            particleSystem.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-            particleSystem.Play();
-        }
-
-        // Reset Dissolve Value in Shader
-        if (dissolveMaterial != null)
-        {
-            dissolveMaterial.SetFloat("_Disolve_Value", initialDissolveValue);
-        }
-        startTime = Time.time;
+        if (dissolveMaterial!=null) dissolveMaterial.SetFloat(variable, anm.Evaluate(Time.time * Speed)*Mul);
     }
-
-    void Update()
-{
-    if (dissolveMaterial != null)
-    {
-        float elapsed = Time.time - startTime;
-        float dissolveValue = anm.Evaluate(elapsed * Speed) * Mul;
-        dissolveMaterial.SetFloat(variable, dissolveValue);
-    }
-}
     
 }

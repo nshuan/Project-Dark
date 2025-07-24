@@ -1,12 +1,13 @@
-Shader "MyShader/Shader_Dissolve"
+
+Shader "MyShader/Shader_DisolvePixel"
 {
 Properties
 {
 [PerRendererData] _MainTex("Sprite Texture", 2D) = "white" {}
-Disolve_Value("Disolve_Value", Range(0, 1)) = 0.509
-Seed("Seed", Range(-8, 8)) = 0.5
+Pixel_Size("Pixel_Size", Range(1, 1024)) = 19
+Disolve_Value("Disolve_Value", Range(0, 1)) = 0.402
+Disolve_Seed("Disolve_Seed", Range(-8, 8)) = 0.5
 _SpriteFade("SpriteFade", Range(0, 1)) = 1.0
-_Color("Color", Color) = (0,0,0,0)
 
 // required for UI.Mask
 [HideInInspector]_StencilComp("Stencil Comparison", Float) = 8
@@ -68,9 +69,9 @@ float4 color    : COLOR;
 
 sampler2D _MainTex;
 float _SpriteFade;
+float Pixel_Size;
 float Disolve_Value;
-float Seed;
-float4 _Color;
+float Disolve_Seed;
 
 v2f vert(appdata_t IN)
 {
@@ -104,7 +105,7 @@ return m;
 float4 BurnFX(float4 txt, float2 uv, float value, float seed, float HDR)
 {
 float t = frac(value*0.9999);
-float4 c = smoothstep(t / 1.2, t + .1, BFXa(3.5*uv, seed));
+float4 c = step((t / 1.2, t + .1), BFXa(3.5*uv, seed*6));
 c = txt*c;
 c.r = lerp(c.r, c.r*15.0*(1 - c.a), value);
 c.g = lerp(c.g, c.g*10.0*(1 - c.a), value);
@@ -113,12 +114,18 @@ c.rgb += txt.rgb*value;
 c.rgb = lerp(saturate(c.rgb),c.rgb,HDR);
 return c;
 }
+float2 PixelUV(float2 uv, float x)
+{
+uv = floor(uv * x + 0.5) / x;
+return uv;
+}
 float4 frag (v2f i) : COLOR
 {
+float2 PixelUV_1 = PixelUV(i.texcoord,Pixel_Size);
 float4 _MainTex_1 = tex2D(_MainTex, i.texcoord);
-float4 _Burn_1 = BurnFX(_MainTex_1,i.texcoord,Disolve_Value,Seed,_Color);
+float4 _Burn_1 = BurnFX(_MainTex_1,PixelUV_1,Disolve_Value,Disolve_Seed,2);
 float4 FinalResult = _Burn_1;
-FinalResult.rgb *= i.color.rgb;
+FinalResult.rgb += i.color.rgb;
 FinalResult.a = FinalResult.a * _SpriteFade * i.color.a;
 FinalResult.rgb *= FinalResult.a;
 FinalResult.a = saturate(FinalResult.a);
