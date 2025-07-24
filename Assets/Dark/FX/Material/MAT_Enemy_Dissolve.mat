@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: MAT_Enemy_Dissolve
-  m_Shader: {fileID: 4800000, guid: 83390e21fc975294aa12ba7039103cdd, type: 3}
+  m_Shader: {fileID: 4800000, guid: 04133219a4fa05a41ba8518cea9ac9dd, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -41,13 +41,15 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - Disolve_Value: 0.85880506
+    - Disolve_Seed: -2.89
+    - Disolve_Value: 0
+    - Pixel_Size: 512
     - Seed: -8
     - _CanvasGroupCompatible: 1
     - _ColorMask: 15
     - _Cutoff: 0.263
     - _DissolveAmount: 1
-    - _DstFactor: 6
+    - _DstFactor: 10
     - _Opp: 0
     - _OutlineMipLevel: 0
     - _OutlineReferenceTexWidth: 1024

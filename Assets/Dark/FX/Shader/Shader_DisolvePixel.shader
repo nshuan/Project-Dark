@@ -105,7 +105,7 @@ return m;
 float4 BurnFX(float4 txt, float2 uv, float value, float seed, float HDR)
 {
 float t = frac(value*0.9999);
-float4 c = step((t / 1.2, t + .1), BFXa(3.5*uv, seed*6));
+float4 c = step((t / 1.2, t + .1), BFXa(6*uv, seed*6));
 c = txt*c;
 c.r = lerp(c.r, c.r*15.0*(1 - c.a), value);
 c.g = lerp(c.g, c.g*10.0*(1 - c.a), value);
