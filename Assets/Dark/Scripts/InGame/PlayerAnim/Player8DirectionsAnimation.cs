@@ -27,7 +27,7 @@ namespace InGame
         {
             currentAnim = currentDirection.idleAnim;
             currentFrame = 0;
-            spriteRenderer.sprite = currentAnim.frames[0];
+            spriteRenderer.sprite = currentAnim.data.frames[0];
             timer = 0f;
         }
 
@@ -35,17 +35,17 @@ namespace InGame
         {
             currentAnim = currentDirection.attackAnim;
             currentFrame = 0;
-            spriteRenderer.sprite = currentAnim.frames[0];
+            spriteRenderer.sprite = currentAnim.data.frames[0];
             timer = 0f;
             return (currentDirection.attackAnim.frameRate * currentDirection.attackAnim.strikeFrameIndex,
-                    currentDirection.attackAnim.frameRate * currentDirection.attackAnim.frames.Length);
+                    currentDirection.attackAnim.frameRate * currentDirection.attackAnim.data.frames.Length);
         }
         
         public void PlaySpecialAttack()
         {
             currentAnim = currentDirection.specialAttackAnim;
             currentFrame = 0;
-            spriteRenderer.sprite = currentAnim.frames[0];
+            spriteRenderer.sprite = currentAnim.data.frames[0];
             timer = 0f;
         }
 
@@ -68,7 +68,7 @@ namespace InGame
             if (timer >= currentAnim.frameRate)
             {
                 currentFrame += 1;
-                if (currentFrame >= currentAnim.frames.Length)
+                if (currentFrame >= currentAnim.data.frames.Length)
                 {
                     if (currentAnim.isLoop) currentFrame = 0;
                     else if (currentAnim.autoExit)
@@ -82,7 +82,7 @@ namespace InGame
                         return;
                     }
                 }
-                spriteRenderer.sprite = currentAnim.frames[currentFrame];
+                spriteRenderer.sprite = currentAnim.data.frames[currentFrame];
                 timer -= currentAnim.frameRate; // subtract instead of reset to avoid drift
             }
         }
