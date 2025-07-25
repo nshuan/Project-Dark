@@ -213,11 +213,15 @@ namespace InGame
             }
             else if (eventData.button == PointerEventData.InputButton.Right)
             {
-                teleKeyPressed = false;
-                teleMouseInput?.OnMouseClick(true);
-                teleMouseInput?.OnDeactivated();
-                ResetMotionBlur();
-                ResetTimeScale();
+                if (teleKeyPressed)
+                {
+                    teleKeyPressed = false;
+                    if (!BlockTeleport)
+                        teleMouseInput?.OnMouseClick(true);
+                    teleMouseInput?.OnDeactivated();
+                    ResetMotionBlur();
+                    ResetTimeScale();
+                }
             }
         }
 
