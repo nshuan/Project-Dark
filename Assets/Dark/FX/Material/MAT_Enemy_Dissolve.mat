@@ -7,13 +7,16 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MAT_Portal_Core
-  m_Shader: {fileID: 4800000, guid: 28f245a4e34998d46b10d12557f0a12b, type: 3}
+  m_Name: MAT_Enemy_Dissolve
+  m_Shader: {fileID: 4800000, guid: 04133219a4fa05a41ba8518cea9ac9dd, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
+  m_ValidKeywords: []
+  m_InvalidKeywords:
   - UNITY_UI_ALPHACLIP
-  m_InvalidKeywords: []
+  - _CANVAS_GROUP_COMPATIBLE
+  - _STRAIGHT_ALPHA_INPUT
+  - _USE8NEIGHBOURHOOD_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -24,35 +27,49 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _MainNoise:
+    - _DissolveNoiseTex:
         m_Texture: {fileID: 2800000, guid: c3ba872455e7c6540b3ad3698f2bd544, type: 3}
-        m_Scale: {x: 0.8, y: 0.2}
-        m_Offset: {x: 0.91, y: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _NoiseTex:
-        m_Texture: {fileID: 2800000, guid: 229b6e14b340cbe48837c1c3f16cc258, type: 3}
+    - _Tex:
+        m_Texture: {fileID: 2800000, guid: 58150e48bf3f5c74f962bab435c24ca6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - Disolve_Seed: -2.89
+    - Disolve_Value: 0
+    - Pixel_Size: 512
+    - Seed: -8
+    - _CanvasGroupCompatible: 1
     - _ColorMask: 15
-    - _DarknessFactor: 0
-    - _DistortionFactor: 0
-    - _DstFactor: 9
-    - _NoiseValue: 1
+    - _Cutoff: 0.263
+    - _DissolveAmount: 1
+    - _DstFactor: 10
     - _Opp: 0
+    - _OutlineMipLevel: 0
+    - _OutlineReferenceTexWidth: 1024
+    - _OutlineSmoothness: 1
+    - _OutlineWidth: 3
+    - _Size: 3.74
+    - _Speed: 0.372
+    - _SpriteFade: 1
     - _SrcFactor: 3
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
+    - _StraightAlphaInput: 1
+    - _ThresholdEnd: 0.25
+    - _Use8Neighbourhood: 1
     - _UseUIAlphaClip: 1
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 0.05490196}
-    - _NoiseSpeed: {r: 1, g: 0, b: 0, a: 0}
-    - _Speed: {r: 0, g: 0.4, b: 0, a: 0}
+    - _Color: {r: 1, g: 0, b: 0, a: 1}
+    - _DissolveColor: {r: 1, g: 0.6878892, b: 0, a: 1}
+    - _OutlineColor: {r: 1, g: 1, b: 0, a: 1}
   m_BuildTextureStacks: []

@@ -1,4 +1,5 @@
 using System;
+using Dark.Scripts.FrameByFrameAnimation;
 using UnityEngine;
 
 namespace InGame
@@ -23,7 +24,7 @@ namespace InGame
         {
             currentAnim = idleAnim;
             currentFrame = 0;
-            spriteRenderer.sprite = currentAnim.frames[0];
+            spriteRenderer.sprite = currentAnim.data.frames[0];
             timer = 0f;
         }
 
@@ -31,7 +32,7 @@ namespace InGame
         {
             currentAnim = attackAnim;
             currentFrame = 0;
-            spriteRenderer.sprite = currentAnim.frames[0];
+            spriteRenderer.sprite = currentAnim.data.frames[0];
             timer = 0f;
             return attackAnim.frameRate * attackAnim.strikeFrameIndex;
         }
@@ -40,7 +41,7 @@ namespace InGame
         {
             currentAnim = specialAttackAnim;
             currentFrame = 0;
-            spriteRenderer.sprite = currentAnim.frames[0];
+            spriteRenderer.sprite = currentAnim.data.frames[0];
             timer = 0f;
         }
 
@@ -52,7 +53,7 @@ namespace InGame
             if (timer >= currentAnim.frameRate)
             {
                 currentFrame += 1;
-                if (currentFrame >= currentAnim.frames.Length)
+                if (currentFrame >= currentAnim.data.frames.Length)
                 {
                     if (currentAnim.isLoop) currentFrame = 0;
                     else if (currentAnim.autoExit)
@@ -66,7 +67,7 @@ namespace InGame
                         return;
                     }
                 }
-                spriteRenderer.sprite = currentAnim.frames[currentFrame];
+                spriteRenderer.sprite = currentAnim.data.frames[currentFrame];
                 timer -= currentAnim.frameRate; // subtract instead of reset to avoid drift
             }
         }
@@ -75,7 +76,7 @@ namespace InGame
     [Serializable]
     public class PlayerSpritesAnimationInfo
     {
-        public Sprite[] frames;
+        public FrameByFrameAnimation data;
         public bool isLoop;
         public float frameRate = 0.1f;
         public bool autoExit = true;

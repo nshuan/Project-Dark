@@ -101,7 +101,16 @@ namespace InGame
 
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             InputManager.BlockTeleport = true;
-            var delayShot = InputManager.playerVisual.PlayShoot(worldMousePosition);
+            var delayShot = 0f;
+            if (isCharge)
+            {
+                delayShot = 0f;
+                InputManager.playerVisual.EndChargeAndShoot();
+            }
+            else
+            {
+                delayShot = InputManager.playerVisual.PlayShoot(worldMousePosition);
+            }
             InputManager.DelayCall(delayShot, () =>
             {
                 InputManager.playerVisual.Weapon.GetAllEnemiesInRange(skillRange);
@@ -154,6 +163,9 @@ namespace InGame
             if (canChargeDame && maxDameMultiplierAdd > 0) isChargingDame = true;
             if (canChargeSize && maxSizeMultiplierAdd > 0) isChargingSize = true;
             if (canChargeRange && maxRangeMultiplierAdd > 0) isChargingRange = true;
+            
+            if (isChargingBullet || isChargingDame || isChargingSize || isChargingRange)
+                InputManager.playerVisual.PlayCharge();
         }
 
         public void OnHoldReleased()

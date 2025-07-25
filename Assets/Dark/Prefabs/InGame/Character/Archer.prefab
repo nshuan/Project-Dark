@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &52153965306898853
+--- !u!1 &192765987599666672
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,44 +8,30 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8220225792644094851}
-  - component: {fileID: 194679540540806704}
+  - component: {fileID: 1766775453336322799}
   m_Layer: 0
-  m_Name: Visual Spine
+  m_Name: Charge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!4 &8220225792644094851
+--- !u!4 &1766775453336322799
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 52153965306898853}
+  m_GameObject: {fileID: 192765987599666672}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.055, y: 0.076, z: 0}
+  m_LocalPosition: {x: -0.02, y: -0.207, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 1
+  m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5730498341007099703}
+  - {fileID: 5392069250690257185}
   m_Father: {fileID: 8748002566143027518}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &194679540540806704
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 52153965306898853}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f911c3b9b69241209bc499fa5a3a7ae3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spritesAnim: {fileID: 0}
 --- !u!1 &701391344388086529
 GameObject:
   m_ObjectHideFlags: 0
@@ -319,7 +305,7 @@ Transform:
   m_GameObject: {fileID: 5644949011015942855}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.062, y: -0.124, z: 0}
+  m_LocalPosition: {x: -0.048, y: -0.12, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -413,7 +399,7 @@ SpriteRenderer:
   m_SortingLayerID: 862781815
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 1915828831, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
+  m_Sprite: {fileID: -404609069, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -440,276 +426,26 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 1994374372, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 341458093, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -707415312, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1015575490, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1596009138, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1050012148, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1704322942, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1891405408, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1917371077, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1201704453, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -997876649, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1304918378, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -403320685, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 337324137, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -590216371, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1647939684, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -522751174, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 447680277, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -500172927, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 1100944043, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -1755190930, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 771791810, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -1559038617, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 603272516, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -1580081879, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 847127278, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -1208404082, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -1279645786, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -312901234, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1380928525, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1765166709, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 892949902, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 612569681, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -111731017, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 2139535277, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1141199794, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -911603815, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1908002302, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1027618180, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 908749025, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -300719015, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1887622810, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1169604919, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1459154892, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 1623660056, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 2081277400, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -1469774042, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 374418811, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -689640095, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -1786386671, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 245168585, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 1831448892, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 878711025, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -942664983, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -828553035, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1515492616, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -2058991, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -914209756, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1531761967, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 129631750, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 736236059, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1137418551, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 334552179, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1031471222, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 535641876, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -861206049, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1260160474, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 937625973, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1677079094, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 782582810, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 2120515615, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 844895864, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -382620793, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 1701884316, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 1201918484, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -484789853, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 154452972, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -1705890381, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 348667233, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 1806956162, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 931749764, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 419086146, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 970505112, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1099566573, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1458812786, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -404609069, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -57028871, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 340722202, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 661468104, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1351960349, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1512198718, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 555720195, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -728577377, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1462716537, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1399134581, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 705014559, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -844081953, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1933852560, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 1360167666, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -28581588, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 10837849, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -985361393, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 1021529750, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 1231536866, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -1606279133, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 1143407124, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 1591258230, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 1741465145, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 1915828831, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -109018485, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1145560624, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -981831025, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1032203460, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1110230213, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -411031770, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1943125418, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1838984997, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -2087777417, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1303297293, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 690861309, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1667590510, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1729418437, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1255071142, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1002660906, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 287992777, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -553599274, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 423952071, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -172014195, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 571629163, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -516090858, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 1257976213, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -1231675116, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 145670608, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -410702880, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -1999695277, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -1110722846, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -512323838, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1061136174, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1183524782, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 3410322, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1253673119, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 2091302803, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 338490443, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 216641368, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1389879252, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1013335274, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 680128522, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -323346560, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 634917420, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 722468036, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 136846891, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1858141157, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -1954853637, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -1983644727, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -1113914536, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -2089238248, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 4204644, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 1013445672, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 49372882, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -1581134033, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -2041156194, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -843255236, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -2012511073, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -677130461, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -848969409, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 272402056, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1916479747, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1524629732, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1500400192, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1062119018, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -395477792, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 2014278408, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1386196940, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1792494680, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 886208972, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1765048931, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 570337408, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -603926494, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -878471549, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 731229698, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 104486302, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -473183917, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 1673525093, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -1753484073, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -972819150, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 52413310, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -933471166, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -2043107732, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -2119680348, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -514697328, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -551660233, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -485577360, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1075838005, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1507459691, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1865022611, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -2126068964, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 222437802, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -675507398, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1038885851, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1477018175, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1713614679, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 369114727, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -154498508, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 2025764759, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1219003697, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1413176986, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 962720997, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 1818383573, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 1255768127, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -1890008410, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -317379544, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 6440828, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 299784333, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 1294521786, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 1165140379, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 2126348787, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -699472304, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 2059146558, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1603570521, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1533676235, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1106044191, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 2062406466, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1783332133, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1339216627, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1954636251, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 2135346544, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 840207201, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -71764706, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 640398603, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -2044712236, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1765933657, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 2125549308, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1870838327, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -1979304864, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 1113596963, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 998391602, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -396869785, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -911804857, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 540053457, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 735239082, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -157350141, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 1600698126, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -1499534072, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -1992253132, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 2138057657, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 2092000863, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1434693807, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1191367508, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1361033336, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 130109753, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1327586303, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -342659229, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1931824889, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -1473370375, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1047819106, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 871141483, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -133253457, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -673574891, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: -342767206, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
-    - {fileID: 1757738185, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 2104090612, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -2055450172, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -203816520, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -2101347974, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 2075924694, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 771223996, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -1817065898, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: 1662827544, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -1715973159, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
-    - {fileID: -1198906549, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
+    - {fileID: 11400000, guid: c338d07902a247d4f99f416371a0c4aa, type: 2}
+    - {fileID: 11400000, guid: c1c58ab7125b96844904224471492cba, type: 2}
+    - {fileID: 11400000, guid: cc0e021c282965c478ee2c2cc6b009a4, type: 2}
+    - {fileID: 11400000, guid: ebe698ce4d5e5714da38de31d265ca3e, type: 2}
+    - {fileID: 11400000, guid: 561d4dfedf3f05d4d9fbcb792eb7ad3b, type: 2}
+    - {fileID: 11400000, guid: 9bdd9752542191a4793d48ec1de3977f, type: 2}
+    - {fileID: 11400000, guid: 5e19f537efc1b6840ab1717f9668301e, type: 2}
+    - {fileID: 11400000, guid: 44ccbf48011b10546aa6d03d5e42d718, type: 2}
+    - {fileID: 11400000, guid: 8a8a05c85c21b1847b76d5cea9b1887e, type: 2}
+    - {fileID: 11400000, guid: addc59671fd7a5446997bf224899b372, type: 2}
+    - {fileID: 11400000, guid: 5ba2fe832ebd39e48a2ffbb3e91fa4d1, type: 2}
+    - {fileID: 11400000, guid: c12edab1a136abf428f15a737523d120, type: 2}
+    - {fileID: 11400000, guid: 3b2f42508b8c5624fa7ff76e4932c9e2, type: 2}
+    - {fileID: 11400000, guid: eb4034d1e2674f74396aca60596429c7, type: 2}
+    - {fileID: 11400000, guid: d9de5d66132e2544f97b01d6c08fa15f, type: 2}
+    - {fileID: 11400000, guid: 05aad9a914a8215488a26f966b59c6c2, type: 2}
+    - {fileID: 11400000, guid: 8d0406a3e4a614540ba481732397a583, type: 2}
+    - {fileID: 11400000, guid: e7b23fe8c4f4d404da4dcfa14f6186ae, type: 2}
+    - {fileID: 11400000, guid: 3cff72685f244814d9b2d27bbaeb884f, type: 2}
+    - {fileID: 11400000, guid: 04956e163a0405849a60dc23546f4973, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -728,66 +464,9 @@ MonoBehaviour:
     - Name: idleAnim
       Entry: 7
       Data: 2|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 3|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 16
-    - Name: 
+    - Name: data
       Entry: 10
       Data: 0
-    - Name: 
-      Entry: 10
-      Data: 1
-    - Name: 
-      Entry: 10
-      Data: 2
-    - Name: 
-      Entry: 10
-      Data: 3
-    - Name: 
-      Entry: 10
-      Data: 4
-    - Name: 
-      Entry: 10
-      Data: 5
-    - Name: 
-      Entry: 10
-      Data: 6
-    - Name: 
-      Entry: 10
-      Data: 7
-    - Name: 
-      Entry: 10
-      Data: 8
-    - Name: 
-      Entry: 10
-      Data: 9
-    - Name: 
-      Entry: 10
-      Data: 10
-    - Name: 
-      Entry: 10
-      Data: 11
-    - Name: 
-      Entry: 10
-      Data: 12
-    - Name: 
-      Entry: 10
-      Data: 13
-    - Name: 
-      Entry: 10
-      Data: 14
-    - Name: 
-      Entry: 10
-      Data: 15
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
     - Name: isLoop
       Entry: 5
       Data: true
@@ -802,52 +481,10 @@ MonoBehaviour:
       Data: 
     - Name: attackAnim
       Entry: 7
-      Data: 4|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 5|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 11
-    - Name: 
+      Data: 3|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: data
       Entry: 10
-      Data: 16
-    - Name: 
-      Entry: 10
-      Data: 17
-    - Name: 
-      Entry: 10
-      Data: 18
-    - Name: 
-      Entry: 10
-      Data: 19
-    - Name: 
-      Entry: 10
-      Data: 20
-    - Name: 
-      Entry: 10
-      Data: 21
-    - Name: 
-      Entry: 10
-      Data: 22
-    - Name: 
-      Entry: 10
-      Data: 23
-    - Name: 
-      Entry: 10
-      Data: 24
-    - Name: 
-      Entry: 10
-      Data: 25
-    - Name: 
-      Entry: 10
-      Data: 26
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+      Data: 1
     - Name: isLoop
       Entry: 5
       Data: false
@@ -865,52 +502,10 @@ MonoBehaviour:
       Data: 
     - Name: specialAttackAnim
       Entry: 7
-      Data: 6|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 7|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 11
-    - Name: 
+      Data: 4|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: data
       Entry: 10
-      Data: 16
-    - Name: 
-      Entry: 10
-      Data: 17
-    - Name: 
-      Entry: 10
-      Data: 18
-    - Name: 
-      Entry: 10
-      Data: 19
-    - Name: 
-      Entry: 10
-      Data: 20
-    - Name: 
-      Entry: 10
-      Data: 21
-    - Name: 
-      Entry: 10
-      Data: 22
-    - Name: 
-      Entry: 10
-      Data: 23
-    - Name: 
-      Entry: 10
-      Data: 24
-    - Name: 
-      Entry: 10
-      Data: 25
-    - Name: 
-      Entry: 10
-      Data: 26
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+      Data: 1
     - Name: isLoop
       Entry: 5
       Data: false
@@ -926,75 +521,96 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: chargeAnim
+      Entry: 6
+      Data: 
+    - Name: chargeAttackAnim
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 8|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
+      Data: 5|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
     - Name: idleAnim
       Entry: 7
-      Data: 9|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
-    - Name: frames
+      Data: 6|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
+    - Name: data
+      Entry: 10
+      Data: 2
+    - Name: isLoop
+      Entry: 5
+      Data: true
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attackAnim
       Entry: 7
-      Data: 10|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 16
-    - Name: 
+      Data: 7|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: data
       Entry: 10
-      Data: 27
+      Data: 3
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 5
     - Name: 
+      Entry: 8
+      Data: 
+    - Name: specialAttackAnim
+      Entry: 7
+      Data: 8|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: data
       Entry: 10
-      Data: 28
+      Data: 3
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 5
     - Name: 
-      Entry: 10
-      Data: 29
-    - Name: 
-      Entry: 10
-      Data: 30
-    - Name: 
-      Entry: 10
-      Data: 31
-    - Name: 
-      Entry: 10
-      Data: 32
-    - Name: 
-      Entry: 10
-      Data: 33
-    - Name: 
-      Entry: 10
-      Data: 34
-    - Name: 
-      Entry: 10
-      Data: 35
-    - Name: 
-      Entry: 10
-      Data: 36
-    - Name: 
-      Entry: 10
-      Data: 37
-    - Name: 
-      Entry: 10
-      Data: 38
-    - Name: 
-      Entry: 10
-      Data: 39
-    - Name: 
-      Entry: 10
-      Data: 40
-    - Name: 
-      Entry: 10
-      Data: 41
-    - Name: 
-      Entry: 10
-      Data: 42
-    - Name: 
-      Entry: 13
+      Entry: 8
+      Data: 
+    - Name: chargeAnim
+      Entry: 6
+      Data: 
+    - Name: chargeAttackAnim
+      Entry: 6
       Data: 
     - Name: 
       Entry: 8
       Data: 
+    - Name: 
+      Entry: 7
+      Data: 9|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
+    - Name: idleAnim
+      Entry: 7
+      Data: 10|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
+    - Name: data
+      Entry: 10
+      Data: 4
     - Name: isLoop
       Entry: 5
       Data: true
@@ -1010,51 +626,9 @@ MonoBehaviour:
     - Name: attackAnim
       Entry: 7
       Data: 11|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 12|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 11
-    - Name: 
+    - Name: data
       Entry: 10
-      Data: 43
-    - Name: 
-      Entry: 10
-      Data: 44
-    - Name: 
-      Entry: 10
-      Data: 45
-    - Name: 
-      Entry: 10
-      Data: 46
-    - Name: 
-      Entry: 10
-      Data: 47
-    - Name: 
-      Entry: 10
-      Data: 48
-    - Name: 
-      Entry: 10
-      Data: 49
-    - Name: 
-      Entry: 10
-      Data: 50
-    - Name: 
-      Entry: 10
-      Data: 51
-    - Name: 
-      Entry: 10
-      Data: 52
-    - Name: 
-      Entry: 10
-      Data: 53
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+      Data: 5
     - Name: isLoop
       Entry: 5
       Data: false
@@ -1072,52 +646,10 @@ MonoBehaviour:
       Data: 
     - Name: specialAttackAnim
       Entry: 7
-      Data: 13|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 14|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 11
-    - Name: 
+      Data: 12|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: data
       Entry: 10
-      Data: 43
-    - Name: 
-      Entry: 10
-      Data: 44
-    - Name: 
-      Entry: 10
-      Data: 45
-    - Name: 
-      Entry: 10
-      Data: 46
-    - Name: 
-      Entry: 10
-      Data: 47
-    - Name: 
-      Entry: 10
-      Data: 48
-    - Name: 
-      Entry: 10
-      Data: 49
-    - Name: 
-      Entry: 10
-      Data: 50
-    - Name: 
-      Entry: 10
-      Data: 51
-    - Name: 
-      Entry: 10
-      Data: 52
-    - Name: 
-      Entry: 10
-      Data: 53
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+      Data: 5
     - Name: isLoop
       Entry: 5
       Data: false
@@ -1133,75 +665,24 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: chargeAnim
+      Entry: 6
+      Data: 
+    - Name: chargeAttackAnim
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 15|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
+      Data: 13|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
     - Name: idleAnim
       Entry: 7
-      Data: 16|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 17|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 16
-    - Name: 
+      Data: 14|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
+    - Name: data
       Entry: 10
-      Data: 54
-    - Name: 
-      Entry: 10
-      Data: 55
-    - Name: 
-      Entry: 10
-      Data: 56
-    - Name: 
-      Entry: 10
-      Data: 57
-    - Name: 
-      Entry: 10
-      Data: 58
-    - Name: 
-      Entry: 10
-      Data: 59
-    - Name: 
-      Entry: 10
-      Data: 60
-    - Name: 
-      Entry: 10
-      Data: 61
-    - Name: 
-      Entry: 10
-      Data: 62
-    - Name: 
-      Entry: 10
-      Data: 63
-    - Name: 
-      Entry: 10
-      Data: 64
-    - Name: 
-      Entry: 10
-      Data: 65
-    - Name: 
-      Entry: 10
-      Data: 66
-    - Name: 
-      Entry: 10
-      Data: 67
-    - Name: 
-      Entry: 10
-      Data: 68
-    - Name: 
-      Entry: 10
-      Data: 69
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+      Data: 6
     - Name: isLoop
       Entry: 5
       Data: true
@@ -1216,52 +697,82 @@ MonoBehaviour:
       Data: 
     - Name: attackAnim
       Entry: 7
-      Data: 18|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
-    - Name: frames
+      Data: 15|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: data
+      Entry: 10
+      Data: 7
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: specialAttackAnim
       Entry: 7
-      Data: 19|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 11
-    - Name: 
+      Data: 16|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: data
       Entry: 10
-      Data: 70
+      Data: 7
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 5
     - Name: 
-      Entry: 10
-      Data: 71
-    - Name: 
-      Entry: 10
-      Data: 72
-    - Name: 
-      Entry: 10
-      Data: 73
-    - Name: 
-      Entry: 10
-      Data: 74
-    - Name: 
-      Entry: 10
-      Data: 75
-    - Name: 
-      Entry: 10
-      Data: 76
-    - Name: 
-      Entry: 10
-      Data: 77
-    - Name: 
-      Entry: 10
-      Data: 78
-    - Name: 
-      Entry: 10
-      Data: 79
-    - Name: 
-      Entry: 10
-      Data: 80
-    - Name: 
-      Entry: 13
+      Entry: 8
+      Data: 
+    - Name: chargeAnim
+      Entry: 6
+      Data: 
+    - Name: chargeAttackAnim
+      Entry: 6
       Data: 
     - Name: 
       Entry: 8
       Data: 
+    - Name: 
+      Entry: 7
+      Data: 17|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
+    - Name: idleAnim
+      Entry: 7
+      Data: 18|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
+    - Name: data
+      Entry: 10
+      Data: 8
+    - Name: isLoop
+      Entry: 5
+      Data: true
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attackAnim
+      Entry: 7
+      Data: 19|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: data
+      Entry: 10
+      Data: 9
     - Name: isLoop
       Entry: 5
       Data: false
@@ -1280,51 +791,9 @@ MonoBehaviour:
     - Name: specialAttackAnim
       Entry: 7
       Data: 20|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 21|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 11
-    - Name: 
+    - Name: data
       Entry: 10
-      Data: 70
-    - Name: 
-      Entry: 10
-      Data: 71
-    - Name: 
-      Entry: 10
-      Data: 72
-    - Name: 
-      Entry: 10
-      Data: 73
-    - Name: 
-      Entry: 10
-      Data: 74
-    - Name: 
-      Entry: 10
-      Data: 75
-    - Name: 
-      Entry: 10
-      Data: 76
-    - Name: 
-      Entry: 10
-      Data: 77
-    - Name: 
-      Entry: 10
-      Data: 78
-    - Name: 
-      Entry: 10
-      Data: 79
-    - Name: 
-      Entry: 10
-      Data: 80
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+      Data: 9
     - Name: isLoop
       Entry: 5
       Data: false
@@ -1340,75 +809,24 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: chargeAnim
+      Entry: 6
+      Data: 
+    - Name: chargeAttackAnim
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 22|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
+      Data: 21|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
     - Name: idleAnim
       Entry: 7
-      Data: 23|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 24|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 16
-    - Name: 
+      Data: 22|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
+    - Name: data
       Entry: 10
-      Data: 81
-    - Name: 
-      Entry: 10
-      Data: 82
-    - Name: 
-      Entry: 10
-      Data: 83
-    - Name: 
-      Entry: 10
-      Data: 84
-    - Name: 
-      Entry: 10
-      Data: 85
-    - Name: 
-      Entry: 10
-      Data: 86
-    - Name: 
-      Entry: 10
-      Data: 87
-    - Name: 
-      Entry: 10
-      Data: 88
-    - Name: 
-      Entry: 10
-      Data: 89
-    - Name: 
-      Entry: 10
-      Data: 90
-    - Name: 
-      Entry: 10
-      Data: 91
-    - Name: 
-      Entry: 10
-      Data: 92
-    - Name: 
-      Entry: 10
-      Data: 93
-    - Name: 
-      Entry: 10
-      Data: 94
-    - Name: 
-      Entry: 10
-      Data: 95
-    - Name: 
-      Entry: 10
-      Data: 96
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+      Data: 10
     - Name: isLoop
       Entry: 5
       Data: true
@@ -1423,52 +841,10 @@ MonoBehaviour:
       Data: 
     - Name: attackAnim
       Entry: 7
-      Data: 25|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 26|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
+      Data: 23|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: data
+      Entry: 10
       Data: 11
-    - Name: 
-      Entry: 10
-      Data: 97
-    - Name: 
-      Entry: 10
-      Data: 98
-    - Name: 
-      Entry: 10
-      Data: 99
-    - Name: 
-      Entry: 10
-      Data: 100
-    - Name: 
-      Entry: 10
-      Data: 101
-    - Name: 
-      Entry: 10
-      Data: 102
-    - Name: 
-      Entry: 10
-      Data: 103
-    - Name: 
-      Entry: 10
-      Data: 104
-    - Name: 
-      Entry: 10
-      Data: 105
-    - Name: 
-      Entry: 10
-      Data: 106
-    - Name: 
-      Entry: 10
-      Data: 107
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
     - Name: isLoop
       Entry: 5
       Data: false
@@ -1486,52 +862,10 @@ MonoBehaviour:
       Data: 
     - Name: specialAttackAnim
       Entry: 7
-      Data: 27|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 28|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
+      Data: 24|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: data
+      Entry: 10
       Data: 11
-    - Name: 
-      Entry: 10
-      Data: 97
-    - Name: 
-      Entry: 10
-      Data: 98
-    - Name: 
-      Entry: 10
-      Data: 99
-    - Name: 
-      Entry: 10
-      Data: 100
-    - Name: 
-      Entry: 10
-      Data: 101
-    - Name: 
-      Entry: 10
-      Data: 102
-    - Name: 
-      Entry: 10
-      Data: 103
-    - Name: 
-      Entry: 10
-      Data: 104
-    - Name: 
-      Entry: 10
-      Data: 105
-    - Name: 
-      Entry: 10
-      Data: 106
-    - Name: 
-      Entry: 10
-      Data: 107
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
     - Name: isLoop
       Entry: 5
       Data: false
@@ -1546,6 +880,84 @@ MonoBehaviour:
       Data: 5
     - Name: 
       Entry: 8
+      Data: 
+    - Name: chargeAnim
+      Entry: 6
+      Data: 
+    - Name: chargeAttackAnim
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 25|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
+    - Name: idleAnim
+      Entry: 7
+      Data: 26|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
+    - Name: data
+      Entry: 10
+      Data: 12
+    - Name: isLoop
+      Entry: 5
+      Data: true
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attackAnim
+      Entry: 7
+      Data: 27|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: data
+      Entry: 10
+      Data: 13
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: specialAttackAnim
+      Entry: 7
+      Data: 28|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: data
+      Entry: 10
+      Data: 13
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: chargeAnim
+      Entry: 6
+      Data: 
+    - Name: chargeAttackAnim
+      Entry: 6
       Data: 
     - Name: 
       Entry: 8
@@ -1556,66 +968,9 @@ MonoBehaviour:
     - Name: idleAnim
       Entry: 7
       Data: 30|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 31|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 16
-    - Name: 
+    - Name: data
       Entry: 10
-      Data: 108
-    - Name: 
-      Entry: 10
-      Data: 109
-    - Name: 
-      Entry: 10
-      Data: 110
-    - Name: 
-      Entry: 10
-      Data: 111
-    - Name: 
-      Entry: 10
-      Data: 112
-    - Name: 
-      Entry: 10
-      Data: 113
-    - Name: 
-      Entry: 10
-      Data: 114
-    - Name: 
-      Entry: 10
-      Data: 115
-    - Name: 
-      Entry: 10
-      Data: 116
-    - Name: 
-      Entry: 10
-      Data: 117
-    - Name: 
-      Entry: 10
-      Data: 118
-    - Name: 
-      Entry: 10
-      Data: 119
-    - Name: 
-      Entry: 10
-      Data: 120
-    - Name: 
-      Entry: 10
-      Data: 121
-    - Name: 
-      Entry: 10
-      Data: 122
-    - Name: 
-      Entry: 10
-      Data: 123
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+      Data: 14
     - Name: isLoop
       Entry: 5
       Data: true
@@ -1630,52 +985,10 @@ MonoBehaviour:
       Data: 
     - Name: attackAnim
       Entry: 7
-      Data: 32|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 33|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 11
-    - Name: 
+      Data: 31|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: data
       Entry: 10
-      Data: 124
-    - Name: 
-      Entry: 10
-      Data: 125
-    - Name: 
-      Entry: 10
-      Data: 126
-    - Name: 
-      Entry: 10
-      Data: 127
-    - Name: 
-      Entry: 10
-      Data: 128
-    - Name: 
-      Entry: 10
-      Data: 129
-    - Name: 
-      Entry: 10
-      Data: 130
-    - Name: 
-      Entry: 10
-      Data: 131
-    - Name: 
-      Entry: 10
-      Data: 132
-    - Name: 
-      Entry: 10
-      Data: 133
-    - Name: 
-      Entry: 10
-      Data: 134
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+      Data: 15
     - Name: isLoop
       Entry: 5
       Data: false
@@ -1693,52 +1006,10 @@ MonoBehaviour:
       Data: 
     - Name: specialAttackAnim
       Entry: 7
-      Data: 34|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 35|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 11
-    - Name: 
+      Data: 32|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: data
       Entry: 10
-      Data: 124
-    - Name: 
-      Entry: 10
-      Data: 125
-    - Name: 
-      Entry: 10
-      Data: 126
-    - Name: 
-      Entry: 10
-      Data: 127
-    - Name: 
-      Entry: 10
-      Data: 128
-    - Name: 
-      Entry: 10
-      Data: 129
-    - Name: 
-      Entry: 10
-      Data: 130
-    - Name: 
-      Entry: 10
-      Data: 131
-    - Name: 
-      Entry: 10
-      Data: 132
-    - Name: 
-      Entry: 10
-      Data: 133
-    - Name: 
-      Entry: 10
-      Data: 134
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+      Data: 15
     - Name: isLoop
       Entry: 5
       Data: false
@@ -1754,75 +1025,96 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: chargeAnim
+      Entry: 6
+      Data: 
+    - Name: chargeAttackAnim
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 36|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
+      Data: 33|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
     - Name: idleAnim
       Entry: 7
-      Data: 37|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 38|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
+      Data: 34|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
+    - Name: data
+      Entry: 10
       Data: 16
+    - Name: isLoop
+      Entry: 5
+      Data: true
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: false
     - Name: 
+      Entry: 8
+      Data: 
+    - Name: attackAnim
+      Entry: 7
+      Data: 35|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: data
       Entry: 10
-      Data: 135
+      Data: 17
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 5
     - Name: 
+      Entry: 8
+      Data: 
+    - Name: specialAttackAnim
+      Entry: 7
+      Data: 36|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: data
       Entry: 10
-      Data: 136
+      Data: 17
+    - Name: isLoop
+      Entry: 5
+      Data: false
+    - Name: frameRate
+      Entry: 4
+      Data: 0.1
+    - Name: autoExit
+      Entry: 5
+      Data: true
+    - Name: strikeFrameIndex
+      Entry: 3
+      Data: 5
     - Name: 
-      Entry: 10
-      Data: 137
-    - Name: 
-      Entry: 10
-      Data: 138
-    - Name: 
-      Entry: 10
-      Data: 139
-    - Name: 
-      Entry: 10
-      Data: 140
-    - Name: 
-      Entry: 10
-      Data: 141
-    - Name: 
-      Entry: 10
-      Data: 142
-    - Name: 
-      Entry: 10
-      Data: 143
-    - Name: 
-      Entry: 10
-      Data: 144
-    - Name: 
-      Entry: 10
-      Data: 145
-    - Name: 
-      Entry: 10
-      Data: 146
-    - Name: 
-      Entry: 10
-      Data: 147
-    - Name: 
-      Entry: 10
-      Data: 148
-    - Name: 
-      Entry: 10
-      Data: 149
-    - Name: 
-      Entry: 10
-      Data: 150
-    - Name: 
-      Entry: 13
+      Entry: 8
+      Data: 
+    - Name: chargeAnim
+      Entry: 6
+      Data: 
+    - Name: chargeAttackAnim
+      Entry: 6
       Data: 
     - Name: 
       Entry: 8
       Data: 
+    - Name: 
+      Entry: 7
+      Data: 37|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
+    - Name: idleAnim
+      Entry: 7
+      Data: 38|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
+    - Name: data
+      Entry: 10
+      Data: 18
     - Name: isLoop
       Entry: 5
       Data: true
@@ -1838,51 +1130,9 @@ MonoBehaviour:
     - Name: attackAnim
       Entry: 7
       Data: 39|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 40|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 11
-    - Name: 
+    - Name: data
       Entry: 10
-      Data: 151
-    - Name: 
-      Entry: 10
-      Data: 152
-    - Name: 
-      Entry: 10
-      Data: 153
-    - Name: 
-      Entry: 10
-      Data: 154
-    - Name: 
-      Entry: 10
-      Data: 155
-    - Name: 
-      Entry: 10
-      Data: 156
-    - Name: 
-      Entry: 10
-      Data: 157
-    - Name: 
-      Entry: 10
-      Data: 158
-    - Name: 
-      Entry: 10
-      Data: 159
-    - Name: 
-      Entry: 10
-      Data: 160
-    - Name: 
-      Entry: 10
-      Data: 161
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+      Data: 19
     - Name: isLoop
       Entry: 5
       Data: false
@@ -1900,52 +1150,10 @@ MonoBehaviour:
       Data: 
     - Name: specialAttackAnim
       Entry: 7
-      Data: 41|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 42|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 11
-    - Name: 
+      Data: 40|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
+    - Name: data
       Entry: 10
-      Data: 151
-    - Name: 
-      Entry: 10
-      Data: 152
-    - Name: 
-      Entry: 10
-      Data: 153
-    - Name: 
-      Entry: 10
-      Data: 154
-    - Name: 
-      Entry: 10
-      Data: 155
-    - Name: 
-      Entry: 10
-      Data: 156
-    - Name: 
-      Entry: 10
-      Data: 157
-    - Name: 
-      Entry: 10
-      Data: 158
-    - Name: 
-      Entry: 10
-      Data: 159
-    - Name: 
-      Entry: 10
-      Data: 160
-    - Name: 
-      Entry: 10
-      Data: 161
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+      Data: 19
     - Name: isLoop
       Entry: 5
       Data: false
@@ -1961,833 +1169,11 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: 
-      Entry: 8
+    - Name: chargeAnim
+      Entry: 6
       Data: 
-    - Name: 
-      Entry: 7
-      Data: 43|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
-    - Name: idleAnim
-      Entry: 7
-      Data: 44|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 45|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 16
-    - Name: 
-      Entry: 10
-      Data: 162
-    - Name: 
-      Entry: 10
-      Data: 163
-    - Name: 
-      Entry: 10
-      Data: 164
-    - Name: 
-      Entry: 10
-      Data: 165
-    - Name: 
-      Entry: 10
-      Data: 166
-    - Name: 
-      Entry: 10
-      Data: 167
-    - Name: 
-      Entry: 10
-      Data: 168
-    - Name: 
-      Entry: 10
-      Data: 169
-    - Name: 
-      Entry: 10
-      Data: 170
-    - Name: 
-      Entry: 10
-      Data: 171
-    - Name: 
-      Entry: 10
-      Data: 172
-    - Name: 
-      Entry: 10
-      Data: 173
-    - Name: 
-      Entry: 10
-      Data: 174
-    - Name: 
-      Entry: 10
-      Data: 175
-    - Name: 
-      Entry: 10
-      Data: 176
-    - Name: 
-      Entry: 10
-      Data: 177
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: isLoop
-      Entry: 5
-      Data: true
-    - Name: frameRate
-      Entry: 4
-      Data: 0.1
-    - Name: autoExit
-      Entry: 5
-      Data: false
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: attackAnim
-      Entry: 7
-      Data: 46|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 47|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 11
-    - Name: 
-      Entry: 10
-      Data: 178
-    - Name: 
-      Entry: 10
-      Data: 179
-    - Name: 
-      Entry: 10
-      Data: 180
-    - Name: 
-      Entry: 10
-      Data: 181
-    - Name: 
-      Entry: 10
-      Data: 182
-    - Name: 
-      Entry: 10
-      Data: 183
-    - Name: 
-      Entry: 10
-      Data: 184
-    - Name: 
-      Entry: 10
-      Data: 185
-    - Name: 
-      Entry: 10
-      Data: 186
-    - Name: 
-      Entry: 10
-      Data: 187
-    - Name: 
-      Entry: 10
-      Data: 188
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: isLoop
-      Entry: 5
-      Data: false
-    - Name: frameRate
-      Entry: 4
-      Data: 0.1
-    - Name: autoExit
-      Entry: 5
-      Data: true
-    - Name: strikeFrameIndex
-      Entry: 3
-      Data: 5
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: specialAttackAnim
-      Entry: 7
-      Data: 48|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 49|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 11
-    - Name: 
-      Entry: 10
-      Data: 178
-    - Name: 
-      Entry: 10
-      Data: 179
-    - Name: 
-      Entry: 10
-      Data: 180
-    - Name: 
-      Entry: 10
-      Data: 181
-    - Name: 
-      Entry: 10
-      Data: 182
-    - Name: 
-      Entry: 10
-      Data: 183
-    - Name: 
-      Entry: 10
-      Data: 184
-    - Name: 
-      Entry: 10
-      Data: 185
-    - Name: 
-      Entry: 10
-      Data: 186
-    - Name: 
-      Entry: 10
-      Data: 187
-    - Name: 
-      Entry: 10
-      Data: 188
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: isLoop
-      Entry: 5
-      Data: false
-    - Name: frameRate
-      Entry: 4
-      Data: 0.1
-    - Name: autoExit
-      Entry: 5
-      Data: true
-    - Name: strikeFrameIndex
-      Entry: 3
-      Data: 5
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 50|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
-    - Name: idleAnim
-      Entry: 7
-      Data: 51|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 52|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 16
-    - Name: 
-      Entry: 10
-      Data: 189
-    - Name: 
-      Entry: 10
-      Data: 190
-    - Name: 
-      Entry: 10
-      Data: 191
-    - Name: 
-      Entry: 10
-      Data: 192
-    - Name: 
-      Entry: 10
-      Data: 193
-    - Name: 
-      Entry: 10
-      Data: 194
-    - Name: 
-      Entry: 10
-      Data: 195
-    - Name: 
-      Entry: 10
-      Data: 196
-    - Name: 
-      Entry: 10
-      Data: 197
-    - Name: 
-      Entry: 10
-      Data: 198
-    - Name: 
-      Entry: 10
-      Data: 199
-    - Name: 
-      Entry: 10
-      Data: 200
-    - Name: 
-      Entry: 10
-      Data: 201
-    - Name: 
-      Entry: 10
-      Data: 202
-    - Name: 
-      Entry: 10
-      Data: 203
-    - Name: 
-      Entry: 10
-      Data: 204
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: isLoop
-      Entry: 5
-      Data: true
-    - Name: frameRate
-      Entry: 4
-      Data: 0.1
-    - Name: autoExit
-      Entry: 5
-      Data: false
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: attackAnim
-      Entry: 7
-      Data: 53|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 54|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 11
-    - Name: 
-      Entry: 10
-      Data: 205
-    - Name: 
-      Entry: 10
-      Data: 206
-    - Name: 
-      Entry: 10
-      Data: 207
-    - Name: 
-      Entry: 10
-      Data: 208
-    - Name: 
-      Entry: 10
-      Data: 209
-    - Name: 
-      Entry: 10
-      Data: 210
-    - Name: 
-      Entry: 10
-      Data: 211
-    - Name: 
-      Entry: 10
-      Data: 212
-    - Name: 
-      Entry: 10
-      Data: 213
-    - Name: 
-      Entry: 10
-      Data: 214
-    - Name: 
-      Entry: 10
-      Data: 215
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: isLoop
-      Entry: 5
-      Data: false
-    - Name: frameRate
-      Entry: 4
-      Data: 0.1
-    - Name: autoExit
-      Entry: 5
-      Data: true
-    - Name: strikeFrameIndex
-      Entry: 3
-      Data: 5
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: specialAttackAnim
-      Entry: 7
-      Data: 55|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 56|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 11
-    - Name: 
-      Entry: 10
-      Data: 205
-    - Name: 
-      Entry: 10
-      Data: 206
-    - Name: 
-      Entry: 10
-      Data: 207
-    - Name: 
-      Entry: 10
-      Data: 208
-    - Name: 
-      Entry: 10
-      Data: 209
-    - Name: 
-      Entry: 10
-      Data: 210
-    - Name: 
-      Entry: 10
-      Data: 211
-    - Name: 
-      Entry: 10
-      Data: 212
-    - Name: 
-      Entry: 10
-      Data: 213
-    - Name: 
-      Entry: 10
-      Data: 214
-    - Name: 
-      Entry: 10
-      Data: 215
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: isLoop
-      Entry: 5
-      Data: false
-    - Name: frameRate
-      Entry: 4
-      Data: 0.1
-    - Name: autoExit
-      Entry: 5
-      Data: true
-    - Name: strikeFrameIndex
-      Entry: 3
-      Data: 5
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 57|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
-    - Name: idleAnim
-      Entry: 7
-      Data: 58|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 59|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 16
-    - Name: 
-      Entry: 10
-      Data: 216
-    - Name: 
-      Entry: 10
-      Data: 217
-    - Name: 
-      Entry: 10
-      Data: 218
-    - Name: 
-      Entry: 10
-      Data: 219
-    - Name: 
-      Entry: 10
-      Data: 220
-    - Name: 
-      Entry: 10
-      Data: 221
-    - Name: 
-      Entry: 10
-      Data: 222
-    - Name: 
-      Entry: 10
-      Data: 223
-    - Name: 
-      Entry: 10
-      Data: 224
-    - Name: 
-      Entry: 10
-      Data: 225
-    - Name: 
-      Entry: 10
-      Data: 226
-    - Name: 
-      Entry: 10
-      Data: 227
-    - Name: 
-      Entry: 10
-      Data: 228
-    - Name: 
-      Entry: 10
-      Data: 229
-    - Name: 
-      Entry: 10
-      Data: 230
-    - Name: 
-      Entry: 10
-      Data: 231
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: isLoop
-      Entry: 5
-      Data: true
-    - Name: frameRate
-      Entry: 4
-      Data: 0.1
-    - Name: autoExit
-      Entry: 5
-      Data: false
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: attackAnim
-      Entry: 7
-      Data: 60|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 61|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 11
-    - Name: 
-      Entry: 10
-      Data: 232
-    - Name: 
-      Entry: 10
-      Data: 233
-    - Name: 
-      Entry: 10
-      Data: 234
-    - Name: 
-      Entry: 10
-      Data: 235
-    - Name: 
-      Entry: 10
-      Data: 236
-    - Name: 
-      Entry: 10
-      Data: 237
-    - Name: 
-      Entry: 10
-      Data: 238
-    - Name: 
-      Entry: 10
-      Data: 239
-    - Name: 
-      Entry: 10
-      Data: 240
-    - Name: 
-      Entry: 10
-      Data: 241
-    - Name: 
-      Entry: 10
-      Data: 242
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: isLoop
-      Entry: 5
-      Data: false
-    - Name: frameRate
-      Entry: 4
-      Data: 0.1
-    - Name: autoExit
-      Entry: 5
-      Data: true
-    - Name: strikeFrameIndex
-      Entry: 3
-      Data: 5
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: specialAttackAnim
-      Entry: 7
-      Data: 62|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 63|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 11
-    - Name: 
-      Entry: 10
-      Data: 232
-    - Name: 
-      Entry: 10
-      Data: 233
-    - Name: 
-      Entry: 10
-      Data: 234
-    - Name: 
-      Entry: 10
-      Data: 235
-    - Name: 
-      Entry: 10
-      Data: 236
-    - Name: 
-      Entry: 10
-      Data: 237
-    - Name: 
-      Entry: 10
-      Data: 238
-    - Name: 
-      Entry: 10
-      Data: 239
-    - Name: 
-      Entry: 10
-      Data: 240
-    - Name: 
-      Entry: 10
-      Data: 241
-    - Name: 
-      Entry: 10
-      Data: 242
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: isLoop
-      Entry: 5
-      Data: false
-    - Name: frameRate
-      Entry: 4
-      Data: 0.1
-    - Name: autoExit
-      Entry: 5
-      Data: true
-    - Name: strikeFrameIndex
-      Entry: 3
-      Data: 5
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 64|InGame.Player8DirectionsAnimation+DirectionInfo, Assembly-CSharp
-    - Name: idleAnim
-      Entry: 7
-      Data: 65|InGame.PlayerSpritesAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 66|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 16
-    - Name: 
-      Entry: 10
-      Data: 243
-    - Name: 
-      Entry: 10
-      Data: 244
-    - Name: 
-      Entry: 10
-      Data: 245
-    - Name: 
-      Entry: 10
-      Data: 246
-    - Name: 
-      Entry: 10
-      Data: 247
-    - Name: 
-      Entry: 10
-      Data: 248
-    - Name: 
-      Entry: 10
-      Data: 249
-    - Name: 
-      Entry: 10
-      Data: 250
-    - Name: 
-      Entry: 10
-      Data: 251
-    - Name: 
-      Entry: 10
-      Data: 252
-    - Name: 
-      Entry: 10
-      Data: 253
-    - Name: 
-      Entry: 10
-      Data: 254
-    - Name: 
-      Entry: 10
-      Data: 255
-    - Name: 
-      Entry: 10
-      Data: 256
-    - Name: 
-      Entry: 10
-      Data: 257
-    - Name: 
-      Entry: 10
-      Data: 258
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: isLoop
-      Entry: 5
-      Data: true
-    - Name: frameRate
-      Entry: 4
-      Data: 0.1
-    - Name: autoExit
-      Entry: 5
-      Data: false
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: attackAnim
-      Entry: 7
-      Data: 67|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 68|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 11
-    - Name: 
-      Entry: 10
-      Data: 259
-    - Name: 
-      Entry: 10
-      Data: 260
-    - Name: 
-      Entry: 10
-      Data: 261
-    - Name: 
-      Entry: 10
-      Data: 262
-    - Name: 
-      Entry: 10
-      Data: 263
-    - Name: 
-      Entry: 10
-      Data: 264
-    - Name: 
-      Entry: 10
-      Data: 265
-    - Name: 
-      Entry: 10
-      Data: 266
-    - Name: 
-      Entry: 10
-      Data: 267
-    - Name: 
-      Entry: 10
-      Data: 268
-    - Name: 
-      Entry: 10
-      Data: 269
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: isLoop
-      Entry: 5
-      Data: false
-    - Name: frameRate
-      Entry: 4
-      Data: 0.1
-    - Name: autoExit
-      Entry: 5
-      Data: true
-    - Name: strikeFrameIndex
-      Entry: 3
-      Data: 5
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: specialAttackAnim
-      Entry: 7
-      Data: 69|InGame.PlayerSpritesAttackAnimationInfo, Assembly-CSharp
-    - Name: frames
-      Entry: 7
-      Data: 70|UnityEngine.Sprite[], UnityEngine.CoreModule
-    - Name: 
-      Entry: 12
-      Data: 11
-    - Name: 
-      Entry: 10
-      Data: 259
-    - Name: 
-      Entry: 10
-      Data: 260
-    - Name: 
-      Entry: 10
-      Data: 261
-    - Name: 
-      Entry: 10
-      Data: 262
-    - Name: 
-      Entry: 10
-      Data: 263
-    - Name: 
-      Entry: 10
-      Data: 264
-    - Name: 
-      Entry: 10
-      Data: 265
-    - Name: 
-      Entry: 10
-      Data: 266
-    - Name: 
-      Entry: 10
-      Data: 267
-    - Name: 
-      Entry: 10
-      Data: 268
-    - Name: 
-      Entry: 10
-      Data: 269
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: isLoop
-      Entry: 5
-      Data: false
-    - Name: frameRate
-      Entry: 4
-      Data: 0.1
-    - Name: autoExit
-      Entry: 5
-      Data: true
-    - Name: strikeFrameIndex
-      Entry: 3
-      Data: 5
-    - Name: 
-      Entry: 8
+    - Name: chargeAttackAnim
+      Entry: 6
       Data: 
     - Name: 
       Entry: 8
@@ -2830,7 +1216,7 @@ Transform:
   m_Children:
   - {fileID: 3268177018605796470}
   - {fileID: 4617084374307372396}
-  - {fileID: 8220225792644094851}
+  - {fileID: 1766775453336322799}
   - {fileID: 2938300384642361823}
   - {fileID: 8875509042617920227}
   - {fileID: 3359619549918100054}
@@ -2851,6 +1237,7 @@ MonoBehaviour:
   animController: {fileID: 6174149847859742363}
   dashEffect: {fileID: 789978762405777030}
   flashEffect: {fileID: 6194580792556600830}
+  chargeEffect: {fileID: 192765987599666672}
   spriteRenderer: {fileID: 9020079279941623819}
   weapon: {fileID: 2997467557329049479}
   offset: {x: 0, y: 1.446}
@@ -2901,153 +1288,6 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 8
---- !u!1 &7521047433162976326
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5730498341007099703}
-  - component: {fileID: 6358686554907588646}
-  - component: {fileID: 2747587149897715768}
-  - component: {fileID: 4015820734440473079}
-  - component: {fileID: 5254276345499909194}
-  m_Layer: 0
-  m_Name: Spine GameObject (Spine_Ingame_Character_Archer)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5730498341007099703
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7521047433162976326}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8220225792644094851}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &6358686554907588646
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7521047433162976326}
-  m_Mesh: {fileID: -548838258290933903, guid: f8814061a4e627542a4eaed07d25db31, type: 3}
---- !u!23 &2747587149897715768
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7521047433162976326}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 2d27d4bc11160604fb70c874298754d8, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 862781815
-  m_SortingLayer: 1
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &4015820734440473079
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7521047433162976326}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d247ba06193faa74d9335f5481b2b56c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skeletonDataAsset: {fileID: 11400000, guid: f0ffe83f3c2f24e41aee9db044217d7e, type: 2}
-  initialSkinName: E0
-  fixPrefabOverrideViaMeshFilter: 2
-  initialFlipX: 0
-  initialFlipY: 0
-  updateWhenInvisible: 0
-  separatorSlotNames: []
-  zSpacing: 0
-  useClipping: 1
-  immutableTriangles: 0
-  pmaVertexColors: 1
-  clearStateOnDisable: 0
-  tintBlack: 0
-  singleSubmesh: 0
-  fixDrawOrder: 0
-  addNormals: 0
-  calculateTangents: 0
-  maskInteraction: 0
-  maskMaterials:
-    materialsMaskDisabled: []
-    materialsInsideMask: []
-    materialsOutsideMask: []
-  disableRenderingOnOverride: 1
-  physicsPositionInheritanceFactor: {x: 1, y: 1}
-  physicsRotationInheritanceFactor: 1
-  physicsMovementRelativeTo: {fileID: 0}
-  updateTiming: 1
-  unscaledTime: 0
-  _animationName: Idle
-  loop: 1
-  timeScale: 1
---- !u!114 &5254276345499909194
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7521047433162976326}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0a21c7cb4ac4321bbac4bc051f8f9f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skeletonAnimation: {fileID: 4015820734440473079}
-  animIdle: Idle
-  animAttackNormal: Shoot
-  animAttackCharge: Shoot
-  directionSkins:
-  - E1
-  - E0
 --- !u!1 &7638698897714516863
 GameObject:
   m_ObjectHideFlags: 0
@@ -3164,6 +1404,112 @@ Transform:
   - {fileID: 2506751597094660687}
   m_Father: {fileID: 8875509042617920227}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &2797040866539156526
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1766775453336322799}
+    m_Modifications:
+    - target: {fileID: 32703658283916706, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_Name
+      value: FX_Ingame_ChargeSkill
+      objectReference: {fileID: 0}
+    - target: {fileID: 32703658283916706, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3010379387347047803, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3084451736161359871, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5320929679414359706, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6013541067120651525, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7118564876000400821, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8884435061034458796, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+--- !u!4 &5392069250690257185 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+  m_PrefabInstance: {fileID: 2797040866539156526}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4851108075710213498
 PrefabInstance:
   m_ObjectHideFlags: 0
