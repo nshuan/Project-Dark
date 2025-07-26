@@ -26,7 +26,6 @@ namespace InGame
             base.Init(startPos, direction, maxDistance, size, speedScale, damage, criticalDamage, criticalRate, stagger, isCharge, hitActions);
 
             canRotate = false;
-            blockHit = true;
             activateDirection = Quaternion.Euler(0f, 0f, Random.Range(-45f, 45f)) * direction * Random.Range(0.8f, 1f);
             activateTimeCounter = activateTime;
             
@@ -60,7 +59,6 @@ namespace InGame
             if (!activated && !canRotate) return;
             if (Vector2.Distance(transform.position, startPos) > maxDistance)
             {
-                blockHit = false;
                 ProjectileHit(null);
             }
             
@@ -83,24 +81,23 @@ namespace InGame
             lifeTime += Time.deltaTime;
             if (lifeTime > MaxLifeTime)
             {
-                blockHit = false;
                 ProjectileHit(null);
             }
             
-            // Check hit enemy
-            var count = Physics2D.CircleCastNonAlloc(transform.position, DamageHitBoundRadius, Vector2.zero, hits, 0f,
-                enemyLayer);
-            if (count > 0)
-            {
-                blockHit = false;
-                ProjectileHit(hits[0].transform);
-            }
+            // // Check hit enemy
+            // var count = Physics2D.CircleCastNonAlloc(transform.position, DamageHitBoundRadius, Vector2.zero, hits, 0f,
+            //     enemyLayer);
+            // if (count > 0)
+            // {
+            //     collider.BlockHit = false;
+            //     ProjectileHit(hits[0].transform);
+            // }
         }
 
-        protected override void ProjectileHit(Transform hitTransform)
+        public override void ProjectileHit(EnemyEntity hit)
         {
             targetToChase = null;
-            base.ProjectileHit(hitTransform);
+            base.ProjectileHit(hit);
         }
     }
 }

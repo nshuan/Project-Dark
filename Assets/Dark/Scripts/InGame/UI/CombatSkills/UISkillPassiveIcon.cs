@@ -25,7 +25,7 @@ namespace InGame.UI.CombatSkills
 
         private void Awake()
         {
-            imgFillCooldown.fillAmount = 1f;
+            imgFillCooldown.fillAmount = 0f;
             imgFillCooldown.gameObject.SetActive(false);
         }
 
@@ -46,7 +46,7 @@ namespace InGame.UI.CombatSkills
             while (cooldownTimer > 0)
             {
                 cooldownTimer -= Time.deltaTime;
-                imgFillCooldown.fillAmount = cooldownTimer / cooldown;
+                imgFillCooldown.fillAmount = 1 - cooldownTimer / cooldown;
                 yield return null;
             }
             

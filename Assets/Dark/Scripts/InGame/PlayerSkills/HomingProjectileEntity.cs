@@ -33,7 +33,6 @@ namespace InGame
         {
             yield return new WaitForSeconds(delay);
             
-            blockHit = true;
             activated = true;
 
             yield return new WaitForSeconds(0.05f);
@@ -45,7 +44,6 @@ namespace InGame
             if (!activated) return;
             if (Vector2.Distance(transform.position, startPos) > maxDistance)
             {
-                blockHit = false;
                 ProjectileHit(null);
             }
             
@@ -64,24 +62,23 @@ namespace InGame
             lifeTime += Time.deltaTime;
             if (lifeTime > MaxLifeTime)
             {
-                blockHit = false;
                 ProjectileHit(null);
             }
             
-            // Check hit enemy
-            var count = Physics2D.CircleCastNonAlloc(transform.position, DamageHitBoundRadius, Vector2.zero, hits, 0f,
-                enemyLayer);
-            if (count > 0)
-            {
-                blockHit = false;
-                ProjectileHit(hits[0].transform);
-            }
+            // // Check hit enemy
+            // var count = Physics2D.CircleCastNonAlloc(transform.position, DamageHitBoundRadius, Vector2.zero, hits, 0f,
+            //     enemyLayer);
+            // if (count > 0)
+            // {
+            //     collider.BlockHit = false;
+            //     ProjectileHit(hits[0]);
+            // }
         }
 
-        protected override void ProjectileHit(Transform hitTransform)
+        public override void ProjectileHit(EnemyEntity hit)
         {
             targetToChase = null;
-            base.ProjectileHit(hitTransform);
+            base.ProjectileHit(hit);
         }
     }
 }
