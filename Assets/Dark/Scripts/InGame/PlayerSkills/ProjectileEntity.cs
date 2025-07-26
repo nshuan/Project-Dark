@@ -12,6 +12,7 @@ namespace InGame
     {
         protected const float MaxLifeTime = 10f;
 
+        [SerializeField] protected ProjectileCollider collider;
         [SerializeField] private Transform visual;
         [SerializeField] protected LayerMask enemyLayer;
         [SerializeField] private float baseDamageRange = 0.1f;
@@ -30,13 +31,11 @@ namespace InGame
         private float Stagger { get; set; }
         private List<IProjectileHit> HitActions { get; set; }
         public bool BlockDestroy { get; set; } // Block destroy so that the projectile can go through enemies but still deal damage
-
-        public Transform TargetTransform => transform;
         
-        protected bool blockHit = false;
+        public Transform TargetTransform => transform;
+
         protected bool activated = false;
         protected float lifeTime = 0f;
-        protected EnemyEntity hitEnemy;
 
         protected RaycastHit2D[] hits = new RaycastHit2D[1];
 
@@ -45,7 +44,12 @@ namespace InGame
         public Action OnHit;
 
         #endregion
-        
+
+        private void Awake()
+        {
+            collider.Projectile = this;
+        }
+
         private void OnDisable()
         {
             activated = false;
@@ -100,49 +104,48 @@ namespace InGame
             lifeTime += Time.deltaTime;
             if (lifeTime > MaxLifeTime)
             {
-                blockHit = false;
                 BlockDestroy = false;
                 ProjectileHit(null);
             }
             
             // Check hit enemy
-            var count = Physics2D.CircleCastNonAlloc(transform.position, DamageHitBoundRadius, Vector2.zero, hits, 0f,
-                enemyLayer);
-            if (count > 0)
-                ProjectileHit(hits[0].transform);
+            // var count = Physics2D.CircleCastNonAlloc(transform.position, DamageHitBoundRadius, Vector2.zero, hits, 0f,
+            //     enemyLayer);
+            // if (count > 0)
+            //     ProjectileHit(hits[0].transform);
         }
         
-        protected virtual void ProjectileHit(Transform hitTransform)
+        public virtual void ProjectileHit(EnemyEntity hit)
         {
-            if (blockHit) return;
-            if (hitTransform)
+            if (!hit)
             {
-                if (hitTransform.TryGetComponent<EnemyEntity>(out hitEnemy))
-                {
-                    // Check critical hit
-                    var critical = Random.Range(0f, 1f) <= CriticalRate;
-                    hitEnemy.Damage(critical ? CriticalDamage : Damage, transform.position, Stagger);
-                    PassiveEffectManager.Instance.TriggerEffect(IsCharge ? PassiveTriggerType.DameByChargeAttack : PassiveTriggerType.DameByNormalAttack, hitEnemy);
-                    
-                    if (critical)
-                        DebugUtility.LogWarning($"Projectile {name} deals critical damage {CriticalDamage} to {hitEnemy.name}!!");
-
-                    if (HitActions != null)
-                    {
-                        foreach (var action in HitActions)
-                        {
-                            action.DoAction(transform.position);
-                        }
-                    }
-                    
-                    OnHit?.Invoke();
-                    if (!BlockDestroy)
-                        OnHit = null;
-                }
+                OnHit = null;
+                ProjectilePool.Instance.Release(this);
+                return;
             }
             
+            // Check critical hit
+            var critical = Random.Range(0f, 1f) <= CriticalRate;
+            hit.Damage(critical ? CriticalDamage : Damage, transform.position, Stagger);
+            PassiveEffectManager.Instance.TriggerEffect(IsCharge ? PassiveTriggerType.DameByChargeAttack : PassiveTriggerType.DameByNormalAttack, hit);
+                    
+            if (critical)
+                DebugUtility.LogWarning($"Projectile {name} deals critical damage {CriticalDamage} to {hit.name}!!");
+
+            if (HitActions != null)
+            {
+                foreach (var action in HitActions)
+                {
+                    action.DoAction(transform.position);
+                }
+            }
+                    
+            OnHit?.Invoke();
             if (!BlockDestroy)
+            {
+                OnHit = null;
                 ProjectilePool.Instance.Release(this);
+            }
         }
 
         private void OnDrawGizmos()

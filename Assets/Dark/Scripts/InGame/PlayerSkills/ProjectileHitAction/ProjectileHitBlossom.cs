@@ -28,7 +28,7 @@ namespace InGame
                 var pDir = (Vector2)(Quaternion.Euler(0f, 0f, angle * i) * dir);
                 var p = ProjectilePool.Instance.Get(projectile, null, false);
                 p.transform.position = position;
-                p.Init(position, pDir.normalized, blossomSize, 1f, 1f, damage, damage, 0f, stagger, false,null);
+                p.Init(position, pDir.normalized, blossomSize, 1f, 1.3f, damage, damage, 0f, stagger, false,null);
                 p.Activate(0f);
             }
         }

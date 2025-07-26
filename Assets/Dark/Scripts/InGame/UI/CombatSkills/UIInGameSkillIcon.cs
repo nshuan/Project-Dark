@@ -13,7 +13,7 @@ namespace InGame.UI.CombatSkills
 
         protected virtual void Awake()
         {
-            imgFillCooldown.fillAmount = 1f;
+            imgFillCooldown.fillAmount = 0f;
             imgFillCooldown.gameObject.SetActive(false);
             txtCooldown.gameObject.SetActive(false);
         }
@@ -34,7 +34,7 @@ namespace InGame.UI.CombatSkills
             {
                 cooldownTimer -= Time.deltaTime;
                 txtCooldown.SetText(((int)cooldownTimer).ToString());
-                imgFillCooldown.fillAmount = cooldownTimer / cooldown;
+                imgFillCooldown.fillAmount = 1 - cooldownTimer / cooldown;
                 yield return null;
             }
             
