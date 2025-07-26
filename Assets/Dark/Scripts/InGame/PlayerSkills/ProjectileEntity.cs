@@ -29,11 +29,13 @@ namespace InGame
         private float CriticalRate { get; set; }
         protected float Speed { get; set; }
         private float Stagger { get; set; }
+        public int MaxHit { get; set; } = 1;
         private List<IProjectileHit> HitActions { get; set; }
         public bool BlockDestroy { get; set; } // Block destroy so that the projectile can go through enemies but still deal damage
         
         public Transform TargetTransform => transform;
 
+        private int currentHit;
         protected bool activated = false;
         protected float lifeTime = 0f;
 
@@ -82,6 +84,7 @@ namespace InGame
             Stagger = stagger;
             IsCharge = isCharge;
             HitActions = hitActions;
+            currentHit = 0;
         }
 
         public void Activate(float delay)
@@ -141,7 +144,9 @@ namespace InGame
             }
                     
             OnHit?.Invoke();
-            if (!BlockDestroy)
+            currentHit += 1;
+            
+            if (!BlockDestroy && currentHit >= MaxHit)
             {
                 OnHit = null;
                 ProjectilePool.Instance.Release(this);
