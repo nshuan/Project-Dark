@@ -38,7 +38,9 @@ namespace InGame
             float skillRange,
             int criticalDamagePerBullet,
             float criticalRatePerBullet,
+            int maxHit,
             bool isCharge,
+            List<IProjectileActivate> activateActions,
             List<IProjectileHit> hitActions)
         {
             shootLogic.Shoot(
@@ -53,7 +55,9 @@ namespace InGame
                 skillRange,
                 speedScale,
                 stagger,
+                maxHit,
                 isCharge,
+                activateActions,
                 hitActions);
         }
     }

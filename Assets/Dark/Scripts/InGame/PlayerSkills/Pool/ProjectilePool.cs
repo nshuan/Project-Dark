@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Core;
 using UnityEngine;
 
-namespace InGame.Pool
+namespace InGame
 {
     public class ProjectilePool : MonoSingleton<ProjectilePool>
     {

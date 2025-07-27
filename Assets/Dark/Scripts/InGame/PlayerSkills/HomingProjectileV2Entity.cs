@@ -21,9 +21,9 @@ namespace InGame
         private bool canRotate = false;
 
         public override void Init(Vector2 startPos, Vector2 direction, float maxDistance, float size, float speedScale, int damage,
-            int criticalDamage, float criticalRate, float stagger, bool isCharge, List<IProjectileHit> hitActions)
+            int criticalDamage, float criticalRate, float stagger, bool isCharge, int maxHit, List<IProjectileActivate> activateActions, List<IProjectileHit> hitActions)
         {
-            base.Init(startPos, direction, maxDistance, size, speedScale, damage, criticalDamage, criticalRate, stagger, isCharge, hitActions);
+            base.Init(startPos, direction, maxDistance, size, speedScale, damage, criticalDamage, criticalRate, stagger, isCharge, maxHit, activateActions, hitActions);
 
             canRotate = false;
             activateDirection = Quaternion.Euler(0f, 0f, Random.Range(-45f, 45f)) * direction * Random.Range(0.8f, 1f);

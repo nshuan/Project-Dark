@@ -98,6 +98,7 @@ namespace InGame
                 maxRangeMultiplierAdd > 0 ? 1 + Mathf.Min(rangeChargeTime / maxRangeChargeTime, 1f) * maxRangeMultiplierAdd : 1f);
             var isCharge = (canChargeBullet && bulletAdd > 0) || (canChargeDame && dameChargeTime > 0) ||
                            (canChargeSize && sizeChargeTime > 0) || (canChargeRange && rangeChargeTime > 0);
+            var maxHit = 1 + LevelUtility.BonusInfo.skillBonus.bulletMaxHitPlus;
 
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             InputManager.BlockTeleport = true;
@@ -114,12 +115,12 @@ namespace InGame
             InputManager.DelayCall(delayShot, () =>
             {
                 InputManager.playerVisual.Weapon.GetAllEnemiesInRange(skillRange);
-                
+
                 InputManager.CurrentSkillConfig.Shoot(
                     bulletAdd > 0
                         ? InputManager.CurrentSkillConfig.projectiles[PlayerProjectileType.ChargeBullet]
                         : InputManager.CurrentSkillConfig.projectiles[PlayerProjectileType.Normal],
-                    InputManager.CursorRangeCenter.position, 
+                    InputManager.CursorRangeCenter.position,
                     tempMousePos,
                     damage,
                     bulletNum,
@@ -127,8 +128,10 @@ namespace InGame
                     skillRange,
                     criticalDamage,
                     critRate,
+                    maxHit,
                     isCharge,
-                    LevelUtility.BonusInfo.skillBonus.projectileHitActions);
+                    LevelUtility.BonusInfo.skillBonus.GetProjectileActivateActions(isCharge),
+                    LevelUtility.BonusInfo.skillBonus.GetProjectileHitActions(isCharge));
 
                 InputManager.BlockTeleport = false;
             });

@@ -1,5 +1,4 @@
 using System;
-using InGame.Pool;
 using UnityEngine;
 
 namespace InGame
@@ -13,7 +12,7 @@ namespace InGame
         {
             var projectile = ProjectilePool.Instance.Get(projectilePrefab, null, false);
             projectile.transform.position = towerAttackPos;
-            projectile.Init(towerAttackPos, direction.normalized, 20, 5, speedScale, damage, damage, 0f, 0f, false, null);
+            projectile.Init(towerAttackPos, direction.normalized, 20, 5, speedScale, damage, damage, 0f, 0f, false, 10, null, null);
             projectile.BlockDestroy = true;
             projectile.Activate(0f);
         }

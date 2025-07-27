@@ -2069,6 +2069,7 @@ Transform:
   - {fileID: 1851111459}
   - {fileID: 152635618}
   - {fileID: 544949212}
+  - {fileID: 1937213646}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &434932556
@@ -6802,6 +6803,9 @@ MonoBehaviour:
     - Name: bulletPlus
       Entry: 3
       Data: 0
+    - Name: bulletMaxHitPlus
+      Entry: 3
+      Data: 0
     - Name: staggerMultiply
       Entry: 4
       Data: 0
@@ -6851,17 +6855,45 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: projectileActivateActions
+      Entry: 7
+      Data: 5|System.Collections.Generic.List`1[[InGame.IProjectileActivate, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 6|InGame.ProjectileActivateSplit, Assembly-CSharp
+    - Name: projectile
+      Entry: 10
+      Data: 0
+    - Name: amount
+      Entry: 3
+      Data: 4
+    - Name: angle
+      Entry: 4
+      Data: 70
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 8
       Data: 
     - Name: effectsMapByTriggerType
       Entry: 7
-      Data: 5|System.Collections.Generic.Dictionary`2[[InGame.PassiveTriggerType,
+      Data: 7|System.Collections.Generic.Dictionary`2[[InGame.PassiveTriggerType,
         Assembly-CSharp],[System.Collections.Generic.List`1[[InGame.PassiveType,
         Assembly-CSharp]], mscorlib]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 6|System.Collections.Generic.EnumEqualityComparer`1[[InGame.PassiveTriggerType,
+      Data: 8|System.Collections.Generic.EnumEqualityComparer`1[[InGame.PassiveTriggerType,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
@@ -7902,6 +7934,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1921297881}
   m_CullTransparentMesh: 1
+--- !u!1 &1937213645
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1937213646}
+  - component: {fileID: 1937213647}
+  m_Layer: 0
+  m_Name: ProjectileDeadPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1937213646
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937213645}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 426610612}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1937213647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937213645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d289712bdc1948b99ae57f349230cc5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefab: {fileID: 637455175842949461, guid: 96f9f904c6b42654988fa536f959dec1, type: 3}
+  delayDisappear: 8
 --- !u!1 &1951554577
 GameObject:
   m_ObjectHideFlags: 0

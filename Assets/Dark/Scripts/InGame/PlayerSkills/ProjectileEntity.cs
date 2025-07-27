@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using InGame.Pool;
-using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -21,16 +19,19 @@ namespace InGame
         [SerializeField] private float baseSpeed = 5f;
         protected Vector2 direction;
         protected Vector2 startPos;
-        protected float maxDistance;
-        private int Damage { get; set; }
-        private bool IsCharge { get; set; }
-        protected float DamageHitBoundRadius { get; set; } = 1f;
-        private int CriticalDamage { get; set; }
-        private float CriticalRate { get; set; }
-        protected float Speed { get; set; }
-        private float Stagger { get; set; }
+        public float maxDistance;
+        public int Damage { get; set; }
+        public float Size { get; set; }
+        public float SpeedScale { get; set; }
+        public bool IsCharge { get; set; }
+        public float DamageHitBoundRadius { get; set; } = 1f;
+        public int CriticalDamage { get; set; }
+        public float CriticalRate { get; set; }
+        public float Speed { get; set; }
+        public float Stagger { get; set; }
         public int MaxHit { get; set; } = 1;
-        private List<IProjectileHit> HitActions { get; set; }
+        public List<IProjectileActivate> ActivateActions { get; set; }
+        public List<IProjectileHit> HitActions { get; set; }
         public bool BlockDestroy { get; set; } // Block destroy so that the projectile can go through enemies but still deal damage
         
         public Transform TargetTransform => transform;
@@ -69,9 +70,13 @@ namespace InGame
             float criticalRate,
             float stagger,
             bool isCharge,
+            int maxHit,
+            List<IProjectileActivate> activateActions,
             List<IProjectileHit> hitActions)
         {
+            Size = size;
             visual.localScale = size * Vector3.one;
+            SpeedScale = speedScale;
             Speed = baseSpeed * speedScale;
             this.startPos = startPos;
             this.direction = direction;
@@ -83,7 +88,9 @@ namespace InGame
             CriticalRate = criticalRate;
             Stagger = stagger;
             IsCharge = isCharge;
+            ActivateActions = activateActions;
             HitActions = hitActions;
+            MaxHit = maxHit;
             currentHit = 0;
         }
 
@@ -97,6 +104,13 @@ namespace InGame
         {
             yield return new WaitForSeconds(delay);
             activated = true;
+            if (ActivateActions != null)
+            {
+                foreach (var action in ActivateActions)
+                {
+                    action.DoAction(this, direction);
+                }
+            }
         }
 
         protected virtual void Update()
@@ -123,6 +137,7 @@ namespace InGame
             if (!hit)
             {
                 OnHit = null;
+                ProjectileDeadPool.Instance.Get().position = transform.position;
                 ProjectilePool.Instance.Release(this);
                 return;
             }
