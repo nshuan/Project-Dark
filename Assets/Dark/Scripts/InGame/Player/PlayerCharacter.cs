@@ -9,7 +9,7 @@ namespace InGame
     public class PlayerCharacter : MonoBehaviour
     {
         [SerializeField] private PlayerAnimController animController;
-        [SerializeField] private DashGhostEffect dashEffect;
+        [SerializeField] private PlayerDashEffect dashEffect;
         [SerializeField] private PLayerFlashEffect flashEffect;
         [SerializeField] private GameObject chargeEffect;
         [SerializeField] private SpriteRenderer spriteRenderer;
@@ -62,14 +62,16 @@ namespace InGame
             animController.SetDirection(target - transform.position);
         }
 
-        public void PlayDashEffect()
+        public void PlayDashEffect(Vector2 direction)
         {
-            dashEffect.DoEffect();
+            dashEffect.PLayStart(direction);
+            spriteRenderer.gameObject.SetActive(false);
         }
 
         public void StopDashEffect()
         {
-            dashEffect.StopEffect();
+            spriteRenderer.gameObject.SetActive(true);
+            dashEffect.PLayEnd();
         }
 
         private Sequence flashSequence;
