@@ -145,6 +145,8 @@ namespace InGame
             cdCounter += delayShot;
             
             // Do cursor effect
+            cursor.UpdateBulletAdd(false);
+            cursor.UpdateCooldown(0f);
             DOTween.Complete(this);
             var seq = DOTween.Sequence(this);
             seq.Append(cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f))
@@ -159,6 +161,7 @@ namespace InGame
                 || isChargingDame
                 || isChargingSize
                 || isChargingRange) return; 
+            
             ResetChargeVariable();
             
             if (canChargeBullet && InputManager.CurrentSkillConfig.chargeBulletMaxAdd > 0)
@@ -218,10 +221,6 @@ namespace InGame
                 cdCounter -= Time.deltaTime;
                 if (cdCounter <= 0)
                     CanShoot = true;
-                
-                // Update UI
-                cursor.UpdateCooldown(Mathf.Clamp(cdCounter / Cooldown, 0f, 1f));
-                cursor.UpdateBulletAdd(false);
             }
             else
             {
@@ -231,7 +230,11 @@ namespace InGame
                     if (isChargingBullet)
                     {
                         if (bulletAddTimer > 0)
+                        {
                             bulletAddTimer -= Time.deltaTime;
+                            // Update UI
+                            cursor.UpdateCooldown(Mathf.Clamp(bulletAddTimer / bulletAddInterval, 0f, 1f));
+                        }
                         else if (bulletAdd < maxBulletAdd)
                         {
                             bulletAdd += 1;

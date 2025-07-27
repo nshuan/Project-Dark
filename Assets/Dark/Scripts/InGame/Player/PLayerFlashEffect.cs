@@ -9,6 +9,7 @@ namespace InGame
         [SerializeField] private GameObject flashEndGO;
         [SerializeField] private GameObject flashAoeGO;
 
+        public Transform explodeCenter;
         public float startDuration = 0.5f;
 
         public void PLayStart()

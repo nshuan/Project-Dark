@@ -19,7 +19,7 @@ namespace InGame
 
         [Space] [Header("Config")] 
         [SerializeField] private Vector2 offset;
-
+        
         private bool blockRotate;
         
         // Return the duration to finish the 1st animation phase, when the skill is actually strike
@@ -74,6 +74,7 @@ namespace InGame
             dashEffect.PLayEnd();
         }
 
+        public Vector2 FlashExplodeCenter => flashEffect.explodeCenter.position;
         private Sequence flashSequence;
         public Tween PLayFlashEffect()
         {

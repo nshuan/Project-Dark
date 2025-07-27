@@ -10,6 +10,7 @@ namespace InGame.UI.CombatSkills
     {
         [SerializeField] private Image imgFillCooldown;
         [SerializeField] private TextMeshProUGUI txtCooldown;
+        [SerializeField] private bool showText;
 
         protected virtual void Awake()
         {
@@ -26,7 +27,7 @@ namespace InGame.UI.CombatSkills
         private IEnumerator IECooldown(float cooldown)
         {
             imgFillCooldown.gameObject.SetActive(true);
-            txtCooldown.gameObject.SetActive(true);
+            txtCooldown.gameObject.SetActive(showText);
             
             var cooldownTimer = cooldown;
             

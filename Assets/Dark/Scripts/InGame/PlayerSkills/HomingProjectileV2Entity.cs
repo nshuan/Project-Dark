@@ -19,6 +19,7 @@ namespace InGame
         private float activateTimeCounter;
         private Transform targetToChase;
         private bool canRotate = false;
+        private bool blockHit;
 
         public override void Init(Vector2 startPos, Vector2 direction, float maxDistance, float size, float speedScale, int damage,
             int criticalDamage, float criticalRate, float stagger, bool isCharge, int maxHit, List<IProjectileActivate> activateActions, List<IProjectileHit> hitActions)
@@ -26,7 +27,9 @@ namespace InGame
             base.Init(startPos, direction, maxDistance, size, speedScale, damage, criticalDamage, criticalRate, stagger, isCharge, maxHit, activateActions, hitActions);
 
             canRotate = false;
+            blockHit = true;
             activateDirection = Quaternion.Euler(0f, 0f, Random.Range(-45f, 45f)) * direction * Random.Range(0.8f, 1f);
+            transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(activateDirection.y, activateDirection.x) * Mathf.Rad2Deg);
             activateTimeCounter = activateTime;
             
             if (WeaponSupporter.EnemyTargetingIndex < WeaponSupporter.EnemiesCountInRange)
@@ -39,19 +42,28 @@ namespace InGame
         protected override IEnumerator IEActivate(float delay)
         {
             yield return new WaitForSeconds(delay);
-
+            
             while (activateTimeCounter > 0)
             {
                 activateTimeCounter -= Time.deltaTime;
+                // if (targetToChase && targetToChase.gameObject.activeInHierarchy)
+                // {
+                //     activateDirection = Vector3.RotateTowards(activateDirection, targetToChase.position - transform.position,
+                //         Mathf.Deg2Rad * 90 * Time.deltaTime, 0f);
+                // }
+                // transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(activateDirection.y, activateDirection.x) * Mathf.Rad2Deg);
                 transform.position += (Vector3)(activateSpeed * Time.deltaTime * activateDirection);
                 yield return null;
             }
-            
+
+            direction.x = activateDirection.x;
+            direction.y = activateDirection.y;
             canRotate = true;
 
-            yield return new WaitForSeconds(0.4f);
+            yield return new WaitForSeconds(0.2f);
             
             activated = true;
+            blockHit = false;
         }
         
         protected override void Update()
@@ -71,6 +83,8 @@ namespace InGame
                         Mathf.Deg2Rad * rotateSpeed * Time.deltaTime, 0f);
                 }
             }
+            
+            transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
 
             if (activated)
             {
@@ -83,19 +97,11 @@ namespace InGame
             {
                 ProjectileHit(null);
             }
-            
-            // // Check hit enemy
-            // var count = Physics2D.CircleCastNonAlloc(transform.position, DamageHitBoundRadius, Vector2.zero, hits, 0f,
-            //     enemyLayer);
-            // if (count > 0)
-            // {
-            //     collider.BlockHit = false;
-            //     ProjectileHit(hits[0].transform);
-            // }
         }
 
         public override void ProjectileHit(EnemyEntity hit)
         {
+            if (blockHit) return;
             targetToChase = null;
             base.ProjectileHit(hit);
         }
