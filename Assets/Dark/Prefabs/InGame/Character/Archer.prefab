@@ -32,6 +32,38 @@ Transform:
   - {fileID: 5392069250690257185}
   m_Father: {fileID: 8748002566143027518}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &321540747711025084
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6563634025267148571}
+  m_Layer: 0
+  m_Name: Explode
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &6563634025267148571
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 321540747711025084}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1930880555215955192}
+  m_Father: {fileID: 8875509042617920227}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &701391344388086529
 GameObject:
   m_ObjectHideFlags: 0
@@ -96,6 +128,7 @@ Transform:
   m_Children:
   - {fileID: 8126641321210888156}
   - {fileID: 4374371994887962442}
+  - {fileID: 6563634025267148571}
   m_Father: {fileID: 8748002566143027518}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6194580792556600830
@@ -112,6 +145,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flashStartGO: {fileID: 1645562885888194866}
   flashEndGO: {fileID: 9137705237316602402}
+  flashAoeGO: {fileID: 321540747711025084}
   startDuration: 1
 --- !u!1 &1645562885888194866
 GameObject:
@@ -1387,7 +1421,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4374371994887962442
 Transform:
   m_ObjectHideFlags: 0
@@ -1402,7 +1436,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2506751597094660687}
-  - {fileID: 1930880555215955192}
   m_Father: {fileID: 8875509042617920227}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &211420892989376865
@@ -1411,7 +1444,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 4374371994887962442}
+    m_TransformParent: {fileID: 6563634025267148571}
     m_Modifications:
     - target: {fileID: 1739730365991447961, guid: ebc8f5f3488f9e94a97c89cbf758a669, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1419,7 +1452,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1739730365991447961, guid: ebc8f5f3488f9e94a97c89cbf758a669, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.68
+      value: -1.7
       objectReference: {fileID: 0}
     - target: {fileID: 1739730365991447961, guid: ebc8f5f3488f9e94a97c89cbf758a669, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1431,15 +1464,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1739730365991447961, guid: ebc8f5f3488f9e94a97c89cbf758a669, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1739730365991447961, guid: ebc8f5f3488f9e94a97c89cbf758a669, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1739730365991447961, guid: ebc8f5f3488f9e94a97c89cbf758a669, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1739730365991447961, guid: ebc8f5f3488f9e94a97c89cbf758a669, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1453,9 +1486,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3848329268541721125, guid: ebc8f5f3488f9e94a97c89cbf758a669, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 4602970532312571360, guid: ebc8f5f3488f9e94a97c89cbf758a669, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 7623550852397948862, guid: ebc8f5f3488f9e94a97c89cbf758a669, type: 3}
       propertyPath: m_Name
       value: FX_Ingame_Active_Flash_Explode
+      objectReference: {fileID: 0}
+    - target: {fileID: 7623550852397948862, guid: ebc8f5f3488f9e94a97c89cbf758a669, type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

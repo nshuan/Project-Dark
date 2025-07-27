@@ -87,8 +87,12 @@ namespace InGame
             flashSequence.Kill();
             flashSequence = DOTween.Sequence();
             flashEffect.PLayEnd();
-            return flashSequence.AppendInterval(Mathf.Max(0f, flashEffect.startDuration - 0.2f))
-                .AppendCallback(() => onLanded?.Invoke())
+            return flashSequence.AppendInterval(Mathf.Max(0f, 0.15f))
+                .AppendCallback(() =>
+                {
+                    flashEffect.PlayAoe();
+                    onLanded?.Invoke();
+                })
                 .Append(spriteRenderer.DOFade(1f, 0.2f));
         }
     }
