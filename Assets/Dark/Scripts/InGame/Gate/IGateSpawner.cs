@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace InGame
 {
@@ -13,8 +14,8 @@ namespace InGame
     {
         public EnemyEntity[] Spawn(Vector2 gatePosition, int enemyId, EnemyEntity enemyPrefab)
         {
-            var enemy = EnemyPool.Instance.Get(enemyPrefab, enemyId, null);
-            enemy.transform.position = gatePosition;
+            var enemy = EnemyPool.Instance.Get(enemyPrefab, enemyId, null, false);
+            enemy.transform.position = gatePosition + Random.insideUnitCircle.normalized * 1.5f;
             return new [] { enemy };
         }
     }
@@ -29,13 +30,13 @@ namespace InGame
         {
             var enemies = new EnemyEntity[3];
 
-            enemies[0] = EnemyPool.Instance.Get(enemyPrefab, enemyId,null);
+            enemies[0] = EnemyPool.Instance.Get(enemyPrefab, enemyId,null, false);
             enemies[0].transform.position = 
                 gatePosition + (Vector2)(Quaternion.Euler(0f, 0f, rotation) * Vector2.up).normalized * radius;
-            enemies[1] = EnemyPool.Instance.Get(enemyPrefab, enemyId, null);
+            enemies[1] = EnemyPool.Instance.Get(enemyPrefab, enemyId, null, false);
             enemies[1].transform.position =
                 gatePosition + (Vector2)(Quaternion.Euler(0f, 0f, 120f + rotation) * Vector2.up).normalized * radius;
-            enemies[2] = EnemyPool.Instance.Get(enemyPrefab, enemyId, null);
+            enemies[2] = EnemyPool.Instance.Get(enemyPrefab, enemyId, null, false);
             enemies[2].transform.position =
                 gatePosition + (Vector2)(Quaternion.Euler(0f, 0f, -120f + rotation) * Vector2.up).normalized * radius;
             

@@ -14,8 +14,7 @@ namespace InGame.UI.CombatSkills
 
         protected virtual void Awake()
         {
-            imgFillCooldown.fillAmount = 0f;
-            imgFillCooldown.gameObject.SetActive(false);
+            imgFillCooldown.fillAmount = 1f;
             txtCooldown.gameObject.SetActive(false);
         }
 
@@ -39,7 +38,6 @@ namespace InGame.UI.CombatSkills
                 yield return null;
             }
             
-            imgFillCooldown.gameObject.SetActive(false);
             txtCooldown.gameObject.SetActive(false);
         }
     }
