@@ -23,14 +23,14 @@ namespace InGame
         {
             flashEndGO.transform.SetParent(null);
             flashEndGO.SetActive(true);
-            StartCoroutine(IEHideObject(flashEndGO, 2f));
+            StartCoroutine(IEHideObject(flashEndGO, 1.5f));
         }
 
         public void PlayAoe()
         {
             flashAoeGO.transform.SetParent(null);
             flashAoeGO.SetActive(true);
-            StartCoroutine(IEHideObject(flashAoeGO, 2f));
+            StartCoroutine(IEHideObject(flashAoeGO, 1.5f));
         }
         
         private IEnumerator IEHideObject(GameObject go, float delay)

@@ -8,7 +8,9 @@ namespace InGame
         
         public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool)
         {
-            target.Burn(size, delayEachBurn, (int)value);
+            transform.position = target.TargetTransform.position;
+            transform.SetParent(target.TargetTransform);
+            target.Burn(size, delayEachBurn, (int)value, () => pool.Release(this, effectId));
         }
     }
 }

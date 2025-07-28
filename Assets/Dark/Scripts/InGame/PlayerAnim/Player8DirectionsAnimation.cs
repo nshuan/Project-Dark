@@ -19,6 +19,8 @@ namespace InGame
         private int currentFrame;
         private float timer;
         private bool charging;
+        private Transform chargeFxLower;
+        private Transform chargeFxUpper;
 
         private void Awake()
         {
@@ -109,7 +111,31 @@ namespace InGame
                 {
                     currentDirection = newDirection;
                     CurrentAnim = charging ? directionInfo[currentDirection].chargeAnim : directionInfo[currentDirection].idleAnim;
-                    if (charging && currentFrame < CurrentAnim.data.frames.Length) spriteRenderer.sprite = CurrentAnim.data.frames[currentFrame];
+
+                    if (charging)
+                    {
+                        if (currentFrame < CurrentAnim.data.frames.Length) spriteRenderer.sprite = CurrentAnim.data.frames[currentFrame];
+                        var showChargeLower = directionInfo[currentDirection].showChargeFxLower;
+                        if (showChargeLower && chargeFxLower)
+                        {
+                            chargeFxLower.position = directionInfo[currentDirection].chargeFxPosition;
+                            if (currentFrame >= CurrentAnim.data.frames.Length - 1)
+                                chargeFxLower.gameObject.SetActive(true);
+                            chargeFxUpper?.gameObject.SetActive(false);
+                        }
+                        else if (!showChargeLower && chargeFxUpper)
+                        {
+                            chargeFxUpper.position = directionInfo[currentDirection].chargeFxPosition;
+                            if (currentFrame >= CurrentAnim.data.frames.Length - 1)
+                                chargeFxUpper.gameObject.SetActive(true);
+                            chargeFxLower?.gameObject.SetActive(false);
+                        }
+                    }
+                    else
+                    {
+                        chargeFxLower?.gameObject.SetActive(false);
+                        chargeFxUpper?.gameObject.SetActive(false);
+                    }
                 }
             }
         }
@@ -145,6 +171,12 @@ namespace InGame
                 timer -= CurrentAnim.frameRate; // subtract instead of reset to avoid drift
             }
         }
+
+        public void SetChargeFx(Transform fxLower, Transform fxUpper)
+        {
+            chargeFxLower = fxLower;
+            chargeFxUpper = fxUpper;
+        }
         
         [Serializable]
         public class DirectionInfo
@@ -154,6 +186,8 @@ namespace InGame
             public PlayerSpritesAnimationInfo specialAttackAnim;
             public PlayerSpritesAnimationInfo chargeAnim;
             public PlayerSpritesAnimationInfo chargeAttackAnim;
+            public Vector2 chargeFxPosition;
+            public bool showChargeFxLower;
         }
     }
 }
