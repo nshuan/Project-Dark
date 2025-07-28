@@ -9,7 +9,7 @@ namespace InGame
     public class PlayerCharacter : MonoBehaviour
     {
         [SerializeField] private PlayerAnimController animController;
-        [SerializeField] private DashGhostEffect dashEffect;
+        [SerializeField] private PlayerDashEffect dashEffect;
         [SerializeField] private PLayerFlashEffect flashEffect;
         [SerializeField] private GameObject chargeEffect;
         [SerializeField] private SpriteRenderer spriteRenderer;
@@ -19,7 +19,7 @@ namespace InGame
 
         [Space] [Header("Config")] 
         [SerializeField] private Vector2 offset;
-
+        
         private bool blockRotate;
         
         // Return the duration to finish the 1st animation phase, when the skill is actually strike
@@ -62,16 +62,19 @@ namespace InGame
             animController.SetDirection(target - transform.position);
         }
 
-        public void PlayDashEffect()
+        public void PlayDashEffect(Vector2 direction)
         {
-            dashEffect.DoEffect();
+            dashEffect.PLayStart(direction);
+            spriteRenderer.gameObject.SetActive(false);
         }
 
         public void StopDashEffect()
         {
-            dashEffect.StopEffect();
+            spriteRenderer.gameObject.SetActive(true);
+            dashEffect.PLayEnd();
         }
 
+        public Vector2 FlashExplodeCenter => flashEffect.explodeCenter.position;
         private Sequence flashSequence;
         public Tween PLayFlashEffect()
         {
@@ -87,8 +90,12 @@ namespace InGame
             flashSequence.Kill();
             flashSequence = DOTween.Sequence();
             flashEffect.PLayEnd();
-            return flashSequence.AppendInterval(Mathf.Max(0f, flashEffect.startDuration - 0.2f))
-                .AppendCallback(() => onLanded?.Invoke())
+            return flashSequence.AppendInterval(Mathf.Max(0f, 0.15f))
+                .AppendCallback(() =>
+                {
+                    flashEffect.PlayAoe();
+                    onLanded?.Invoke();
+                })
                 .Append(spriteRenderer.DOFade(1f, 0.2f));
         }
     }

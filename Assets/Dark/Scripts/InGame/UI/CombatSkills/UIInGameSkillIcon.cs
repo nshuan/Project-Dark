@@ -10,11 +10,11 @@ namespace InGame.UI.CombatSkills
     {
         [SerializeField] private Image imgFillCooldown;
         [SerializeField] private TextMeshProUGUI txtCooldown;
+        [SerializeField] private bool showText;
 
         protected virtual void Awake()
         {
             imgFillCooldown.fillAmount = 1f;
-            imgFillCooldown.gameObject.SetActive(false);
             txtCooldown.gameObject.SetActive(false);
         }
 
@@ -26,7 +26,7 @@ namespace InGame.UI.CombatSkills
         private IEnumerator IECooldown(float cooldown)
         {
             imgFillCooldown.gameObject.SetActive(true);
-            txtCooldown.gameObject.SetActive(true);
+            txtCooldown.gameObject.SetActive(showText);
             
             var cooldownTimer = cooldown;
             
@@ -34,11 +34,10 @@ namespace InGame.UI.CombatSkills
             {
                 cooldownTimer -= Time.deltaTime;
                 txtCooldown.SetText(((int)cooldownTimer).ToString());
-                imgFillCooldown.fillAmount = cooldownTimer / cooldown;
+                imgFillCooldown.fillAmount = 1 - cooldownTimer / cooldown;
                 yield return null;
             }
             
-            imgFillCooldown.gameObject.SetActive(false);
             txtCooldown.gameObject.SetActive(false);
         }
     }

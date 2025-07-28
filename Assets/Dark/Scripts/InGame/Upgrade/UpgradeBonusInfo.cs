@@ -70,6 +70,8 @@ namespace InGame
         [Space] 
         public int bulletPlus = 0;
 
+        public int bulletMaxHitPlus = 0;
+
         [Space] 
         public float staggerMultiply = 0f;
 
@@ -78,6 +80,23 @@ namespace InGame
         public bool unlockedChargeBullet;
         public bool unlockedChargeSize;
         public bool unlockedChargeRange;
-        [NonSerialized, OdinSerialize] public List<IProjectileHit> projectileHitActions = new List<IProjectileHit>();
+        [NonSerialized, OdinSerialize] 
+        public List<IProjectileHit> projectileHitActions = new List<IProjectileHit>();
+        [NonSerialized, OdinSerialize] 
+        public List<IProjectileHit> projectileChargeHitActions = new List<IProjectileHit>();
+        [NonSerialized, OdinSerialize]
+        public List<IProjectileActivate> projectileActivateActions = new List<IProjectileActivate>();
+        [NonSerialized, OdinSerialize]
+        public List<IProjectileActivate> projectileChargeActivateActions = new List<IProjectileActivate>();
+
+        public List<IProjectileHit> GetProjectileHitActions(bool isCharge)
+        {
+            return isCharge ? projectileChargeHitActions : projectileHitActions;
+        }
+
+        public List<IProjectileActivate> GetProjectileActivateActions(bool isCharge)
+        {
+            return isCharge ? projectileChargeActivateActions : projectileActivateActions;
+        }
     }
 }

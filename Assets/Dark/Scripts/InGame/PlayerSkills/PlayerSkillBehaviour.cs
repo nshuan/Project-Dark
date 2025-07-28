@@ -20,7 +20,9 @@ namespace InGame
             float skillRange,
             float bulletSpeedScale,
             float stagger,
+            int maxHit,
             bool isCharge,
+            List<IProjectileActivate> activateActions,
             List<IProjectileHit> hitEffects);
     }
 }

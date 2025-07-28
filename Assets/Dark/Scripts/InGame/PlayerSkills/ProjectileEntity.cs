@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using InGame.Pool;
-using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -12,6 +10,7 @@ namespace InGame
     {
         protected const float MaxLifeTime = 10f;
 
+        [SerializeField] protected ProjectileCollider collider;
         [SerializeField] private Transform visual;
         [SerializeField] protected LayerMask enemyLayer;
         [SerializeField] private float baseDamageRange = 0.1f;
@@ -20,23 +19,26 @@ namespace InGame
         [SerializeField] private float baseSpeed = 5f;
         protected Vector2 direction;
         protected Vector2 startPos;
-        protected float maxDistance;
-        private int Damage { get; set; }
-        private bool IsCharge { get; set; }
-        protected float DamageHitBoundRadius { get; set; } = 1f;
-        private int CriticalDamage { get; set; }
-        private float CriticalRate { get; set; }
-        protected float Speed { get; set; }
-        private float Stagger { get; set; }
-        private List<IProjectileHit> HitActions { get; set; }
+        public float maxDistance;
+        public int Damage { get; set; }
+        public float Size { get; set; }
+        public float SpeedScale { get; set; }
+        public bool IsCharge { get; set; }
+        public float DamageHitBoundRadius { get; set; } = 1f;
+        public int CriticalDamage { get; set; }
+        public float CriticalRate { get; set; }
+        public float Speed { get; set; }
+        public float Stagger { get; set; }
+        public int MaxHit { get; set; } = 1;
+        public List<IProjectileActivate> ActivateActions { get; set; }
+        public List<IProjectileHit> HitActions { get; set; }
         public bool BlockDestroy { get; set; } // Block destroy so that the projectile can go through enemies but still deal damage
-
-        public Transform TargetTransform => transform;
         
-        protected bool blockHit = false;
+        public Transform TargetTransform => transform;
+
+        private int currentHit;
         protected bool activated = false;
         protected float lifeTime = 0f;
-        protected EnemyEntity hitEnemy;
 
         protected RaycastHit2D[] hits = new RaycastHit2D[1];
 
@@ -45,7 +47,12 @@ namespace InGame
         public Action OnHit;
 
         #endregion
-        
+
+        private void Awake()
+        {
+            collider.Projectile = this;
+        }
+
         private void OnDisable()
         {
             activated = false;
@@ -63,9 +70,13 @@ namespace InGame
             float criticalRate,
             float stagger,
             bool isCharge,
+            int maxHit,
+            List<IProjectileActivate> activateActions,
             List<IProjectileHit> hitActions)
         {
+            Size = size;
             visual.localScale = size * Vector3.one;
+            SpeedScale = speedScale;
             Speed = baseSpeed * speedScale;
             this.startPos = startPos;
             this.direction = direction;
@@ -77,7 +88,10 @@ namespace InGame
             CriticalRate = criticalRate;
             Stagger = stagger;
             IsCharge = isCharge;
+            ActivateActions = activateActions;
             HitActions = hitActions;
+            MaxHit = maxHit;
+            currentHit = 0;
         }
 
         public void Activate(float delay)
@@ -90,6 +104,13 @@ namespace InGame
         {
             yield return new WaitForSeconds(delay);
             activated = true;
+            if (ActivateActions != null)
+            {
+                foreach (var action in ActivateActions)
+                {
+                    action.DoAction(this, direction);
+                }
+            }
         }
 
         protected virtual void Update()
@@ -100,49 +121,51 @@ namespace InGame
             lifeTime += Time.deltaTime;
             if (lifeTime > MaxLifeTime)
             {
-                blockHit = false;
                 BlockDestroy = false;
                 ProjectileHit(null);
             }
             
             // Check hit enemy
-            var count = Physics2D.CircleCastNonAlloc(transform.position, DamageHitBoundRadius, Vector2.zero, hits, 0f,
-                enemyLayer);
-            if (count > 0)
-                ProjectileHit(hits[0].transform);
+            // var count = Physics2D.CircleCastNonAlloc(transform.position, DamageHitBoundRadius, Vector2.zero, hits, 0f,
+            //     enemyLayer);
+            // if (count > 0)
+            //     ProjectileHit(hits[0].transform);
         }
         
-        protected virtual void ProjectileHit(Transform hitTransform)
+        public virtual void ProjectileHit(EnemyEntity hit)
         {
-            if (blockHit) return;
-            if (hitTransform)
+            if (!hit)
             {
-                if (hitTransform.TryGetComponent<EnemyEntity>(out hitEnemy))
-                {
-                    // Check critical hit
-                    var critical = Random.Range(0f, 1f) <= CriticalRate;
-                    hitEnemy.Damage(critical ? CriticalDamage : Damage, transform.position, Stagger);
-                    PassiveEffectManager.Instance.TriggerEffect(IsCharge ? PassiveTriggerType.DameByChargeAttack : PassiveTriggerType.DameByNormalAttack, hitEnemy);
-                    
-                    if (critical)
-                        DebugUtility.LogWarning($"Projectile {name} deals critical damage {CriticalDamage} to {hitEnemy.name}!!");
-
-                    if (HitActions != null)
-                    {
-                        foreach (var action in HitActions)
-                        {
-                            action.DoAction(transform.position);
-                        }
-                    }
-                    
-                    OnHit?.Invoke();
-                    if (!BlockDestroy)
-                        OnHit = null;
-                }
+                OnHit = null;
+                ProjectileDeadPool.Instance.Get().position = transform.position;
+                ProjectilePool.Instance.Release(this);
+                return;
             }
             
-            if (!BlockDestroy)
+            // Check critical hit
+            var critical = Random.Range(0f, 1f) <= CriticalRate;
+            hit.Damage(critical ? CriticalDamage : Damage, transform.position, Stagger);
+            PassiveEffectManager.Instance.TriggerEffect(IsCharge ? PassiveTriggerType.DameByChargeAttack : PassiveTriggerType.DameByNormalAttack, hit);
+                    
+            if (critical)
+                DebugUtility.LogWarning($"Projectile {name} deals critical damage {CriticalDamage} to {hit.name}!!");
+
+            if (HitActions != null)
+            {
+                foreach (var action in HitActions)
+                {
+                    action.DoAction(transform.position);
+                }
+            }
+                    
+            OnHit?.Invoke();
+            currentHit += 1;
+            
+            if (!BlockDestroy && currentHit >= MaxHit)
+            {
+                OnHit = null;
                 ProjectilePool.Instance.Release(this);
+            }
         }
 
         private void OnDrawGizmos()

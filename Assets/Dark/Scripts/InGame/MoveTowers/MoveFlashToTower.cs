@@ -17,6 +17,7 @@ namespace InGame
         private RaycastHit2D[] hits = new RaycastHit2D[50];
         private EnemyEntity hitTarget;
         private Transform characterTransform;
+        private CameraShake cameraShake;
         
         public IEnumerator IEMove(PlayerCharacter character, Vector2 startPos, Vector2 endPos, Action onComplete)
         {
@@ -30,7 +31,10 @@ namespace InGame
             
             yield return character.StopFlashEffect(() =>
             {
-                var count = Physics2D.CircleCastNonAlloc(character.transform.position, explodeSize, Vector2.zero, hits,
+                cameraShake ??= new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera };
+                VisualEffectHelper.Instance.PlayEffect(cameraShake);
+                
+                var count = Physics2D.CircleCastNonAlloc(character.FlashExplodeCenter, explodeSize, Vector2.zero, hits,
                     0f,
                     enemyLayer);
                 if (count > 0)

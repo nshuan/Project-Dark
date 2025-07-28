@@ -7,7 +7,9 @@ namespace InGame
     {
         [SerializeField] private GameObject flashStartGO;
         [SerializeField] private GameObject flashEndGO;
+        [SerializeField] private GameObject flashAoeGO;
 
+        public Transform explodeCenter;
         public float startDuration = 0.5f;
 
         public void PLayStart()
@@ -24,6 +26,13 @@ namespace InGame
             StartCoroutine(IEHideObject(flashEndGO, 2f));
         }
 
+        public void PlayAoe()
+        {
+            flashAoeGO.transform.SetParent(null);
+            flashAoeGO.SetActive(true);
+            StartCoroutine(IEHideObject(flashAoeGO, 2f));
+        }
+        
         private IEnumerator IEHideObject(GameObject go, float delay)
         {
             yield return new WaitForSeconds(delay);

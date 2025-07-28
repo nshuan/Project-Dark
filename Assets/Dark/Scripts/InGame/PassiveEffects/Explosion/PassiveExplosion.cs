@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using InGame.Effects;
 using UnityEngine;
 
 namespace InGame
@@ -12,7 +13,13 @@ namespace InGame
         private float Stagger { get; set; }
         private RaycastHit2D[] hits = new RaycastHit2D[50];
         private IDamageable hitTarget;
-        
+        private CameraShake cameraShakeEffect;
+
+        public override void Initialize()
+        {
+            cameraShakeEffect = new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera };
+        }
+
         public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool)
         {
             transform.position = target.Position;
@@ -31,6 +38,8 @@ namespace InGame
                         ExplosionHit(hits[i].transform, value);
                     }
                 }
+                
+                VisualEffectHelper.Instance.PlayEffect(cameraShakeEffect);
             }, () =>
             {
                 pool.Release(this, effectId);

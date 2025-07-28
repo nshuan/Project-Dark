@@ -11,6 +11,9 @@ namespace InGame
 {
     public class GateEntity : SerializedMonoBehaviour
     {
+        [SerializeField] private AnimationCurve orbYCurve;
+        [SerializeField] private float orbSpawnDuration;
+        
         [ReadOnly] public TowerEntity[] target;
         private float WaveHpMultiplier { get; set; }
         private float WaveDmgMultiplier { get; set; }
@@ -21,6 +24,7 @@ namespace InGame
         private int TotalSpawnTurn { get; set; } // unlimited = -1
         private int currentSpawnTurn = 0;
         private int AliveEnemyCount { get; set; }
+        
         #region Gate config
 
         [Space] [Header("Gate config")] 
@@ -32,6 +36,8 @@ namespace InGame
         #endregion
 
         public Action OnAllEnemiesDead { get; set; }
+
+        private float orbSpawnTimer;
         
         public void Activate()
         {
@@ -66,6 +72,7 @@ namespace InGame
                 StopCoroutine(spawnCoroutine);
             
             visual.SetActive(false);
+            orbSpawnTimer = 0f;
         }
         
         private Coroutine spawnCoroutine;
@@ -80,6 +87,42 @@ namespace InGame
                 yield return new WaitForSeconds(config.intervalLoop);
                 
                 var enemies = config.spawnLogic.Spawn(transform.position, config.spawnType.enemyId, config.spawnType.enemyPrefab);
+                var orbs = new Transform[enemies.Length];
+
+                for (var i = 0; i < enemies.Length; i++)
+                {
+                    orbs[i] = EnemyOrbPool.Instance.Get(null);
+                    orbs[i].position = transform.position;
+                }
+
+                while (orbSpawnTimer < orbSpawnDuration)
+                {
+                    orbSpawnTimer += Time.deltaTime;
+                    
+                    for (var i = 0; i < orbs.Length; i++)
+                    {
+                        var t = Mathf.Clamp01(orbSpawnTimer / orbSpawnDuration);
+
+                        // horizontal position (isometric: usually XZ plane)
+                        var horizontalPos = Vector3.Lerp(transform.position, enemies[i].transform.position, t);
+
+                        // height offset using curve
+                        var curveY = orbYCurve.Evaluate(t) * 3f;
+
+                        // final position
+                        horizontalPos.y += curveY;
+
+                        orbs[i].position = horizontalPos;
+                    }
+
+                    yield return new WaitForEndOfFrame();
+                }
+
+                foreach (var orb in orbs)
+                {
+                    EnemyOrbPool.Instance.Release(orb);
+                }
+                
                 for (var i = 0; i < enemies.Length; i++)
                 {
                     var enemy = enemies[i];
@@ -97,6 +140,7 @@ namespace InGame
                 }
 
                 currentSpawnTurn += 1;
+                orbSpawnTimer = 0f;
             }
             
             Deactivate();

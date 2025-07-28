@@ -172,7 +172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.40392157, g: 0.40392157, b: 0.40392157, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -185,7 +185,7 @@ MonoBehaviour:
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
-  m_FillClockwise: 1
+  m_FillClockwise: 0
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
@@ -775,7 +775,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4473486295083902700, guid: 48c83a9a8994a4f4098cdeded5b57916, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 267.2
+      value: 252.90002
       objectReference: {fileID: 0}
     - target: {fileID: 4473486295083902700, guid: 48c83a9a8994a4f4098cdeded5b57916, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -1324,7 +1324,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.39215687}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2068,7 +2068,9 @@ Transform:
   m_Children:
   - {fileID: 1851111459}
   - {fileID: 152635618}
+  - {fileID: 1800629517}
   - {fileID: 544949212}
+  - {fileID: 1937213646}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &434932556
@@ -2639,7 +2641,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.39215687}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3064,8 +3066,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1938037939
+  m_SortingLayer: -2
   m_SortingOrder: -1000
   m_Sprite: {fileID: 21300000, guid: 533083a99ec36724f9f962eb51b56c3f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -3164,7 +3166,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4473486295083902700, guid: 48c83a9a8994a4f4098cdeded5b57916, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 267.2
+      value: 252.90002
       objectReference: {fileID: 0}
     - target: {fileID: 4473486295083902700, guid: 48c83a9a8994a4f4098cdeded5b57916, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -3383,7 +3385,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4473486295083902700, guid: 48c83a9a8994a4f4098cdeded5b57916, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 267.2
+      value: 252.90002
       objectReference: {fileID: 0}
     - target: {fileID: 4473486295083902700, guid: 48c83a9a8994a4f4098cdeded5b57916, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -3534,6 +3536,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imgFillCooldown: {fileID: 1170527477}
   txtCooldown: {fileID: 2005781619}
+  showText: 0
   skillIcon: {fileID: 556437016}
   effectIconParent: {fileID: 245604120}
 --- !u!1 &757195832 stripped
@@ -3785,6 +3788,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imgFillCooldown: {fileID: 1580087830}
   txtCooldown: {fileID: 1302539565}
+  showText: 0
 --- !u!1 &816500542
 GameObject:
   m_ObjectHideFlags: 0
@@ -4937,7 +4941,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.39215687}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5125,7 +5129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.40392157, g: 0.40392157, b: 0.40392157, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5138,7 +5142,7 @@ MonoBehaviour:
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
-  m_FillClockwise: 1
+  m_FillClockwise: 0
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
@@ -5359,7 +5363,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: 1413211463
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!1 &1204619583
@@ -6441,7 +6445,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.40392157, g: 0.40392157, b: 0.40392157, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6452,9 +6456,9 @@ MonoBehaviour:
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
-  m_FillMethod: 2
+  m_FillMethod: 4
   m_FillAmount: 1
-  m_FillClockwise: 1
+  m_FillClockwise: 0
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
@@ -6726,7 +6730,8 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects: []
+    ReferencedUnityObjects:
+    - {fileID: 6844351392576462872, guid: 5bf387a4936339542a95d194cf62d737, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -6801,6 +6806,9 @@ MonoBehaviour:
     - Name: bulletPlus
       Entry: 3
       Data: 0
+    - Name: bulletMaxHitPlus
+      Entry: 3
+      Data: 0
     - Name: staggerMultiply
       Entry: 4
       Data: 0
@@ -6822,24 +6830,79 @@ MonoBehaviour:
         mscorlib
     - Name: 
       Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 4|InGame.ProjectileHitBlossom, Assembly-CSharp
+    - Name: projectile
+      Entry: 10
       Data: 0
+    - Name: bulletAmount
+      Entry: 3
+      Data: 5
+    - Name: blossomSize
+      Entry: 4
+      Data: 3
+    - Name: damage
+      Entry: 3
+      Data: 0
+    - Name: stagger
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 
     - Name: 
       Entry: 8
       Data: 
+    - Name: projectileChargeHitActions
+      Entry: 6
+      Data: 
+    - Name: projectileActivateActions
+      Entry: 7
+      Data: 5|System.Collections.Generic.List`1[[InGame.IProjectileActivate, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 6|InGame.ProjectileActivateSplit, Assembly-CSharp
+    - Name: projectile
+      Entry: 10
+      Data: 0
+    - Name: amount
+      Entry: 3
+      Data: 4
+    - Name: angle
+      Entry: 4
+      Data: 70
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: projectileChargeActivateActions
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
     - Name: effectsMapByTriggerType
       Entry: 7
-      Data: 4|System.Collections.Generic.Dictionary`2[[InGame.PassiveTriggerType,
+      Data: 7|System.Collections.Generic.Dictionary`2[[InGame.PassiveTriggerType,
         Assembly-CSharp],[System.Collections.Generic.List`1[[InGame.PassiveType,
         Assembly-CSharp]], mscorlib]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 5|System.Collections.Generic.EnumEqualityComparer`1[[InGame.PassiveTriggerType,
+      Data: 8|System.Collections.Generic.EnumEqualityComparer`1[[InGame.PassiveTriggerType,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
@@ -6852,57 +6915,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 2
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
       Data: 0
-    - Name: $v
-      Entry: 7
-      Data: 6|System.Collections.Generic.List`1[[InGame.PassiveType, Assembly-CSharp]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 1
-    - Name: $v
-      Entry: 7
-      Data: 7|System.Collections.Generic.List`1[[InGame.PassiveType, Assembly-CSharp]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
     - Name: 
       Entry: 13
       Data: 
@@ -6993,7 +7006,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4037736, g: 0.4037736, b: 0.4037736, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7006,7 +7019,7 @@ MonoBehaviour:
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
-  m_FillClockwise: 1
+  m_FillClockwise: 0
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
@@ -7287,6 +7300,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imgFillCooldown: {fileID: 38177429}
   txtCooldown: {fileID: 875067745}
+  showText: 0
   skillIcon: {fileID: 1101729317}
   effectIconParent: {fileID: 757195832}
 --- !u!1 &1684454218
@@ -7689,6 +7703,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 691118427}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1800629516
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1800629517}
+  - component: {fileID: 1800629518}
+  m_Layer: 0
+  m_Name: EnemyOrbPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1800629517
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1800629516}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 426610612}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1800629518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1800629516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bfa58b87cf3473c8095cfe6021340a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefab: {fileID: 6208888116731386985, guid: ac5a73b76f1030e4d9bb085652a9fbc7, type: 3}
 --- !u!1 &1851111458
 GameObject:
   m_ObjectHideFlags: 0
@@ -7930,6 +7989,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1921297881}
   m_CullTransparentMesh: 1
+--- !u!1 &1937213645
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1937213646}
+  - component: {fileID: 1937213647}
+  m_Layer: 0
+  m_Name: ProjectileDeadPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1937213646
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937213645}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 426610612}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1937213647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937213645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d289712bdc1948b99ae57f349230cc5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefab: {fileID: 637455175842949461, guid: 96f9f904c6b42654988fa536f959dec1, type: 3}
+  delayDisappear: 8
 --- !u!1 &1951554577
 GameObject:
   m_ObjectHideFlags: 0
@@ -8396,6 +8501,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imgFillCooldown: {fileID: 1438383149}
   txtCooldown: {fileID: 896082955}
+  showText: 0
   skillIcon: {fileID: 2064883686}
   effectIconParent: {fileID: 1492763655}
 --- !u!114 &2016680611 stripped
@@ -8595,7 +8701,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.39215687}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -9032,7 +9138,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4473486295083902700, guid: 48c83a9a8994a4f4098cdeded5b57916, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 267.2
+      value: 252.9
       objectReference: {fileID: 0}
     - target: {fileID: 4473486295083902700, guid: 48c83a9a8994a4f4098cdeded5b57916, type: 3}
       propertyPath: m_AnchoredPosition.y

@@ -36,6 +36,9 @@ namespace InGame.Upgrade
                 case BonusSkillType.BulletNum:
                     bonusInfo.skillBonus.bulletPlus += (int)value[level - 1];
                     break;
+                case BonusSkillType.BulletMaxHit:
+                    bonusInfo.skillBonus.bulletMaxHitPlus += (int)value[level - 1];
+                    break;
                 case BonusSkillType.Stagger:
                     bonusInfo.skillBonus.staggerMultiply += value[level - 1];
                     break;
@@ -49,6 +52,7 @@ namespace InGame.Upgrade
             Size,
             Range,
             BulletNum,
+            BulletMaxHit,
             Stagger
         }
     }

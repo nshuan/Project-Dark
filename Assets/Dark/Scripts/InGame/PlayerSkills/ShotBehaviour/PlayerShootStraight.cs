@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using InGame.Pool;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -21,7 +20,9 @@ namespace InGame
             float skillRange, 
             float bulletSpeedScale, 
             float stagger, 
+            int maxHit,
             bool isCharge,
+            List<IProjectileActivate> activateActions,
             List<IProjectileHit> projectileHitActions)
         {
             const float delayEachBullet = 0.1f;
@@ -29,7 +30,7 @@ namespace InGame
             {
                 var p = ProjectilePool.Instance.Get(projectilePrefab, null, false);
                 p.transform.position = spawnPos;
-                p.Init(spawnPos, (target - spawnPos).normalized, skillRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, isCharge, projectileHitActions);
+                p.Init(spawnPos, (target - spawnPos).normalized, skillRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, isCharge, maxHit, activateActions, projectileHitActions);
                 p.Activate(delayEachBullet * i);
             }
         }

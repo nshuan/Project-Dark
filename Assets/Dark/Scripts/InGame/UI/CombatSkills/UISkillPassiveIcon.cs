@@ -26,7 +26,6 @@ namespace InGame.UI.CombatSkills
         private void Awake()
         {
             imgFillCooldown.fillAmount = 1f;
-            imgFillCooldown.gameObject.SetActive(false);
         }
 
         private void OnEffectTriggered(PassiveTriggerType triggerType, PassiveType passiveType, float cooldown)
@@ -46,11 +45,9 @@ namespace InGame.UI.CombatSkills
             while (cooldownTimer > 0)
             {
                 cooldownTimer -= Time.deltaTime;
-                imgFillCooldown.fillAmount = cooldownTimer / cooldown;
+                imgFillCooldown.fillAmount = 1 - cooldownTimer / cooldown;
                 yield return null;
             }
-            
-            imgFillCooldown.gameObject.SetActive(false);
         }
     }
 }

@@ -98,6 +98,7 @@ namespace InGame
                 maxRangeMultiplierAdd > 0 ? 1 + Mathf.Min(rangeChargeTime / maxRangeChargeTime, 1f) * maxRangeMultiplierAdd : 1f);
             var isCharge = (canChargeBullet && bulletAdd > 0) || (canChargeDame && dameChargeTime > 0) ||
                            (canChargeSize && sizeChargeTime > 0) || (canChargeRange && rangeChargeTime > 0);
+            var maxHit = 1 + LevelUtility.BonusInfo.skillBonus.bulletMaxHitPlus;
 
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             InputManager.BlockTeleport = true;
@@ -114,12 +115,12 @@ namespace InGame
             InputManager.DelayCall(delayShot, () =>
             {
                 InputManager.playerVisual.Weapon.GetAllEnemiesInRange(skillRange);
-                
+
                 InputManager.CurrentSkillConfig.Shoot(
                     bulletAdd > 0
                         ? InputManager.CurrentSkillConfig.projectiles[PlayerProjectileType.ChargeBullet]
                         : InputManager.CurrentSkillConfig.projectiles[PlayerProjectileType.Normal],
-                    InputManager.CursorRangeCenter.position, 
+                    InputManager.CursorRangeCenter.position,
                     tempMousePos,
                     damage,
                     bulletNum,
@@ -127,8 +128,10 @@ namespace InGame
                     skillRange,
                     criticalDamage,
                     critRate,
+                    maxHit,
                     isCharge,
-                    LevelUtility.BonusInfo.skillBonus.projectileHitActions);
+                    LevelUtility.BonusInfo.skillBonus.GetProjectileActivateActions(isCharge),
+                    LevelUtility.BonusInfo.skillBonus.GetProjectileHitActions(isCharge));
 
                 InputManager.BlockTeleport = false;
             });
@@ -142,6 +145,8 @@ namespace InGame
             cdCounter += delayShot;
             
             // Do cursor effect
+            cursor.UpdateBulletAdd(false);
+            cursor.UpdateCooldown(0f);
             DOTween.Complete(this);
             var seq = DOTween.Sequence(this);
             seq.Append(cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f))
@@ -156,6 +161,7 @@ namespace InGame
                 || isChargingDame
                 || isChargingSize
                 || isChargingRange) return; 
+            
             ResetChargeVariable();
             
             if (canChargeBullet && InputManager.CurrentSkillConfig.chargeBulletMaxAdd > 0)
@@ -215,10 +221,6 @@ namespace InGame
                 cdCounter -= Time.deltaTime;
                 if (cdCounter <= 0)
                     CanShoot = true;
-                
-                // Update UI
-                cursor.UpdateCooldown(Mathf.Clamp(cdCounter / Cooldown, 0f, 1f));
-                cursor.UpdateBulletAdd(false);
             }
             else
             {
@@ -228,7 +230,11 @@ namespace InGame
                     if (isChargingBullet)
                     {
                         if (bulletAddTimer > 0)
+                        {
                             bulletAddTimer -= Time.deltaTime;
+                            // Update UI
+                            cursor.UpdateCooldown(Mathf.Clamp(bulletAddTimer / bulletAddInterval, 0f, 1f));
+                        }
                         else if (bulletAdd < maxBulletAdd)
                         {
                             bulletAdd += 1;
