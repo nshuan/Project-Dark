@@ -8,11 +8,10 @@ namespace InGame
 {
     public class PlayerCharacter : MonoBehaviour
     {
+        [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private PlayerAnimController animController;
         [SerializeField] private PlayerDashEffect dashEffect;
         [SerializeField] private PLayerFlashEffect flashEffect;
-        [SerializeField] private GameObject chargeEffect;
-        [SerializeField] private SpriteRenderer spriteRenderer;
 
         [Space] [SerializeField] private WeaponSupporter weapon;
         public WeaponSupporter Weapon => weapon;
@@ -35,18 +34,11 @@ namespace InGame
 
         public void PlayCharge()
         {
-            StartCoroutine(IEChargeEffect(animController.PlayCharge()));
-        }
-
-        private IEnumerator IEChargeEffect(float delay)
-        {
-            yield return new WaitForSeconds(delay);
-            chargeEffect.SetActive(true);
+            animController.PlayCharge();
         }
 
         public void EndChargeAndShoot()
         {
-            chargeEffect.SetActive(false);
             animController.EndChargeAndShoot();
         }
 

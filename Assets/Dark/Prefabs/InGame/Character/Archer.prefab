@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1766775453336322799}
   m_Layer: 0
-  m_Name: Charge
+  m_Name: ChargeUpperLayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 192765987599666672}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.02, y: -0.207, z: 0}
+  m_LocalPosition: {x: 0.212, y: -0.234, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -358,6 +358,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spritesAnim: {fileID: 2194498147048568497}
+  chargeEffectLower: {fileID: 6497324169121462256}
+  chargeEffectUpper: {fileID: 1766775453336322799}
 --- !u!1 &5661628046290633621
 GameObject:
   m_ObjectHideFlags: 0
@@ -432,7 +434,7 @@ SpriteRenderer:
   m_SortingLayerID: 862781815
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: -404609069, guid: 65881cd595eb9024fa50efbaac037803, type: 3}
+  m_Sprite: {fileID: -1890008410, guid: 9039a63161461ce458622bb708ea2f5a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -560,6 +562,21 @@ MonoBehaviour:
     - Name: chargeAttackAnim
       Entry: 6
       Data: 
+    - Name: chargeFxPosition
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: -8.108
+    - Name: 
+      Entry: 4
+      Data: 2.264
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: showChargeFxLower
+      Entry: 5
+      Data: true
     - Name: 
       Entry: 8
       Data: 
@@ -632,6 +649,21 @@ MonoBehaviour:
     - Name: chargeAttackAnim
       Entry: 6
       Data: 
+    - Name: chargeFxPosition
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: -7.711
+    - Name: 
+      Entry: 4
+      Data: 2.272
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: showChargeFxLower
+      Entry: 5
+      Data: true
     - Name: 
       Entry: 8
       Data: 
@@ -704,6 +736,21 @@ MonoBehaviour:
     - Name: chargeAttackAnim
       Entry: 6
       Data: 
+    - Name: chargeFxPosition
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: -7.588
+    - Name: 
+      Entry: 4
+      Data: 2.241
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: showChargeFxLower
+      Entry: 5
+      Data: true
     - Name: 
       Entry: 8
       Data: 
@@ -776,6 +823,21 @@ MonoBehaviour:
     - Name: chargeAttackAnim
       Entry: 6
       Data: 
+    - Name: chargeFxPosition
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: -7.473
+    - Name: 
+      Entry: 4
+      Data: 1.971
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: showChargeFxLower
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -848,6 +910,21 @@ MonoBehaviour:
     - Name: chargeAttackAnim
       Entry: 6
       Data: 
+    - Name: chargeFxPosition
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: -7.715
+    - Name: 
+      Entry: 4
+      Data: 1.856
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: showChargeFxLower
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -920,6 +997,21 @@ MonoBehaviour:
     - Name: chargeAttackAnim
       Entry: 6
       Data: 
+    - Name: chargeFxPosition
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: -7.684
+    - Name: 
+      Entry: 4
+      Data: 1.685
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: showChargeFxLower
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -992,6 +1084,21 @@ MonoBehaviour:
     - Name: chargeAttackAnim
       Entry: 6
       Data: 
+    - Name: chargeFxPosition
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: -7.855
+    - Name: 
+      Entry: 4
+      Data: 1.713
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: showChargeFxLower
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -1064,6 +1171,21 @@ MonoBehaviour:
     - Name: chargeAttackAnim
       Entry: 6
       Data: 
+    - Name: chargeFxPosition
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: -8.22
+    - Name: 
+      Entry: 4
+      Data: 1.773
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: showChargeFxLower
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -1136,6 +1258,21 @@ MonoBehaviour:
     - Name: chargeAttackAnim
       Entry: 6
       Data: 
+    - Name: chargeFxPosition
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: -8.299
+    - Name: 
+      Entry: 4
+      Data: 1.96
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: showChargeFxLower
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -1208,6 +1345,21 @@ MonoBehaviour:
     - Name: chargeAttackAnim
       Entry: 6
       Data: 
+    - Name: chargeFxPosition
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: -8.243
+    - Name: 
+      Entry: 4
+      Data: 2.158
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: showChargeFxLower
+      Entry: 5
+      Data: true
     - Name: 
       Entry: 8
       Data: 
@@ -1248,6 +1400,38 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6563634025267148571}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6285724337199516004
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6497324169121462256}
+  m_Layer: 0
+  m_Name: ChargeLowerLayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &6497324169121462256
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6285724337199516004}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.212, y: -0.242, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4778483683864040039}
+  m_Father: {fileID: 8748002566143027518}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6357789787122487718
 GameObject:
   m_ObjectHideFlags: 0
@@ -1280,6 +1464,7 @@ Transform:
   m_Children:
   - {fileID: 3268177018605796470}
   - {fileID: 4617084374307372396}
+  - {fileID: 6497324169121462256}
   - {fileID: 1766775453336322799}
   - {fileID: 2938300384642361823}
   - {fileID: 8875509042617920227}
@@ -1298,11 +1483,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ca4cc656c034d159540bcc80bcd2dfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 9020079279941623819}
   animController: {fileID: 6174149847859742363}
   dashEffect: {fileID: 3216691245108859979}
   flashEffect: {fileID: 6194580792556600830}
-  chargeEffect: {fileID: 192765987599666672}
-  spriteRenderer: {fileID: 9020079279941623819}
   weapon: {fileID: 2997467557329049479}
   offset: {x: 0, y: 1.446}
 --- !u!1 &7373470921108189585
@@ -1580,15 +1764,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.5
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1647,6 +1831,112 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
   m_PrefabInstance: {fileID: 2797040866539156526}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &3338849734618347368
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6497324169121462256}
+    m_Modifications:
+    - target: {fileID: 32703658283916706, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_Name
+      value: FX_Ingame_ChargeSkill (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 32703658283916706, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 3010379387347047803, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 3084451736161359871, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 5320929679414359706, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 6013541067120651525, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 7118564876000400821, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8884435061034458796, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+--- !u!4 &4778483683864040039 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7783750345768969487, guid: d2937223c705e6e46a6d054dbaad9d48, type: 3}
+  m_PrefabInstance: {fileID: 3338849734618347368}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4716179032706401750
 PrefabInstance:

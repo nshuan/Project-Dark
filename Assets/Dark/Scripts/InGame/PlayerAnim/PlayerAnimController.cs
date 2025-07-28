@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
 namespace InGame
@@ -5,7 +7,14 @@ namespace InGame
     public class PlayerAnimController : MonoBehaviour
     {
         [SerializeField] private Player8DirectionsAnimation spritesAnim;
-        
+        [SerializeField] private Transform chargeEffectLower;
+        [SerializeField] private Transform chargeEffectUpper;
+
+        private void Awake()
+        {
+            spritesAnim.SetChargeFx(chargeEffectLower, chargeEffectUpper);
+        }
+
         public void PlayIdle()
         {
             spritesAnim.PlayIdle();    
