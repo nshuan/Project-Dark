@@ -223,6 +223,8 @@ namespace InGame
         private IEnumerator IEDie(float delayAnim, float delayRelease)
         {
             yield return new WaitForSeconds(delayAnim);
+            callbackBurnComplete?.Invoke();
+            callbackBurnComplete = null;
             
             WealthManager.Instance.AddExp(Exp);
             if (Random.Range(0f, 0f) <= DarkRatio)
@@ -237,8 +239,10 @@ namespace InGame
         #region Effect 
 
         public Transform TargetTransform => transform;
-        public void Burn(float duration, float delayEachBurn, int damage)
+        private Action callbackBurnComplete;
+        public void Burn(float duration, float delayEachBurn, int damage, Action callbackComplete)
         {
+            callbackBurnComplete = callbackComplete;
             StartCoroutine(IEBurn(duration, delayEachBurn, damage));
         }
 
@@ -252,6 +256,9 @@ namespace InGame
                 Damage(damage, transform.position, 0f);
                 totalBurn -= 1;
             }
+            
+            callbackBurnComplete?.Invoke();
+            callbackBurnComplete = null;
         }
 
         public void Kill()
