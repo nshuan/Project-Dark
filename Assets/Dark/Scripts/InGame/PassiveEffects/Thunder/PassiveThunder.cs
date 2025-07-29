@@ -29,12 +29,18 @@ namespace InGame
                 StartCoroutine(IEThunder(() =>
                 {
                     var triggerCount = EnemyManager.Instance.FilterEnemiesNonAlloc(enemy => enemy.PercentageHpLeft < value, ref triggerredEnemies);
-                    if (triggerCount > 0) VisualEffectHelper.Instance.PlayEffect(cameraShakeEffect);
+                    var indexVfx = 0;
+                    if (triggerCount > 0)
+                    {
+                        cameraShakeEffect.Duration = 0.5f + 0.1f * (triggerCount - 1);
+                        VisualEffectHelper.Instance.PlayEffect(cameraShakeEffect);
+                    }
                     while (triggerCount > 0)
                     {
-                        VfxThunderPool.Instance.GetAndRelease(null, triggerredEnemies[triggerCount - 1].transform.position, 0f, 1f);
+                        VfxThunderPool.Instance.GetAndRelease(null, triggerredEnemies[triggerCount - 1].transform.position, 0.1f * indexVfx, 1f);
                         triggerredEnemies[triggerCount - 1].Kill();
                         triggerCount -= 1;
+                        indexVfx += 1;
                     }
                 }, () =>
                 {
@@ -54,7 +60,7 @@ namespace InGame
                         {
                             if (hits[i].transform.TryGetComponent(out tempTarget))
                             {
-                                VfxThunderPool.Instance.GetAndRelease(null, tempTarget.Position, 0f, 1f);
+                                VfxThunderPool.Instance.GetAndRelease(null, tempTarget.Position, 0.1f * i, 1f);
                                 if (tempTarget.PercentageHpLeft < value)
                                 {
                                     tempTarget.Kill();
@@ -62,6 +68,7 @@ namespace InGame
                             }
                         }
                         
+                        cameraShakeEffect.Duration = 0.5f + 0.1f * (count - 1);
                         VisualEffectHelper.Instance.PlayEffect(cameraShakeEffect);
                     }
                 }, () =>
