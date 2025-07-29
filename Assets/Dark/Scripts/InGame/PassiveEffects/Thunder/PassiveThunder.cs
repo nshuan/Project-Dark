@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using InGame.Effects;
 using UnityEngine;
 
 namespace InGame
@@ -12,18 +13,26 @@ namespace InGame
         private EnemyEntity[] triggerredEnemies;
         private RaycastHit2D[] hits = new RaycastHit2D[50];
         private IEffectTarget tempTarget;
+        private CameraShake cameraShakeEffect;
+        
+        public override void Initialize()
+        {
+            cameraShakeEffect = new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera, Duration = 0.5f, Magnitude = 0.2f};
+            triggerredEnemies = new EnemyEntity[maxTriggeredEnemies];
+            hits = new RaycastHit2D[50];
+        }
         
         public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool)
         {
-            triggerredEnemies ??= new EnemyEntity[maxTriggeredEnemies];
-
             if (triggerAllEnemies)
             {
                 StartCoroutine(IEThunder(() =>
                 {
                     var triggerCount = EnemyManager.Instance.FilterEnemiesNonAlloc(enemy => enemy.PercentageHpLeft < value, ref triggerredEnemies);
+                    if (triggerCount > 0) VisualEffectHelper.Instance.PlayEffect(cameraShakeEffect);
                     while (triggerCount > 0)
                     {
+                        VfxThunderPool.Instance.GetAndRelease(null, triggerredEnemies[triggerCount - 1].transform.position, 0f, 1f);
                         triggerredEnemies[triggerCount - 1].Kill();
                         triggerCount -= 1;
                     }
@@ -45,12 +54,15 @@ namespace InGame
                         {
                             if (hits[i].transform.TryGetComponent(out tempTarget))
                             {
+                                VfxThunderPool.Instance.GetAndRelease(null, tempTarget.Position, 0f, 1f);
                                 if (tempTarget.PercentageHpLeft < value)
                                 {
                                     tempTarget.Kill();
                                 }
                             }
                         }
+                        
+                        VisualEffectHelper.Instance.PlayEffect(cameraShakeEffect);
                     }
                 }, () =>
                 {
@@ -61,7 +73,7 @@ namespace InGame
         
         private IEnumerator IEThunder(Action actionDamage, Action actionComplete)
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.25f);
             actionDamage?.Invoke();
 
             yield return new WaitForSeconds(1f);
