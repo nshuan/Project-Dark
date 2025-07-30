@@ -80,7 +80,7 @@ namespace InGame
         {
             yield return new WaitForSeconds(config.startTime);
             
-            visual.SetActive(true);
+            visual.SetActive(config.showVisual);
             
             while (TotalSpawnTurn == -1 || currentSpawnTurn < TotalSpawnTurn)
             {

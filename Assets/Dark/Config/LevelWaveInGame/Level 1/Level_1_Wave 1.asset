@@ -29,7 +29,7 @@ MonoBehaviour:
         mscorlib
     - Name: 
       Entry: 12
-      Data: 2
+      Data: 4
     - Name: 
       Entry: 7
       Data: 1|InGame.GateConfig, Assembly-CSharp
@@ -45,6 +45,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: showVisual
+      Entry: 5
+      Data: true
     - Name: targetBaseIndex
       Entry: 7
       Data: 2|System.Int32[], mscorlib
@@ -77,16 +80,10 @@ MonoBehaviour:
       Data: 0
     - Name: intervalLoop
       Entry: 4
-      Data: 4
+      Data: 5
     - Name: spawnLogic
       Entry: 7
-      Data: 3|InGame.GateSpawnTriangle, Assembly-CSharp
-    - Name: radius
-      Entry: 4
-      Data: 1.5
-    - Name: rotation
-      Entry: 4
-      Data: 0
+      Data: 3|InGame.GateSpawnSingle, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -108,6 +105,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: showVisual
+      Entry: 5
+      Data: false
     - Name: targetBaseIndex
       Entry: 7
       Data: 5|System.Int32[], mscorlib
@@ -143,13 +143,127 @@ MonoBehaviour:
       Data: 4
     - Name: spawnLogic
       Entry: 7
-      Data: 6|InGame.GateSpawnTriangle, Assembly-CSharp
-    - Name: radius
+      Data: 6|InGame.GateSpawnSingle, Assembly-CSharp
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 7|InGame.GateConfig, Assembly-CSharp
+    - Name: position
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
       Entry: 4
-      Data: 1.377
-    - Name: rotation
+      Data: 0
+    - Name: 
       Entry: 4
-      Data: 37
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: showVisual
+      Entry: 5
+      Data: false
+    - Name: targetBaseIndex
+      Entry: 7
+      Data: 8|System.Int32[], mscorlib
+    - Name: 
+      Entry: 14
+      Data: 3
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: startTime
+      Entry: 4
+      Data: 4.2
+    - Name: duration
+      Entry: 4
+      Data: 200
+    - Name: spawnType
+      Entry: 10
+      Data: 1
+    - Name: intervalLoop
+      Entry: 4
+      Data: 4
+    - Name: spawnLogic
+      Entry: 7
+      Data: 9|InGame.GateSpawnSingle, Assembly-CSharp
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 10|InGame.GateConfig, Assembly-CSharp
+    - Name: position
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: showVisual
+      Entry: 5
+      Data: false
+    - Name: targetBaseIndex
+      Entry: 7
+      Data: 11|System.Int32[], mscorlib
+    - Name: 
+      Entry: 14
+      Data: 3
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: startTime
+      Entry: 4
+      Data: 4.35
+    - Name: duration
+      Entry: 4
+      Data: 200
+    - Name: spawnType
+      Entry: 10
+      Data: 1
+    - Name: intervalLoop
+      Entry: 4
+      Data: 4
+    - Name: spawnLogic
+      Entry: 7
+      Data: 12|InGame.GateSpawnSingle, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 

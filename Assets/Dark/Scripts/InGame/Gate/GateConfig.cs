@@ -8,6 +8,7 @@ namespace InGame
     public class GateConfig
     {
         public Vector2 position;
+        public bool showVisual = true;
         [Range(0, 2)] public int[] targetBaseIndex;
         
         public float startTime; // delay before the gate start spawning
