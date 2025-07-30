@@ -16,13 +16,13 @@ namespace InGame
         
         private RaycastHit2D[] hits = new RaycastHit2D[50];
         private EnemyEntity hitTarget;
-        private Transform characterTransform;
+        private PlayerCharacter characterRef;
         private CameraShake cameraShake;
         
         public IEnumerator IEMove(PlayerCharacter character, Vector2 startPos, Vector2 endPos, Action onComplete)
         {
             hits ??= new RaycastHit2D[50];
-            characterTransform = character.transform;
+            characterRef = character;
             
             yield return character.PLayFlashEffect().WaitForCompletion(); 
             
@@ -56,7 +56,9 @@ namespace InGame
             {
                 if (hitTransform.TryGetComponent(out hitTarget))
                 {
-                    hitTarget.Damage((int)value, characterTransform.position, stagger);
+                    hitTarget.HitDirectionX = hitTransform.position.x - characterRef.FlashExplodeCenter.x;
+                    hitTarget.HitDirectionY = hitTransform.position.y - characterRef.FlashExplodeCenter.y;
+                    hitTarget.Damage((int)value, characterRef.FlashExplodeCenter, stagger);
                 }
             }
         }

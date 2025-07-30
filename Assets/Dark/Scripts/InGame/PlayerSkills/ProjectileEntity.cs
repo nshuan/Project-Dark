@@ -144,6 +144,8 @@ namespace InGame
             
             // Check critical hit
             var critical = Random.Range(0f, 1f) <= CriticalRate;
+            hit.HitDirectionX = direction.x;
+            hit.HitDirectionY = direction.y;
             hit.Damage(critical ? CriticalDamage : Damage, transform.position, Stagger);
             PassiveEffectManager.Instance.TriggerEffect(IsCharge ? PassiveTriggerType.DameByChargeAttack : PassiveTriggerType.DameByNormalAttack, hit);
                     

@@ -14,7 +14,7 @@ namespace InGame
         [SerializeField] private Collider2D collider2d;
         
         public Transform Target { get; set; }
-        public IDamageable TargetDamageable { get; set; }
+        public TowerEntity TargetTower { get; set; }
         private EnemyBehaviour config;
 
         #region Stats
@@ -47,9 +47,9 @@ namespace InGame
         private Coroutine attackCoroutine;
 
         private Vector2 attackPosition;
-        private Vector3 hitDirection = new Vector3();
         
         private float invisibleTimer;
+        private float freezeDuration;
         
         #region Initialize
 
@@ -59,7 +59,7 @@ namespace InGame
             
             // Set target and attack position
             Target = target.transform;
-            TargetDamageable = target;
+            TargetTower = target;
 
             collider2d.enabled = false;
             
@@ -124,6 +124,10 @@ namespace InGame
                 staggerDuration -= Time.deltaTime;
                 transform.position = Vector2.MoveTowards(transform.position, (Vector2)transform.position + staggerDirection, 5f * Time.deltaTime);
             }
+            else if (freezeDuration > 0)
+            {
+                freezeDuration -= Time.deltaTime;
+            }
             else
             {
                 boidAgent.GetBoidAdditionNonAlloc(ref directionAddition);
@@ -169,21 +173,20 @@ namespace InGame
 
         private void Attack()
         {
-            if (TargetDamageable.IsDestroyed) return;
-            config.attackBehaviour.Attack(TargetDamageable, CurrentDamage);
+            if (TargetTower.IsDestroyed) return;
+            config.attackBehaviour.Attack(TargetTower, transform.position, CurrentDamage);
             animController.PlayAttack();
         }
 
-        public void Damage(int damage, Vector2 attackerPos, float stagger)
+        public float HitDirectionX { get; set; }
+        public float HitDirectionY { get; set; }
+
+        public void Damage(int damage, Vector2 dealerPosition, float stagger)
         {
             if (IsDestroyed) return;
             if (State == EnemyState.Invisible) return;
             
             CurrentHealth -= damage;
-            hitDirection.x = transform.position.x - attackerPos.x;
-            hitDirection.y = transform.position.y - attackerPos.y;
-            hitDirection.x /= hitDirection.magnitude;
-            hitDirection.y /= hitDirection.magnitude;
             
             OnHit?.Invoke(damage);
             if (CurrentHealth <= 0)
@@ -194,8 +197,10 @@ namespace InGame
             {
                 if (stagger - config.staggerResist > 0)
                 {
-                    staggerDirection = (stagger - config.staggerResist) * hitDirection;
+                    staggerDirection.x = (stagger - config.staggerResist) * HitDirectionX;
+                    staggerDirection.y = (stagger - config.staggerResist) * HitDirectionY;
                     staggerDuration = (stagger - config.staggerResist) * config.staggerMaxDuration;
+                    freezeDuration = staggerDuration;
                 }
                 
                 animController.PlayHit();
@@ -253,6 +258,8 @@ namespace InGame
             while (totalBurn > 0)
             {
                 yield return new WaitForSeconds(delayEachBurn);
+                HitDirectionX = 0f;
+                HitDirectionY = 0f;
                 Damage(damage, transform.position, 0f);
                 totalBurn -= 1;
             }
@@ -263,6 +270,8 @@ namespace InGame
 
         public void Kill()
         {
+            HitDirectionX = 0f;
+            HitDirectionY = 0f;
             Damage(CurrentHealth, transform.position, 0f);
         }
         #endregion

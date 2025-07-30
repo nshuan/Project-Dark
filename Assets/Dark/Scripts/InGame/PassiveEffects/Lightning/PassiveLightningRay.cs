@@ -89,7 +89,18 @@ namespace InGame
                 StartCoroutine(IEDelayHideAnchor(i, durationEachHit));
                 if (hitOrder[i].TryGetComponent(out hitTarget))
                 {
-                    hitTarget.Damage((int)damage, i == 0 ? Position : hitOrder[i - 1].position, Stagger);
+                    if (i == 0)
+                    {
+                        hitTarget.HitDirectionX = 0f;
+                        hitTarget.HitDirectionY = 0f;
+                        hitTarget.Damage((int)damage, Position, Stagger);
+                    }
+                    else
+                    {
+                        hitTarget.HitDirectionX = hitOrder[i].position.x - hitOrder[i - 1].position.x;
+                        hitTarget.HitDirectionY = hitOrder[i].position.y - hitOrder[i - 1].position.y;
+                        hitTarget.Damage((int)damage, hitOrder[i - 1].position, Stagger);
+                    }
                 }
 
                 yield return new WaitForSeconds(delayEachHit);
