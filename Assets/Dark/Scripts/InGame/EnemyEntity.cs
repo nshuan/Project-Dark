@@ -94,7 +94,7 @@ namespace InGame
             DOTween.Kill(this);
         }
         
-        public void Activate()
+        public virtual void Activate()
         {
             config.Spawn(this, () =>
             {
@@ -108,7 +108,7 @@ namespace InGame
 
         #endregion
 
-        private void Update()
+        protected virtual void Update()
         {
             if (!Target) return;
             if (IsDestroyed) return;
@@ -157,7 +157,7 @@ namespace InGame
             attackCoroutine = StartCoroutine(IEAttack());
         }
 
-        private IEnumerator IEAttack()
+        protected virtual IEnumerator IEAttack()
         {
             while (true)
             {

@@ -15,7 +15,7 @@ namespace InGame
         [SerializeField] private float stagger;
         
         private RaycastHit2D[] hits = new RaycastHit2D[50];
-        private EnemyEntity hitTarget;
+        private IDamageable hitTarget;
         private PlayerCharacter characterRef;
         private CameraShake cameraShake;
         

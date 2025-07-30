@@ -7,6 +7,7 @@ namespace InGame
     [Serializable]
     public class GateConfig
     {
+        public bool isBossGate;
         public Vector2 position;
         public bool showVisual = true;
         [Range(0, 2)] public int[] targetBaseIndex;
