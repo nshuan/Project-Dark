@@ -80,47 +80,53 @@ namespace InGame
         {
             yield return new WaitForSeconds(config.startTime);
             
-            visual.SetActive(true);
+            visual.SetActive(config.showVisual);
             
             while (TotalSpawnTurn == -1 || currentSpawnTurn < TotalSpawnTurn)
             {
                 yield return new WaitForSeconds(config.intervalLoop);
                 
                 var enemies = config.spawnLogic.Spawn(transform.position, config.spawnType.enemyId, config.spawnType.enemyPrefab);
-                var orbs = new Transform[enemies.Length];
-
-                for (var i = 0; i < enemies.Length; i++)
+                
+                // Không phải boss thì spawn orb
+                if (!config.isBossGate)
                 {
-                    orbs[i] = EnemyOrbPool.Instance.Get(null);
-                    orbs[i].position = transform.position;
-                }
-
-                while (orbSpawnTimer < orbSpawnDuration)
-                {
-                    orbSpawnTimer += Time.deltaTime;
                     
-                    for (var i = 0; i < orbs.Length; i++)
+                    var orbs = new Transform[enemies.Length];
+
+                    for (var i = 0; i < enemies.Length; i++)
                     {
-                        var t = Mathf.Clamp01(orbSpawnTimer / orbSpawnDuration);
-
-                        // horizontal position (isometric: usually XZ plane)
-                        var horizontalPos = Vector3.Lerp(transform.position, enemies[i].transform.position, t);
-
-                        // height offset using curve
-                        var curveY = orbYCurve.Evaluate(t) * 3f;
-
-                        // final position
-                        horizontalPos.y += curveY;
-
-                        orbs[i].position = horizontalPos;
+                        orbs[i] = EnemyOrbPool.Instance.Get(null);
+                        orbs[i].position = transform.position;
                     }
 
-                    yield return new WaitForEndOfFrame();
-                }
+                    while (orbSpawnTimer < orbSpawnDuration)
+                    {
+                        orbSpawnTimer += Time.deltaTime;
+                        
+                        for (var i = 0; i < orbs.Length; i++)
+                        {
+                            var t = Mathf.Clamp01(orbSpawnTimer / orbSpawnDuration);
 
-                foreach (var orb in orbs)
-                {
-                    EnemyOrbPool.Instance.Release(orb);
+                            // horizontal position (isometric: usually XZ plane)
+                            var horizontalPos = Vector3.Lerp(transform.position, enemies[i].transform.position, t);
+
+                            // height offset using curve
+                            var curveY = orbYCurve.Evaluate(t) * 3f;
+
+                            // final position
+                            horizontalPos.y += curveY;
+
+                            orbs[i].position = horizontalPos;
+                        }
+
+                        yield return new WaitForEndOfFrame();
+                    }
+
+                    foreach (var orb in orbs)
+                    {
+                        EnemyOrbPool.Instance.Release(orb);
+                    }
                 }
                 
                 for (var i = 0; i < enemies.Length; i++)

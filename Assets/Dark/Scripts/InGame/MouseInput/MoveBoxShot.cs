@@ -28,6 +28,8 @@ namespace InGame
             {
                 if (hit.collider && hit.transform.TryGetComponent<EnemyEntity>(out var enemyEntity))
                 {
+                    enemyEntity.HitDirectionX = hit.transform.position.x - mousePos.x;
+                    enemyEntity.HitDirectionY = hit.transform.position.y - mousePos.y;
                     enemyEntity.Damage(damage, mousePos, 0f);
                     CheckElemental(enemyEntity);
                 }

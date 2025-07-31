@@ -22,8 +22,7 @@ namespace InGame
         public Action<int> OnHit { get; set; }
         public Action<Vector2> OnHitAttackerPos { get; set; }
         public Action<TowerEntity> OnDestroyed;
-
-        private Vector3 hitDirection = new Vector3();
+        
         private FlashColor damageEffect;
         
         public void Initialize(int id, int hp)
@@ -54,19 +53,18 @@ namespace InGame
             selected.gameObject.SetActive(false);
         }
 
-        public void Damage(int damage, Vector2 attackerPos, float stagger)
+        public float HitDirectionX { get; set; }
+        public float HitDirectionY { get; set; }
+
+        public void Damage(int damage, Vector2 dealerPosition, float stagger)
         {
             if (IsDestroyed) return;
             
             stagger = 0;
             CurrentHp -= damage;
-            hitDirection.x = transform.position.x - attackerPos.x;
-            hitDirection.y = transform.position.y - attackerPos.y;
-            hitDirection.x /= hitDirection.magnitude;
-            hitDirection.y /= hitDirection.magnitude;
             
             OnHit?.Invoke(damage);
-            OnHitAttackerPos?.Invoke(attackerPos);
+            OnHitAttackerPos?.Invoke(dealerPosition);
             if (CurrentHp <= 0)
             {
                 IsDestroyed = true;

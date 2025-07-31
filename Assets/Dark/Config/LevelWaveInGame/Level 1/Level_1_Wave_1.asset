@@ -10,14 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f37e2e92c06d44f4b3ef3e428d98117c, type: 3}
-  m_Name: Level_1_Wave 1
+  m_Name: Level_1_Wave_1
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 11400000, guid: ff66082d35a8786429078ae8cc5e9433, type: 2}
-    - {fileID: 11400000, guid: bfd0b90c58376274fa2a63998fec8aa5, type: 2}
+    - {fileID: 11400000, guid: b67db2869a9a4754aa2225de5e37b6fb, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -29,10 +28,13 @@ MonoBehaviour:
         mscorlib
     - Name: 
       Entry: 12
-      Data: 2
+      Data: 1
     - Name: 
       Entry: 7
       Data: 1|InGame.GateConfig, Assembly-CSharp
+    - Name: isBossGate
+      Entry: 5
+      Data: true
     - Name: position
       Entry: 7
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
@@ -45,6 +47,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: showVisual
+      Entry: 5
+      Data: false
     - Name: targetBaseIndex
       Entry: 7
       Data: 2|System.Int32[], mscorlib
@@ -68,88 +73,19 @@ MonoBehaviour:
       Data: 
     - Name: startTime
       Entry: 4
-      Data: 2
-    - Name: duration
-      Entry: 4
-      Data: 200
-    - Name: spawnType
-      Entry: 10
-      Data: 0
-    - Name: intervalLoop
-      Entry: 4
-      Data: 4
-    - Name: spawnLogic
-      Entry: 7
-      Data: 3|InGame.GateSpawnTriangle, Assembly-CSharp
-    - Name: radius
-      Entry: 4
-      Data: 1.5
-    - Name: rotation
-      Entry: 4
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 4|InGame.GateConfig, Assembly-CSharp
-    - Name: position
-      Entry: 7
-      Data: UnityEngine.Vector2, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 0
-    - Name: 
-      Entry: 4
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: targetBaseIndex
-      Entry: 7
-      Data: 5|System.Int32[], mscorlib
-    - Name: 
-      Entry: 14
       Data: 3
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 2
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: startTime
-      Entry: 4
-      Data: 4
     - Name: duration
       Entry: 4
-      Data: 200
+      Data: 1
     - Name: spawnType
       Entry: 10
-      Data: 1
+      Data: 0
     - Name: intervalLoop
       Entry: 4
-      Data: 4
+      Data: 1
     - Name: spawnLogic
       Entry: 7
-      Data: 6|InGame.GateSpawnTriangle, Assembly-CSharp
-    - Name: radius
-      Entry: 4
-      Data: 1.377
-    - Name: rotation
-      Entry: 4
-      Data: 37
+      Data: 3|InGame.GateSpawnSingle, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 

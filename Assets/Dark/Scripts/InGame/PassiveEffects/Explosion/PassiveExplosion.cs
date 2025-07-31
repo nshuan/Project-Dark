@@ -61,6 +61,8 @@ namespace InGame
             {
                 if (hitTransform.TryGetComponent(out hitTarget))
                 {
+                    hitTarget.HitDirectionX = hitTransform.position.x - Position.x;
+                    hitTarget.HitDirectionY = hitTransform.position.y - Position.y;
                     hitTarget.Damage((int)value, Position, Stagger);
                 }
             }

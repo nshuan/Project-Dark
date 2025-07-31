@@ -8,6 +8,12 @@ namespace InGame
         
         public void PLayStart(Vector2 direction)
         {
+            // Calculate angle in degrees
+            var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+            // Apply rotation around Z axis
+            vfxDash.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+            
             vfxDash.SetActive(true);
         }
 
