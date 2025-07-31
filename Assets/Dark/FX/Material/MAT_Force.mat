@@ -25,12 +25,12 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainNoise:
-        m_Texture: {fileID: 2800000, guid: 26610386452fee34d8c24060b12bce08, type: 3}
-        m_Scale: {x: 1, y: 1}
+        m_Texture: {fileID: 2800000, guid: c3ba872455e7c6540b3ad3698f2bd544, type: 3}
+        m_Scale: {x: 0.4, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
-        m_Scale: {x: 2, y: 1.08}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseTex:
         m_Texture: {fileID: 2800000, guid: 229b6e14b340cbe48837c1c3f16cc258, type: 3}
@@ -41,7 +41,10 @@ Material:
     - _ColorMask: 15
     - _DarknessFactor: 0
     - _DistortionFactor: 0
-    - _NoiseValue: 0
+    - _DstFactor: 1
+    - _NoiseValue: 1
+    - _Opp: 0
+    - _SrcFactor: 1
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
@@ -50,6 +53,6 @@ Material:
     - _UseUIAlphaClip: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _NoiseSpeed: {r: 0, g: 0, b: 0, a: 0}
-    - _Speed: {r: 0, g: 1.2, b: 0, a: 0}
+    - _NoiseSpeed: {r: 0.1, g: 0.2, b: 0, a: 0}
+    - _Speed: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
