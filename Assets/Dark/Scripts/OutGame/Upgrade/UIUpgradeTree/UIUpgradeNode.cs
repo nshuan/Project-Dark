@@ -31,7 +31,9 @@ namespace Dark.Scripts.OutGame.Upgrade
             if (config.preRequire == null || config.preRequire.Length == 0) return;
             foreach (var nodeConfig in config.preRequire)
             {
-                treeRef.ShowPreRequiredLine(transform.position, treeRef.GetNodeById(nodeConfig.nodeId).transform.position);
+                var preRequireNode = treeRef.GetNodeById(nodeConfig.nodeId);
+                if (preRequireNode == null) continue;
+                treeRef.ShowPreRequiredLine(transform.position, preRequireNode.transform.position);
             }
         }
     }
