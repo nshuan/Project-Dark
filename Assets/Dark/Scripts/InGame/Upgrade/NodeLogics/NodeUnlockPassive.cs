@@ -18,5 +18,11 @@ namespace InGame.Upgrade
 		    if (!bonusInfo.effectsMapByTriggerType[triggerType].Contains(passiveType))
 			    bonusInfo.effectsMapByTriggerType[triggerType].Add(passiveType);
 	    }
+
+	    public string GetDescription(int level)
+	    {
+		    var result = "";
+		    return result;
+	    }
     }
 }

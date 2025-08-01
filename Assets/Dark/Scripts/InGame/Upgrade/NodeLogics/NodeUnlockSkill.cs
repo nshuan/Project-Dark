@@ -8,6 +8,7 @@ namespace InGame.Upgrade
     public class NodeUnlockSkill : INodeActivateLogic
     {
         public BonusUnlockSkillType unlockType;
+        public string unlockDescription;
         
         public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)
         {
@@ -35,7 +36,12 @@ namespace InGame.Upgrade
                     break;
             }
         }
-        
+
+        public string GetDescription(int level)
+        {
+            return unlockDescription;
+        }
+
         public enum BonusUnlockSkillType
         {
             ChargeDamage,

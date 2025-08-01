@@ -10,7 +10,8 @@ namespace Dark.Scripts.FrameByFrameAnimation
     public class FrameByFrameAnimation : ScriptableObject
     {
         public Sprite[] frames;
-        
+
+#if UNITY_EDITOR
         /// <summary>
         /// Get sliced sprites from a given texture asset by index range.
         /// Works only in the editor.
@@ -76,6 +77,7 @@ namespace Dark.Scripts.FrameByFrameAnimation
                     frames[i - startIndex] = sprites[i];
             }
         }
+#endif
         
         private int ExtractNumber(string text)
         {

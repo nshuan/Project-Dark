@@ -12,5 +12,11 @@ namespace InGame.Upgrade
         {
             bonusInfo.unlockedTowerCounter = counterConfig;
         }
+
+        public string GetDescription(int level)
+        {
+            var result = "";
+            return result;
+        }
     }
 }

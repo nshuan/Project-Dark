@@ -34,7 +34,13 @@ namespace InGame.Upgrade
                     break;
             }
         }
-        
+
+        public string GetDescription(int level)
+        {
+            var result = "";
+            return result;
+        }
+
         public enum BonusPlayerType
         {
             Health,

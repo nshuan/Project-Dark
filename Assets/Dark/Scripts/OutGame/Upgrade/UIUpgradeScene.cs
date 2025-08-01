@@ -1,7 +1,6 @@
 using System;
 using InGame.CharacterClass;
 using InGame.Upgrade;
-using InGame.Upgrade.UI;
 using UnityEngine;
 
 namespace Dark.Scripts.OutGame.Upgrade
@@ -14,7 +13,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         
         private void Start()
         {
-            cacheTree = Instantiate(UpgradeTreeConfig.Instance.GetTree(ClassManager.Instance.CurrentClass), treeParent);
+            // cacheTree = Instantiate(UpgradeTreeConfig.Instance.GetTree(ClassManager.Instance.CurrentClass), treeParent);
         }
     }
 }

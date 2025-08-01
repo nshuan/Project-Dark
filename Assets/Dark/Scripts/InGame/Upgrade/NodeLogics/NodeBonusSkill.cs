@@ -15,6 +15,12 @@ namespace InGame.Upgrade
             BonusSkill(level, ref bonusInfo);
         }
 
+        public string GetDescription(int level)
+        {
+            var result = "";
+            return result;
+        }
+
         private void BonusSkill(int level, ref UpgradeBonusInfo bonusInfo)
         {
             switch (bonusType)

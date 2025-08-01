@@ -35,5 +35,11 @@ namespace InGame.Upgrade
                 }
             }
         }
+
+        public string GetDescription(int level)
+        {
+            var result = "";
+            return result;
+        }
     }
 }
