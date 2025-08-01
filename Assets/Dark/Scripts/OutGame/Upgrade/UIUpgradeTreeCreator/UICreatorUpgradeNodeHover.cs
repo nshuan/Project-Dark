@@ -4,11 +4,12 @@ using UnityEngine.EventSystems;
 
 namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
 {
-    public class UICreatorUpgradeNodeHover : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+    public class UICreatorUpgradeNodeHover : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
     {
         public RectTransform rectTransform;
 
         public Action onDrag;
+        public Action onClick;
 
         public void OnBeginDrag(PointerEventData eventData) { }
 
@@ -20,5 +21,9 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         }
 
         public void OnEndDrag(PointerEventData eventData) { }
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            onClick?.Invoke();
+        }
     }
 }

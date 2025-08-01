@@ -163,5 +163,18 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             var direction = (to - from).normalized;
             line.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
         }
+
+        #region Select Node
+
+        private UICreatorUpgradeNode selectingNode;
+
+        public void SelectNode(UICreatorUpgradeNode node)
+        {
+            if (selectingNode != null) selectingNode.DeselectThis();
+            selectingNode = node;
+            node.SelectThis();
+        }
+
+        #endregion
     }
 }
