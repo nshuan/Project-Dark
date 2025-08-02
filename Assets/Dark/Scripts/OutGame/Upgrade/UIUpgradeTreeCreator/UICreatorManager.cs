@@ -47,6 +47,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         private TreeDataStruct newTree;
         [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, UICreatorUpgradeNode> nodesMap;
         private Dictionary<int, Dictionary<int, RectTransform>> linesMap;
+        private Dictionary<int, List<UICreatorUpgradeNode>> nodeChildMap;
+        private Dictionary<int, List<UICreatorUpgradeNode>> nodeParentMap;
         
         private void Awake()
         {
@@ -60,6 +62,9 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 btn.onClick.RemoveAllListeners();
                 btn.onClick.AddListener(() => CreateNewNode(nodeType));
             }
+            
+            btnDeselectAll.onClick.RemoveAllListeners();
+            btnDeselectAll.onClick.AddListener(DeselectAll);
         }
 
         public void CreateNewTree()
@@ -94,6 +99,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             newTree = new TreeDataStruct() { nodes = new List<NodeDataStruct>() };
             nodesMap = new Dictionary<int, UICreatorUpgradeNode>();
             linesMap = new Dictionary<int, Dictionary<int, RectTransform>>();
+            nodeChildMap =  new Dictionary<int, List<UICreatorUpgradeNode>>();
+            nodeParentMap = new Dictionary<int, List<UICreatorUpgradeNode>>();
         }
 
         public void CreateNewNode(NodeType nodeType)
@@ -127,8 +134,42 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             var node = Instantiate(prefab, treeParent);
             node.manager = this;
             node.config = nodeConfig;
-            node.InitNode();
+            
             nodesMap.Add(nodeConfig.nodeId, node);
+            nodeChildMap.TryAdd(nodeConfig.nodeId, new List<UICreatorUpgradeNode>());
+            nodeParentMap.TryAdd(nodeConfig.nodeId, new List<UICreatorUpgradeNode>());
+            foreach (var preConfig in nodeConfig.preRequire)
+            {
+                nodeChildMap.TryAdd(preConfig.nodeId, new List<UICreatorUpgradeNode>());
+                if (!nodeChildMap[preConfig.nodeId].Contains(node))
+                    nodeChildMap[preConfig.nodeId].Add(node);
+                if (nodesMap.ContainsKey(preConfig.nodeId))
+                    nodeParentMap[nodeConfig.nodeId].Add(nodesMap[preConfig.nodeId]);
+            }
+
+            foreach (var childNode in nodeChildMap[nodeConfig.nodeId])
+            {
+                nodeParentMap.TryAdd(childNode.config.nodeId, new List<UICreatorUpgradeNode>());
+                if (!nodeParentMap[childNode.config.nodeId].Contains(node))
+                {
+                    nodeParentMap[childNode.config.nodeId].Add(node);
+                    ShowPreRequiredLine(nodeConfig.nodeId, node.transform.position, childNode.config.nodeId, childNode.transform.position);
+                }
+            }
+
+            foreach (var childNode in nodeChildMap[nodeConfig.nodeId])
+            {
+                ShowPreRequiredLine(nodeConfig.nodeId, node.transform.position, childNode.config.nodeId, childNode.transform.position);
+            }
+
+            foreach (var parentNode in nodeParentMap[nodeConfig.nodeId])
+            {
+                ShowPreRequiredLine(parentNode.config.nodeId, parentNode.transform.position, nodeConfig.nodeId, node.transform.position);
+            }
+            
+            UpdateLine(nodeConfig.nodeId);
+            
+            node.InitNode();
         }
 
         public UICreatorUpgradeNode GetNodeById(int id)
@@ -138,14 +179,10 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         
         public void ShowPreRequiredLine(int fromId, Vector2 from, int toId, Vector2 to)
         {
-            RectTransform line = null;
+            RectTransform line;
             if (linesMap.ContainsKey(fromId))
             {
-                if (linesMap[fromId].ContainsKey(toId))
-                {
-                    line = linesMap[fromId][toId];
-                }
-                else
+                if (!linesMap[fromId].ContainsKey(toId))
                 {
                     line = Instantiate(linePrefab, lineParent);
                     linesMap[fromId].Add(toId, line);
@@ -157,15 +194,54 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 linesMap.Add(fromId, new Dictionary<int, RectTransform>());
                 linesMap[fromId].Add(toId, line);
             }
-            
-            line.position = (from + to) / 2;
-            line.sizeDelta = new Vector2(Vector2.Distance(from, to), 8f);
-            var direction = (to - from).normalized;
-            line.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+        }
+
+        public void UpdateLine(int nodeId)
+        {
+            var from = new Vector2();
+            var to = new Vector2();
+            var direction = new Vector2();
+            foreach (var childNode in nodeChildMap[nodeId])
+            {
+                from.x = nodesMap[nodeId].transform.position.x;
+                from.y = nodesMap[nodeId].transform.position.y;
+                to.x = childNode.transform.position.x;
+                to.y = childNode.transform.position.y;
+                direction.x = to.x - from.x;
+                direction.y = to.y - from.y;
+                if (direction.magnitude > 0.05f)
+                {
+                    direction = direction / direction.magnitude;
+                    linesMap[nodeId][childNode.config.nodeId].position = (from + to) / 2;
+                    linesMap[nodeId][childNode.config.nodeId].sizeDelta = new Vector2(Vector2.Distance(from, to), 8f);
+                    linesMap[nodeId][childNode.config.nodeId].rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+                }
+            }
+
+            foreach (var parentNode in nodeParentMap[nodeId])
+            {
+                from.x = parentNode.transform.position.x;
+                from.y = parentNode.transform.position.y;
+                to.x = nodesMap[nodeId].transform.position.x;
+                to.y = nodesMap[nodeId].transform.position.y;
+                direction.x = to.x - from.x;
+                direction.y = to.y - from.y;
+                if (direction.magnitude > 0.05f)
+                {
+                    direction = direction / direction.magnitude;
+                    linesMap[parentNode.config.nodeId][nodeId].position = (from + to) / 2;
+                    linesMap[parentNode.config.nodeId][nodeId].sizeDelta = new Vector2(Vector2.Distance(from, to), 8f);
+                    linesMap[parentNode.config.nodeId][nodeId].rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+                }
+            }
         }
 
         #region Select Node
 
+        [Space]
+        [Header("Select Node")]
+        [SerializeField] private Button btnDeselectAll;
+        
         private UICreatorUpgradeNode selectingNode;
 
         public void SelectNode(UICreatorUpgradeNode node)
@@ -173,6 +249,12 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             if (selectingNode != null) selectingNode.DeselectThis();
             selectingNode = node;
             node.SelectThis();
+        }
+
+        public void DeselectAll()
+        {
+            if  (selectingNode != null) selectingNode.DeselectThis();
+            selectingNode = null;
         }
 
         #endregion
