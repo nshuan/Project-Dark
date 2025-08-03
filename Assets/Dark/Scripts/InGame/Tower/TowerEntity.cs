@@ -9,6 +9,7 @@ namespace InGame
     {
         [SerializeField] public Vector3 standOffset;
         [SerializeField] private SpriteRenderer towerVisual;
+        [SerializeField] private GameObject towerVisualUILayer;
         [SerializeField] private Sprite[] spriteStates;
         [SerializeField] private float[] thresholdState = new[] { 0f, 0.3f, 0.7f };
 
@@ -45,14 +46,12 @@ namespace InGame
 
         public void EnterTower()
         {
-            selected.gameObject.SetActive(true);
-            //fxselected.Play();
+            selected.SetActive(true);
         }
 
         public void LeaveTower()
         {
-            selected.gameObject.SetActive(false);
-            //fxselected.Stop();
+            selected.SetActive(false);
         }
 
         public float HitDirectionX { get; set; }
@@ -86,31 +85,20 @@ namespace InGame
         }
 
         [SerializeField] private GameObject selected;
-        //[SerializeField] private GameObject fxselected;
         [SerializeField] private GameObject hover;
-        //[SerializeField] private GameObject fxhover;
         public void Hover(bool hovering)
         {
-            hover.gameObject.SetActive(hovering);
+            hover.SetActive(hovering);
+        }
+        
+        public void OnMotionBlur()
+        {
+            towerVisualUILayer.SetActive(true);
         }
 
-        [Space]
-        [SerializeField] private string highestSortingLayer;
-        [SerializeField] private string defaultSortingLayer;
-        public void SetHighestSortingLayer()
+        public void OnEndMotionBlur()
         {
-            //towerVisual.sortingLayerName = highestSortingLayer;
-            //selected.sortingLayerName = highestSortingLayer;
-            //hover.sortingLayerName = highestSortingLayer;
-
-        }
-
-        public void ResetSortingLayer()
-        {
-            //towerVisual.sortingLayerName = defaultSortingLayer;
-            //selected.sortingLayerName = defaultSortingLayer;
-            //hover.sortingLayerName = defaultSortingLayer;
-
+            towerVisualUILayer.SetActive(false);
         }
     }
 }
