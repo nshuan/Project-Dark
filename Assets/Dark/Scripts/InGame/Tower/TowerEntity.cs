@@ -42,15 +42,17 @@ namespace InGame
             currentState = spriteStates.Length - 1;
             towerVisual.sprite = spriteStates[currentState];
         }
-        
+
         public void EnterTower()
         {
             selected.gameObject.SetActive(true);
+            fxselected.Play();
         }
 
         public void LeaveTower()
         {
             selected.gameObject.SetActive(false);
+            fxselected.Stop();
         }
 
         public float HitDirectionX { get; set; }
@@ -84,10 +86,13 @@ namespace InGame
         }
 
         [SerializeField] private SpriteRenderer selected;
+        [SerializeField] private ParticleSystem fxselected;
         [SerializeField] private SpriteRenderer hover;
+        [SerializeField] private ParticleSystem fxhover;
         public void Hover(bool hovering)
         {
             hover.gameObject.SetActive(hovering);
+            fxhover.Play();
         }
 
         [Space]

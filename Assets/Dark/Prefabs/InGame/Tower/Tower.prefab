@@ -118,6 +118,7 @@ Transform:
   - {fileID: 8249688804626138219}
   - {fileID: 7739058977564152157}
   - {fileID: 6388689559540784956}
+  - {fileID: 6447148272275086533}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1868382969554725214
@@ -143,7 +144,9 @@ MonoBehaviour:
   - 0.3
   - 0.7
   selected: {fileID: 768306142439790387}
+  fxselected: {fileID: 8439432195233982422}
   hover: {fileID: 2944728230707981953}
+  fxhover: {fileID: 8439432195233982422}
   highestSortingLayer: UI
   defaultSortingLayer: Default
 --- !u!1 &3726468988353673083
@@ -361,3 +364,70 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1001 &7890619948535702056
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8540445364392104723}
+    m_Modifications:
+    - target: {fileID: 3817295707181563629, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3817295707181563629, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3817295707181563629, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3817295707181563629, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3817295707181563629, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3817295707181563629, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3817295707181563629, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3817295707181563629, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3817295707181563629, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3817295707181563629, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6994314466156648143, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
+      propertyPath: m_Name
+      value: FX_Tower_Selected
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
+--- !u!4 &6447148272275086533 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3817295707181563629, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
+  m_PrefabInstance: {fileID: 7890619948535702056}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &8439432195233982422 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 1774418078784701950, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
+  m_PrefabInstance: {fileID: 7890619948535702056}
+  m_PrefabAsset: {fileID: 0}
