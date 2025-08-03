@@ -1849,7 +1849,7 @@ GameObject:
   - component: {fileID: 328986984}
   m_Layer: 0
   m_Name: VfxCamera - Layer -1
-  m_TagString: MainCamera
+  m_TagString: VfxCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3187,7 +3187,7 @@ GameObject:
   - component: {fileID: 569397908}
   m_Layer: 0
   m_Name: VfxCamera - Layer -2 - Non pixelate
-  m_TagString: MainCamera
+  m_TagString: VfxCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3248,7 +3248,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 8192
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
+  m_TargetTexture: {fileID: 8400000, guid: 4f9f9fa491505a741ac142dd57901c45, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 0
   m_HDR: 1
@@ -4010,7 +4010,7 @@ GameObject:
   - component: {fileID: 803153442}
   m_Layer: 0
   m_Name: VfxCamera - Layer 2 - Non pixelate
-  m_TagString: MainCamera
+  m_TagString: VfxCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4071,7 +4071,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 4096
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
+  m_TargetTexture: {fileID: 8400000, guid: 0853acddf8d0cb94eb3bfb0605ff6907, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 0
   m_HDR: 1
@@ -7299,7 +7299,7 @@ MonoBehaviour:
       Data: 0
     - Name: unlockedChargeDame
       Entry: 5
-      Data: false
+      Data: true
     - Name: unlockedChargeBullet
       Entry: 5
       Data: true
@@ -7315,7 +7315,28 @@ MonoBehaviour:
         mscorlib
     - Name: 
       Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 4|InGame.ProjectileHitBlossom, Assembly-CSharp
+    - Name: projectile
+      Entry: 10
       Data: 0
+    - Name: bulletAmount
+      Entry: 3
+      Data: 8
+    - Name: blossomSize
+      Entry: 4
+      Data: 3
+    - Name: damage
+      Entry: 3
+      Data: 0
+    - Name: stagger
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 
@@ -7327,14 +7348,14 @@ MonoBehaviour:
       Data: 
     - Name: projectileActivateActions
       Entry: 7
-      Data: 4|System.Collections.Generic.List`1[[InGame.IProjectileActivate, Assembly-CSharp]],
+      Data: 5|System.Collections.Generic.List`1[[InGame.IProjectileActivate, Assembly-CSharp]],
         mscorlib
     - Name: 
       Entry: 12
       Data: 1
     - Name: 
       Entry: 7
-      Data: 5|InGame.ProjectileActivateSplit, Assembly-CSharp
+      Data: 6|InGame.ProjectileActivateSplit, Assembly-CSharp
     - Name: projectile
       Entry: 10
       Data: 0
@@ -7361,12 +7382,12 @@ MonoBehaviour:
       Data: 
     - Name: effectsMapByTriggerType
       Entry: 7
-      Data: 6|System.Collections.Generic.Dictionary`2[[InGame.PassiveTriggerType,
+      Data: 7|System.Collections.Generic.Dictionary`2[[InGame.PassiveTriggerType,
         Assembly-CSharp],[System.Collections.Generic.List`1[[InGame.PassiveType,
         Assembly-CSharp]], mscorlib]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 7|System.Collections.Generic.EnumEqualityComparer`1[[InGame.PassiveTriggerType,
+      Data: 8|System.Collections.Generic.EnumEqualityComparer`1[[InGame.PassiveTriggerType,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
@@ -7379,7 +7400,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 1
+      Data: 2
     - Name: 
       Entry: 7
       Data: 
@@ -7388,14 +7409,45 @@ MonoBehaviour:
       Data: 0
     - Name: $v
       Entry: 7
-      Data: 8|System.Collections.Generic.List`1[[InGame.PassiveType, Assembly-CSharp]],
+      Data: 9|System.Collections.Generic.List`1[[InGame.PassiveType, Assembly-CSharp]],
         mscorlib
     - Name: 
       Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 3
       Data: 1
     - Name: 
       Entry: 3
       Data: 3
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 7
+      Data: 10|System.Collections.Generic.List`1[[InGame.PassiveType, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 13
       Data: 
@@ -7532,7 +7584,7 @@ GameObject:
   - component: {fileID: 1604732161}
   m_Layer: 0
   m_Name: VfxCamera - Layer 1
-  m_TagString: MainCamera
+  m_TagString: VfxCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7621,7 +7673,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1627288792
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8260,7 +8312,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1779316798
 RectTransform:
   m_ObjectHideFlags: 0
