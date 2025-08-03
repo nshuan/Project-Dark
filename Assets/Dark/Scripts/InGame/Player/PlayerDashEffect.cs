@@ -5,6 +5,8 @@ namespace InGame
     public class PlayerDashEffect : MonoBehaviour
     {
         [SerializeField] private GameObject vfxDash;
+        [SerializeField] private ParticleSystem vfxDashEnd;
+        
         
         public void PLayStart(Vector2 direction)
         {
@@ -13,13 +15,14 @@ namespace InGame
 
             // Apply rotation around Z axis
             vfxDash.transform.rotation = Quaternion.Euler(0f, 0f, angle);
-            
+            vfxDashEnd.transform.rotation = Quaternion.Euler(0f, 0f, angle);
             vfxDash.SetActive(true);
         }
 
         public void PLayEnd()
         {
             vfxDash.SetActive(false);
+            vfxDashEnd.Play();
         }
     }
 }
