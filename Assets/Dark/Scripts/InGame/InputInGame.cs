@@ -128,9 +128,9 @@ namespace InGame
                             {
                                 foreach (var tower in LevelManager.Instance.Towers)
                                 {
-                                    if (tower.Id == LevelManager.Instance.CurrentTower.Id) continue;
-                                    tower.SetHighestSortingLayer();
+                                    tower.OnMotionBlur();
                                 }
+                                playerVisual.OnMotionBlur();
                             
                                 motionBlur.gameObject.SetActive(true);
                             }).Append(motionBlur.DOFade(1f, 0.16f))
@@ -256,8 +256,9 @@ namespace InGame
                     motionBlur.gameObject.SetActive(false);
                     foreach (var tower in LevelManager.Instance.Towers)
                     {
-                        tower.ResetSortingLayer();
+                        tower.OnEndMotionBlur();
                     }
+                    playerVisual.OnEndMotionBlur();
                 })
                 .Play();
         }

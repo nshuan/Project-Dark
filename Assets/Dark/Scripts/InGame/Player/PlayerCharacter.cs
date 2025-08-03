@@ -90,5 +90,19 @@ namespace InGame
                 })
                 .Append(spriteRenderer.DOFade(1f, 0.2f));
         }
+
+        [Space] [Header("Motion Blur")] 
+        [SerializeField] private string defaultSortingLayerName;
+        [SerializeField] private string motionSortingLayerName;
+        
+        public void OnMotionBlur()
+        {
+            spriteRenderer.sortingLayerName = motionSortingLayerName;
+        }
+
+        public void OnEndMotionBlur()
+        {
+            spriteRenderer.sortingLayerName = defaultSortingLayerName;
+        }
     }
 }
