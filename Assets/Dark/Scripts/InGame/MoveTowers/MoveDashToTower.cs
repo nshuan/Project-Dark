@@ -7,12 +7,19 @@ namespace InGame
     [Serializable]
     public class MoveDashToTower : IMoveTowersLogic
     {
+        [SerializeField] private AnimationCurve speedCurve;
+        [SerializeField] private float duration;
+        
         public IEnumerator IEMove(PlayerCharacter character, Vector2 startPos, Vector2 endPos, Action onComplete)
         {
             character.PlayDashEffect(endPos - startPos);
-            while (Vector2.Distance(character.transform.position, endPos) > 0.1f)
+            
+            var timeElapsed = 0f;
+            while (timeElapsed / duration < 1f)
             {
-                character.transform.position = Vector2.Lerp(character.transform.position, endPos, Time.deltaTime * 8f);
+                timeElapsed += Time.deltaTime;
+                var speed = speedCurve.Evaluate(Mathf.Clamp01(timeElapsed / duration));
+                character.transform.position = Vector2.Lerp(startPos, endPos, speed);
                 yield return null;
             }
                 
