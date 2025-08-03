@@ -114,7 +114,10 @@ namespace InGame.Upgrade
             var costInfo = treeConfig.nodeMapById[nodeId].costInfo;
             if (costInfo.Any((cost) =>
                     WealthManager.Instance.CanSpend(cost.costType, cost.costValue[currentLevel]) == false))
+            {
+                DebugUtility.LogWarning($"Upgrade node {treeConfig.nodeMapById[nodeId].nodeName} failed: Not enough resource!");
                 return false;
+            }
             
             foreach (var cost in treeConfig.nodeMapById[nodeId].costInfo)
             {

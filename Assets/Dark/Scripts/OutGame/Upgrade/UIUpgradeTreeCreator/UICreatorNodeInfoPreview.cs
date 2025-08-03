@@ -3,9 +3,9 @@ using InGame.Upgrade;
 using TMPro;
 using UnityEngine;
 
-namespace Dark.Scripts.OutGame.Upgrade
+namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
 {
-    public class UIUpgradeNodeInfoPreview : MonoSingleton<UIUpgradeNodeInfoPreview>
+    public class UICreatorNodeInfoPreview : MonoSingleton<UICreatorNodeInfoPreview>
     {
         [SerializeField] private RectTransform rectInfoFrame;
         [SerializeField] private TextMeshProUGUI txtNodeName;
@@ -13,12 +13,9 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private TextMeshProUGUI txtNodeLevel;
         [SerializeField] private TextMeshProUGUI txtNodePrice;
         [SerializeField] private TextMeshProUGUI[] txtNodeBonus;
-
-        public bool CanAutoShowHide { get; set; } = true;
         
-        public void UpdateUI(UpgradeNodeData data, UpgradeNodeConfig config, bool forceUpdate)
+        public void UpdateUI(UpgradeNodeData data, UpgradeNodeConfig config)
         {
-            if (CanAutoShowHide == false && forceUpdate == false) return;
             txtNodeName.SetText(config.nodeName);
             txtNodeLore.SetText(config.description);
             if (data != null)
@@ -43,16 +40,14 @@ namespace Dark.Scripts.OutGame.Upgrade
             }
         }
         
-        public void Show(Vector2 position, Vector2 padding, bool forceShow)
+        public void Show(Vector2 position, Vector2 padding)
         {
-            if (CanAutoShowHide == false && forceShow == false) return;
             rectInfoFrame.position = position + padding;
             rectInfoFrame.gameObject.SetActive(true);
         }
 
-        public void Hide(bool forceHide)
+        public void Hide()
         {
-            if (CanAutoShowHide == false && forceHide == false) return;
             rectInfoFrame.gameObject.SetActive(false);
         }
     }

@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using InGame.Upgrade;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -34,9 +37,13 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
     {
         public UICreatorConfigLoader configLoader;
         [SerializeField] private Transform treeParent;
-        [SerializeField] private Button btnNewTree;
+        [SerializeField] private GameObject groupNodeModeButtons;
         [SerializeField] private TMP_InputField input;
+        [SerializeField] private Button btnNewTree;
         [SerializeField] private Button[] btnCreateNode;
+        [SerializeField] private Button btnDeleteNode;
+        [SerializeField] private Button btnChangeMode;
+        [SerializeField] private TextMeshProUGUI txtMode;
         [OdinSerialize, NonSerialized] private Dictionary<NodeType, UICreatorUpgradeNode> nodePrefabs;
         
         [Space]
@@ -49,6 +56,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         private Dictionary<int, Dictionary<int, RectTransform>> linesMap;
         private Dictionary<int, List<UICreatorUpgradeNode>> nodeChildMap;
         private Dictionary<int, List<UICreatorUpgradeNode>> nodeParentMap;
+
+        private bool isLinkMode;
         
         private void Awake()
         {
@@ -65,10 +74,15 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             
             btnDeselectAll.onClick.RemoveAllListeners();
             btnDeselectAll.onClick.AddListener(DeselectAll);
+            btnDeleteNode.onClick.RemoveAllListeners();
+            btnDeleteNode.onClick.AddListener(DeleteNode);
+            btnChangeMode.onClick.RemoveAllListeners();
+            btnChangeMode.onClick.AddListener(ChangeMode);
         }
 
         public void CreateNewTree()
         {
+            UICreatorNodeInfoPreview.Instance.Hide();
             // Destroy all nodes
             var children = new GameObject[treeParent.childCount];
             for (int i = 0; i < treeParent.childCount; i++)
@@ -101,10 +115,12 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             linesMap = new Dictionary<int, Dictionary<int, RectTransform>>();
             nodeChildMap =  new Dictionary<int, List<UICreatorUpgradeNode>>();
             nodeParentMap = new Dictionary<int, List<UICreatorUpgradeNode>>();
+            selectingNode = null;
         }
 
         public void CreateNewNode(NodeType nodeType)
         {
+            UICreatorNodeInfoPreview.Instance.Hide();
             if (newTree == null)
             {
                 DebugUtility.LogError("Create a tree first!");
@@ -134,6 +150,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             var node = Instantiate(prefab, treeParent);
             node.manager = this;
             node.config = nodeConfig;
+            node.CreatorNodeType = nodeType;
             
             nodesMap.Add(nodeConfig.nodeId, node);
             nodeChildMap.TryAdd(nodeConfig.nodeId, new List<UICreatorUpgradeNode>());
@@ -153,18 +170,30 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 if (!nodeParentMap[childNode.config.nodeId].Contains(node))
                 {
                     nodeParentMap[childNode.config.nodeId].Add(node);
-                    ShowPreRequiredLine(nodeConfig.nodeId, node.transform.position, childNode.config.nodeId, childNode.transform.position);
+                    var direction = (childNode.transform.position - node.transform.position).normalized;
+                    ShowPreRequiredLine(nodeConfig.nodeId, 
+                        node.transform.position + direction * node.lineAnchorOffsetRadius, 
+                        childNode.config.nodeId, 
+                        childNode.transform.position - direction * childNode.lineAnchorOffsetRadius);
                 }
             }
 
             foreach (var childNode in nodeChildMap[nodeConfig.nodeId])
             {
-                ShowPreRequiredLine(nodeConfig.nodeId, node.transform.position, childNode.config.nodeId, childNode.transform.position);
+                var direction = (childNode.transform.position - node.transform.position).normalized;
+                ShowPreRequiredLine(nodeConfig.nodeId, 
+                    node.transform.position + direction * node.lineAnchorOffsetRadius, 
+                    childNode.config.nodeId, 
+                    childNode.transform.position - direction * childNode.lineAnchorOffsetRadius);
             }
 
             foreach (var parentNode in nodeParentMap[nodeConfig.nodeId])
             {
-                ShowPreRequiredLine(parentNode.config.nodeId, parentNode.transform.position, nodeConfig.nodeId, node.transform.position);
+                var direction = (node.transform.position - parentNode.transform.position).normalized; 
+                ShowPreRequiredLine(parentNode.config.nodeId, 
+                    parentNode.transform.position + direction * parentNode.lineAnchorOffsetRadius,
+                    nodeConfig.nodeId, 
+                    node.transform.position - direction * node.lineAnchorOffsetRadius);
             }
             
             UpdateLine(nodeConfig.nodeId);
@@ -172,6 +201,69 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             node.InitNode();
         }
 
+        public void DeleteNode()
+        {
+            if (selectingNode == null)
+            {
+                DebugUtility.LogWarning("You are not selecting any node!");
+                return;
+            }
+
+            // Delete lines
+            if (linesMap.ContainsKey(selectingNode.config.nodeId))
+            {
+                foreach (var pair in linesMap[selectingNode.config.nodeId])
+                {
+                    Destroy(pair.Value.gameObject);
+                }
+                linesMap.Remove(selectingNode.config.nodeId);
+            }
+            foreach (var pair in linesMap)
+            {
+                if (pair.Value != null && pair.Value.ContainsKey(selectingNode.config.nodeId))
+                {
+                    Destroy(pair.Value[selectingNode.config.nodeId].gameObject);
+                    pair.Value.Remove(selectingNode.config.nodeId);
+                }
+            }
+            
+            // Delete node references
+            if (nodeChildMap.ContainsKey(selectingNode.config.nodeId))
+            {
+                foreach (var child in nodeChildMap[selectingNode.config.nodeId])
+                {
+                    if (nodeParentMap.ContainsKey(child.config.nodeId) &&
+                        nodeParentMap[child.config.nodeId].Contains(selectingNode))
+                        nodeParentMap[child.config.nodeId].Remove(selectingNode);
+                }
+                nodeChildMap.Remove(selectingNode.config.nodeId);
+            }
+            if (nodeParentMap.ContainsKey(selectingNode.config.nodeId))
+            {
+                foreach (var parent in nodeParentMap[selectingNode.config.nodeId])
+                {
+                    if (nodeChildMap.ContainsKey(parent.config.nodeId) &&
+                        nodeChildMap[parent.config.nodeId].Contains(selectingNode))
+                        nodeChildMap[parent.config.nodeId].Remove(selectingNode);
+                }
+                nodeParentMap.Remove(selectingNode.config.nodeId);
+            }
+            if (nodesMap.ContainsKey(selectingNode.config.nodeId))
+                nodesMap.Remove(selectingNode.config.nodeId);
+            
+            Destroy(selectingNode.gameObject);
+            selectingNode = null;
+            btnDeleteNode.gameObject.SetActive(false);
+            UICreatorNodeInfoPreview.Instance.Hide();
+        }
+
+        public void ChangeMode()
+        {
+            DeselectAll();
+            isLinkMode = !isLinkMode;
+            txtMode.SetText(isLinkMode ? "Link Mode" : "Node Mode");
+            groupNodeModeButtons.SetActive(!isLinkMode);
+        }
         public UICreatorUpgradeNode GetNodeById(int id)
         {
             return nodesMap.GetValueOrDefault(id);
@@ -246,15 +338,145 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
 
         public void SelectNode(UICreatorUpgradeNode node)
         {
+            if (isLinkMode)
+            {
+                SelectNodeLink(node);
+                return;
+            }
+            
             if (selectingNode != null) selectingNode.DeselectThis();
             selectingNode = node;
+            btnDeleteNode.gameObject.SetActive(true);
             node.SelectThis();
+            UICreatorNodeInfoPreview.Instance.UpdateUI(null, node.config);
+            UICreatorNodeInfoPreview.Instance.Show(node.transform.position, new Vector2(node.lineAnchorOffsetRadius, 0f));
         }
 
         public void DeselectAll()
         {
             if  (selectingNode != null) selectingNode.DeselectThis();
             selectingNode = null;
+            btnDeleteNode.gameObject.SetActive(false);
+            UICreatorNodeInfoPreview.Instance.Hide();
+        }
+
+        #endregion
+
+        #region Edit node links
+
+        public void SelectNodeLink(UICreatorUpgradeNode node)
+        {
+            if (selectingNode == null)
+            {
+                selectingNode = node;
+                node.SelectThis();
+            }
+            else
+            {
+                // Add or remove link 
+                if (selectingNode.config.preRequire.Contains(node.config))
+                {
+                    // Update data
+                    var newPreRequire = selectingNode.config.preRequire.Where((nodeConfig) => nodeConfig != node.config)
+                        .ToArray();
+                    selectingNode.config.preRequire = newPreRequire;
+#if UNITY_EDITOR
+                    EditorUtility.SetDirty(selectingNode.config);
+                    AssetDatabase.SaveAssets();
+                    AssetDatabase.Refresh();
+                    Debug.Log("ScriptableObject changes saved to asset.");
+#endif
+                    
+                    if (linesMap.ContainsKey(node.config.nodeId))
+                    {
+                        if (linesMap[node.config.nodeId].ContainsKey(selectingNode.config.nodeId))
+                        {
+                            Destroy(linesMap[node.config.nodeId][selectingNode.config.nodeId].gameObject);
+                            linesMap[node.config.nodeId].Remove(selectingNode.config.nodeId);
+                        }
+                    }
+                    if (nodeParentMap.ContainsKey(selectingNode.config.nodeId))
+                    {
+                        if (nodeParentMap[selectingNode.config.nodeId].Contains(node))
+                            nodeParentMap[selectingNode.config.nodeId].Remove(node);
+                    }
+                    if (nodeChildMap.ContainsKey(node.config.nodeId))
+                    {
+                        if (nodeChildMap[node.config.nodeId].Contains(selectingNode))
+                            nodeChildMap[node.config.nodeId].Remove(selectingNode);
+                    }
+                }
+                else
+                {
+                    // Check loop
+                    // TODO check loop
+                    
+                    // Update data
+                    var newPreRequire = selectingNode.config.preRequire.ToList();
+                    newPreRequire.Add(node.config);
+                    selectingNode.config.preRequire = newPreRequire.ToArray();
+#if UNITY_EDITOR
+                    EditorUtility.SetDirty(selectingNode.config);
+                    AssetDatabase.SaveAssets();
+                    AssetDatabase.Refresh();
+                    Debug.Log("ScriptableObject changes saved to asset.");
+#endif
+
+                    linesMap.TryAdd(node.config.nodeId, new Dictionary<int, RectTransform>());
+                    if (!linesMap[node.config.nodeId].ContainsKey(selectingNode.config.nodeId))
+                    {
+                        var line = Instantiate(linePrefab, lineParent);
+                        linesMap[node.config.nodeId].Add(selectingNode.config.nodeId, line);
+                    }
+                    nodeParentMap.TryAdd(selectingNode.config.nodeId, new List<UICreatorUpgradeNode>());
+                    if (!nodeParentMap[selectingNode.config.nodeId].Contains(node))
+                        nodeParentMap[selectingNode.config.nodeId].Add(node);
+                    nodeChildMap.TryAdd(node.config.nodeId, new List<UICreatorUpgradeNode>());
+                    if (!nodeChildMap[node.config.nodeId].Contains(selectingNode))
+                        nodeChildMap[node.config.nodeId].Add(selectingNode);
+                    
+                    UpdateLine(node.config.nodeId);
+                }
+                
+                selectingNode.DeselectThis();
+                selectingNode = null;
+            }
+        }
+
+        #endregion
+        
+        #region Data
+
+        [Space] 
+        [Header("Save Load")] 
+        [SerializeField] private GenerateJsonFromTree jsonConverter;
+        
+        public void SaveTreeData(string treeName)
+        {
+            if (newTree == null)
+            {
+                DebugUtility.LogError("Create a tree first!");
+                return;
+            }
+            
+            newTree.nodes = new List<NodeDataStruct>();
+            foreach (var pair in nodesMap)
+            {
+                newTree.nodes.Add(new NodeDataStruct()
+                {
+                    id = pair.Key,
+                    idPrefab = (int)pair.Value.CreatorNodeType,
+                    position = pair.Value.transform.localPosition,
+                });
+            }
+            
+            if (newTree.nodes == null || newTree.nodes.Count == 0)
+            {
+                DebugUtility.LogError("Tree doesn't have any nodes!");
+                return;
+            }
+            
+            jsonConverter.SaveJson(treeName, newTree);
         }
 
         #endregion
