@@ -46,13 +46,13 @@ namespace InGame
         public void EnterTower()
         {
             selected.gameObject.SetActive(true);
-            fxselected.Play();
+            //fxselected.Play();
         }
 
         public void LeaveTower()
         {
             selected.gameObject.SetActive(false);
-            fxselected.Stop();
+            //fxselected.Stop();
         }
 
         public float HitDirectionX { get; set; }
@@ -85,21 +85,13 @@ namespace InGame
             VisualEffectHelper.Instance.PlayEffect(damageEffect);
         }
 
-        [SerializeField] private SpriteRenderer selected;
-        [SerializeField] private ParticleSystem fxselected;
-        [SerializeField] private SpriteRenderer hover;
-        [SerializeField] private ParticleSystem fxhover;
+        [SerializeField] private GameObject selected;
+        //[SerializeField] private GameObject fxselected;
+        [SerializeField] private GameObject hover;
+        //[SerializeField] private GameObject fxhover;
         public void Hover(bool hovering)
         {
             hover.gameObject.SetActive(hovering);
-            if (!hovering)
-            {
-                fxhover.Play();
-            }
-            else
-            {
-                fxhover.Stop();
-            }
         }
 
         [Space]
@@ -107,17 +99,17 @@ namespace InGame
         [SerializeField] private string defaultSortingLayer;
         public void SetHighestSortingLayer()
         {
-            towerVisual.sortingLayerName = highestSortingLayer;
-            selected.sortingLayerName = highestSortingLayer;
-            hover.sortingLayerName = highestSortingLayer;
+            //towerVisual.sortingLayerName = highestSortingLayer;
+            //selected.sortingLayerName = highestSortingLayer;
+            //hover.sortingLayerName = highestSortingLayer;
 
         }
 
         public void ResetSortingLayer()
         {
-            towerVisual.sortingLayerName = defaultSortingLayer;
-            selected.sortingLayerName = defaultSortingLayer;
-            hover.sortingLayerName = defaultSortingLayer;
+            //towerVisual.sortingLayerName = defaultSortingLayer;
+            //selected.sortingLayerName = defaultSortingLayer;
+            //hover.sortingLayerName = defaultSortingLayer;
 
         }
     }

@@ -143,10 +143,8 @@ MonoBehaviour:
   - 0
   - 0.3
   - 0.7
-  selected: {fileID: 768306142439790387}
-  fxselected: {fileID: 8439432195233982422}
-  hover: {fileID: 2944728230707981953}
-  fxhover: {fileID: 8439432195233982422}
+  selected: {fileID: 905741370930525415}
+  hover: {fileID: 905741370930525415}
   highestSortingLayer: UI
   defaultSortingLayer: Default
 --- !u!1 &3726468988353673083
@@ -372,18 +370,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8540445364392104723}
     m_Modifications:
-    - target: {fileID: 2910418615046540185, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
-      propertyPath: m_Layer
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 2943512610026098828, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
-      propertyPath: m_Layer
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 2980607274077008958, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
-      propertyPath: m_Layer
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 3817295707181563629, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -424,34 +410,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4252108637193738998, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
-      propertyPath: m_Layer
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 4685227435599753225, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
-      propertyPath: m_Layer
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 6994314466156648143, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
       propertyPath: m_Name
       value: FX_Tower_Selected
       objectReference: {fileID: 0}
     - target: {fileID: 6994314466156648143, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
-      propertyPath: m_Layer
-      value: 10
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
+--- !u!1 &905741370930525415 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6994314466156648143, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
+  m_PrefabInstance: {fileID: 7890619948535702056}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6447148272275086533 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3817295707181563629, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
-  m_PrefabInstance: {fileID: 7890619948535702056}
-  m_PrefabAsset: {fileID: 0}
---- !u!198 &8439432195233982422 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 1774418078784701950, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
   m_PrefabInstance: {fileID: 7890619948535702056}
   m_PrefabAsset: {fileID: 0}
