@@ -24624,7 +24624,7 @@ ParticleSystem:
         m_NumAlphaKeys: 2
     startSize:
       serializedVersion: 2
-      minMaxState: 3
+      minMaxState: 0
       scalar: 2
       minScalar: 1
       maxCurve:
@@ -24677,7 +24677,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeY:
       serializedVersion: 2
-      minMaxState: 3
+      minMaxState: 0
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -24730,7 +24730,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeZ:
       serializedVersion: 2
-      minMaxState: 3
+      minMaxState: 0
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -29252,13 +29252,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7078826162070910141}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: 0.61, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4209671016614479256}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!198 &1709716898282140579
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -29778,7 +29778,7 @@ ParticleSystem:
     startRotation:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1.5707963
+      scalar: 0
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -29828,11 +29828,11 @@ ParticleSystem:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-    randomizeRotationDirection: 1
-    gravitySource: 1
+    randomizeRotationDirection: 0
+    gravitySource: 0
     maxNumParticles: 4
     customEmitterVelocity: {x: 0, y: 0, z: 0}
-    size3D: 1
+    size3D: 0
     rotation3D: 0
     gravityModifier:
       serializedVersion: 2
@@ -30096,7 +30096,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 4
+      scalar: 0
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -30264,7 +30264,7 @@ ParticleSystem:
     curve:
       serializedVersion: 2
       minMaxState: 1
-      scalar: 4.751501
+      scalar: 1.6477845
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -30272,20 +30272,20 @@ ParticleSystem:
         - serializedVersion: 3
           time: 0
           value: 1
-          inSlope: -4.231325
-          outSlope: -4.231325
-          tangentMode: 0
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 34
           weightedMode: 0
           inWeight: 0
-          outWeight: 0.06467581
+          outWeight: 0
         - serializedVersion: 3
-          time: 0.4578644
-          value: 0
-          inSlope: -5.1820774
-          outSlope: -5.1820774
-          tangentMode: 0
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 34
           weightedMode: 0
-          inWeight: 0.049763072
+          inWeight: 0
           outWeight: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
@@ -30317,7 +30317,7 @@ ParticleSystem:
     y:
       serializedVersion: 2
       minMaxState: 1
-      scalar: 1.9192306
+      scalar: 1.8688583
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -30325,20 +30325,20 @@ ParticleSystem:
         - serializedVersion: 3
           time: 0
           value: 1
-          inSlope: -1
-          outSlope: -1
+          inSlope: 0
+          outSlope: 0
           tangentMode: 34
           weightedMode: 0
           inWeight: 0
-          outWeight: 0.33333334
+          outWeight: 0
         - serializedVersion: 3
           time: 1
-          value: 0
-          inSlope: -1
-          outSlope: -1
+          value: 1
+          inSlope: 0
+          outSlope: 0
           tangentMode: 34
           weightedMode: 0
-          inWeight: 0.33333334
+          inWeight: 0
           outWeight: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
@@ -34101,7 +34101,7 @@ ParticleSystemRenderer:
   m_SortingFudge: 0
   m_NormalDirection: 1
   m_ShadowBias: 0
-  m_RenderAlignment: 0
+  m_RenderAlignment: 2
   m_Pivot: {x: 0, y: 0, z: 0}
   m_Flip: {x: 0, y: 0, z: 0}
   m_EnableGPUInstancing: 1
