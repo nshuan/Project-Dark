@@ -92,7 +92,14 @@ namespace InGame
         public void Hover(bool hovering)
         {
             hover.gameObject.SetActive(hovering);
-            fxhover.Play();
+            if (!hovering)
+            {
+                fxhover.Play();
+            }
+            else
+            {
+                fxhover.Stop();
+            }
         }
 
         [Space]
@@ -103,6 +110,7 @@ namespace InGame
             towerVisual.sortingLayerName = highestSortingLayer;
             selected.sortingLayerName = highestSortingLayer;
             hover.sortingLayerName = highestSortingLayer;
+
         }
 
         public void ResetSortingLayer()
@@ -110,6 +118,7 @@ namespace InGame
             towerVisual.sortingLayerName = defaultSortingLayer;
             selected.sortingLayerName = defaultSortingLayer;
             hover.sortingLayerName = defaultSortingLayer;
+
         }
     }
 }
