@@ -21,12 +21,21 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
     public class NodeDataStruct
     {
         public int id;
+        public int idType;
         public int idPrefab;
         public Vector2 position;
     }
 
+    [Serializable]
+    public class NodeButtonInfo
+    {
+        public Button button;
+        public UICreatorUpgradeNode nodePrefab;
+    }
+
     public enum NodeType
     {
+        ClassNode,
         SkillNode,
         EffectNode,
         StatNode,
@@ -39,12 +48,14 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         [SerializeField] private Transform treeParent;
         [SerializeField] private GameObject groupNodeModeButtons;
         [SerializeField] private TMP_InputField input;
+        [SerializeField] private TMP_InputField inputTreeName;
         [SerializeField] private Button btnNewTree;
-        [SerializeField] private Button[] btnCreateNode;
         [SerializeField] private Button btnDeleteNode;
         [SerializeField] private Button btnChangeMode;
         [SerializeField] private TextMeshProUGUI txtMode;
-        [OdinSerialize, NonSerialized] private Dictionary<NodeType, UICreatorUpgradeNode> nodePrefabs;
+        [SerializeField] private Button[] btnToggleNodes;
+        [SerializeField] private Transform[] nodeButtonGroups;
+        [OdinSerialize, NonSerialized] private Dictionary<NodeType, List<NodeButtonInfo>> btnInfo;
         
         [Space]
         [Header("Tree Visual")]
@@ -64,12 +75,28 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             btnNewTree.onClick.RemoveAllListeners();
             btnNewTree.onClick.AddListener(CreateNewTree);
 
-            for (var index = 0; index < btnCreateNode.Length; index++)
+            for (var i = 0; i < btnToggleNodes.Length; i++)
             {
-                var btn = btnCreateNode[index];
+                var index = i;
+                btnToggleNodes[i].onClick.RemoveAllListeners();
+                btnToggleNodes[i].onClick.AddListener(() =>
+                {
+                    HideAllNodeGroup();
+                    ToggleNodeGroup(index);
+                });
+            }
+            
+            for (var index = 0; index < btnInfo.Count; index++)
+            {
                 var nodeType = (NodeType)index;
-                btn.onClick.RemoveAllListeners();
-                btn.onClick.AddListener(() => CreateNewNode(nodeType));
+                var infoList = btnInfo[nodeType];
+                for (var i = 0; i < infoList.Count; i++)
+                {
+                    var info = infoList[i];
+                    var pIndex = i;
+                    info.button.onClick.RemoveAllListeners();
+                    info.button.onClick.AddListener(() => CreateNewNode(nodeType, pIndex));
+                }
             }
             
             btnDeselectAll.onClick.RemoveAllListeners();
@@ -80,8 +107,22 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             btnChangeMode.onClick.AddListener(ChangeMode);
         }
 
+        public void ToggleNodeGroup(int index)
+        {
+            nodeButtonGroups[index].gameObject.SetActive(!nodeButtonGroups[index].gameObject.activeInHierarchy);
+        }
+
+        public void HideAllNodeGroup()
+        {
+            foreach (var group in nodeButtonGroups)
+            {
+                group.gameObject.SetActive(false);
+            }
+        }
+
         public void CreateNewTree()
         {
+            HideAllNodeGroup();
             UICreatorNodeInfoPreview.Instance.Hide();
             // Destroy all nodes
             var children = new GameObject[treeParent.childCount];
@@ -118,8 +159,9 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             selectingNode = null;
         }
 
-        public void CreateNewNode(NodeType nodeType)
+        public void CreateNewNode(NodeType nodeType, int prefabIndex)
         {
+            HideAllNodeGroup();
             UICreatorNodeInfoPreview.Instance.Hide();
             if (newTree == null)
             {
@@ -136,8 +178,13 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             var nodeConfig = configLoader.GetNodeConfig(id);
             if (nodeConfig == null)
             {
-                DebugUtility.LogError("Config not found!");
-                return;
+                configLoader.GetConfigsFromPath();
+                nodeConfig = configLoader.GetNodeConfig(id);
+                if (nodeConfig == null)
+                {
+                    DebugUtility.LogError("Config not found!");
+                    return;
+                }
             }
 
             if (nodesMap.ContainsKey(id))
@@ -146,11 +193,12 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 return;
             }
 
-            var prefab = nodePrefabs[nodeType];
+            var prefab = btnInfo[nodeType][prefabIndex].nodePrefab;
             var node = Instantiate(prefab, treeParent);
             node.manager = this;
             node.config = nodeConfig;
             node.CreatorNodeType = nodeType;
+            node.PrefabIndex = prefabIndex;
             
             nodesMap.Add(nodeConfig.nodeId, node);
             nodeChildMap.TryAdd(nodeConfig.nodeId, new List<UICreatorUpgradeNode>());
@@ -203,6 +251,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
 
         public void DeleteNode()
         {
+            HideAllNodeGroup();
             if (selectingNode == null)
             {
                 DebugUtility.LogWarning("You are not selecting any node!");
@@ -259,6 +308,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
 
         public void ChangeMode()
         {
+            HideAllNodeGroup();
             DeselectAll();
             isLinkMode = !isLinkMode;
             txtMode.SetText(isLinkMode ? "Link Mode" : "Node Mode");
@@ -304,6 +354,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 if (direction.magnitude > 0.05f)
                 {
                     direction = direction / direction.magnitude;
+                    from = from + direction * nodesMap[nodeId].lineAnchorOffsetRadius;
+                    to = to - direction * childNode.lineAnchorOffsetRadius;
                     linesMap[nodeId][childNode.config.nodeId].position = (from + to) / 2;
                     linesMap[nodeId][childNode.config.nodeId].sizeDelta = new Vector2(Vector2.Distance(from, to), 8f);
                     linesMap[nodeId][childNode.config.nodeId].rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
@@ -321,6 +373,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 if (direction.magnitude > 0.05f)
                 {
                     direction = direction / direction.magnitude;
+                    from = from + direction * parentNode.lineAnchorOffsetRadius;
+                    to = to - direction * nodesMap[nodeId].lineAnchorOffsetRadius;
                     linesMap[parentNode.config.nodeId][nodeId].position = (from + to) / 2;
                     linesMap[parentNode.config.nodeId][nodeId].sizeDelta = new Vector2(Vector2.Distance(from, to), 8f);
                     linesMap[parentNode.config.nodeId][nodeId].rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
@@ -338,6 +392,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
 
         public void SelectNode(UICreatorUpgradeNode node)
         {
+            HideAllNodeGroup();
             if (isLinkMode)
             {
                 SelectNodeLink(node);
@@ -354,6 +409,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
 
         public void DeselectAll()
         {
+            HideAllNodeGroup();
             if  (selectingNode != null) selectingNode.DeselectThis();
             selectingNode = null;
             btnDeleteNode.gameObject.SetActive(false);
@@ -451,11 +507,18 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         [Header("Save Load")] 
         [SerializeField] private GenerateJsonFromTree jsonConverter;
         
-        public void SaveTreeData(string treeName)
+        public void SaveTreeData()
         {
+            HideAllNodeGroup();
             if (newTree == null)
             {
                 DebugUtility.LogError("Create a tree first!");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(inputTreeName.text))
+            {
+                DebugUtility.LogError("Input a valid tree name first!");
                 return;
             }
             
@@ -465,6 +528,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 newTree.nodes.Add(new NodeDataStruct()
                 {
                     id = pair.Key,
+                    idType = pair.Value.PrefabIndex,
                     idPrefab = (int)pair.Value.CreatorNodeType,
                     position = pair.Value.transform.localPosition,
                 });
@@ -476,7 +540,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 return;
             }
             
-            jsonConverter.SaveJson(treeName, newTree);
+            jsonConverter.SaveJson(inputTreeName.text, newTree);
         }
 
         #endregion

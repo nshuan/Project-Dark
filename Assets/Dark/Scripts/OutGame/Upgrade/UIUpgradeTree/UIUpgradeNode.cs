@@ -56,14 +56,20 @@ namespace Dark.Scripts.OutGame.Upgrade
             
             hoverField.onHover = () =>
             {
-                UIUpgradeNodeInfoPreview.Instance.UpdateUI(data, config, false);
+                UIUpgradeNodeInfoPreview.Instance.Setup(config, false, null, null);
                 UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(lineAnchorOffsetRadius, 0f), false);
             };
             hoverField.onHoverExit = () => UIUpgradeNodeInfoPreview.Instance.Hide(false);
             hoverField.onPointerClick = () =>
             {
                 treeRef.SelectNode(this);
-                UIUpgradeNodeInfoPreview.Instance.UpdateUI(data, config, true);
+                UIUpgradeNodeInfoPreview.Instance.Setup(config, true, () =>
+                {
+                    // TODO on success
+                }, () =>
+                {
+                    // TODO on failed
+                });
                 UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(lineAnchorOffsetRadius, 0f), true);
             };
         }

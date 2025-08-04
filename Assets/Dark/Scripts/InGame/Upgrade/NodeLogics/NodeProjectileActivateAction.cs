@@ -11,6 +11,7 @@ namespace InGame.Upgrade
     {
         [OdinSerialize, NonSerialized] private List<IProjectileActivate> actions;
         [SerializeField] private bool isCharge;
+        [SerializeField] private string bonusDescription;
         
         public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)
         {
@@ -38,8 +39,7 @@ namespace InGame.Upgrade
 
         public string GetDescription(int level)
         {
-            var result = "";
-            return result;
+            return bonusDescription;
         }
     }
 }

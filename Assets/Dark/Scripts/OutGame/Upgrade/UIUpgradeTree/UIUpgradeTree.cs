@@ -103,7 +103,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             from = from + direction * fromOffsetRadius;
             to = to - direction * toOffsetRadius;
             line.position = (from + to) / 2;
-            line.GetComponent<RectTransform>().sizeDelta = new Vector2(9f, Vector2.Distance(from, to));
+            line.GetComponent<RectTransform>().sizeDelta = new Vector2(10f, Vector2.Distance(from, to));
             line.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + 90);
 
             return line.GetComponent<UIUpgradeLine>();

@@ -8,6 +8,7 @@ namespace InGame.Upgrade
         public BonusPlayerType bonusType;
         public float[] value;
         public bool isMultiply;
+        public string bonusDescription;
         
         public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)
         {
@@ -37,8 +38,7 @@ namespace InGame.Upgrade
 
         public string GetDescription(int level)
         {
-            var result = "";
-            return result;
+            return bonusDescription;
         }
 
         public enum BonusPlayerType

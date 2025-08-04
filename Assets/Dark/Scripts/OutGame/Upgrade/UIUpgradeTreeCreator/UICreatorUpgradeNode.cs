@@ -15,6 +15,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         public float lineAnchorOffsetRadius;
         
         public NodeType CreatorNodeType { get; set; }
+        public int PrefabIndex { get; set; }
         
         public void InitNode()
         {

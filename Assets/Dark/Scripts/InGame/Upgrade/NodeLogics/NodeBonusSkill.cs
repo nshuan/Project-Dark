@@ -8,6 +8,7 @@ namespace InGame.Upgrade
         public BonusSkillType bonusType;
         public float[] value;
         public bool isMultiply;
+        public string bonusDescription;
         
         public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)
         {
@@ -17,8 +18,7 @@ namespace InGame.Upgrade
 
         public string GetDescription(int level)
         {
-            var result = "";
-            return result;
+            return bonusDescription;
         }
 
         private void BonusSkill(int level, ref UpgradeBonusInfo bonusInfo)

@@ -9,6 +9,7 @@ namespace InGame.Upgrade
     {
 	    [SerializeField] private PassiveTriggerType triggerType;
 	    [SerializeField] private PassiveType passiveType;
+	    [SerializeField] private string bonusDescription;
 	    
 	    public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)
 	    {
@@ -21,8 +22,7 @@ namespace InGame.Upgrade
 
 	    public string GetDescription(int level)
 	    {
-		    var result = "";
-		    return result;
+		    return bonusDescription;
 	    }
     }
 }
