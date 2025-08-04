@@ -33,6 +33,7 @@ namespace InGame
         public List<IProjectileActivate> ActivateActions { get; set; }
         public List<IProjectileHit> HitActions { get; set; }
         public bool BlockDestroy { get; set; } // Block destroy so that the projectile can go through enemies but still deal damage
+        public bool BlockSpawnDeadBody { get; set; } // Do not spawn dead projectile on hit
         
         public Transform TargetTransform => transform;
 
@@ -116,7 +117,12 @@ namespace InGame
         protected virtual void Update()
         {
             if (!activated) return;
-            if (Vector2.Distance(transform.position, startPos) > maxDistance) ProjectileHit(null);
+            if (Vector2.Distance(transform.position, startPos) > maxDistance)
+            {
+                if (!BlockSpawnDeadBody)
+                    ProjectileDeadPool.Instance.Get().position = transform.position;
+                ProjectileHit(null);
+            }
             transform.position += (Vector3)(Speed * Time.deltaTime * direction);
             lifeTime += Time.deltaTime;
             if (lifeTime > MaxLifeTime)
@@ -136,8 +142,9 @@ namespace InGame
         {
             if (!hit)
             {
+                BlockDestroy = false;
+                BlockSpawnDeadBody = false;
                 OnHit = null;
-                ProjectileDeadPool.Instance.Get().position = transform.position;
                 ProjectilePool.Instance.Release(this);
                 return;
             }
@@ -165,6 +172,8 @@ namespace InGame
             
             if (!BlockDestroy && currentHit >= MaxHit)
             {
+                BlockDestroy = false;
+                BlockSpawnDeadBody = false;
                 OnHit = null;
                 ProjectilePool.Instance.Release(this);
             }

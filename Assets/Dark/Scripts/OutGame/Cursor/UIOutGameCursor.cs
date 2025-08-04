@@ -7,7 +7,7 @@ namespace Dark.Scripts.OutGame
     {
         private void Start()
         {
-            Cursor.visible = false;
+            
         }
 
         private void Update()

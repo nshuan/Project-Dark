@@ -71,6 +71,7 @@ namespace InGame
             if (!activated && !canRotate) return;
             if (Vector2.Distance(transform.position, startPos) > maxDistance)
             {
+                ProjectileDeadPool.Instance.Get().position = transform.position;
                 ProjectileHit(null);
             }
             
