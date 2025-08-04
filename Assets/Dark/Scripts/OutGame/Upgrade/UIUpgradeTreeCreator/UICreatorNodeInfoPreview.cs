@@ -25,8 +25,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             }
             else
             {
-                txtNodeLevel.SetText($"Locked");
-                txtNodePrice.SetText($"Locked");
+                txtNodeLevel.SetText($"{0}/{config.levelNum}");
+                txtNodePrice.gameObject.SetActive(false);
             }
             
             for (var i = 0; i < config.nodeLogic.Length; i++)
