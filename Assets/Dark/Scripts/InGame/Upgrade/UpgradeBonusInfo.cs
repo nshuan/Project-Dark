@@ -40,15 +40,15 @@ namespace InGame
 
         #endregion
         
-        #region Effect
+        #region Passive
 
         [Space] 
-        [NonSerialized, OdinSerialize] public Dictionary<PassiveTriggerType, List<PassiveType>> effectsMapByTriggerType;
-        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> effectsBonusCooldownMapByType;
-        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> effectsBonusChanceMapByType;
-        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> effectsBonusSizeMapByType;
-        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> effectsBonusValueMapByType;
-        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> effectsBonusStaggerMapByType;
+        [NonSerialized, OdinSerialize] public Dictionary<PassiveTriggerType, List<PassiveType>> passiveMapByTriggerType;
+        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusCooldownMapByType;
+        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusChanceMapByType;
+        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusSizeMapByType;
+        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusValueMapByType;
+        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusStaggerMapByType;
 
         #endregion
     }
