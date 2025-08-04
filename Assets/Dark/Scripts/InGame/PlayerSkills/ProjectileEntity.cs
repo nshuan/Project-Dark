@@ -120,7 +120,7 @@ namespace InGame
             if (Vector2.Distance(transform.position, startPos) > maxDistance)
             {
                 if (!BlockSpawnDeadBody)
-                    ProjectileDeadPool.Instance.Get().position = transform.position;
+                    ProjectileDeadPool.Instance.Get(direction).position = transform.position;
                 ProjectileHit(null);
             }
             transform.position += (Vector3)(Speed * Time.deltaTime * direction);

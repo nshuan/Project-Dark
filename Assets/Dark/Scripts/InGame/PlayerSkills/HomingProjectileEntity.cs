@@ -44,7 +44,7 @@ namespace InGame
             if (!activated) return;
             if (Vector2.Distance(transform.position, startPos) > maxDistance)
             {
-                ProjectileDeadPool.Instance.Get().position = transform.position;
+                ProjectileDeadPool.Instance.Get(direction).position = transform.position;
                 ProjectileHit(null);
             }
             

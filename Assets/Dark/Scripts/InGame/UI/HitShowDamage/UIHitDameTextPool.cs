@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Core;
 using TMPro;
@@ -8,7 +9,7 @@ namespace InGame.UI.HitShowDamage
     public class UIHitDameTextPool : MonoSingleton<UIHitDameTextPool>
     {
         [SerializeField] private TextMeshProUGUI prefab;
-        [SerializeField] private UIHitDameCanvas canvas; 
+        [SerializeField] private UIHitDameCanvas canvas;
         
         private Queue<TextMeshProUGUI> pool;
         private TextMeshProUGUI tempText;
@@ -41,6 +42,13 @@ namespace InGame.UI.HitShowDamage
         {
             text.gameObject.SetActive(false);
             pool.Enqueue(text);
+        }
+
+        [Serializable]
+        public struct HitDamageTextColorInfo
+        {
+            public int threshold;
+            public Color color;
         }
     }
 }

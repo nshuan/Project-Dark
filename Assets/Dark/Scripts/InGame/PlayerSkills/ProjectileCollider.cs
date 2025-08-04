@@ -10,6 +10,11 @@ namespace InGame
         
         private void OnTriggerEnter2D(Collider2D other)
         {
+            if (other.tag == "Tower")
+            {
+                Projectile.ProjectileHit(null);    
+            }
+            
             if (other.tag == "InGameBoundary")
             {
                 Projectile.BlockSpawnDeadBody = true;

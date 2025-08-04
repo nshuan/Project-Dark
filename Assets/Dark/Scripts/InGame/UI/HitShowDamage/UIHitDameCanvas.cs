@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -9,6 +10,11 @@ namespace InGame.UI.HitShowDamage
     public class UIHitDameCanvas : MonoBehaviour
     {
         [SerializeField] private Camera cam;
+        
+        [Space]
+        [Header("Text color")]
+        [SerializeField] private List<Color> colorInfos;
+        [SerializeField] private int damageGap;
 
         public void ShowDamage(TextMeshProUGUI txtDamage, int damage, Vector3 worldPos)
         {
@@ -17,6 +23,8 @@ namespace InGame.UI.HitShowDamage
 
         private IEnumerator IEShowDamage(TextMeshProUGUI txtDamage, int damage, Vector3 worldPos)
         {
+            var indexColor = damage / damageGap;
+            txtDamage.color = colorInfos[Math.Clamp(indexColor, 0, colorInfos.Count - 1)];
             txtDamage.transform.position = cam.WorldToScreenPoint(worldPos);
             txtDamage.SetText(damage.ToString());
             txtDamage.gameObject.SetActive(true);
