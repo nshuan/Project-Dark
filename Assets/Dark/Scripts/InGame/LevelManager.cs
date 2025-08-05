@@ -50,6 +50,8 @@ namespace InGame
         public Action<PlayerSkillConfig> OnChangeSkill { get; set; }
         public Action<TowerEntity> OnChangeTower { get; set; }
 
+        public event Action<int> OnWaveStart;
+        
         public event Action OnWin;
         public event Action OnLose;
 
@@ -144,6 +146,7 @@ namespace InGame
             {
                 currentWave = waves[currentWaveIndex];
                 currentWave.SetupWave(gatePrefab, Towers, Level.levelExpRatio, Level.levelDarkRatio, OnWaveForceStop);
+                OnWaveStart?.Invoke(currentWaveIndex);
                 currentWaveIndex += 1;
                 yield return currentWave.IEActivateWave();
             }
