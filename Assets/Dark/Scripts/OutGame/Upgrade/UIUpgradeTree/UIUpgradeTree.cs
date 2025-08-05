@@ -28,31 +28,9 @@ namespace Dark.Scripts.OutGame.Upgrade
             btnDeselectAll.onClick.RemoveAllListeners();
             btnDeselectAll.onClick.AddListener(() =>
             {
-                DeselectAll();
                 UIUpgradeNodeInfoPreview.Instance.Hide(true);
             });
         }
-
-        #region Select Node
-        
-        private UIUpgradeNode selectingNode;
-
-        public void SelectNode(UIUpgradeNode node)
-        {
-            if (selectingNode != null) selectingNode.DeselectThis();
-            UIUpgradeNodeInfoPreview.Instance.CanAutoShowHide = false;
-            selectingNode = node;
-            node.SelectThis();
-        }
-
-        public void DeselectAll()
-        {
-            if (selectingNode != null) selectingNode.DeselectThis();
-            selectingNode = null;
-            UIUpgradeNodeInfoPreview.Instance.CanAutoShowHide = true;
-        }
-
-        #endregion
 
 #if UNITY_EDITOR
         [Button]
