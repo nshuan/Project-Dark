@@ -9,9 +9,24 @@ namespace InGame
     {
         [SerializeField] private AnimationCurve speedCurve;
         [SerializeField] private float duration;
+
+        [Space] [Header("Combat")] 
+        [SerializeField] private LayerMask enemyLayer;
+        [SerializeField] private int damage;
+        [SerializeField] private float stagger;
+        [SerializeField] private int maxHitEachTrigger = 5;
+        [SerializeField] private float hitRadius = 2f;
+        
+        private RaycastHit2D[] hits = new RaycastHit2D[10];
+        private IDamageable hitTarget;
+        private Vector2 direction;
+        private PlayerCharacter characterRef;
         
         public IEnumerator IEMove(PlayerCharacter character, Vector2 startPos, Vector2 endPos, Action onComplete)
         {
+            hits ??= new RaycastHit2D[50];
+            characterRef = character;
+            direction = endPos - startPos;
             character.PlayDashEffect(endPos - startPos);
             
             var timeElapsed = 0f;
@@ -20,6 +35,18 @@ namespace InGame
                 timeElapsed += Time.deltaTime;
                 var speed = speedCurve.Evaluate(Mathf.Clamp01(timeElapsed / duration));
                 character.transform.position = Vector2.Lerp(startPos, endPos, speed);
+                
+                var count = Physics2D.CircleCastNonAlloc(character.transform.position, hitRadius, Vector2.zero, hits,
+                    0f,
+                    enemyLayer);
+                if (count > 0)
+                {
+                    for (int i = 0; i < count; i++)
+                    {
+                        DashHit(hits[i].transform, damage);
+                    }
+                }
+                
                 yield return null;
             }
                 
@@ -27,6 +54,19 @@ namespace InGame
             character.StopDashEffect();
             yield return new WaitForEndOfFrame();
             onComplete?.Invoke();
+        }
+        
+        private void DashHit(Transform hitTransform, float value)
+        {
+            if (hitTransform)
+            {
+                if (hitTransform.TryGetComponent(out hitTarget))
+                {
+                    hitTarget.HitDirectionX = direction.x;
+                    hitTarget.HitDirectionY = direction.y;
+                    hitTarget.Damage((int)value, characterRef.FlashExplodeCenter, stagger);
+                }
+            }
         }
     }
 }

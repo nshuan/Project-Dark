@@ -41,7 +41,7 @@ namespace InGame
                 {
                     for (int i = 0; i < count; i++)
                     {
-                        ExplosionHit(hits[i].transform, damage);
+                        FlashHit(hits[i].transform, damage);
                     }
                 }
             }).WaitForCompletion();
@@ -50,7 +50,7 @@ namespace InGame
             onComplete?.Invoke();
         }
         
-        private void ExplosionHit(Transform hitTransform, float value)
+        private void FlashHit(Transform hitTransform, float value)
         {
             if (hitTransform)
             {
