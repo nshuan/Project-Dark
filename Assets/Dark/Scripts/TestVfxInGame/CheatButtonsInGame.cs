@@ -35,45 +35,45 @@ namespace TestVfxInGame
         private void Start()
         {
             btnUnlockExplosion.GetComponentInChildren<TextMeshProUGUI>().SetText(
-                testUpgradeBonus.testBonusInfo.effectsMapByTriggerType == null ||
-                !testUpgradeBonus.testBonusInfo.effectsMapByTriggerType.ContainsKey(PassiveTriggerType.DameByNormalAttack) ||
-                testUpgradeBonus.testBonusInfo.effectsMapByTriggerType[PassiveTriggerType.DameByNormalAttack] == null ||
-                !testUpgradeBonus.testBonusInfo.effectsMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Contains(PassiveType.Explosion)
+                testUpgradeBonus.testBonusInfo.passiveMapByTriggerType == null ||
+                !testUpgradeBonus.testBonusInfo.passiveMapByTriggerType.ContainsKey(PassiveTriggerType.DameByNormalAttack) ||
+                testUpgradeBonus.testBonusInfo.passiveMapByTriggerType[PassiveTriggerType.DameByNormalAttack] == null ||
+                !testUpgradeBonus.testBonusInfo.passiveMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Contains(PassiveType.Explosion)
                     ? "Unlock Explosion" : "Lock Explosion");
             btnUnlockLightning.GetComponentInChildren<TextMeshProUGUI>().SetText(
-                testUpgradeBonus.testBonusInfo.effectsMapByTriggerType == null ||
-                !testUpgradeBonus.testBonusInfo.effectsMapByTriggerType.ContainsKey(PassiveTriggerType.DameByNormalAttack) ||
-                testUpgradeBonus.testBonusInfo.effectsMapByTriggerType[PassiveTriggerType.DameByNormalAttack] == null ||
-                !testUpgradeBonus.testBonusInfo.effectsMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Contains(PassiveType.Lightning)
+                testUpgradeBonus.testBonusInfo.passiveMapByTriggerType == null ||
+                !testUpgradeBonus.testBonusInfo.passiveMapByTriggerType.ContainsKey(PassiveTriggerType.DameByNormalAttack) ||
+                testUpgradeBonus.testBonusInfo.passiveMapByTriggerType[PassiveTriggerType.DameByNormalAttack] == null ||
+                !testUpgradeBonus.testBonusInfo.passiveMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Contains(PassiveType.Lightning)
                     ? "Unlock Lightning" : "Lock Lightning");
             btnUnlockBurning.GetComponentInChildren<TextMeshProUGUI>().SetText(
-                testUpgradeBonus.testBonusInfo.effectsMapByTriggerType == null ||
-                !testUpgradeBonus.testBonusInfo.effectsMapByTriggerType.ContainsKey(PassiveTriggerType.DameByNormalAttack) ||
-                testUpgradeBonus.testBonusInfo.effectsMapByTriggerType[PassiveTriggerType.DameByNormalAttack] == null ||
-                !testUpgradeBonus.testBonusInfo.effectsMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Contains(PassiveType.Burning)
+                testUpgradeBonus.testBonusInfo.passiveMapByTriggerType == null ||
+                !testUpgradeBonus.testBonusInfo.passiveMapByTriggerType.ContainsKey(PassiveTriggerType.DameByNormalAttack) ||
+                testUpgradeBonus.testBonusInfo.passiveMapByTriggerType[PassiveTriggerType.DameByNormalAttack] == null ||
+                !testUpgradeBonus.testBonusInfo.passiveMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Contains(PassiveType.Burning)
                     ? "Unlock Burning" : "Lock Burning");
             btnUnlockThunder.GetComponentInChildren<TextMeshProUGUI>().SetText(
-                testUpgradeBonus.testBonusInfo.effectsMapByTriggerType == null ||
-                !testUpgradeBonus.testBonusInfo.effectsMapByTriggerType.ContainsKey(PassiveTriggerType.DameByNormalAttack) ||
-                testUpgradeBonus.testBonusInfo.effectsMapByTriggerType[PassiveTriggerType.DameByNormalAttack] == null ||
-                !testUpgradeBonus.testBonusInfo.effectsMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Contains(PassiveType.Thunder)
+                testUpgradeBonus.testBonusInfo.passiveMapByTriggerType == null ||
+                !testUpgradeBonus.testBonusInfo.passiveMapByTriggerType.ContainsKey(PassiveTriggerType.DameByNormalAttack) ||
+                testUpgradeBonus.testBonusInfo.passiveMapByTriggerType[PassiveTriggerType.DameByNormalAttack] == null ||
+                !testUpgradeBonus.testBonusInfo.passiveMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Contains(PassiveType.Thunder)
                     ? "Unlock Thunder" : "Lock Thunder");
         }
 
         private void OnButtonExplosionClicked()
         {
-            testUpgradeBonus.testBonusInfo.effectsMapByTriggerType ??=
+            testUpgradeBonus.testBonusInfo.passiveMapByTriggerType ??=
                 new Dictionary<PassiveTriggerType, List<PassiveType>>();
             
-            testUpgradeBonus.testBonusInfo.effectsMapByTriggerType.TryAdd(PassiveTriggerType.DameByNormalAttack, new List<PassiveType>());
-            if (!testUpgradeBonus.testBonusInfo.effectsMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Contains(PassiveType.Explosion))
+            testUpgradeBonus.testBonusInfo.passiveMapByTriggerType.TryAdd(PassiveTriggerType.DameByNormalAttack, new List<PassiveType>());
+            if (!testUpgradeBonus.testBonusInfo.passiveMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Contains(PassiveType.Explosion))
             {
-                testUpgradeBonus.testBonusInfo.effectsMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Add(PassiveType.Explosion);
+                testUpgradeBonus.testBonusInfo.passiveMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Add(PassiveType.Explosion);
                 btnUnlockExplosion.GetComponentInChildren<TextMeshProUGUI>().SetText("Lock Explosion");
             }
             else
             {
-                testUpgradeBonus.testBonusInfo.effectsMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Remove(PassiveType.Explosion);
+                testUpgradeBonus.testBonusInfo.passiveMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Remove(PassiveType.Explosion);
                 btnUnlockExplosion.GetComponentInChildren<TextMeshProUGUI>().SetText("Unlock Explosion");
             }
             
@@ -82,18 +82,18 @@ namespace TestVfxInGame
 
         private void OnButtonLightningClicked()
         {
-            testUpgradeBonus.testBonusInfo.effectsMapByTriggerType ??=
+            testUpgradeBonus.testBonusInfo.passiveMapByTriggerType ??=
                 new Dictionary<PassiveTriggerType, List<PassiveType>>();
             
-            testUpgradeBonus.testBonusInfo.effectsMapByTriggerType.TryAdd(PassiveTriggerType.DameByNormalAttack, new List<PassiveType>());
-            if (!testUpgradeBonus.testBonusInfo.effectsMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Contains(PassiveType.Lightning))
+            testUpgradeBonus.testBonusInfo.passiveMapByTriggerType.TryAdd(PassiveTriggerType.DameByNormalAttack, new List<PassiveType>());
+            if (!testUpgradeBonus.testBonusInfo.passiveMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Contains(PassiveType.Lightning))
             {
-                testUpgradeBonus.testBonusInfo.effectsMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Add(PassiveType.Lightning);
+                testUpgradeBonus.testBonusInfo.passiveMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Add(PassiveType.Lightning);
                 btnUnlockLightning.GetComponentInChildren<TextMeshProUGUI>().SetText("Lock Lightning");
             }
             else
             {
-                testUpgradeBonus.testBonusInfo.effectsMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Remove(PassiveType.Lightning);
+                testUpgradeBonus.testBonusInfo.passiveMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Remove(PassiveType.Lightning);
                 btnUnlockLightning.GetComponentInChildren<TextMeshProUGUI>().SetText("Unlock Lightning");
             }
             
@@ -102,18 +102,18 @@ namespace TestVfxInGame
 
         private void OnButtonBurningClicked()
         {
-            testUpgradeBonus.testBonusInfo.effectsMapByTriggerType ??=
+            testUpgradeBonus.testBonusInfo.passiveMapByTriggerType ??=
                 new Dictionary<PassiveTriggerType, List<PassiveType>>();
             
-            testUpgradeBonus.testBonusInfo.effectsMapByTriggerType.TryAdd(PassiveTriggerType.DameByNormalAttack, new List<PassiveType>());
-            if (!testUpgradeBonus.testBonusInfo.effectsMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Contains(PassiveType.Burning))
+            testUpgradeBonus.testBonusInfo.passiveMapByTriggerType.TryAdd(PassiveTriggerType.DameByNormalAttack, new List<PassiveType>());
+            if (!testUpgradeBonus.testBonusInfo.passiveMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Contains(PassiveType.Burning))
             {
-                testUpgradeBonus.testBonusInfo.effectsMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Add(PassiveType.Burning);
+                testUpgradeBonus.testBonusInfo.passiveMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Add(PassiveType.Burning);
                 btnUnlockBurning.GetComponentInChildren<TextMeshProUGUI>().SetText("Lock Burning");
             }
             else
             {
-                testUpgradeBonus.testBonusInfo.effectsMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Remove(PassiveType.Burning);
+                testUpgradeBonus.testBonusInfo.passiveMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Remove(PassiveType.Burning);
                 btnUnlockBurning.GetComponentInChildren<TextMeshProUGUI>().SetText("Unlock Burning");
             }
             
@@ -122,18 +122,18 @@ namespace TestVfxInGame
 
         private void OnButtonThunderClicked()
         {
-            testUpgradeBonus.testBonusInfo.effectsMapByTriggerType ??=
+            testUpgradeBonus.testBonusInfo.passiveMapByTriggerType ??=
                 new Dictionary<PassiveTriggerType, List<PassiveType>>();
             
-            testUpgradeBonus.testBonusInfo.effectsMapByTriggerType.TryAdd(PassiveTriggerType.DameByNormalAttack, new List<PassiveType>());
-            if (!testUpgradeBonus.testBonusInfo.effectsMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Contains(PassiveType.Thunder))
+            testUpgradeBonus.testBonusInfo.passiveMapByTriggerType.TryAdd(PassiveTriggerType.DameByNormalAttack, new List<PassiveType>());
+            if (!testUpgradeBonus.testBonusInfo.passiveMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Contains(PassiveType.Thunder))
             {
-                testUpgradeBonus.testBonusInfo.effectsMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Add(PassiveType.Thunder);
+                testUpgradeBonus.testBonusInfo.passiveMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Add(PassiveType.Thunder);
                 btnUnlockThunder.GetComponentInChildren<TextMeshProUGUI>().SetText("Lock Thunder");
             }
             else
             {
-                testUpgradeBonus.testBonusInfo.effectsMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Remove(PassiveType.Thunder);
+                testUpgradeBonus.testBonusInfo.passiveMapByTriggerType[PassiveTriggerType.DameByNormalAttack].Remove(PassiveType.Thunder);
                 btnUnlockThunder.GetComponentInChildren<TextMeshProUGUI>().SetText("Unlock Thunder");
             }
             

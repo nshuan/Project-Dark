@@ -27,7 +27,7 @@ namespace InGame.UI.CombatSkills
 
         private void OnUpgradeBonusActivated(UpgradeBonusInfo bonusInfo)
         {
-            if (bonusInfo.effectsMapByTriggerType.TryGetValue(triggerType, out var effectTypes))
+            if (bonusInfo.passiveMapByTriggerType.TryGetValue(triggerType, out var effectTypes))
             {
                 if (effectTypes == null || effectIcons.Length == 0) return;
                 

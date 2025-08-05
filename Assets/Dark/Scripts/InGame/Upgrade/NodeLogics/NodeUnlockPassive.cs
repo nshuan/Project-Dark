@@ -13,11 +13,11 @@ namespace InGame.Upgrade
 	    
 	    public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)
 	    {
-		    if (!bonusInfo.effectsMapByTriggerType.ContainsKey(triggerType))
-			    bonusInfo.effectsMapByTriggerType.Add(triggerType, new List<PassiveType>());
+		    if (!bonusInfo.passiveMapByTriggerType.ContainsKey(triggerType))
+			    bonusInfo.passiveMapByTriggerType.Add(triggerType, new List<PassiveType>());
 		    
-		    if (!bonusInfo.effectsMapByTriggerType[triggerType].Contains(passiveType))
-			    bonusInfo.effectsMapByTriggerType[triggerType].Add(passiveType);
+		    if (!bonusInfo.passiveMapByTriggerType[triggerType].Contains(passiveType))
+			    bonusInfo.passiveMapByTriggerType[triggerType].Add(passiveType);
 	    }
 
 	    public string GetDescription(int level)

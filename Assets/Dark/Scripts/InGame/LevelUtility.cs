@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace InGame
@@ -114,5 +115,49 @@ namespace InGame
         {
             return baseStagger * (1 + BonusInfo.skillBonus.staggerMultiply);
         }
+
+        #region Passive
+
+        public static float GetPassiveCooldown(PassiveType passiveType, float baseCooldown)
+        {
+            if (BonusInfo.passiveBonusCooldownMapByType == null) return baseCooldown;
+            if (BonusInfo.passiveBonusCooldownMapByType.TryGetValue(passiveType, out var bonus))
+                return Mathf.Max(baseCooldown - bonus, 0f);
+            return baseCooldown;
+        }
+
+        public static float GetPassiveChance(PassiveType passiveType, float baseChance)
+        {
+            if (BonusInfo.passiveBonusChanceMapByType == null) return baseChance;
+            if (BonusInfo.passiveBonusChanceMapByType.TryGetValue(passiveType, out var bonus))
+                return Mathf.Min(baseChance + bonus, 1f);
+            return baseChance;
+        }
+
+        public static float GetPassiveSize(PassiveType passiveType, float baseSize)
+        {
+            if (BonusInfo.passiveBonusSizeMapByType == null) return baseSize;
+            if (BonusInfo.passiveBonusSizeMapByType.TryGetValue(passiveType, out var bonus))
+                return baseSize + bonus;
+            return baseSize;
+        }
+
+        public static float GetPassiveValue(PassiveType passiveType, float baseValue)
+        {
+            if (BonusInfo.passiveBonusValueMapByType == null) return baseValue;
+            if (BonusInfo.passiveBonusValueMapByType.TryGetValue(passiveType, out var bonus))
+                return baseValue + bonus;
+            return baseValue;
+        }
+
+        public static float GetPassiveStagger(PassiveType passiveType, float baseStagger)
+        {
+            if (BonusInfo.passiveBonusStaggerMapByType == null) return baseStagger;
+            if (BonusInfo.passiveBonusStaggerMapByType.TryGetValue(passiveType, out var bonus))
+                return baseStagger + bonus;
+            return baseStagger;
+        }
+
+        #endregion
     }
 }

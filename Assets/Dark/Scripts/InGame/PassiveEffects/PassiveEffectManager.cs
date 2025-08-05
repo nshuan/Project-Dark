@@ -46,7 +46,7 @@ namespace InGame
                 { PassiveTriggerType.TowerTakeDame , new List<PassiveType>() }
             };
             
-            foreach (var pair in bonusInfo.effectsMapByTriggerType)
+            foreach (var pair in bonusInfo.passiveMapByTriggerType)
             {
                 foreach (var effect in pair.Value)
                 {
@@ -69,7 +69,11 @@ namespace InGame
                 if (Random.Range(0f, 1f) <= effectConfig.chance)
                 {
                     pool.Get(effectConfig.passivePrefab, effectConfig.effectId, null, true)
-                        .TriggerEffect(effectConfig.effectId, target, effectConfig.size, effectConfig.value, effectConfig.stagger, pool);
+                        .TriggerEffect(effectConfig.effectId, target, 
+                            LevelUtility.GetPassiveSize(effectConfig.logicType, effectConfig.size), 
+                            LevelUtility.GetPassiveValue(effectConfig.logicType, effectConfig.value), 
+                            LevelUtility.GetPassiveStagger(effectConfig.logicType, effectConfig.stagger), 
+                            pool);
 
                     cooldownEffectMap[triggerType][effectConfig.logicType] = true;
                     StartCoroutine(IECooldown(effectConfig.cooldown, () => cooldownEffectMap[triggerType][effectConfig.logicType] = false));
