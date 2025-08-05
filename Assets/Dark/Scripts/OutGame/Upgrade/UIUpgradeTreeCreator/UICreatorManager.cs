@@ -365,10 +365,10 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             var direction = new Vector2();
             foreach (var childNode in nodeChildMap[nodeId])
             {
-                from.x = nodesMap[nodeId].transform.position.x;
-                from.y = nodesMap[nodeId].transform.position.y;
-                to.x = childNode.transform.position.x;
-                to.y = childNode.transform.position.y;
+                from.x = nodesMap[nodeId].transform.localPosition.x;
+                from.y = nodesMap[nodeId].transform.localPosition.y;
+                to.x = childNode.transform.localPosition.x;
+                to.y = childNode.transform.localPosition.y;
                 direction.x = to.x - from.x;
                 direction.y = to.y - from.y;
                 if (direction.magnitude > 0.05f)
@@ -376,7 +376,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                     direction = direction / direction.magnitude;
                     from = from + direction * nodesMap[nodeId].lineAnchorOffsetRadius;
                     to = to - direction * childNode.lineAnchorOffsetRadius;
-                    linesMap[nodeId][childNode.config.nodeId].position = (from + to) / 2;
+                    linesMap[nodeId][childNode.config.nodeId].localPosition = (from + to) / 2;
                     linesMap[nodeId][childNode.config.nodeId].sizeDelta = new Vector2(Vector2.Distance(from, to), 8f);
                     linesMap[nodeId][childNode.config.nodeId].rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
                 }
@@ -384,10 +384,10 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
 
             foreach (var parentNode in nodeParentMap[nodeId])
             {
-                from.x = parentNode.transform.position.x;
-                from.y = parentNode.transform.position.y;
-                to.x = nodesMap[nodeId].transform.position.x;
-                to.y = nodesMap[nodeId].transform.position.y;
+                from.x = parentNode.transform.localPosition.x;
+                from.y = parentNode.transform.localPosition.y;
+                to.x = nodesMap[nodeId].transform.localPosition.x;
+                to.y = nodesMap[nodeId].transform.localPosition.y;
                 direction.x = to.x - from.x;
                 direction.y = to.y - from.y;
                 if (direction.magnitude > 0.05f)
@@ -395,7 +395,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                     direction = direction / direction.magnitude;
                     from = from + direction * parentNode.lineAnchorOffsetRadius;
                     to = to - direction * nodesMap[nodeId].lineAnchorOffsetRadius;
-                    linesMap[parentNode.config.nodeId][nodeId].position = (from + to) / 2;
+                    linesMap[parentNode.config.nodeId][nodeId].localPosition = (from + to) / 2;
                     linesMap[parentNode.config.nodeId][nodeId].sizeDelta = new Vector2(Vector2.Distance(from, to), 8f);
                     linesMap[parentNode.config.nodeId][nodeId].rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
                 }
