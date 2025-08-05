@@ -16,41 +16,17 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private TextMeshProUGUI txtNodeLevel;
         [SerializeField] private TextMeshProUGUI txtNodePrice;
         [SerializeField] private TextMeshProUGUI[] txtNodeBonus;
-        [SerializeField] private Button btnUpgrade;
 
         public bool CanAutoShowHide { get; set; } = true;
         private UpgradeNodeData cacheData;
         private UpgradeNodeConfig cacheConfig;
-        
-        private Action OnUpgradeSuccessCallback { get; set; }
-        private Action OnUpgradeFailedCallback { get; set; }
 
-        private void Start()
-        {
-            btnUpgrade.onClick.RemoveAllListeners();
-            btnUpgrade.onClick.AddListener(() =>
-            {
-                if (cacheConfig.preRequire.Select((node) => node.nodeId)
-                    .Any((id) => UpgradeManager.Instance.GetData(id) == null || UpgradeManager.Instance.GetData(id).level == 0))
-                    return;
-                var success = UpgradeManager.Instance.UpgradeNode(cacheConfig.nodeId);
-                if (success)
-                    OnUpgradeSuccessCallback?.Invoke();
-                else
-                    OnUpgradeFailedCallback?.Invoke();
-                
-                UpdateUI();
-            });
-        }
-
-        public void Setup(UpgradeNodeConfig config, bool forceUpdate, Action onUpgradeSuccessCallback, Action onUpgradeFailedCallback)
+        public void Setup(UpgradeNodeConfig config, bool forceUpdate)
         {
             if (CanAutoShowHide == false && forceUpdate == false) return;
             
             cacheConfig = config;
             cacheData = UpgradeManager.Instance.GetData(config.nodeId);
-            OnUpgradeSuccessCallback = onUpgradeSuccessCallback;
-            OnUpgradeFailedCallback = onUpgradeFailedCallback;
             UpdateUI();
         }
 
