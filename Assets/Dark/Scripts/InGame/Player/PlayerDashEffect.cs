@@ -6,8 +6,10 @@ namespace InGame
     {
         [SerializeField] private GameObject vfxDash;
         [SerializeField] private ParticleSystem vfxDashEnd;
-        
-        
+        [SerializeField] private ParticleSystem vfxDashStart;
+
+
+
         public void PLayStart(Vector2 direction)
         {
             // Calculate angle in degrees
@@ -16,7 +18,10 @@ namespace InGame
             // Apply rotation around Z axis
             vfxDash.transform.rotation = Quaternion.Euler(0f, 0f, angle);
             vfxDashEnd.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+            vfxDashStart.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+
             vfxDash.SetActive(true);
+            vfxDashStart.Play();
         }
 
         public void PLayEnd()
