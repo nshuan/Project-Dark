@@ -65,12 +65,17 @@ namespace InGame
 
         public (float, float) PlayAttack()
         {
+            // CurrentAnim = directionInfo[currentDirection].attackAnim;
+            // currentFrame = 0;
+            // spriteRenderer.sprite = CurrentAnim.data.frames[0];
+            // timer = 0f;
+            // return (CurrentAnim.frameRate * directionInfo[currentDirection].attackAnim.strikeFrameIndex,
+            //     CurrentAnim.frameRate * CurrentAnim.data.frames.Length);
             CurrentAnim = directionInfo[currentDirection].attackAnim;
-            currentFrame = 0;
-            spriteRenderer.sprite = CurrentAnim.data.frames[0];
+            currentFrame = directionInfo[currentDirection].attackAnim.strikeFrameIndex;
+            spriteRenderer.sprite = CurrentAnim.data.frames[currentFrame];
             timer = 0f;
-            return (CurrentAnim.frameRate * directionInfo[currentDirection].attackAnim.strikeFrameIndex,
-                CurrentAnim.frameRate * CurrentAnim.data.frames.Length);
+            return (CurrentAnim.frameRate, CurrentAnim.frameRate * (CurrentAnim.data.frames.Length - currentFrame));
         }
         
         public float PlayCharge()
