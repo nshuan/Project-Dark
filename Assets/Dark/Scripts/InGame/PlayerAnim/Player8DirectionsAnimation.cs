@@ -118,14 +118,14 @@ namespace InGame
                         var showChargeLower = directionInfo[currentDirection].showChargeFxLower;
                         if (showChargeLower && chargeFxLower)
                         {
-                            chargeFxLower.position = directionInfo[currentDirection].chargeFxPosition;
+                            chargeFxLower.localPosition = directionInfo[currentDirection].chargeFxPosition;
                             if (currentFrame >= CurrentAnim.data.frames.Length - 1)
                                 chargeFxLower.gameObject.SetActive(true);
                             chargeFxUpper?.gameObject.SetActive(false);
                         }
                         else if (!showChargeLower && chargeFxUpper)
                         {
-                            chargeFxUpper.position = directionInfo[currentDirection].chargeFxPosition;
+                            chargeFxUpper.localPosition = directionInfo[currentDirection].chargeFxPosition;
                             if (currentFrame >= CurrentAnim.data.frames.Length - 1)
                                 chargeFxUpper.gameObject.SetActive(true);
                             chargeFxLower?.gameObject.SetActive(false);
