@@ -16,7 +16,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         
         [Space]
         [Header("Prefabs mapped by ID")]
-        [OdinSerialize, NonSerialized] private Dictionary<NodeType, GameObject> nodePrefabs;
+        [OdinSerialize, NonSerialized] private Dictionary<NodeType, List<GameObject>> nodePrefabsMap;
 
         [Space] [Header("Information")] 
         [SerializeField] private string treeJsonFilename;
@@ -48,13 +48,19 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
     
             foreach (var node in treeData.nodes)
             {
-                if (!nodePrefabs.TryGetValue((NodeType)node.idPrefab, out var prefab))
+                if (!nodePrefabsMap.TryGetValue((NodeType)node.idType, out var prefabList))
                 {
                     Debug.LogWarning($"Missing prefab for idPrefab: {node.idPrefab}, skipping.");
                     continue;
                 }
+
+                if (node.idPrefab < 0 || node.idPrefab >= prefabList.Count)
+                {
+                    Debug.LogWarning($"Invalid idPrefab: {node.idPrefab}, skipping.");
+                    continue;
+                }
     
-                GameObject go = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+                GameObject go = (GameObject)PrefabUtility.InstantiatePrefab(prefabList[node.idPrefab]);
                 go.transform.SetParent(root.transform.Find("Nodes"));
                 go.transform.localPosition = node.position;
                 go.GetComponent<UIUpgradeNode>().config = configLoader.GetNodeConfig(node.id);

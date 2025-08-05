@@ -56,6 +56,13 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         [SerializeField] private Button[] btnToggleNodes;
         [SerializeField] private Transform[] nodeButtonGroups;
         [OdinSerialize, NonSerialized] private Dictionary<NodeType, List<NodeButtonInfo>> btnInfo;
+
+        [Space] [Header("Create and Load tree")] 
+        [SerializeField] private GameObject groupBtnLoadTree;
+        [SerializeField] private Button btnToggleLoadTree;
+        [SerializeField] private Button btnCloseLoadTree;
+        [SerializeField] private Button btnLoadTree;
+        [SerializeField] private TMP_InputField inputTreeNameToLoad;
         
         [Space]
         [Header("Tree Visual")]
@@ -95,7 +102,16 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                     var info = infoList[i];
                     var pIndex = i;
                     info.button.onClick.RemoveAllListeners();
-                    info.button.onClick.AddListener(() => CreateNewNode(nodeType, pIndex));
+                    info.button.onClick.AddListener(() =>
+                    {
+                        if (!int.TryParse(input.text, out var id))
+                        {
+                            DebugUtility.LogError("Id is invalid!");
+                            return;
+                        }
+                        
+                        CreateNewNode(nodeType, pIndex, id);
+                    });
                 }
             }
             
@@ -105,6 +121,13 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             btnDeleteNode.onClick.AddListener(DeleteNode);
             btnChangeMode.onClick.RemoveAllListeners();
             btnChangeMode.onClick.AddListener(ChangeMode);
+            
+            btnToggleLoadTree.onClick.RemoveAllListeners();
+            btnToggleLoadTree.onClick.AddListener(() => groupBtnLoadTree.SetActive(true));
+            btnCloseLoadTree.onClick.RemoveAllListeners();
+            btnCloseLoadTree.onClick.AddListener(() => groupBtnLoadTree.SetActive(false));
+            btnLoadTree.onClick.RemoveAllListeners();
+            btnLoadTree.onClick.AddListener(LoadTree);
         }
 
         public void ToggleNodeGroup(int index)
@@ -122,6 +145,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
 
         public void CreateNewTree()
         {
+            groupBtnLoadTree.SetActive(false);
             HideAllNodeGroup();
             UICreatorNodeInfoPreview.Instance.Hide();
             // Destroy all nodes
@@ -159,7 +183,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             selectingNode = null;
         }
 
-        public void CreateNewNode(NodeType nodeType, int prefabIndex)
+        public void CreateNewNode(NodeType nodeType, int prefabIndex, int id)
         {
             HideAllNodeGroup();
             UICreatorNodeInfoPreview.Instance.Hide();
@@ -169,17 +193,13 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 return;
             }
 
-            if (!int.TryParse(input.text, out var id))
-            {
-                DebugUtility.LogError("Id is invalid!");
-                return;
-            }
-
             var nodeConfig = configLoader.GetNodeConfig(id);
             if (nodeConfig == null)
             {
+#if UNITY_EDITOR
                 configLoader.GetConfigsFromPath();
                 nodeConfig = configLoader.GetNodeConfig(id);
+#endif
                 if (nodeConfig == null)
                 {
                     DebugUtility.LogError("Config not found!");
@@ -500,6 +520,40 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         }
 
         #endregion
+
+        #region Load from saved JSON
+
+        public void LoadTree()
+        {
+            var name = inputTreeNameToLoad.text;
+            if (string.IsNullOrEmpty(name))
+            {
+                Debug.LogError("Tree name can not be empty!");
+                return;
+            }
+
+            if (!jsonConverter.Exist(name))
+            {
+                Debug.LogError($"No tree with name {name}!");
+                return;
+            }
+            
+            CreateNewTree();
+            newTree = jsonConverter.LoadJson(name);
+
+            foreach (var nodeData in newTree.nodes)
+            {
+                CreateNewNode((NodeType)nodeData.idType, nodeData.idPrefab, nodeData.id);
+                nodesMap[nodeData.id].transform.localPosition = nodeData.position;
+            }
+
+            foreach (var nodeData in newTree.nodes)
+            {
+                UpdateLine(nodeData.id);
+            }
+        }
+        
+        #endregion
         
         #region Data
 
@@ -528,8 +582,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 newTree.nodes.Add(new NodeDataStruct()
                 {
                     id = pair.Key,
-                    idType = pair.Value.PrefabIndex,
-                    idPrefab = (int)pair.Value.CreatorNodeType,
+                    idType = (int)pair.Value.CreatorNodeType,
+                    idPrefab = pair.Value.PrefabIndex,
                     position = pair.Value.transform.localPosition,
                 });
             }

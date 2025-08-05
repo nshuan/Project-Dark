@@ -12,5 +12,18 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             File.WriteAllText(path, json);
             Debug.Log("Saved to: " + path);
         }
+
+        public TreeDataStruct LoadJson(string treeName)
+        {
+            var path = Application.dataPath + "/Dark/JSON/" + treeName + ".json";
+            var json = File.ReadAllText(path);
+            return JsonUtility.FromJson<TreeDataStruct>(json);
+        }
+
+        public bool Exist(string treeName)
+        {
+            var path = Application.dataPath + "/Dark/JSON/" + treeName + ".json";
+            return File.Exists(path);
+        }
     }
 }
