@@ -543,7 +543,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
 
             foreach (var nodeData in newTree.nodes)
             {
-                CreateNewNode((NodeType)nodeData.idType, nodeData.idPrefab, nodeData.id);
+                CreateNewNode((NodeType)nodeData.idPrefab, nodeData.idType, nodeData.id);
                 nodesMap[nodeData.id].transform.localPosition = nodeData.position;
             }
 
