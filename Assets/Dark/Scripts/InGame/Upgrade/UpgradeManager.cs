@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Core;
+using Dark.Scripts.OutGame.Upgrade;
 using Data;
 using Economic;
-using InGame.ConfigManager;
-using InGame.Upgrade.UIDummy;
 using UnityEngine;
 
 namespace InGame.Upgrade
@@ -36,7 +35,7 @@ namespace InGame.Upgrade
 
         private void InitData()
         {
-            data = DataHandler.Load<UpgradeData>(DataKey, new UpgradeData(TreeConfig.nodeMapById));
+            data = DataHandler.Load<UpgradeData>(DataKey, new UpgradeData());
 #if UNITY_EDITOR
             // data = new UpgradeData(TreeConfig.nodeMapById);
 #endif
@@ -60,17 +59,15 @@ namespace InGame.Upgrade
         #endregion
 
         #region Config
+        
+        private UpgradeTreeConfig treeConfig;
 
-        private const string UpgradeTreeConfigPath = "DummyUpgradeTreeConfig";
-
-        private DummyUpgradeTreeConfig treeConfig;
-
-        public DummyUpgradeTreeConfig TreeConfig
+        public UpgradeTreeConfig TreeConfig
         {
             get
             {
                 if (treeConfig == null) 
-                    treeConfig = Resources.Load<DummyUpgradeTreeConfig>(UpgradeTreeConfigPath);
+                    treeConfig = UpgradeTreeManifest.Instance.GetTreeConfig(CharacterClass.CharacterClass.Archer);
                 return treeConfig;
             }
         }
@@ -107,19 +104,22 @@ namespace InGame.Upgrade
                 data.nodes.Add(newNodeData);
                 dataMapById.Add(nodeId, newNodeData);
             }
+
+            if (TreeConfig.GetNodeById(nodeId) == null) return false;
+            var nodeConfig = TreeConfig.GetNodeById(nodeId);
             
-            if (dataMapById[nodeId].level >= treeConfig.nodeMapById[nodeId].levelNum) return false;
+            if (dataMapById[nodeId].level >= nodeConfig.levelNum) return false;
 
             var currentLevel = dataMapById[nodeId].level;
-            var costInfo = treeConfig.nodeMapById[nodeId].costInfo;
+            var costInfo = nodeConfig.costInfo;
             if (costInfo.Any((cost) =>
                     WealthManager.Instance.CanSpend(cost.costType, cost.costValue[currentLevel]) == false))
             {
-                DebugUtility.LogWarning($"Upgrade node {treeConfig.nodeMapById[nodeId].nodeName} failed: Not enough resource!");
+                DebugUtility.LogWarning($"Upgrade node {nodeConfig.nodeName} failed: Not enough resource!");
                 return false;
             }
             
-            foreach (var cost in treeConfig.nodeMapById[nodeId].costInfo)
+            foreach (var cost in nodeConfig.costInfo)
             {
                 WealthManager.Instance.Spend(cost.costType, cost.costValue[currentLevel]);    
             }
@@ -147,17 +147,9 @@ namespace InGame.Upgrade
     {
         public List<UpgradeNodeData> nodes;
 
-        public UpgradeData(Dictionary<int, UpgradeNodeConfig> nodeMap)
+        public UpgradeData()
         {
             nodes = new List<UpgradeNodeData>();
-            // foreach (var pair in nodeMap)
-            // {
-            //     nodes.Add(new UpgradeNodeData()
-            //     {
-            //         id = pair.Key,
-            //         level = 0
-            //     });
-            // }
         }
     }
 

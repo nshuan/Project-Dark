@@ -18,6 +18,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [Header("UI")]
         [SerializeField] private UIUpgradeNodeHoverField hoverField;
         [SerializeField] private GameObject imgActivatedGlow;
+        [SerializeField] private GameObject imgActivatedMaxGlow;
         [SerializeField] private GameObject imgAvailable;
         [SerializeField] private GameObject imgLock;
         public float lineAnchorOffsetRadius;
@@ -25,8 +26,6 @@ namespace Dark.Scripts.OutGame.Upgrade
         private void OnEnable()
         {
             UpdateUI();
-            
-            DeselectThis();
         }
 
         public void UpdateUI()
@@ -39,65 +38,53 @@ namespace Dark.Scripts.OutGame.Upgrade
                 {
                     imgAvailable.SetActive(true);
                     imgLock.SetActive(false);
+                    imgActivatedGlow.SetActive(false);
+                    imgActivatedMaxGlow.SetActive(false);
                 }
                 else
                 {
                     imgAvailable.SetActive(false);
                     imgLock.SetActive(true);
+                    imgActivatedGlow.SetActive(false);
+                    imgActivatedMaxGlow.SetActive(false);
                 }
             }
             else // Activated
             {
                 imgAvailable.SetActive(true);
                 imgLock.SetActive(false);
+                imgActivatedGlow.SetActive(data.level < config.levelNum);
+                imgActivatedMaxGlow.SetActive(data.level >= config.levelNum);
             }
-            
-            imgActivatedGlow.SetActive(false);
             
             hoverField.onHover = () =>
             {
-                UIUpgradeNodeInfoPreview.Instance.Setup(config, false, null, null);
+                UIUpgradeNodeInfoPreview.Instance.Setup(config, false);
                 UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(lineAnchorOffsetRadius, 0f), false);
             };
             hoverField.onHoverExit = () => UIUpgradeNodeInfoPreview.Instance.Hide(false);
             hoverField.onPointerClick = () =>
             {
-                treeRef.SelectNode(this);
-                UIUpgradeNodeInfoPreview.Instance.Setup(config, true, () =>
+                // treeRef.SelectNode(this);
+                if (config.preRequire == null || config.preRequire.Select((node) => node.nodeId)
+                    .Any((id) => UpgradeManager.Instance.GetData(id) == null || UpgradeManager.Instance.GetData(id).level == 0))
+                    return;
+                
+                var success = UpgradeManager.Instance.UpgradeNode(config.nodeId);
+                if (success)
                 {
-                    // TODO on success
-                }, () =>
+                    UIUpgradeNodeInfoPreview.Instance.Setup(config, true);
+                    UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(lineAnchorOffsetRadius, 0f), true);
+                    UpdateUI();
+                    treeRef.UpdateChildren(config.nodeId);
+                }
+                else
                 {
-                    // TODO on failed
-                });
-                UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(lineAnchorOffsetRadius, 0f), true);
+                    // TODO not success
+                }
             };
         }
 
-        public void SelectThis()
-        {
-            imgActivatedGlow.SetActive(true);
-            if (preRequireLines is { Count: > 0 })
-            {
-                foreach (var preRequireLine in preRequireLines)
-                {
-                    preRequireLine.line.UpdateLineState(UIUpgradeNodeState.Activated);
-                }
-            }
-        }
-
-        public void DeselectThis()
-        {
-            imgActivatedGlow.SetActive(false);
-            if (preRequireLines is { Count: > 0 })
-            {
-                foreach (var preRequireLine in preRequireLines)
-                {
-                    preRequireLine.line.UpdateLineState(UIUpgradeNodeState.Available);
-                }
-            }
-        }
-        
         private void OnDrawGizmos()
         {
             Gizmos.DrawWireSphere(transform.position, lineAnchorOffsetRadius);

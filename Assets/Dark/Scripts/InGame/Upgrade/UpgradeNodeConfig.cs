@@ -1,14 +1,13 @@
 using System;
 using System.Linq;
 using Economic;
-using InGame.Upgrade.UI;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
 
 namespace InGame.Upgrade
 {
-    [CreateAssetMenu(menuName = "InGame/Upgrade/Node Config", fileName = "NodeConfig")]
+    [CreateAssetMenu(menuName = "Dark/Upgrade/Upgrade Node Config", fileName = "UpgradeNodeConfig")]
     public class UpgradeNodeConfig : SerializedScriptableObject
     {
         public int nodeId;
@@ -17,7 +16,6 @@ namespace InGame.Upgrade
         public string description; // Description to display
         public UpgradeNodeCostInfo[] costInfo; 
         public int levelNum = 1;
-        public UIUpgradeNode nodePrefab;
         [NonSerialized, OdinSerialize] public INodeActivateLogic[] nodeLogic;
         
         public UpgradeNodeState State { get; set; }
