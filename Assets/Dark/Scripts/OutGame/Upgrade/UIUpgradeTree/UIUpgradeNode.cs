@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using InGame.Upgrade;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -17,6 +18,8 @@ namespace Dark.Scripts.OutGame.Upgrade
         [Space]
         [Header("UI")]
         [SerializeField] private UIUpgradeNodeHoverField hoverField;
+
+        [SerializeField] private Transform imgBorder;
         [SerializeField] private GameObject imgActivatedGlow;
         [SerializeField] private GameObject imgActivatedMaxGlow;
         [SerializeField] private GameObject imgAvailable;
@@ -94,6 +97,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     UIUpgradeNodeInfoPreview.Instance.Setup(config, true);
                     UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(lineAnchorOffsetRadius, 0f), true);
                     UpdateUI();
+                    DoUpgrade().Play();
                     treeRef.UpdateChildren(config.nodeId);
                 }
                 else
@@ -101,6 +105,15 @@ namespace Dark.Scripts.OutGame.Upgrade
                     // TODO not success
                 }
             };
+        }
+
+        private Tween DoUpgrade()
+        {
+            DOTween.Complete(this);
+            return DOTween.Sequence(this)
+                .Append(imgBorder.DOLocalRotate(new Vector3(0f, 0f, 180f), 0.4f).SetRelative())
+                .Join(imgBorder.DOScale(1.2f, 0.4f).SetEase(Ease.OutQuad))
+                .Append(imgBorder.DOScale(1f, 0.2f).SetEase(Ease.InQuad));
         }
 
         private void OnDrawGizmos()

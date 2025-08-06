@@ -16,6 +16,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         public float zoomSpeed = 0.1f;
         public float minScale = 0.5f;
         public float maxScale = 1.2f;
+        public float defaultScale = 0.5f;
 
         private bool activateKeyHolding = false;
 
@@ -26,6 +27,11 @@ namespace Dark.Scripts.OutGame.Upgrade
                 btnResetZoom.onClick.RemoveAllListeners();
                 btnResetZoom.onClick.AddListener(ResetZoom);
             }
+        }
+
+        private void Start()
+        {
+            targetRect.localScale = Vector3.one * defaultScale;
         }
 
         private void Update()
