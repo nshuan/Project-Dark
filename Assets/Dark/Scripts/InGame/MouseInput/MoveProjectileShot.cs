@@ -27,7 +27,7 @@ namespace InGame
         private int maxBulletAdd;
         private float bulletAddInterval;
         private float bulletAddTimer;
-        
+        private bool isChargeBulletMax;
 
         private bool canChargeDame;
         private bool isChargingDame;
@@ -146,7 +146,7 @@ namespace InGame
             
             // Do cursor effect
             cursor.UpdateBulletAdd(false);
-            cursor.UpdateCooldown(0f);
+            cursor.UpdateCooldown(false, 0f);
             DOTween.Complete(this);
             var seq = DOTween.Sequence(this);
             seq.Append(cursor.transform.DOPunchScale(0.3f * Vector3.one, 0.13f).SetEase(Ease.InQuad))
@@ -177,6 +177,7 @@ namespace InGame
         public void OnHoldReleased()
         {
             isChargingBullet = false;
+            isChargeBulletMax = false;
             isChargingDame = false;
             isChargingSize = false;
             isChargingRange = false;
@@ -233,16 +234,25 @@ namespace InGame
                         {
                             bulletAddTimer -= Time.deltaTime;
                             // Update UI
-                            cursor.UpdateCooldown(Mathf.Clamp(bulletAddTimer / bulletAddInterval, 0f, 1f));
+                            cursor.UpdateCooldown(true, 1 - Mathf.Clamp(bulletAddTimer / bulletAddInterval, 0f, 1f));
                         }
                         else if (bulletAdd < maxBulletAdd)
                         {
                             bulletAdd += 1;
                             bulletAddTimer = bulletAddInterval;
+                            cursor.UpdateBulletAdd(true, bulletAdd);
+                            cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f).SetEase(Ease.InQuad)
+                                .OnComplete(() => cursor.UpdateCooldown(true, 0f));
                         }
-                    
-                        // Update UI
-                        cursor.UpdateBulletAdd(true, bulletAdd);
+                        else if (bulletAdd == maxBulletAdd)
+                        {
+                            if (!isChargeBulletMax)
+                            {
+                                cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f).SetEase(Ease.InQuad);
+                                isChargeBulletMax = true;
+                            }
+                            cursor.UpdateMax();
+                        }
                     }
                     else
                     {

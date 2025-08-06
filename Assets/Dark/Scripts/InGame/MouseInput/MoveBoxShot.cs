@@ -50,7 +50,7 @@ namespace InGame
                     CanShoot = true;
                 
                 // Update UI
-                cursor.UpdateCooldown(Mathf.Clamp(cdCounter / Cooldown, 0f, 1f));
+                cursor.UpdateCooldown(true, Mathf.Clamp(cdCounter / Cooldown, 0f, 1f));
             }
         }
 
