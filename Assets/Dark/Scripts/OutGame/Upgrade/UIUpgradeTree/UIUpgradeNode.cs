@@ -40,6 +40,11 @@ namespace Dark.Scripts.OutGame.Upgrade
                     imgLock.SetActive(false);
                     imgActivatedGlow.SetActive(false);
                     imgActivatedMaxGlow.SetActive(false);
+
+                    foreach (var lineInfo in preRequireLines)
+                    {
+                        lineInfo.line.UpdateLineState(UIUpgradeNodeState.Available);
+                    }
                 }
                 else
                 {
@@ -47,6 +52,14 @@ namespace Dark.Scripts.OutGame.Upgrade
                     imgLock.SetActive(true);
                     imgActivatedGlow.SetActive(false);
                     imgActivatedMaxGlow.SetActive(false);
+                    
+                    foreach (var lineInfo in preRequireLines)
+                    {
+                        lineInfo.line.UpdateLineState(
+                            UpgradeManager.Instance.GetData(lineInfo.preRequireId) == null
+                            ? UIUpgradeNodeState.Locked
+                            : UIUpgradeNodeState.Available);
+                    }
                 }
             }
             else // Activated
@@ -55,6 +68,11 @@ namespace Dark.Scripts.OutGame.Upgrade
                 imgLock.SetActive(false);
                 imgActivatedGlow.SetActive(data.level < config.levelNum);
                 imgActivatedMaxGlow.SetActive(data.level >= config.levelNum);
+                
+                foreach (var lineInfo in preRequireLines)
+                {
+                    lineInfo.line.UpdateLineState(UIUpgradeNodeState.Activated);
+                }
             }
             
             hoverField.onHover = () =>

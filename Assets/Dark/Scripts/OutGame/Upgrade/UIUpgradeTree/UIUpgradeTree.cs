@@ -72,7 +72,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                 foreach (var preRequireConfig in node.config.preRequire)
                 {
                     var preRequireNode = GetNodeById(preRequireConfig.nodeId);
-                    if (preRequireNode == null) continue;
+                    if (!preRequireNode) continue;
                     node.preRequireLines.Add(new UIUpgradeLineInfo()
                     {
                         preRequireId = preRequireConfig.nodeId,
