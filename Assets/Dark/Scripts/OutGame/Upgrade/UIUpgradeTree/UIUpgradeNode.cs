@@ -66,7 +66,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             hoverField.onPointerClick = () =>
             {
                 // treeRef.SelectNode(this);
-                if (config.preRequire.Select((node) => node.nodeId)
+                if (config.preRequire == null || config.preRequire.Select((node) => node.nodeId)
                     .Any((id) => UpgradeManager.Instance.GetData(id) == null || UpgradeManager.Instance.GetData(id).level == 0))
                     return;
                 
@@ -75,6 +75,8 @@ namespace Dark.Scripts.OutGame.Upgrade
                 {
                     UIUpgradeNodeInfoPreview.Instance.Setup(config, true);
                     UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(lineAnchorOffsetRadius, 0f), true);
+                    UpdateUI();
+                    treeRef.UpdateChildren(config.nodeId);
                 }
                 else
                 {

@@ -14,6 +14,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private Transform linePrefab;
 
         [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, UIUpgradeNode> nodesMap;
+        [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, List<UIUpgradeNode>> nodeChildrenMap;
 
         [Space] [Header("UI")] 
         [SerializeField] private Button btnDeselectAll;
@@ -21,6 +22,17 @@ namespace Dark.Scripts.OutGame.Upgrade
         public UIUpgradeNode GetNodeById(int id)
         {
             return nodesMap.GetValueOrDefault(id);
+        }
+
+        public void UpdateChildren(int id)
+        {
+            if (nodeChildrenMap.TryGetValue(id, out var children))
+            {
+                foreach (var childNode in children)
+                {
+                    childNode.UpdateUI();
+                }
+            }
         }
 
         private void Awake()
@@ -48,6 +60,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             }
             
             nodesMap = new Dictionary<int, UIUpgradeNode>();
+            nodeChildrenMap = new Dictionary<int, List<UIUpgradeNode>>();
             var nodes = GetComponentsInChildren<UIUpgradeNode>();
             foreach (var node in nodes)
             {
@@ -65,6 +78,11 @@ namespace Dark.Scripts.OutGame.Upgrade
                         preRequireId = preRequireConfig.nodeId,
                         line = ShowPreRequiredLine(node.transform.position, node.lineAnchorOffsetRadius, preRequireNode.transform.position, preRequireNode.lineAnchorOffsetRadius)
                     });
+                    
+                    // Add child map
+                    nodeChildrenMap.TryAdd(preRequireConfig.nodeId, new List<UIUpgradeNode>());
+                    if (!nodeChildrenMap[preRequireConfig.nodeId].Contains(node))
+                        nodeChildrenMap[preRequireConfig.nodeId].Add(node);
                 }
                 
                 EditorUtility.SetDirty(node);
