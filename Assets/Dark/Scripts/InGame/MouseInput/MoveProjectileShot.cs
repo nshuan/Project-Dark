@@ -149,8 +149,8 @@ namespace InGame
             cursor.UpdateCooldown(0f);
             DOTween.Complete(this);
             var seq = DOTween.Sequence(this);
-            seq.Append(cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f))
-                .Join(cursor.transform.DOShakeRotation(0.13f, new Vector3(0f, 0f, 10f)));
+            seq.Append(cursor.transform.DOPunchScale(0.3f * Vector3.one, 0.13f).SetEase(Ease.InQuad))
+                 .Join(cursor.visual.DOFade(0.3f, 0.13f).SetEase(Ease.InQuad).SetLoops(2,LoopType.Yoyo));
             seq.Play();
         }
 

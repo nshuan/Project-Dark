@@ -7,6 +7,7 @@ namespace InGame
 {
     public class MonoCursor : MonoBehaviour
     {
+        public Image visual;
         [SerializeField] private Image cooldown;
         [SerializeField] private TextMeshProUGUI txtChargeBulletAdd;
 
