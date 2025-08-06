@@ -21,8 +21,11 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         private void Awake()
         {
-            btnResetZoom.onClick.RemoveAllListeners();
-            btnResetZoom.onClick.AddListener(ResetZoom);
+            if (btnResetZoom)
+            {
+                btnResetZoom.onClick.RemoveAllListeners();
+                btnResetZoom.onClick.AddListener(ResetZoom);
+            }
         }
 
         private void Update()
@@ -54,7 +57,7 @@ namespace Dark.Scripts.OutGame.Upgrade
 
                 // Apply the scale
                 targetRect.localScale = new Vector3(newScale, newScale, 1f);
-                txtZoom.SetText($"x{newScale:F1}");
+                txtZoom?.SetText($"x{newScale:F1}");
                 
                 // Convert mouse position again after scaling
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(
