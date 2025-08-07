@@ -18,7 +18,7 @@ namespace InGame
         private EnemyBehaviour config;
 
         #region Stats
-        private int MaxHealth { get; set; }
+        public int MaxHealth { get; set; }
         private int CurrentHealth { get; set; }
         private int CurrentDamage { get; set; }
         private int Exp { get; set; }
