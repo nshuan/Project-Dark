@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f1427934e97420e88cdf1eeb6547fc2, type: 3}
-  m_Name: 33_Sharpened Instinct
+  m_Name: "51_Berserker\u2019s Philter"
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -32,7 +32,7 @@ MonoBehaviour:
       Data: 1|InGame.Upgrade.NodeBonusPlayer, Assembly-CSharp
     - Name: bonusType
       Entry: 3
-      Data: 3
+      Data: 4
     - Name: value
       Entry: 7
       Data: 2|System.Single[], mscorlib
@@ -41,7 +41,7 @@ MonoBehaviour:
       Data: 1
     - Name: 
       Entry: 4
-      Data: 5
+      Data: 10
     - Name: 
       Entry: 13
       Data: 
@@ -63,12 +63,15 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  nodeId: 33
-  nodeName: Sharpened Instinct
+  nodeId: 51
+  nodeName: "Berserker\u2019s Philter"
   preRequire:
-  - {fileID: 11400000, guid: a13ec6b75f597b440822f867eb32794c, type: 2}
-  description: Others seek out weaknesses, striking with deadly precision.
+  - {fileID: 11400000, guid: 9cc53a50664230c4faacd2da3a0687a2, type: 2}
+  description: "This power was never meant for regular use\u2014it would break a
+    normal body. But Sentinels are different."
   costInfo:
   - costType: 0
-    costValue: 64000000
+    costValue: e8030000
+  - costType: 1
+    costValue: 01000000
   levelNum: 1
