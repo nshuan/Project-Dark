@@ -15,6 +15,7 @@ namespace InGame
         protected Vector3 mousePosition;
         protected Vector3 worldMousePosition;
         
+        protected MoveChargeController chargeController;
         public bool CanShoot { get; set; }
         protected float Cooldown { get; set; }
         protected float cdCounter;
@@ -74,6 +75,8 @@ namespace InGame
             canChargeDame = skillBonusInfo.unlockedChargeDame;
             canChargeSize = skillBonusInfo.unlockedChargeSize;
             canChargeRange = skillBonusInfo.unlockedChargeRange;
+            
+            chargeController.SetProjectile(InputManager.CurrentSkillConfig.projectiles[PlayerProjectileType.ChargeBullet]);
         }
         
         public virtual void OnMouseClick()
@@ -132,6 +135,25 @@ namespace InGame
                     isCharge,
                     LevelUtility.BonusInfo.skillBonus.GetProjectileActivateActions(isCharge),
                     LevelUtility.BonusInfo.skillBonus.GetProjectileHitActions(isCharge));
+                
+                if (isCharge)
+                    chargeController.Attack((projectile) =>
+                    {
+                        projectile.Init(
+                            projectile.transform.position, 
+                            (worldMousePosition - projectile.transform.position).normalized, 
+                            skillRange,
+                            skillSize, 
+                            InputManager.CurrentSkillConfig.speedScale,
+                            damage,
+                            criticalDamage, 
+                            critRate, 
+                            InputManager.CurrentSkillConfig.stagger, 
+                            isCharge, 
+                            maxHit, 
+                            null, 
+                            LevelUtility.BonusInfo.skillBonus.GetProjectileHitActions(isCharge));
+                    });
 
                 InputManager.BlockTeleport = false;
             });
@@ -239,6 +261,7 @@ namespace InGame
                         else if (bulletAdd < maxBulletAdd)
                         {
                             bulletAdd += 1;
+                            chargeController.AddBullet();
                             bulletAddTimer = bulletAddInterval;
                             cursor.UpdateBulletAdd(true, bulletAdd);
                             cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f).SetEase(Ease.InQuad)
