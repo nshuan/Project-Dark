@@ -6,6 +6,7 @@ using InGame.Upgrade;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Dark.Scripts.OutGame.Upgrade
 {
@@ -19,6 +20,8 @@ namespace Dark.Scripts.OutGame.Upgrade
         [Header("UI")]
         [SerializeField] private UIUpgradeNodeHoverField hoverField;
 
+        [SerializeField] private Image nodeVisual;
+        [SerializeField] private Image nodeLockVisual;
         [SerializeField] private Transform imgBorder;
         [SerializeField] private GameObject imgActivatedGlow;
         [SerializeField] private GameObject imgActivatedMaxGlow;
@@ -31,6 +34,14 @@ namespace Dark.Scripts.OutGame.Upgrade
             UpdateUI();
         }
 
+        public void SetVisual(Sprite sprite, Sprite lockSprite)
+        {
+            nodeVisual.sprite = sprite;
+            nodeLockVisual.sprite = lockSprite;
+            nodeVisual.SetNativeSize();
+            nodeLockVisual.SetNativeSize();
+        }
+        
         public void UpdateUI()
         {
             var data = UpgradeManager.Instance.GetData(config.nodeId);

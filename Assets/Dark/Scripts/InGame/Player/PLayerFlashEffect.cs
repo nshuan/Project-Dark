@@ -1,4 +1,5 @@
 using System.Collections;
+using Dark.Scripts.Audio;
 using UnityEngine;
 
 namespace InGame
@@ -8,6 +9,7 @@ namespace InGame
         [SerializeField] private GameObject flashStartGO;
         [SerializeField] private GameObject flashEndGO;
         [SerializeField] private GameObject flashAoeGO;
+        [SerializeField] private AudioComponent sfxFlashAoe;
 
         public Transform explodeCenter;
         public float startDuration = 0.5f;
@@ -30,6 +32,7 @@ namespace InGame
         {
             flashAoeGO.transform.SetParent(null);
             flashAoeGO.SetActive(true);
+            sfxFlashAoe.Play();
             StartCoroutine(IEHideObject(flashAoeGO, 1.5f));
         }
         

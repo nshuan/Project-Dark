@@ -36,6 +36,11 @@ namespace InGame.Upgrade
             return nodeMapById.GetValueOrDefault(id);
         }
 
+        public UpgradeNodeConfig GetNodeByName(string name)
+        {
+            return nodeMapById.FirstOrDefault((pair) => pair.Value.nodeName.Replace(" ", "") == name).Value;
+        }
+
 #if UNITY_EDITOR
         [Button]
         public void GetConfigsFromPath()

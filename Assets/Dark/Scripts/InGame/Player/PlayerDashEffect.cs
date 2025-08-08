@@ -1,3 +1,4 @@
+using Dark.Scripts.Audio;
 using UnityEngine;
 
 namespace InGame
@@ -7,9 +8,8 @@ namespace InGame
         [SerializeField] private GameObject vfxDash;
         [SerializeField] private ParticleSystem vfxDashEnd;
         [SerializeField] private ParticleSystem vfxDashStart;
-
-
-
+        [SerializeField] private AudioComponent sfxDashStart;
+        
         public void PLayStart(Vector2 direction)
         {
             // Calculate angle in degrees
@@ -22,6 +22,7 @@ namespace InGame
 
             vfxDash.SetActive(true);
             vfxDashStart.Play();
+            sfxDashStart.Play();
         }
 
         public void PLayEnd()
