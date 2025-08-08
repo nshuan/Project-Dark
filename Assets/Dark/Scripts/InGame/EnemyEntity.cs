@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Dark.Scripts.Audio;
 using DG.Tweening;
 using Economic;
 using InGame.EnemyEffect;
@@ -16,6 +17,8 @@ namespace InGame
         public Transform Target { get; set; }
         public TowerEntity TargetTower { get; set; }
         private EnemyBehaviour config;
+
+        [SerializeField] private AudioComponent sfxHit;
 
         #region Stats
         public int MaxHealth { get; set; }
@@ -187,6 +190,7 @@ namespace InGame
             if (State == EnemyState.Invisible) return;
             
             CurrentHealth -= damage;
+            sfxHit.Play();
             
             OnHit?.Invoke(damage);
             if (CurrentHealth <= 0)
