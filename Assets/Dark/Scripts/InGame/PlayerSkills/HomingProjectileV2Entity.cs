@@ -16,7 +16,6 @@ namespace InGame
         [SerializeField] private float timeToReachMaxSpeed = 2f;
 
         private Vector2 activateDirection;
-        private float activateTimeCounter;
         private Transform targetToChase;
         private bool canRotate = false;
         private bool blockHit;
@@ -28,9 +27,7 @@ namespace InGame
 
             canRotate = false;
             blockHit = true;
-            activateDirection = Quaternion.Euler(0f, 0f, Random.Range(-45f, 45f)) * direction * Random.Range(0.8f, 1f);
-            transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(activateDirection.y, activateDirection.x) * Mathf.Rad2Deg);
-            activateTimeCounter = activateTime;
+            transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
             
             if (WeaponSupporter.EnemyTargetingIndex < WeaponSupporter.EnemiesCountInRange)
             {
@@ -42,28 +39,18 @@ namespace InGame
         protected override IEnumerator IEActivate(float delay)
         {
             yield return new WaitForSeconds(delay);
-            
-            while (activateTimeCounter > 0)
-            {
-                activateTimeCounter -= Time.deltaTime;
-                // if (targetToChase && targetToChase.gameObject.activeInHierarchy)
-                // {
-                //     activateDirection = Vector3.RotateTowards(activateDirection, targetToChase.position - transform.position,
-                //         Mathf.Deg2Rad * 90 * Time.deltaTime, 0f);
-                // }
-                // transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(activateDirection.y, activateDirection.x) * Mathf.Rad2Deg);
-                transform.position += (Vector3)(activateSpeed * Time.deltaTime * activateDirection);
-                yield return null;
-            }
 
-            direction.x = activateDirection.x;
-            direction.y = activateDirection.y;
             canRotate = true;
-
-            yield return new WaitForSeconds(0.2f);
-            
             activated = true;
             blockHit = false;
+            
+            if (ActivateActions != null)
+            {
+                foreach (var action in ActivateActions)
+                {
+                    action.DoAction(this, direction);
+                }
+            }
         }
         
         protected override void Update()
@@ -71,7 +58,8 @@ namespace InGame
             if (!activated && !canRotate) return;
             if (Vector2.Distance(transform.position, startPos) > maxDistance)
             {
-                ProjectileDeadPool.Instance.Get(direction).position = transform.position;
+                if (!BlockSpawnDeadBody)
+                    ProjectileDeadPool.Instance.Get(direction).position = transform.position;
                 ProjectileHit(null);
             }
             

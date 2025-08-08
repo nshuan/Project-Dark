@@ -18,7 +18,7 @@ namespace InGame
         private EnemyBehaviour config;
 
         #region Stats
-        private int MaxHealth { get; set; }
+        public int MaxHealth { get; set; }
         private int CurrentHealth { get; set; }
         private int CurrentDamage { get; set; }
         private int Exp { get; set; }
@@ -220,6 +220,8 @@ namespace InGame
             OnDead?.Invoke();
             OnDead = null;
             boidAgent.IsActive = false;
+            callbackBurnComplete?.Invoke();
+            callbackBurnComplete = null;
             StartCoroutine(IEDie(
                 animController.PlayDie(), 0.5f
                 ));
@@ -228,8 +230,6 @@ namespace InGame
         private IEnumerator IEDie(float delayAnim, float delayRelease)
         {
             yield return new WaitForSeconds(delayAnim);
-            callbackBurnComplete?.Invoke();
-            callbackBurnComplete = null;
             
             WealthManager.Instance.AddExp(Exp);
             if (Random.Range(0f, 0f) <= DarkRatio)
