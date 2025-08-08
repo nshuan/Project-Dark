@@ -17,6 +17,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, List<UIUpgradeNode>> nodeChildrenMap;
 
         [Space] [Header("UI")] 
+        [SerializeField] private UpgradeSpritesManifest spriteManifest;
         [SerializeField] private Button btnDeselectAll;
         
         public UIUpgradeNode GetNodeById(int id)
@@ -66,6 +67,9 @@ namespace Dark.Scripts.OutGame.Upgrade
             {
                 nodesMap.TryAdd(node.config.nodeId, node);
                 node.treeRef = this;
+                var nodeInfo = spriteManifest.GetSprite(node.config.nodeId);
+                if (nodeInfo != null)
+                    node.SetVisual(nodeInfo.normalSprite, nodeInfo.lockSprite);
             }
 
             foreach (var node in nodes)

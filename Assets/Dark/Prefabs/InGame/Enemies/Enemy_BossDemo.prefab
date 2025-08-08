@@ -32,6 +32,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4355210591890552985}
   - {fileID: 541454038136209678}
   - {fileID: 8825471043145619266}
   m_Father: {fileID: 0}
@@ -118,6 +119,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collider2d: {fileID: 2405272052621527813}
+  sfxHit: {fileID: 1640410933532257295}
   boidAgent: {fileID: 708390462539577957}
   uiHealth: {fileID: 2775015567938810026}
   animController: {fileID: 2498714227618212496}
@@ -509,6 +511,53 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyHitEffect: {fileID: 6579039246270841003}
   spritesAnim: {fileID: 3504597299782065854}
+--- !u!1 &7094835804594406353
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4355210591890552985}
+  - component: {fileID: 1640410933532257295}
+  m_Layer: 0
+  m_Name: Sfx
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4355210591890552985
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7094835804594406353}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2189210148331816725}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1640410933532257295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7094835804594406353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sourceIndex: 6
+  playOnEnable: 0
+  delay: 0
 --- !u!1 &8126553267637693997
 GameObject:
   m_ObjectHideFlags: 0
