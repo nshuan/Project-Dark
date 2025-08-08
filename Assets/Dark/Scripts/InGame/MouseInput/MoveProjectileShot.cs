@@ -15,6 +15,7 @@ namespace InGame
         protected Vector3 mousePosition;
         protected Vector3 worldMousePosition;
         
+        public MoveChargeController ChargeController { get; set; }
         public bool CanShoot { get; set; }
         protected float Cooldown { get; set; }
         protected float cdCounter;
@@ -61,9 +62,10 @@ namespace InGame
             cursorRect = cursor.GetComponent<RectTransform>();
         }
 
-        public void Initialize(InputInGame manager)
+        public void Initialize(InputInGame manager, MoveChargeController chargeController)
         {
             InputManager = manager;
+            ChargeController = chargeController;
             Cooldown = LevelUtility.GetSkillCooldown(
                 InputManager.CurrentSkillConfig.skillId,
                 InputManager.PlayerStats.cooldown,
@@ -74,6 +76,9 @@ namespace InGame
             canChargeDame = skillBonusInfo.unlockedChargeDame;
             canChargeSize = skillBonusInfo.unlockedChargeSize;
             canChargeRange = skillBonusInfo.unlockedChargeRange;
+            
+            ChargeController.SetProjectile(InputManager.CurrentSkillConfig.projectiles[PlayerProjectileType.ChargeBullet]);
+            ChargeController.Cam = Cam;
         }
         
         public virtual void OnMouseClick()
@@ -115,15 +120,13 @@ namespace InGame
             InputManager.DelayCall(delayShot, () =>
             {
                 InputManager.playerVisual.Weapon.GetAllEnemiesInRange(skillRange);
-
+                
                 InputManager.CurrentSkillConfig.Shoot(
-                    bulletAdd > 0
-                        ? InputManager.CurrentSkillConfig.projectiles[PlayerProjectileType.ChargeBullet]
-                        : InputManager.CurrentSkillConfig.projectiles[PlayerProjectileType.Normal],
+                    InputManager.CurrentSkillConfig.projectiles[PlayerProjectileType.Normal],
                     InputManager.CursorRangeCenter.position,
                     tempMousePos,
                     damage,
-                    bulletNum,
+                    isCharge ? 1 : bulletNum,
                     skillSize,
                     skillRange,
                     criticalDamage,
@@ -132,6 +135,27 @@ namespace InGame
                     isCharge,
                     LevelUtility.BonusInfo.skillBonus.GetProjectileActivateActions(isCharge),
                     LevelUtility.BonusInfo.skillBonus.GetProjectileHitActions(isCharge));
+                
+                if (isCharge)
+                    ChargeController.Attack((projectile, direction) =>
+                    {
+                        projectile.Init(
+                            projectile.transform.position, 
+                            direction.normalized, 
+                            skillRange,
+                            skillSize, 
+                            InputManager.CurrentSkillConfig.speedScale,
+                            damage,
+                            criticalDamage, 
+                            critRate, 
+                            InputManager.CurrentSkillConfig.stagger, 
+                            true, 
+                            maxHit, 
+                            null, 
+                            LevelUtility.BonusInfo.skillBonus.GetProjectileHitActions(true));
+                        
+                        projectile.Activate(0f);
+                    });
 
                 InputManager.BlockTeleport = false;
             });
@@ -239,6 +263,8 @@ namespace InGame
                         else if (bulletAdd < maxBulletAdd)
                         {
                             bulletAdd += 1;
+                            ChargeController.AddBullet(InputManager.playerVisual.transform.position,
+                                worldMousePosition - InputManager.playerVisual.transform.position);
                             bulletAddTimer = bulletAddInterval;
                             cursor.UpdateBulletAdd(true, bulletAdd);
                             cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f).SetEase(Ease.InQuad)
@@ -271,6 +297,12 @@ namespace InGame
                 if (canChargeSize && isChargingSize)
                 {
                     sizeChargeTime += Time.deltaTime;
+                    var size = LevelUtility.GetSkillSize(InputManager.CurrentSkillConfig.skillId,
+                        InputManager.CurrentSkillConfig.size,
+                        maxSizeMultiplierAdd > 0
+                            ? 1 + Mathf.Min(sizeChargeTime / maxSizeChargeTime, 1f) * maxSizeMultiplierAdd
+                            : 1f);
+                    ChargeController.AddSize(size);
                 }
                 
                 // Charge range

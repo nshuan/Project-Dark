@@ -11,7 +11,6 @@ namespace InGame
         protected const float MaxLifeTime = 10f;
 
         [SerializeField] protected ProjectileCollider collider;
-        [SerializeField] private Transform visual;
         [SerializeField] protected LayerMask enemyLayer;
         [SerializeField] private float baseDamageRange = 0.1f;
         
@@ -76,7 +75,7 @@ namespace InGame
             List<IProjectileHit> hitActions)
         {
             Size = size;
-            visual.localScale = size * Vector3.one;
+            transform.localScale = size * Vector3.one;
             SpeedScale = speedScale;
             Speed = baseSpeed * speedScale;
             this.startPos = startPos;
