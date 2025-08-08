@@ -49,7 +49,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collider: {fileID: 8019707196208417071}
-  visual: {fileID: 7251696399891678742}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -353,8 +352,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6091133498770446435}
-  - component: {fileID: 5001645840147429426}
   - component: {fileID: 8019707196208417071}
+  - component: {fileID: 2668803693432166665}
   m_Layer: 0
   m_Name: Collider
   m_TagString: Untagged
@@ -377,8 +376,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1569795731929869319}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &5001645840147429426
-CircleCollider2D:
+--- !u!114 &8019707196208417071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9007665832906337287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ba0a74808d14af1a73a901f0ef786bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!70 &2668803693432166665
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -409,18 +420,6 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.2
---- !u!114 &8019707196208417071
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9007665832906337287}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ba0a74808d14af1a73a901f0ef786bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Offset: {x: 0.16656707, y: 0.004670303}
+  m_Size: {x: 0.26212606, y: 0.16249622}
+  m_Direction: 1
