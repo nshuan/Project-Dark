@@ -58,13 +58,13 @@ namespace Dark.Scripts.Audio
         /// <summary>
         /// Plays a sound effect immediately or after a delay.
         /// </summary>
-        public void PlaySFX(int index, float volume = 1f, float pitch = 1f, float delay = 0f)
+        public void PlaySFX(int index, float volume = -1f, float pitch = -10f, float delay = 0f)
         {
             AudioSource src = sourcePoolMap[index][nextIndexMap[index]];
             nextIndexMap[index] = (nextIndexMap[index] + 1) % sourcePoolMap[index].Count;
             
-            src.volume = volume;
-            src.pitch = pitch;
+            src.volume = volume < 0 ? src.volume : volume;
+            src.pitch = pitch < -9f ? src.pitch : pitch;
 
             if (delay > 0f)
                 src.PlayDelayed(delay);
