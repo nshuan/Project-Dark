@@ -66,6 +66,10 @@ namespace Dark.Scripts.OutGame.Upgrade
             {
                 nodesMap.TryAdd(node.config.nodeId, node);
                 node.treeRef = this;
+            }
+
+            foreach (var node in nodes)
+            {
                 node.preRequireLines = new List<UIUpgradeLineInfo>();
                 
                 if (node.config.preRequire == null || node.config.preRequire.Length == 0) continue;
