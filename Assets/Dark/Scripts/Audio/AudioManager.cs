@@ -36,8 +36,18 @@ namespace Dark.Scripts.Audio
                     var sourceSub = new GameObject($"{sources[index].name} - {i}");
                     sourceSub.transform.SetParent(sources[index].transform);
                     var sourceComponent = sourceSub.AddComponent<AudioSource>();
+                    
                     sourceComponent.clip = sources[index].clip;
+                    sourceComponent.playOnAwake = sources[index].playOnAwake;
+                    sourceComponent.loop = sources[index].loop;
+                    sourceComponent.priority = sources[index].priority;
+                    sourceComponent.volume = sources[index].volume;
+                    sourceComponent.pitch = sources[index].pitch;
+                    sourceComponent.panStereo = sources[index].panStereo;
+                    sourceComponent.spatialBlend = sources[index].spatialBlend;
+                    sourceComponent.reverbZoneMix = sources[index].reverbZoneMix;
                     sourceComponent.playOnAwake = false;
+                    
                     pool.Add(sourceComponent);
                 }
                 sourcePoolMap[index] = pool;
