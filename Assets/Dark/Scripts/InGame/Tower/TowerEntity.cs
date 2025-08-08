@@ -1,4 +1,5 @@
 using System;
+using Dark.Scripts.Audio;
 using InGame.Effects;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,6 +13,7 @@ namespace InGame
         [SerializeField] private GameObject towerVisualUILayer;
         [SerializeField] private Sprite[] spriteStates;
         [SerializeField] private float[] thresholdState = new[] { 0f, 0.3f, 0.7f };
+        [SerializeField] private AudioComponent sfxHit;
 
         private int currentState;
         
@@ -81,6 +83,7 @@ namespace InGame
             }
             
             // Do damage effect
+            sfxHit.Play();
             VisualEffectHelper.Instance.PlayEffect(damageEffect);
         }
 
