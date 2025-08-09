@@ -4438,6 +4438,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 691118427}
     m_Modifications:
+    - target: {fileID: 1004459731753596296, guid: 230636914da9ae645a2e1e20148bd6cf, type: 3}
+      propertyPath: m_Volume
+      value: 0.514
+      objectReference: {fileID: 0}
+    - target: {fileID: 1544131567242796115, guid: 230636914da9ae645a2e1e20148bd6cf, type: 3}
+      propertyPath: m_Volume
+      value: 0.644
+      objectReference: {fileID: 0}
+    - target: {fileID: 2134916274490209101, guid: 230636914da9ae645a2e1e20148bd6cf, type: 3}
+      propertyPath: m_Volume
+      value: 0.506
+      objectReference: {fileID: 0}
+    - target: {fileID: 2211616188510886021, guid: 230636914da9ae645a2e1e20148bd6cf, type: 3}
+      propertyPath: m_Volume
+      value: 0.031
+      objectReference: {fileID: 0}
     - target: {fileID: 3385196017061023560, guid: 230636914da9ae645a2e1e20148bd6cf, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -4478,9 +4494,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4884066568610893849, guid: 230636914da9ae645a2e1e20148bd6cf, type: 3}
+      propertyPath: m_Volume
+      value: 0.48
+      objectReference: {fileID: 0}
     - target: {fileID: 5828832237223945358, guid: 230636914da9ae645a2e1e20148bd6cf, type: 3}
       propertyPath: m_Name
       value: AudioManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 7261600990387067805, guid: 230636914da9ae645a2e1e20148bd6cf, type: 3}
+      propertyPath: m_Volume
+      value: 0.503
+      objectReference: {fileID: 0}
+    - target: {fileID: 8145759203493865385, guid: 230636914da9ae645a2e1e20148bd6cf, type: 3}
+      propertyPath: m_Volume
+      value: 0.247
+      objectReference: {fileID: 0}
+    - target: {fileID: 8246038323982757136, guid: 230636914da9ae645a2e1e20148bd6cf, type: 3}
+      propertyPath: m_Volume
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8352232578871950419, guid: 230636914da9ae645a2e1e20148bd6cf, type: 3}
+      propertyPath: m_Volume
+      value: 0.072
+      objectReference: {fileID: 0}
+    - target: {fileID: 8961808885527769891, guid: 230636914da9ae645a2e1e20148bd6cf, type: 3}
+      propertyPath: m_Volume
+      value: 0.061
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6328,7 +6368,6 @@ MonoBehaviour:
     SerializedBytes: 
     ReferencedUnityObjects:
     - {fileID: 6844351392576462872, guid: 5bf387a4936339542a95d194cf62d737, type: 3}
-    - {fileID: 6844351392576462872, guid: 3de001d91ec8b174eaa2d43aaf531f9d, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -6357,7 +6396,7 @@ MonoBehaviour:
       Data: 
     - Name: damePlus
       Entry: 3
-      Data: 0
+      Data: 8
     - Name: dameMultiply
       Entry: 4
       Data: 0
@@ -6384,7 +6423,7 @@ MonoBehaviour:
       Data: 2|InGame.UpgradeBonusSkillInfo, Assembly-CSharp
     - Name: skillDamePlus
       Entry: 3
-      Data: 0
+      Data: 10
     - Name: skillDameMultiply
       Entry: 4
       Data: 0
@@ -6393,7 +6432,7 @@ MonoBehaviour:
       Data: 0
     - Name: skillCooldownMultiply
       Entry: 4
-      Data: 8
+      Data: 2
     - Name: skillSizeMultiply
       Entry: 4
       Data: 0
@@ -6420,35 +6459,14 @@ MonoBehaviour:
       Data: true
     - Name: unlockedChargeRange
       Entry: 5
-      Data: true
+      Data: false
     - Name: projectileHitActions
       Entry: 7
       Data: 3|System.Collections.Generic.List`1[[InGame.IProjectileHit, Assembly-CSharp]],
         mscorlib
     - Name: 
       Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 4|InGame.ProjectileHitBlossom, Assembly-CSharp
-    - Name: projectile
-      Entry: 10
       Data: 0
-    - Name: bulletAmount
-      Entry: 3
-      Data: 1
-    - Name: blossomSize
-      Entry: 4
-      Data: 3
-    - Name: damage
-      Entry: 3
-      Data: 1
-    - Name: stagger
-      Entry: 4
-      Data: 0.8
-    - Name: 
-      Entry: 8
-      Data: 
     - Name: 
       Entry: 13
       Data: 
@@ -6457,32 +6475,11 @@ MonoBehaviour:
       Data: 
     - Name: projectileChargeHitActions
       Entry: 7
-      Data: 5|System.Collections.Generic.List`1[[InGame.IProjectileHit, Assembly-CSharp]],
+      Data: 4|System.Collections.Generic.List`1[[InGame.IProjectileHit, Assembly-CSharp]],
         mscorlib
     - Name: 
       Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 6|InGame.ProjectileHitBlossom, Assembly-CSharp
-    - Name: projectile
-      Entry: 10
-      Data: 1
-    - Name: bulletAmount
-      Entry: 3
-      Data: 2
-    - Name: blossomSize
-      Entry: 4
-      Data: 8
-    - Name: damage
-      Entry: 3
-      Data: 10
-    - Name: stagger
-      Entry: 4
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
+      Data: 0
     - Name: 
       Entry: 13
       Data: 
@@ -6491,14 +6488,14 @@ MonoBehaviour:
       Data: 
     - Name: projectileActivateActions
       Entry: 7
-      Data: 7|System.Collections.Generic.List`1[[InGame.IProjectileActivate, Assembly-CSharp]],
+      Data: 5|System.Collections.Generic.List`1[[InGame.IProjectileActivate, Assembly-CSharp]],
         mscorlib
     - Name: 
       Entry: 12
       Data: 1
     - Name: 
       Entry: 7
-      Data: 8|InGame.ProjectileActivateSplit, Assembly-CSharp
+      Data: 6|InGame.ProjectileActivateSplit, Assembly-CSharp
     - Name: projectile
       Entry: 10
       Data: 0
@@ -6507,7 +6504,7 @@ MonoBehaviour:
       Data: 2
     - Name: angle
       Entry: 4
-      Data: 8
+      Data: 13.6
     - Name: 
       Entry: 8
       Data: 
@@ -6518,19 +6515,29 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: projectileChargeActivateActions
-      Entry: 6
+      Entry: 7
+      Data: 7|System.Collections.Generic.List`1[[InGame.IProjectileActivate, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
       Data: 
     - Name: 
       Entry: 8
       Data: 
     - Name: passiveMapByTriggerType
       Entry: 7
-      Data: 9|Unity.VisualScripting.FlexibleDictionary`2[[InGame.PassiveTriggerType,
+      Data: 8|Unity.VisualScripting.FlexibleDictionary`2[[InGame.PassiveTriggerType,
         Assembly-CSharp],[System.Collections.Generic.List`1[[InGame.PassiveType,
         Assembly-CSharp]], mscorlib]], Unity.VisualScripting.Core
     - Name: comparer
       Entry: 7
-      Data: 10|System.Collections.Generic.EnumEqualityComparer`1[[InGame.PassiveTriggerType,
+      Data: 9|System.Collections.Generic.EnumEqualityComparer`1[[InGame.PassiveTriggerType,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
@@ -6552,20 +6559,23 @@ MonoBehaviour:
       Data: 0
     - Name: $v
       Entry: 7
-      Data: 11|System.Collections.Generic.List`1[[InGame.PassiveType, Assembly-CSharp]],
+      Data: 10|System.Collections.Generic.List`1[[InGame.PassiveType, Assembly-CSharp]],
         mscorlib
     - Name: 
       Entry: 12
-      Data: 3
+      Data: 4
+    - Name: 
+      Entry: 3
+      Data: 2
     - Name: 
       Entry: 3
       Data: 1
     - Name: 
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: 
       Entry: 3
-      Data: 2
+      Data: 0
     - Name: 
       Entry: 13
       Data: 
