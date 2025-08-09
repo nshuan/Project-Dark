@@ -17,6 +17,9 @@ namespace InGame.Upgrade
         public UpgradeNodeCostInfo[] costInfo; 
         public int levelNum = 1;
         [NonSerialized, OdinSerialize] public INodeActivateLogic[] nodeLogic;
+        [Space] [Header("Visual")] 
+        public Sprite nodeSprite;
+        public Sprite nodeSpriteLock;
         
         public UpgradeNodeState State { get; set; }
         public bool Activated { get; set; }

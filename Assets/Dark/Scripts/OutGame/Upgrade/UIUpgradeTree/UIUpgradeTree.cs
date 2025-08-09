@@ -66,6 +66,8 @@ namespace Dark.Scripts.OutGame.Upgrade
             {
                 nodesMap.TryAdd(node.config.nodeId, node);
                 node.treeRef = this;
+                if (node.config.nodeSprite && node.config.nodeSpriteLock)
+                    node.SetVisual(node.config.nodeSprite, node.config.nodeSpriteLock);
             }
 
             foreach (var node in nodes)

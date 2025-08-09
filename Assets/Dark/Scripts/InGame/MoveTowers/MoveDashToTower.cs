@@ -36,7 +36,7 @@ namespace InGame
                 var speed = speedCurve.Evaluate(Mathf.Clamp01(timeElapsed / duration));
                 character.transform.position = Vector2.Lerp(startPos, endPos, speed);
                 
-                var count = Physics2D.CircleCastNonAlloc(character.transform.position, hitRadius, Vector2.zero, hits,
+                var count = Physics2D.CircleCastNonAlloc(character.FlashExplodeCenter, hitRadius, Vector2.zero, hits,
                     0f,
                     enemyLayer);
                 if (count > 0)

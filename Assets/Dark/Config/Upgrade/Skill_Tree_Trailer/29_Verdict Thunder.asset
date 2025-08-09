@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f1427934e97420e88cdf1eeb6547fc2, type: 3}
+  m_Name: 29_Verdict Thunder
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: nodeLogic
+      Entry: 7
+      Data: 0|InGame.Upgrade.INodeActivateLogic[], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 1|InGame.Upgrade.NodeUnlockPassive, Assembly-CSharp
+    - Name: triggerType
+      Entry: 3
+      Data: 3
+    - Name: passiveType
+      Entry: 3
+      Data: 3
+    - Name: bonusDescription
+      Entry: 1
+      Data: Tower counterattacks have a chance to summon lightning that executes
+        low-HP enemies
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  nodeId: 29
+  nodeName: Verdict Thunder
+  preRequire:
+  - {fileID: 11400000, guid: 3046d29e157a62d47a5456bccd6093d6, type: 2}
+  description: "An ancient forbidden technique, passed down only to the most elite
+    of the Sentinels. Those who master its power are known as Sons of the Storm\u2014
+    and throughout history, only one has ever tamed its full force besides its original
+    creator"
+  costInfo:
+  - costType: 2
+    costValue: 01000000
+  levelNum: 1

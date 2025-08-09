@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f1427934e97420e88cdf1eeb6547fc2, type: 3}
+  m_Name: 3_Echopiercer
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: nodeLogic
+      Entry: 7
+      Data: 0|InGame.Upgrade.INodeActivateLogic[], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 1|InGame.Upgrade.NodeBonusSkill, Assembly-CSharp
+    - Name: bonusType
+      Entry: 3
+      Data: 5
+    - Name: value
+      Entry: 7
+      Data: 2|System.Single[], mscorlib
+    - Name: 
+      Entry: 14
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 2
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isMultiply
+      Entry: 5
+      Data: false
+    - Name: bonusDescription
+      Entry: 1
+      Data: Fires an arrow that pierces through up to 2 enemies
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  nodeId: 3
+  nodeName: Echopiercer
+  preRequire:
+  - {fileID: 11400000, guid: 6cded38d338f69241abf2b1e68ce4a4c, type: 2}
+  description: "When the battlefield falls into a deadlock and the enemy lines stretch
+    endlessly forward, only the most seasoned archers call upon the Echopiercer to
+    turn the tide. Each arrow, imbued with boundless arcane force, accelerates beyond
+    mortal comprehension\u2014piercing through all who stand in its path. With every
+    shot, it carves open a sliver of hope amidst the chaos of war."
+  costInfo:
+  - costType: 2
+    costValue: 01000000
+  levelNum: 1
+  nodeSprite: {fileID: 21300000, guid: 113cebb770ccb7d48810571456a495f0, type: 3}
+  nodeSpriteLock: {fileID: 21300000, guid: 782782e1bb92d3b4d9b550401a6c841f, type: 3}
