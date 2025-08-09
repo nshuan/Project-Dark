@@ -87,22 +87,23 @@ namespace InGame
             
             CanShoot = false;
             
+            var isCharge = (canChargeBullet && bulletAdd > 0) || (canChargeDame && dameChargeTime > 0) ||
+                           (canChargeSize && sizeChargeTime > 0) || (canChargeRange && rangeChargeTime > 0);
+            
             var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(
                 InputManager.CurrentSkillConfig.skillId,
                 InputManager.PlayerStats.damage,
                 InputManager.CurrentSkillConfig.damePerBullet,
                 InputManager.PlayerStats.criticalDamage,
-                maxDameMultiplierAdd > 0 ? 1 + Mathf.Min(dameChargeTime / maxDameChargeTime, 1f) * maxDameMultiplierAdd : 1f);
+                canChargeDame && dameChargeTime > 0 ? 1 + Mathf.Max(dameChargeTime / maxDameChargeTime * maxDameMultiplierAdd, 0f) : 1f);
             var critRate = LevelUtility.GetCriticalRate(InputManager.PlayerStats.criticalRate);
             var bulletNum = LevelUtility.GetNumberOfBullets(InputManager.CurrentSkillConfig.skillId, InputManager.CurrentSkillConfig.numberOfBullets, bulletAdd);
             var skillSize = LevelUtility.GetSkillSize(InputManager.CurrentSkillConfig.skillId,
                 InputManager.CurrentSkillConfig.size,
-                maxSizeMultiplierAdd > 0 ? 1 + Mathf.Min(sizeChargeTime / maxSizeChargeTime, 1f) * maxSizeMultiplierAdd : 1f);
+                canChargeSize && sizeChargeTime > 0 ? 1 + Mathf.Min(sizeChargeTime / maxSizeChargeTime, 1f) * maxSizeMultiplierAdd : 1f);
             var skillRange = LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId,
                 InputManager.CurrentSkillConfig.range,
-                maxRangeMultiplierAdd > 0 ? 1 + Mathf.Min(rangeChargeTime / maxRangeChargeTime, 1f) * maxRangeMultiplierAdd : 1f);
-            var isCharge = (canChargeBullet && bulletAdd > 0) || (canChargeDame && dameChargeTime > 0) ||
-                           (canChargeSize && sizeChargeTime > 0) || (canChargeRange && rangeChargeTime > 0);
+                canChargeRange && rangeChargeTime > 0 ? 1 + Mathf.Min(rangeChargeTime / maxRangeChargeTime, 1f) * maxRangeMultiplierAdd : 1f);
             var maxHit = 1 + LevelUtility.BonusInfo.skillBonus.bulletMaxHitPlus;
 
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
