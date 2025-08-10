@@ -29,7 +29,9 @@ namespace InGame
             for (var i = 0; i < numberOfBullets; i++)
             {
                 var p = ProjectilePool.Instance.Get(projectilePrefab, null, false);
+                var direction = (target - spawnPos).normalized;
                 p.transform.position = spawnPos;
+                p.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
                 p.Init(spawnPos, (target - spawnPos).normalized, skillRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, isCharge, maxHit, activateActions, projectileHitActions);
                 p.Activate(delayEachBullet * i);
             }
