@@ -20,7 +20,7 @@ namespace InGame.UI.Waves
         
         private void OnLevelLoaded(LevelConfig level)
         {
-            totalWave = level.waveInfos.Length;
+            totalWave = level.waveInfo.Length;
             foreach (var waveItem in waveItems)
             {
                 waveItem.UpdateUI(0);

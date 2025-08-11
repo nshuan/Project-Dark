@@ -93,7 +93,7 @@ namespace InGame
             // Start waves
             currentWaveIndex = 0;
             if (waveCoroutine != null) StopCoroutine(waveCoroutine);
-            waveCoroutine = StartCoroutine(IEWave(level.waveInfos));
+            waveCoroutine = StartCoroutine(IEWave(level.waveInfo));
             
             OnLevelLoaded?.Invoke(level);
             OnChangeSkill?.Invoke(skillConfig);
@@ -136,15 +136,14 @@ namespace InGame
 
         private int currentWaveIndex;
         private Coroutine waveCoroutine;
-        private IEnumerator IEWave(IWaveInfo[] waves)
+        private IEnumerator IEWave(WaveInfo[] waves)
         {
             if (waves == null || waves.Length == 0) yield break;
             yield return new WaitForEndOfFrame();
-            
-            IWaveInfo currentWave = null;
+
             while (currentWaveIndex < waves.Length)
             {
-                currentWave = waves[currentWaveIndex];
+                var currentWave = waves[currentWaveIndex];
                 currentWave.SetupWave(gatePrefab, Towers, Level.levelExpRatio, Level.levelDarkRatio, OnWaveForceStop);
                 OnWaveStart?.Invoke(currentWaveIndex);
                 currentWaveIndex += 1;
@@ -156,7 +155,7 @@ namespace InGame
         {
             if (waveCoroutine != null) StopCoroutine(waveCoroutine);
             winLoseManager.CheckWin(this);
-            waveCoroutine = StartCoroutine(IEWave(Level.waveInfos));
+            waveCoroutine = StartCoroutine(IEWave(Level.waveInfo));
         }
 
         #endregion

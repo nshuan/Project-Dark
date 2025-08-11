@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Linq;
-using Sirenix.OdinInspector;
-using Sirenix.Serialization;
 using Unity.Mathematics;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -10,10 +8,9 @@ using Object = UnityEngine.Object;
 namespace InGame
 {
     [Serializable]
-    public class SingleWaveInfo : IWaveInfo
+    public class WaveInfo
     {
-        [field:NonSerialized, OdinSerialize, ReadOnly] public int WaveIndex { get; set; }
-        
+        public int waveIndex;
         public float scaleHp = 1f;
         public float scaleDmg = 1f;
         public float timeToEnd;
@@ -39,7 +36,7 @@ namespace InGame
 
         public void ActivateWave()
         {
-            DebugUtility.LogError($"Activate wave {WaveIndex}");
+            DebugUtility.LogError($"Activate wave {waveIndex}");
             
             foreach (var gate in Gates)
             {
@@ -53,7 +50,7 @@ namespace InGame
             ActivateWave();
             
             yield return new WaitForSeconds(timeToEnd);
-            DebugUtility.LogError($"Wave {WaveIndex}: End duration");
+            DebugUtility.LogError($"Wave {waveIndex}: End duration");
             CheckStopAllGate();
         }
 
@@ -71,7 +68,7 @@ namespace InGame
         {
             if (Gates.All((gate) => gate.AllEnemyDead))
             {
-                DebugUtility.LogError($"Stop wave {WaveIndex}: All enemies are dead");
+                DebugUtility.LogError($"Stop wave {waveIndex}: All enemies are dead");
                 WaveEndedCompletely = true;
                 OnWaveForceStop?.Invoke();
                 OnWaveForceStop = null;

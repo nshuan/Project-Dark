@@ -11,10 +11,10 @@ namespace InGame.GateEditor
         
         public WaveConfig WaveConfig { get; set; }
 
-        public void LoadWaves(SingleWaveInfo waveInfo)
+        public void LoadWaves(WaveInfo waveInfo)
         {
             WaveConfig = waveInfo.waveConfig;
-            name = "Wave " + waveInfo.WaveIndex;
+            name = "Wave " + waveInfo.waveIndex;
             
             // Delete all child
             while (transform.childCount > 0)

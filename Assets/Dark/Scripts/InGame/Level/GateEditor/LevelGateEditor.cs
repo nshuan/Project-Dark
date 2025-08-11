@@ -31,14 +31,11 @@ namespace InGame.GateEditor
                 return;
             }
 
-            foreach (var wave in level.waveInfos)
+            foreach (var wave in level.waveInfo)
             {
-                if (wave is SingleWaveInfo waveInfo)
-                {
-                    var newWaveEditor = Instantiate(waveEditorPrefab, transform);
-                    newWaveEditor.LoadWaves(waveInfo);
-                    waves.Add(newWaveEditor);
-                }
+                var newWaveEditor = Instantiate(waveEditorPrefab, transform);
+                newWaveEditor.LoadWaves(wave);
+                waves.Add(newWaveEditor);
             }
         }
 
