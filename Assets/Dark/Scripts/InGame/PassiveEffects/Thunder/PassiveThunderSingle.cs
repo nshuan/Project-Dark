@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Dark.Scripts.Audio;
 using InGame.Effects;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -9,6 +10,7 @@ namespace InGame
     public class PassiveThunderSingle : MonoPassiveEntity
     {
         [SerializeField] private bool randomEnemy;
+        [SerializeField] private AudioComponent sfx;
         
         private EnemyEntity triggerredEnemy;
         private RaycastHit2D[] hits = new RaycastHit2D[50];
@@ -42,6 +44,7 @@ namespace InGame
                             else
                             {
                                 triggerredEnemy.Damage((int)(triggerredEnemy.MaxHealth * value), triggerredEnemy.transform.position, stagger);
+                                sfx.Play();
                             }
                         }
                         

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Dark.Scripts.Audio;
 using InGame.Effects;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ namespace InGame
         private RaycastHit2D[] hits = new RaycastHit2D[50];
         private IDamageable hitTarget;
         private CameraShake cameraShakeEffect;
+        [SerializeField] private AudioComponent sfx;
 
         public override void Initialize()
         {
@@ -36,6 +38,7 @@ namespace InGame
                     for (var i = 0; i < count; i++)
                     {
                         ExplosionHit(hits[i].transform, value);
+                        sfx.Play();
                     }
                 }
                 

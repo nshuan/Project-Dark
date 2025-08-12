@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Dark.Scripts.Audio;
 using InGame.Effects;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ namespace InGame
         [SerializeField] private int maxHit = 5;
         [SerializeField] private float delayEachHit = 0.05f;
         [SerializeField] private float durationEachHit = 0.13f;
+        [SerializeField] private AudioComponent sfx;
         
         private Vector2 Position { get; set; }
         private float Stagger { get; set; }
@@ -76,6 +78,7 @@ namespace InGame
             StartCoroutine(IELightningRay(value, () => pool.Release(this, effectId)));
             vfxImpact.position = Position;
             vfxImpact.gameObject.SetActive(true);
+            sfx.Play();
             StartCoroutine(IEDelayHideVfxImpact(durationEachHit));
             cameraShakeEffect.Duration = Mathf.Max(orderCount * delayEachHit, durationEachHit);
             VisualEffectHelper.Instance.PlayEffect(cameraShakeEffect);
