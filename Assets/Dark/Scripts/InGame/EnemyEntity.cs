@@ -190,12 +190,13 @@ namespace InGame
             if (State == EnemyState.Invisible) return;
             
             CurrentHealth -= damage;
-            sfxHit.Play();
+            
             
             OnHit?.Invoke(damage);
             if (CurrentHealth <= 0)
             {
                 OnDie();
+                sfxHit.Play();
             }
             else
             {
@@ -206,7 +207,7 @@ namespace InGame
                     staggerDuration = (stagger - config.staggerResist) * config.staggerMaxDuration;
                     freezeDuration = staggerDuration;
                 }
-                
+
                 animController.PlayHit();
                 invisibleTimer = config.invisibleDuration;
                 State = EnemyState.Invisible;

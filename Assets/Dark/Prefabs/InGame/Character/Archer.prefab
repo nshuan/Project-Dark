@@ -131,7 +131,6 @@ Transform:
   - {fileID: 8126641321210888156}
   - {fileID: 4374371994887962442}
   - {fileID: 6563634025267148571}
-  - {fileID: 494529235477553924}
   m_Father: {fileID: 8748002566143027518}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6194580792556600830
@@ -150,6 +149,7 @@ MonoBehaviour:
   flashEndGO: {fileID: 9137705237316602402}
   flashAoeGO: {fileID: 321540747711025084}
   sfxFlashAoe: {fileID: 5272930182811632203}
+  sfxFlashAoe_end: {fileID: 0}
   explodeCenter: {fileID: 6161533850593521826}
   startDuration: 0.5
 --- !u!1 &1645562885888194866
@@ -183,6 +183,7 @@ Transform:
   m_Children:
   - {fileID: 2081985394999151883}
   - {fileID: 4421750079316605599}
+  - {fileID: 494529235477553924}
   m_Father: {fileID: 8875509042617920227}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1939867487498700576
@@ -348,12 +349,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4051566418034428798}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8875509042617920227}
+  m_Father: {fileID: 8126641321210888156}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5272930182811632203
 MonoBehaviour:
@@ -1680,6 +1681,53 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &8009713270322909412
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1828201278123004014}
+  - component: {fileID: 9103810989611059074}
+  m_Layer: 0
+  m_Name: Sfx_End
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1828201278123004014
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8009713270322909412}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4374371994887962442}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9103810989611059074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8009713270322909412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sourceIndex: 10
+  playOnEnable: 0
+  delay: 0
 --- !u!1 &8093634977475200776
 GameObject:
   m_ObjectHideFlags: 0
@@ -1758,6 +1806,7 @@ Transform:
   m_Children:
   - {fileID: 4983090551925431062}
   - {fileID: 2911085250920463471}
+  - {fileID: 1828201278123004014}
   m_Father: {fileID: 8875509042617920227}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &28641185747557671

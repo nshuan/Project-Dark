@@ -10,6 +10,8 @@ namespace InGame
         [SerializeField] private GameObject flashEndGO;
         [SerializeField] private GameObject flashAoeGO;
         [SerializeField] private AudioComponent sfxFlashAoe;
+        [SerializeField] private AudioComponent sfxFlashAoe_end;
+
 
         public Transform explodeCenter;
         public float startDuration = 0.5f;
@@ -19,6 +21,8 @@ namespace InGame
             flashStartGO.transform.SetParent(null);
             flashStartGO.SetActive(true);
             StartCoroutine(IEHideObject(flashStartGO, 2f));
+            sfxFlashAoe.Play();
+
         }
 
         public void PLayEnd()
@@ -26,13 +30,13 @@ namespace InGame
             flashEndGO.transform.SetParent(null);
             flashEndGO.SetActive(true);
             StartCoroutine(IEHideObject(flashEndGO, 1.5f));
+            sfxFlashAoe_end.Play();
         }
 
         public void PlayAoe()
         {
             flashAoeGO.transform.SetParent(null);
             flashAoeGO.SetActive(true);
-            sfxFlashAoe.Play();
             StartCoroutine(IEHideObject(flashAoeGO, 1.5f));
         }
         
