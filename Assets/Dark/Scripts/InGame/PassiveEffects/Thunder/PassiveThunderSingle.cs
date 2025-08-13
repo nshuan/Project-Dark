@@ -44,8 +44,8 @@ namespace InGame
                             else
                             {
                                 triggerredEnemy.Damage((int)(triggerredEnemy.MaxHealth * value), triggerredEnemy.transform.position, stagger);
-                                sfx.Play();
                             }
+                            sfx.Play();
                         }
                         
                         cameraShakeEffect.Duration = 0.5f;
@@ -73,6 +73,7 @@ namespace InGame
                         {
                             triggerredEnemy.Damage((int)(triggerredEnemy.MaxHealth * value / 100), triggerredEnemy.transform.position, stagger);
                         }
+                        sfx.Play();
                     }
                     
                     cameraShakeEffect.Duration = 0.5f;
