@@ -3,7 +3,7 @@ namespace GoogleSheetTool
 {
     public enum GoogleSheetTabs
     {
-        TestSheet1, // "TestSheet1"
-        SheetTest2, // "SheetTest2"
+        Enemy, // "Enemy"
+        Passive, // "Passive"
     }
 }
