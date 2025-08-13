@@ -1,5 +1,5 @@
 // Auto-generated. Do not edit by hand.
-namespace Generated
+namespace GoogleSheetTool
 {
     public enum GoogleSheetTabs
     {
