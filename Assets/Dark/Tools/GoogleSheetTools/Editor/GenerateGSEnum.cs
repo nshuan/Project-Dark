@@ -26,7 +26,7 @@ public static class GenerateGoogleSheetsEnum
             return;
         }
 
-        var url = $"https://sheets.googleapis.com/v4/spreadsheets/{GoogleSheetConst.SpreadsheetId}?fields=sheets.properties.title&key={GoogleSheetConst.ApiKey}";
+        var url = $"https://sheets.googleapis.com/v4/spreadsheets/{GoogleSheetConst.SpreadsheetId}?fields=sheets.properties(title,sheetId)&key={GoogleSheetConst.ApiKey}";
         EditorCoroutineUtility.StartCoroutineOwnerless(FetchAndWriteEnum(url, isApi:true));
     }
 
@@ -56,36 +56,28 @@ public static class GenerateGoogleSheetsEnum
                 yield break;
             }
 
-            List<string> sheetNames;
-            try
-            {
-                sheetNames = isApi ? ParseSheetNamesFromApiJson(req.downloadHandler.text)
-                                   : ParseSheetNamesFromXlsx(req.downloadHandler.data);
-            }
+            List<TabInfo> tabs;
+            try { tabs = ParseTabsFromApiJson(req.downloadHandler.text); }
             catch (Exception e)
             {
                 Debug.LogError("Parsing error: " + e);
                 yield break;
             }
 
-            if (sheetNames == null || sheetNames.Count == 0)
+            if (tabs == null || tabs.Count == 0)
             {
                 Debug.LogWarning("No sheets found.");
                 yield break;
             }
 
-            var enumCode = BuildEnumSource(EnumName, sheetNames);
-            var directory = Path.GetDirectoryName(OutputPath);
-            if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
-            File.WriteAllText(OutputPath, enumCode, new UTF8Encoding(false));
-            AssetDatabase.Refresh();
-
-            Debug.Log($"Generated enum '{EnumName}' with {sheetNames.Count} entries at: {OutputPath}");
+            var code = BuildEnumWithGids(EnumName, "GoogleSheetTool", tabs);
+            WriteCode(OutputPath, code);
+            Debug.Log($"Generated enum '{EnumName}' (with gid values) at: {OutputPath}");
         }
     }
 
     // --- Parse JSON from Sheets API v4: { "sheets":[ { "properties": { "title":"Sheet1" }}, ... ] }
-    [Serializable] private class SheetProps { public string title; }
+    [Serializable] private class SheetProps { public string title; public int sheetId; }
     [Serializable] private class Sheet      { public SheetProps properties; }
     [Serializable] private class Root       { public List<Sheet> sheets; }
 
@@ -104,64 +96,67 @@ public static class GenerateGoogleSheetsEnum
         return list;
     }
 
-    // --- Parse XLSX (no external libs, super-light “peek” for sheet names)
-    // This minimal reader scans [Content_Types].xml and xl/workbook.xml for sheet titles.
-    // For robust .xlsx parsing, consider NPOI, but this works for getting tab names without extra packages.
-    private static List<string> ParseSheetNamesFromXlsx(byte[] xlsxBytes)
+    private static List<TabInfo> ParseTabsFromApiJson(string json)
     {
-        // XLSX is a zip; we’ll extract xl/workbook.xml and read <sheet name="...">
-        // We’ll use System.IO.Compression which is available in .NET 4.x (Player settings: Api Compatibility Level .NET 4.x)
-        using (var ms = new MemoryStream(xlsxBytes))
-        using (var archive = new System.IO.Compression.ZipArchive(ms, System.IO.Compression.ZipArchiveMode.Read))
+        var root = JsonUtility.FromJson<Root>(json);
+        var outList = new List<TabInfo>();
+        if (root?.sheets != null)
         {
-            var entry = archive.GetEntry("xl/workbook.xml");
-            if (entry == null) throw new Exception("workbook.xml not found in xlsx");
-
-            using (var stream = entry.Open())
-            using (var sr = new StreamReader(stream, Encoding.UTF8))
+            foreach (var s in root.sheets)
             {
-                var xml = sr.ReadToEnd();
-                // crude but effective: match name="Sheet Name"
-                var matches = Regex.Matches(xml, "name=\"([^\"]+)\"");
-                var list = new List<string>();
-                foreach (Match m in matches)
-                {
-                    var name = m.Groups[1].Value;
-                    if (!string.IsNullOrEmpty(name)) list.Add(name);
-                }
-                return list;
+                var p = s?.properties;
+                if (!string.IsNullOrEmpty(p?.title))
+                    outList.Add(new TabInfo { Title = p.title, Gid = p.sheetId });
             }
         }
+        return outList;
     }
 
-    private static string BuildEnumSource(string enumName, List<string> rawNames)
+    private static string BuildEnumWithGids(string enumName, string ns, List<TabInfo> tabs)
     {
         var used = new HashSet<string>();
         var sb = new StringBuilder();
         sb.AppendLine("// Auto-generated. Do not edit by hand.");
-        sb.AppendLine("namespace GoogleSheetTool");
+        sb.AppendLine($"namespace {ns}");
         sb.AppendLine("{");
-        sb.AppendLine($"    public enum {enumName}");
+        sb.AppendLine($"    public enum {enumName} : int");
         sb.AppendLine("    {");
-
-        foreach (var raw in rawNames)
+        foreach (var t in tabs)
         {
-            var ident = ToValidIdentifier(raw);
-            // ensure unique
-            var final = ident;
-            int suffix = 1;
-            while (used.Contains(final))
-                final = ident + "_" + (++suffix).ToString();
-
-            used.Add(final);
-            sb.AppendLine($"        {final}, // \"{raw}\"");
+            var ident = ToValidIdentifier(t.Title);
+            var final = EnsureUnique(ident, used);
+            sb.AppendLine($"        {final} = {t.Gid}, // \"{t.Title}\" (gid {t.Gid})");
         }
-
+        sb.AppendLine("    }");
+        sb.AppendLine();
+        // Optional convenience: maps between enum and original titles
+        sb.AppendLine($"    public static class {enumName}Info");
+        sb.AppendLine("    {");
+        sb.AppendLine($"        public static readonly System.Collections.Generic.Dictionary<" +
+                      $"{enumName}, string> TitleByEnum = new System.Collections.Generic.Dictionary<{enumName}, string>");
+        sb.AppendLine("        {");
+        foreach (var t in tabs)
+        {
+            var ident = EnsureUnique(ToValidIdentifier(t.Title), null); // not adding to shared set
+            sb.AppendLine($"            {{ {enumName}.{ident}, \"{EscapeString(t.Title)}\" }},");
+        }
+        sb.AppendLine("        };");
         sb.AppendLine("    }");
         sb.AppendLine("}");
         return sb.ToString();
     }
 
+    private static string EnsureUnique(string ident, HashSet<string> usedOrNull)
+    {
+        if (usedOrNull == null) return ident; // for read-only mapping emit
+        var final = ident;
+        int suffix = 1;
+        while (usedOrNull.Contains(final))
+            final = ident + "_" + (++suffix).ToString();
+        usedOrNull.Add(final);
+        return final;
+    }
+    
     private static string ToValidIdentifier(string s)
     {
         if (string.IsNullOrEmpty(s)) return "_Empty";
@@ -175,6 +170,22 @@ public static class GenerateGoogleSheetsEnum
         id = id.Trim('_');
         return string.IsNullOrEmpty(id) ? "_Unnamed" : id;
     }
+    
+    private static string EscapeString(string s) => s.Replace("\\", "\\\\").Replace("\"", "\\\"");
+
+    private static void WriteCode(string path, string code)
+    {
+        var dir = Path.GetDirectoryName(path);
+        if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+        File.WriteAllText(path, code, new UTF8Encoding(false));
+        AssetDatabase.Refresh();
+    }
+}
+
+public struct TabInfo
+{
+    public string Title; // e.g. "GameplayConfig"
+    public int Gid;      // e.g. 123456789
 }
 
 #endif

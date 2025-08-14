@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using GoogleSheetTool;
 using InGame;
@@ -11,6 +12,7 @@ public class ImportDataWindow : EditorWindow
     public GoogleSheetTabs tabName; // The name of the tab (page) to fetch
     
     private GoogleSheetConfig gsConfig;
+    private Dictionary<GoogleSheetTabs, ConfigImporter> importerMap;
 
     [MenuItem("Tools/Dark/Google Sheets/Import Data")]
     public static void ShowWindow()
@@ -39,10 +41,11 @@ public class ImportDataWindow : EditorWindow
             return;
         }
 
-        gsConfig ??= AssetDatabase.LoadAssetAtPath<GoogleSheetConfig>(GoogleSheetConfig.Path); 
+        gsConfig ??= AssetDatabase.LoadAssetAtPath<GoogleSheetConfig>(GoogleSheetConfig.Path);
+        InitImporterMap();
 
         // string url = $"https://docs.google.com/spreadsheets/d/{GoogleSheetConst.SpreadsheetId}/gviz/tq?tqx=out:csv&sheet={Uri.EscapeDataString(tabName.ToString())}";
-        var url = $"https://docs.google.com/spreadsheets/d/{GoogleSheetConst.SpreadsheetId}/export?format=csv&gid=0";
+        var url = $"https://docs.google.com/spreadsheets/d/{GoogleSheetConst.SpreadsheetId}/export?format=csv&gid={(int)tabName}";
 
         string csvContent;
         using (WebClient client = new WebClient())
@@ -59,15 +62,16 @@ public class ImportDataWindow : EditorWindow
 
         var csvTable = ParseCsv(csvContent);
 
-        switch (tabName)
+        var listDataToUpdate = gsConfig.data.Where((data) => data.sheetName == tabName).ToArray();
+        if (listDataToUpdate.Length == 0)
         {
-            case GoogleSheetTabs.Enemy:
-                EnemyConfigImporter.Import(gsConfig.enemies.configs, csvTable);
-                break;
-            case GoogleSheetTabs.Passive:
-                break;
-            default:
-                break;
+            Debug.LogError($"No Data with sheet name {tabName} found!");
+            return;
+        }
+        
+        foreach (var data in listDataToUpdate)
+        {
+            importerMap[tabName].Import(data.configs, csvTable);
         }
 
         AssetDatabase.SaveAssets();
@@ -84,7 +88,7 @@ public class ImportDataWindow : EditorWindow
         for (int i = 0; i < csvContent.Length; i++)
         {
             char c = csvContent[i];
-
+            
             if (c == '\"')
             {
                 // Toggle inQuotes when encountering an unescaped quote
@@ -130,4 +134,12 @@ public class ImportDataWindow : EditorWindow
         return rows;
     }
 
+    private void InitImporterMap()
+    {
+        if (importerMap != null) return;
+        importerMap = new Dictionary<GoogleSheetTabs, ConfigImporter>();
+
+        importerMap.TryAdd(GoogleSheetTabs.Enemy, new EnemyConfigImporter());
+        importerMap.TryAdd(GoogleSheetTabs.Passive, new EnemyConfigImporter());
+    }
 }
