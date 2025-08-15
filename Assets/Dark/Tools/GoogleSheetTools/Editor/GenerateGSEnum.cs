@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using GoogleSheetTool;
+using Dark.Tools.GoogleSheetTool;
 using Unity.EditorCoroutines.Editor;
+using Dark.Tools.Utils;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -74,13 +75,7 @@ public static class GenerateGoogleSheetsEnum
                 yield break;
             }
 
-            var enumCode = BuildEnumSource(EnumName, sheetNames);
-            var directory = Path.GetDirectoryName(OutputPath);
-            if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
-            File.WriteAllText(OutputPath, enumCode, new UTF8Encoding(false));
-            AssetDatabase.Refresh();
-
-            Debug.Log($"Generated enum '{EnumName}' with {sheetNames.Count} entries at: {OutputPath}");
+            UtilGenerateEnum.GenerateEnumScript(OutputPath, sheetNames, EnumName, "Dark.Tools.GoogleSheetTool");
         }
     }
 
@@ -132,48 +127,6 @@ public static class GenerateGoogleSheetsEnum
                 return list;
             }
         }
-    }
-
-    private static string BuildEnumSource(string enumName, List<string> rawNames)
-    {
-        var used = new HashSet<string>();
-        var sb = new StringBuilder();
-        sb.AppendLine("// Auto-generated. Do not edit by hand.");
-        sb.AppendLine("namespace GoogleSheetTool");
-        sb.AppendLine("{");
-        sb.AppendLine($"    public enum {enumName}");
-        sb.AppendLine("    {");
-
-        foreach (var raw in rawNames)
-        {
-            var ident = ToValidIdentifier(raw);
-            // ensure unique
-            var final = ident;
-            int suffix = 1;
-            while (used.Contains(final))
-                final = ident + "_" + (++suffix).ToString();
-
-            used.Add(final);
-            sb.AppendLine($"        {final}, // \"{raw}\"");
-        }
-
-        sb.AppendLine("    }");
-        sb.AppendLine("}");
-        return sb.ToString();
-    }
-
-    private static string ToValidIdentifier(string s)
-    {
-        if (string.IsNullOrEmpty(s)) return "_Empty";
-        // Replace non-alphanumeric with underscores
-        string id = Regex.Replace(s, @"[^a-zA-Z0-9_]", "_");
-        // If starts with digit, prefix underscore
-        if (Regex.IsMatch(id, @"^[0-9]")) id = "_" + id;
-        // Collapse multiple underscores
-        id = Regex.Replace(id, @"_+", "_");
-        // Trim underscores from ends
-        id = id.Trim('_');
-        return string.IsNullOrEmpty(id) ? "_Unnamed" : id;
     }
 }
 

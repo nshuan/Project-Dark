@@ -5,7 +5,7 @@ using InGame;
 using UnityEditor;
 using UnityEngine;
 
-namespace GoogleSheetTool
+namespace Dark.Tools.GoogleSheetTool
 {
     public class EnemyConfigImporter
     {

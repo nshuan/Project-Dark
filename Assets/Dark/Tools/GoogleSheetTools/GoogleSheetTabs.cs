@@ -1,5 +1,5 @@
 // Auto-generated. Do not edit by hand.
-namespace GoogleSheetTool
+namespace Dark.Tools.GoogleSheetTool
 {
     public enum GoogleSheetTabs
     {

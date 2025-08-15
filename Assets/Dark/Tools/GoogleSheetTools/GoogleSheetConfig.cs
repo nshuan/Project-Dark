@@ -8,7 +8,7 @@ using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
 
-namespace GoogleSheetTool
+namespace Dark.Tools.GoogleSheetTool
 {
     public class GoogleSheetConfig : ScriptableObject
     {
