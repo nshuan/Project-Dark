@@ -14,13 +14,14 @@ namespace Dark.Tools.GoogleSheetTool
     {
         public static string Path = "Assets/Dark/Tools/GoogleSheetTools/GoogleSheetConfig.asset";
         
-        public GSEnemyDataInfo enemies;
+        public GoogleSheetDataInfo[] data;
     }
     
-    public class GoogleSheetDataInfo<T> where T : ScriptableObject
+    [Serializable]
+    public class GoogleSheetDataInfo
     {
         public GoogleSheetTabs sheetName;
-        public T[] configs;
+        public ScriptableObject[] configs;
 
 #if UNITY_EDITOR
         [Space]
@@ -37,12 +38,12 @@ namespace Dark.Tools.GoogleSheetTool
             
             var folderPath = UnityEditor.AssetDatabase.GetAssetPath(configFolderPath);
             string[] guids = UnityEditor.AssetDatabase.FindAssets("t:" + nameof(ScriptableObject), new[] { folderPath });
-            List<(int, T)> assets = new List<(int, T)>();
+            List<(int, ScriptableObject)> assets = new List<(int, ScriptableObject)>();
 
             foreach (string guid in guids)
             {
                 string path = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
-                T asset = UnityEditor.AssetDatabase.LoadAssetAtPath<T>(path);
+                ScriptableObject asset = UnityEditor.AssetDatabase.LoadAssetAtPath<ScriptableObject>(path);
                 if (asset == null) continue;
                 
                 // Validate configs name
@@ -71,11 +72,5 @@ namespace Dark.Tools.GoogleSheetTool
             EditorUtility.SetDirty(AssetDatabase.LoadAssetAtPath<GoogleSheetConfig>(GoogleSheetConfig.Path));
         }
 #endif
-    }
-    
-    [Serializable]
-    public class GSEnemyDataInfo : GoogleSheetDataInfo<EnemyBehaviour>
-    {
-        
     }
 }

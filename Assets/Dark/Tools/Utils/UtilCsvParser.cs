@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Dark.Tools.Utils
 {
@@ -7,9 +9,9 @@ namespace Dark.Tools.Utils
         public static List<string[]> Parse(string csvContent)
         {
             var rows = new List<string[]>();
+            var currentRow = new List<string>();
+            var currentValue = new StringBuilder();
             bool inQuotes = false;
-            string currentValue = "";
-            List<string> currentRow = new List<string>();
 
             for (int i = 0; i < csvContent.Length; i++)
             {
@@ -17,12 +19,11 @@ namespace Dark.Tools.Utils
 
                 if (c == '\"')
                 {
-                    // Toggle inQuotes when encountering an unescaped quote
                     if (inQuotes && i + 1 < csvContent.Length && csvContent[i + 1] == '\"')
                     {
                         // Escaped quote
-                        currentValue += '\"';
-                        i++;
+                        currentValue.Append('\"');
+                        i++; // Skip next quote
                     }
                     else
                     {
@@ -31,29 +32,36 @@ namespace Dark.Tools.Utils
                 }
                 else if (c == ',' && !inQuotes)
                 {
-                    currentRow.Add(currentValue);
-                    currentValue = "";
+                    currentRow.Add(currentValue.ToString());
+                    currentValue.Clear();
                 }
                 else if ((c == '\n' || c == '\r') && !inQuotes)
                 {
-                    if (!string.IsNullOrEmpty(currentValue) || currentRow.Count > 0)
-                    {
-                        currentRow.Add(currentValue);
-                        rows.Add(currentRow.ToArray());
-                        currentRow = new List<string>();
-                        currentValue = "";
-                    }
+                    // Handle \r\n (Windows newlines)
+                    if (c == '\r' && i + 1 < csvContent.Length && csvContent[i + 1] == '\n')
+                        i++;
+
+                    currentRow.Add(currentValue.ToString());
+                    rows.Add(currentRow.ToArray());
+
+                    currentRow = new List<string>();
+                    currentValue.Clear();
                 }
                 else
                 {
-                    currentValue += c;
+                    currentValue.Append(c);
                 }
             }
-                
-            // Add last row if any
-            if (!string.IsNullOrEmpty(currentValue) || currentRow.Count > 0)
+
+            // Add final value and row if needed
+            if (inQuotes)
             {
-                currentRow.Add(currentValue);
+                throw new FormatException("Malformed CSV: unmatched quote.");
+            }
+
+            if (currentValue.Length > 0 || currentRow.Count > 0)
+            {
+                currentRow.Add(currentValue.ToString());
                 rows.Add(currentRow.ToArray());
             }
 
