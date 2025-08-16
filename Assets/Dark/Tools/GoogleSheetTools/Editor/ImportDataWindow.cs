@@ -12,7 +12,6 @@ public class ImportDataWindow : EditorWindow
     public GoogleSheetTabs tabName; // The name of the tab (page) to fetch
     
     private GoogleSheetConfig gsConfig;
-    private Dictionary<GoogleSheetTabs, ConfigImporter> importerMap;
 
     [MenuItem("Tools/Dark/Google Sheets/Import Data")]
     public static void ShowWindow()
@@ -42,7 +41,6 @@ public class ImportDataWindow : EditorWindow
         }
 
         gsConfig ??= AssetDatabase.LoadAssetAtPath<GoogleSheetConfig>(GoogleSheetConfig.Path);
-        InitImporterMap();
 
         // string url = $"https://docs.google.com/spreadsheets/d/{GoogleSheetConst.SpreadsheetId}/gviz/tq?tqx=out:csv&sheet={Uri.EscapeDataString(tabName.ToString())}";
         var url = $"https://docs.google.com/spreadsheets/d/{GoogleSheetConst.SpreadsheetId}/export?format=csv&gid={(int)tabName}";
@@ -71,7 +69,7 @@ public class ImportDataWindow : EditorWindow
         
         foreach (var data in listDataToUpdate)
         {
-            importerMap[tabName].Import(data.configs, csvTable);
+            ConfigImporter.Import(data.configs, csvTable);
         }
 
         AssetDatabase.SaveAssets();
@@ -132,14 +130,5 @@ public class ImportDataWindow : EditorWindow
         }
 
         return rows;
-    }
-
-    private void InitImporterMap()
-    {
-        if (importerMap != null) return;
-        importerMap = new Dictionary<GoogleSheetTabs, ConfigImporter>();
-
-        importerMap.TryAdd(GoogleSheetTabs.Enemy, new EnemyConfigImporter());
-        importerMap.TryAdd(GoogleSheetTabs.Passive, new EnemyConfigImporter());
     }
 }

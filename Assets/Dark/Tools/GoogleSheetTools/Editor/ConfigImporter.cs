@@ -2,15 +2,71 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
+using UnityEditor;
 using UnityEngine;
 
 namespace GoogleSheetTool
 {
-    public abstract class ConfigImporter
+    public class ConfigImporter
     {
-        public abstract void Import(ScriptableObject[] configs, List<string[]> csvData);
+        public static void Import(ScriptableObject[] configs, List<string[]> csvData)
+        {
+            var configDict = new Dictionary<int, ScriptableObject>();
+            foreach (var config in configs)
+            {
+                // Validate configs name
+                var underscoreIndex = config.name.IndexOf('_');
+                if (underscoreIndex <= 0)
+                {
+                    Debug.LogError($"Invalid config name: {config.name}");
+                    continue;
+                }
 
-        public void SetValue(ScriptableObject instance, string fieldName, string value)
+                // Validate config index
+                if (int.TryParse(config.name.Substring(0, underscoreIndex), out var configId))
+                {
+                    configDict.Add(configId, config);
+                }
+                else
+                {
+                    Debug.LogError($"Invalid config id: {config.name}");
+                    return;
+                }
+                
+                configDict.TryAdd(configId, config);
+            }
+            
+            // Header is field names
+            var fields = csvData[0];
+            
+            for (int i = 1; i < csvData.Count; i++) // Skip header
+            {
+                var cols = csvData[i];
+                if (cols == null || cols.Length == 0) continue;
+                
+                if (!int.TryParse(cols[0], out var csvEnemyId))
+                {
+                    Debug.LogWarning($"Row {i+1} skipped — invalid enemyId");
+                    continue;
+                }
+
+                if (configDict.TryGetValue(csvEnemyId, out ScriptableObject config))
+                {
+                    for (var fieldIndex = 0; fieldIndex < cols.Length; fieldIndex++)
+                    {
+                        SetValue(config, fields[fieldIndex], cols[fieldIndex]);
+                    }
+
+                    EditorUtility.SetDirty(config);
+                }
+                else
+                {
+                    Debug.LogError($"No matching config found for enemyId {csvEnemyId}");
+                }
+            }
+        }
+
+        public static void SetValue(ScriptableObject instance, string fieldName, string value)
         {
             Type type = instance.GetType();
 
