@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using UnityEditor;
 using UnityEngine;
 
 namespace InGame.GateEditor
@@ -13,7 +14,7 @@ namespace InGame.GateEditor
         [Space]
         [SerializeField] private LevelConfig level;
         
-        private List<LevelWaveEditor> waves = new List<LevelWaveEditor>();
+        public List<LevelWaveEditor> waves = new List<LevelWaveEditor>();
 
         [Button]
         public void Loadlevel()
@@ -37,6 +38,8 @@ namespace InGame.GateEditor
                 newWaveEditor.LoadWaves(wave);
                 waves.Add(newWaveEditor);
             }
+            
+            EditorUtility.SetDirty(this);
         }
 
         [Button]
@@ -46,6 +49,8 @@ namespace InGame.GateEditor
             {
                 wave.SaveWave();
             }
+            
+            EditorUtility.SetDirty(level);
         }
     }
 }

@@ -8,8 +8,8 @@ namespace InGame.GateEditor
     public class LevelWaveEditor : MonoBehaviour
     {
         [SerializeField] private LevelGateConfigEditor gateEditorPrefab;
-        
-        public WaveConfig WaveConfig { get; set; }
+
+        public WaveConfig WaveConfig;
 
         public void LoadWaves(WaveInfo waveInfo)
         {
@@ -33,6 +33,8 @@ namespace InGame.GateEditor
                 var newGate = Instantiate(gateEditorPrefab, transform);
                 newGate.SetupGate(gateConfig);
             }
+            
+            EditorUtility.SetDirty(this);
         }
         
         private bool IsWaveInfoNull => WaveConfig == null;
@@ -79,6 +81,8 @@ namespace InGame.GateEditor
                     });
                 }
             }
+            
+            EditorUtility.SetDirty(WaveConfig);
         }
     }
 }
