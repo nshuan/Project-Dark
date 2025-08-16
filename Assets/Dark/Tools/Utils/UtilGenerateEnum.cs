@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -11,10 +12,10 @@ namespace Dark.Tools.Utils
 #if UNITY_EDITOR
     public class UtilGenerateEnum
     {
-        public static void GenerateEnumScript(string path, List<string> rawNames, string enumName,
+        public static void GenerateEnumScript(string path,  string enumName, List<string> rawNames, List<int> values = null,
             string spacename = "Dark.Tools")
         {
-            var code = GenerateEnumCode(rawNames, enumName, spacename);
+            var code = GenerateEnumCode(enumName, rawNames, values, spacename);
             var directory = Path.GetDirectoryName(path);
             if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
             File.WriteAllText(path, code, new UTF8Encoding(false));
@@ -23,7 +24,7 @@ namespace Dark.Tools.Utils
             Debug.Log($"Generated enum '{enumName}' with {rawNames.Count} entries at: {path}");
         }
         
-        public static string GenerateEnumCode(List<string> rawNames, string enumName, string spacename = "Dark.Tools")
+        public static string GenerateEnumCode(string enumName, List<string> rawNames, List<int> values = null, string spacename = "Dark.Tools")
         {
             var used = new HashSet<string>();
             var sb = new StringBuilder();
@@ -33,8 +34,9 @@ namespace Dark.Tools.Utils
             sb.AppendLine($"    public enum {enumName}");
             sb.AppendLine("    {");
 
-            foreach (var raw in rawNames)
+            for (var i = 0; i < rawNames.Count; i++)
             {
+                var raw = rawNames[i];
                 var ident = ToValidIdentifier(raw);
                 // ensure unique
                 var final = ident;
@@ -42,8 +44,9 @@ namespace Dark.Tools.Utils
                 while (used.Contains(final))
                     final = ident + "_" + (++suffix).ToString();
 
+                var value = values == null ? "" : $" = {values[i]}";
                 used.Add(final);
-                sb.AppendLine($"        {final}, // \"{raw}\"");
+                sb.AppendLine($"        {final}{value}, // \"{raw}\"");
             }
 
             sb.AppendLine("    }");

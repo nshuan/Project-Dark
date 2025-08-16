@@ -11,11 +11,12 @@ using UnityEngine;
 
 public class ImportDataWindow : EditorWindow
 {
+    public string sheetLink;
     public GoogleSheetTabs tabName; // The name of the tab (page) to fetch
     
     private GoogleSheetConfig gsConfig;
 
-    [MenuItem("Tools/Dark/Google Sheets/Import Data")]
+    [MenuItem("Dark/Google Sheets/Import Data")]
     public static void ShowWindow()
     {
         GetWindow<ImportDataWindow>("Data Importer");
@@ -24,6 +25,15 @@ public class ImportDataWindow : EditorWindow
     void OnGUI()
     {
         SerializedObject so = new SerializedObject(this);
+        
+        // Sheet link
+        gsConfig ??= AssetDatabase.LoadAssetAtPath<GoogleSheetConfig>(GoogleSheetConfig.Path);
+        sheetLink = gsConfig.sheetLink;
+        sheetLink = EditorGUILayout.TextField("Sheet Link", sheetLink);
+        
+        EditorGUILayout.Space();
+        
+        // Tab name
         tabName = (GoogleSheetTabs)EditorGUILayout.EnumPopup("TabName", tabName);
 
         if (GUILayout.Button("Import Data"))
@@ -36,17 +46,16 @@ public class ImportDataWindow : EditorWindow
 
     void ImportData()
     {
-        if (string.IsNullOrEmpty(GoogleSheetConst.SpreadsheetId))
+        if (string.IsNullOrEmpty(sheetLink))
         {
             Debug.LogError("Sheet ID or Tab Name is empty!");
             return;
         }
 
         gsConfig ??= AssetDatabase.LoadAssetAtPath<GoogleSheetConfig>(GoogleSheetConfig.Path);
-
-        // string url = $"https://docs.google.com/spreadsheets/d/{GoogleSheetConst.SpreadsheetId}/gviz/tq?tqx=out:csv&sheet={Uri.EscapeDataString(tabName.ToString())}";
-        var url = $"https://docs.google.com/spreadsheets/d/{GoogleSheetConst.SpreadsheetId}/export?format=csv&gid={(int)tabName}";
-
+        
+        var url = $"{sheetLink}&gid={(int)tabName}";
+        
         string csvContent;
         using (WebClient client = new WebClient())
         {

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GenerateGSConfig
 {
-    [MenuItem("Tools/Dark/Google Sheets/Generate Config")]
+    [MenuItem("Dark/Google Sheets/Generate Config")]
     public static void CreateInstance()
     {
         if (File.Exists(GoogleSheetConfig.Path))

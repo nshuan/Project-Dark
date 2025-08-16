@@ -13,7 +13,12 @@ namespace Dark.Tools.GoogleSheetTool
     public class GoogleSheetConfig : ScriptableObject
     {
         public static string Path = "Assets/Dark/Tools/GoogleSheetTools/GoogleSheetConfig.asset";
+
+        public string sheetLink;
+        public string sheetId;
+        public string sheetApiKey;
         
+        [Space]
         public GoogleSheetDataInfo[] data;
     }
     
