@@ -20,7 +20,7 @@ namespace Dark.Tools.Description.Editor
         private const string EnumClassName =  "DescriptionType";
         private const string EnumPath = "Assets/Dark/Tools/Description/Runtime/DescriptionType.cs";
 
-        [MenuItem("Tools/Dark/Description/Generate Language Enum")]
+        [MenuItem("Dark/Description/Generate Language Enum")]
         public static void GenerateLanguageEnum()
         {
             var sheetLink = AssetDatabase.LoadAssetAtPath<DescriptionConfig>(DescriptionConfig.Path).dataSheetLink;
@@ -55,10 +55,10 @@ namespace Dark.Tools.Description.Editor
                 languageNames.Add(headers[i]);
             
             // Generate enum file
-            UtilGenerateEnum.GenerateEnumScript(EnumPath, languageNames.ToList(), EnumClassName, "Dark.Tools.Description");
+            UtilGenerateEnum.GenerateEnumScript(EnumPath, EnumClassName, languageNames.ToList(), null, "Dark.Tools.Description");
         }
         
-        [MenuItem("Tools/Dark/Description/Import Descriptions")]
+        [MenuItem("Dark/Description/Import Descriptions")]
         public static void Import()
         {
             if (!File.Exists(EnumPath))
@@ -100,7 +100,6 @@ namespace Dark.Tools.Description.Editor
             List<string> languageNames = new List<string>();
             for (int i = 1; i < headers.Length; i++)
                 languageNames.Add(headers[i]);
-
             
             // Parse rows
             for (int row = 1; row < lines.Length; row++)
