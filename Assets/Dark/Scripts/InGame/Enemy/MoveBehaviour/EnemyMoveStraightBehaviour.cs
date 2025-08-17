@@ -1,3 +1,4 @@
+using InGame.MapBoundary;
 using UnityEngine;
 
 namespace InGame
@@ -26,18 +27,17 @@ namespace InGame
         public override void MoveNonAlloc(Transform enemy, Vector2 target, Vector2 directionAdder, float stopRange, float speed,
             ref Vector3 direction)
         {
-            var enemyPos = enemy.position;
-            var distance = Vector2.Distance(enemyPos, target);
+            var distance = Vector2.Distance(enemy.position, target);
             if (distance > MinDelta)
             {
-                var dirX = target.x - enemyPos.x;
-                var dirY = target.y - enemyPos.y;
+                var dirX = target.x - enemy.position.x;
+                var dirY = target.y - enemy.position.y;
                 var magnitude = Mathf.Sqrt(dirX * dirX + dirY * dirY);
                 direction.x = dirX + directionAdder.x * magnitude;
                 direction.y = dirY + directionAdder.y * magnitude;
                 direction.z = 0;
                 // Remove normalized to make it similar to Vector3.Lerp
-                enemy.position = enemyPos + direction.normalized * (Time.deltaTime * speed);
+                enemy.position += direction.normalized * (Time.deltaTime * speed);
             }
         }
     }

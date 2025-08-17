@@ -4,6 +4,7 @@ using Dark.Scripts.Audio;
 using DG.Tweening;
 using Economic;
 using InGame.EnemyEffect;
+using InGame.MapBoundary;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -13,7 +14,8 @@ namespace InGame
     public class EnemyEntity : MonoBehaviour, IDamageable, IEffectTarget
     {
         [SerializeField] private Collider2D collider2d;
-        
+
+        private MapBoundaryManager boundaryManager;
         public Transform Target { get; set; }
         public TowerEntity TargetTower { get; set; }
         private EnemyBehaviour config;
@@ -55,6 +57,11 @@ namespace InGame
         private float freezeDuration;
         
         #region Initialize
+
+        private void Awake()
+        {
+            boundaryManager = MapBoundaryManager.Instance;
+        }
 
         public void Init(EnemyBehaviour eConfig, TowerEntity target, float hpMultiplier, float dmgMultiplier, float levelExpRatio, float levelDarkRatio)
         {
@@ -133,7 +140,15 @@ namespace InGame
             }
             else
             {
-                boidAgent.GetBoidAdditionNonAlloc(ref directionAddition);
+                if (boundaryManager.ContainPoint(transform.position))
+                {
+                    directionAddition.x = 0;
+                    directionAddition.y = 0;
+                }
+                else
+                {
+                    boidAgent.GetBoidAdditionNonAlloc(ref directionAddition);
+                }
                 MoveTo(Target);
             }
         }
