@@ -15,43 +15,27 @@ namespace Dark.Scripts.Audio
     /// </summary>
     public class AudioManager : MonoSingleton<AudioManager>
     {
-        [SerializeField] private AudioSource[] sources;
-
-        private Dictionary<int, List<AudioSource>> sourcePoolMap;
+        [SerializeField] private AudioSourceComponent[] sources;
             
         [Header("Settings")]
         public int initialPoolSize = 10; // starting number of AudioSources
 
-        private Dictionary<int, int> nextIndexMap;
-
-        private void Awake()
+        private void Start()
         {
-            sourcePoolMap =  new Dictionary<int, List<AudioSource>>();
-            nextIndexMap = new Dictionary<int, int>();
             for (int index = 0; index < sources.Length; index++)
             {
+                sources[index].Source = sources[index].GetComponent<AudioSource>();
                 var pool = new List<AudioSource>();
                 for (int i = 0; i < initialPoolSize; i++)
                 {
                     var sourceSub = new GameObject($"{sources[index].name} - {i}");
                     sourceSub.transform.SetParent(sources[index].transform);
                     var sourceComponent = sourceSub.AddComponent<AudioSource>();
-                    
-                    sourceComponent.clip = sources[index].clip;
-                    sourceComponent.playOnAwake = sources[index].playOnAwake;
-                    sourceComponent.loop = sources[index].loop;
-                    sourceComponent.priority = sources[index].priority;
-                    sourceComponent.volume = sources[index].volume;
-                    sourceComponent.pitch = sources[index].pitch;
-                    sourceComponent.panStereo = sources[index].panStereo;
-                    sourceComponent.spatialBlend = sources[index].spatialBlend;
-                    sourceComponent.reverbZoneMix = sources[index].reverbZoneMix;
-                    sourceComponent.playOnAwake = false;
-                    
                     pool.Add(sourceComponent);
                 }
-                sourcePoolMap[index] = pool;
-                nextIndexMap[index] = 0;
+                sources[index].SourcePool = pool;
+                sources[index].UpdateSourceInPool();
+                sources[index].NextIndex = 0;
             }
         }
 
@@ -60,17 +44,7 @@ namespace Dark.Scripts.Audio
         /// </summary>
         public void PlaySFX(int index, float volume = -1f, float pitch = -10f, float delay = 0f)
         {
-            AudioSource src = sourcePoolMap[index][nextIndexMap[index]];
-            nextIndexMap[index] = (nextIndexMap[index] + 1) % sourcePoolMap[index].Count;
-            
-            src.volume = volume < 0 ? src.volume : volume;
-            src.pitch = pitch < -9f ? src.pitch : pitch;
-
-            if (delay > 0f)
-                src.PlayDelayed(delay);
-            else
-                src.Play();
+            sources[index].PlaySFX(volume, pitch, delay);
         }
-
     }
 }

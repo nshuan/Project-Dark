@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 869510929638736256}
   - component: {fileID: 4884066568610893849}
+  - component: {fileID: 2657296254503462490}
   m_Layer: 0
   m_Name: SourceFlash
   m_TagString: Untagged
@@ -128,6 +129,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2657296254503462490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2860267873314323471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ac1144c5fb74ced8ef7b280446586d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableRandomPitch: 0
+  randomPitchMin: 0
+  randomPitchMax: 0
 --- !u!1 &2933735623348166564
 GameObject:
   m_ObjectHideFlags: 0
@@ -138,6 +154,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1221582049580510756}
   - component: {fileID: 8961808885527769891}
+  - component: {fileID: 2105334904189855748}
   m_Layer: 0
   m_Name: SourceFire
   m_TagString: Untagged
@@ -256,6 +273,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2105334904189855748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2933735623348166564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ac1144c5fb74ced8ef7b280446586d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableRandomPitch: 0
+  randomPitchMin: 0
+  randomPitchMax: 0
 --- !u!1 &3142723149787541305
 GameObject:
   m_ObjectHideFlags: 0
@@ -266,6 +298,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8448227618716966377}
   - component: {fileID: 8145759203493865385}
+  - component: {fileID: 9163545255460878328}
   m_Layer: 0
   m_Name: SourceShoot
   m_TagString: Untagged
@@ -384,6 +417,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &9163545255460878328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3142723149787541305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ac1144c5fb74ced8ef7b280446586d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableRandomPitch: 0
+  randomPitchMin: 1
+  randomPitchMax: 3
 --- !u!1 &3577551389263146215
 GameObject:
   m_ObjectHideFlags: 0
@@ -394,6 +442,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4428160043412061890}
   - component: {fileID: 2134916274490209101}
+  - component: {fileID: 1398770469962498614}
   m_Layer: 0
   m_Name: SourceLightning
   m_TagString: Untagged
@@ -512,6 +561,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1398770469962498614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3577551389263146215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ac1144c5fb74ced8ef7b280446586d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableRandomPitch: 0
+  randomPitchMin: 0
+  randomPitchMax: 0
 --- !u!1 &5828832237223945358
 GameObject:
   m_ObjectHideFlags: 0
@@ -568,17 +632,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sources:
-  - {fileID: 8145759203493865385}
-  - {fileID: 2211616188510886021}
-  - {fileID: 2134916274490209101}
-  - {fileID: 7261600990387067805}
-  - {fileID: 1544131567242796115}
-  - {fileID: 4884066568610893849}
-  - {fileID: 8352232578871950419}
-  - {fileID: 8246038323982757136}
-  - {fileID: 8961808885527769891}
-  - {fileID: 1004459731753596296}
-  - {fileID: 8127971903939763589}
+  - {fileID: 9163545255460878328}
+  - {fileID: 4902204361103927003}
+  - {fileID: 1398770469962498614}
+  - {fileID: 6728895574384033046}
+  - {fileID: 8149401754818345936}
+  - {fileID: 2657296254503462490}
+  - {fileID: 7124866392918999371}
+  - {fileID: 1596584494420251850}
+  - {fileID: 2105334904189855748}
+  - {fileID: 1054158029192887486}
+  - {fileID: 5983828208143393248}
   initialPoolSize: 10
 --- !u!1 &6125053918502467831
 GameObject:
@@ -590,6 +654,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4379912210592199787}
   - component: {fileID: 8246038323982757136}
+  - component: {fileID: 1596584494420251850}
   m_Layer: 0
   m_Name: SourceBGM
   m_TagString: Untagged
@@ -708,6 +773,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1596584494420251850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6125053918502467831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ac1144c5fb74ced8ef7b280446586d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableRandomPitch: 0
+  randomPitchMin: 0
+  randomPitchMax: 0
 --- !u!1 &6178624039578318216
 GameObject:
   m_ObjectHideFlags: 0
@@ -718,6 +798,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2350116347379101887}
   - component: {fileID: 8127971903939763589}
+  - component: {fileID: 5983828208143393248}
   m_Layer: 0
   m_Name: SourceFlashEnd
   m_TagString: Untagged
@@ -836,6 +917,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5983828208143393248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6178624039578318216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ac1144c5fb74ced8ef7b280446586d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableRandomPitch: 0
+  randomPitchMin: 0
+  randomPitchMax: 0
 --- !u!1 &6740978388525551044
 GameObject:
   m_ObjectHideFlags: 0
@@ -846,6 +942,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2549327373614940069}
   - component: {fileID: 8352232578871950419}
+  - component: {fileID: 7124866392918999371}
   m_Layer: 0
   m_Name: SourceEnemyHit
   m_TagString: Untagged
@@ -964,6 +1061,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7124866392918999371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6740978388525551044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ac1144c5fb74ced8ef7b280446586d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableRandomPitch: 0
+  randomPitchMin: 0
+  randomPitchMax: 0
 --- !u!1 &7113142157640783664
 GameObject:
   m_ObjectHideFlags: 0
@@ -974,6 +1086,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6505617042181853044}
   - component: {fileID: 2211616188510886021}
+  - component: {fileID: 4902204361103927003}
   m_Layer: 0
   m_Name: SourceTowerHit
   m_TagString: Untagged
@@ -1092,6 +1205,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4902204361103927003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7113142157640783664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ac1144c5fb74ced8ef7b280446586d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableRandomPitch: 0
+  randomPitchMin: 0
+  randomPitchMax: 0
 --- !u!1 &8018646428415908585
 GameObject:
   m_ObjectHideFlags: 0
@@ -1102,6 +1230,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7777554034323623272}
   - component: {fileID: 1004459731753596296}
+  - component: {fileID: 1054158029192887486}
   m_Layer: 0
   m_Name: SourceExplosion
   m_TagString: Untagged
@@ -1220,6 +1349,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1054158029192887486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8018646428415908585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ac1144c5fb74ced8ef7b280446586d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableRandomPitch: 0
+  randomPitchMin: 0
+  randomPitchMax: 0
 --- !u!1 &8359207191478501258
 GameObject:
   m_ObjectHideFlags: 0
@@ -1230,6 +1374,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5456060444555377201}
   - component: {fileID: 7261600990387067805}
+  - component: {fileID: 6728895574384033046}
   m_Layer: 0
   m_Name: SourceThunder
   m_TagString: Untagged
@@ -1348,6 +1493,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6728895574384033046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8359207191478501258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ac1144c5fb74ced8ef7b280446586d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableRandomPitch: 0
+  randomPitchMin: 0
+  randomPitchMax: 0
 --- !u!1 &8788553957207425983
 GameObject:
   m_ObjectHideFlags: 0
@@ -1358,6 +1518,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8340508089306360755}
   - component: {fileID: 1544131567242796115}
+  - component: {fileID: 8149401754818345936}
   m_Layer: 0
   m_Name: SourceDash
   m_TagString: Untagged
@@ -1476,3 +1637,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8149401754818345936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8788553957207425983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ac1144c5fb74ced8ef7b280446586d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableRandomPitch: 0
+  randomPitchMin: 0
+  randomPitchMax: 0

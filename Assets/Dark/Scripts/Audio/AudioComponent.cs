@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Dark.Scripts.Audio
@@ -19,6 +20,7 @@ namespace Dark.Scripts.Audio
         /// <summary>
         /// Play audio immediately or after delay
         /// </summary>
+        [Button]
         public void Play()
         {
             AudioManager.Instance.PlaySFX(sourceIndex, delay:delay);
