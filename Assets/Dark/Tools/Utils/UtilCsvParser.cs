@@ -6,6 +6,14 @@ namespace Dark.Tools.Utils
 {
     public class UtilCsvParser
     {
+        /// <summary>
+        /// Full data get from sheet,
+        /// this function will find the first range containing full of "comment"
+        /// and get all line below that as true data
+        /// </summary>
+        /// <param name="csvContent"></param>
+        /// <returns></returns>
+        /// <exception cref="FormatException"></exception>
         public static List<string[]> Parse(string csvContent)
         {
             var rows = new List<string[]>();
@@ -65,6 +73,60 @@ namespace Dark.Tools.Utils
                 rows.Add(currentRow.ToArray());
             }
 
+            return ValidateParse(rows);
+        }
+
+        private static List<string[]> ValidateParse(List<string[]> rows)
+        {
+            int startCol = 0, endCol = 0, startRow = -1;
+            var commentFound = false;
+
+            for (var i = 0; i < rows.Count; i++)
+            {
+                for (var j = 0; j < rows[i].Length; j++)
+                {
+                    if (commentFound == false)
+                    {
+                        if (rows[i][j] == "comment")
+                        {
+                            commentFound = true;
+                            startCol = j;
+                            startRow = i + 1;
+                        }
+                    }
+                    
+                    if (commentFound == true)
+                    {
+                        if (rows[i][j] == "comment")
+                        {
+                            endCol = j;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+                
+                if (commentFound)
+                    break;
+            }
+
+            if (commentFound)
+            {
+                var result = new List<string[]>();
+                for (var i = startRow; i < rows.Count; i++)
+                {
+                    result.Add(new string[endCol - startCol + 1]);
+                    for (var j = startCol; j <= endCol; j++)
+                    {
+                        result[i - startRow][j - startCol] = rows[i][j];
+                    }
+                }
+                
+                return result;
+            }
+            
             return rows;
         }
     }
