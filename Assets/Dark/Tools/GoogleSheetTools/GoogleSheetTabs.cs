@@ -6,7 +6,7 @@ namespace Dark.Tools.GoogleSheetTool
         Enemy = 0, // "Enemy"
         Skill = 858221668, // "Skill"
         Passive = 1431028597, // "Passive"
-        Node = 1998964867, // "Node"
+        NodeConfig = 1998964867, // "NodeConfig"
         Description = 319474694, // "Description"
     }
 }

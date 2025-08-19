@@ -13,8 +13,7 @@ public class ImportDataWindow : EditorWindow
 {
     public string sheetLink;
     public GoogleSheetTabs tabName; // The name of the tab (page) to fetch
-    
-    private GoogleSheetConfig gsConfig;
+    public GoogleSheetConfig gsConfig;
 
     [MenuItem("Dark/Google Sheets/Import Data")]
     public static void ShowWindow()
@@ -26,8 +25,14 @@ public class ImportDataWindow : EditorWindow
     {
         SerializedObject so = new SerializedObject(this);
         
-        // Sheet link
+        // Google sheet config
         gsConfig ??= AssetDatabase.LoadAssetAtPath<GoogleSheetConfig>(GoogleSheetConfig.Path);
+        using (new EditorGUI.DisabledScope(true)) // disables editing
+        {
+            EditorGUILayout.ObjectField("Config", gsConfig, typeof(GoogleSheetConfig), false);
+        }
+
+        // Sheet link
         sheetLink = gsConfig.sheetLink;
         sheetLink = EditorGUILayout.TextField("Sheet Link", sheetLink);
         
@@ -77,13 +82,23 @@ public class ImportDataWindow : EditorWindow
             Debug.LogError($"No Data with sheet name {tabName} found!");
             return;
         }
-        
-        foreach (var data in listDataToUpdate)
+
+        if (tabName.ToString().ToLower().Contains("nodeconfig"))
         {
-            ConfigImporter.Import(data.configs, csvTable);
+            foreach (var data in listDataToUpdate)
+            {
+                ConfigNodeImporter.Import(data.configs, csvTable);
+            }
+        }
+        else
+        {
+            foreach (var data in listDataToUpdate)
+            {
+                ConfigImporter.Import(data.configs, csvTable);
+            }
         }
 
         AssetDatabase.SaveAssets();
-        Debug.Log($"Enemy data imported successfully from tab \"{tabName}\".");
+        Debug.Log($"Data imported successfully from tab \"{tabName}\".");
     }
 }
