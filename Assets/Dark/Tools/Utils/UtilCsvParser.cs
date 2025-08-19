@@ -91,7 +91,7 @@ namespace Dark.Tools.Utils
                         {
                             commentFound = true;
                             startCol = j;
-                            startRow = i + 1;
+                            startRow = i + 2;
                         }
                     }
                     
