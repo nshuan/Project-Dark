@@ -7,9 +7,9 @@ namespace InGame.Upgrade
 	[Serializable]
     public class NodeUnlockPassive : INodeActivateLogic
     {
-	    [SerializeField] private PassiveTriggerType triggerType;
-	    [SerializeField] private PassiveType passiveType;
-	    [SerializeField] private string bonusDescription;
+	    public PassiveTriggerType triggerType;
+	    public PassiveType passiveType;
+	    public string bonusDescription;
 	    
 	    public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)
 	    {

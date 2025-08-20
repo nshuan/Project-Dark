@@ -113,8 +113,8 @@ namespace Dark.Tools.GoogleSheetTool
 
                     var a = 1;
                     
-                    // config.nodeLogic = ConfigNodeLogicGenerator.Generate(logicInfos);
-                    // EditorUtility.SetDirty(config);
+                    config.nodeLogic = ConfigNodeLogicFactory.Generate(logicInfos);
+                    EditorUtility.SetDirty(config);
                 }
                 else
                 {
