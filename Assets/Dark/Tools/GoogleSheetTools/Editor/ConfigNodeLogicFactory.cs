@@ -105,8 +105,6 @@ namespace Dark.Tools.GoogleSheetTool
         UnlockChargePassive,
         UnlockMovePassive,
         UnlockCounterPassive,
-        UnlockAttackDame,
-        UnlockAttackSpeed,
         UnlockChargeSize,
         UnlockChargeBullet,
         BonusDropRate,
