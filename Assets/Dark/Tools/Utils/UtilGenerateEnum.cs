@@ -4,7 +4,6 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEditor;
-using UnityEditor.Recorder;
 using UnityEngine;
 
 namespace Dark.Tools.Utils

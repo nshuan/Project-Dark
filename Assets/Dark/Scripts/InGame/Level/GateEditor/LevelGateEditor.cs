@@ -38,8 +38,10 @@ namespace InGame.GateEditor
                 newWaveEditor.LoadWaves(wave);
                 waves.Add(newWaveEditor);
             }
-            
+
+#if UNITY_EDITOR
             EditorUtility.SetDirty(this);
+#endif
         }
 
         [Button]
@@ -50,7 +52,9 @@ namespace InGame.GateEditor
                 wave.SaveWave();
             }
             
+#if UNITY_EDITOR
             EditorUtility.SetDirty(level);
+#endif
         }
     }
 }

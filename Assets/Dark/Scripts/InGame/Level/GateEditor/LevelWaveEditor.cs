@@ -34,7 +34,9 @@ namespace InGame.GateEditor
                 newGate.SetupGate(gateConfig);
             }
             
+#if UNITY_EDITOR
             EditorUtility.SetDirty(this);
+#endif
         }
         
         private bool IsWaveInfoNull => WaveConfig == null;
@@ -82,7 +84,9 @@ namespace InGame.GateEditor
                 }
             }
             
+#if UNITY_EDITOR
             EditorUtility.SetDirty(WaveConfig);
+#endif
         }
     }
 }
