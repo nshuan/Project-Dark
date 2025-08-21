@@ -9,7 +9,7 @@ namespace InGame
     [CreateAssetMenu(menuName = "InGame/Passive Effect", fileName = "PassiveConfig")]
     public class PassiveConfig : SerializedScriptableObject
     {
-        public int effectId;
+        public int passiveId;
         public PassiveTriggerType triggerType;
         public PassiveType logicType;
         public float cooldown;

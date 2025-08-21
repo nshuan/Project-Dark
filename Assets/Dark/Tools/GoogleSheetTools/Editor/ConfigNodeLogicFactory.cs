@@ -63,7 +63,7 @@ namespace Dark.Tools.GoogleSheetTool
 
                 if (typeMap.TryGetValue(logicType, out var generatorType))
                 {
-                    result.Add(((INodeLogicGenerator)Activator.CreateInstance(generatorType)).Generate(info.value, isMul));
+                    result.Add(((INodeLogicGenerator)Activator.CreateInstance(generatorType)).Generate(info.value[0], info.value.GetRange(1, info.value.Count - 1), isMul));
                 }
                 else
                 {
@@ -83,6 +83,10 @@ namespace Dark.Tools.GoogleSheetTool
         }
     }
 
+    /// <summary>
+    /// Key = Logic type key, should match the key in enum LogicType
+    /// value = values to set, 1st item should be the subtype of logic. If there isn't, it should be an empty string
+    /// </summary>
     public struct NodeLogicInfo
     {
         public string key;
@@ -92,7 +96,7 @@ namespace Dark.Tools.GoogleSheetTool
 
     public interface INodeLogicGenerator
     {
-        public INodeActivateLogic Generate(List<string> value, bool isMul);
+        public INodeActivateLogic Generate(string subType, List<string> value, bool isMul);
     }
     
     public enum LogicType
@@ -108,20 +112,22 @@ namespace Dark.Tools.GoogleSheetTool
         UnlockChargeSize,
         UnlockChargeBullet,
         BonusDropRate,
-        BonusTotalDamage,
-        BonusCriticalRate,
-        BonusCriticalDamage,
-        BonusAttackSize,
-        BonusTotalCooldown,
-        BonusBps, // Bullet per shot
+        BonusBaseDamage,
+        BonusBaseCriticalRate,
+        BonusBaseCriticalDamage,
+        BonusBaseCooldown,
+        BonusBaseHp,
+        BonusSkillDamage,
+        BonusSkillBps, // Bullet per shot
+        BonusSkillAttackSize,
+        BonusSkillStagger,
+        BonusSkillBulletMaxHit,
         BonusAttackSpeed,
-        BonusHp,
         BonusHpRegenPerSec,
         BonusHpRegenOnKill,
         BonusAttackRange,
         BonusMoveCooldown,
         BonusMoveCastTime,
-        BonusStagger,
         TempBonusAttackSpeed,
         TempBonusDamage,
         TempBonusCriticalRate,

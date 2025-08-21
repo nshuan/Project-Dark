@@ -14,16 +14,16 @@ namespace Dark.Tools.GoogleSheetTool
         /// <param name="value"></param>
         /// <param name="isMul"></param>
         /// <returns></returns>
-        public INodeActivateLogic Generate(List<string> value, bool isMul)
+        public INodeActivateLogic Generate(string subType, List<string> value, bool isMul)
         {
             if (value == null || value.Count == 0)
             {
                 return null;
             }
 
-            if (!int.TryParse(value[0], out var passiveIndex))
+            if (!int.TryParse(subType, out var passiveIndex))
             {
-                Debug.LogError($"Invalid value string: {value[0]}");
+                Debug.LogError($"Invalid sub-type string: {subType}");
                 return null;
             }
 
@@ -44,16 +44,16 @@ namespace Dark.Tools.GoogleSheetTool
         /// <param name="value"></param>
         /// <param name="isMul"></param>
         /// <returns></returns>
-        public INodeActivateLogic Generate(List<string> value, bool isMul)
+        public INodeActivateLogic Generate(string subType, List<string> value, bool isMul)
         {
             if (value == null || value.Count == 0)
             {
                 return null;
             }
 
-            if (!int.TryParse(value[0], out var passiveIndex))
+            if (!int.TryParse(subType, out var passiveIndex))
             {
-                Debug.LogError($"Invalid value string: {value[0]}");
+                Debug.LogError($"Invalid passive sub-type string: {subType}");
                 return null;
             }
 
@@ -74,16 +74,16 @@ namespace Dark.Tools.GoogleSheetTool
         /// <param name="value"></param>
         /// <param name="isMul"></param>
         /// <returns></returns>
-        public INodeActivateLogic Generate(List<string> value, bool isMul)
+        public INodeActivateLogic Generate(string subType, List<string> value, bool isMul)
         {
             if (value == null || value.Count == 0)
             {
                 return null;
             }
 
-            if (!int.TryParse(value[0], out var passiveIndex))
+            if (!int.TryParse(subType, out var passiveIndex))
             {
-                Debug.LogError($"Invalid value string: {value[0]}");
+                Debug.LogError($"Invalid passive sub-type string: {subType}");
                 return null;
             }
 
@@ -104,16 +104,16 @@ namespace Dark.Tools.GoogleSheetTool
         /// <param name="value"></param>
         /// <param name="isMul"></param>
         /// <returns></returns>
-        public INodeActivateLogic Generate(List<string> value, bool isMul)
+        public INodeActivateLogic Generate(string subType, List<string> value, bool isMul)
         {
             if (value == null || value.Count == 0)
             {
                 return null;
             }
 
-            if (!int.TryParse(value[0], out var passiveIndex))
+            if (!int.TryParse(subType, out var passiveIndex))
             {
-                Debug.LogError($"Invalid value string: {value[0]}");
+                Debug.LogError($"Invalid passive sub-type string: {subType}");
                 return null;
             }
 

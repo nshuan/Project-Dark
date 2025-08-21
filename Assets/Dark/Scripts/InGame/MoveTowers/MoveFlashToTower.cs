@@ -9,16 +9,23 @@ namespace InGame
     [Serializable]
     public class MoveFlashToTower : IMoveTowersLogic
     {
-        [SerializeField] private float explodeSize = 2f;
-        [SerializeField] private LayerMask enemyLayer;
-        [SerializeField] private int damage;
-        [SerializeField] private float stagger;
+        private float explodeSize = 2f;
+        private LayerMask enemyLayer;
+        private int damage;
+        private float stagger;
         
         private RaycastHit2D[] hits = new RaycastHit2D[50];
         private IDamageable hitTarget;
         private PlayerCharacter characterRef;
         private CameraShake cameraShake;
-        
+
+        public void SetStats(int damage, float stagger, int maxHitEachTrigger, float size)
+        {
+            this.damage = damage;
+            this.stagger = stagger;
+            this.explodeSize = size;
+        }
+
         public IEnumerator IEMove(PlayerCharacter character, Vector2 startPos, Vector2 endPos, Action onComplete)
         {
             hits ??= new RaycastHit2D[50];

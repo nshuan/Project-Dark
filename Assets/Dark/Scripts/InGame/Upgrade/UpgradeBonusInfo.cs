@@ -31,6 +31,10 @@ namespace InGame
         public int hpPlus = 0;
         public float hpMultiply = 0f;
 
+        [Space] 
+        public float dropRatePlus = 0;
+        public float dropRateMultiply = 0;
+        
         #endregion
 
         #region Skill

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe4ca987c046441a908aae53ed6a9761, type: 3}
-  m_Name: PassiveLightningOnHit
+  m_Name: 3_PassiveThunderOnHit
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -21,12 +21,12 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  effectId: 1
+  passiveId: 3
   triggerType: 0
-  logicType: 1
-  cooldown: 5
+  logicType: 3
+  cooldown: 10
   chance: 1
-  size: 4
-  value: 5
-  stagger: 0
-  passivePrefab: {fileID: -3467292178509076920, guid: 02efcce4cc6bb3348b298515d4b97b12, type: 3}
+  size: 5
+  value: 0.1
+  stagger: 1
+  passivePrefab: {fileID: 108902128442283032, guid: 2950b596c390328458ea332d3b6054a4, type: 3}
