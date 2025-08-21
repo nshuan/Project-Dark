@@ -203,7 +203,7 @@ namespace InGame
             OnChangeSkill?.Invoke(skillConfig);
         }
 
-        public int testLevel;
+        public LevelConfig testLevel;
         [Button]
         public void TestLoadLevel()
         {

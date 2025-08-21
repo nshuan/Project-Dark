@@ -14,7 +14,7 @@ namespace InGame
         public EnemyMoveBehaviour moveBehaviour;
         public EnemyAttackBehaviour attackBehaviour;
         public float attackRange; // Distance to start attacking
-        public float attackSpeed; // Attack speed
+        public float attackSpeed; // Hit per second
         public int hp;
         public int dmg; // Base damage
         public float moveSpeed;

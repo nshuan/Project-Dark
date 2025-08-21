@@ -182,7 +182,7 @@ namespace InGame
                 if (inAttackRange)
                 {
                     Attack();
-                    yield return new WaitForSeconds(config.attackSpeed);
+                    yield return new WaitForSeconds(1 / config.attackSpeed);
                 }
                 else
                     yield return new WaitUntil(() => inAttackRange);
