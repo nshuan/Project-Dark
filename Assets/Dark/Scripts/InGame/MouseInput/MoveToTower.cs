@@ -62,6 +62,11 @@ namespace InGame
                 CanCountdown = false;
                 if (isLongTele)
                 {
+                    LongConfig.moveLogic.SetStats(
+                        LongConfig.damage,
+                        LongConfig.stagger,
+                        LongConfig.maxHitEachTrigger,
+                        LongConfig.size);
                     Character.StartCoroutine(LongConfig.moveLogic.IEMove(
                         Character, 
                         Character.transform.position, 
@@ -79,6 +84,11 @@ namespace InGame
                 }
                 else
                 {
+                    ShortConfig.moveLogic.SetStats(
+                        ShortConfig.damage,
+                        ShortConfig.stagger,
+                        ShortConfig.maxHitEachTrigger,
+                        ShortConfig.size);
                     Character.StartCoroutine(ShortConfig.moveLogic.IEMove(
                         Character, 
                         Character.transform.position, 

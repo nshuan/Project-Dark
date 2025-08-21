@@ -7,6 +7,11 @@ namespace InGame
     [Serializable]
     public class MoveTeleToTower : IMoveTowersLogic
     {
+        public void SetStats(int damage, float stagger, int maxHitEachTrigger, float size)
+        {
+            
+        }
+
         public IEnumerator IEMove(PlayerCharacter character, Vector2 startPos, Vector2 endPos, Action onComplete)
         {
             // Jump up

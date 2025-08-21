@@ -4,9 +4,11 @@ namespace Dark.Tools.GoogleSheetTool
     public enum GoogleSheetTabs
     {
         Enemy = 0, // "Enemy"
-        Skill = 858221668, // "Skill"
-        Passive = 1431028597, // "Passive"
-        NodeConfig = 1998964867, // "NodeConfig"
-        Description = 319474694, // "Description"
+        SkillConfig = 69138666, // "SkillConfig"
+        PassiveConfig = 545721731, // "PassiveConfig"
+        MoveConfig = 545988098, // "MoveConfig"
+        Wave = 230897661, // "Wave"
+        LevelConfig = 992670229, // "LevelConfig"
+        TowerCounter = 1956116879, // "TowerCounter"
     }
 }

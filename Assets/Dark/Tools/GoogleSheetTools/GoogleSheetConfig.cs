@@ -5,12 +5,13 @@ using System.Linq;
 using InGame;
 using InGame.Upgrade;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEditor;
 using UnityEngine;
 
 namespace Dark.Tools.GoogleSheetTool
 {
-    public class GoogleSheetConfig : ScriptableObject
+    public class GoogleSheetConfig : SerializedScriptableObject
     {
         public static string Path = "Assets/Dark/Tools/GoogleSheetTools/GoogleSheetConfig.asset";
 
@@ -19,7 +20,7 @@ namespace Dark.Tools.GoogleSheetTool
         public string sheetApiKey;
         
         [Space]
-        public GoogleSheetDataInfo[] data;
+        [NonSerialized, OdinSerialize] public GoogleSheetDataInfo[] data;
     }
     
     [Serializable]

@@ -13,6 +13,8 @@ namespace InGame
         public float cooldown;
         public int damage;
         public float size;
+        public float stagger;
+        public int maxHitEachTrigger = 5;
         [NonSerialized, OdinSerialize] public IMoveTowersLogic moveLogic;
     }
 }

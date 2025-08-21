@@ -12,16 +12,25 @@ namespace InGame
 
         [Space] [Header("Combat")] 
         [SerializeField] private LayerMask enemyLayer;
-        [SerializeField] private int damage;
-        [SerializeField] private float stagger;
-        [SerializeField] private int maxHitEachTrigger = 5;
-        [SerializeField] private float hitRadius = 2f;
+        
+        private int damage;
+        private float stagger;
+        private int maxHitEachTrigger = 5;
+        private float hitRadius = 2f;
         
         private RaycastHit2D[] hits = new RaycastHit2D[10];
         private IDamageable hitTarget;
         private Vector2 direction;
         private PlayerCharacter characterRef;
-        
+
+        public void SetStats(int damage, float stagger, int maxHitEachTrigger, float size)
+        {
+            this.damage = damage;
+            this.stagger = stagger;
+            this.maxHitEachTrigger = maxHitEachTrigger;
+            this.hitRadius = size;
+        }
+
         public IEnumerator IEMove(PlayerCharacter character, Vector2 startPos, Vector2 endPos, Action onComplete)
         {
             hits ??= new RaycastHit2D[50];

@@ -68,8 +68,8 @@ namespace InGame
                 // Calculate chance
                 if (Random.Range(0f, 1f) <= effectConfig.chance)
                 {
-                    pool.Get(effectConfig.passivePrefab, effectConfig.effectId, null, true)
-                        .TriggerEffect(effectConfig.effectId, target, 
+                    pool.Get(effectConfig.passivePrefab, effectConfig.passiveId, null, true)
+                        .TriggerEffect(effectConfig.passiveId, target, 
                             LevelUtility.GetPassiveSize(effectConfig.logicType, effectConfig.size), 
                             LevelUtility.GetPassiveValue(effectConfig.logicType, effectConfig.value), 
                             LevelUtility.GetPassiveStagger(effectConfig.logicType, effectConfig.stagger), 
