@@ -41,7 +41,7 @@ namespace InGame
         private Vector3 direction = new Vector3();
         private Vector2 directionAddition = new Vector2();
         private float staggerDuration;
-        private Vector2 staggerDirection;
+        private Vector2 staggerTargetPos;
 
         [Space, Header("Visual")] 
         [SerializeField] private EnemyBoidAgent boidAgent;
@@ -132,12 +132,13 @@ namespace InGame
             if (staggerDuration > 0)
             {
                 staggerDuration -= Time.deltaTime;
-                transform.position = Vector2.MoveTowards(transform.position, (Vector2)transform.position + staggerDirection, 5f * Time.deltaTime);
+                // transform.position = Vector2.MoveTowards(transform.position, (Vector2)transform.position + staggerDirection, 5f * Time.deltaTime);
+                transform.position = Vector2.Lerp(transform.position, staggerTargetPos, staggerDuration);
             }
-            else if (freezeDuration > 0)
-            {
-                freezeDuration -= Time.deltaTime;
-            }
+            // else if (freezeDuration > 0)
+            // {
+            //     freezeDuration -= Time.deltaTime;
+            // }
             else
             {
                 if (boundaryManager.ContainPoint(transform.position))
@@ -217,9 +218,11 @@ namespace InGame
             {
                 if (stagger - config.staggerResist > 0)
                 {
-                    staggerDirection.x = (stagger - config.staggerResist) * HitDirectionX;
-                    staggerDirection.y = (stagger - config.staggerResist) * HitDirectionY;
-                    staggerDuration = (stagger - config.staggerResist) * config.staggerMaxDuration;
+                    var mag = Mathf.Sqrt(HitDirectionX *  HitDirectionX + HitDirectionY * HitDirectionY);
+                    staggerTargetPos.x = (stagger - config.staggerResist) * HitDirectionX / mag + transform.position.x;
+                    staggerTargetPos.y = (stagger - config.staggerResist) * HitDirectionY / mag + transform.position.y;
+                    
+                    staggerDuration = Mathf.Abs(stagger - config.staggerResist) / config.staggerVelocity;
                     freezeDuration = staggerDuration;
                 }
 

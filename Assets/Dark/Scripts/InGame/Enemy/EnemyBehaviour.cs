@@ -19,7 +19,7 @@ namespace InGame
         public int dmg; // Base damage
         public float moveSpeed;
         public float staggerResist; // Reduce projectile stagger
-        public float staggerMaxDuration = 1.5f; // Hit back 1f on 0.5s
+        public float staggerVelocity = 1.5f; // Hit back X on 1s
         public float invisibleDuration;
         public int exp;
         public int dark;
