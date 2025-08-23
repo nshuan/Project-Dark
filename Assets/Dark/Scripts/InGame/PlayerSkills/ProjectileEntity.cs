@@ -141,10 +141,17 @@ namespace InGame
         {
             if (!hit)
             {
+                DebugUtility.Log("null");
                 BlockDestroy = false;
                 BlockSpawnDeadBody = false;
                 OnHit = null;
                 ProjectilePool.Instance.Release(this);
+                return;
+            }
+
+            if (hit.State == EnemyState.Invisible)
+            {
+                DebugUtility.Log("Invisible");
                 return;
             }
             
@@ -155,6 +162,7 @@ namespace InGame
             hit.Damage(critical ? CriticalDamage : Damage, transform.position, Stagger);
             PassiveEffectManager.Instance.TriggerEffect(IsCharge ? PassiveTriggerType.DameByChargeAttack : PassiveTriggerType.DameByNormalAttack, hit);
                     
+            DebugUtility.Log("hit");
             if (critical)
                 DebugUtility.LogWarning($"Projectile {name} deals critical damage {CriticalDamage} to {hit.name}!!");
 

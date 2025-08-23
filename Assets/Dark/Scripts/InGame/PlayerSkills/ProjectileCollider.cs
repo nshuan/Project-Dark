@@ -10,12 +10,12 @@ namespace InGame
         
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.tag == "Tower")
+            if (other.CompareTag("Tower"))
             {
                 Projectile.ProjectileHit(null);    
             }
             
-            if (other.tag == "InGameBoundary")
+            if (other.CompareTag("InGameBoundary"))
             {
                 Projectile.BlockSpawnDeadBody = true;
                 return;
@@ -24,6 +24,7 @@ namespace InGame
             if (other.TryGetComponent<EnemyEntity>(out hitEnemy))
             {
                 Projectile.ProjectileHit(hitEnemy);
+                DebugUtility.Log($"Hit enemy {hitEnemy.name}");
             }
         }
 
