@@ -86,12 +86,11 @@ namespace InGame
             {
                 yield return new WaitForSeconds(config.intervalLoop);
                 
-                var enemies = config.spawnLogic.Spawn(transform.position, config.spawnType.enemyId, config.spawnType.enemyPrefab);
+                var enemies = config.spawnLogic.Spawn(transform.position, config.spawnType.enemyId, config.spawnType.enemyPrefab, target);
                 
                 // Không phải boss thì spawn orb
                 if (!config.isBossGate)
                 {
-                    
                     var orbs = new Transform[enemies.Length];
 
                     for (var i = 0; i < enemies.Length; i++)
@@ -109,7 +108,7 @@ namespace InGame
                             var t = Mathf.Clamp01(orbSpawnTimer / orbSpawnDuration);
 
                             // horizontal position (isometric: usually XZ plane)
-                            var horizontalPos = Vector3.Lerp(transform.position, enemies[i].transform.position, t);
+                            var horizontalPos = Vector3.Lerp(transform.position, enemies[i].Item1.transform.position, t);
 
                             // height offset using curve
                             var curveY = orbYCurve.Evaluate(t) * 3f;
@@ -132,15 +131,15 @@ namespace InGame
                 for (var i = 0; i < enemies.Length; i++)
                 {
                     var enemy = enemies[i];
-                    enemy.Init(config.spawnType, target[Random.Range(0, target.Length)], WaveHpMultiplier, WaveDmgMultiplier, LevelExpRatio, LevelDarkRatio);
-                    enemy.Activate();
-                    enemy.UniqueId = EnemyManager.Instance.CurrentEnemyIndex;
+                    enemy.Item1.Init(config.spawnType, enemy.Item2, WaveHpMultiplier, WaveDmgMultiplier, LevelExpRatio, LevelDarkRatio);
+                    enemy.Item1.Activate();
+                    enemy.Item1.UniqueId = EnemyManager.Instance.CurrentEnemyIndex;
                     AliveEnemyCount += 1;
-                    EnemyManager.Instance.OnEnemySpawn(enemy);
-                    enemy.OnDead += () =>
+                    EnemyManager.Instance.OnEnemySpawn(enemy.Item1);
+                    enemy.Item1.OnDead += () =>
                     {
                         AliveEnemyCount -= 1;
-                        EnemyManager.Instance.OnEnemyDead(enemy);
+                        EnemyManager.Instance.OnEnemyDead(enemy.Item1);
                         CheckAllEnemiesDead();
                     };
                 }

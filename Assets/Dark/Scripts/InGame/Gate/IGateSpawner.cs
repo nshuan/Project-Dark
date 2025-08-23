@@ -6,17 +6,24 @@ namespace InGame
 {
     public interface IGateSpawner
     {
-        EnemyEntity[] Spawn(Vector2 gatePosition, int enemyId, EnemyEntity enemyPrefab);
+        (EnemyEntity, TowerEntity)[] Spawn(Vector2 gatePosition, int enemyId, EnemyEntity enemyPrefab, TowerEntity[] targetTower);
     }
     
     [Serializable]
     public class GateSpawnSingle : IGateSpawner
     {
-        public EnemyEntity[] Spawn(Vector2 gatePosition, int enemyId, EnemyEntity enemyPrefab)
+        public (EnemyEntity, TowerEntity)[] Spawn(Vector2 gatePosition, int enemyId, EnemyEntity enemyPrefab, TowerEntity[] targetTower)
         {
             var enemy = EnemyPool.Instance.Get(enemyPrefab, enemyId, null, false);
-            enemy.transform.position = gatePosition + Random.insideUnitCircle.normalized * 1.5f;
-            return new [] { enemy };
+            TowerEntity target = null;
+            
+            target = targetTower[Random.Range(0, targetTower.Length)];
+            enemy.transform.position =
+                (Vector3)gatePosition + 
+                (Quaternion.Euler(0f, 0f, Random.Range(-45f, 45f)) * (target.transform.position - (Vector3)gatePosition).normalized)
+                * 1.5f;
+            
+            return new [] { (enemy, target) };
         }
     }
 
@@ -24,23 +31,39 @@ namespace InGame
     public class GateSpawnTriangle : IGateSpawner
     {
         [Range(1f, 2f)] public float radius = 1.5f;
-        [Range(0f, 360f)] public float rotation = 0f;
         
-        public EnemyEntity[] Spawn(Vector2 gatePosition, int enemyId, EnemyEntity enemyPrefab)
+        public (EnemyEntity, TowerEntity)[] Spawn(Vector2 gatePosition, int enemyId, EnemyEntity enemyPrefab, TowerEntity[] targetTower)
         {
             var enemies = new EnemyEntity[3];
+            var targets = new TowerEntity[3];
 
             enemies[0] = EnemyPool.Instance.Get(enemyPrefab, enemyId,null, false);
-            enemies[0].transform.position = 
-                gatePosition + (Vector2)(Quaternion.Euler(0f, 0f, rotation) * Vector2.up).normalized * radius;
+            targets[0] = targetTower[Random.Range(0, targetTower.Length)];
+            enemies[0].transform.position =
+                (Vector3)gatePosition + 
+                (Quaternion.Euler(0f, 0f, Random.Range(-45f, 45f)) * (targets[0].transform.position - (Vector3)gatePosition).normalized)
+                * radius;
+
             enemies[1] = EnemyPool.Instance.Get(enemyPrefab, enemyId, null, false);
+            targets[1] = targetTower[Random.Range(0, targetTower.Length)];
             enemies[1].transform.position =
-                gatePosition + (Vector2)(Quaternion.Euler(0f, 0f, 120f + rotation) * Vector2.up).normalized * radius;
-            enemies[2] = EnemyPool.Instance.Get(enemyPrefab, enemyId, null, false);
-            enemies[2].transform.position =
-                gatePosition + (Vector2)(Quaternion.Euler(0f, 0f, -120f + rotation) * Vector2.up).normalized * radius;
+                (Vector3)gatePosition + 
+                (Quaternion.Euler(0f, 0f, Random.Range(-45f, 45f)) * (targets[1].transform.position - (Vector3)gatePosition).normalized)
+                * radius;
             
-            return enemies; 
+            enemies[2] = EnemyPool.Instance.Get(enemyPrefab, enemyId, null, false);
+            targets[2] = targetTower[Random.Range(0, targetTower.Length)];
+            enemies[2].transform.position =
+                (Vector3)gatePosition + 
+                (Quaternion.Euler(0f, 0f, Random.Range(-45f, 45f)) * (targets[2].transform.position - (Vector3)gatePosition).normalized)
+                * radius;
+            
+            return new []
+            {
+                (enemies[0], targets[0]),
+                (enemies[1], targets[1]),
+                (enemies[2], targets[2])
+            }; 
         }
     }
 }
