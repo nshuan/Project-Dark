@@ -16,10 +16,13 @@ namespace InGame
             set
             {
                 projectile = value;
-                lastPosition = projectile.transform.position;
+                if (projectile != null)
+                    lastPosition = projectile.transform.position;
             }
         }
 
+        public bool CanTrigger { get; set; }
+        
         private CapsuleCollider2D capsuleCollider;
         private EnemyEntity hitEnemy;
         private Vector2 lastPosition;
@@ -54,6 +57,7 @@ namespace InGame
         private void FixedUpdate()
         {
             if (!Projectile) return;
+            if (!CanTrigger) return;
             
             direction.x = projectile.transform.position.x - lastPosition.x;
             direction.y = projectile.transform.position.y - lastPosition.y;
@@ -83,6 +87,12 @@ namespace InGame
             }
             lastPosition.x = projectile.transform.position.x;
             lastPosition.y = projectile.transform.position.y;
+        }
+        
+        public void UpdateLastPosition(Vector2 position)
+        {
+            lastPosition.x = position.x;
+            lastPosition.y = position.y;
         }
     }
 }
