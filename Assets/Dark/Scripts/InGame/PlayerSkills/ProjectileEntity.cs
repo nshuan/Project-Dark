@@ -92,6 +92,8 @@ namespace InGame
             HitActions = hitActions;
             MaxHit = maxHit;
             currentHit = 0;
+            
+            collider.UpdateLastPosition(transform.position);
         }
 
         public void Activate(float delay)
@@ -104,6 +106,7 @@ namespace InGame
         {
             yield return new WaitForSeconds(delay);
             activated = true;
+            collider.CanTrigger = true;
             if (ActivateActions != null)
             {
                 foreach (var action in ActivateActions)
@@ -142,6 +145,7 @@ namespace InGame
             if (!hit)
             {
                 DebugUtility.Log("null");
+                collider.CanTrigger = false;
                 BlockDestroy = false;
                 BlockSpawnDeadBody = false;
                 OnHit = null;
@@ -181,6 +185,7 @@ namespace InGame
             
             if (!BlockDestroy && currentHit >= MaxHit)
             {
+                collider.CanTrigger = false;
                 BlockDestroy = false;
                 BlockSpawnDeadBody = false;
                 OnHit = null;
