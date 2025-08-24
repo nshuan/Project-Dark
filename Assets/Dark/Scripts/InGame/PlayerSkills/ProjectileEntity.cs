@@ -145,6 +145,8 @@ namespace InGame
                 BlockDestroy = false;
                 BlockSpawnDeadBody = false;
                 OnHit = null;
+                lifeTime = 0f;
+                activated = false;
                 ProjectilePool.Instance.Release(this);
                 return;
             }
@@ -182,6 +184,8 @@ namespace InGame
                 BlockDestroy = false;
                 BlockSpawnDeadBody = false;
                 OnHit = null;
+                lifeTime = 0f;
+                activated = false;
                 ProjectilePool.Instance.Release(this);
             }
         }
