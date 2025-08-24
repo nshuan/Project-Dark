@@ -23,6 +23,8 @@ namespace InGame.Upgrade
 
         private void BonusSkill(int level, ref UpgradeBonusInfo bonusInfo)
         {
+            if (level <= 0 || level > value.Length) return;
+            
             switch (bonusType)
             {
                 case BonusSkillType.Damage:
