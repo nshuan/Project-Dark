@@ -7,9 +7,14 @@ namespace Dark.Scripts.OutGame.Upgrade
 {
     public class PlayButton : MonoBehaviour, IPointerClickHandler
     {
+        private void Start()
+        {
+            Loading.Instance.LoadSceneWithoutActivation(SceneConstants.SceneInGame);
+        }
+        
         public void OnPointerClick(PointerEventData eventData)
         {
-            Loading.Instance.LoadScene(SceneConstants.SceneInGame, () =>
+            Loading.Instance.ActivateCacheScene(() =>
             {
                 LevelManager.Instance.LoadLevel(1);
             });
