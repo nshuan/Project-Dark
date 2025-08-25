@@ -10,7 +10,7 @@ namespace InGame
     {
         [SerializeField] public Vector3 standOffset;
         [SerializeField] private SpriteRenderer towerVisual;
-        [SerializeField] private GameObject towerVisualUILayer;
+        [SerializeField] private SpriteRenderer towerVisualUILayer;
         [SerializeField] private Sprite[] spriteStates;
         [SerializeField] private float[] thresholdState = new[] { 0f, 0.3f, 0.7f };
         [SerializeField] private AudioComponent sfxHit;
@@ -44,6 +44,7 @@ namespace InGame
             };
             currentState = spriteStates.Length - 1;
             towerVisual.sprite = spriteStates[currentState];
+            towerVisualUILayer.sprite = spriteStates[currentState];
         }
 
         public void EnterTower()
@@ -79,6 +80,7 @@ namespace InGame
                 {
                     currentState -= 1;
                     towerVisual.sprite = spriteStates[currentState];
+                    towerVisualUILayer.sprite = spriteStates[currentState];
                 }
             }
             
@@ -96,12 +98,12 @@ namespace InGame
         
         public void OnMotionBlur()
         {
-            towerVisualUILayer.SetActive(true);
+            towerVisualUILayer.gameObject.SetActive(true);
         }
 
         public void OnEndMotionBlur()
         {
-            towerVisualUILayer.SetActive(false);
+            towerVisualUILayer.gameObject.SetActive(false);
         }
     }
 }
