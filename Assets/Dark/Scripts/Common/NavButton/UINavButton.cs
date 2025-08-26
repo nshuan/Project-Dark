@@ -8,32 +8,51 @@ namespace Dark.Scripts.OutGame.Common.NavButton
         [SerializeField] private UIButton[] buttons;
         [SerializeField] private int startIndex = -1;
 
-        private UIButton currentButton;
+        private UIButton currentSelectButton;
         
         private void Awake()
         {
             for (var i = 0; i < buttons.Length; i++)
             {
                 buttons[i].Index = i;
+                buttons[i].UpdateState(UIButtonState.None);
                 buttons[i].FuncUpdateNav = OnButtonAction;
             }
 
             if (startIndex >= 0 && startIndex < buttons.Length)
             {
-                currentButton = buttons[startIndex];
-                OnButtonAction(currentButton, UIButtonState.Selected);
+                currentSelectButton = buttons[startIndex];
+                OnButtonAction(currentSelectButton, UIButtonState.Selected);
             }
         }
 
         private bool OnButtonAction(UIButton target, UIButtonState state)
         {
-            foreach (var button in buttons)
+            switch (state)
             {
-                button.UpdateUI(UIButtonState.None);
+                case UIButtonState.None:
+                    break;
+                case UIButtonState.Hover:
+                    foreach (var button in buttons)
+                    {
+                        if (button.State == UIButtonState.Selected) continue;
+                        button.UpdateState(UIButtonState.None);
+                    }
+                    if (target.State != UIButtonState.Selected)
+                        target.UpdateState(state);
+                    break;
+                case UIButtonState.Selected:
+                    currentSelectButton = target;
+                    currentSelectButton.UpdateState(state);
+                    
+                    foreach (var button in buttons)
+                    {
+                        if (button.Index != target.Index)
+                            button.UpdateState(UIButtonState.None);
+                    }
+                    break;
             }
-
-            currentButton = target;
-            currentButton.UpdateUI(state);
+            
             return true;
         }
     }
