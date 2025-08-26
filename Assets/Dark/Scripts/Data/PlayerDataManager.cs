@@ -7,8 +7,10 @@ namespace Data
 {
     public class PlayerDataManager : Singleton<PlayerDataManager>
     {
-        private const string DataKey = "playerData";
-        
+        private const string DefaultDataKey = "playerData";
+        public static string CurrentDataKey = "";
+        private static string DataKey => string.IsNullOrEmpty(CurrentDataKey) ? DefaultDataKey : CurrentDataKey;
+
         private PlayerData data;
         public PlayerData Data => data;
         

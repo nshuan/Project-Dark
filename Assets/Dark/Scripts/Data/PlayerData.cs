@@ -18,6 +18,10 @@ namespace Data
         public int levelPoint;
         public int dark;
         public int bossPoint;
+        
+        // Record
+        public int passedDay;
+        public double timePlayedMilli;
 
         public PlayerData()
         {

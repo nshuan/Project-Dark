@@ -5,6 +5,12 @@ namespace Data
 {
     public class DataHandler
     {
+        public static bool Exist<T>(string key)
+        {
+            string filePath = Application.dataPath + "/" + key + ".json";
+            return File.Exists(filePath);
+        }
+        
         public static void Save<T>(string key, T data)
         {
             string filePath = Application.dataPath + "/" + key + ".json";
