@@ -15,6 +15,7 @@ namespace Dark.Scripts.SceneNavigation
         [SerializeField] private TextMeshProUGUI progressText;
 
         private AsyncOperation cacheAsync;
+        private string preloadedSceneName;
         public Action onStartLoading;
         private Action onSceneLoaded;
         
@@ -28,11 +29,17 @@ namespace Dark.Scripts.SceneNavigation
         public void LoadSceneWithoutActivation(string sceneName)
         {
             cacheAsync = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
-            cacheAsync.allowSceneActivation = false;
+            if (cacheAsync != null)
+            {
+                preloadedSceneName = sceneName;
+                cacheAsync.allowSceneActivation = false;
+            }
         }
 
-        public void ActivateCacheScene(Action completeCallback = null)
+        private void ActivateCacheScene(Action completeCallback = null)
         {
+            if (cacheAsync == null) return;
+            DebugUtility.LogWarning($"Activating scene {preloadedSceneName}");
             onSceneLoaded = completeCallback;
             onStartLoading?.Invoke();
             DoOpen(0.2f).OnComplete(() =>
@@ -43,7 +50,13 @@ namespace Dark.Scripts.SceneNavigation
         
         public void LoadScene(string sceneName, Action completeCallback = null)
         {
-            if (SceneManager.GetSceneByName(sceneName).IsValid()) return;
+            if (preloadedSceneName == sceneName)
+            {
+                ActivateCacheScene(completeCallback);
+                return;
+            }
+            
+            DebugUtility.LogWarning($"Loading scene {sceneName}");
             onSceneLoaded = completeCallback;
             onStartLoading?.Invoke();
             DoOpen(0.2f).OnComplete(() =>
@@ -54,6 +67,7 @@ namespace Dark.Scripts.SceneNavigation
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
+            DebugUtility.LogWarning($"Scene {scene.name} is loaded!");
             DoClose(0.2f);
             onSceneLoaded?.Invoke();
             onSceneLoaded = null;

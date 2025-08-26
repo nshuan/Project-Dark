@@ -1,5 +1,6 @@
 using System;
 using Core;
+using Dark.Scripts.SceneNavigation;
 using Data;
 using InGame.CharacterClass;
 
@@ -76,5 +77,10 @@ namespace Dark.Scripts.OutGame.SaveSlot
         }
 
         #endregion
+
+        private void Start()
+        {
+            Loading.Instance.LoadSceneWithoutActivation(SceneConstants.SceneUpgrade);
+        }
     }
 }

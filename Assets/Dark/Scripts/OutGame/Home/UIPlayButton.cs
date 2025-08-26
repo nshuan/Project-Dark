@@ -1,4 +1,6 @@
+using System.Collections;
 using Dark.Scripts.SceneNavigation;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Dark.Scripts.OutGame.Home
@@ -12,7 +14,7 @@ namespace Dark.Scripts.OutGame.Home
         
         public override void OnPointerClick(PointerEventData eventData)
         {
-            Loading.Instance.ActivateCacheScene();
+            Loading.Instance.LoadScene(SceneConstants.SceneSaveSlot);
             base.OnPointerClick(eventData);
         }
     }
