@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Dark.Scripts.OutGame.Home.NavButton
+namespace Dark.Scripts.OutGame.Common.NavButton
 {
     public class UINavButton : MonoBehaviour
     {

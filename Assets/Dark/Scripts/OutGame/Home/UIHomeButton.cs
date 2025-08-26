@@ -1,4 +1,4 @@
-using Dark.Scripts.OutGame.Home.NavButton;
+using Dark.Scripts.OutGame.Common.NavButton;
 using UnityEngine;
 
 namespace Dark.Scripts.OutGame.Home

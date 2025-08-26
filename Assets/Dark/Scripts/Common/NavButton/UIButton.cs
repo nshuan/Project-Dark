@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Dark.Scripts.OutGame.Home.NavButton
+namespace Dark.Scripts.OutGame.Common.NavButton
 {
     public class UIButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
     {

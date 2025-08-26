@@ -1,7 +1,4 @@
-using System;
-using Dark.Scripts.OutGame.Home.NavButton;
 using Dark.Scripts.SceneNavigation;
-using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Dark.Scripts.OutGame.Home
