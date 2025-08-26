@@ -10,6 +10,7 @@ namespace Dark.Scripts.OutGame.Common.NavButton
     {
         public int Index { get; set; }
         public UIButtonState State { get; protected set; }
+        public virtual bool BlockSelect => false;
         public Func<UIButton, UIButtonState, bool> FuncUpdateNav { get; set; }
 
         public void UpdateState(UIButtonState state)
@@ -25,6 +26,7 @@ namespace Dark.Scripts.OutGame.Common.NavButton
 
         public virtual void OnPointerClick(PointerEventData eventData)
         {
+            if (BlockSelect) return;
             FuncUpdateNav(this, UIButtonState.Selected);
         }
 
