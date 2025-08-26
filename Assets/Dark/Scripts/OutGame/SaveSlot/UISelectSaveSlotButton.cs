@@ -1,4 +1,5 @@
 using Dark.Scripts.OutGame.Common.NavButton;
+using Dark.Scripts.SceneNavigation;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -35,6 +36,7 @@ namespace Dark.Scripts.OutGame.SaveSlot
         {
             base.OnPointerClick(eventData);
             SaveSlotManager.Instance.SelectSlot(slotIndex);
+            Loading.Instance.LoadScene(SceneConstants.SceneUpgrade);
         }
     }
 }

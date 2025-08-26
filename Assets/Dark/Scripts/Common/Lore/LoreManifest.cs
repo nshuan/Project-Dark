@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -5,6 +6,7 @@ using Dark.Tools.GoogleSheetTool;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Dark.Scripts.Common.Lore
 {
@@ -13,12 +15,12 @@ namespace Dark.Scripts.Common.Lore
         public static string Path = "LoreManifest";
         private static string FilePath = "Assets/Dark/Resources/LoreManifest.asset";
 
-        public Dictionary<LoreKey, string> loreMap;
+        public Dictionary<LoreKey, LoreInfo> loreMap;
         
-        public static string GetRandom()
+        public static LoreInfo GetRandom()
         {
             var instance = Resources.Load<LoreManifest>(Path);
-            if (instance.loreMap == null || instance.loreMap.Count == 0) return "";
+            if (instance.loreMap == null || instance.loreMap.Count == 0) return new LoreInfo();
             var result = instance.loreMap.Values.ToArray()[Random.Range(0, instance.loreMap.Count)];
             Resources.UnloadAsset(instance);
             return result;
@@ -55,5 +57,12 @@ namespace Dark.Scripts.Common.Lore
     {
         TheSightSunder,
         EchoPiercer
+    }
+
+    [Serializable]
+    public struct LoreInfo
+    {
+        public string name;
+        public string lore;
     }
 }

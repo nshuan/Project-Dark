@@ -9,6 +9,7 @@ namespace Dark.Scripts.SceneNavigation
     public class UILoadingLore : MonoBehaviour
     {
         [SerializeField] private Loading loading;
+        [SerializeField] private TextMeshProUGUI txtTitle;
         [SerializeField] private TextMeshProUGUI txtLore;
 
         private void Awake()
@@ -18,12 +19,14 @@ namespace Dark.Scripts.SceneNavigation
 
         private void Start()
         {
-            txtLore.SetText(LoreManifest.GetRandom());
+            OnStartLoading();
         }
 
         private void OnStartLoading()
         {
-            txtLore.SetText(LoreManifest.GetRandom());
+            var info = LoreManifest.GetRandom();
+            txtTitle.SetText(info.name);
+            txtLore.SetText(info.lore);
         }
     }
 }

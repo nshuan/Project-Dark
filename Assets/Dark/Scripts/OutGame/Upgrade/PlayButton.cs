@@ -14,7 +14,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         
         public void OnPointerClick(PointerEventData eventData)
         {
-            Loading.Instance.ActivateCacheScene(() =>
+            Loading.Instance.LoadScene(SceneConstants.SceneInGame, () =>
             {
                 LevelManager.Instance.LoadLevel(1);
             });
