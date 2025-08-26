@@ -15,6 +15,7 @@ namespace Dark.Scripts.SceneNavigation
         [SerializeField] private TextMeshProUGUI progressText;
 
         private AsyncOperation cacheAsync;
+        public Action onStartLoading;
         private Action onSceneLoaded;
         
         protected override void Awake()
@@ -33,6 +34,7 @@ namespace Dark.Scripts.SceneNavigation
         public void ActivateCacheScene(Action completeCallback = null)
         {
             onSceneLoaded = completeCallback;
+            onStartLoading?.Invoke();
             DoOpen(0.2f).OnComplete(() =>
             {
                 cacheAsync.allowSceneActivation = true;
@@ -43,6 +45,7 @@ namespace Dark.Scripts.SceneNavigation
         {
             if (SceneManager.GetSceneByName(sceneName).IsValid()) return;
             onSceneLoaded = completeCallback;
+            onStartLoading?.Invoke();
             DoOpen(0.2f).OnComplete(() =>
             {
                 SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
