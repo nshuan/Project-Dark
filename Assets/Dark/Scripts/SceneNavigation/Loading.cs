@@ -1,6 +1,7 @@
 using System;
 using Core;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,6 +12,7 @@ namespace Dark.Scripts.SceneNavigation
     {
         [SerializeField] private CanvasGroup loadingPanel;
         [SerializeField] private Image progress;
+        [SerializeField] private TextMeshProUGUI progressText;
 
         private AsyncOperation cacheAsync;
         private Action onSceneLoaded;
@@ -58,6 +60,7 @@ namespace Dark.Scripts.SceneNavigation
         {
             loadingPanel.alpha = 0f;
             progress.fillAmount = 0f;
+            progressText.SetText($"0%");
             loadingPanel.gameObject.SetActive(true);
             return loadingPanel.DOFade(1f, duration);
         }
@@ -66,7 +69,11 @@ namespace Dark.Scripts.SceneNavigation
         {
             DOTween.Kill(this);
             var seq = DOTween.Sequence(this);
-            seq.Append(progress.DOFillAmount(1f, 1f))
+            seq.Append(DOTween.To(() => 0f, x =>
+                {
+                    progress.fillAmount = x;
+                    progressText.SetText($"{(int)(x * 100)}%");
+                }, 1f, duration))
                 .Append(loadingPanel.DOFade(0f, duration))
                 .OnComplete(() => loadingPanel.gameObject.SetActive(false));
             return seq.Play();
