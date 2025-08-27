@@ -11,7 +11,6 @@ namespace InGame
         protected const float MaxLifeTime = 10f;
 
         [SerializeField] protected ProjectileCollider collider;
-        [SerializeField] protected LayerMask enemyLayer;
         [SerializeField] private float baseDamageRange = 0.1f;
         
         [Space] [Header("Bullet config")]

@@ -15,7 +15,6 @@ namespace InGame.CharacterClass
 
     public enum CharacterClass
     {
-        None,
         Archer,
         Knight
     }

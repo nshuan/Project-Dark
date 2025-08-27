@@ -112,15 +112,15 @@ namespace InGame
             if (isCharge)
             {
                 delayShot = 0f;
-                InputManager.playerVisual.EndChargeAndShoot();
+                InputManager.PlayerVisual.EndChargeAndShoot();
             }
             else
             {
-                delayShot = InputManager.playerVisual.PlayShoot(worldMousePosition);
+                delayShot = InputManager.PlayerVisual.PlayShoot(worldMousePosition);
             }
             InputManager.DelayCall(delayShot, () =>
             {
-                InputManager.playerVisual.Weapon.GetAllEnemiesInRange(skillRange);
+                InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(skillRange);
                 
                 InputManager.CurrentSkillConfig.Shoot(
                     InputManager.CurrentSkillConfig.projectiles[PlayerProjectileType.Normal],
@@ -196,7 +196,7 @@ namespace InGame
             if (canChargeRange && maxRangeMultiplierAdd > 0) isChargingRange = true;
             
             if (isChargingBullet || isChargingDame || isChargingSize || isChargingRange)
-                InputManager.playerVisual.PlayCharge();
+                InputManager.PlayerVisual.PlayCharge();
         }
 
         public void OnHoldReleased()
@@ -239,7 +239,7 @@ namespace InGame
             mousePosition = Input.mousePosition;
             mousePosition.z = 0; // Set z to 0 for 2D
             cursorRect.position = mousePosition;    
-            InputManager.playerVisual.SetDirection(worldMousePosition);
+            InputManager.PlayerVisual.SetDirection(worldMousePosition);
             
             // Cooldown if player can not shoot
             if (!CanShoot)
@@ -264,8 +264,8 @@ namespace InGame
                         else if (bulletAdd < maxBulletAdd)
                         {
                             bulletAdd += 1;
-                            ChargeController.AddBullet(InputManager.playerVisual.transform.position,
-                                worldMousePosition - InputManager.playerVisual.transform.position);
+                            ChargeController.AddBullet(InputManager.PlayerVisual.transform.position,
+                                worldMousePosition - InputManager.PlayerVisual.transform.position);
                             bulletAddTimer = bulletAddInterval;
                             cursor.UpdateBulletAdd(true, bulletAdd);
                             cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f).SetEase(Ease.InQuad)
