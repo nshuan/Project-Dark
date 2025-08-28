@@ -67,7 +67,7 @@ namespace InGame.Upgrade
             get
             {
                 if (treeConfig == null) 
-                    treeConfig = UpgradeTreeManifest.Instance.GetTreeConfig(CharacterClass.CharacterClass.Archer);
+                    treeConfig = UpgradeTreeManifest.GetTreeConfig(CharacterClass.CharacterClass.Archer);
                 return treeConfig;
             }
         }

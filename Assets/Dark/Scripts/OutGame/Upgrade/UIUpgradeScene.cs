@@ -1,19 +1,34 @@
 using System;
+using Data;
 using InGame.CharacterClass;
 using InGame.Upgrade;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Dark.Scripts.OutGame.Upgrade
 {
     public class UIUpgradeScene : MonoBehaviour
     {
+        [Header("Upgrade Tree")]
+        [SerializeField] private GameObject panelUpgradeTree;
         [SerializeField] private Transform treeParent;
-        
-        private UIUpgradeTree cacheTree;
-        
-        private void Start()
+
+        [Space] [Header("Select class")] 
+        [SerializeField] private GameObject panelSelectClass;
+
+        private void Awake()
         {
-            // cacheTree = Instantiate(UpgradeTreeConfig.Instance.GetTree(ClassManager.Instance.CurrentClass), treeParent);
+            if (PlayerDataManager.Instance.IsNewData)
+            {
+                panelUpgradeTree.SetActive(false);
+                panelSelectClass.SetActive(true);
+            }
+            else
+            {
+                panelUpgradeTree.SetActive(true);
+                panelSelectClass.SetActive(false);
+                Instantiate(UpgradeTreeManifest.GetTreePrefab(CharacterClass.Archer), treeParent);
+            }
         }
     }
 }

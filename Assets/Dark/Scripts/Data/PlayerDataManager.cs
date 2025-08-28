@@ -13,7 +13,7 @@ namespace Data
 
         private PlayerData data;
         public PlayerData Data => data;
-        
+        public bool IsNewData { get; private set; } 
         public PlayerDataManager()
         {
             Initialize();
@@ -21,7 +21,16 @@ namespace Data
         
         public void Initialize()
         {
-            data = DataHandler.Load<PlayerData>(DataKey) ?? new PlayerData();
+            if (DataHandler.Exist<PlayerData>(DataKey))
+            {
+                data = DataHandler.Load<PlayerData>(DataKey);
+                IsNewData = false;
+            }
+            else
+            {
+                data = new PlayerData();
+                IsNewData = true;
+            }
         }
         
         #region SAVE LOAD

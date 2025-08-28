@@ -13,32 +13,21 @@ namespace Dark.Scripts.OutGame.Upgrade
     {
         [NonSerialized, OdinSerialize] public Dictionary<CharacterClass, UpgradeTreeInfo> upgradeTreeMap = new Dictionary<CharacterClass, UpgradeTreeInfo>();
         
-        public UpgradeTreeConfig GetTreeConfig(CharacterClass characterClass)
+        public static UpgradeTreeConfig GetTreeConfig(CharacterClass characterClass)
         {
-            return upgradeTreeMap.GetValueOrDefault(characterClass).config;
+            var instance = Resources.Load<UpgradeTreeManifest>("UpgradeTreeManifest");
+            var config = instance.upgradeTreeMap.GetValueOrDefault(characterClass).config;
+            Resources.UnloadAsset(instance);
+            return config;
         }
         
-        public UIUpgradeTree GetTreePrefab(CharacterClass characterClass)
+        public static UIUpgradeTree GetTreePrefab(CharacterClass characterClass)
         {
-            return upgradeTreeMap.GetValueOrDefault(characterClass).prefab;
+            var instance = Resources.Load<UpgradeTreeManifest>("UpgradeTreeManifest");
+            var prefab = instance.upgradeTreeMap.GetValueOrDefault(characterClass).prefab;
+            Resources.UnloadAsset(instance);
+            return prefab;
         }
-        
-        #region SINGLETON
-
-        private static UpgradeTreeManifest instance;
-
-        public static UpgradeTreeManifest Instance
-        {
-            get
-            {
-                if (instance == null)
-                    instance = Resources.Load<UpgradeTreeManifest>("UpgradeTreeManifest");
-
-                return instance;
-            }
-        }
-        
-        #endregion
     }
 
     [Serializable]
