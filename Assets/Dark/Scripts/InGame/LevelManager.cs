@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using Core;
+using Data;
 using Economic;
+using InGame.ConfigManager;
 using InGame.Upgrade;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -14,11 +16,11 @@ namespace InGame
     public class LevelManager : SerializedMonoSingleton<LevelManager>
     {
         [SerializeField] private PlayerStats playerStats;
-        [SerializeField] private PlayerSkillConfig skillConfig;
         public MoveTowersConfig defaultTeleConfig;
         public MoveTowersConfig shortTeleConfig;
         public MoveTowersConfig longTeleConfig;
 
+        [SerializeField] private PlayerSpawner playerSpawner;
         [SerializeField] private GateEntity gatePrefab;
         
         [SerializeField] private TowerEntity[] towers;
@@ -32,10 +34,14 @@ namespace InGame
                 return towers[currentTowerIndex];
             }
         }
+        
+        private PlayerSkillConfig skillConfig;
    
         public LevelConfig Level { get; private set; }
         public PlayerStats PlayerStats => playerStats;
         private bool IsEndLevel { get; set; }
+        
+        public PlayerCharacter Player { get; set; }
 
         #region Upgrade
 
@@ -89,6 +95,11 @@ namespace InGame
             
             InitTowers();
             TeleportTower(0);
+
+            skillConfig = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
+            
+            Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)skillConfig.skillId);
+            Player.transform.position = CurrentTower.transform.position + CurrentTower.standOffset;
             
             // Start waves
             currentWaveIndex = 0;
@@ -203,7 +214,7 @@ namespace InGame
             OnChangeSkill?.Invoke(skillConfig);
         }
 
-        public int testLevel;
+        public LevelConfig testLevel;
         [Button]
         public void TestLoadLevel()
         {

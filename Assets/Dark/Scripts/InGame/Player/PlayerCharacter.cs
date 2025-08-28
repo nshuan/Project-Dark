@@ -12,6 +12,7 @@ namespace InGame
         [SerializeField] private PlayerAnimController animController;
         [SerializeField] private PlayerDashEffect dashEffect;
         [SerializeField] private PLayerFlashEffect flashEffect;
+        [SerializeField] private PlayerTeleEffect teleEffect;
 
         [Space] [SerializeField] private WeaponSupporter weapon;
         public WeaponSupporter Weapon => weapon;
@@ -54,6 +55,40 @@ namespace InGame
             animController.SetDirection(target - transform.position);
         }
 
+        #region Tele
+
+        private Sequence teleSequence;
+        public Tween PLayTeleEffect(Vector2 endPos)
+        {
+            teleSequence.Kill();
+            teleSequence = DOTween.Sequence();
+            teleEffect.PlayStartCharging();
+            teleEffect.PlayEndCharging(endPos);
+            return teleSequence.AppendInterval(0.2f)
+                .AppendCallback(() =>
+                {
+                    teleEffect.PLayStart();
+                    spriteRenderer.DOFade(0f, 0.1f);
+                })
+                .AppendInterval(Mathf.Max(0f, teleEffect.startDuration - 0.2f));
+        }
+
+        public Tween StopTeleEffect()
+        {
+            teleSequence.Kill();
+            teleSequence = DOTween.Sequence();
+
+            return teleSequence.AppendCallback(() =>
+            {
+                teleEffect.PLayEnd();
+                spriteRenderer.DOFade(1f, 0.1f);
+            });
+        }
+
+        #endregion
+        
+        #region Dash
+
         public void PlayDashEffect(Vector2 direction)
         {
             dashEffect.PLayStart(direction);
@@ -65,6 +100,10 @@ namespace InGame
             spriteRenderer.gameObject.SetActive(true);
             dashEffect.PLayEnd();
         }
+
+        #endregion
+
+        #region Flash
 
         public Vector2 FlashExplodeCenter => flashEffect.explodeCenter.position;
         private Sequence flashSequence;
@@ -90,6 +129,10 @@ namespace InGame
                 })
                 .Append(spriteRenderer.DOFade(1f, 0.2f));
         }
+        
+        #endregion
+
+        #region Motion Blur
 
         [Space] [Header("Motion Blur")] 
         [SerializeField] private string defaultSortingLayerName;
@@ -104,5 +147,7 @@ namespace InGame
         {
             spriteRenderer.sortingLayerName = defaultSortingLayerName;
         }
+
+        #endregion
     }
 }

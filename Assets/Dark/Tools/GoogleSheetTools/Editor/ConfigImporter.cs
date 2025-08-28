@@ -9,6 +9,8 @@ namespace Dark.Tools.GoogleSheetTool
 {
     public class ConfigImporter
     {
+        static NumberFormatInfo format = new NumberFormatInfo { NumberDecimalSeparator = "," };
+
         public static void Import(ScriptableObject[] configs, List<string[]> csvData)
         {
             var configDict = new Dictionary<int, ScriptableObject>();
@@ -87,7 +89,10 @@ namespace Dark.Tools.GoogleSheetTool
                     }
                     else
                     {
-                        parsedValue = Convert.ChangeType(value, fieldType, CultureInfo.InvariantCulture);
+                        if (fieldType == typeof(float))
+                            parsedValue = Convert.ChangeType(value, fieldType, format);
+                        else
+                            parsedValue = Convert.ChangeType(value, fieldType);
                     }
 
                     // Set the field value

@@ -11,7 +11,6 @@ namespace InGame
         protected const float MaxLifeTime = 10f;
 
         [SerializeField] protected ProjectileCollider collider;
-        [SerializeField] protected LayerMask enemyLayer;
         [SerializeField] private float baseDamageRange = 0.1f;
         
         [Space] [Header("Bullet config")]
@@ -92,6 +91,8 @@ namespace InGame
             HitActions = hitActions;
             MaxHit = maxHit;
             currentHit = 0;
+            
+            collider.UpdateLastPosition(transform.position);
         }
 
         public void Activate(float delay)
@@ -104,6 +105,7 @@ namespace InGame
         {
             yield return new WaitForSeconds(delay);
             activated = true;
+            collider.CanTrigger = true;
             if (ActivateActions != null)
             {
                 foreach (var action in ActivateActions)
@@ -141,10 +143,20 @@ namespace InGame
         {
             if (!hit)
             {
+                DebugUtility.Log("null");
+                collider.CanTrigger = false;
                 BlockDestroy = false;
                 BlockSpawnDeadBody = false;
                 OnHit = null;
+                lifeTime = 0f;
+                activated = false;
                 ProjectilePool.Instance.Release(this);
+                return;
+            }
+
+            if (hit.State == EnemyState.Invisible)
+            {
+                DebugUtility.Log("Invisible");
                 return;
             }
             
@@ -155,6 +167,7 @@ namespace InGame
             hit.Damage(critical ? CriticalDamage : Damage, transform.position, Stagger);
             PassiveEffectManager.Instance.TriggerEffect(IsCharge ? PassiveTriggerType.DameByChargeAttack : PassiveTriggerType.DameByNormalAttack, hit);
                     
+            DebugUtility.Log("hit");
             if (critical)
                 DebugUtility.LogWarning($"Projectile {name} deals critical damage {CriticalDamage} to {hit.name}!!");
 
@@ -171,9 +184,12 @@ namespace InGame
             
             if (!BlockDestroy && currentHit >= MaxHit)
             {
+                collider.CanTrigger = false;
                 BlockDestroy = false;
                 BlockSpawnDeadBody = false;
                 OnHit = null;
+                lifeTime = 0f;
+                activated = false;
                 ProjectilePool.Instance.Release(this);
             }
         }

@@ -14,12 +14,12 @@ namespace InGame
         public EnemyMoveBehaviour moveBehaviour;
         public EnemyAttackBehaviour attackBehaviour;
         public float attackRange; // Distance to start attacking
-        public float attackSpeed; // Attack speed
+        public float attackSpeed; // Hit per second
         public int hp;
         public int dmg; // Base damage
         public float moveSpeed;
         public float staggerResist; // Reduce projectile stagger
-        public float staggerMaxDuration = 1.5f; // Hit back 1f on 0.5s
+        public float staggerVelocity = 1.5f; // Hit back X on 1s
         public float invisibleDuration;
         public int exp;
         public int dark;

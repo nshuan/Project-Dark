@@ -11,12 +11,12 @@ namespace InGame
     {
         [SerializeField] private Camera cam;
         [SerializeField] private Canvas canvas;
-        [SerializeField] public PlayerCharacter playerVisual;
 		[SerializeField] private CanvasGroup motionBlur;
         public float holdThreshold = 0.5f;
+        public PlayerCharacter PlayerVisual { get; set; }
         public PlayerStats PlayerStats { get; set; }
         public PlayerSkillConfig CurrentSkillConfig { get; set; }
-        public Transform CursorRangeCenter => playerVisual.transform;
+        public Transform CursorRangeCenter => PlayerVisual.transform;
         private List<MoveTowersConfig> availableTeleConfigs;
         private bool BlockAllInput { get; set; }
         public bool BlockTeleport { get; set; }
@@ -49,6 +49,7 @@ namespace InGame
             
             LevelManager.Instance.OnLevelLoaded += (level) =>
             {
+                PlayerVisual = LevelManager.Instance.Player;
                 PlayerStats = LevelManager.Instance.PlayerStats;
                 
                 if (LevelUtility.BonusInfo.unlockedMoveToTower == null || LevelUtility.BonusInfo.unlockedMoveToTower.Count == 0)
@@ -61,7 +62,7 @@ namespace InGame
                         else if (moveId == 2) availableTeleConfigs.Add(LevelManager.Instance.longTeleConfig);
                     }
                 }
-                teleMouseInput = new MoveToTower(cam, playerVisual, availableTeleConfigs[0], availableTeleConfigs.Count > 1 ? availableTeleConfigs[1] : null, LevelManager.Instance.Towers, LevelManager.Instance.CurrentTower.Id, DelayCall);
+                teleMouseInput = new MoveToTower(cam, PlayerVisual, availableTeleConfigs[0], availableTeleConfigs.Count > 1 ? availableTeleConfigs[1] : null, LevelManager.Instance.Towers, LevelManager.Instance.CurrentTower.Id, DelayCall);
                 BlockAllInput = false;
             };
             LevelManager.Instance.OnChangeSkill += OnSkillChanged;
@@ -136,7 +137,7 @@ namespace InGame
                                 {
                                     tower.OnMotionBlur();
                                 }
-                                playerVisual.OnMotionBlur();
+                                PlayerVisual.OnMotionBlur();
                             
                                 motionBlur.gameObject.SetActive(true);
                             }).Append(motionBlur.DOFade(1f, 0.16f))
@@ -264,7 +265,7 @@ namespace InGame
                     {
                         tower.OnEndMotionBlur();
                     }
-                    playerVisual.OnEndMotionBlur();
+                    PlayerVisual.OnEndMotionBlur();
                 })
                 .Play();
         }
