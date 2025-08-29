@@ -13,9 +13,7 @@ namespace Dark.Scripts.SceneNavigation
         [SerializeField] private CanvasGroup loadingPanel;
         [SerializeField] private Image progress;
         [SerializeField] private TextMeshProUGUI progressText;
-
-        private AsyncOperation cacheAsync;
-        private string preloadedSceneName;
+        
         public Action onStartLoading;
         private Action onSceneLoaded;
         
@@ -25,37 +23,9 @@ namespace Dark.Scripts.SceneNavigation
             
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
-
-        public void LoadSceneWithoutActivation(string sceneName)
-        {
-            cacheAsync = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
-            if (cacheAsync != null)
-            {
-                preloadedSceneName = sceneName;
-                cacheAsync.allowSceneActivation = false;
-            }
-        }
-
-        private void ActivateCacheScene(Action completeCallback = null)
-        {
-            if (cacheAsync == null) return;
-            DebugUtility.LogWarning($"Activating scene {preloadedSceneName}");
-            onSceneLoaded = completeCallback;
-            onStartLoading?.Invoke();
-            DoOpen(0.2f).OnComplete(() =>
-            {
-                cacheAsync.allowSceneActivation = true;
-            });
-        }
         
         public void LoadScene(string sceneName, Action completeCallback = null)
         {
-            if (preloadedSceneName == sceneName)
-            {
-                ActivateCacheScene(completeCallback);
-                return;
-            }
-            
             DebugUtility.LogWarning($"Loading scene {sceneName}");
             onSceneLoaded = completeCallback;
             onStartLoading?.Invoke();

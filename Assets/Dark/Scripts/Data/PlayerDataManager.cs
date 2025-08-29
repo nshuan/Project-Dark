@@ -49,6 +49,7 @@ namespace Data
 
         public void ClearData(string dataKey)
         {
+            data = null;
             if (DataHandler.Exist<PlayerData>(dataKey))
                 DataHandler.Clear(dataKey);
         }

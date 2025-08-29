@@ -4,13 +4,22 @@ using Dark.Scripts.Common.UIWarning;
 using Dark.Scripts.SceneNavigation;
 using Data;
 using InGame.CharacterClass;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace Dark.Scripts.OutGame.SaveSlot
 {
     public class SaveSlotManager : MonoSingleton<SaveSlotManager>
     {
+        #region UI
+
         public UIPopupWarning popupConfirmClearSave;
-        
+        [SerializeField] private Button btnBack;
+
+        #endregion
+
+        #region Data
+
         private readonly string[] SlotDataKeys = new[]
         {
             "playerDataSlot0",
@@ -37,6 +46,8 @@ namespace Dark.Scripts.OutGame.SaveSlot
             if (index < 0 || index >= SlotDataKeys.Length) return;
             PlayerDataManager.Instance.ClearData(SlotDataKeys[index]);
         }
+
+        #endregion
 
         #region Display Data
 
@@ -87,9 +98,15 @@ namespace Dark.Scripts.OutGame.SaveSlot
 
         #endregion
 
-        private void Start()
+        protected override void Awake()
         {
-            Loading.Instance.LoadSceneWithoutActivation(SceneConstants.SceneUpgrade);
+            base.Awake();
+            
+            btnBack.onClick.RemoveAllListeners();
+            btnBack.onClick.AddListener(() =>
+            {
+                Loading.Instance.LoadScene(SceneConstants.SceneMenu);
+            });
         }
     }
 }
