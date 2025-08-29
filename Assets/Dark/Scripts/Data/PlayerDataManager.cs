@@ -46,6 +46,12 @@ namespace Data
             data = newData;
             Save();
         }
+
+        public void ClearData(string dataKey)
+        {
+            if (DataHandler.Exist<PlayerData>(dataKey))
+                DataHandler.Clear(dataKey);
+        }
         
         #endregion
     }

@@ -30,10 +30,12 @@ namespace Dark.Scripts.OutGame.Upgrade
             switch (state)
             {
                 case UIButtonState.None:
+                    rectSelected.gameObject.SetActive(false);
                     btnSelect.onClick.RemoveAllListeners();
                     DoCollapse();
                     break;
                 case UIButtonState.Hover:
+                    rectSelected.gameObject.SetActive(true);
                     break;
                 case UIButtonState.Selected:
                     btnSelect.onClick.RemoveAllListeners();
@@ -58,15 +60,13 @@ namespace Dark.Scripts.OutGame.Upgrade
                     .DOSizeDelta(new Vector2(config.widthExpand, rectFrame.sizeDelta.y), config.expandDuration)
                     .SetEase(config.expandEasing))
                 .Join(imgLight.DOFade(1f, config.lightOnDuration).SetEase(config.lightOnEasing))
-                .Join(imgIconLight.DOFade(config.iconLightAlpha, config.lightOnDuration).SetEase(config.lightOnEasing))
-                .AppendCallback(() => rectSelected.gameObject.SetActive(true));
+                .Join(imgIconLight.DOFade(config.iconLightAlpha, config.lightOnDuration).SetEase(config.lightOnEasing));
         }
 
         private Tween DoCollapse()
         {
             DOTween.Kill(this);
             return DOTween.Sequence(this)
-                .AppendCallback(() => rectSelected.gameObject.SetActive(false))
                 .Append(rectFrame
                     .DOSizeDelta(new Vector2(config.widthCollapse, rectFrame.sizeDelta.y), config.expandDuration)
                     .SetEase(config.expandEasing))

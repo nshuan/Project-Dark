@@ -1,5 +1,6 @@
 using System;
 using Core;
+using Dark.Scripts.Common.UIWarning;
 using Dark.Scripts.SceneNavigation;
 using Data;
 using InGame.CharacterClass;
@@ -8,6 +9,8 @@ namespace Dark.Scripts.OutGame.SaveSlot
 {
     public class SaveSlotManager : MonoSingleton<SaveSlotManager>
     {
+        public UIPopupWarning popupConfirmClearSave;
+        
         private readonly string[] SlotDataKeys = new[]
         {
             "playerDataSlot0",
@@ -27,6 +30,12 @@ namespace Dark.Scripts.OutGame.SaveSlot
         private PlayerData GetSlotData(int slotIndex)
         {
             return DataHandler.Load<PlayerData>(SlotDataKeys[slotIndex]);
+        }
+
+        public void ClearSlot(int index)
+        {
+            if (index < 0 || index >= SlotDataKeys.Length) return;
+            PlayerDataManager.Instance.ClearData(SlotDataKeys[index]);
         }
 
         #region Display Data

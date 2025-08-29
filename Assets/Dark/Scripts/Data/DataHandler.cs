@@ -28,5 +28,14 @@ namespace Data
             }
             return defaultValue;
         }
+        
+        public static void Clear(string key)
+        {
+            string filePath = Application.dataPath + "/" + key + ".json";
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+        }
     }
 }

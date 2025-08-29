@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Dark.Scripts.OutGame.Common.NavButton
 {
-    public class UIButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
+    public class UIButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
     {
         public int Index { get; set; }
         public UIButtonState State { get; protected set; }
@@ -33,6 +33,11 @@ namespace Dark.Scripts.OutGame.Common.NavButton
         public virtual void OnPointerEnter(PointerEventData eventData)
         {
             FuncUpdateNav(this, UIButtonState.Hover);
+        }
+
+        public virtual void OnPointerExit(PointerEventData eventData)
+        {
+            FuncUpdateNav(this, UIButtonState.None);
         }
     }
 

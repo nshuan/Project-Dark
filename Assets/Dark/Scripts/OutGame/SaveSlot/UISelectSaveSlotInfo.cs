@@ -1,6 +1,8 @@
 using System;
+using Data;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Dark.Scripts.OutGame.SaveSlot
 {
@@ -13,6 +15,7 @@ namespace Dark.Scripts.OutGame.SaveSlot
         [SerializeField] private TextMeshProUGUI txtDayPassed;
         [SerializeField] private TextMeshProUGUI txtLevel;
         [SerializeField] private TextMeshProUGUI txtPlayedTime;
+        [SerializeField] private Button btnClearSave;
 
         private SaveSlotManager saveSlotManager;
         
@@ -37,6 +40,21 @@ namespace Dark.Scripts.OutGame.SaveSlot
                 txtLevel.SetText(saveSlotManager.GetDisplayLevel(slotIndex));
                 txtPlayedTime.SetText(saveSlotManager.GetDisplayTimePlayed(slotIndex));
             }
+            
+            btnClearSave.onClick.RemoveAllListeners();
+            btnClearSave.onClick.AddListener(() =>
+            {
+                saveSlotManager.popupConfirmClearSave.gameObject.SetActive(true);
+                saveSlotManager.popupConfirmClearSave.Setup(
+                    "Clear save", 
+                    $"Are you sure to clear data in Slot {btnSelect.Index}?",
+                    () =>
+                    {
+                        saveSlotManager.ClearSlot(btnSelect.Index);
+                        saveSlotManager.popupConfirmClearSave.gameObject.SetActive(false);
+                        UpdateUI();
+                    });
+            });
         }
     }
 }
