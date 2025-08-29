@@ -37,7 +37,8 @@ namespace Data
 
         public void Save()
         {
-            DataHandler.Save(DataKey, data);    
+            DataHandler.Save(DataKey, data);
+            IsNewData = false;
         }
 
         public void Save(PlayerData newData)
