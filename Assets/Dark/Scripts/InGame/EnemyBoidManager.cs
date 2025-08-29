@@ -13,6 +13,10 @@ namespace InGame
             base.Awake();
         
             grid = new EnemySpatialGrid(100, 100, 5);
+            LevelManager.Instance.OnLevelLoaded += (level) =>
+            {
+                grid.Clear();
+            };
         }
     }
 }

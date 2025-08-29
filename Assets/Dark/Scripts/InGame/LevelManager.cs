@@ -138,7 +138,6 @@ namespace InGame
         {
             OnWin = null;
             OnLose = null;
-            OnLevelLoaded = null;
             OnChangeSkill = null;
             OnChangeTower = null;
         }

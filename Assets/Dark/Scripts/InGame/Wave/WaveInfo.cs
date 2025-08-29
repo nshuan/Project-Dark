@@ -4,6 +4,7 @@ using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 namespace InGame
 {
@@ -15,6 +16,8 @@ namespace InGame
         public float scaleDmg = 1f;
         public float timeToEnd;
         public WaveConfig waveConfig;
+        public WaveConfig[] randomWaveConfigs;
+        public bool isRandomWaveConfig;
 
         public GateEntity[] Gates { get; private set; }
         public Action OnWaveForceStop { get; set; }
@@ -22,6 +25,9 @@ namespace InGame
         
         public void SetupWave(GateEntity gatePrefab, TowerEntity[] towers, float levelExpRatio, float levelDarkRatio, Action onWaveForceEnded)
         {
+            if (isRandomWaveConfig)
+                waveConfig = randomWaveConfigs[Random.Range(0, randomWaveConfigs.Length)];
+            DebugUtility.LogError($"Setup wave {waveConfig.name}");
             Gates = new GateEntity[waveConfig.gateConfigs.Count];
             for (var i = 0; i < waveConfig.gateConfigs.Count; i++)
             {

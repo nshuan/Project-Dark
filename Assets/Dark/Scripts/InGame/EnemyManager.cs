@@ -13,7 +13,7 @@ namespace InGame
         
         public void Initialize()
         { 
-            Enemies = new Dictionary<int, EnemyEntity>(); 
+            Enemies = new Dictionary<int, EnemyEntity>();
             EnemiesAliveMap = new Dictionary<int, bool>();
             CurrentEnemyIndex = 0;
         }

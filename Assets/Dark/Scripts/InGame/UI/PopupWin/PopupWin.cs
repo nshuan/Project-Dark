@@ -35,6 +35,18 @@ namespace InGame.UI
             {
                 Loading.Instance.LoadScene(SceneConstants.SceneUpgrade);
             });
+            
+            // Todo load next level
+            btnNextLevel.onClick.RemoveAllListeners();
+            btnNextLevel.onClick.AddListener(() =>
+            {
+                imgBlockRaycast.SetActive(false);
+                ui.gameObject.SetActive(false);
+                Loading.Instance.LoadScene(SceneConstants.SceneInGame, () =>
+                {
+                    LevelManager.Instance.LoadLevel(1);
+                });
+            });
         }
     }
 }

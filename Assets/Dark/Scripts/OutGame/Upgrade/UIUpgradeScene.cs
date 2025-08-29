@@ -1,16 +1,21 @@
 using System;
 using Core;
+using Dark.Scripts.SceneNavigation;
 using Data;
 using InGame.CharacterClass;
 using InGame.Upgrade;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace Dark.Scripts.OutGame.Upgrade
 {
     public class UIUpgradeScene : MonoSingleton<UIUpgradeScene>
     {
-        [Header("Upgrade Tree")]
+        [Header("Common")] 
+        [SerializeField] private Button btnBack;
+        
+        [Space] [Header("Upgrade Tree")]
         [SerializeField] private GameObject panelUpgradeTree;
         [SerializeField] private Transform treeParent;
 
@@ -30,6 +35,12 @@ namespace Dark.Scripts.OutGame.Upgrade
                 panelSelectClass.SetActive(false);
                 Instantiate(UpgradeTreeManifest.GetTreePrefab((CharacterClass)PlayerDataManager.Instance.Data.characterClass), treeParent);
             }
+            
+            btnBack.onClick.RemoveAllListeners();
+            btnBack.onClick.AddListener(() =>
+            {
+                Loading.Instance.LoadScene(SceneConstants.SceneMenu);
+            });
         }
 
         public void SelectClass(CharacterClass classType)
