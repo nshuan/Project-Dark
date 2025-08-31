@@ -4491,9 +4491,9 @@ RectTransform:
   - {fileID: 800619682268482912}
   m_Father: {fileID: 3035300973196830798}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 32}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 64}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7792565450743571524
@@ -4511,8 +4511,6 @@ MonoBehaviour:
   imgFillCooldown: {fileID: 966814829840677377}
   txtCooldown: {fileID: 188765770650042357}
   showText: 0
-  skillIcon: {fileID: 9123989541764388154}
-  effectIconParent: {fileID: 6252108472480101509}
 --- !u!1 &5842816452258940576
 GameObject:
   m_ObjectHideFlags: 0
@@ -4656,6 +4654,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3035300973196830798}
+  - component: {fileID: 3200159815267499409}
+  - component: {fileID: 8815473648968687062}
   m_Layer: 5
   m_Name: SkillSummary
   m_TagString: Untagged
@@ -4686,6 +4686,49 @@ RectTransform:
   m_AnchoredPosition: {x: 184, y: -265.7}
   m_SizeDelta: {x: 368, y: 256}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3200159815267499409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5935735156177021875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
+--- !u!114 &8815473648968687062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5935735156177021875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4e9b07ff4574d4fbbd30dd87de9dd80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  icons:
+  - {fileID: 4972907860378536217}
+  - {fileID: 7792565450743571524}
+  - {fileID: 2250184037008399948}
+  - {fileID: 2243921557197751883}
 --- !u!1 &5973990586442514048
 GameObject:
   m_ObjectHideFlags: 0
@@ -4809,9 +4852,9 @@ RectTransform:
   - {fileID: 5668287397115277546}
   m_Father: {fileID: 3035300973196830798}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -32}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 64}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2250184037008399948
@@ -4829,8 +4872,6 @@ MonoBehaviour:
   imgFillCooldown: {fileID: 8692536389085100619}
   txtCooldown: {fileID: 8370322338926415968}
   showText: 0
-  skillIcon: {fileID: 1954186010650177963}
-  effectIconParent: {fileID: 1402415567281801487}
 --- !u!1 &6136997346685255700
 GameObject:
   m_ObjectHideFlags: 0
@@ -5438,9 +5479,9 @@ RectTransform:
   - {fileID: 1792199658250886369}
   m_Father: {fileID: 3035300973196830798}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 96}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 64}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4972907860378536217
@@ -5864,9 +5905,9 @@ RectTransform:
   - {fileID: 2473925402861261309}
   m_Father: {fileID: 3035300973196830798}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -96}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 64}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2243921557197751883
@@ -8368,11 +8409,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4473486295083902700, guid: 48c83a9a8994a4f4098cdeded5b57916, type: 3}
   m_PrefabInstance: {fileID: 3821686151643753356}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &6252108472480101509 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7190745337645211401, guid: 48c83a9a8994a4f4098cdeded5b57916, type: 3}
-  m_PrefabInstance: {fileID: 3821686151643753356}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4940296252976477231
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8786,11 +8822,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 48c83a9a8994a4f4098cdeded5b57916, type: 3}
---- !u!1 &1402415567281801487 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7190745337645211401, guid: 48c83a9a8994a4f4098cdeded5b57916, type: 3}
-  m_PrefabInstance: {fileID: 8123589166390629894}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &5668287397115277546 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4473486295083902700, guid: 48c83a9a8994a4f4098cdeded5b57916, type: 3}

@@ -1,3 +1,5 @@
+using System;
+
 namespace InGame.UI.CombatSkills
 {
     public class UIAttackNormalIcon : UIInGameSkillIcon
@@ -10,6 +12,11 @@ namespace InGame.UI.CombatSkills
         private void OnDestroy()
         {
             CombatActions.OnAttackNormal -= OnSkillUsed;
+        }
+
+        public override void CheckShowSkill(Action callbackShow, Action callbackHide)
+        {
+            callbackShow?.Invoke();
         }
     }
 }

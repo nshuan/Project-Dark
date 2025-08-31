@@ -32,19 +32,19 @@ namespace Dark.Scripts.Utils.Camera
 
             if (conformX && conformY)
             {
-                size.x = Screen.currentResolution.width;
-                size.y = Screen.currentResolution.height;
+                size.x = ScreenWidth;
+                size.y = ScreenHeight;
             }
             else if (conformX)
             {
                 var ratio = size.y / size.x;
-                size.x = Screen.currentResolution.width;
+                size.x = ScreenWidth;
                 size.y = size.x * ratio;
             }
             else if (conformY)
             {
                 var ratio = size.x / size.y;
-                size.y = Screen.currentResolution.height;
+                size.y = ScreenHeight;
                 size.x = size.y * ratio;
             }
             else
@@ -53,6 +53,28 @@ namespace Dark.Scripts.Utils.Camera
             }
             
             rectTransform.sizeDelta = size;
+        }
+
+        public int ScreenWidth
+        {
+            get
+            {
+#if UNITY_EDITOR
+                return (int)Handles.GetMainGameViewSize().x;
+#endif
+                return Screen.width;
+            }
+        }
+
+        public int ScreenHeight
+        {
+            get
+            {
+#if UNITY_EDITOR
+                return (int)Handles.GetMainGameViewSize().y;
+#endif
+                return Screen.height;
+            }
         }
     }
 
