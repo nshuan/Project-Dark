@@ -1,3 +1,4 @@
+using System;
 using InGame.Upgrade;
 using UnityEngine;
 
@@ -5,39 +6,37 @@ namespace InGame.UI.CombatSkills
 {
     public class UIAttackMoveTowerIcon : UIInGameSkillIcon
     {
-        [SerializeField] private GameObject skillIcon;
-        [SerializeField] private GameObject effectIconParent;
-
         private bool available;
-        
-        protected override void Awake()
+        private Action callbackShowSkill;
+        private Action callbackHideSkill;
+
+        public override void CheckShowSkill(Action callbackShow, Action callbackHide)
         {
-            base.Awake();
-            
+            callbackShowSkill = callbackShow;
+            callbackHideSkill = callbackHide;
             UpgradeManager.Instance.OnActivated += OnUpgradeBonusActivated;
         }
-        
+
         private void OnDestroy()
         {
             CombatActions.OnMoveTower -= OnSkillUsed;
-            UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
         }
 
         private void OnUpgradeBonusActivated(UpgradeBonusInfo bonusInfo)
         {
+            UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
+            
             if (bonusInfo.unlockedMoveToTower != null && bonusInfo.unlockedMoveToTower.Count > 0)
             {
                 available = true;
-                skillIcon.SetActive(true);
-                effectIconParent.SetActive(true);
+                callbackShowSkill?.Invoke();
                 CombatActions.OnMoveTower -= OnSkillUsed;
                 CombatActions.OnMoveTower += OnSkillUsed;
             }
             else
             {
                 available = false;
-                skillIcon.SetActive(false);
-                effectIconParent.SetActive(false);
+                callbackHideSkill?.Invoke();
             }
         }
     }

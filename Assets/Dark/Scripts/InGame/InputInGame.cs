@@ -64,10 +64,11 @@ namespace InGame
                 }
                 teleMouseInput = new MoveToTower(cam, PlayerVisual, availableTeleConfigs[0], availableTeleConfigs.Count > 1 ? availableTeleConfigs[1] : null, LevelManager.Instance.Towers, LevelManager.Instance.CurrentTower.Id, DelayCall);
                 BlockAllInput = false;
+                
+                LevelManager.Instance.OnChangeSkill += OnSkillChanged;
+                LevelManager.Instance.OnWin += OnLevelCompleted;
+                LevelManager.Instance.OnLose += OnLevelCompleted;
             };
-            LevelManager.Instance.OnChangeSkill += OnSkillChanged;
-            LevelManager.Instance.OnWin += OnLevelCompleted;
-            LevelManager.Instance.OnLose += OnLevelCompleted;
         }
 
         private void OnLevelCompleted()

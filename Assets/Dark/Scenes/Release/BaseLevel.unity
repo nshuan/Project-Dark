@@ -1605,255 +1605,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prefab: {fileID: 3480321224655161973, guid: 550169874aee5d34fb8747a4a902c4a2, type: 3}
---- !u!1 &1568595443
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1568595445}
-  - component: {fileID: 1568595444}
-  m_Layer: 0
-  m_Name: TestUpgradeBonus
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1568595444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1568595443}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f38329b873642b2b90ef7cd5388dec8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes:
-    - Name: testBonusInfo
-      Entry: 7
-      Data: 0|InGame.UpgradeBonusInfo, Assembly-CSharp
-    - Name: unlockedMoveToTower
-      Entry: 7
-      Data: 1|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: moveCooldownPlus
-      Entry: 4
-      Data: 0
-    - Name: damePlus
-      Entry: 3
-      Data: 6
-    - Name: dameMultiply
-      Entry: 4
-      Data: 0
-    - Name: criticalRatePlus
-      Entry: 4
-      Data: 0
-    - Name: criticalDame
-      Entry: 3
-      Data: 0
-    - Name: cooldownPlus
-      Entry: 4
-      Data: 0
-    - Name: hpPlus
-      Entry: 3
-      Data: 0
-    - Name: hpMultiply
-      Entry: 4
-      Data: 0
-    - Name: dropRatePlus
-      Entry: 4
-      Data: 0
-    - Name: dropRateMultiply
-      Entry: 4
-      Data: 0
-    - Name: unlockedTowerCounter
-      Entry: 6
-      Data: 
-    - Name: skillBonus
-      Entry: 7
-      Data: 2|InGame.UpgradeBonusSkillInfo, Assembly-CSharp
-    - Name: skillDamePlus
-      Entry: 3
-      Data: 0
-    - Name: skillDameMultiply
-      Entry: 4
-      Data: 0
-    - Name: skillCooldownPlus
-      Entry: 4
-      Data: 0
-    - Name: skillCooldownMultiply
-      Entry: 4
-      Data: 0
-    - Name: skillSizeMultiply
-      Entry: 4
-      Data: 0
-    - Name: skillRangeMultiply
-      Entry: 4
-      Data: 0
-    - Name: bulletPlus
-      Entry: 3
-      Data: 0
-    - Name: bulletMaxHitPlus
-      Entry: 3
-      Data: 0
-    - Name: staggerMultiply
-      Entry: 4
-      Data: 0
-    - Name: unlockedChargeDame
-      Entry: 5
-      Data: false
-    - Name: unlockedChargeBullet
-      Entry: 5
-      Data: false
-    - Name: unlockedChargeSize
-      Entry: 5
-      Data: false
-    - Name: unlockedChargeRange
-      Entry: 5
-      Data: false
-    - Name: projectileHitActions
-      Entry: 7
-      Data: 3|System.Collections.Generic.List`1[[InGame.IProjectileHit, Assembly-CSharp]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: projectileChargeHitActions
-      Entry: 6
-      Data: 
-    - Name: projectileActivateActions
-      Entry: 7
-      Data: 4|System.Collections.Generic.List`1[[InGame.IProjectileActivate, Assembly-CSharp]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: projectileChargeActivateActions
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: passiveMapByTriggerType
-      Entry: 7
-      Data: 5|System.Collections.Generic.Dictionary`2[[InGame.PassiveTriggerType,
-        Assembly-CSharp],[System.Collections.Generic.List`1[[InGame.PassiveType,
-        Assembly-CSharp]], mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 6|System.Collections.Generic.EnumEqualityComparer`1[[InGame.PassiveTriggerType,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 1
-    - Name: $v
-      Entry: 7
-      Data: 7|System.Collections.Generic.List`1[[InGame.PassiveType, Assembly-CSharp]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 2
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: passiveBonusCooldownMapByType
-      Entry: 6
-      Data: 
-    - Name: passiveBonusChanceMapByType
-      Entry: 6
-      Data: 
-    - Name: passiveBonusSizeMapByType
-      Entry: 6
-      Data: 
-    - Name: passiveBonusValueMapByType
-      Entry: 6
-      Data: 
-    - Name: passiveBonusStaggerMapByType
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-  enableTest: 1
---- !u!4 &1568595445
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1568595443}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1786152825
 GameObject:
   m_ObjectHideFlags: 0
@@ -2134,6 +1885,67 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c7c32f2213925344abe57070303dc8b1, type: 3}
+--- !u!1001 &5547804633881771799
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7505955037445265209, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      propertyPath: m_Name
+      value: TestUpgradeBonus
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
 --- !u!1001 &8548446864017650782
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2174,6 +1986,30 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1402339552175169372, guid: 5e8d8c786c7e28b4397ee81bbf90f584, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1402339552175169372, guid: 5e8d8c786c7e28b4397ee81bbf90f584, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1402339552175169372, guid: 5e8d8c786c7e28b4397ee81bbf90f584, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1687766197588904450, guid: 5e8d8c786c7e28b4397ee81bbf90f584, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1687766197588904450, guid: 5e8d8c786c7e28b4397ee81bbf90f584, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1687766197588904450, guid: 5e8d8c786c7e28b4397ee81bbf90f584, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1712265526322169675, guid: 5e8d8c786c7e28b4397ee81bbf90f584, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2203,6 +2039,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1884122154327707676, guid: 5e8d8c786c7e28b4397ee81bbf90f584, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2091202754727531710, guid: 5e8d8c786c7e28b4397ee81bbf90f584, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2091202754727531710, guid: 5e8d8c786c7e28b4397ee81bbf90f584, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2091202754727531710, guid: 5e8d8c786c7e28b4397ee81bbf90f584, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
@@ -2271,6 +2119,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5585190688186704982, guid: 5e8d8c786c7e28b4397ee81bbf90f584, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5703169674837091223, guid: 5e8d8c786c7e28b4397ee81bbf90f584, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5703169674837091223, guid: 5e8d8c786c7e28b4397ee81bbf90f584, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5703169674837091223, guid: 5e8d8c786c7e28b4397ee81bbf90f584, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
@@ -2523,4 +2383,4 @@ SceneRoots:
   - {fileID: 1005695263}
   - {fileID: 426610612}
   - {fileID: 691118427}
-  - {fileID: 1568595445}
+  - {fileID: 5547804633881771799}

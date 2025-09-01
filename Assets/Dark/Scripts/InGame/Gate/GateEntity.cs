@@ -84,8 +84,6 @@ namespace InGame
             
             while (TotalSpawnTurn == -1 || currentSpawnTurn < TotalSpawnTurn)
             {
-                yield return new WaitForSeconds(config.intervalLoop);
-                
                 var enemies = config.spawnLogic.Spawn(transform.position, config.spawnType.enemyId, config.spawnType.enemyPrefab, target);
                 
                 // Không phải boss thì spawn orb
@@ -146,6 +144,9 @@ namespace InGame
 
                 currentSpawnTurn += 1;
                 orbSpawnTimer = 0f;
+                
+                if (TotalSpawnTurn == -1 || currentSpawnTurn < TotalSpawnTurn)
+                    yield return new WaitForSeconds(config.intervalLoop);
             }
             
             Deactivate();

@@ -37,13 +37,21 @@ namespace Data
 
         public void Save()
         {
-            DataHandler.Save(DataKey, data);    
+            DataHandler.Save(DataKey, data);
+            IsNewData = false;
         }
 
         public void Save(PlayerData newData)
         {
             data = newData;
             Save();
+        }
+
+        public void ClearData(string dataKey)
+        {
+            data = null;
+            if (DataHandler.Exist<PlayerData>(dataKey))
+                DataHandler.Clear(dataKey);
         }
         
         #endregion

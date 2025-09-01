@@ -31,6 +31,8 @@ namespace Dark.Scripts.OutGame.Common.NavButton
             switch (state)
             {
                 case UIButtonState.None:
+                    if (target.State != UIButtonState.Selected)
+                        target.UpdateState(state);
                     break;
                 case UIButtonState.Hover:
                     foreach (var button in buttons)

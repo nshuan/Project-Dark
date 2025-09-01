@@ -18,6 +18,8 @@ namespace InGame.UI.CombatSkills
             txtCooldown.gameObject.SetActive(false);
         }
 
+        public abstract void CheckShowSkill(Action callbackShow, Action callbackHide);
+        
         protected virtual void OnSkillUsed(float cooldown)
         {
             StartCoroutine(IECooldown(cooldown));
