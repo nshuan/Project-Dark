@@ -12,8 +12,15 @@ namespace Data
         private static string DataKey => string.IsNullOrEmpty(CurrentDataKey) ? DefaultDataKey : CurrentDataKey;
 
         private PlayerData data;
-        public PlayerData Data => data;
-        public bool IsNewData { get; private set; } 
+        public PlayerData Data
+        {
+            get
+            {
+                if (data == null) Initialize();
+                return data;
+            }
+        }
+        
         public PlayerDataManager()
         {
             Initialize();
@@ -24,12 +31,10 @@ namespace Data
             if (DataHandler.Exist<PlayerData>(DataKey))
             {
                 data = DataHandler.Load<PlayerData>(DataKey);
-                IsNewData = false;
             }
             else
             {
                 data = new PlayerData();
-                IsNewData = true;
             }
         }
         
@@ -38,7 +43,6 @@ namespace Data
         public void Save()
         {
             DataHandler.Save(DataKey, data);
-            IsNewData = false;
         }
 
         public void Save(PlayerData newData)
