@@ -49,6 +49,7 @@ namespace InGame
         {
             IsActive = true;
             spawnCoroutine = StartCoroutine(IESpawn());
+            visualCoroutine = StartCoroutine(IEVisual());
         }
 
         public void Deactivate()
@@ -56,8 +57,14 @@ namespace InGame
             if (spawnCoroutine != null)
                 StopCoroutine(spawnCoroutine);
 
+            if (visualCoroutine != null)
+            {
+                StopCoroutine(visualCoroutine);
+                ForceCloseGate();
+            }
+
             IsActive = false;
-            gameObject.SetActive(false);
+            this.DelayCall(vfxCloseTotalDuration, () => gameObject.SetActive(false));
         }
         
         public void Initialize(GateConfig cfg, TowerEntity[] targetBase, float waveHpMultiplier, float waveDmgMultiplier, float levelExpRatio, float levelDarkRatio)
@@ -77,6 +84,9 @@ namespace InGame
             if (spawnCoroutine != null)
                 StopCoroutine(spawnCoroutine);
             
+            if (visualCoroutine != null)
+                StopCoroutine(visualCoroutine);
+            
             visual.SetActive(false);
             vfxOpen.SetActive(false);
             vfxClose.SetActive(false);
@@ -85,15 +95,11 @@ namespace InGame
         }
         
         private Coroutine spawnCoroutine;
+        private Coroutine visualCoroutine;
         private IEnumerator IESpawn()
         {
             yield return new WaitForSeconds(config.startTime);
-            
-            visual.SetActive(config.showVisual);
-            vfxOpen.SetActive(true);
-            vfxPortal.SetActive(true);
-            this.DelayCall(2f, () => vfxOpen.SetActive(false));
-            
+
             while (TotalSpawnTurn == -1 || currentSpawnTurn < TotalSpawnTurn)
             {
                 var enemies = config.spawnLogic.Spawn(transform.position, config.spawnType.enemyId, config.spawnType.enemyPrefab, target);
@@ -163,12 +169,6 @@ namespace InGame
             
             CheckAllEnemiesDead();
             
-            vfxClose.SetActive(true);
-            yield return new WaitForSeconds(vfxCloseAppearDuration);
-            vfxPortal.SetActive(false);
-            yield return new WaitForSeconds(vfxCloseTotalDuration - vfxCloseAppearDuration);
-            vfxClose.SetActive(false);
-            
             Deactivate();
         }
         
@@ -181,6 +181,31 @@ namespace InGame
                 OnAllEnemiesDead?.Invoke();
                 OnAllEnemiesDead = null;
             }
+        }
+
+        private IEnumerator IEVisual()
+        {
+            yield return new WaitForSeconds(config.startTimeVisual);
+            
+            visual.SetActive(true);
+            vfxOpen.SetActive(true);
+            vfxPortal.SetActive(true);
+            this.DelayCall(2f, () => vfxOpen.SetActive(false));
+
+            yield return new WaitForSeconds(config.durationVisual);
+            
+            vfxClose.SetActive(true);
+            yield return new WaitForSeconds(vfxCloseAppearDuration);
+            vfxPortal.SetActive(false);
+            yield return new WaitForSeconds(vfxCloseTotalDuration - vfxCloseAppearDuration);
+            vfxClose.SetActive(false);
+        }
+
+        private void ForceCloseGate()
+        {
+            vfxClose.SetActive(true);
+            this.DelayCall(vfxCloseAppearDuration, () => vfxPortal.SetActive(false));
+            this.DelayCall(vfxCloseTotalDuration, () => vfxClose.SetActive(false));
         }
     }
 }
