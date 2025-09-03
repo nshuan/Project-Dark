@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using Dark.Scripts.Utils;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
@@ -32,6 +33,11 @@ namespace InGame
 
         [Space] [Header("Visual")] 
         [SerializeField] private GameObject visual;
+        [SerializeField] private GameObject vfxOpen;
+        [SerializeField] private GameObject vfxPortal;
+        [SerializeField] private GameObject vfxClose;
+        [SerializeField] private float vfxCloseAppearDuration = 4f;
+        [SerializeField] private float vfxCloseTotalDuration = 6f;
 
         #endregion
 
@@ -72,6 +78,9 @@ namespace InGame
                 StopCoroutine(spawnCoroutine);
             
             visual.SetActive(false);
+            vfxOpen.SetActive(false);
+            vfxClose.SetActive(false);
+            vfxPortal.SetActive(false);
             orbSpawnTimer = 0f;
         }
         
@@ -81,6 +90,9 @@ namespace InGame
             yield return new WaitForSeconds(config.startTime);
             
             visual.SetActive(config.showVisual);
+            vfxOpen.SetActive(true);
+            vfxPortal.SetActive(true);
+            this.DelayCall(2f, () => vfxOpen.SetActive(false));
             
             while (TotalSpawnTurn == -1 || currentSpawnTurn < TotalSpawnTurn)
             {
@@ -149,8 +161,15 @@ namespace InGame
                     yield return new WaitForSeconds(config.intervalLoop);
             }
             
-            Deactivate();
             CheckAllEnemiesDead();
+            
+            vfxClose.SetActive(true);
+            yield return new WaitForSeconds(vfxCloseAppearDuration);
+            vfxPortal.SetActive(false);
+            yield return new WaitForSeconds(vfxCloseTotalDuration - vfxCloseAppearDuration);
+            vfxClose.SetActive(false);
+            
+            Deactivate();
         }
         
         private void CheckAllEnemiesDead()
