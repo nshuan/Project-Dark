@@ -7,6 +7,7 @@ namespace Data
     [Serializable]
     public class PlayerData
     {
+        public bool initialized;
         public int level;
         
         // Class
@@ -22,7 +23,7 @@ namespace Data
         // Record
         public int passedDay;
         public double timePlayedMilli;
-
+        
         public PlayerData()
         {
             level = 1;
@@ -31,5 +32,6 @@ namespace Data
             // Remove later
             characterClass = 1;
         }
+        
     }
 }
