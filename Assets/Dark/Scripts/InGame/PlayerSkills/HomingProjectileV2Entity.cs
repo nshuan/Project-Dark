@@ -43,6 +43,7 @@ namespace InGame
             canRotate = true;
             activated = true;
             blockHit = false;
+            collider.CanTrigger = true;
             
             if (ActivateActions != null)
             {
@@ -56,7 +57,7 @@ namespace InGame
         protected override void Update()
         {
             if (!activated && !canRotate) return;
-            if (Vector2.Distance(transform.position, startPos) > maxDistance)
+            if (Vector2.Distance(transform.position, StartPos) > maxDistance)
             {
                 if (!BlockSpawnDeadBody)
                     ProjectileDeadPool.Instance.Get(direction).position = transform.position;
