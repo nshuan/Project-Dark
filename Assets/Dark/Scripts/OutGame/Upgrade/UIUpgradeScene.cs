@@ -24,7 +24,7 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         protected override void Awake()
         {
-            if (PlayerDataManager.Instance.IsNewData)
+            if (PlayerDataManager.Instance.Data.initialized == false)
             {
                 panelUpgradeTree.SetActive(false);
                 panelSelectClass.SetActive(true);
@@ -46,10 +46,11 @@ namespace Dark.Scripts.OutGame.Upgrade
         public void SelectClass(CharacterClass classType)
         {
             // Save selected class
-            if (PlayerDataManager.Instance.IsNewData)
+            if (PlayerDataManager.Instance.Data.initialized == false)
             {
                 var data = PlayerDataManager.Instance.Data;
                 data.characterClass = (int)classType;
+                data.initialized = true;
                 
                 PlayerDataManager.Instance.Save(data);
             }
