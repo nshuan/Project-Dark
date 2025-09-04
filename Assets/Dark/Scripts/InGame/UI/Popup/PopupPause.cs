@@ -42,6 +42,7 @@ namespace InGame.UI
             btnBackToTree.onClick.RemoveAllListeners();
             btnBackToTree.onClick.AddListener(() =>
             {
+                PauseGame.Instance.Resume();
                 Loading.Instance.LoadScene(SceneConstants.SceneUpgrade);
             });
             
