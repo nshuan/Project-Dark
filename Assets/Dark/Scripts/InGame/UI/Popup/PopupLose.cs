@@ -1,5 +1,6 @@
 using Dark.Scripts.CoreUI;
 using Dark.Scripts.SceneNavigation;
+using DG.Tweening;
 using Economic;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -11,6 +12,7 @@ namespace InGame.UI
     {
         [SerializeField] private UIPopup ui;
         [SerializeField] private GameObject imgBlockRaycast;
+        [SerializeField] private float delayShowPopup = 5f; // Do có vfx endgame khi trụ bị phá nên cần delay xong vfx mới show popup
         
         [Space]
         [SerializeField] private Button btnBackToTree;
@@ -25,7 +27,7 @@ namespace InGame.UI
         {
             UpdateUI();
             imgBlockRaycast.SetActive(true);
-            ui.DoOpen();
+            ui.DoOpen().SetDelay(delayShowPopup).Play();
         }
 
         private void UpdateUI()

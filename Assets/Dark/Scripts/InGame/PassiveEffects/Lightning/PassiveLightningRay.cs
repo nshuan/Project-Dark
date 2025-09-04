@@ -41,6 +41,7 @@ namespace InGame
             transform.position = Vector3.zero;
             this.Position = target.Position;
             this.Stagger = stagger;
+            gameObject.SetActive(true);
 
             var count = Physics2D.CircleCastNonAlloc(Position, size, Vector2.zero, hits, 0f, targetLayer);
             for (var i = 0; i < count; i++)

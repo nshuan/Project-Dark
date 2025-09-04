@@ -10,6 +10,20 @@ namespace Dark.Scripts.Utils
         {
             return target.StartCoroutine(IEDelayCall(delay, callback));
         }
+        
+        public static bool TryDelayCall(this MonoBehaviour target, float delay, Action callback)
+        {
+            try
+            {
+                target.StartCoroutine(IEDelayCall(delay, callback));
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            
+            return true;
+        }
 
         private static IEnumerator IEDelayCall(float delay, Action callback)
         {

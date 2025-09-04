@@ -27,6 +27,7 @@ namespace InGame
             transform.position = target.Position;
             this.Position = target.Position;
             this.Stagger = stagger;
+            gameObject.SetActive(true);
 
             StartCoroutine(IEExplode(() =>
             {
