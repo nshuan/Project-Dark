@@ -49,13 +49,13 @@ namespace Dark.Scripts.SceneNavigation
             progress.fillAmount = 0f;
             progressText.SetText($"0%");
             loadingPanel.gameObject.SetActive(true);
-            return loadingPanel.DOFade(1f, duration);
+            return loadingPanel.DOFade(1f, duration).SetUpdate(true);
         }
 
         private Tween DoClose(float duration)
         {
             DOTween.Kill(this);
-            var seq = DOTween.Sequence(this);
+            var seq = DOTween.Sequence(this).SetUpdate(true);
             seq.Append(DOTween.To(() => 0f, x =>
                 {
                     progress.fillAmount = x;
