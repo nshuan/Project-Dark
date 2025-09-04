@@ -44,7 +44,7 @@ namespace InGame.UI
                 ui.gameObject.SetActive(false);
                 Loading.Instance.LoadScene(SceneConstants.SceneInGame, () =>
                 {
-                    LevelManager.Instance.LoadLevel(1);
+                    LevelManager.Instance.LoadLevel(LevelManager.Instance.Level.level % 2 + 1);
                 });
             });
         }
