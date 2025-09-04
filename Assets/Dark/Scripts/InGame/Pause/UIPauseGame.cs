@@ -36,7 +36,6 @@ namespace InGame.Pause
                     {
                         if (PauseGame.Instance.IsPaused) PauseGame.Instance.Resume();
                         else PauseGame.Instance.Pause();
-                        DebugUtility.LogError(PauseGame.Instance.IsPaused ? "[InGame] Paused" : "[InGame] Resumed");
                         pauseCooldown = pauseCooldownDuration;
                     }
                 }

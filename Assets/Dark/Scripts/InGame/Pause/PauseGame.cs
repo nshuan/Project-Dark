@@ -15,6 +15,7 @@ namespace InGame.Pause
             Time.timeScale = 0f;
             IsPaused = true;
             onPause?.Invoke(true);
+            DebugUtility.LogError("[InGame] Paused");
         }
 
         public void Resume()
@@ -22,6 +23,7 @@ namespace InGame.Pause
             Time.timeScale = 1f;
             IsPaused = false;
             onPause?.Invoke(false);
+            DebugUtility.LogError("[InGame] Resumed");
         }
     }
 }

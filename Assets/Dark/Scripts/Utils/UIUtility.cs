@@ -6,6 +6,7 @@ public static class UIUtility
 {
     public static Tween DoOpen(this UIPopup popup)
     {
+        DOTween.Kill(popup);
         return DOTween.Sequence(popup).SetUpdate(true)
             .AppendCallback(() =>
             {
@@ -17,6 +18,7 @@ public static class UIUtility
     
     public static Tween DoClose(this UIPopup popup)
     {
+        DOTween.Kill(popup);
         return DOTween.Sequence(popup).SetUpdate(true)
             .Append(popup.transform.DOScale(0f, 0.3f).SetEase(Ease.InBack))
             .AppendCallback(() =>
