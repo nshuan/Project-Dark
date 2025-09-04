@@ -26,25 +26,22 @@ namespace InGame
         {
             LevelManager.Instance.OnLevelLoaded += OnLoadLevel;
             LevelManager.Instance.OnChangeTower += OnChangedTower;
-            LevelManager.Instance.OnChangeSkill += OnChangedSkill;
         }
 
         private void OnLoadLevel(LevelConfig level)
         {
             txtLevel.SetText($"Level: {level.name}");
+
+            var skillConfig = LevelManager.Instance.SkillConfig;
+            txtSkill.SetText($"Skill: {skillConfig.name}");
+            txtBulletDamage.SetText($"Base dmg per bullet: {LevelManager.Instance.PlayerStats.damage + skillConfig.damePerBullet}");
+            txtSkillCooldown.SetText($"Skill cooldown: {skillConfig.cooldown}");
+            txtAttackRange.SetText($"Attack range: {skillConfig.range}");
         }
 
         private void OnChangedTower(TowerEntity tower)
         {
             currentTower.SetText($"Current tower: {tower.name} [{LevelManager.Instance.CurrentTower.CurrentHp}]");
-        }
-
-        private void OnChangedSkill(PlayerSkillConfig skillConfig)
-        {
-            txtSkill.SetText($"Skill: {skillConfig.name}");
-            txtBulletDamage.SetText($"Base dmg per bullet: {LevelManager.Instance.PlayerStats.damage + skillConfig.damePerBullet}");
-            txtSkillCooldown.SetText($"Skill cooldown: {skillConfig.cooldown}");
-            txtAttackRange.SetText($"Attack range: {skillConfig.range}");
         }
     }
 }

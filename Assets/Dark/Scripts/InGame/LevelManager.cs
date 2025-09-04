@@ -36,6 +36,7 @@ namespace InGame
         }
         
         private PlayerSkillConfig skillConfig;
+        public PlayerSkillConfig SkillConfig => skillConfig;
    
         public LevelConfig Level { get; private set; }
         public PlayerStats PlayerStats => playerStats;
@@ -46,14 +47,12 @@ namespace InGame
         #region Upgrade
 
         [ReadOnly, NonSerialized, OdinSerialize] private UpgradeBonusInfo bonusInfo;
-        public UpgradeBonusInfo BonusInfo => bonusInfo;
-
+        
         #endregion
         
         #region Action
 
         public Action<LevelConfig> OnLevelLoaded { get; set; }
-        public Action<PlayerSkillConfig> OnChangeSkill { get; set; }
         public Action<TowerEntity> OnChangeTower { get; set; }
 
         public event Action<int> OnWaveStart;
@@ -107,7 +106,6 @@ namespace InGame
             waveCoroutine = StartCoroutine(IEWave(level.waveInfo));
             
             OnLevelLoaded?.Invoke(level);
-            OnChangeSkill?.Invoke(skillConfig);
         }
 
         public void WinLevel()
@@ -138,7 +136,6 @@ namespace InGame
         {
             OnWin = null;
             OnLose = null;
-            OnChangeSkill = null;
             OnChangeTower = null;
         }
         
@@ -205,13 +202,6 @@ namespace InGame
             OnChangeTower?.Invoke(CurrentTower);
         }
         #endregion
-
-
-        [Button]
-        public void TestSkillChange()
-        {
-            OnChangeSkill?.Invoke(skillConfig);
-        }
 
         public LevelConfig testLevel;
         [Button]

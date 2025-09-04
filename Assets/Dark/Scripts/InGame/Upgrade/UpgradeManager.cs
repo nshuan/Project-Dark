@@ -139,6 +139,18 @@ namespace InGame.Upgrade
         {
             testBonusInfo = bonusInfo;
         }
+
+        public void ForceReactivateTree()
+        {
+            if (testBonusInfo != null)
+            {
+                testBonusInfo.skillBonus ??= new UpgradeBonusSkillInfo();
+                testBonusInfo.passiveMapByTriggerType ??= new Dictionary<PassiveTriggerType, List<PassiveType>>();
+            }
+            
+            LevelUtility.BonusInfo = testBonusInfo;
+            OnActivated?.Invoke(testBonusInfo);
+        }
 #endif
     }
 

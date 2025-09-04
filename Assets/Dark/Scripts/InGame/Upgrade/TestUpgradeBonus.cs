@@ -24,5 +24,14 @@ namespace InGame.Upgrade
         {
             testBonusInfo = new UpgradeBonusInfo();
         }
+        
+#if UNITY_EDITOR
+        [Button]
+        public void ForceReactivate()
+        {
+            UpgradeManager.Instance.ForceTestBonusInfo(testBonusInfo);
+            UpgradeManager.Instance.ForceReactivateTree();
+        }
+#endif
     }
 }
