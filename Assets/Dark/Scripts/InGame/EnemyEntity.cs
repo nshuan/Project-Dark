@@ -226,9 +226,17 @@ namespace InGame
             {
                 if (stagger - config.staggerResist > 0)
                 {
-                    var mag = Mathf.Sqrt(HitDirectionX *  HitDirectionX + HitDirectionY * HitDirectionY);
-                    staggerTargetPos.x = (stagger - config.staggerResist) * HitDirectionX / mag + transform.position.x;
-                    staggerTargetPos.y = (stagger - config.staggerResist) * HitDirectionY / mag + transform.position.y;
+                    var mag = Mathf.Sqrt(HitDirectionX * HitDirectionX + HitDirectionY * HitDirectionY);
+                    if (mag == 0)
+                    {
+                        staggerTargetPos.x = transform.position.x;
+                        staggerTargetPos.y = transform.position.y;
+                    }
+                    else
+                    {
+                        staggerTargetPos.x = (stagger - config.staggerResist) * HitDirectionX / mag + transform.position.x;
+                        staggerTargetPos.y = (stagger - config.staggerResist) * HitDirectionY / mag + transform.position.y;
+                    }
                     
                     staggerDuration = Mathf.Abs(stagger - config.staggerResist) / config.staggerVelocity;
                     freezeDuration = staggerDuration;
