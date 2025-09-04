@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7229145231587067381}
   - component: {fileID: 5035342186942688560}
   - component: {fileID: 2000800880884936748}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34,8 +34,8 @@ Transform:
   - {fileID: 8564002090142630497}
   - {fileID: 7125907638010037864}
   - {fileID: 4408685648208954764}
-  - {fileID: 5193706461007647197}
   - {fileID: 7645576347059346241}
+  - {fileID: 5193706461007647197}
   m_Father: {fileID: 1742570230231521380}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &5035342186942688560
@@ -55,7 +55,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -4846,7 +4846,7 @@ GameObject:
   - component: {fileID: 4408685648208954764}
   - component: {fileID: 4748383746325245081}
   - component: {fileID: 3706489563640237209}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Spark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4885,7 +4885,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 1
   prewarm: 1
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -5122,7 +5122,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.4
+      scalar: 0.2
       minScalar: 0.1
       maxCurve:
         serializedVersion: 2
@@ -5586,7 +5586,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.17
+      value: 0.09
       mode: 0
       spread: 0
       speed:
@@ -9612,7 +9612,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 96fb429982d4df44bb62db448a888b5c, type: 2}
+  - {fileID: 2100000, guid: d3e4d0cf971920e418bddfc6182b87f4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9676,7 +9676,7 @@ GameObject:
   - component: {fileID: 5193706461007647197}
   - component: {fileID: 1845623512149770328}
   - component: {fileID: 1155753656723401206}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Main
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9715,7 +9715,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 1
   prewarm: 1
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -9888,7 +9888,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 1, g: 0.4764151, b: 0.4764151, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -9952,7 +9952,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.6
+      scalar: 1.62
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -14463,7 +14463,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 509
+  m_SortingOrder: 512
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -14507,7 +14507,7 @@ GameObject:
   - component: {fileID: 8564002090142630497}
   - component: {fileID: 1600001257148260390}
   - component: {fileID: 3562415968541869751}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Smoke_SD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14546,7 +14546,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 1
   prewarm: 1
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -14719,7 +14719,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 0, b: 0, a: 1}
+      maxColor: {r: 0, g: 0, b: 0, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -14783,7 +14783,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1.2
+      scalar: 1.65
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -15100,7 +15100,7 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     gravitySource: 1
-    maxNumParticles: 10
+    maxNumParticles: 20
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
@@ -15983,7 +15983,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: 21300000, guid: c68ebe598a28234429ac7186565e5621, type: 3}
+    - sprite: {fileID: 21300000, guid: b42d47d712255ee429c43015c2618ba9, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -19273,7 +19273,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 85de15b46765a7245af31aea639c1ea5, type: 2}
+  - {fileID: 2100000, guid: d3e4d0cf971920e418bddfc6182b87f4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -19337,7 +19337,7 @@ GameObject:
   - component: {fileID: 7645576347059346241}
   - component: {fileID: 3618730413652319445}
   - component: {fileID: 6186733605145488198}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19376,7 +19376,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 1
   prewarm: 1
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -19549,7 +19549,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 0, b: 0, a: 1}
+      maxColor: {r: 0.6226415, g: 0, b: 0, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -19613,7 +19613,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1.2
+      scalar: 1.63
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -19930,7 +19930,7 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     gravitySource: 1
-    maxNumParticles: 10
+    maxNumParticles: 2
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
@@ -20196,7 +20196,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2
+      scalar: 1
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -20813,7 +20813,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: 21300000, guid: c68ebe598a28234429ac7186565e5621, type: 3}
+    - sprite: {fileID: 21300000, guid: 93e508c2ef0a870488f3841bc3669083, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -24123,7 +24123,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 512
+  m_SortingOrder: 509
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -24167,7 +24167,7 @@ GameObject:
   - component: {fileID: 1742570230231521380}
   - component: {fileID: 845373271979794095}
   - component: {fileID: 7269962564637696367}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: FX_Ingame_Enemy_Spawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24207,7 +24207,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -28998,7 +28998,7 @@ GameObject:
   - component: {fileID: 7125907638010037864}
   - component: {fileID: 8726924352297598558}
   - component: {fileID: 5781010898898533665}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Trail_SD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29037,7 +29037,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 1
   prewarm: 1
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:

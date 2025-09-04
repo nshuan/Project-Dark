@@ -97,6 +97,7 @@ namespace InGame
 
             skillConfig = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
             
+            if (Player != null) Destroy(Player.gameObject);
             Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)skillConfig.skillId);
             Player.transform.position = CurrentTower.transform.position + CurrentTower.standOffset;
             
@@ -123,6 +124,8 @@ namespace InGame
         public void LoseLevel()
         {
             if (IsEndLevel) return;
+            
+            if (waveCoroutine != null) StopCoroutine(waveCoroutine);
             
             WealthManager.Instance.Save();
             

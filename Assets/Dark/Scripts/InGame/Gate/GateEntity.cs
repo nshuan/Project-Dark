@@ -54,6 +54,9 @@ namespace InGame
 
         public void Deactivate()
         {
+            LevelManager.Instance.OnWin -= Deactivate;
+            LevelManager.Instance.OnLose -= Deactivate;
+            
             if (spawnCoroutine != null)
                 StopCoroutine(spawnCoroutine);
 
@@ -92,6 +95,9 @@ namespace InGame
             vfxClose.SetActive(false);
             vfxPortal.SetActive(false);
             orbSpawnTimer = 0f;
+            
+            LevelManager.Instance.OnWin += Deactivate;
+            LevelManager.Instance.OnLose += Deactivate;
         }
         
         private Coroutine spawnCoroutine;
@@ -111,8 +117,9 @@ namespace InGame
 
                     for (var i = 0; i < enemies.Length; i++)
                     {
-                        orbs[i] = EnemyOrbPool.Instance.Get(null);
+                        orbs[i] = EnemyOrbPool.Instance.Get(null, false);
                         orbs[i].position = transform.position;
+                        orbs[i].gameObject.SetActive(true);
                     }
 
                     while (orbSpawnTimer < orbSpawnDuration)

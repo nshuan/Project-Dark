@@ -76,7 +76,11 @@ namespace InGame
             
             lineRenderer.ResetLine(maxHit, hitOrder, orderCount);
 
-            StartCoroutine(IELightningRay(value, () => pool.Release(this, effectId)));
+            StartCoroutine(IELightningRay(value, () =>
+            {
+                lineRenderer.ResetLine(maxHit, null, 0);
+                pool.Release(this, effectId);
+            }));
             vfxImpact.position = Position;
             vfxImpact.gameObject.SetActive(true);
             sfx.Play();
