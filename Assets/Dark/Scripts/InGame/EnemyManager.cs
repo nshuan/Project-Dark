@@ -16,6 +16,17 @@ namespace InGame
             Enemies = new Dictionary<int, EnemyEntity>();
             EnemiesAliveMap = new Dictionary<int, bool>();
             CurrentEnemyIndex = 0;
+
+            LevelManager.Instance.OnLose += OnLevelCompleted;
+        }
+
+        private void OnLevelCompleted()
+        {
+            for (var i = 0; i < Enemies.Count; i++)
+            {
+                if (EnemiesAliveMap[i] == false) continue;
+                Enemies[i].Stop();
+            }
         }
         
         public void OnEnemySpawn(EnemyEntity enemy)

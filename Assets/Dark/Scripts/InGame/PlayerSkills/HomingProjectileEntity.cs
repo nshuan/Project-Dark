@@ -42,7 +42,7 @@ namespace InGame
         protected override void Update()
         {
             if (!activated) return;
-            if (Vector2.Distance(transform.position, startPos) > maxDistance)
+            if (Vector2.Distance(transform.position, StartPos) > maxDistance)
             {
                 ProjectileDeadPool.Instance.Get(direction).position = transform.position;
                 ProjectileHit(null);

@@ -25,6 +25,7 @@ namespace InGame
         
         public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool)
         {
+            gameObject.SetActive(true);
             if (randomEnemy)
             {
                 StartCoroutine(IEThunder(() =>

@@ -116,12 +116,11 @@ namespace InGame
             });
         }
 
-        #endregion
-
         protected virtual void Update()
         {
             if (!Target) return;
             if (IsDestroyed) return;
+            if (State == EnemyState.Freeze) return;
             if (State == EnemyState.Spawn) return;
             if (State == EnemyState.Invisible)
             {
@@ -153,7 +152,9 @@ namespace InGame
                 MoveTo(Target);
             }
         }
-
+        
+        #endregion
+        
         private void MoveTo(Transform target)
         {
             if (Vector3.Distance(transform.position, target.position) < config.attackRange)
@@ -168,6 +169,13 @@ namespace InGame
             }
         }
 
+        public void Stop()
+        {
+            State = EnemyState.Freeze;
+            if (attackCoroutine != null)
+                StopCoroutine(attackCoroutine);
+        }
+        
         private void StartAttackCoroutine()
         {
             if (attackCoroutine != null)

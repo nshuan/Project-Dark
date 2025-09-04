@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Dark.Scripts.Utils;
 using DG.Tweening;
+using InGame.Pause;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -62,13 +64,28 @@ namespace InGame
                         else if (moveId == 2) availableTeleConfigs.Add(LevelManager.Instance.longTeleConfig);
                     }
                 }
-                teleMouseInput = new MoveToTower(cam, PlayerVisual, availableTeleConfigs[0], availableTeleConfigs.Count > 1 ? availableTeleConfigs[1] : null, LevelManager.Instance.Towers, LevelManager.Instance.CurrentTower.Id, DelayCall);
+                teleMouseInput = new MoveToTower(cam, PlayerVisual, availableTeleConfigs[0], availableTeleConfigs.Count > 1 ? availableTeleConfigs[1] : null, LevelManager.Instance.Towers, LevelManager.Instance.CurrentTower.Id, this.TryDelayCall);
                 BlockAllInput = false;
                 
-                LevelManager.Instance.OnChangeSkill += OnSkillChanged;
+                // Setup skill config and mouse input
+                CurrentSkillConfig = LevelManager.Instance.SkillConfig;
+                CursorRangeRadius = CurrentSkillConfig.range;
+            
+                if (mouseInput != null)
+                {
+                    mouseInput.Dispose();
+                    mouseInput = null;
+                }
+                var cursor = ShotCursorManager.Instance.GetPrefab(CurrentSkillConfig.shootLogic.cursorType, canvas.transform);
+                mouseInput = ShotCursorManager.Instance.GetCursorMoveLogic(CurrentSkillConfig.shootLogic.cursorType, cam, cursor);
+                mouseInput.Initialize(this, chargeControllerArcher);
+                mouseInput.ResetChargeVariable();
+                
                 LevelManager.Instance.OnWin += OnLevelCompleted;
                 LevelManager.Instance.OnLose += OnLevelCompleted;
             };
+
+            PauseGame.Instance.onPause += OnPause;
         }
 
         private void OnLevelCompleted()
@@ -81,28 +98,13 @@ namespace InGame
             ResetMotionBlur();
             ResetTimeScale();
         }
-        
-        private void OnSkillChanged(PlayerSkillConfig skillConfig)
-        {
-            if (!skillConfig) return;
-
-            CurrentSkillConfig = skillConfig;
-            CursorRangeRadius = skillConfig.range;
-            
-            if (mouseInput != null)
-            {
-                mouseInput.Dispose();
-                mouseInput = null;
-            }
-            var cursor = ShotCursorManager.Instance.GetPrefab(skillConfig.shootLogic.cursorType, canvas.transform);
-            mouseInput = ShotCursorManager.Instance.GetCursorMoveLogic(skillConfig.shootLogic.cursorType, cam, cursor);
-            mouseInput.Initialize(this, chargeControllerArcher);
-            mouseInput.ResetChargeVariable();
-        }
 
         private void Update()
         {
-            if (BlockAllInput) return;
+            if (BlockAllInput)
+            {
+                return;
+            }
             
 #if UNITY_EDITOR
             // Test tower change
@@ -233,18 +235,6 @@ namespace InGame
             }
         }
 
-        public bool DelayCall(float delay, Action callback)
-        {
-            StartCoroutine(IEDelayCall(delay, callback));
-            return true;
-        }
-
-        private IEnumerator IEDelayCall(float delay, Action callback)
-        {
-            yield return new WaitForSeconds(delay);
-            callback?.Invoke();
-        }
-
         private void FreezeTimeScale()
         {
             Time.timeScale = 0.1f;
@@ -270,5 +260,14 @@ namespace InGame
                 })
                 .Play();
         }
+
+        #region Pause Game
+
+        public void OnPause(bool isPaused)
+        {
+            BlockAllInput = isPaused;
+        }
+        
+        #endregion
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using Dark.Scripts.Utils;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
@@ -32,6 +33,11 @@ namespace InGame
 
         [Space] [Header("Visual")] 
         [SerializeField] private GameObject visual;
+        [SerializeField] private GameObject vfxOpen;
+        [SerializeField] private GameObject vfxPortal;
+        [SerializeField] private GameObject vfxClose;
+        [SerializeField] private float vfxCloseAppearDuration = 4f;
+        [SerializeField] private float vfxCloseTotalDuration = 6f;
 
         #endregion
 
@@ -43,6 +49,7 @@ namespace InGame
         {
             IsActive = true;
             spawnCoroutine = StartCoroutine(IESpawn());
+            visualCoroutine = StartCoroutine(IEVisual());
         }
 
         public void Deactivate()
@@ -50,8 +57,14 @@ namespace InGame
             if (spawnCoroutine != null)
                 StopCoroutine(spawnCoroutine);
 
+            if (visualCoroutine != null)
+            {
+                StopCoroutine(visualCoroutine);
+                ForceCloseGate();
+            }
+
             IsActive = false;
-            gameObject.SetActive(false);
+            this.DelayCall(vfxCloseTotalDuration, () => gameObject.SetActive(false));
         }
         
         public void Initialize(GateConfig cfg, TowerEntity[] targetBase, float waveHpMultiplier, float waveDmgMultiplier, float levelExpRatio, float levelDarkRatio)
@@ -71,17 +84,22 @@ namespace InGame
             if (spawnCoroutine != null)
                 StopCoroutine(spawnCoroutine);
             
+            if (visualCoroutine != null)
+                StopCoroutine(visualCoroutine);
+            
             visual.SetActive(false);
+            vfxOpen.SetActive(false);
+            vfxClose.SetActive(false);
+            vfxPortal.SetActive(false);
             orbSpawnTimer = 0f;
         }
         
         private Coroutine spawnCoroutine;
+        private Coroutine visualCoroutine;
         private IEnumerator IESpawn()
         {
             yield return new WaitForSeconds(config.startTime);
-            
-            visual.SetActive(config.showVisual);
-            
+
             while (TotalSpawnTurn == -1 || currentSpawnTurn < TotalSpawnTurn)
             {
                 var enemies = config.spawnLogic.Spawn(transform.position, config.spawnType.enemyId, config.spawnType.enemyPrefab, target);
@@ -149,8 +167,9 @@ namespace InGame
                     yield return new WaitForSeconds(config.intervalLoop);
             }
             
-            Deactivate();
             CheckAllEnemiesDead();
+            
+            Deactivate();
         }
         
         private void CheckAllEnemiesDead()
@@ -162,6 +181,31 @@ namespace InGame
                 OnAllEnemiesDead?.Invoke();
                 OnAllEnemiesDead = null;
             }
+        }
+
+        private IEnumerator IEVisual()
+        {
+            yield return new WaitForSeconds(config.startTimeVisual);
+            
+            visual.SetActive(true);
+            vfxOpen.SetActive(true);
+            vfxPortal.SetActive(true);
+            this.DelayCall(2f, () => vfxOpen.SetActive(false));
+
+            yield return new WaitForSeconds(config.durationVisual);
+            
+            vfxClose.SetActive(true);
+            yield return new WaitForSeconds(vfxCloseAppearDuration);
+            vfxPortal.SetActive(false);
+            yield return new WaitForSeconds(vfxCloseTotalDuration - vfxCloseAppearDuration);
+            vfxClose.SetActive(false);
+        }
+
+        private void ForceCloseGate()
+        {
+            vfxClose.SetActive(true);
+            this.DelayCall(vfxCloseAppearDuration, () => vfxPortal.SetActive(false));
+            this.DelayCall(vfxCloseTotalDuration, () => vfxClose.SetActive(false));
         }
     }
 }
