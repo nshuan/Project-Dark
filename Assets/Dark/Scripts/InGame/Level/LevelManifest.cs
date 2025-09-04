@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using InGame.ConfigManager;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using UnityEditor;
 using UnityEngine;
 
 namespace InGame
@@ -10,6 +13,9 @@ namespace InGame
     [CreateAssetMenu(menuName = "InGame/Level Manifest", fileName = "LevelManifest")]
     public class LevelManifest : SerializedScriptableObject
     {
+        private static string Path = "LevelManifest";
+        private static string FilePath = "Assets/Dark/Resources/LevelManifest.asset";
+        
         [ReadOnly, NonSerialized, OdinSerialize]
         private Dictionary<int, LevelConfig> levelMap;
 
@@ -39,8 +45,32 @@ namespace InGame
         #endregion
         
 #if UNITY_EDITOR
-        private const string LevelPath = "Assets/Config/LevelInGame";
+        private const string LevelPath = "Assets/Dark/Config/LevelInGame";
 
+        [MenuItem("Dark/Manifest/Generate Level Manifest")]
+        public static void CreateInstance()
+        {
+            if (File.Exists(FilePath))
+            {
+                var instance = AssetDatabase.LoadAssetAtPath<LevelManifest>(FilePath);
+                EditorUtility.FocusProjectWindow();
+                Selection.activeObject = instance;   
+                Debug.LogError("Level Manifest file already exists!");
+                return;
+            }
+            
+            LevelManifest asset = ScriptableObject.CreateInstance<LevelManifest>();
+
+            // Create and save the asset
+            AssetDatabase.CreateAsset(asset, FilePath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            // Select the new asset
+            EditorUtility.FocusProjectWindow();
+            Selection.activeObject = asset;    
+        }
+        
         [Button]
         private void Validate()
         {
