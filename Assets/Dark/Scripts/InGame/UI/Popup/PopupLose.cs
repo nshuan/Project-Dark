@@ -1,31 +1,33 @@
-using System;
 using Dark.Scripts.CoreUI;
 using Dark.Scripts.SceneNavigation;
+using DG.Tweening;
 using Economic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace InGame.UI
 {
-    public class PopupWin : MonoBehaviour
+    public class PopupLose : MonoBehaviour
     {
         [SerializeField] private UIPopup ui;
         [SerializeField] private GameObject imgBlockRaycast;
+        [SerializeField] private float delayShowPopup = 5f; // Do có vfx endgame khi trụ bị phá nên cần delay xong vfx mới show popup
         
         [Space]
         [SerializeField] private Button btnBackToTree;
-        [SerializeField] private Button btnNextLevel;
+        [SerializeField] private Button btnReplay;
 
         private void Start()
         {
-            LevelManager.Instance.OnWin += OnWin;
+            LevelManager.Instance.OnLose += OnLose;
         }
 
-        private void OnWin()
+        private void OnLose()
         {
             UpdateUI();
             imgBlockRaycast.SetActive(true);
-            ui.DoOpen();
+            ui.DoOpen().SetDelay(delayShowPopup).Play();
         }
 
         private void UpdateUI()
@@ -36,9 +38,9 @@ namespace InGame.UI
                 Loading.Instance.LoadScene(SceneConstants.SceneUpgrade);
             });
             
-            // Todo load next level
-            btnNextLevel.onClick.RemoveAllListeners();
-            btnNextLevel.onClick.AddListener(() =>
+            // Todo reload level
+            btnReplay.onClick.RemoveAllListeners();
+            btnReplay.onClick.AddListener(() =>
             {
                 imgBlockRaycast.SetActive(false);
                 ui.gameObject.SetActive(false);

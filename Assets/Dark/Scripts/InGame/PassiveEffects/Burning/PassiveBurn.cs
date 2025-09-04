@@ -12,6 +12,7 @@ namespace InGame
         {
             transform.position = target.TargetTransform.position;
             transform.SetParent(target.TargetTransform);
+            gameObject.SetActive(true);
             target.Burn(size, delayEachBurn, (int)value, () => pool.Release(this, effectId));
             sfx.Play();
         }

@@ -12,6 +12,8 @@ namespace InGame
     [Serializable]
     public class GateSpawnSingle : IGateSpawner
     {
+        [Range(1f, 2f)] public float radius = 1.5f;
+        
         public (EnemyEntity, TowerEntity)[] Spawn(Vector2 gatePosition, int enemyId, EnemyEntity enemyPrefab, TowerEntity[] targetTower)
         {
             var enemy = EnemyPool.Instance.Get(enemyPrefab, enemyId, null, false);
@@ -21,7 +23,7 @@ namespace InGame
             enemy.transform.position =
                 (Vector3)gatePosition + 
                 (Quaternion.Euler(0f, 0f, Random.Range(-45f, 45f)) * (target.transform.position - (Vector3)gatePosition).normalized)
-                * 1.5f;
+                * radius;
             
             return new [] { (enemy, target) };
         }

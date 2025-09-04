@@ -46,6 +46,7 @@ namespace InGame
     {
         Spawn,
         Move,
-        Invisible
+        Invisible,
+        Freeze
     }
 }

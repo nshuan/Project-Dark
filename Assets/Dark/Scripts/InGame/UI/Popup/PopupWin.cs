@@ -1,27 +1,27 @@
+using System;
 using Dark.Scripts.CoreUI;
 using Dark.Scripts.SceneNavigation;
 using Economic;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace InGame.UI
 {
-    public class PopupLose : MonoBehaviour
+    public class PopupWin : MonoBehaviour
     {
         [SerializeField] private UIPopup ui;
         [SerializeField] private GameObject imgBlockRaycast;
         
         [Space]
         [SerializeField] private Button btnBackToTree;
-        [SerializeField] private Button btnReplay;
+        [SerializeField] private Button btnNextLevel;
 
         private void Start()
         {
-            LevelManager.Instance.OnLose += OnLose;
+            LevelManager.Instance.OnWin += OnWin;
         }
 
-        private void OnLose()
+        private void OnWin()
         {
             UpdateUI();
             imgBlockRaycast.SetActive(true);
@@ -36,15 +36,15 @@ namespace InGame.UI
                 Loading.Instance.LoadScene(SceneConstants.SceneUpgrade);
             });
             
-            // Todo reload level
-            btnReplay.onClick.RemoveAllListeners();
-            btnReplay.onClick.AddListener(() =>
+            // Todo load next level
+            btnNextLevel.onClick.RemoveAllListeners();
+            btnNextLevel.onClick.AddListener(() =>
             {
                 imgBlockRaycast.SetActive(false);
                 ui.gameObject.SetActive(false);
                 Loading.Instance.LoadScene(SceneConstants.SceneInGame, () =>
                 {
-                    LevelManager.Instance.LoadLevel(1);
+                    LevelManager.Instance.LoadLevel(LevelManager.Instance.Level.level % 2 + 1);
                 });
             });
         }
