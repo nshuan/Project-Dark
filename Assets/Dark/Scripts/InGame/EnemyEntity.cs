@@ -47,6 +47,7 @@ namespace InGame
         [SerializeField] private EnemyBoidAgent boidAgent;
         [SerializeField] private Transform uiHealth;
         public EnemyAnimController animController;
+        [SerializeField] private GameObject shadow;
         
         private bool inAttackRange;
         private Coroutine attackCoroutine;
@@ -93,6 +94,8 @@ namespace InGame
             inAttackRange = false;
             IsDestroyed = false;
             config.Init(this);
+            
+            shadow.SetActive(true);
         }
 
         #endregion
@@ -268,6 +271,7 @@ namespace InGame
 
         private IEnumerator IEDie(float delayAnim, float delayRelease)
         {
+            shadow.SetActive(false);    
             yield return new WaitForSeconds(delayAnim);
             
             WealthManager.Instance.AddExp(Exp);
