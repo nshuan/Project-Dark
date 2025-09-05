@@ -28,9 +28,6 @@ namespace Data
         {
             level = 1;
             grade = 1;
-            
-            // Remove later
-            characterClass = 1;
         }
         
     }
