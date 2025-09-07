@@ -1,16 +1,18 @@
 using System;
+using Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Dark.Scripts.Cursor
 {
-    public class CursorManager : MonoBehaviour
+    public class CursorManager : MonoSingleton<CursorManager>
     {
         [SerializeField] private CursorInfo cursorOutGame;
         [SerializeField] private CursorInfo cursorInGame;
         
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             SceneManager.sceneLoaded += OnSceneLoaded; 
         }
 
@@ -18,15 +20,23 @@ namespace Dark.Scripts.Cursor
         {
             if (scene.name == "BaseLevel")
             {
-                UnityEngine.Cursor.SetCursor(cursorInGame.tex, cursorInGame.hotSpot, cursorInGame.mode);
-                return;
+                SetCursorInGame();
             }
-
-            if (scene.name is "Home" or "Upgrade")
+            else
             {
-                UnityEngine.Cursor.SetCursor(cursorOutGame.tex, cursorOutGame.hotSpot, cursorOutGame.mode);
-                return;
+                SetCursorOutGame();
             }
+        }
+
+        public void SetCursorOutGame()
+        {
+            UnityEngine.Cursor.SetCursor(cursorOutGame.tex, cursorOutGame.hotSpot, cursorOutGame.mode);
+            UnityEngine.Cursor.visible = true;
+        }
+        
+        public void SetCursorInGame()
+        {
+            UnityEngine.Cursor.visible = false;
         }
         
         [Serializable]
