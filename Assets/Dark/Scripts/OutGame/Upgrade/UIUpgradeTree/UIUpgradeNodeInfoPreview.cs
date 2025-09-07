@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Core;
+using Dark.Scripts.Utils.Camera;
 using InGame.Upgrade;
 using TMPro;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace Dark.Scripts.OutGame.Upgrade
 {
     public class UIUpgradeNodeInfoPreview : MonoSingleton<UIUpgradeNodeInfoPreview>
     {
+        [SerializeField] private Vector2 rectInfoFramePadding;
         [SerializeField] private RectTransform rectInfoFrame;
         [SerializeField] private TextMeshProUGUI txtNodeName;
         [SerializeField] private TextMeshProUGUI txtNodeLore;
@@ -32,13 +34,12 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         public void UpdateUI()
         {
-            if (cacheData == null) return;
             if (cacheConfig == null) return;
             txtNodeName.SetText(cacheConfig.nodeName);
             txtNodeLore.SetText(cacheConfig.description);
             if (cacheData != null)
             {
-                txtNodeLevel.SetText($"{cacheData.level}/{cacheConfig.levelNum}");
+                txtNodeLevel.SetText($"{cacheData?.level ?? 0}/{cacheConfig.levelNum}");
                 txtNodePrice.SetText($"{0}/{1}");
             }
             else
@@ -61,7 +62,31 @@ namespace Dark.Scripts.OutGame.Upgrade
         public void Show(Vector2 position, Vector2 padding, bool forceShow)
         {
             if (CanAutoShowHide == false && forceShow == false) return;
-            rectInfoFrame.position = position + padding;
+
+            // Check if the panel is outside the screen
+            var framePos = position + padding;
+            var framePivot = new Vector2(0f, 0.5f);
+            if (position.x + padding.x + rectInfoFrame.sizeDelta.x - rectInfoFramePadding.x > SafeScaler.ScreenWidth)
+            {
+                framePos.x = position.x - padding.x;
+                framePivot.x = 1f;
+            }
+            else
+            {
+                framePos.x = position.x + padding.x;
+                framePivot.x = 0f;
+            }
+
+            if (position.y + rectInfoFrame.sizeDelta.y / 2 - rectInfoFramePadding.y > SafeScaler.ScreenHeight)
+                framePivot.y = 1f;
+            else if (position.y - rectInfoFrame.sizeDelta.y / 2 + rectInfoFramePadding.y < 0)
+                framePivot.y = 0f;
+            else
+                framePivot.y = 0.5f;
+
+            rectInfoFrame.position = framePos;
+            rectInfoFrame.pivot = framePivot;
+            
             rectInfoFrame.gameObject.SetActive(true);
         }
 

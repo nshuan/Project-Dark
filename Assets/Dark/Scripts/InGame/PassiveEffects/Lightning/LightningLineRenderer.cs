@@ -35,6 +35,8 @@ namespace InGame
 
         private void Update()
         {
+            if (targets == null) return;
+            
             // Fill in positions from targets
             // Collapse the rest to the last valid point
             for (var i = startLineIndex; i <= endLineIndex; i++)
