@@ -83,9 +83,9 @@ MonoBehaviour:
   - {fileID: 0}
   visual: {fileID: 2664195306680629247}
   vfxOpen: {fileID: 3201861804066438387}
-  vfxPortal: {fileID: 3223621638449810477}
+  vfxPortal: {fileID: 2642936798812817566}
   vfxClose: {fileID: 4624007601015185650}
-  vfxCloseAppearDuration: 1
+  vfxCloseAppearDuration: 0.5
   vfxCloseTotalDuration: 4
 --- !u!1 &2664195306680629247
 GameObject:
@@ -204,6 +204,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FX_Ingame_Enemy_Portal_Close
       objectReference: {fileID: 0}
+    - target: {fileID: 7653470929884555072, guid: 726b1a998b01d60468325fca984f81cc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9101575222967935175, guid: 726b1a998b01d60468325fca984f81cc, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -267,9 +271,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3335844950552041163}
     m_Modifications:
+    - target: {fileID: 1222685888465004416, guid: 54914df8dbfef904fa962a98adb51fdd, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1794360776846041907, guid: 54914df8dbfef904fa962a98adb51fdd, type: 3}
       propertyPath: m_Name
       value: FX_Ingame_Enemy_Portal
+      objectReference: {fileID: 0}
+    - target: {fileID: 1794360776846041907, guid: 54914df8dbfef904fa962a98adb51fdd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4496486960712637999, guid: 54914df8dbfef904fa962a98adb51fdd, type: 3}
       propertyPath: m_LocalPosition.x
@@ -321,8 +333,8 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4496486960712637999, guid: 54914df8dbfef904fa962a98adb51fdd, type: 3}
   m_PrefabInstance: {fileID: 3772401659034808094}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3223621638449810477 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1794360776846041907, guid: 54914df8dbfef904fa962a98adb51fdd, type: 3}
+--- !u!198 &2642936798812817566 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 1222685888465004416, guid: 54914df8dbfef904fa962a98adb51fdd, type: 3}
   m_PrefabInstance: {fileID: 3772401659034808094}
   m_PrefabAsset: {fileID: 0}

@@ -34,11 +34,13 @@ namespace InGame
         [Space] [Header("Visual")] 
         [SerializeField] private GameObject visual;
         [SerializeField] private GameObject vfxOpen;
-        [SerializeField] private GameObject vfxPortal;
+        [SerializeField] private ParticleSystem vfxPortal;
         [SerializeField] private GameObject vfxClose;
         [SerializeField] private float vfxCloseAppearDuration = 4f;
         [SerializeField] private float vfxCloseTotalDuration = 6f;
 
+        private ParticleSystem.MainModule vfxIdle;
+        
         #endregion
 
         public Action OnAllEnemiesDead { get; set; }
@@ -70,6 +72,23 @@ namespace InGame
             this.DelayCall(vfxCloseTotalDuration, () => gameObject.SetActive(false));
         }
         
+        public void Deactivate(bool hideVisual)
+        {
+            LevelManager.Instance.OnWin -= Deactivate;
+            LevelManager.Instance.OnLose -= Deactivate;
+            
+            if (spawnCoroutine != null)
+                StopCoroutine(spawnCoroutine);
+
+            if (hideVisual && visualCoroutine != null)
+            {
+                StopCoroutine(visualCoroutine);
+                ForceCloseGate();
+            }
+
+            IsActive = false;
+        }
+        
         public void Initialize(GateConfig cfg, TowerEntity[] targetBase, float waveHpMultiplier, float waveDmgMultiplier, float levelExpRatio, float levelDarkRatio)
         {
             config = cfg;
@@ -93,7 +112,7 @@ namespace InGame
             visual.SetActive(false);
             vfxOpen.SetActive(false);
             vfxClose.SetActive(false);
-            vfxPortal.SetActive(false);
+            vfxPortal.gameObject.SetActive(false);
             orbSpawnTimer = 0f;
             
             LevelManager.Instance.OnWin += Deactivate;
@@ -176,7 +195,7 @@ namespace InGame
             
             CheckAllEnemiesDead();
             
-            Deactivate();
+            Deactivate(false);
         }
         
         private void CheckAllEnemiesDead()
@@ -195,24 +214,26 @@ namespace InGame
             yield return new WaitForSeconds(config.startTimeVisual);
             
             visual.SetActive(true);
+            vfxIdle = vfxPortal.main;
+            vfxIdle.startLifetime = config.durationVisual;
+            vfxPortal.gameObject.SetActive(true);
             vfxOpen.SetActive(true);
-            vfxPortal.SetActive(true);
             this.DelayCall(2f, () => vfxOpen.SetActive(false));
 
             yield return new WaitForSeconds(config.durationVisual);
             
             vfxClose.SetActive(true);
             yield return new WaitForSeconds(vfxCloseAppearDuration);
-            vfxPortal.SetActive(false);
+            // vfxPortal.gameObject.SetActive(false);
             yield return new WaitForSeconds(vfxCloseTotalDuration - vfxCloseAppearDuration);
             vfxClose.SetActive(false);
         }
 
         private void ForceCloseGate()
         {
-            vfxClose.SetActive(true);
-            this.DelayCall(vfxCloseAppearDuration, () => vfxPortal.SetActive(false));
-            this.DelayCall(vfxCloseTotalDuration, () => vfxClose.SetActive(false));
+            vfxOpen.SetActive(false);
+            vfxClose.SetActive(false);
+            vfxPortal.gameObject.SetActive(false);
         }
     }
 }

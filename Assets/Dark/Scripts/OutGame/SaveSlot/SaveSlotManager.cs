@@ -34,6 +34,7 @@ namespace Dark.Scripts.OutGame.SaveSlot
         {
             index = Math.Clamp(index, 0, SlotDataKeys.Length - 1);
             PlayerDataManager.CurrentDataKey = SlotDataKeys[index];
+            PlayerDataManager.Instance.Initialize();
         }
 
         private PlayerData GetSlotData(int slotIndex)
