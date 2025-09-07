@@ -28,6 +28,7 @@ namespace InGame
         private float holdDelayTime;
         private IMouseInput mouseInput;
         private IRightMouseInput teleMouseInput;
+        private MonoCursor cursor;
 
         #region Move Towers
 
@@ -76,7 +77,8 @@ namespace InGame
                     mouseInput.Dispose();
                     mouseInput = null;
                 }
-                var cursor = ShotCursorManager.Instance.GetPrefab(CurrentSkillConfig.shootLogic.cursorType, canvas.transform);
+                cursor ??= ShotCursorManager.Instance.GetPrefab(CurrentSkillConfig.shootLogic.cursorType, canvas.transform);
+                cursor.gameObject.SetActive(true);
                 mouseInput = ShotCursorManager.Instance.GetCursorMoveLogic(CurrentSkillConfig.shootLogic.cursorType, cam, cursor);
                 mouseInput.Initialize(this, chargeControllerArcher);
                 mouseInput.ResetChargeVariable();
@@ -266,6 +268,7 @@ namespace InGame
         public void OnPause(bool isPaused)
         {
             BlockAllInput = isPaused;
+            cursor.gameObject.SetActive(!isPaused);
         }
         
         #endregion
