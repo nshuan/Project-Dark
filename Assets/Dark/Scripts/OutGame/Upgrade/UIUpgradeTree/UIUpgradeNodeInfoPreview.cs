@@ -34,13 +34,12 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         public void UpdateUI()
         {
-            if (cacheData == null) return;
             if (cacheConfig == null) return;
             txtNodeName.SetText(cacheConfig.nodeName);
             txtNodeLore.SetText(cacheConfig.description);
             if (cacheData != null)
             {
-                txtNodeLevel.SetText($"{cacheData.level}/{cacheConfig.levelNum}");
+                txtNodeLevel.SetText($"{cacheData?.level ?? 0}/{cacheConfig.levelNum}");
                 txtNodePrice.SetText($"{0}/{1}");
             }
             else
