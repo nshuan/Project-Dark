@@ -10,6 +10,13 @@ namespace Dark.Scripts.OutGame.Upgrade
         public Action onHoverExit;
         public Action onPointerClick;
         
+        public RectTransform rectTransform;
+
+        private void Awake()
+        {
+            rectTransform = GetComponent<RectTransform>();
+        }
+
         public void OnPointerEnter(PointerEventData eventData)
         {
             onHover?.Invoke();

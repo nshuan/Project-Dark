@@ -55,7 +55,7 @@ namespace Dark.Scripts.Utils.Camera
             rectTransform.sizeDelta = size;
         }
 
-        public int ScreenWidth
+        public static int ScreenWidth
         {
             get
             {
@@ -66,7 +66,7 @@ namespace Dark.Scripts.Utils.Camera
             }
         }
 
-        public int ScreenHeight
+        public static int ScreenHeight
         {
             get
             {

@@ -92,7 +92,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             hoverField.onHover = () =>
             {
                 UIUpgradeNodeInfoPreview.Instance.Setup(config, false);
-                UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(lineAnchorOffsetRadius, 0f), false);
+                UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.rectTransform.sizeDelta.x / 2, 0f), false);
             };
             hoverField.onHoverExit = () => UIUpgradeNodeInfoPreview.Instance.Hide(false);
             hoverField.onPointerClick = () =>
@@ -106,7 +106,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                 if (success)
                 {
                     UIUpgradeNodeInfoPreview.Instance.Setup(config, true);
-                    UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(lineAnchorOffsetRadius, 0f), true);
+                    UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.rectTransform.sizeDelta.x / 2, 0f), true);
                     UpdateUI();
                     DoUpgrade().Play();
                     treeRef.UpdateChildren(config.nodeId);
