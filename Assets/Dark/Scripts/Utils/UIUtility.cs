@@ -1,6 +1,7 @@
 using Dark.Scripts.CoreUI;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 public static class UIUtility
 {
@@ -25,5 +26,13 @@ public static class UIUtility
             {
                 popup.gameObject.SetActive(false);
             });
+    }
+
+
+    public static void SetAlpha(this Image image, float alpha)
+    {
+        var color = image.color;
+        color.a = alpha;
+        image.color = color;
     }
 }
