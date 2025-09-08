@@ -1,3 +1,4 @@
+using System;
 using Dark.Scripts.CoreUI;
 using Dark.Scripts.SceneNavigation;
 using DG.Tweening;
@@ -18,16 +19,23 @@ namespace InGame.UI
         [SerializeField] private Button btnBackToTree;
         [SerializeField] private Button btnReplay;
 
+        public static event Action onShowPopup;
+        
         private void Start()
         {
             LevelManager.Instance.OnLose += OnLose;
+        }
+
+        private void OnDestroy()
+        {
+            onShowPopup = null;
         }
 
         private void OnLose()
         {
             UpdateUI();
             imgBlockRaycast.SetActive(true);
-            ui.DoOpen().SetDelay(delayShowPopup).Play();
+            ui.DoOpen().SetDelay(delayShowPopup).OnComplete(() => onShowPopup?.Invoke());
         }
 
         private void UpdateUI()

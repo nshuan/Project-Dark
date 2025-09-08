@@ -10,7 +10,6 @@ using UnityEngine;
 
 namespace InGame
 {
-    [CreateAssetMenu(menuName = "InGame/Level Manifest", fileName = "LevelManifest")]
     public class LevelManifest : SerializedScriptableObject
     {
         private static string Path = "LevelManifest";

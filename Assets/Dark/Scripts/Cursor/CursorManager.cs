@@ -7,9 +7,6 @@ namespace Dark.Scripts.Cursor
 {
     public class CursorManager : MonoSingleton<CursorManager>
     {
-        [SerializeField] private CursorInfo cursorOutGame;
-        [SerializeField] private CursorInfo cursorInGame;
-        
         protected override void Awake()
         {
             base.Awake();
@@ -30,21 +27,14 @@ namespace Dark.Scripts.Cursor
 
         public void SetCursorOutGame()
         {
-            UnityEngine.Cursor.SetCursor(cursorOutGame.tex, cursorOutGame.hotSpot, cursorOutGame.mode);
+            var cursor = CursorManifest.GetCursorInfo(CursorKind.OutGame);
+            UnityEngine.Cursor.SetCursor(cursor.tex, cursor.hotSpot, cursor.mode);
             UnityEngine.Cursor.visible = true;
         }
         
         public void SetCursorInGame()
         {
             UnityEngine.Cursor.visible = false;
-        }
-        
-        [Serializable]
-        public struct CursorInfo
-        {
-            public Texture2D tex;
-            public Vector2 hotSpot;
-            public CursorMode mode;
         }
     }
 }
