@@ -53,6 +53,13 @@ namespace InGame
 
         #endregion
         
+        #region Tower
+
+        public int toleranceRegenPerSecond = 0;
+        public int toleranceRegenWhenKill = 0;
+
+        #endregion
+        
         #region Passive
 
         [Space] 

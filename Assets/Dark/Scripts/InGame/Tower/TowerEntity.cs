@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Dark.Scripts.Audio;
 using InGame.Effects;
 using UnityEngine;
@@ -13,6 +14,7 @@ namespace InGame
         [SerializeField] private SpriteRenderer towerVisualUILayer;
         [SerializeField] private Sprite[] spriteStates;
         [SerializeField] private float[] thresholdState = new[] { 0f, 0.3f, 0.7f };
+        [SerializeField] private TowerAutoRegenerate autoRegenerate;
         [SerializeField] private AudioComponent sfxHit;
 
         private int currentState;
@@ -45,6 +47,7 @@ namespace InGame
             currentState = spriteStates.Length - 1;
             towerVisual.sprite = spriteStates[currentState];
             towerVisualUILayer.sprite = spriteStates[currentState];
+            autoRegenerate.Initialize(this, LevelUtility.BonusInfo.toleranceRegenPerSecond);
         }
 
         public void EnterTower()
@@ -84,11 +87,27 @@ namespace InGame
                 }
             }
             
+            autoRegenerate.Activate();
+            
             // Do damage effect
             sfxHit.Play();
             VisualEffectHelper.Instance.PlayEffect(damageEffect);
         }
 
+        public void Regenerate(int value)
+        {
+            if (IsDestroyed) return;
+
+            CurrentHp += value;
+            
+            if (currentState < spriteStates.Length - 1 && (float)CurrentHp / MaxHp >= thresholdState[currentState + 1])
+            {
+                currentState += 1;
+                towerVisual.sprite = spriteStates[currentState];
+                towerVisualUILayer.sprite = spriteStates[currentState];
+            }
+        }
+        
         [SerializeField] private GameObject selected;
         [SerializeField] private GameObject hover;
         public void Hover(bool hovering)
