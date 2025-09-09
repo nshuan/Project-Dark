@@ -19,8 +19,8 @@ namespace Dark.Scripts.OutGame.SaveSlot
         
         [Header("General")]
         [SerializeField] private RectTransform resizeTarget;
-        [SerializeField] private Vector2 sizeUnselected = new Vector2(1f, 1f);
-        [SerializeField] private Vector2 sizeSelected;
+        [SerializeField] private Vector2 scaleUnselected = new Vector2(1f, 1f);
+        [SerializeField] private Vector2 scaleSelected;
         [SerializeField] private float frameAlphaUnselected = 0.9f;
         [SerializeField] private float frameAlphaSelected = 1f;
         [SerializeField] private float hoverAnimDuration = 0.25f;
@@ -31,8 +31,6 @@ namespace Dark.Scripts.OutGame.SaveSlot
         [Header("Group Icon")]
         [SerializeField] private CanvasGroup cvgIconUnselected;
         [SerializeField] private CanvasGroup cvgIconSelected;
-        [SerializeField] private Vector2 sizeIconSelected;
-        [SerializeField] private Vector2 sizeIconUnselected = new Vector2(1f, 1f);
         
         [Header("Text color")]
         [SerializeField] private Graphic[] texts;
@@ -40,22 +38,16 @@ namespace Dark.Scripts.OutGame.SaveSlot
         [SerializeField] private Color colorTextSelected;
 
         private bool isHovering = false;
-        private RectTransform rectIconUnselected;
-        private RectTransform rectIconSelected;
 
         private void OnEnable()
         {
             isHovering = false;
             uiFrame.SetAlpha(frameAlphaUnselected);
-            resizeTarget.sizeDelta = sizeUnselected;
+            resizeTarget.localScale = scaleUnselected;
             imgLight.SetAlpha(0f);
             cvgIconUnselected.alpha = 1f;
             cvgIconSelected.alpha = 0f;
             uiBlockClearSave.SetAlpha(1f);
-            rectIconUnselected = cvgIconUnselected.GetComponent<RectTransform>();
-            rectIconSelected = cvgIconSelected.GetComponent<RectTransform>();
-            rectIconUnselected.sizeDelta = sizeIconUnselected;
-            rectIconSelected.sizeDelta = sizeIconUnselected;
         }
 
         public override void UpdateUI(UIButtonState state)
@@ -74,7 +66,7 @@ namespace Dark.Scripts.OutGame.SaveSlot
                     break;
                 case UIButtonState.Selected:
                     uiFrame.SetAlpha(frameAlphaSelected);
-                    resizeTarget.sizeDelta = sizeSelected;
+                    resizeTarget.localScale = scaleSelected;
                     break;
             }
         }
@@ -90,11 +82,9 @@ namespace Dark.Scripts.OutGame.SaveSlot
         {
             DOTween.Kill(this);
             var seq = DOTween.Sequence(this);
-
-            seq.Append(resizeTarget.DOSizeDelta(sizeSelected, duration))
+            
+            seq.Append(resizeTarget.DOScale(scaleSelected, duration))
                 .Join(imgLight.DOFade(1f, duration))
-                .Join(rectIconSelected.DOSizeDelta(sizeIconSelected, duration))
-                .Join(rectIconUnselected.DOSizeDelta(sizeIconSelected, duration))
                 .Join(cvgIconSelected.DOFade(1f, duration))
                 .Join(cvgIconUnselected.DOFade(0f, duration))
                 .Join(uiBlockClearSave.DOFade(0f, duration));
@@ -111,11 +101,9 @@ namespace Dark.Scripts.OutGame.SaveSlot
         {
             DOTween.Kill(this);
             var seq = DOTween.Sequence(this);
-
-            seq.Append(resizeTarget.DOSizeDelta(sizeUnselected, duration))
+            
+            seq.Append(resizeTarget.DOScale(scaleUnselected, duration))
                 .Join(imgLight.DOFade(0f, duration))
-                .Join(rectIconSelected.DOSizeDelta(sizeIconUnselected, duration))
-                .Join(rectIconUnselected.DOSizeDelta(sizeIconUnselected, duration))
                 .Join(cvgIconSelected.DOFade(0f, duration))
                 .Join(cvgIconUnselected.DOFade(1f, duration))
                 .Join(uiBlockClearSave.DOFade(1f, duration));
