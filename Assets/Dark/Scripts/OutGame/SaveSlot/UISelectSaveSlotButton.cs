@@ -128,16 +128,16 @@ namespace Dark.Scripts.OutGame.SaveSlot
             return seq;
         }
 
-        // private RectTransform rectThis;
-        // private Canvas canvasThis;
-        // public override void OnPointerExit(PointerEventData eventData)
-        // {
-        //     rectThis ??= GetComponent<RectTransform>();
-        //     canvasThis ??= GetComponentInParent<Canvas>();
-        //     
-        //     if (rectThis.PointerStillOverMe(canvasThis)) return;
-        //     
-        //     base.OnPointerExit(eventData);
-        // }
+        private RectTransform rectThis;
+        private Canvas canvasThis;
+        public override void OnPointerExit(PointerEventData eventData)
+        {
+            rectThis ??= GetComponent<RectTransform>();
+            canvasThis ??= GetComponentInParent<Canvas>();
+            
+            if (rectThis.PointerStillOverMe(canvasThis)) return;
+            
+            base.OnPointerExit(eventData);
+        }
     }
 }
