@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace Dark.Scripts.SceneNavigation
 {
@@ -13,6 +14,8 @@ namespace Dark.Scripts.SceneNavigation
         [SerializeField] private CanvasGroup loadingPanel;
         [SerializeField] private Image progress;
         [SerializeField] private TextMeshProUGUI progressText;
+        [SerializeField] private float minDuration = 0.5f;
+        [SerializeField] private float maxDuration = 1.5f;
         
         public Action onStartLoading;
         private Action onSceneLoaded;
@@ -38,7 +41,7 @@ namespace Dark.Scripts.SceneNavigation
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
             DebugUtility.LogWarning($"Scene {scene.name} is loaded!");
-            DoClose(0.2f);
+            DoClose(Random.Range(minDuration, maxDuration), 0.2f);
             onSceneLoaded?.Invoke();
             onSceneLoaded = null;
         }
@@ -52,7 +55,7 @@ namespace Dark.Scripts.SceneNavigation
             return loadingPanel.DOFade(1f, duration).SetUpdate(true);
         }
 
-        private Tween DoClose(float duration)
+        private Tween DoClose(float duration, float hideDuration)
         {
             DOTween.Kill(this);
             var seq = DOTween.Sequence(this).SetUpdate(true);
@@ -61,7 +64,7 @@ namespace Dark.Scripts.SceneNavigation
                     progress.fillAmount = x;
                     progressText.SetText($"{(int)(x * 100)}%");
                 }, 1f, duration))
-                .Append(loadingPanel.DOFade(0f, duration))
+                .Append(loadingPanel.DOFade(0f, hideDuration))
                 .OnComplete(() => loadingPanel.gameObject.SetActive(false));
             return seq.Play();
         }

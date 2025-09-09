@@ -29,7 +29,8 @@ namespace InGame.Upgrade
 
         public enum BonusMoveTowerType
         {
-            Cooldown
+            Cooldown,
+            CastTime
         }
     }
 }

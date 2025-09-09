@@ -60,16 +60,6 @@ namespace InGame
             CheckStopAllGate();
         }
 
-        public void StopWave()
-        {
-            foreach (var gate in Gates)
-            {
-                gate.Deactivate();
-            }
-            
-            CheckStopAllGate();
-        }
-
         private void CheckStopAllGate()
         {
             if (Gates.All((gate) => gate.AllEnemyDead))

@@ -87,6 +87,7 @@ namespace InGame
                 LevelManager.Instance.OnLose += OnLevelCompleted;
             };
 
+            PauseGame.Instance.onPause -= OnPause;
             PauseGame.Instance.onPause += OnPause;
         }
 
@@ -268,7 +269,7 @@ namespace InGame
         public void OnPause(bool isPaused)
         {
             BlockAllInput = isPaused;
-            cursor.gameObject.SetActive(!isPaused);
+            cursor?.gameObject.SetActive(!isPaused);
         }
         
         #endregion
