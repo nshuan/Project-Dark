@@ -11,6 +11,8 @@ namespace Dark.Scripts.OutGame.SaveSlot
         [SerializeField] private UISelectSaveSlotButton btnSelect;
         [SerializeField] private GameObject panelEmptySlot;
         [SerializeField] private GameObject panelSlot;
+        [SerializeField] private GameObject[] imgClass;
+        [SerializeField] private GameObject[] imgClassLight;
         [SerializeField] private TextMeshProUGUI txtClassName;
         [SerializeField] private TextMeshProUGUI txtDayPassed;
         [SerializeField] private TextMeshProUGUI txtLevel;
@@ -33,28 +35,38 @@ namespace Dark.Scripts.OutGame.SaveSlot
             panelEmptySlot.SetActive(isEmptySlot);
             panelSlot.SetActive(!isEmptySlot);
 
+            foreach (var icon in imgClass)
+                icon.SetActive(false);
+            foreach (var icon in imgClassLight)
+                icon.SetActive(false);
+            
+            btnClearSave.onClick.RemoveAllListeners();
+            
             if (!isEmptySlot)
             {
+                var classType = saveSlotManager.GetClassTypeIndex(slotIndex);
+                if (classType >= 0 || classType < imgClass.Length) imgClass[classType].SetActive(true);
+                if (classType >= 0 || classType < imgClassLight.Length) imgClassLight[classType].SetActive(true);
+                
                 txtClassName.SetText(saveSlotManager.GetDisplayClassName(slotIndex));
                 txtDayPassed.SetText(saveSlotManager.GetDisplayPassedDays(slotIndex));
                 txtLevel.SetText(saveSlotManager.GetDisplayLevel(slotIndex));
                 txtPlayedTime.SetText(saveSlotManager.GetDisplayTimePlayed(slotIndex));
+                
+                btnClearSave.onClick.AddListener(() =>
+                {
+                    saveSlotManager.popupConfirmClearSave.gameObject.SetActive(true);
+                    saveSlotManager.popupConfirmClearSave.Setup(
+                        "your data will be lost", 
+                        $"Are you sure?",
+                        () =>
+                        {
+                            saveSlotManager.ClearSlot(btnSelect.Index);
+                            saveSlotManager.popupConfirmClearSave.gameObject.SetActive(false);
+                            UpdateUI();
+                        });
+                });
             }
-            
-            btnClearSave.onClick.RemoveAllListeners();
-            btnClearSave.onClick.AddListener(() =>
-            {
-                saveSlotManager.popupConfirmClearSave.gameObject.SetActive(true);
-                saveSlotManager.popupConfirmClearSave.Setup(
-                    "Clear save", 
-                    $"Are you sure to clear data in Slot {btnSelect.Index}?",
-                    () =>
-                    {
-                        saveSlotManager.ClearSlot(btnSelect.Index);
-                        saveSlotManager.popupConfirmClearSave.gameObject.SetActive(false);
-                        UpdateUI();
-                    });
-            });
         }
     }
 }

@@ -56,6 +56,16 @@ namespace Dark.Scripts.OutGame.SaveSlot
         {
             return slotIndex < 0 || slotIndex >= SlotDataKeys.Length || !DataHandler.Exist<PlayerData>(SlotDataKeys[slotIndex]);
         }
+
+        public int GetClassTypeIndex(int slotIndex)
+        {
+            if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length) return -1;
+            if (IsEmptySlot(slotIndex)) return -1;
+            
+            cacheData[slotIndex] ??= GetSlotData(slotIndex);
+
+            return cacheData[slotIndex].characterClass;
+        }
         
         public string GetDisplayClassName(int slotIndex)
         {
@@ -69,32 +79,33 @@ namespace Dark.Scripts.OutGame.SaveSlot
 
         public string GetDisplayPassedDays(int slotIndex)
         {
-            if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length) return "";
-            if (IsEmptySlot(slotIndex)) return "";
+            if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length) return "days:";
+            if (IsEmptySlot(slotIndex)) return "days:";
             
             cacheData[slotIndex] ??= GetSlotData(slotIndex);
             
-            return cacheData[slotIndex].passedDay.ToString();
+            return $"days: {cacheData[slotIndex].passedDay}";
         }
 
         public string GetDisplayLevel(int slotIndex)
         {
-            if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length) return "";
-            if (IsEmptySlot(slotIndex)) return "";
+            if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length) return "level:";
+            if (IsEmptySlot(slotIndex)) return "level:";
             
             cacheData[slotIndex] ??= GetSlotData(slotIndex);
             
-            return cacheData[slotIndex].level.ToString();
+            return $"level: {cacheData[slotIndex].level}";
         }
 
         public string GetDisplayTimePlayed(int slotIndex)
         {
-            if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length) return "";
-            if (IsEmptySlot(slotIndex)) return "";
+            if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length) return "0 hours 0 min";
+            if (IsEmptySlot(slotIndex)) return "0 hours 0 min";
             
             cacheData[slotIndex] ??= GetSlotData(slotIndex);
-            
-            return TimeSpan.FromMilliseconds(cacheData[slotIndex].timePlayedMilli).ToString(@"hh\:mm\:ss");
+
+            var totalTime = TimeSpan.FromMilliseconds(cacheData[slotIndex].timePlayedMilli);
+            return $"{(int)totalTime.TotalHours} hours {totalTime.Minutes} min";
         }
 
         #endregion
