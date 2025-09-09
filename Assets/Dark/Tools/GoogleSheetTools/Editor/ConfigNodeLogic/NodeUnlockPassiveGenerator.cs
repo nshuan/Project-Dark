@@ -9,7 +9,7 @@ namespace Dark.Tools.GoogleSheetTool
     public class NodeUnlockAttackPassiveGenerator :  INodeLogicGenerator
     {
         /// <summary>
-        /// 1st index: passive ID
+        /// subType: passive ID
         /// </summary>
         /// <param name="value"></param>
         /// <param name="isMul"></param>
@@ -39,7 +39,7 @@ namespace Dark.Tools.GoogleSheetTool
     public class NodeUnlockChargePassiveGenerator :  INodeLogicGenerator
     {
         /// <summary>
-        /// 1st index: passive ID
+        /// subType: passive ID
         /// </summary>
         /// <param name="value"></param>
         /// <param name="isMul"></param>
@@ -69,7 +69,7 @@ namespace Dark.Tools.GoogleSheetTool
     public class NodeUnlockMovePassiveGenerator :  INodeLogicGenerator
     {
         /// <summary>
-        /// 1st index: passive ID
+        /// subType: passive ID
         /// </summary>
         /// <param name="value"></param>
         /// <param name="isMul"></param>
@@ -99,7 +99,7 @@ namespace Dark.Tools.GoogleSheetTool
     public class NodeUnlockCounterPassiveGenerator :  INodeLogicGenerator
     {
         /// <summary>
-        /// 1st index: passive ID
+        /// subType: passive ID
         /// </summary>
         /// <param name="value"></param>
         /// <param name="isMul"></param>

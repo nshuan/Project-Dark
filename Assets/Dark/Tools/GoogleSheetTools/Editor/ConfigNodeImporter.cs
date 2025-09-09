@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using Economic;
 using InGame.Upgrade;
 using UnityEditor;
 using UnityEngine;
@@ -9,7 +12,7 @@ namespace Dark.Tools.GoogleSheetTool
 {
     public class ConfigNodeImporter
     {
-        public static void Import(ScriptableObject[] configs, List<string[]> csvData)
+        public static void Import(ScriptableObject[] configs, List<string[]> csvData, Func<string, UpgradeNodeConfig> funcCreateNewNodeConfig, Action callbackCompleteImport = null)
         {
             var configDict = new Dictionary<int, UpgradeNodeConfig>();
             foreach (var config in configs)
@@ -94,33 +97,78 @@ namespace Dark.Tools.GoogleSheetTool
                     continue;
                 }
                 
-                // Todo Thêm cost
-                
-                // Thêm logic
-                if (configDict.TryGetValue(csvNodeId, out UpgradeNodeConfig config))
+                if (!configDict.TryGetValue(csvNodeId, out UpgradeNodeConfig config))
                 {
-                    var logicInfos = new List<NodeLogicInfo>();
-                    
-                    foreach (var indexInfo in logicIndexes)
+                    var nodeName = "Unnamed";
+                    for (var fieldIndex = 0; fieldIndex < fields.Length; fieldIndex++)
                     {
-                        logicInfos.Add(new NodeLogicInfo()
-                        {
-                            key = cols[indexInfo.typeIndex],
-                            value = indexInfo.valueIndexes.Select((index) => cols[index]).ToList(),
-                            isMul = cols[indexInfo.isMulIndex]
-                        });
+                        if (fields[fieldIndex] != "nodeName") continue;
+                        nodeName = cols[fieldIndex];
+                        break;
                     }
 
-                    var a = 1;
-                    
-                    config.nodeLogic = ConfigNodeLogicFactory.Generate(logicInfos);
-                    EditorUtility.SetDirty(config);
+                    config = funcCreateNewNodeConfig($"{csvNodeId}_{nodeName}");
+                    config.nodeId = csvNodeId;
                 }
+                
+                if (costTypeIndexes.Count != costValueIndexes.Count)
+                    Debug.LogError("Can't import cost - Number of cost type and cost value do not match");
                 else
                 {
-                    Debug.LogError($"No matching config found for nodeId {csvNodeId}");
+                    config.costInfo = new UpgradeNodeCostInfo[costTypeIndexes.Count];
+                    
+                    for (var index = 0; index < costTypeIndexes.Count; index++)
+                    {
+                        if (!Enum.TryParse<WealthType>(cols[costTypeIndexes[index]], out var costType))
+                        {
+                            Debug.LogWarning($"Can't import cost - Invalid cost type {cols[costTypeIndexes[index]]}, data index = {i}");
+                            continue;
+                        }
+                        
+                        try
+                        {
+                            var costValue = cols[costValueIndexes[index]].Split(',').Select((str) => int.Parse(str, CultureInfo.InvariantCulture)).ToArray();;
+
+                            var costInfo = new UpgradeNodeCostInfo()
+                            {
+                                costType = costType,
+                                costValue = costValue,
+                            };
+                            
+                            config.costInfo[index] = costInfo;
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine($"Can't import cost - Invalid cost value string: {cols[costValueIndexes[index]]}, data index = {i}");
+                        }
+                    }
                 }
+                
+                // Thêm logic
+                var logicInfos = new List<NodeLogicInfo>();
+                    
+                for (var fieldIndex = 0; fieldIndex < cols.Length; fieldIndex++)
+                {
+                    ConfigImporter.SetValue(config, fields[fieldIndex], cols[fieldIndex]);
+                }
+                    
+                foreach (var indexInfo in logicIndexes)
+                {
+                    logicInfos.Add(new NodeLogicInfo()
+                    {
+                        key = cols[indexInfo.typeIndex],
+                        value = indexInfo.valueIndexes.Select((index) => cols[index]).ToList(),
+                        isMul = cols[indexInfo.isMulIndex]
+                    });
+                }
+
+                var a = 1;
+                    
+                config.nodeLogic = ConfigNodeLogicFactory.Generate(logicInfos);
+                EditorUtility.SetDirty(config);
             }
+            
+            callbackCompleteImport?.Invoke();
         }
         
         public struct LogicImportInfo

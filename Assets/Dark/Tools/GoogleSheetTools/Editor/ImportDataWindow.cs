@@ -6,8 +6,10 @@ using System.Text;
 using Dark.Tools.GoogleSheetTool;
 using Dark.Tools.Utils;
 using InGame;
+using InGame.Upgrade;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 public class ImportDataWindow : EditorWindow
 {
@@ -87,7 +89,9 @@ public class ImportDataWindow : EditorWindow
         {
             foreach (var data in listDataToUpdate)
             {
-                ConfigNodeImporter.Import(data.configs, csvTable);
+                ConfigNodeImporter.Import(data.configs, csvTable, 
+                    (_name) => data.CreateNewConfig<UpgradeNodeConfig>(_name),
+                    () => data.GetConfigsSortByName());
             }
         }
         else

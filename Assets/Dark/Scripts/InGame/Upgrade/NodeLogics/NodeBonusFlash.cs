@@ -3,21 +3,27 @@ using System;
 namespace InGame.Upgrade
 {
     [Serializable]
-    public class NodeBonusMoveTower : INodeActivateLogic
+    public class NodeBonusFlash : INodeActivateLogic
     {
-        public BonusMoveTowerType bonusType;
+        public BonusType bonusType;
         public float[] value;
         public bool isMultiply;
         public string bonusDescription;
-        
+
         public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)
         {
             if (level <= 0 || level > value.Length) return;
 
             switch (bonusType)
             {
-                case BonusMoveTowerType.Cooldown:
-                    bonusInfo.moveCooldownPlus += (int)value[level - 1];
+                case BonusType.Cooldown:
+                    bonusInfo.flashCooldownPlus += value[level - 1];
+                    break;
+                case BonusType.Size:
+                    bonusInfo.flashSizePlus += value[level - 1];
+                    break;
+                case BonusType.Damage:
+                    bonusInfo.flashDamagePlus += value[level - 1];
                     break;
             }
         }
@@ -26,11 +32,12 @@ namespace InGame.Upgrade
         {
             return bonusDescription;
         }
-
-        public enum BonusMoveTowerType
+        
+        public enum BonusType
         {
             Cooldown,
-            CastTime
+            Size,
+            Damage
         }
     }
 }

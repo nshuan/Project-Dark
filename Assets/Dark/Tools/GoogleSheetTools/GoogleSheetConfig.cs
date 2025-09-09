@@ -77,6 +77,33 @@ namespace Dark.Tools.GoogleSheetTool
             configs = assets.Select((asset) => asset.Item2).ToArray();
             EditorUtility.SetDirty(AssetDatabase.LoadAssetAtPath<GoogleSheetConfig>(GoogleSheetConfig.Path));
         }
+
+        public T CreateNewConfig<T>(string name) where T : ScriptableObject
+        {
+            if (!configFolderPath)
+            {
+                Debug.LogError("Can't create new config - Empty config folder path");
+                return null;
+            }
+            
+            var folderPath = UnityEditor.AssetDatabase.GetAssetPath(configFolderPath);
+            var filePath = folderPath + "/" + name + ".asset";
+            
+            if (File.Exists(filePath))
+            {
+                Debug.LogWarning("Can't create new config - Config file already exists!");
+                return AssetDatabase.LoadAssetAtPath<T>(filePath);
+            }
+            
+            T asset = ScriptableObject.CreateInstance<T>();
+            
+            // Create and save the asset
+            AssetDatabase.CreateAsset(asset, filePath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            
+            return asset;
+        }
 #endif
     }
 }

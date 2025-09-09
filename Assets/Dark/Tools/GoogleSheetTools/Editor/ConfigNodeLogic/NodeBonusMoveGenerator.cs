@@ -32,4 +32,17 @@ namespace Dark.Tools.GoogleSheetTool
             }
         }
     }
+    
+    [ConfigNodeLogicType(LogicType.BonusMoveCastTime)]
+    public class NodeBonusMoveCastTimeGenerator : INodeLogicGenerator
+    {
+        public INodeActivateLogic Generate(string subType, List<string> value, bool isMul)
+        {
+            return new NodeBonusMoveTower()
+            {
+                bonusType = NodeBonusMoveTower.BonusMoveTowerType.CastTime,
+                isMultiply = isMul
+            };
+        }
+    }
 }

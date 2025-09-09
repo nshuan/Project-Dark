@@ -13,6 +13,14 @@ namespace InGame
 
         public List<int> unlockedMoveToTower; // 1 for Flash and 2 for Dash
         public float moveCooldownPlus = 0f;
+        
+        public float dashCooldownPlus = 0f;
+        public float dashSizePlus = 0f;
+        public float dashDamagePlus = 0f;
+        
+        public float flashCooldownPlus = 0f;
+        public float flashSizePlus = 0f;
+        public float flashDamagePlus = 0f;
 
         #endregion
         
@@ -49,10 +57,10 @@ namespace InGame
 
         [Space] 
         [NonSerialized, OdinSerialize] public Dictionary<PassiveTriggerType, List<PassiveType>> passiveMapByTriggerType;
-        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusCooldownMapByType;
-        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusChanceMapByType;
         [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusSizeMapByType;
         [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusValueMapByType;
+        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusCooldownMapByType;
+        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusChanceMapByType;
         [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusStaggerMapByType;
 
         #endregion

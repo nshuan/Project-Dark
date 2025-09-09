@@ -3,9 +3,10 @@ using System;
 namespace InGame.Upgrade
 {
     [Serializable]
-    public class NodeBonusMoveTower : INodeActivateLogic
+    public class NodeBonusPassive : INodeActivateLogic
     {
-        public BonusMoveTowerType bonusType;
+        public BonusType bonusType;
+        public PassiveType passiveType;
         public float[] value;
         public bool isMultiply;
         public string bonusDescription;
@@ -13,13 +14,8 @@ namespace InGame.Upgrade
         public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)
         {
             if (level <= 0 || level > value.Length) return;
-
-            switch (bonusType)
-            {
-                case BonusMoveTowerType.Cooldown:
-                    bonusInfo.moveCooldownPlus += (int)value[level - 1];
-                    break;
-            }
+            
+            
         }
 
         public string GetDescription(int level)
@@ -27,10 +23,10 @@ namespace InGame.Upgrade
             return bonusDescription;
         }
 
-        public enum BonusMoveTowerType
+        public enum BonusType
         {
-            Cooldown,
-            CastTime
+            Damage,
+            Size
         }
     }
 }

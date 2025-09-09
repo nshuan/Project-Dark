@@ -7,6 +7,7 @@ namespace Dark.Tools.GoogleSheetTool
         SkillConfig = 69138666, // "SkillConfig"
         PassiveConfig = 545721731, // "PassiveConfig"
         MoveConfig = 545988098, // "MoveConfig"
+        NodeConfig = 1947278781, // "NodeConfig"
         Wave = 230897661, // "Wave"
         LevelConfig = 992670229, // "LevelConfig"
         TowerCounter = 1956116879, // "TowerCounter"
