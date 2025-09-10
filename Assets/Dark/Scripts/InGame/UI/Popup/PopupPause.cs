@@ -20,6 +20,8 @@ namespace InGame.UI
         private void Start()
         {
             PauseGame.Instance.onPause += OnPauseGame;
+            LevelManager.Instance.OnWin += OnLevelCompleted;
+            LevelManager.Instance.OnLose += OnLevelCompleted;
         }
 
         private void OnPauseGame(bool isPaused)
@@ -35,6 +37,11 @@ namespace InGame.UI
                 imgBlockRaycast.SetActive(false);
                 ui.DoClose();
             }
+        }
+
+        private void OnLevelCompleted()
+        {
+            PauseGame.Instance.onPause -= OnPauseGame;
         }
 
         private void UpdateUI()

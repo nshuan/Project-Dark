@@ -57,6 +57,8 @@ namespace InGame
 
         public int toleranceRegenPerSecond = 0;
         public int toleranceRegenWhenKill = 0;
+        public float towerCounterCooldownPlus = 0f;
+        public int towerCounterDamagePlus = 0;  
 
         #endregion
         

@@ -38,11 +38,25 @@ namespace Dark.Tools.GoogleSheetTool
     {
         public INodeActivateLogic Generate(string subType, List<string> value, bool isMul)
         {
-            return new NodeBonusMoveTower()
+            if (value == null || value.Count == 0)
             {
-                bonusType = NodeBonusMoveTower.BonusMoveTowerType.CastTime,
-                isMultiply = isMul
-            };
+                return null;
+            }
+
+            try
+            {
+                var bonusValue = value[0].Split(',').Select((str) => float.Parse(str, CultureInfo.InvariantCulture)).ToArray();
+                return new NodeBonusMoveTower()
+                {
+                    bonusType = NodeBonusMoveTower.BonusMoveTowerType.CastTime,
+                    value = bonusValue,
+                    isMultiply = isMul
+                };
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Invalid BonusMoveCastTime value string: {value[0]}");
+            }
         }
     }
 }

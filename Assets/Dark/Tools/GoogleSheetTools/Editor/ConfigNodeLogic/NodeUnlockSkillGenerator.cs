@@ -38,4 +38,28 @@ namespace Dark.Tools.GoogleSheetTool
             };
         }
     }
+    
+    [ConfigNodeLogicType(LogicType.UnlockChargeSize)]
+    public class NodeLogicUnlockChargeSizeGenerator : INodeLogicGenerator
+    {
+        public INodeActivateLogic Generate(string subType, List<string> value, bool isMul)
+        {
+            return new NodeUnlockSkill()
+            {
+                unlockType = NodeUnlockSkill.BonusUnlockSkillType.ChargeSize
+            };
+        }
+    }
+    
+    [ConfigNodeLogicType(LogicType.UnlockChargeBullet)]
+    public class NodeLogicUnlockChargeBulletGenerator : INodeLogicGenerator
+    {
+        public INodeActivateLogic Generate(string subType, List<string> value, bool isMul)
+        {
+            return new NodeUnlockSkill()
+            {
+                unlockType = NodeUnlockSkill.BonusUnlockSkillType.ChargeBullet
+            };
+        }
+    }
 }

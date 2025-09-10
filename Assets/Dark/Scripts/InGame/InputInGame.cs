@@ -93,6 +93,8 @@ namespace InGame
 
         private void OnLevelCompleted()
         {
+            PauseGame.Instance.onPause -= OnPause;
+            
             BlockAllInput = true;
             IsMousePressing = false;
             IsMousePressingStarted = false;

@@ -63,7 +63,8 @@ public static class GenerateGoogleSheetsEnum
                 yield break;
             }
 
-            tabs = tabs.Where((tab) => !tab.Title.Contains("README_")).ToList();
+            // EX -> EXCLUDE
+            tabs = tabs.Where((tab) => !tab.Title.Contains("[EX]")).ToList();
 
             UtilGenerateEnum.GenerateEnumScript(OutputPath, EnumName, tabs.Select((tab) => tab.Title).ToList(),
                 tabs.Select((tab) => tab.Gid).ToList(), "Dark.Tools.GoogleSheetTool");

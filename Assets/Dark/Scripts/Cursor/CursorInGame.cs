@@ -17,6 +17,11 @@ namespace Dark.Scripts.Cursor
             PopupLose.onShowPopup += OnShowPopupEndGame;
         }
 
+        private void OnDestroy()
+        {
+            PauseGame.Instance.onPause -= OnPause;
+        }
+
         private void OnPause(bool pause)
         {
             if (pause)
