@@ -1,4 +1,6 @@
 using System;
+using Dark.Scripts.Common;
+using Dark.Scripts.Utils;
 using Data;
 using TMPro;
 using UnityEngine;
@@ -54,8 +56,7 @@ namespace Dark.Scripts.OutGame.SaveSlot
                 txtPlayedTime.SetText(saveSlotManager.GetDisplayTimePlayed(slotIndex));
                 
                 btnClearSave.onClick.AddListener(() =>
-                {
-                    saveSlotManager.popupConfirmClearSave.gameObject.SetActive(true);
+                { 
                     saveSlotManager.popupConfirmClearSave.Setup(
                         "your data will be lost", 
                         $"Are you sure?",
@@ -65,6 +66,10 @@ namespace Dark.Scripts.OutGame.SaveSlot
                             saveSlotManager.popupConfirmClearSave.gameObject.SetActive(false);
                             UpdateUI();
                         });
+                    this.DelayCall(UIConst.BtnDelayOnClick, () =>
+                    {
+                        saveSlotManager.popupConfirmClearSave.gameObject.SetActive(true);
+                    });
                 });
             }
         }

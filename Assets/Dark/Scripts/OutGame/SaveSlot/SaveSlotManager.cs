@@ -1,7 +1,9 @@
 using System;
 using Core;
+using Dark.Scripts.Common;
 using Dark.Scripts.Common.UIWarning;
 using Dark.Scripts.SceneNavigation;
+using Dark.Scripts.Utils;
 using Data;
 using InGame.CharacterClass;
 using UnityEngine;
@@ -117,7 +119,7 @@ namespace Dark.Scripts.OutGame.SaveSlot
             btnBack.onClick.RemoveAllListeners();
             btnBack.onClick.AddListener(() =>
             {
-                Loading.Instance.LoadScene(SceneConstants.SceneMenu);
+                this.DelayCall(UIConst.BtnDelayOnClick, () => Loading.Instance.LoadScene(SceneConstants.SceneMenu));
             });
         }
     }

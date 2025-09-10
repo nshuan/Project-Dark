@@ -1,4 +1,5 @@
 using System;
+using Dark.Scripts.Utils;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,7 +18,10 @@ namespace Dark.Scripts.Common.UIWarning
             txtTitle.SetText(title);
             txtContent.SetText(content);
             btnYes.onClick.RemoveAllListeners();
-            btnYes.onClick.AddListener(() => callbackYes?.Invoke());
+            btnYes.onClick.AddListener(() =>
+            {
+                this.DelayCall(UIConst.BtnDelayOnClick, () => callbackYes?.Invoke());
+            });
             btnNo.onClick.RemoveAllListeners();
             btnNo.onClick.AddListener(() =>
             {
