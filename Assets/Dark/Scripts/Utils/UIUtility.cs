@@ -9,23 +9,27 @@ public static class UIUtility
 {
     public static Tween DoOpen(this UIPopup popup)
     {
+        var target = !popup.rectContent ? popup.transform : popup.rectContent;
         DOTween.Kill(popup);
         return DOTween.Sequence(popup).SetUpdate(true)
             .AppendCallback(() =>
             {
-                popup.transform.localScale = 0.3f * Vector3.one;
+                target.transform.localScale = 0.3f * Vector3.one;
+                target.gameObject.SetActive(true);
                 popup.gameObject.SetActive(true);
             })
-            .Append(popup.transform.DOScale(1f, 0.3f).SetEase(Ease.OutBack));
+            .Append(target.transform.DOScale(1f, 0.3f).SetEase(Ease.OutBack));
     }
     
     public static Tween DoClose(this UIPopup popup)
     {
+        var target = !popup.rectContent ? popup.transform : popup.rectContent;
         DOTween.Kill(popup);
         return DOTween.Sequence(popup).SetUpdate(true)
-            .Append(popup.transform.DOScale(0f, 0.3f).SetEase(Ease.InBack))
+            .Append(target.transform.DOScale(0f, 0.3f).SetEase(Ease.InBack))
             .AppendCallback(() =>
             {
+                target.gameObject.SetActive(false);
                 popup.gameObject.SetActive(false);
             });
     }

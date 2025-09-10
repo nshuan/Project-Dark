@@ -68,7 +68,7 @@ namespace Dark.Scripts.OutGame.SaveSlot
                         });
                     this.DelayCall(UIConst.BtnDelayOnClick, () =>
                     {
-                        saveSlotManager.popupConfirmClearSave.gameObject.SetActive(true);
+                        saveSlotManager.popupConfirmClearSave.DoOpen();
                     });
                 });
             }

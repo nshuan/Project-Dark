@@ -1,4 +1,5 @@
 using System;
+using Dark.Scripts.CoreUI;
 using Dark.Scripts.Utils;
 using TMPro;
 using UnityEngine;
@@ -6,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Dark.Scripts.Common.UIWarning
 {
-    public class UIPopupWarning : MonoBehaviour
+    public class UIPopupWarning : UIPopup
     {
         [SerializeField] private TextMeshProUGUI txtTitle;
         [SerializeField] private TextMeshProUGUI txtContent;
@@ -28,7 +29,7 @@ namespace Dark.Scripts.Common.UIWarning
                 if (callbackNo != null)
                     callbackNo?.Invoke();
                 else
-                    gameObject.SetActive(false);
+                    this.DoClose();
             });
         }
     }
