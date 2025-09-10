@@ -106,6 +106,8 @@ namespace InGame
                 InputManager.CurrentSkillConfig.range,
                 canChargeRange && rangeChargeTime > 0 ? 1 + Mathf.Min(rangeChargeTime / maxRangeChargeTime, 1f) * maxRangeMultiplierAdd : 1f);
             var maxHit = 1 + LevelUtility.BonusInfo.skillBonus.bulletMaxHitPlus;
+            var stagger = LevelUtility.GetBulletStagger(InputManager.CurrentSkillConfig.skillId,
+                InputManager.CurrentSkillConfig.stagger);
 
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             InputManager.BlockTeleport = true;
@@ -133,6 +135,7 @@ namespace InGame
                     skillRange,
                     criticalDamage,
                     critRate,
+                    stagger,
                     maxHit,
                     isCharge,
                     LevelUtility.BonusInfo.skillBonus.GetProjectileActivateActions(isCharge),

@@ -159,5 +159,39 @@ namespace InGame
         }
 
         #endregion
+
+        #region Move Towers
+
+        public static float GetDashCooldown(float baseCooldown)
+        {
+            return baseCooldown - BonusInfo.dashCooldownPlus;
+        }
+
+        public static float GetDashSize(float baseSize)
+        {
+            return baseSize + BonusInfo.dashSizePlus;
+        }
+
+        public static int GetDashDamage(int baseDamage)
+        {
+            return baseDamage + BonusInfo.dashDamagePlus;
+        }
+
+        public static float GetFlashCooldown(float baseCooldown)
+        {
+            return baseCooldown - BonusInfo.flashCooldownPlus;
+        }
+
+        public static float GetFlashSize(float baseSize)
+        {
+            return baseSize + BonusInfo.flashSizePlus;
+        }
+
+        public static int GetFlashDamage(int baseDamage)
+        {
+            return baseDamage + BonusInfo.flashDamagePlus;
+        }
+
+        #endregion
     }
 }

@@ -23,7 +23,7 @@ namespace InGame.Upgrade
                     bonusInfo.flashSizePlus += value[level - 1];
                     break;
                 case BonusType.Damage:
-                    bonusInfo.flashDamagePlus += value[level - 1];
+                    bonusInfo.flashDamagePlus += (int)value[level - 1];
                     break;
             }
         }

@@ -38,6 +38,7 @@ namespace InGame
             float skillRange,
             int criticalDamagePerBullet,
             float criticalRatePerBullet,
+            float stagger,
             int maxHit,
             bool isCharge,
             List<IProjectileActivate> activateActions,

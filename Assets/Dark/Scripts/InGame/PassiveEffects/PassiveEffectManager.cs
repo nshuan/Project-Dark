@@ -66,7 +66,7 @@ namespace InGame
                 if (cooldownEffectMap[triggerType][effectConfig.logicType]) continue;
                 
                 // Calculate chance
-                if (Random.Range(0f, 1f) <= effectConfig.chance)
+                if (Random.Range(0f, 1f) <= LevelUtility.GetPassiveChance(effectConfig.logicType, effectConfig.chance))
                 {
                     pool.Get(effectConfig.passivePrefab, effectConfig.passiveId, null, false)
                         .TriggerEffect(effectConfig.passiveId, target, 
@@ -76,9 +76,10 @@ namespace InGame
                             pool);
 
                     cooldownEffectMap[triggerType][effectConfig.logicType] = true;
-                    StartCoroutine(IECooldown(effectConfig.cooldown, () => cooldownEffectMap[triggerType][effectConfig.logicType] = false));
+                    var cooldown = LevelUtility.GetPassiveCooldown(effectConfig.logicType, effectConfig.cooldown);
+                    StartCoroutine(IECooldown(cooldown, () => cooldownEffectMap[triggerType][effectConfig.logicType] = false));
                     
-                    CombatActions.OnEffectTriggered?.Invoke(triggerType, effectConfig.logicType, effectConfig.cooldown);
+                    CombatActions.OnEffectTriggered?.Invoke(triggerType, effectConfig.logicType, cooldown);
                 }
             }
         }

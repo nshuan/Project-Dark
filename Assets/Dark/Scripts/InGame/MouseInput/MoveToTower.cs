@@ -63,10 +63,10 @@ namespace InGame
                 if (isLongTele)
                 {
                     LongConfig.moveLogic.SetStats(
-                        LongConfig.damage,
+                        GetDamage(LongConfig),
                         LongConfig.stagger,
                         LongConfig.maxHitEachTrigger,
-                        LongConfig.size);
+                        GetSize(LongConfig));
                     Character.StartCoroutine(LongConfig.moveLogic.IEMove(
                         Character, 
                         Character.transform.position, 
@@ -74,7 +74,7 @@ namespace InGame
                         () =>
                         {
                             LevelManager.Instance.TeleportTower(selectingTower); 
-                            Cooldown = LongConfig.cooldown;
+                            Cooldown = GetCooldown(LongConfig);
                             cdCounter = Cooldown;
                             CanCountdown = true;
                             CurrentTowerIndex = selectingTower;
@@ -85,10 +85,10 @@ namespace InGame
                 else
                 {
                     ShortConfig.moveLogic.SetStats(
-                        ShortConfig.damage,
+                        GetDamage(ShortConfig),
                         ShortConfig.stagger,
                         ShortConfig.maxHitEachTrigger,
-                        ShortConfig.size);
+                        GetSize(ShortConfig));
                     Character.StartCoroutine(ShortConfig.moveLogic.IEMove(
                         Character, 
                         Character.transform.position, 
@@ -96,7 +96,7 @@ namespace InGame
                         () =>
                         {
                             LevelManager.Instance.TeleportTower(selectingTower);
-                            Cooldown = ShortConfig.cooldown;
+                            Cooldown = GetCooldown(ShortConfig);
                             cdCounter = Cooldown;
                             CanCountdown = true;
                             CurrentTowerIndex = selectingTower;
@@ -174,6 +174,30 @@ namespace InGame
         private void OnTowerChanged(TowerEntity tower)
         {
             CurrentTowerIndex = tower.Id;
+        }
+
+        private float GetCooldown(MoveTowersConfig config)
+        {
+            var cooldown = config.cooldown;
+            if (config.moveLogic is MoveDashToTower) cooldown = LevelUtility.GetDashCooldown(config.cooldown);
+            else if (config.moveLogic is MoveFlashToTower) cooldown = LevelUtility.GetFlashCooldown(config.cooldown);
+            return cooldown;
+        }
+
+        private float GetSize(MoveTowersConfig config)
+        {
+            var size = config.size;
+            if (config.moveLogic is MoveDashToTower) size = LevelUtility.GetDashSize(config.size);
+            else if (config.moveLogic is MoveFlashToTower) size = LevelUtility.GetFlashSize(config.size);
+            return size;
+        }
+
+        private int GetDamage(MoveTowersConfig config)
+        {
+            var damage = config.damage;
+            if (config.moveLogic is MoveDashToTower) damage = LevelUtility.GetDashDamage(config.damage);
+            else if (config.moveLogic is MoveFlashToTower) damage = LevelUtility.GetFlashDamage(config.damage);
+            return damage;
         }
     }
 }

@@ -16,11 +16,11 @@ namespace InGame
         
         public float dashCooldownPlus = 0f;
         public float dashSizePlus = 0f;
-        public float dashDamagePlus = 0f;
+        public int dashDamagePlus = 0;
         
         public float flashCooldownPlus = 0f;
         public float flashSizePlus = 0f;
-        public float flashDamagePlus = 0f;
+        public int flashDamagePlus = 0;
 
         #endregion
         
