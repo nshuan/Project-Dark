@@ -19,13 +19,20 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         [OdinSerialize, NonSerialized] private Dictionary<NodeType, List<GameObject>> nodePrefabsMap;
 
         [Space] [Header("Information")] 
-        [SerializeField] private string treeJsonFilename;
-        [SerializeField] private string outPutTreeName;
+        public string treeJsonFilename;
+        public string outPutTreeName;
     
         private string jsonFilePath = Application.dataPath + "/Dark/JSON/";
         private string outputPrefabPath = "Assets/Dark/Prefabs/UIUpgradeTrees/";
     
     #if UNITY_EDITOR
+        public void ConvertJsonToPrefab(string filename, string outputTreeName)
+        {
+            treeJsonFilename = filename;
+            outPutTreeName = outputTreeName;
+            ConvertJsonToPrefab();
+        }
+        
         [Button]
         public void ConvertJsonToPrefab()
         {

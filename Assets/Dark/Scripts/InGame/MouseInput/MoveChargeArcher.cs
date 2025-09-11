@@ -61,7 +61,7 @@ namespace InGame
             while (timer < spawnMaxDuration)
             {
                 timer += Time.deltaTime;
-                projectile.transform.position += spawnSpeed * Time.deltaTime * spawnDirection;
+                projectile.transform.position -= spawnSpeed * Time.deltaTime * spawnDirection;
                 spawnDirection = Vector3.RotateTowards(spawnDirection, Cam.ScreenToWorldPoint(Input.mousePosition) - projectile.transform.position,
                     Mathf.Deg2Rad * rotateSpeed * Time.deltaTime, 0f);
                 projectile.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(spawnDirection.y, spawnDirection.x) * Mathf.Rad2Deg);

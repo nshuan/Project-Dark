@@ -163,7 +163,7 @@ namespace Dark.Tools.GoogleSheetTool
             }
             catch (Exception e)
             {
-                throw new Exception($"Invalid BonusSkillBulletMaxHit value string: {value[0]}");
+                throw new Exception($"Invalid BonusSkillCooldown value string: {value[0]}");
             }
         }
     }

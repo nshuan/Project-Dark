@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Dark.Tools.GoogleSheetTool;
+using Dark.Tools.Utils;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
@@ -30,25 +31,7 @@ namespace Dark.Scripts.Common.Lore
         [MenuItem("Dark/Lore/Generate Lore Manifest")]
         public static void CreateInstance()
         {
-            if (File.Exists(FilePath))
-            {
-                var instance = AssetDatabase.LoadAssetAtPath<LoreManifest>(FilePath);
-                EditorUtility.FocusProjectWindow();
-                Selection.activeObject = instance;   
-                Debug.LogError("Lore Manifest file already exists!");
-                return;
-            }
-            
-            LoreManifest asset = ScriptableObject.CreateInstance<LoreManifest>();
-
-            // Create and save the asset
-            AssetDatabase.CreateAsset(asset, FilePath);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-
-            // Select the new asset
-            EditorUtility.FocusProjectWindow();
-            Selection.activeObject = asset;    
+            AssetDatabaseUtils.CreateSOInstance<LoreManifest>(FilePath);
         }
 #endif
     }
