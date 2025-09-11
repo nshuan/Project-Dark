@@ -157,7 +157,8 @@ namespace InGame
                             true, 
                             maxHit, 
                             null, 
-                            LevelUtility.BonusInfo.skillBonus.GetProjectileHitActions(true));
+                            LevelUtility.BonusInfo.skillBonus.GetProjectileHitActions(true),
+                            ProjectileType.PlayerProjectile);
                         
                         projectile.Activate(0f);
                     });

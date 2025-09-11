@@ -18,9 +18,9 @@ namespace InGame
         private bool canChase = false;
 
         public override void Init(Vector2 startPos, Vector2 direction, float maxDistance, float size, float speedScale, int damage,
-            int criticalDamage, float criticalRate, float stagger, bool isCharge, int maxHit, List<IProjectileActivate> activateActions, List<IProjectileHit> hitActions)
+            int criticalDamage, float criticalRate, float stagger, bool isCharge, int maxHit, List<IProjectileActivate> activateActions, List<IProjectileHit> hitActions, ProjectileType damageType)
         {
-            base.Init(startPos, direction, maxDistance, size, speedScale, damage, criticalDamage, criticalRate, stagger, isCharge, maxHit, activateActions, hitActions);
+            base.Init(startPos, direction, maxDistance, size, speedScale, damage, criticalDamage, criticalRate, stagger, isCharge, maxHit, activateActions, hitActions, damageType);
 
             if (WeaponSupporter.EnemyTargetingIndex < WeaponSupporter.EnemiesCountInRange)
             {

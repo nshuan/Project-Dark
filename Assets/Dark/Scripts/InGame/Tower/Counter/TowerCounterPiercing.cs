@@ -12,7 +12,8 @@ namespace InGame
         {
             var projectile = ProjectilePool.Instance.Get(projectilePrefab, null, false);
             projectile.transform.position = towerAttackPos;
-            projectile.Init(towerAttackPos, direction.normalized, 20, 5, speedScale, damage, damage, 0f, 0f, false, 10, null, null);
+            projectile.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+            projectile.Init(towerAttackPos, direction.normalized, 20, 5, speedScale, damage, damage, 0f, 0f, false, 10, null, null, ProjectileType.TowerProjectile);
             projectile.BlockDestroy = true;
             projectile.Activate(0f);
         }

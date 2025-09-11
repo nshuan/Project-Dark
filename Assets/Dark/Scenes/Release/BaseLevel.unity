@@ -321,6 +321,24 @@ MonoBehaviour:
     - Name: moveCooldownPlus
       Entry: 4
       Data: 0
+    - Name: dashCooldownPlus
+      Entry: 4
+      Data: 0
+    - Name: dashSizePlus
+      Entry: 4
+      Data: 0
+    - Name: dashDamagePlus
+      Entry: 3
+      Data: 0
+    - Name: flashCooldownPlus
+      Entry: 4
+      Data: 0
+    - Name: flashSizePlus
+      Entry: 4
+      Data: 0
+    - Name: flashDamagePlus
+      Entry: 3
+      Data: 0
     - Name: damePlus
       Entry: 3
       Data: 10
@@ -428,6 +446,18 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: toleranceRegenPerSecond
+      Entry: 3
+      Data: 0
+    - Name: toleranceRegenWhenKill
+      Entry: 3
+      Data: 0
+    - Name: towerCounterCooldownPlus
+      Entry: 4
+      Data: 0
+    - Name: towerCounterDamagePlus
+      Entry: 3
+      Data: 0
     - Name: passiveMapByTriggerType
       Entry: 7
       Data: 5|System.Collections.Generic.Dictionary`2[[InGame.PassiveTriggerType,
@@ -480,16 +510,16 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: passiveBonusCooldownMapByType
-      Entry: 6
-      Data: 
-    - Name: passiveBonusChanceMapByType
-      Entry: 6
-      Data: 
     - Name: passiveBonusSizeMapByType
       Entry: 6
       Data: 
     - Name: passiveBonusValueMapByType
+      Entry: 6
+      Data: 
+    - Name: passiveBonusCooldownMapByType
+      Entry: 6
+      Data: 
+    - Name: passiveBonusChanceMapByType
       Entry: 6
       Data: 
     - Name: passiveBonusStaggerMapByType
@@ -2174,7 +2204,7 @@ PrefabInstance:
       objectReference: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
     - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
       propertyPath: serializationData.PrefabModifications.Array.size
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
       propertyPath: serializationData.PrefabModifications.Array.data[0]
@@ -2183,25 +2213,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
       propertyPath: serializationData.PrefabModifications.Array.data[1]
-      value: '"path":"testBonusInfo.passiveMapByTriggerType","add_keys":{"$id":0,"$type":"System.Object[],
-        mscorlib","$rlength":1,"$rcontent":[{"$id":1,"$type":"InGame.PassiveTriggerType,
-        Assembly-CSharp",0}]},"remove_keys":{"$id":2,"$type":"System.Object[], mscorlib","$rlength":1,"$rcontent":[{"$id":3,"$type":"InGame.PassiveTriggerType,
-        Assembly-CSharp",1}]}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[2]
       value: '"path":"testBonusInfo.passiveMapByTriggerType.{0es}","value":{"$id":0,"$type":"System.Collections.Generic.List`1[[InGame.PassiveType,
         Assembly-CSharp]], mscorlib","$rlength":1,"$rcontent":[1]}'
       objectReference: {fileID: 0}
     - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[3]
-      value: '"path":"testBonusInfo.passiveMapByTriggerType.{0es}.[0]","value":{"$id":0,"$type":"InGame.PassiveType,
-        Assembly-CSharp",1}'
+      propertyPath: serializationData.PrefabModifications.Array.data[2]
+      value: '"path":"testBonusInfo.unlockedTowerCounter","value":$eref:0'
       objectReference: {fileID: 0}
     - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
       propertyPath: serializationData.PrefabModificationsReferencedUnityObjects.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      propertyPath: serializationData.PrefabModificationsReferencedUnityObjects.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: ab372ed54d6f51143af4237da03cdefd, type: 2}
     - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

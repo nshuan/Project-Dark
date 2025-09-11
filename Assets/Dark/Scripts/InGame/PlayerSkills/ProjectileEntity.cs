@@ -30,6 +30,7 @@ namespace InGame
         public int MaxHit { get; set; } = 1;
         public List<IProjectileActivate> ActivateActions { get; set; }
         public List<IProjectileHit> HitActions { get; set; }
+        public ProjectileType DamageType { get; set; }
         public bool BlockDestroy { get; set; } // Block destroy so that the projectile can go through enemies but still deal damage
         public bool BlockSpawnDeadBody { get; set; } // Do not spawn dead projectile on hit
         
@@ -59,19 +60,20 @@ namespace InGame
         }
 
         public virtual void Init(
-            Vector2 startPos, 
-            Vector2 direction, 
-            float maxDistance, 
+            Vector2 startPos,
+            Vector2 direction,
+            float maxDistance,
             float size,
-            float speedScale, 
-            int damage, 
-            int criticalDamage, 
+            float speedScale,
+            int damage,
+            int criticalDamage,
             float criticalRate,
             float stagger,
             bool isCharge,
             int maxHit,
             List<IProjectileActivate> activateActions,
-            List<IProjectileHit> hitActions)
+            List<IProjectileHit> hitActions,
+            ProjectileType damageType)
         {
             Size = size;
             transform.localScale = size * Vector3.one;
@@ -91,6 +93,7 @@ namespace InGame
             HitActions = hitActions;
             MaxHit = maxHit;
             currentHit = 0;
+            DamageType = damageType;
             
             collider.UpdateLastPosition(transform.position);
         }
@@ -165,7 +168,10 @@ namespace InGame
             hit.HitDirectionX = direction.x;
             hit.HitDirectionY = direction.y;
             hit.Damage(critical ? CriticalDamage : Damage, transform.position, Stagger);
-            PassiveEffectManager.Instance.TriggerEffect(IsCharge ? PassiveTriggerType.DameByChargeAttack : PassiveTriggerType.DameByNormalAttack, hit);
+            if (DamageType == ProjectileType.PlayerProjectile)
+                PassiveEffectManager.Instance.TriggerEffect(IsCharge ? PassiveTriggerType.DameByChargeAttack : PassiveTriggerType.DameByNormalAttack, hit);
+            else if (DamageType == ProjectileType.TowerProjectile)
+                PassiveEffectManager.Instance.TriggerEffect(PassiveTriggerType.TowerTakeDame, hit);
                     
             DebugUtility.Log("hit");
             if (critical)
@@ -198,5 +204,11 @@ namespace InGame
         {
             Gizmos.DrawWireSphere(transform.position, baseDamageRange);
         }
+    }
+
+    public enum ProjectileType
+    {
+        PlayerProjectile,
+        TowerProjectile
     }
 }

@@ -33,19 +33,19 @@ namespace InGame
                 var dir = target - spawnPos;
                 var p = ProjectilePool.Instance.Get(projectilePrefab, null, false);
                 p.transform.position = spawnPos;
-                p.Init(spawnPos, dir.normalized, skillRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, isCharge, maxHit, activateActions, projectileHitActions);
+                p.Init(spawnPos, dir.normalized, skillRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, isCharge, maxHit, activateActions, projectileHitActions, ProjectileType.PlayerProjectile);
                 p.Activate(delayEachBullet * i);
                 
                 var pDir = (Vector2)(Quaternion.Euler(0f, 0f, angle / 2) * dir);
                 p = ProjectilePool.Instance.Get(projectilePrefab, null, false);
                 p.transform.position = spawnPos;
-                p.Init(spawnPos, pDir.normalized, skillRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, isCharge, maxHit, activateActions, projectileHitActions);
+                p.Init(spawnPos, pDir.normalized, skillRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, isCharge, maxHit, activateActions, projectileHitActions, ProjectileType.PlayerProjectile);
                 p.Activate(delayEachBullet * i);
             
                 pDir = Quaternion.Euler(0f, 0f, - angle / 2) * dir;
                 p = ProjectilePool.Instance.Get(projectilePrefab, null, false);
                 p.transform.position = spawnPos;
-                p.Init(spawnPos, pDir.normalized, skillRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, isCharge, maxHit, activateActions, projectileHitActions);
+                p.Init(spawnPos, pDir.normalized, skillRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, isCharge, maxHit, activateActions, projectileHitActions, ProjectileType.PlayerProjectile);
                 p.Activate(delayEachBullet * i);
             }
             

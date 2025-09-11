@@ -38,7 +38,8 @@ namespace InGame
                     parentProjectile.IsCharge, 
                     parentProjectile.MaxHit, 
                     null,
-                    parentProjectile.HitActions
+                    parentProjectile.HitActions,
+                    ProjectileType.PlayerProjectile
                     );
                 p.Activate(0.2f);
 
@@ -65,7 +66,8 @@ namespace InGame
                     parentProjectile.IsCharge, 
                     parentProjectile.MaxHit, 
                     null,
-                    parentProjectile.HitActions
+                    parentProjectile.HitActions,
+                    ProjectileType.PlayerProjectile
                 );
                 p.Activate(0f);
             
@@ -87,7 +89,8 @@ namespace InGame
                     parentProjectile.IsCharge, 
                     parentProjectile.MaxHit, 
                     null,
-                    parentProjectile.HitActions
+                    parentProjectile.HitActions,
+                    ProjectileType.PlayerProjectile
                 );
                 p.Activate(0f);
             }
