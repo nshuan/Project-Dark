@@ -5,5 +5,6 @@ namespace Dark.Tools.Language
     {
         english, // "english"
         vietnamese, // "vietnamese"
+        korean, // "korean"
     }
 }
