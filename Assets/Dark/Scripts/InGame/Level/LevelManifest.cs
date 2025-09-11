@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Dark.Tools.Utils;
 using InGame.ConfigManager;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -49,25 +50,7 @@ namespace InGame
         [MenuItem("Dark/Manifest/Generate Level Manifest")]
         public static void CreateInstance()
         {
-            if (File.Exists(FilePath))
-            {
-                var instance = AssetDatabase.LoadAssetAtPath<LevelManifest>(FilePath);
-                EditorUtility.FocusProjectWindow();
-                Selection.activeObject = instance;   
-                Debug.LogError("Level Manifest file already exists!");
-                return;
-            }
-            
-            LevelManifest asset = ScriptableObject.CreateInstance<LevelManifest>();
-
-            // Create and save the asset
-            AssetDatabase.CreateAsset(asset, FilePath);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-
-            // Select the new asset
-            EditorUtility.FocusProjectWindow();
-            Selection.activeObject = asset;    
+            AssetDatabaseUtils.CreateSOInstance<LevelManifest>(FilePath);
         }
         
         [Button]

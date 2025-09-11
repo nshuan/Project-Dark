@@ -45,6 +45,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
     public class UICreatorManager : SerializedMonoBehaviour
     {
         public UICreatorConfigLoader configLoader;
+        public JsonToTreePrefabConverter prefabConverter;
         [SerializeField] private Transform treeParent;
         [SerializeField] private GameObject groupNodeModeButtons;
         [SerializeField] private TMP_InputField input;
@@ -595,6 +596,10 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             }
             
             jsonConverter.SaveJson(inputTreeName.text, newTree);
+
+#if UNITY_EDITOR
+            prefabConverter.ConvertJsonToPrefab(inputTreeName.text, inputTreeName.text);
+#endif
         }
 
         #endregion
