@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Dark.Tools.Utils;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEditor;
@@ -37,25 +38,7 @@ namespace InGame.ConfigManager
         [MenuItem("Dark/Manifest/Generate Class Config Manifest")]
         public static void CreateInstance()
         {
-            if (File.Exists(FilePath))
-            {
-                var instance = AssetDatabase.LoadAssetAtPath<ClassConfigManifest>(FilePath);
-                EditorUtility.FocusProjectWindow();
-                Selection.activeObject = instance;   
-                Debug.LogError("Class Config Manifest file already exists!");
-                return;
-            }
-            
-            ClassConfigManifest asset = ScriptableObject.CreateInstance<ClassConfigManifest>();
-
-            // Create and save the asset
-            AssetDatabase.CreateAsset(asset, FilePath);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-
-            // Select the new asset
-            EditorUtility.FocusProjectWindow();
-            Selection.activeObject = asset;    
+            AssetDatabaseUtils.CreateSOInstance<ClassConfigManifest>(FilePath);
         }
 #endif
     }
