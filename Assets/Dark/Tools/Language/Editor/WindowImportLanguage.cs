@@ -109,13 +109,13 @@ namespace Dark.Tools.Language.Editor
             
                 string key = values[0];
                 LanguageItem data = new LanguageItem();
-                data.descriptionMap = new Dictionary<LanguageType, string>();
+                data.languageMap = new Dictionary<LanguageType, string>();
             
                 for (int col = 1; col < headers.Length; col++)
                 {
                     if (string.IsNullOrEmpty(values[col])) continue;
                     LanguageType type = (LanguageType)System.Enum.Parse(typeof(LanguageType), languageNames[col - 1]);
-                    data.descriptionMap.TryAdd(type, values[col]);
+                    data.languageMap.TryAdd(type, values[col]);
                 }
             
                 config.dataMap.TryAdd(key, data);
