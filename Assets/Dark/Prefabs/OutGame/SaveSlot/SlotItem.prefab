@@ -3231,6 +3231,8 @@ MonoBehaviour:
   txtLevel: {fileID: 9217581677335981433}
   txtPlayedTime: {fileID: 8612751000380497209}
   btnClearSave: {fileID: 4279166997211119387}
+  _fxHover: {fileID: 8037598118270794726}
+  _fxBurst: {fileID: 1190175048316408048}
 --- !u!1001 &2215231848230351606
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3239,12 +3241,8 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3641760513823355483}
     m_Modifications:
-    - target: {fileID: 1025215735683097094, guid: f06d28ad1614f2f4bb19ea6689e8667e, type: 3}
-      propertyPath: m_AutoScaling
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1025215735683097094, guid: f06d28ad1614f2f4bb19ea6689e8667e, type: 3}
-      propertyPath: m_ResetScaleOnEnable
+    - target: {fileID: 354694489457095744, guid: f06d28ad1614f2f4bb19ea6689e8667e, type: 3}
+      propertyPath: m_SortingLayer
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1531713086167291123, guid: f06d28ad1614f2f4bb19ea6689e8667e, type: 3}
@@ -3331,11 +3329,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3011808417607414095, guid: f06d28ad1614f2f4bb19ea6689e8667e, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4719810444809845148, guid: f06d28ad1614f2f4bb19ea6689e8667e, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5077399526663198897, guid: f06d28ad1614f2f4bb19ea6689e8667e, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f06d28ad1614f2f4bb19ea6689e8667e, type: 3}
+--- !u!114 &1190175048316408048 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1025215735683097094, guid: f06d28ad1614f2f4bb19ea6689e8667e, type: 3}
+  m_PrefabInstance: {fileID: 2215231848230351606}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16f0b0b6d0b7542bfbd20a3e05b04ff1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &4551331942525824572 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2420546161284029642, guid: f06d28ad1614f2f4bb19ea6689e8667e, type: 3}
@@ -3349,17 +3370,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2953374285348407488}
     m_Modifications:
-    - target: {fileID: 3855514714403357241, guid: d21fb2675c787e043b16f0ac0f70edc2, type: 3}
-      propertyPath: m_AutoScaling
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3855514714403357241, guid: d21fb2675c787e043b16f0ac0f70edc2, type: 3}
-      propertyPath: m_ResetScaleOnEnable
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4739838798761364877, guid: d21fb2675c787e043b16f0ac0f70edc2, type: 3}
       propertyPath: m_Name
       value: FX_UI_SaveSlot_Activate
+      objectReference: {fileID: 0}
+    - target: {fileID: 6589532831609373280, guid: d21fb2675c787e043b16f0ac0f70edc2, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6648648269461019852, guid: d21fb2675c787e043b16f0ac0f70edc2, type: 3}
       propertyPath: m_SortingLayer
@@ -3455,3 +3472,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7567291937800578456, guid: d21fb2675c787e043b16f0ac0f70edc2, type: 3}
   m_PrefabInstance: {fileID: 6488212428376848863}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8037598118270794726 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3855514714403357241, guid: d21fb2675c787e043b16f0ac0f70edc2, type: 3}
+  m_PrefabInstance: {fileID: 6488212428376848863}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16f0b0b6d0b7542bfbd20a3e05b04ff1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
