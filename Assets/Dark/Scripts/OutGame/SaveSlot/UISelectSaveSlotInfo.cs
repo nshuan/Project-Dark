@@ -21,9 +21,6 @@ namespace Dark.Scripts.OutGame.SaveSlot
         [SerializeField] private TextMeshProUGUI txtLevel;
         [SerializeField] private TextMeshProUGUI txtPlayedTime;
         [SerializeField] private Button btnClearSave;
-        [SerializeField] private UIParticle _fxHover;
-        [SerializeField] private UIParticle _fxBurst;
-
 
         private SaveSlotManager saveSlotManager;
         
@@ -40,25 +37,20 @@ namespace Dark.Scripts.OutGame.SaveSlot
             
             panelEmptySlot.SetActive(isEmptySlot);
             panelSlot.SetActive(!isEmptySlot);
-            if(!isEmptySlot) _fxHover.Play();
 
             foreach (var icon in imgClass)
                 icon.SetActive(false);
             foreach (var icon in imgClassLight)
                 icon.SetActive(false);
             
+            btnClearSave.gameObject.SetActive(!isEmptySlot);
             btnClearSave.onClick.RemoveAllListeners();
             
             if (!isEmptySlot)
             {
                 var classType = saveSlotManager.GetClassTypeIndex(slotIndex);
                 if (classType >= 0 || classType < imgClass.Length) imgClass[classType].SetActive(true);
-                if (classType >= 0 || classType < imgClassLight.Length)
-                {
-                    imgClassLight[classType].SetActive(true);
-                    _fxBurst.Play();
-                }
-                
+                if (classType >= 0 || classType < imgClassLight.Length) imgClassLight[classType].SetActive(true);
                 
                 txtClassName.SetText(saveSlotManager.GetDisplayClassName(slotIndex));
                 txtDayPassed.SetText(saveSlotManager.GetDisplayPassedDays(slotIndex));
