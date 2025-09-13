@@ -81,6 +81,7 @@ namespace Dark.Scripts.OutGame.SaveSlot
 
         public override void OnPointerClick(PointerEventData eventData)
         {
+            interactable = false;
             base.OnPointerClick(eventData);
             SaveSlotManager.Instance.SelectSlot(slotIndex);
             Loading.Instance.LoadScene(SceneConstants.SceneUpgrade);

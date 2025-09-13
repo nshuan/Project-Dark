@@ -39,6 +39,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             btnBack.onClick.RemoveAllListeners();
             btnBack.onClick.AddListener(() =>
             {
+                btnBack.interactable = false;
                 Loading.Instance.LoadScene(SceneConstants.SceneMenu);
             });
         }
