@@ -54,7 +54,7 @@ namespace Dark.Scripts.Common
             
             DOTween.Kill(this);
             DOTween.Sequence(this)
-                .Append(transform.DOPunchScale(new Vector3(-0.1f, -0.1f, 0f), duration)).Play();
+                .Append(transform.DOPunchScale(new Vector3(pressScale - hoverScale, pressScale - hoverScale, pressScale - hoverScale), duration)).Play();
         }
     }
 }

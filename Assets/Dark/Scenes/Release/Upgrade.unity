@@ -284,6 +284,7 @@ GameObject:
   - component: {fileID: 61788313}
   - component: {fileID: 61788312}
   - component: {fileID: 61788311}
+  - component: {fileID: 61788314}
   m_Layer: 5
   m_Name: ItemKnight
   m_TagString: Untagged
@@ -369,6 +370,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 61788309}
   m_CullTransparentMesh: 1
+--- !u!114 &61788314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 61788309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c58ba58b69fe4aefb8afb91ccc5fae9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverScale: 1.02
+  pressScale: 1
+  duration: 0.2
 --- !u!1 &73459949
 GameObject:
   m_ObjectHideFlags: 0
@@ -1453,6 +1469,7 @@ GameObject:
   - component: {fileID: 434248911}
   - component: {fileID: 434248910}
   - component: {fileID: 434248909}
+  - component: {fileID: 434248912}
   m_Layer: 5
   m_Name: ItemArcher
   m_TagString: Untagged
@@ -1538,6 +1555,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 434248907}
   m_CullTransparentMesh: 1
+--- !u!114 &434248912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 434248907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c58ba58b69fe4aefb8afb91ccc5fae9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverScale: 1.02
+  pressScale: 1
+  duration: 0.2
 --- !u!1 &447427276
 GameObject:
   m_ObjectHideFlags: 0
