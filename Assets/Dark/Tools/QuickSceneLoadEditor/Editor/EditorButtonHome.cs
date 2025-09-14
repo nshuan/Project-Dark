@@ -21,6 +21,17 @@ namespace Dark.Tools.QuickSceneLoadEditor.Editor
         { 
             GUILayout.BeginHorizontal();
             
+            if (GUILayout.Button("Init", GUILayout.Width(40)))
+            {
+                if (!EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                    {
+                        EditorSceneManager.OpenScene($"Assets/Dark/Scenes/Release/Init.unity");
+                    }
+                }
+            }
+            
             if (GUILayout.Button("Home", GUILayout.Width(60)))
             {
                 if (!EditorApplication.isPlayingOrWillChangePlaymode)
@@ -30,7 +41,6 @@ namespace Dark.Tools.QuickSceneLoadEditor.Editor
                         EditorSceneManager.OpenScene($"Assets/Dark/Scenes/Release/Home.unity");
                     }
                 }
-
             }
             
             if (GUILayout.Button("InGame", GUILayout.Width(60)))
