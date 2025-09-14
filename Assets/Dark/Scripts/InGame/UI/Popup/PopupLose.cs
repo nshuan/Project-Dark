@@ -12,7 +12,7 @@ namespace InGame.UI
     public class PopupLose : MonoBehaviour
     {
         [SerializeField] private UIPopup ui;
-        [SerializeField] private GameObject imgBlockRaycast;
+        [SerializeField] private CanvasGroup imgBlockRaycast;
         [SerializeField] private float delayShowPopup = 5f; // Do có vfx endgame khi trụ bị phá nên cần delay xong vfx mới show popup
         
         [Space]
@@ -34,7 +34,12 @@ namespace InGame.UI
         private void OnLose()
         {
             UpdateUI();
-            imgBlockRaycast.SetActive(true);
+            DOVirtual.DelayedCall(delayShowPopup, () =>
+            {
+                imgBlockRaycast.alpha = 0f;
+                imgBlockRaycast.gameObject.SetActive(true);
+                imgBlockRaycast.DOFade(1f, 0.2f);
+            });
             ui.DoOpen().SetDelay(delayShowPopup).OnComplete(() => onShowPopup?.Invoke());
         }
 
@@ -43,6 +48,8 @@ namespace InGame.UI
             btnBackToTree.onClick.RemoveAllListeners();
             btnBackToTree.onClick.AddListener(() =>
             {
+                btnReplay.interactable = false;
+                btnBackToTree.interactable = false;
                 Loading.Instance.LoadScene(SceneConstants.SceneUpgrade);
             });
             
@@ -50,8 +57,8 @@ namespace InGame.UI
             btnReplay.onClick.RemoveAllListeners();
             btnReplay.onClick.AddListener(() =>
             {
-                imgBlockRaycast.SetActive(false);
-                ui.gameObject.SetActive(false);
+                btnReplay.interactable = false;
+                btnBackToTree.interactable = false;
                 Loading.Instance.LoadScene(SceneConstants.SceneInGame, () =>
                 {
                     LevelManager.Instance.LoadLevel(1);
