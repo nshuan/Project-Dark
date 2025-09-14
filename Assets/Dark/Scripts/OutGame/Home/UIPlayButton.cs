@@ -9,6 +9,7 @@ namespace Dark.Scripts.OutGame.Home
     {
         public override void OnPointerClick(PointerEventData eventData)
         {
+            interactable = false;
             Loading.Instance.LoadScene(SceneConstants.SceneSaveSlot);
             base.OnPointerClick(eventData);
         }

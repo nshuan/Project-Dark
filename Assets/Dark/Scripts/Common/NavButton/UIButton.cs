@@ -13,6 +13,8 @@ namespace Dark.Scripts.OutGame.Common.NavButton
         public virtual bool BlockSelect => false;
         public Func<UIButton, UIButtonState, bool> FuncUpdateNav { get; set; }
 
+        public bool interactable = true;
+        
         public void UpdateState(UIButtonState state)
         {
             State = state;

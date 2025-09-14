@@ -119,6 +119,7 @@ namespace Dark.Scripts.OutGame.SaveSlot
             btnBack.onClick.RemoveAllListeners();
             btnBack.onClick.AddListener(() =>
             {
+                btnBack.interactable = false;
                 this.DelayCall(UIConst.BtnDelayOnClick, () => Loading.Instance.LoadScene(SceneConstants.SceneMenu));
             });
         }

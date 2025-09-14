@@ -12,6 +12,7 @@ namespace Dark.Scripts.SceneNavigation
     public class Loading : MonoSingleton<Loading>
     {
         [SerializeField] private CanvasGroup loadingPanel;
+        [SerializeField] private CanvasGroup blankPanel;
         [SerializeField] private Image progress;
         [SerializeField] private TextMeshProUGUI progressText;
         [SerializeField] private float minDuration = 0.5f;
@@ -32,7 +33,7 @@ namespace Dark.Scripts.SceneNavigation
             DebugUtility.LogWarning($"Loading scene {sceneName}");
             onSceneLoaded = completeCallback;
             onStartLoading?.Invoke();
-            DoOpen(0.2f).OnComplete(() =>
+            DoOpen(0.3f).OnComplete(() =>
             {
                 SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
             });
@@ -41,7 +42,7 @@ namespace Dark.Scripts.SceneNavigation
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
             DebugUtility.LogWarning($"Scene {scene.name} is loaded!");
-            DoClose(Random.Range(minDuration, maxDuration), 0.2f);
+            DoClose(Random.Range(minDuration, maxDuration), 0.3f,0.5f);
             onSceneLoaded?.Invoke();
             onSceneLoaded = null;
         }
@@ -49,23 +50,39 @@ namespace Dark.Scripts.SceneNavigation
         private Tween DoOpen(float duration)
         {
             loadingPanel.alpha = 0f;
-            progress.fillAmount = 0f;
-            progressText.SetText($"0%");
-            loadingPanel.gameObject.SetActive(true);
-            return loadingPanel.DOFade(1f, duration).SetUpdate(true);
+            loadingPanel.gameObject.SetActive(false);
+            blankPanel.alpha = 0f;
+            blankPanel.gameObject.SetActive(true);
+            DOTween.Kill(this);
+            var seq = DOTween.Sequence(this).SetUpdate(true);
+            seq.Append(blankPanel.DOFade(1f, duration));
+            return seq;
         }
 
-        private Tween DoClose(float duration, float hideDuration)
+        private Tween DoClose(float duration, float hideBlankDuration, float hideDuration)
         {
             DOTween.Kill(this);
             var seq = DOTween.Sequence(this).SetUpdate(true);
-            seq.Append(DOTween.To(() => 0f, x =>
+            seq.AppendCallback(() =>
+                {
+                    loadingPanel.alpha = 1f;
+                    loadingPanel.gameObject.SetActive(true);
+                    progress.fillAmount = 0f;
+                    progressText.SetText($"0%");
+                })
+                .AppendInterval(0.5f)
+                .Append(blankPanel.DOFade(0f, hideBlankDuration))
+                .Append(DOTween.To(() => 0f, x =>
                 {
                     progress.fillAmount = x;
                     progressText.SetText($"{(int)(x * 100)}%");
                 }, 1f, duration))
                 .Append(loadingPanel.DOFade(0f, hideDuration))
-                .OnComplete(() => loadingPanel.gameObject.SetActive(false));
+                .OnComplete(() =>
+                {
+                    blankPanel.gameObject.SetActive(false);
+                    loadingPanel.gameObject.SetActive(false);
+                });
             return seq.Play();
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using Coffee.UIExtensions;
 using Dark.Scripts.OutGame.Common.NavButton;
 using Dark.Scripts.SceneNavigation;
 using DG.Tweening;
@@ -19,14 +20,16 @@ namespace Dark.Scripts.OutGame.SaveSlot
         
         [Header("General")]
         [SerializeField] private RectTransform resizeTarget;
-        [SerializeField] private Vector2 scaleUnselected = new Vector2(1f, 1f);
-        [SerializeField] private Vector2 scaleSelected;
+        [SerializeField] private Vector3 scaleUnselected = new Vector3(1f, 1f, 1f);
+        [SerializeField] private Vector3 scaleSelected;
         [SerializeField] private float frameAlphaUnselected = 0.9f;
         [SerializeField] private float frameAlphaSelected = 1f;
         [SerializeField] private float hoverAnimDuration = 0.25f;
         
         [Header("Hover light")]
-        [SerializeField] private Image imgLight;
+        [SerializeField] private CanvasGroup imgLight;
+        [SerializeField] private UIParticle _fxHover;
+        [SerializeField] private UIParticle _fxBurst;
         
         [Header("Group Icon")]
         [SerializeField] private CanvasGroup cvgIconUnselected;
@@ -44,7 +47,7 @@ namespace Dark.Scripts.OutGame.SaveSlot
             isHovering = false;
             uiFrame.SetAlpha(frameAlphaUnselected);
             resizeTarget.localScale = scaleUnselected;
-            imgLight.SetAlpha(0f);
+            imgLight.alpha = 0f;
             cvgIconUnselected.alpha = 1f;
             cvgIconSelected.alpha = 0f;
             uiBlockClearSave.SetAlpha(1f);
@@ -61,7 +64,12 @@ namespace Dark.Scripts.OutGame.SaveSlot
                     break;
                 case UIButtonState.Hover:
                     uiFrame.SetAlpha(frameAlphaSelected);
-                    if (!isHovering) DoHoverIn(hoverAnimDuration);
+                    if (!isHovering)
+                    {
+                        DoHoverIn(hoverAnimDuration);
+                        _fxHover.Play();
+                        _fxBurst.Play();
+                    }
                     isHovering = true;
                     break;
                 case UIButtonState.Selected:
@@ -73,6 +81,7 @@ namespace Dark.Scripts.OutGame.SaveSlot
 
         public override void OnPointerClick(PointerEventData eventData)
         {
+            interactable = false;
             base.OnPointerClick(eventData);
             SaveSlotManager.Instance.SelectSlot(slotIndex);
             Loading.Instance.LoadScene(SceneConstants.SceneUpgrade);

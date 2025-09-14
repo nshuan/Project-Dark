@@ -18,33 +18,51 @@ namespace Dark.Tools.QuickSceneLoadEditor.Editor
         }
 
         private static void OnToolbarGUI()
-        {
-            // Only show when NOT playing
-            if (EditorApplication.isPlayingOrWillChangePlaymode) return;
-
+        { 
             GUILayout.BeginHorizontal();
             
             if (GUILayout.Button("Home", GUILayout.Width(60)))
             {
-                if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                if (!EditorApplication.isPlayingOrWillChangePlaymode)
                 {
-                    EditorSceneManager.OpenScene($"Assets/Dark/Scenes/Release/Home.unity");
+                    if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                    {
+                        EditorSceneManager.OpenScene($"Assets/Dark/Scenes/Release/Home.unity");
+                    }
                 }
+
             }
             
             if (GUILayout.Button("InGame", GUILayout.Width(60)))
             {
-                if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                if (!EditorApplication.isPlayingOrWillChangePlaymode)
                 {
-                    EditorSceneManager.OpenScene($"Assets/Dark/Scenes/Release/BaseLevel.unity"); 
+                    if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                    {
+                        EditorSceneManager.OpenScene($"Assets/Dark/Scenes/Release/BaseLevel.unity"); 
+                    }
                 }
             }
             
             if (GUILayout.Button("Upgrade", GUILayout.Width(60)))
             {
-                if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                if (!EditorApplication.isPlayingOrWillChangePlaymode)
                 {
-                    EditorSceneManager.OpenScene($"Assets/Dark/Scenes/Release/Upgrade.unity"); 
+                    if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                    {
+                        EditorSceneManager.OpenScene($"Assets/Dark/Scenes/Release/Upgrade.unity"); 
+                    }
+                }
+            }
+            
+            if (GUILayout.Button("SaveSlot", GUILayout.Width(60)))
+            {
+                if (!EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                    {
+                        EditorSceneManager.OpenScene($"Assets/Dark/Scenes/Release/SaveSlot.unity"); 
+                    }
                 }
             }
             
@@ -84,6 +102,8 @@ namespace Dark.Tools.QuickSceneLoadEditor.Editor
             {
                 ToolbarGUI();
             });
+            
+            ToolbarGUI();
         }
 
         public static event Action OnToolbarGUI = delegate { };
