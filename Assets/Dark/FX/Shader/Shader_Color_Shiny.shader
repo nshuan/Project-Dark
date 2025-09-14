@@ -11,6 +11,7 @@ Shader "MyShader/Shader_Color_Shiny"
         _Rotation("_Rotation", Range(0, 360)) = 0
         _Position("_Position", Float) = 0
         _Color("Color", Color) = (0,0,0,0)
+        _Speed("_Speed", Range(0, 8)) = 1
 
         // required for UI.Mask
         [HideInInspector]_StencilComp("Stencil Comparison", Float) = 8
@@ -68,6 +69,7 @@ Shader "MyShader/Shader_Color_Shiny"
             float _Position;
             float _Rotation;
             float4 _Color;
+            float _Speed;
 
             v2f vert(appdata_t IN)
             {
@@ -93,10 +95,10 @@ Shader "MyShader/Shader_Color_Shiny"
                 return rotatedUV + 0.5;
             }
 
-             float4 ShinyFX(float4 txt, float2 uv, float pos, float size, float smooth, float intensity, float rotation)
+             float4 ShinyFX(float4 txt, float2 uv, float pos, float size, float smooth, float intensity, float rotation, float speed)
             {
                 uv = RotationUV(rotation, uv);
-                pos = pos + 0.5;
+                pos = 1.4 - frac(_Time * speed) * 1.6;
                 uv = uv - float2(pos, 0.5);
                 float a = atan2(uv.x, uv.y) + 1.4, r = 3.1415;
                 float d = cos(floor(0.5 + a / r) * r - a) * length(uv);
@@ -108,7 +110,7 @@ Shader "MyShader/Shader_Color_Shiny"
              float4 frag(v2f i) : COLOR
             {
                 float4 _MainTex_1 = tex2D(_MainTex, i.texcoord);
-                float4 _ShinyFX_1 = ShinyFX(_MainTex_1, i.texcoord, _Position, _Size, _Smooth, _Intensity, _Rotation);
+                float4 _ShinyFX_1 = ShinyFX(_MainTex_1, i.texcoord, _Position, _Size, _Smooth, _Intensity, _Rotation, _Speed);
                 float4 FinalResult = _ShinyFX_1;
                 FinalResult.rgb *= i.color.rgb;
                 FinalResult.a = FinalResult.a * i.color.a;
