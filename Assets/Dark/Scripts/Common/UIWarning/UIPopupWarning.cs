@@ -16,20 +16,26 @@ namespace Dark.Scripts.Common.UIWarning
 
         public void Setup(string title, string content, Action callbackYes, Action callbackNo = null)
         {
+            btnYes.interactable = true;
+            btnNo.interactable = true;
             txtTitle.SetText(title);
             txtContent.SetText(content);
             btnYes.onClick.RemoveAllListeners();
             btnYes.onClick.AddListener(() =>
             {
+                btnYes.interactable = false;
+                btnNo.interactable = false;
                 this.DelayCall(UIConst.BtnDelayOnClick, () => callbackYes?.Invoke());
             });
             btnNo.onClick.RemoveAllListeners();
             btnNo.onClick.AddListener(() =>
             {
+                btnYes.interactable = false;
+                btnNo.interactable = false;
                 if (callbackNo != null)
                     callbackNo?.Invoke();
                 else
-                    this.DoClose();
+                    this.DoCloseFadeOut();
             });
         }
     }

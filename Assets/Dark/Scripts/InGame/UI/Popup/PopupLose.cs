@@ -12,7 +12,6 @@ namespace InGame.UI
     public class PopupLose : MonoBehaviour
     {
         [SerializeField] private UIPopup ui;
-        [SerializeField] private CanvasGroup imgBlockRaycast;
         [SerializeField] private float delayShowPopup = 5f; // Do có vfx endgame khi trụ bị phá nên cần delay xong vfx mới show popup
         
         [Space]
@@ -34,13 +33,7 @@ namespace InGame.UI
         private void OnLose()
         {
             UpdateUI();
-            DOVirtual.DelayedCall(delayShowPopup, () =>
-            {
-                imgBlockRaycast.alpha = 0f;
-                imgBlockRaycast.gameObject.SetActive(true);
-                imgBlockRaycast.DOFade(1f, 0.2f);
-            });
-            ui.DoOpen().SetDelay(delayShowPopup).OnComplete(() => onShowPopup?.Invoke());
+            ui.DoOpenFadeIn().SetDelay(delayShowPopup).OnComplete(() => onShowPopup?.Invoke());
         }
 
         private void UpdateUI()

@@ -65,12 +65,12 @@ namespace Dark.Scripts.OutGame.SaveSlot
                         () =>
                         {
                             saveSlotManager.ClearSlot(btnSelect.Index);
-                            saveSlotManager.popupConfirmClearSave.gameObject.SetActive(false);
+                            saveSlotManager.popupConfirmClearSave.DoCloseFadeOut();
                             UpdateUI();
                         });
                     this.DelayCall(UIConst.BtnDelayOnClick, () =>
                     {
-                        saveSlotManager.popupConfirmClearSave.DoOpen();
+                        saveSlotManager.popupConfirmClearSave.DoOpenFadeIn();
                     });
                 });
             }

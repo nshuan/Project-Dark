@@ -534,6 +534,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rectContent: {fileID: 0}
+  groupBlockRaycast: {fileID: 4056175428979696852}
 --- !u!1 &6533175412911171836
 GameObject:
   m_ObjectHideFlags: 0
@@ -719,7 +720,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ui: {fileID: 7256447572933235228}
-  imgBlockRaycast: {fileID: 7899176054842830502}
   btnBackToTree: {fileID: 6433684576686236353}
   btnNextLevel: {fileID: 2042573081520487984}
 --- !u!1 &7803900705109906919
@@ -870,6 +870,7 @@ GameObject:
   - component: {fileID: 339035112957195868}
   - component: {fileID: 5874080702385028094}
   - component: {fileID: 4245399099396957211}
+  - component: {fileID: 4056175428979696852}
   m_Layer: 5
   m_Name: imgBlockRaycast
   m_TagString: Untagged
@@ -934,6 +935,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &4056175428979696852
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7899176054842830502}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &8264096624211478061
 GameObject:
   m_ObjectHideFlags: 0
