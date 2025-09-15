@@ -19,6 +19,7 @@ namespace InGame
         private void Awake()
         {
             UpgradeManager.Instance.OnActivated += OnUpgradeBonusActivated;
+            LevelManager.Instance.OnLose += OnLose;
             tower.OnHitAttackerPos += OnTowerHit;
             OnOneTowerHit += OnCounter;
             tower.OnDestroyed += OnTowerDestroyed;
@@ -59,6 +60,12 @@ namespace InGame
             StartCoroutine(IECounterCooldown(config.cooldown));
         }
 
+        private void OnLose()
+        {
+            LevelManager.Instance.OnLose -= OnLose;
+            canCounter = false;
+        }
+        
         private IEnumerator IECounterCooldown(float cooldown)
         {
             counterCooldown = true;
