@@ -11,6 +11,8 @@ namespace InGame
         public Dictionary<int, bool> EnemiesAliveMap {get; private set; } = new Dictionary<int, bool>();
         public int CurrentEnemyIndex { get; private set; } // index is stored as enemy id
         
+        public Action OnOneEnemyDead { get; set; }
+        
         public void Initialize()
         { 
             Enemies = new Dictionary<int, EnemyEntity>();
@@ -39,6 +41,7 @@ namespace InGame
         public void OnEnemyDead(EnemyEntity enemy)
         {
             EnemiesAliveMap[enemy.UniqueId] = false;
+            OnOneEnemyDead?.Invoke();
         }
 
         public int FilterEnemiesNonAlloc(Func<EnemyEntity, bool> filter, ref EnemyEntity[] enemies, bool aliveOnly = true)

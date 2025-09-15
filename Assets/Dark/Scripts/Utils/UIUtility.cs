@@ -7,34 +7,6 @@ using UnityEngine.UI;
 
 public static class UIUtility
 {
-    public static Tween DoOpen(this UIPopup popup)
-    {
-        var target = !popup.rectContent ? popup.transform : popup.rectContent;
-        DOTween.Kill(popup);
-        return DOTween.Sequence(popup).SetUpdate(true)
-            .AppendCallback(() =>
-            {
-                target.transform.localScale = 0.3f * Vector3.one;
-                target.gameObject.SetActive(true);
-                popup.gameObject.SetActive(true);
-            })
-            .Append(target.transform.DOScale(1f, 0.3f).SetEase(Ease.OutBack));
-    }
-    
-    public static Tween DoClose(this UIPopup popup)
-    {
-        var target = !popup.rectContent ? popup.transform : popup.rectContent;
-        DOTween.Kill(popup);
-        return DOTween.Sequence(popup).SetUpdate(true)
-            .Append(target.transform.DOScale(0f, 0.3f).SetEase(Ease.InBack))
-            .AppendCallback(() =>
-            {
-                target.gameObject.SetActive(false);
-                popup.gameObject.SetActive(false);
-            });
-    }
-
-
     public static void SetAlpha(this Image image, float alpha)
     {
         var color = image.color;

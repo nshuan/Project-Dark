@@ -11,7 +11,6 @@ namespace InGame.UI
     public class PopupPause : MonoBehaviour
     {
         [SerializeField] private UIPopup ui;
-        [SerializeField] private GameObject imgBlockRaycast;
         
         [Space]
         [SerializeField] private Button btnBackToTree;
@@ -29,13 +28,11 @@ namespace InGame.UI
             if (isPaused)
             {
                 UpdateUI();
-                imgBlockRaycast.SetActive(true);
-                ui.DoOpen();
+                ui.DoOpenFadeIn();
             }
             else
             {
-                imgBlockRaycast.SetActive(false);
-                ui.DoClose();
+                ui.DoCloseFadeOut();
             }
         }
 

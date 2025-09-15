@@ -11,7 +11,6 @@ namespace InGame.UI
     public class PopupWin : MonoBehaviour
     {
         [SerializeField] private UIPopup ui;
-        [SerializeField] private GameObject imgBlockRaycast;
         
         [Space]
         [SerializeField] private Button btnBackToTree;
@@ -32,8 +31,7 @@ namespace InGame.UI
         private void OnWin()
         {
             UpdateUI();
-            imgBlockRaycast.SetActive(true);
-            ui.DoOpen().OnComplete(() => onShowPopup?.Invoke());
+            ui.DoOpenFadeIn().OnComplete(() => onShowPopup?.Invoke());
         }
 
         private void UpdateUI()
@@ -48,7 +46,6 @@ namespace InGame.UI
             btnNextLevel.onClick.RemoveAllListeners();
             btnNextLevel.onClick.AddListener(() =>
             {
-                imgBlockRaycast.SetActive(false);
                 ui.gameObject.SetActive(false);
                 Loading.Instance.LoadScene(SceneConstants.SceneInGame, () =>
                 {

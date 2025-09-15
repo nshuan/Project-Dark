@@ -225,6 +225,7 @@ GameObject:
   - component: {fileID: 3203403444839571657}
   - component: {fileID: 1137444324326785841}
   - component: {fileID: 3280149688413141266}
+  - component: {fileID: 8799703752382602759}
   m_Layer: 5
   m_Name: BgCover
   m_TagString: Untagged
@@ -289,6 +290,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &8799703752382602759
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1327865645448579110}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2292858129858607790
 GameObject:
   m_ObjectHideFlags: 0
@@ -349,6 +362,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rectContent: {fileID: 5710152130109002100}
+  groupBlockRaycast: {fileID: 8799703752382602759}
   txtTitle: {fileID: 7210148977174430715}
   txtContent: {fileID: 7507946920977753581}
   btnYes: {fileID: 7637731352183503541}
