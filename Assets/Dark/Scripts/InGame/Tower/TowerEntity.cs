@@ -15,6 +15,7 @@ namespace InGame
         [SerializeField] private Sprite[] spriteStates;
         [SerializeField] private float[] thresholdState = new[] { 0f, 0.3f, 0.7f };
         [SerializeField] private TowerAutoRegenerate autoRegenerate;
+        [SerializeField] private TowerRegenerateOnKill regenerateOnKill;
         [SerializeField] private AudioComponent sfxHit;
 
         private int currentState;
@@ -48,6 +49,7 @@ namespace InGame
             towerVisual.sprite = spriteStates[currentState];
             towerVisualUILayer.sprite = spriteStates[currentState];
             autoRegenerate.Initialize(this, LevelUtility.BonusInfo.toleranceRegenPerSecond);
+            regenerateOnKill.Initialize(this, LevelUtility.BonusInfo.toleranceRegenWhenKill);
         }
 
         public void EnterTower()
