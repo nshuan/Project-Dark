@@ -1,17 +1,18 @@
 using Economic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace InGame.UI.Economic
 {
-    public class UIInGameEchoes : MonoBehaviour
+    public class UIInGameEchoes : UIInGameEconomic
     {
-        public TextMeshProUGUI txtLevelPoint;
-        private int levelPoint;
+        public TextMeshProUGUI txtEchoes;
         
         private void Start()
         {
-            levelPoint = WealthManager.Instance.LevelPoint;
+            current = WealthManager.Instance.LevelPoint;
+            target = WealthManager.Instance.LevelPoint;
             UpdateUI();
             
             WealthManager.Instance.OnLevelPointChanged += OnLevelPointChanged;
@@ -22,15 +23,15 @@ namespace InGame.UI.Economic
             WealthManager.Instance.OnLevelPointChanged -= OnLevelPointChanged;
         }
         
-        private void UpdateUI()
-        {
-            txtLevelPoint.SetText($"{levelPoint}");
-        }
-
         private void OnLevelPointChanged(int before, int after)
         {
-            levelPoint = after;
+            if (before == after) return;
             UpdateUI();    
+        }
+        
+        private void UpdateUI()
+        {
+            txtEchoes.SetText($"{current}");
         }
     }
 }
