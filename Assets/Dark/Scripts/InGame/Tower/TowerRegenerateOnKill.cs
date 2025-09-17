@@ -25,16 +25,18 @@ namespace InGame
 
         private void OnOneEnemyKilled()
         {
-            if (coroutineRegenerate != null)
-                StopCoroutine(coroutineRegenerate);
-            coroutineRegenerate = StartCoroutine(IERegenerate());
+            if (tower.CurrentHp < tower.MaxHp && tower.CurrentHp > 0)
+            {
+                if (coroutineRegenerate != null)
+                    StopCoroutine(coroutineRegenerate);
+                coroutineRegenerate = StartCoroutine(IERegenerateVfx());
+                tower.Regenerate(regenAmount);
+            }
         }
         
-        private IEnumerator IERegenerate()
+        private IEnumerator IERegenerateVfx()
         {
             vfxTowerRegenerate.gameObject.SetActive(true);
-            
-            tower.Regenerate(regenAmount);
             
             yield return new WaitForSeconds(vfxDuration);
             vfxTowerRegenerate.gameObject.SetActive(false);
