@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace InGame.UI.HitShowDamage
 {
-    [RequireComponent(typeof(Canvas))]
     public class UIHitDameCanvas : MonoBehaviour
     {
         [SerializeField] private Camera cam;
@@ -25,7 +25,7 @@ namespace InGame.UI.HitShowDamage
         {
             var indexColor = damage / damageGap;
             txtDamage.color = colorInfos[Math.Clamp(indexColor, 0, colorInfos.Count - 1)];
-            txtDamage.transform.position = cam.WorldToScreenPoint(worldPos);
+            txtDamage.transform.position = cam.WorldToScreenPoint(worldPos) + new Vector3(Random.Range(-30f, 30f), 0f, 0f);
             txtDamage.SetText(damage.ToString());
             txtDamage.gameObject.SetActive(true);
             var endPos = txtDamage.transform.position + new Vector3(0f, 50f, 0f);

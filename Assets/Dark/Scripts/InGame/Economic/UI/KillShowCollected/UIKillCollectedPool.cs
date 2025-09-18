@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
 using Core;
+using InGame.UI.HitShowDamage;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace InGame.UI.HitShowDamage
+namespace InGame.UI.Economic.KillShowCollected
 {
-    public class UIHitDameTextPool : MonoSingleton<UIHitDameTextPool>
+    public class UIKillCollectedPool : MonoSingleton<UIKillCollectedPool>
     {
         [SerializeField] private TextMeshProUGUI prefab;
-        [SerializeField] private UIHitDameCanvas manager;
+        [SerializeField] private UIKillCollected manager;
         
         private Queue<TextMeshProUGUI> pool;
         private TextMeshProUGUI tempText;
@@ -22,10 +22,10 @@ namespace InGame.UI.HitShowDamage
             pool = new Queue<TextMeshProUGUI>();
         }
 
-        public void ShowDamage(int damage, Vector3 worldPos)
+        public void ShowCollected(int value, Vector3 worldPos)
         {
             Get();
-            manager.ShowDamage(tempText, damage, worldPos);
+            manager.ShowCollected(tempText, value, worldPos);
         }
         
         public TextMeshProUGUI Get()
@@ -43,13 +43,6 @@ namespace InGame.UI.HitShowDamage
         {
             text.gameObject.SetActive(false);
             pool.Enqueue(text);
-        }
-
-        [Serializable]
-        public struct HitDamageTextColorInfo
-        {
-            public int threshold;
-            public Color color;
         }
     }
 }
