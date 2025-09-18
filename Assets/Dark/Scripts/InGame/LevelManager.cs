@@ -56,6 +56,7 @@ namespace InGame
         public Action<TowerEntity> OnChangeTower { get; set; }
 
         public event Action<int> OnWaveStart;
+        public event Action<int> onWaveEnded;
         
         public event Action OnWin;
         public event Action OnLose;
@@ -158,12 +159,14 @@ namespace InGame
                 OnWaveStart?.Invoke(currentWaveIndex);
                 currentWaveIndex += 1;
                 yield return currentWave.IEActivateWave();
+                onWaveEnded?.Invoke(currentWaveIndex - 1);
             }
         }
 
         private void OnWaveForceStop()
         {
             if (waveCoroutine != null) StopCoroutine(waveCoroutine);
+            onWaveEnded?.Invoke(currentWaveIndex - 1);
             winLoseManager.CheckWin(this);
             waveCoroutine = StartCoroutine(IEWave(Level.waveInfo));
         }
