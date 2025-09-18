@@ -26,10 +26,10 @@ namespace InGame
         public int MaxHealth { get; set; }
         private int CurrentHealth { get; set; }
         private int CurrentDamage { get; set; }
-        private int Exp { get; set; }
-        private int Dark { get; set; }
-        private float DarkRatio { get; set; }
-        private int BossPoint { get; set; }
+        public int Exp { get; private set; }
+        public int Dark { get; private set; }
+        public float DarkRatio { get; private set; }
+        public int BossPoint { get; private set; }
 
         #endregion
 
@@ -273,12 +273,6 @@ namespace InGame
         {
             shadow.SetActive(false);    
             yield return new WaitForSeconds(delayAnim);
-            
-            WealthManager.Instance.AddExp(Exp);
-            if (Random.Range(0f, 0f) <= DarkRatio)
-                WealthManager.Instance.AddDark(Dark);
-            WealthManager.Instance.AddBossPoint(BossPoint);
-            
             yield return new WaitForSeconds(delayRelease);
             EnemyPool.Instance.Release(this, config.enemyId);
             

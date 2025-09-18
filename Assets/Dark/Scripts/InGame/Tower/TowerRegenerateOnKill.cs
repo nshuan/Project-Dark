@@ -23,7 +23,7 @@ namespace InGame
             EnemyManager.Instance.OnOneEnemyDead += OnOneEnemyKilled;
         }
 
-        private void OnOneEnemyKilled()
+        private void OnOneEnemyKilled(EnemyEntity enemy)
         {
             if (tower.CurrentHp < tower.MaxHp && tower.CurrentHp > 0)
             {
