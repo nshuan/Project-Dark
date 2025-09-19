@@ -41,7 +41,7 @@ namespace InGame.Economic.DropItems
                     }
                 }
                 
-                item.Collect(() =>
+                item.Collect(LevelManager.Instance.Player.transform, () =>
                 {
                     UIKillCollectedPool.Instance.ShowCollected(item.kind, item.Quantity, item.transform.position);
                     EItemDropPool.Instance.Release(item);
