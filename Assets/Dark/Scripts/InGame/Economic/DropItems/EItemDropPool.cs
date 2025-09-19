@@ -25,11 +25,10 @@ namespace InGame.Economic.DropItems
             }
         }
 
-        public EItemDrop Get(WealthType kind, Action<EItemDrop> onItemSpawned)
+        public void Get(WealthType kind, Action<EItemDrop> onItemSpawned)
         {
             Get(kind);
             onItemSpawned?.Invoke(tempItem);
-            return tempItem;
         }
 
         public EItemDrop Get(WealthType kind)

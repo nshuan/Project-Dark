@@ -141,6 +141,8 @@ namespace InGame
             OnWin = null;
             OnLose = null;
             OnChangeTower = null;
+            OnWaveStart = null;
+            onWaveEnded = null;
         }
         
         #region Waves

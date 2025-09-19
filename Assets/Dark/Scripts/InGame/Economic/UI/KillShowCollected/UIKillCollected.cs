@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Economic;
 using InGame.UI.HitShowDamage;
 using TMPro;
 using UnityEngine;
@@ -15,12 +16,12 @@ namespace InGame.UI.Economic.KillShowCollected
         [Header("Text color")]
         [SerializeField] private Color textColor;
 
-        public void ShowCollected(TextMeshProUGUI txtValue, int value, Vector3 worldPos)
+        public void ShowCollected(WealthType kind, int value, TextMeshProUGUI txtValue, Vector3 worldPos)
         {
-            StartCoroutine(IEShowCollected(txtValue, value, worldPos));
+            StartCoroutine(IEShowCollected(kind, value, txtValue, worldPos));
         }
 
-        private IEnumerator IEShowCollected(TextMeshProUGUI txtValue, int value, Vector3 worldPos)
+        private IEnumerator IEShowCollected(WealthType kind, int value,TextMeshProUGUI txtValue,  Vector3 worldPos)
         {
             txtValue.color = textColor;
             txtValue.transform.position = cam.WorldToScreenPoint(worldPos) + new Vector3(Random.Range(-30f, 30f), 40f, 0f);
@@ -37,7 +38,7 @@ namespace InGame.UI.Economic.KillShowCollected
             }
 
             yield return new WaitForEndOfFrame();
-            UIKillCollectedPool.Instance.Release(txtValue);
+            UIKillCollectedPool.Instance.Release(kind, txtValue);
         }
     }
 }

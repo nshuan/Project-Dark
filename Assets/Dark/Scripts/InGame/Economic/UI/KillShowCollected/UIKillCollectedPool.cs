@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Core;
+using Economic;
 using InGame.UI.HitShowDamage;
 using TMPro;
 using UnityEngine;
@@ -9,40 +10,50 @@ namespace InGame.UI.Economic.KillShowCollected
 {
     public class UIKillCollectedPool : MonoSingleton<UIKillCollectedPool>
     {
-        [SerializeField] private TextMeshProUGUI prefab;
+        [SerializeField] private TextMeshProUGUI[] prefab;
         [SerializeField] private UIKillCollected manager;
         
-        private Queue<TextMeshProUGUI> pool;
+        private Dictionary<WealthType, Queue<TextMeshProUGUI>> poolMap;
         private TextMeshProUGUI tempText;
         
         protected override void Awake()
         {
             base.Awake();
             
-            pool = new Queue<TextMeshProUGUI>();
+            poolMap = new Dictionary<WealthType, Queue<TextMeshProUGUI>>();
+            foreach (WealthType kind in Enum.GetValues(typeof(WealthType)))
+            {
+                poolMap.Add(kind, new Queue<TextMeshProUGUI>());
+            }
         }
 
-        public void ShowCollected(int value, Vector3 worldPos)
+        public void ShowCollected(WealthType kind, int value, Vector3 worldPos)
         {
-            Get();
-            manager.ShowCollected(tempText, value, worldPos);
+            Get(kind);
+            manager.ShowCollected(kind, value, tempText, worldPos);
         }
         
-        public TextMeshProUGUI Get()
+        public TextMeshProUGUI Get(WealthType kind)
         {
-            if (!pool.TryDequeue(out tempText))
+            if (poolMap.ContainsKey(kind))
             {
-                tempText = Instantiate(prefab, manager.transform);
+                if (!poolMap[kind].TryDequeue(out tempText))
+                {
+                    tempText = Instantiate(prefab[(int)kind], manager.transform);
+                }
             }
             
             tempText.gameObject.SetActive(false);
             return tempText;
         }
 
-        public void Release(TextMeshProUGUI text)
+        public void Release(WealthType kind, TextMeshProUGUI text)
         {
             text.gameObject.SetActive(false);
-            pool.Enqueue(text);
+            if (poolMap.ContainsKey(kind))
+            {
+                poolMap[kind].Enqueue(text);
+            }
         }
     }
 }
