@@ -19,7 +19,13 @@ namespace InGame.Economic
 
         private void OnEnemyDead(EnemyEntity enemy)
         {
-            WealthManager.Instance.AddExp(enemy.Exp);
+            
+            // Show text + Exp trên đầu con enemy vừa die
+            if (enemy.Exp > 0)
+            {
+                WealthManager.Instance.AddExp(enemy.Exp);
+                UIKillCollectedPool.Instance.ShowCollected(WealthType.Exp, enemy.Exp, enemy.transform.position);
+            }
             
             // TH0: Show text trên đầu con enemy vừa die
             if (selectMethod == 0)
