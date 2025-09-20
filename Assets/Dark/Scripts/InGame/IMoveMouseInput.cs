@@ -1,11 +1,15 @@
 namespace InGame
 {
-    public interface IRightMouseInput
+    public interface IMoveTowerMouseInput : IMoveMouseInput
     {
-        bool CanMove { get; }
         void OnMouseClick(bool isLongTele);
         void OnActivated();
         void OnDeactivated();
+    }
+
+    public interface IMoveMouseInput
+    {
+        bool CanMove { get; }
         void OnUpdate();
     }
 }

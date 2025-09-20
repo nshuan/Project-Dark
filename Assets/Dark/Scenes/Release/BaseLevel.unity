@@ -133,6 +133,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78ba5c74ba854c04a082c60d2c6eabb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &102622157
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 102622158}
+  - component: {fileID: 102622159}
+  m_Layer: 0
+  m_Name: ItemDropManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &102622158
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102622157}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1558433986}
+  m_Father: {fileID: 691118427}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &102622159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102622157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8066bdd6f4db4abeb7dc9e51d15f9b6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vfxClaimOnPlayerPrefab: {fileID: 1933820617859428542, guid: b8e02277aadb12448828d3d9f02794da, type: 3}
+  collectDuration: 0.7
+  vfxPositionOffset: {x: -0.11, y: -0.45, z: 0}
 --- !u!1 &253350853
 GameObject:
   m_ObjectHideFlags: 0
@@ -1038,6 +1086,7 @@ Transform:
   - {fileID: 1405331109}
   - {fileID: 1605390107}
   - {fileID: 1960874327}
+  - {fileID: 102622158}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &774652969
@@ -1811,6 +1860,57 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c7c32f2213925344abe57070303dc8b1, type: 3}
+--- !u!1 &1558433985
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1558433986}
+  - component: {fileID: 1558433987}
+  m_Layer: 0
+  m_Name: ItemDropPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1558433986
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1558433985}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 102622158}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1558433987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1558433985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97168b27dcfa4885b132e8b113bffe6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabs:
+  - kind: 0
+    prefab: {fileID: 1475500146204445689, guid: bfd7d2c1f996a9846b6e0a866a8d8379, type: 3}
+  - kind: 1
+    prefab: {fileID: 1475500146204445689, guid: bc6e537afba91374ca41ce6e1e5bb9bc, type: 3}
+  - kind: 2
+    prefab: {fileID: 1475500146204445689, guid: 24df689f13c2f6a43bc479a96bec3122, type: 3}
 --- !u!1 &1605390106
 GameObject:
   m_ObjectHideFlags: 0
@@ -1944,6 +2044,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7892015862db417ca142b9a613c557b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectMethod: 2
 --- !u!114 &2016680611 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1868382969554725214, guid: c7c32f2213925344abe57070303dc8b1, type: 3}

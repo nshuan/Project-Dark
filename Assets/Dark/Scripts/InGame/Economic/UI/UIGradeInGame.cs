@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using Economic;
 using TMPro;
 using UnityEngine;
@@ -32,7 +33,7 @@ namespace InGame.UI.Economic
         private void OnUpGrade(int newGrade)
         {
             grade = newGrade;
-            currentExpProgress = WealthManager.Instance.Exp - expNeededToLevelUp;
+            currentExpProgress = WealthManager.Instance.Exp % (expNeededToLevelUp == 0 ? 1 : expNeededToLevelUp);
             expNeededToLevelUp = GradeConfig.Instance.GetRequirement(grade + 1);
             UpdateUIGrade();
             UpdateUIExp();
@@ -51,7 +52,8 @@ namespace InGame.UI.Economic
 
         private void UpdateUIExp()
         {
-            fillExp.fillAmount = (float)currentExpProgress / expNeededToLevelUp;
+            DOTween.Kill(this);
+            fillExp.DOFillAmount((float)currentExpProgress / expNeededToLevelUp, 0.5f).SetTarget(this);
         }
     }
 }

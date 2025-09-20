@@ -173,6 +173,7 @@ namespace Economic
     {
         Vestige, // Dark
         Echoes, // Level Point
-        Sigils // Boss Point
+        Sigils, // Boss Point
+        Exp
     }
 }

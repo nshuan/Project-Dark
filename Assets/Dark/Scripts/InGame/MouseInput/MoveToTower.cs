@@ -5,7 +5,7 @@ using UnityEngine;
 namespace InGame
 {
     [Serializable]
-    public class MoveToTower : IRightMouseInput
+    public class MoveToTower : IMoveTowerMouseInput
     {
         private const float HoverRadius = 2f;
         
