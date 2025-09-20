@@ -27,7 +27,9 @@ namespace InGame
         private bool IsMousePressingStarted;
         private float holdDelayTime;
         private IMouseInput mouseInput;
-        private IRightMouseInput teleMouseInput;
+        private IMoveTowerMouseInput teleMouseInput;
+        private IMoveMouseInput collectorMouseInput;
+        public bool enableCollectorMouse;
         private MonoCursor cursor;
 
         #region Move Towers
@@ -82,6 +84,9 @@ namespace InGame
                 mouseInput = ShotCursorManager.Instance.GetCursorMoveLogic(CurrentSkillConfig.shootLogic.cursorType, cam, cursor);
                 mouseInput.Initialize(this, chargeControllerArcher);
                 mouseInput.ResetChargeVariable();
+
+                if (enableCollectorMouse)
+                    collectorMouseInput = new MoveCollectResource(cam, PlayerVisual.transform);
                 
                 LevelManager.Instance.OnWin += OnLevelCompleted;
                 LevelManager.Instance.OnLose += OnLevelCompleted;
@@ -175,6 +180,7 @@ namespace InGame
             
             mouseInput?.OnUpdate();
             teleMouseInput?.OnUpdate();
+            if (enableCollectorMouse) collectorMouseInput?.OnUpdate();
         }
 
         private void OnDrawGizmos()

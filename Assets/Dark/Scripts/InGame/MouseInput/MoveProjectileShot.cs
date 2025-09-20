@@ -237,6 +237,8 @@ namespace InGame
             rangeChargeTime = 0f;
         }
 
+        public bool CanMove => true;
+
         public virtual void OnUpdate()
         {
             worldMousePosition = Cam.ScreenToWorldPoint(Input.mousePosition);

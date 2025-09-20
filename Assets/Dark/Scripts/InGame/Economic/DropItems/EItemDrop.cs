@@ -1,63 +1,79 @@
 using System;
 using System.Collections;
 using Dark.Scripts.Utils;
+using DG.Tweening;
+using DG.Tweening.Core;
 using Economic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace InGame.Economic.DropItems
 {
-    public class EItemDrop : MonoBehaviour
+    public class EItemDrop : MonoBehaviour, ICollectible
     {
-        private const float RotateSpeed = 250f;
-        private const float FlySpeed = 5f;
+        private const float FlySpeed = 10f;
         
         [SerializeField] private GameObject vfxClaim;
         [SerializeField] private GameObject visual;
         
-        [Space]
-        [Header("Config")]
-        [SerializeField] private AnimationCurve flySpeedCurve;
-        [SerializeField] private float timeToReachMaxSpeed = 1f;
+        public float CollectDuration { get; set; }
         
         public WealthType kind;
         public int Quantity { get; set; }
+        [NonSerialized] public Vector3 vfxPositionOffset;
         
-        public void Drop()
+        public void Drop(Vector2 position)
         {
             visual.gameObject.SetActive(true);
+            var targetPos = position + Random.insideUnitCircle.normalized * 0.6f;
+            transform.DOJump(targetPos, 0.2f, 1, 0.5f).SetTarget(this);
         }
 
-        public void Collect(Transform target, Action onCompleteVfx)
+        public bool CanCollectByMouse { get; set; }
+        public void Collect(Transform target, float delay)
         {
-            StartCoroutine(IECollect(target, 1f, () =>
+            CanCollectByMouse = false;
+            if (Quantity > 0)
             {
-                visual.gameObject.SetActive(false);
-                vfxClaim.SetActive(true);
-            }, () =>
-            {
-                vfxClaim.SetActive(false);
-                onCompleteVfx?.Invoke();
-            }));
-        }
-
-        private IEnumerator IECollect(Transform target, float delayComplete, Action onReachTarget, Action onComplete)
-        {
-            var direction = target.position - transform.position;
-            var lifeTime = 0f;
-
-            while (Vector3.Distance(transform.position, target.position) > 1f)
-            {
-                direction = Vector3.RotateTowards(direction, target.position - transform.position,
-                    Mathf.Deg2Rad * RotateSpeed * Time.deltaTime, 0f);
-                transform.position += FlySpeed * (lifeTime < timeToReachMaxSpeed ? flySpeedCurve.Evaluate(lifeTime / timeToReachMaxSpeed) : 1f)
-                                               * Time.deltaTime * direction;
-                lifeTime += Time.deltaTime;
-                yield return new WaitForEndOfFrame();
+                switch (kind)
+                {
+                    case WealthType.Vestige:
+                        WealthManager.Instance.AddDark(Quantity);
+                        break;
+                    case WealthType.Echoes:
+                        WealthManager.Instance.AddLevelPoint(Quantity);
+                        break;
+                    case WealthType.Sigils:
+                        WealthManager.Instance.AddBossPoint(Quantity);
+                        break;
+                }
             }
             
-            onReachTarget?.Invoke();
-            yield return new WaitForSeconds(delayComplete);
-            onComplete?.Invoke();
+            Collect(target, delay, () =>
+            {
+                EItemDropPool.Instance.Release(this);
+            });
+        }
+
+        public void Collect(Transform target, float delay, Action onCollected)
+        {
+            DOTween.Kill(this);
+            var seq = DOTween.Sequence(this).SetDelay(delay)
+                .Append(transform.DOMove(target.position, CollectDuration).SetEase(Ease.InBack))
+                .AppendCallback(() =>
+                {
+                    visual.gameObject.SetActive(false);
+                    vfxClaim.transform.position = target.position + vfxPositionOffset;
+                    vfxClaim.SetActive(CanCollectByMouse);
+                });
+            if (CanCollectByMouse)
+                seq.AppendInterval(1f);
+
+            seq.OnComplete(() =>
+            {
+                vfxClaim.SetActive(false);
+                onCollected?.Invoke();
+            });
         }
     }
 }
