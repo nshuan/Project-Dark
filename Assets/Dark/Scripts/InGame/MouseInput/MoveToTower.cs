@@ -181,6 +181,7 @@ namespace InGame
             var cooldown = config.cooldown;
             if (config.moveLogic is MoveDashToTower) cooldown = LevelUtility.GetDashCooldown(config.cooldown);
             else if (config.moveLogic is MoveFlashToTower) cooldown = LevelUtility.GetFlashCooldown(config.cooldown);
+            else if (config.moveLogic is MoveTeleToTower) cooldown = LevelUtility.GetTeleCooldown(config.cooldown);
             return cooldown;
         }
 
