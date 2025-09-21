@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Dark.Scripts.Audio;
 using Dark.Scripts.Utils;
 using DG.Tweening;
 using DG.Tweening.Core;
@@ -15,6 +16,7 @@ namespace InGame.Economic.DropItems
         
         [SerializeField] private GameObject vfxClaim;
         [SerializeField] private GameObject visual;
+        [SerializeField] private AudioComponent sfx;
         
         public float CollectDuration { get; set; }
         
@@ -65,6 +67,7 @@ namespace InGame.Economic.DropItems
                     visual.gameObject.SetActive(false);
                     vfxClaim.transform.position = target.position + vfxPositionOffset;
                     vfxClaim.SetActive(CanCollectByMouse);
+                    sfx.Play();
                 });
             if (CanCollectByMouse)
                 seq.AppendInterval(1f);
