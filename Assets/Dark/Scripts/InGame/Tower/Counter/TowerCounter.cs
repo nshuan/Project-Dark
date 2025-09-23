@@ -55,9 +55,11 @@ namespace InGame
         {
             counterDirection.x = attackerPos.x - transform.position.x;
             counterDirection.y = attackerPos.y - transform.position.y;
-            
-            config.logic.Counter(transform.position, counterDirection, config.damage, 1f);
-            StartCoroutine(IECounterCooldown(config.cooldown));
+
+            var damage = config.damage + LevelUtility.BonusInfo.towerCounterDamagePlus;
+            var cooldown = Mathf.Max(config.cooldown - LevelUtility.BonusInfo.towerCounterCooldownPlus, 0f);
+            config.logic.Counter(transform.position, counterDirection, damage, 1f);
+            StartCoroutine(IECounterCooldown(cooldown));
         }
 
         private void OnLose()
