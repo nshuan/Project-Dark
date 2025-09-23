@@ -23,7 +23,7 @@ namespace Economic.UI
         private void OnDarkChanged(int before, int after)
         {
             if (before == after) return;
-            AnimateIncreasing(after);
+            AnimateUpdating(after);
         }
         
         public override void UpdateUI()

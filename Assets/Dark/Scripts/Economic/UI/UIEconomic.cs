@@ -5,7 +5,7 @@ namespace Economic.UI
 {
     public class UIEconomic : MonoBehaviour
     {
-        private Coroutine coroutineAnimatedIncreasing;
+        private Coroutine coroutineAnimatedUpdating;
         protected int current;
         protected int target;
         protected float updateInterval = 0.05f;
@@ -15,18 +15,18 @@ namespace Economic.UI
             
         }
         
-        public void AnimateIncreasing(int target)
+        public void AnimateUpdating(int target)
         {
             if (target == this.target) return;
             this.target = target;
             
-            if (coroutineAnimatedIncreasing == null)
+            if (coroutineAnimatedUpdating == null)
             {
-                coroutineAnimatedIncreasing = StartCoroutine(IEAnimatedIncreasing());
+                coroutineAnimatedUpdating = StartCoroutine(IEAnimatedUpdating());
             }
         }
 
-        private IEnumerator IEAnimatedIncreasing()
+        private IEnumerator IEAnimatedUpdating()
         {
             if (current < target)
             {
@@ -47,7 +47,7 @@ namespace Economic.UI
                 }
             }
 
-            coroutineAnimatedIncreasing = null;
+            coroutineAnimatedUpdating = null;
         }
     }
 }

@@ -23,10 +23,10 @@ namespace Economic.UI
         private void OnLevelPointChanged(int before, int after)
         {
             if (before == after) return;
-            UpdateUI();    
+            AnimateUpdating(after);
         }
         
-        private void UpdateUI()
+        public override void UpdateUI()
         {
             txtEchoes.SetText($"{current}");
         }
