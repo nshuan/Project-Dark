@@ -91,6 +91,31 @@ namespace InGame
         }
 
         #endregion
+
+#if HOT_CHEAT
+        public void CheatEnableOrRemovePassiveEffect(PassiveTriggerType triggerType, PassiveType passiveType)
+        {
+            possibleEffectMap ??= new Dictionary<PassiveTriggerType, List<PassiveType>>()
+            {
+                { PassiveTriggerType.DameByNormalAttack , new List<PassiveType>() },
+                { PassiveTriggerType.DameByChargeAttack , new List<PassiveType>() },
+                { PassiveTriggerType.DameByMoveSKill , new List<PassiveType>() },
+                { PassiveTriggerType.TowerTakeDame , new List<PassiveType>() }
+            };
+            
+            if (!possibleEffectMap[triggerType].Contains(passiveType))
+                possibleEffectMap[triggerType].Add(passiveType);
+            else
+                possibleEffectMap[triggerType].Remove(passiveType);
+        }
+
+        public bool CheatIsEnabled(PassiveTriggerType triggerType, PassiveType passiveType)
+        {
+            if (possibleEffectMap == null) return false;
+            if (!possibleEffectMap.ContainsKey(triggerType)) return false;
+            return possibleEffectMap[triggerType].Contains(passiveType);
+        }
+#endif
     }
 
     public enum PassiveTriggerType
