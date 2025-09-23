@@ -1,11 +1,8 @@
-using Economic;
 using TMPro;
-using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace InGame.UI.Economic
+namespace Economic.UI
 {
-    public class UIInGameEchoes : UIInGameEconomic
+    public class UIEchoes : UIEconomic
     {
         public TextMeshProUGUI txtEchoes;
         

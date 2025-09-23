@@ -1,12 +1,8 @@
-using System;
-using Economic;
 using TMPro;
-using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace InGame.UI.Economic
+namespace Economic.UI
 {
-    public class UIInGameSigils : UIInGameEconomic
+    public class UISigils : UIEconomic
     {
         public TextMeshProUGUI txtSigils;
         

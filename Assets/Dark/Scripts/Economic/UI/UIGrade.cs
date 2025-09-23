@@ -1,13 +1,11 @@
-using System;
 using DG.Tweening;
-using Economic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace InGame.UI.Economic
+namespace Economic.UI
 {
-    public class UIGradeInGame : MonoBehaviour
+    public class UIGrade : MonoBehaviour
     {
         public Image fillExp;
         public TextMeshProUGUI txtGrade;

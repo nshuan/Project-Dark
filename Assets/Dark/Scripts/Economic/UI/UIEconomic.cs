@@ -1,9 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
-namespace InGame.UI.Economic
+namespace Economic.UI
 {
-    public class UIInGameEconomic : MonoBehaviour
+    public class UIEconomic : MonoBehaviour
     {
         private Coroutine coroutineAnimatedIncreasing;
         protected int current;

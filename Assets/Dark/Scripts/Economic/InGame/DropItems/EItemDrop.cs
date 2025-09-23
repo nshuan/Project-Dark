@@ -1,14 +1,11 @@
 using System;
-using System.Collections;
 using Dark.Scripts.Audio;
-using Dark.Scripts.Utils;
 using DG.Tweening;
-using DG.Tweening.Core;
-using Economic;
+using InGame;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace InGame.Economic.DropItems
+namespace Economic.InGame.DropItems
 {
     public class EItemDrop : MonoBehaviour, ICollectible
     {

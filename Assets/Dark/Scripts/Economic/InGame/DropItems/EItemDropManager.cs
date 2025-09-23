@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using Core;
 using Dark.Scripts.Utils;
-using Economic;
-using InGame.UI.Economic.KillShowCollected;
+using InGame;
 using UnityEngine;
 
-namespace InGame.Economic.DropItems
+namespace Economic.InGame.DropItems
 {
     public class EItemDropManager : MonoSingleton<EItemDropManager>
     {
