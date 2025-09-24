@@ -42,9 +42,11 @@ namespace Dark.Scripts.SceneNavigation
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
             DebugUtility.LogWarning($"Scene {scene.name} is loaded!");
-            DoClose(Random.Range(minDuration, maxDuration), 0.3f,0.5f);
-            onSceneLoaded?.Invoke();
-            onSceneLoaded = null;
+            DoClose(Random.Range(minDuration, maxDuration), 0.3f,0.5f).OnComplete(() =>
+            {
+                onSceneLoaded?.Invoke();
+                onSceneLoaded = null;
+            });
         }
 
         private Tween DoOpen(float duration)
@@ -78,7 +80,7 @@ namespace Dark.Scripts.SceneNavigation
                     progressText.SetText($"{(int)(x * 100)}%");
                 }, 1f, duration))
                 .Append(loadingPanel.DOFade(0f, hideDuration))
-                .OnComplete(() =>
+                .AppendCallback(() =>
                 {
                     blankPanel.gameObject.SetActive(false);
                     loadingPanel.gameObject.SetActive(false);
