@@ -41,7 +41,7 @@ namespace InGame
         {
             playerDamage = Mathf.RoundToInt((playerDamage + BonusInfo.damePlus) * (1 + BonusInfo.dameMultiply));
             skillDamage = Mathf.RoundToInt((skillDamage + BonusInfo.skillBonus.skillDamePlus) * (1 + BonusInfo.skillBonus.skillDameMultiply));
-            criticalDameMultiplier = chargeDameMultiplier + BonusInfo.criticalDame;
+            criticalDameMultiplier = criticalDameMultiplier + BonusInfo.criticalDame;
             var bulletDamage = playerDamage + skillDamage;
             return (
                 Mathf.RoundToInt(bulletDamage * chargeDameMultiplier), 
@@ -162,6 +162,11 @@ namespace InGame
 
         #region Move Towers
 
+        public static float GetTeleCooldown(float baseCooldown)
+        {
+            return baseCooldown - BonusInfo.moveCooldownPlus;
+        }
+        
         public static float GetDashCooldown(float baseCooldown)
         {
             return baseCooldown - BonusInfo.dashCooldownPlus;

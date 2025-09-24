@@ -6,7 +6,7 @@ using InGame.UI.HitShowDamage;
 using TMPro;
 using UnityEngine;
 
-namespace InGame.UI.Economic.KillShowCollected
+namespace Economic.UI.KillShowCollected
 {
     public class UIKillCollectedPool : MonoSingleton<UIKillCollectedPool>
     {

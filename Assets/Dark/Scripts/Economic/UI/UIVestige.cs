@@ -1,13 +1,8 @@
-using System;
-using System.Collections;
-using Economic;
 using TMPro;
-using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace InGame.UI.Economic
+namespace Economic.UI
 {
-    public class UIInGameVestige : UIInGameEconomic
+    public class UIVestige : UIEconomic
     {
         public TextMeshProUGUI txtVestige;
         
@@ -28,7 +23,7 @@ namespace InGame.UI.Economic
         private void OnDarkChanged(int before, int after)
         {
             if (before == after) return;
-            AnimateIncreasing(after);
+            AnimateUpdating(after);
         }
         
         public override void UpdateUI()

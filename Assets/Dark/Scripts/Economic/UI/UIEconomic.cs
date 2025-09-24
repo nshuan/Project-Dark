@@ -1,11 +1,11 @@
 using System.Collections;
 using UnityEngine;
 
-namespace InGame.UI.Economic
+namespace Economic.UI
 {
-    public class UIInGameEconomic : MonoBehaviour
+    public class UIEconomic : MonoBehaviour
     {
-        private Coroutine coroutineAnimatedIncreasing;
+        private Coroutine coroutineAnimatedUpdating;
         protected int current;
         protected int target;
         protected float updateInterval = 0.05f;
@@ -15,18 +15,18 @@ namespace InGame.UI.Economic
             
         }
         
-        public void AnimateIncreasing(int target)
+        public void AnimateUpdating(int target)
         {
             if (target == this.target) return;
             this.target = target;
             
-            if (coroutineAnimatedIncreasing == null)
+            if (coroutineAnimatedUpdating == null)
             {
-                coroutineAnimatedIncreasing = StartCoroutine(IEAnimatedIncreasing());
+                coroutineAnimatedUpdating = StartCoroutine(IEAnimatedUpdating());
             }
         }
 
-        private IEnumerator IEAnimatedIncreasing()
+        private IEnumerator IEAnimatedUpdating()
         {
             if (current < target)
             {
@@ -47,7 +47,7 @@ namespace InGame.UI.Economic
                 }
             }
 
-            coroutineAnimatedIncreasing = null;
+            coroutineAnimatedUpdating = null;
         }
     }
 }

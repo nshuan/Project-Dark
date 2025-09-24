@@ -1,11 +1,10 @@
-using System;
-using Economic;
-using InGame.Economic.DropItems;
-using InGame.UI.Economic.KillShowCollected;
+using InGame;
+using Economic.InGame.DropItems;
+using Economic.UI.KillShowCollected;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace InGame.Economic
+namespace Economic.UI
 {
     public class ECollector : MonoBehaviour
     {

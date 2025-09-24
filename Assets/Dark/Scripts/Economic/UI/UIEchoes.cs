@@ -1,11 +1,8 @@
-using Economic;
 using TMPro;
-using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace InGame.UI.Economic
+namespace Economic.UI
 {
-    public class UIInGameEchoes : UIInGameEconomic
+    public class UIEchoes : UIEconomic
     {
         public TextMeshProUGUI txtEchoes;
         
@@ -26,10 +23,10 @@ namespace InGame.UI.Economic
         private void OnLevelPointChanged(int before, int after)
         {
             if (before == after) return;
-            UpdateUI();    
+            AnimateUpdating(after);
         }
         
-        private void UpdateUI()
+        public override void UpdateUI()
         {
             txtEchoes.SetText($"{current}");
         }

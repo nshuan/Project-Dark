@@ -1,5 +1,52 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2292658228252252019
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 684975584388205258}
+  - component: {fileID: 2721829043061295964}
+  m_Layer: 0
+  m_Name: Sfx
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &684975584388205258
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2292658228252252019}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8878898953844404854}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2721829043061295964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2292658228252252019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sourceIndex: 13
+  playOnEnable: 0
+  delay: 0
 --- !u!1 &3362547422226500229
 GameObject:
   m_ObjectHideFlags: 0
@@ -33,6 +80,7 @@ Transform:
   m_Children:
   - {fileID: 377180349463834552}
   - {fileID: 2294238935871437148}
+  - {fileID: 684975584388205258}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1475500146204445689
@@ -49,40 +97,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vfxClaim: {fileID: 3565376113205855755}
   visual: {fileID: 4350023303770841330}
-  flySpeedCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: -4.586947
-      outSlope: -4.586947
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.18668264
-    - serializedVersion: 3
-      time: 0.16254428
-      value: -0.094537824
-      inSlope: 1.0133615
-      outSlope: 1.0133615
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.36870298
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 1.3078412
-      outSlope: 1.3078412
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.16695066
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  timeToReachMaxSpeed: 1
+  sfx: {fileID: 2721829043061295964}
   kind: 0
 --- !u!58 &3372183826394419275
 CircleCollider2D:

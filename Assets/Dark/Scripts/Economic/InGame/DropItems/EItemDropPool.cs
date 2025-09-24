@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Core;
-using Economic;
 using UnityEngine;
 
-namespace InGame.Economic.DropItems
+namespace Economic.InGame.DropItems
 {
     public class EItemDropPool : MonoSingleton<EItemDropPool>
     {

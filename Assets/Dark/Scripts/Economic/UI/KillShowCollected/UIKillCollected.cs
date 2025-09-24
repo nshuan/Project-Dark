@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace InGame.UI.Economic.KillShowCollected
+namespace Economic.UI.KillShowCollected
 {
     public class UIKillCollected : MonoBehaviour
     {

@@ -8,6 +8,7 @@ namespace InGame
 {
     public class PassiveExplosion : MonoPassiveEntity
     {
+        [SerializeField] private Transform vfx;
         [SerializeField] private float vfxDuration = 1f;
         
         private Vector2 Position { get; set; }
@@ -25,6 +26,7 @@ namespace InGame
         public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool)
         {
             transform.position = target.Position;
+            vfx.localScale = Vector3.one * size;
             this.Position = target.Position;
             this.Stagger = stagger;
             gameObject.SetActive(true);
