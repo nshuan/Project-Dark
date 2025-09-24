@@ -20,10 +20,13 @@ namespace InGame
             CurrentEnemyIndex = 0;
 
             LevelManager.Instance.OnLose += OnLevelCompleted;
+            LevelManager.Instance.OnWin += OnLevelCompleted;
         }
 
         private void OnLevelCompleted()
         {
+            OnOneEnemyDead = null;
+            
             for (var i = 0; i < Enemies.Count; i++)
             {
                 if (EnemiesAliveMap[i] == false) continue;
