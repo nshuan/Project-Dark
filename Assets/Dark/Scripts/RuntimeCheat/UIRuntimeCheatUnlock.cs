@@ -116,7 +116,9 @@ namespace Dark.Scripts.RuntimeCheat
                 LevelUtility.BonusInfo.passiveMapByTriggerType[triggerType].Add(passiveType);
             else LevelUtility.BonusInfo.passiveMapByTriggerType[triggerType].Remove(passiveType);
 
+#if HOT_CHEAT
             UpgradeManager.Instance.CheatUpdateBonusInfo(LevelUtility.BonusInfo);
+#endif
         }
     }
 }
