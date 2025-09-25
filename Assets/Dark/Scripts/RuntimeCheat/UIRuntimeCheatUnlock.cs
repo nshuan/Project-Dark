@@ -14,6 +14,9 @@ namespace Dark.Scripts.RuntimeCheat
         public Button[] btnUnlockMovePassive;
         public Button[] btnUnlockCounterPassive;
 
+        public Button btnUnlockChargeSize;
+        public Button btnUnlockChargeBullet;
+
         private void OnEnable()
         {
             // Normal attack passive
@@ -95,6 +98,24 @@ namespace Dark.Scripts.RuntimeCheat
 #endif
                 });
             }
+            
+            btnUnlockChargeSize.targetGraphic.color = LevelUtility.BonusInfo.skillBonus.unlockedChargeSize ? Color.green : Color.red;
+            btnUnlockChargeSize.onClick.RemoveAllListeners();
+            btnUnlockChargeSize.onClick.AddListener(() =>
+            {
+                var bonusInfo = LevelUtility.BonusInfo;
+                bonusInfo.skillBonus.unlockedChargeSize = !bonusInfo.skillBonus.unlockedChargeSize;
+                btnUnlockChargeSize.targetGraphic.color = bonusInfo.skillBonus.unlockedChargeSize ? Color.green : Color.red;
+            });
+            
+            btnUnlockChargeBullet.targetGraphic.color = LevelUtility.BonusInfo.skillBonus.unlockedChargeBullet ? Color.green : Color.red;
+            btnUnlockChargeBullet.onClick.RemoveAllListeners();
+            btnUnlockChargeBullet.onClick.AddListener(() =>
+            {
+                var bonusInfo = LevelUtility.BonusInfo;
+                bonusInfo.skillBonus.unlockedChargeBullet = !bonusInfo.skillBonus.unlockedChargeBullet;
+                btnUnlockChargeBullet.targetGraphic.color = bonusInfo.skillBonus.unlockedChargeBullet ? Color.green : Color.red;
+            });
         }
 
         private bool ExistPassive(PassiveTriggerType triggerType, PassiveType passiveType)
