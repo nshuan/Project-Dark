@@ -19,7 +19,7 @@ namespace InGame.Upgrade
         
         #region Data
 
-        private const string DataKey = "UpgradeData";
+        private static string DataKey => PlayerDataManager.DataKey + "_UpgradeData";
         private UpgradeData data;
 
         public UpgradeData Data

@@ -9,7 +9,7 @@ namespace Data
     {
         private const string DefaultDataKey = "playerData";
         public static string CurrentDataKey = "";
-        private static string DataKey => string.IsNullOrEmpty(CurrentDataKey) ? DefaultDataKey : CurrentDataKey;
+        public static string DataKey => string.IsNullOrEmpty(CurrentDataKey) ? DefaultDataKey : CurrentDataKey;
 
         private PlayerData data;
         public PlayerData Data
