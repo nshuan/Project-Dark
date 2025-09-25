@@ -67,16 +67,16 @@ namespace InGame
         {
             InputManager = manager;
             ChargeController = chargeController;
-            Cooldown = LevelUtility.GetSkillCooldown(
-                InputManager.CurrentSkillConfig.skillId,
-                InputManager.PlayerStats.cooldown,
-                InputManager.CurrentSkillConfig.cooldown);
-
-            var skillBonusInfo = LevelUtility.BonusInfo.skillBonus;
-            canChargeBullet = skillBonusInfo.unlockedChargeBullet;
-            canChargeDame = skillBonusInfo.unlockedChargeDame;
-            canChargeSize = skillBonusInfo.unlockedChargeSize;
-            canChargeRange = skillBonusInfo.unlockedChargeRange;
+            // Cooldown = LevelUtility.GetSkillCooldown(
+            //     InputManager.CurrentSkillConfig.skillId,
+            //     InputManager.PlayerStats.cooldown,
+            //     InputManager.CurrentSkillConfig.cooldown);
+            //
+            // var skillBonusInfo = LevelUtility.BonusInfo.skillBonus;
+            // canChargeBullet = skillBonusInfo.unlockedChargeBullet;
+            // canChargeDame = skillBonusInfo.unlockedChargeDame;
+            // canChargeSize = skillBonusInfo.unlockedChargeSize;
+            // canChargeRange = skillBonusInfo.unlockedChargeRange;
             
             ChargeController.SetProjectile(InputManager.CurrentSkillConfig.projectiles[PlayerProjectileType.ChargeBullet]);
             ChargeController.Cam = Cam;
@@ -87,6 +87,17 @@ namespace InGame
             if (!CanShoot) return;
             
             CanShoot = false;
+            
+            Cooldown = LevelUtility.GetSkillCooldown(
+                InputManager.CurrentSkillConfig.skillId,
+                InputManager.PlayerStats.cooldown,
+                InputManager.CurrentSkillConfig.cooldown);
+            
+            var skillBonusInfo = LevelUtility.BonusInfo.skillBonus;
+            canChargeBullet = skillBonusInfo.unlockedChargeBullet;
+            canChargeDame = skillBonusInfo.unlockedChargeDame;
+            canChargeSize = skillBonusInfo.unlockedChargeSize;
+            canChargeRange = skillBonusInfo.unlockedChargeRange;
             
             var isCharge = (canChargeBullet && bulletAdd > 0) || (canChargeDame && dameChargeTime > 0) ||
                            (canChargeSize && sizeChargeTime > 0) || (canChargeRange && rangeChargeTime > 0);

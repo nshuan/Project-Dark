@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Economic.UI
@@ -17,6 +18,9 @@ namespace Economic.UI
         
         public void AnimateUpdating(int target)
         {
+            current = target;
+            UpdateUI();
+            return;
             if (target == this.target) return;
             this.target = target;
             
