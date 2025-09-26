@@ -7,9 +7,9 @@ namespace InGame
     public class ProjectileActivateSplit : IProjectileActivate
     {
         [SerializeField] private ProjectileEntity projectile;
-        [SerializeField] private int amount;
+        public int amount;
         [Range(0f, 180f)] 
-        [SerializeField] private float angle;
+        public float angle;
         
         public void DoAction(ProjectileEntity parentProjectile, Vector2 direction)
         {

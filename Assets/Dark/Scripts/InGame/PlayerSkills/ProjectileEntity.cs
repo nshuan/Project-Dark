@@ -181,7 +181,7 @@ namespace InGame
             {
                 foreach (var action in HitActions)
                 {
-                    action.DoAction(transform.position);
+                    action.DoAction(this, transform.position);
                 }
             }
                     

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using InGame;
 using InGame.Upgrade;
 
 namespace Dark.Tools.GoogleSheetTool
@@ -59,6 +60,30 @@ namespace Dark.Tools.GoogleSheetTool
             return new NodeUnlockSkill()
             {
                 unlockType = NodeUnlockSkill.BonusUnlockSkillType.ChargeBullet
+            };
+        }
+    }
+    
+    [ConfigNodeLogicType(LogicType.UnlockSplitBullet)]
+    public class NodeLogicUnlockSplitBulletGenerator : INodeLogicGenerator
+    {
+        public INodeActivateLogic Generate(string subType, List<string> value, bool isMul)
+        {
+            return new NodeProjectileActivateAction()
+            {
+                actions = new List<IProjectileActivate>() { new ProjectileActivateSplit() { amount = 2, angle = 56f } }
+            };
+        }
+    }
+    
+    [ConfigNodeLogicType(LogicType.UnlockBulletHitBlossom)]
+    public class NodeLogicUnlockBulletHitBlossomGenerator : INodeLogicGenerator
+    {
+        public INodeActivateLogic Generate(string subType, List<string> value, bool isMul)
+        {
+            return new NodeProjectileHitAction()
+            {
+                actions = new List<IProjectileHit>() { new ProjectileHitBlossom() { bulletAmount = 5, blossomSize = 3f, } }
             };
         }
     }

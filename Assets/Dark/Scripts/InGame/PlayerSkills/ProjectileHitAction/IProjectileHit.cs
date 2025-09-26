@@ -10,6 +10,6 @@ namespace InGame
     /// </summary>
     public interface IProjectileHit
     {
-        void DoAction(Vector2 position);
+        void DoAction(ProjectileEntity parentProjectile, Vector2 position);
     }
 }
