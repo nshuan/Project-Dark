@@ -47,8 +47,7 @@ namespace InGame
         #endregion
 
         #region Skill
-
-        public TowerCounterConfig unlockedTowerCounter;
+        
         public UpgradeBonusSkillInfo skillBonus = new UpgradeBonusSkillInfo();
         
         public UpgradeBonusChargeInfo chargeDameBonus = new UpgradeBonusChargeInfo();
@@ -60,6 +59,7 @@ namespace InGame
         
         #region Tower
 
+        public bool unlockedTowerCounter;
         public int toleranceRegenPerSecond = 0;
         public int toleranceRegenWhenKill = 0;
         public float towerCounterCooldownPlus = 0f;
