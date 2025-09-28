@@ -8,6 +8,8 @@ namespace InGame
     public class MonoCursor : MonoBehaviour
     {
         public Image visual;
+        public Transform content;
+        [SerializeField] private float contentMaxScale;
         [SerializeField] private GameObject groupCooldown;
         [SerializeField] private GameObject cooldownGlow;
         [SerializeField] private Image cooldown;
@@ -36,6 +38,12 @@ namespace InGame
             txtMax.gameObject.SetActive(true);
             cooldownGlow.gameObject.SetActive(true);
             cooldown.color = cooldownMaxColor;
+        }
+
+        public void UpdateScale(float value)
+        {
+            value = Mathf.Clamp(value, 0f, 1f);
+            content.transform.localScale = Vector3.one * (1 + value);
         }
     }
 }
