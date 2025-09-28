@@ -180,8 +180,12 @@ namespace InGame
             DOTween.Complete(this);
             var seq = DOTween.Sequence(this);
             seq.Append(cursor.transform.DOPunchScale(0.3f * Vector3.one, 0.13f).SetEase(Ease.InQuad))
-                 .Join(cursor.visual.DOFade(0.3f, 0.13f).SetEase(Ease.InQuad).SetLoops(2,LoopType.Yoyo));
-            seq.Play();
+                .Join(cursor.visual.DOFade(0.3f, 0.13f).SetEase(Ease.InQuad).SetLoops(2, LoopType.Yoyo))
+                .Join(DOTween.To(() => cursor.content.localScale.x - 1f, x =>
+                {
+                    cursor.UpdateScale(x);
+                }, 0f, 0.13f));
+            seq.Play().OnComplete(() => cursor.UpdateCooldown(false, 0f));
         }
 
         public void OnHoldStarted()
@@ -217,23 +221,31 @@ namespace InGame
         {
             // bullet number
             bulletAdd = 0;
-            maxBulletAdd = InputManager.CurrentSkillConfig.chargeBulletMaxAdd;
-            bulletAddInterval = InputManager.CurrentSkillConfig.chargeBulletInterval;
+            var maxBullet = LevelUtility.GetChargeBulletMax(InputManager.CurrentSkillConfig.chargeBulletMaxAdd,
+                InputManager.CurrentSkillConfig.chargeBulletInterval);
+            maxBulletAdd = maxBullet.Item1;
+            bulletAddInterval = maxBullet.Item2;
             bulletAddTimer = bulletAddInterval;
             
             // damage
-            maxDameMultiplierAdd = InputManager.CurrentSkillConfig.chargeDameMax;
-            maxDameChargeTime = InputManager.CurrentSkillConfig.chargeDameTime;
+            var maxDame = LevelUtility.GetChargeDameMax(InputManager.CurrentSkillConfig.chargeDameMax,
+                InputManager.CurrentSkillConfig.chargeDameTime);
+            maxDameMultiplierAdd = maxDame.Item1;
+            maxDameChargeTime = maxDame.Item2;
             dameChargeTime = -1f;
             
             // Size
-            maxSizeMultiplierAdd = InputManager.CurrentSkillConfig.chargeSizeMax;
-            maxSizeChargeTime = InputManager.CurrentSkillConfig.chargeSizeTime;
+            var maxSize = LevelUtility.GetChargeSizeMax(InputManager.CurrentSkillConfig.chargeSizeMax,
+                InputManager.CurrentSkillConfig.chargeSizeTime);
+            maxSizeMultiplierAdd = maxSize.Item1;
+            maxSizeChargeTime = maxSize.Item2;
             sizeChargeTime = 0f;
             
             // Range
-            maxRangeMultiplierAdd = InputManager.CurrentSkillConfig.chargeRangeMax;
-            maxRangeChargeTime = InputManager.CurrentSkillConfig.chargeRangeTime;
+            var maxRange = LevelUtility.GetChargeRangeMax(InputManager.CurrentSkillConfig.chargeRangeMax,
+                InputManager.CurrentSkillConfig.chargeRangeTime);
+            maxRangeMultiplierAdd = maxRange.Item1;
+            maxRangeChargeTime = maxRange.Item2;
             rangeChargeTime = 0f;
         }
 
@@ -311,6 +323,7 @@ namespace InGame
                             ? 1 + Mathf.Min(sizeChargeTime / maxSizeChargeTime, 1f) * maxSizeMultiplierAdd
                             : 1f);
                     ChargeController.AddSize(size);
+                    cursor.UpdateScale(Mathf.Min(sizeChargeTime / maxSizeChargeTime, 1f));
                 }
                 
                 // Charge range

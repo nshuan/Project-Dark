@@ -50,6 +50,11 @@ namespace InGame
 
         public TowerCounterConfig unlockedTowerCounter;
         public UpgradeBonusSkillInfo skillBonus = new UpgradeBonusSkillInfo();
+        
+        public UpgradeBonusChargeInfo chargeDameBonus = new UpgradeBonusChargeInfo();
+        public UpgradeBonusChargeInfo chargeBulletBonus = new UpgradeBonusChargeInfo();
+        public UpgradeBonusChargeInfo chargeSizeBonus = new UpgradeBonusChargeInfo();
+        public UpgradeBonusChargeInfo chargeRangeBonus = new UpgradeBonusChargeInfo();
 
         #endregion
         
@@ -120,5 +125,21 @@ namespace InGame
         {
             return isCharge ? projectileChargeActivateActions : projectileActivateActions;
         }
+    }
+
+    [Serializable]
+    public class UpgradeBonusChargeInfo
+    {
+        public float maxDameMultiplier;
+        public float maxDameChargeTime;
+
+        public int maxBulletAdd;
+        public float bulletAddInterval;
+
+        public float maxSizeMultiplier;
+        public float maxSizeChargeTime;
+
+        public float maxRangeMultiplier;
+        public float maxRangeChargeTime;
     }
 }
