@@ -29,7 +29,7 @@ namespace InGame
         #region Gate config
 
         [Space] [Header("Gate config")] 
-        [NonSerialized, OdinSerialize, ReadOnly] private GateConfig config;
+        [NonSerialized, OdinSerialize, ReadOnly] public GateConfig config;
 
         [Space] [Header("Visual")] 
         [SerializeField] private GameObject visual;
@@ -50,8 +50,7 @@ namespace InGame
         public void Activate()
         {
             IsActive = true;
-            spawnCoroutine = StartCoroutine(IESpawn());
-            visualCoroutine = StartCoroutine(IEVisual());
+            delayCoroutine = StartCoroutine(IEStartSpawn(config.startTime));
         }
 
         public void Deactivate()
@@ -118,13 +117,23 @@ namespace InGame
             LevelManager.Instance.OnWin += Deactivate;
             LevelManager.Instance.OnLose += Deactivate;
         }
-        
+
+        private Coroutine delayCoroutine;
         private Coroutine spawnCoroutine;
         private Coroutine visualCoroutine;
+        public Action onActivated;
+        private IEnumerator IEStartSpawn(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            onActivated?.Invoke();
+            onActivated = null;
+            delayCoroutine = null;
+            spawnCoroutine = StartCoroutine(IESpawn());
+            visualCoroutine = StartCoroutine(IEVisual());
+        }
+        
         private IEnumerator IESpawn()
         {
-            yield return new WaitForSeconds(config.startTime);
-
             while (TotalSpawnTurn == -1 || currentSpawnTurn < TotalSpawnTurn)
             {
                 var enemies = config.spawnLogic.Spawn(transform.position, config.spawnType.enemyId, config.spawnType.enemyPrefab, target);
@@ -211,8 +220,6 @@ namespace InGame
 
         private IEnumerator IEVisual()
         {
-            yield return new WaitForSeconds(config.startTimeVisual);
-            
             visual.SetActive(true);
             vfxIdle = vfxPortal.main;
             vfxIdle.startLifetime = config.durationVisual;
@@ -234,6 +241,29 @@ namespace InGame
             vfxOpen.SetActive(false);
             vfxClose.SetActive(false);
             vfxPortal.gameObject.SetActive(false);
+        }
+
+        /// <summary>
+        /// Restart lại gate nhưng giảm start time
+        /// </summary>
+        /// <param name="reduceStartTime"></param>
+        public void ForceRestartGate(float reduceStartTime)
+        {
+            if (AllEnemyDead) return;
+            if (delayCoroutine != null)
+            {
+                StopCoroutine(delayCoroutine);
+                delayCoroutine = null;
+                if (reduceStartTime < config.startTime)
+                {
+                    delayCoroutine = StartCoroutine(IEStartSpawn(config.startTime - reduceStartTime));
+                }
+                else
+                {
+                    spawnCoroutine = StartCoroutine(IESpawn());
+                    visualCoroutine = StartCoroutine(IEVisual());
+                }
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using Sirenix.Utilities;
 using Unity.Mathematics;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -22,6 +23,7 @@ namespace InGame
         public GateEntity[] Gates { get; private set; }
         public Action OnWaveForceStop { get; set; }
         public bool WaveEndedCompletely { get; set; }
+        private int currentGateIndex = 0;
         
         public void SetupWave(GateEntity gatePrefab, TowerEntity[] towers, float levelExpRatio, float levelDarkRatio, Action onWaveForceEnded)
         {
@@ -35,7 +37,10 @@ namespace InGame
                 Gates[i] = Object.Instantiate(gatePrefab, gateCfg.position, quaternion.identity, null);
                 Gates[i].Initialize(gateCfg, gateCfg.targetBaseIndex.Select((index) => towers[index]).ToArray(), scaleHp, scaleDmg, levelExpRatio, levelDarkRatio);
             }
+            
+            Gates.Sort((gate1, gate2) => gate1.config.startTime.CompareTo(gate2.config.startTime));
 
+            currentGateIndex = 0;
             WaveEndedCompletely = false;
             OnWaveForceStop = onWaveForceEnded;
         }
@@ -43,11 +48,14 @@ namespace InGame
         public void ActivateWave()
         {
             DebugUtility.LogError($"Activate wave {waveIndex}");
-            
-            foreach (var gate in Gates)
+
+            for (var i = 0; i < Gates.Length; i++)
             {
+                var gate = Gates[i];
+                var a = i;
+                gate.onActivated += () => { currentGateIndex = a; };
                 gate.Activate();
-                gate.OnAllEnemiesDead += CheckStopAllGate;
+                gate.OnAllEnemiesDead += () => { OnStopGate(a); };
             }
         }
         
@@ -59,7 +67,7 @@ namespace InGame
             DebugUtility.LogError($"Wave {waveIndex}: End duration");
             CheckStopAllGate();
         }
-
+        
         private void CheckStopAllGate()
         {
             if (Gates.All((gate) => gate.AllEnemyDead))
@@ -69,6 +77,23 @@ namespace InGame
                 OnWaveForceStop?.Invoke();
                 OnWaveForceStop = null;
             }
+        }
+
+        private void OnStopGate(int index)
+        {
+            // Nếu mà gate vừa end ko phải gate cuối cùng đã mở thì bỏ qua
+            if (index < currentGateIndex) return;
+            
+            var reduceStartTime = 0f;
+            if (index + 1 < Gates.Length)
+                reduceStartTime = Gates[index + 1].config.startTime;
+            
+            for (var i = index + 1; i < Gates.Length; i++)
+            {
+                Gates[i].ForceRestartGate(reduceStartTime);
+            }
+            
+            CheckStopAllGate();
         }
     }
 }
