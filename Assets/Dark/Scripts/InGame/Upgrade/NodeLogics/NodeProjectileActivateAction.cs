@@ -9,8 +9,8 @@ namespace InGame.Upgrade
     [Serializable]
     public class NodeProjectileActivateAction : INodeActivateLogic
     {
-        [OdinSerialize, NonSerialized] private List<IProjectileActivate> actions;
-        [SerializeField] private bool isCharge;
+        [OdinSerialize, NonSerialized] public List<IProjectileActivate> actions;
+        public bool isCharge;
         [SerializeField] private string bonusDescription;
         
         public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)

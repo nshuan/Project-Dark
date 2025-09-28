@@ -111,39 +111,6 @@ namespace Dark.Tools.GoogleSheetTool
                     config.nodeId = csvNodeId;
                 }
                 
-                if (costTypeIndexes.Count != costValueIndexes.Count)
-                    Debug.LogError("Can't import cost - Number of cost type and cost value do not match");
-                else
-                {
-                    config.costInfo = new UpgradeNodeCostInfo[costTypeIndexes.Count];
-                    
-                    for (var index = 0; index < costTypeIndexes.Count; index++)
-                    {
-                        if (!Enum.TryParse<WealthType>(cols[costTypeIndexes[index]], out var costType))
-                        {
-                            Debug.LogWarning($"Can't import cost - Invalid cost type {cols[costTypeIndexes[index]]}, data index = {i}");
-                            continue;
-                        }
-                        
-                        try
-                        {
-                            var costValue = cols[costValueIndexes[index]].Split(',').Select((str) => int.Parse(str, CultureInfo.InvariantCulture)).ToArray();;
-
-                            var costInfo = new UpgradeNodeCostInfo()
-                            {
-                                costType = costType,
-                                costValue = costValue,
-                            };
-                            
-                            config.costInfo[index] = costInfo;
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine($"Can't import cost - Invalid cost value string: {cols[costValueIndexes[index]]}, data index = {i}");
-                        }
-                    }
-                }
-                
                 // Thêm logic
                 var logicInfos = new List<NodeLogicInfo>();
                     
@@ -165,6 +132,43 @@ namespace Dark.Tools.GoogleSheetTool
                 var a = 1;
                     
                 config.nodeLogic = ConfigNodeLogicFactory.Generate(logicInfos);
+
+                // Thêm cost
+                if (costTypeIndexes.Count != costValueIndexes.Count)
+                {
+                    Debug.LogError("Number of cost type and cost value do not match - Auto fill all missing cost value with 0");
+                }
+         
+                config.costInfo = new UpgradeNodeCostInfo[costTypeIndexes.Count];
+                    
+                for (var index = 0; index < costTypeIndexes.Count; index++)
+                {
+                    if (!Enum.TryParse<WealthType>(cols[costTypeIndexes[index]], out var costType))
+                    {
+                        Debug.LogWarning($"Can't import cost - Invalid cost type {cols[costTypeIndexes[index]]}, data index = {i}");
+                        continue;
+                    }
+                        
+                    try
+                    {
+                        int[] costValue;
+                        if (index >= costValueIndexes.Count || string.IsNullOrEmpty(fields[costValueIndexes[index]])) costValue = new int[] { 0 };
+                        else costValue = cols[costValueIndexes[index]].Split(',').Select((str) => int.Parse(str, CultureInfo.InvariantCulture)).ToArray();;
+
+                        var costInfo = new UpgradeNodeCostInfo()
+                        {
+                            costType = costType,
+                            costValue = costValue,
+                        };
+                            
+                        config.costInfo[index] = costInfo;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Can't import cost - Invalid cost value string: {cols[costValueIndexes[index]]}, data index = {i}");
+                    }
+                }
+                
                 EditorUtility.SetDirty(config);
             }
             

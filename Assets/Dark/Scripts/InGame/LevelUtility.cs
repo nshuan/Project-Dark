@@ -81,7 +81,7 @@ namespace InGame
         /// <returns></returns>
         public static float GetSkillCooldown(int skillId, float playerCooldown, float baseSkillCooldown)
         {
-            return (baseSkillCooldown - BonusInfo.skillBonus.skillCooldownPlus) * (1 - BonusInfo.skillBonus.skillCooldownMultiply) * (playerCooldown + BonusInfo.cooldownPlus);
+            return Mathf.Max(0f, (baseSkillCooldown - BonusInfo.skillBonus.skillCooldownPlus) * (1 - BonusInfo.skillBonus.skillCooldownMultiply) * (playerCooldown - BonusInfo.cooldownPlus));
         }
 
         /// <summary>

@@ -141,6 +141,8 @@ namespace Dark.Tools.GoogleSheetTool
         BonusCounterCooldown,
         BonusCounterDamage,
         BonusPassiveDamage,
-        BonusPassiveSize
+        BonusPassiveSize,
+        UnlockSplitBullet,
+        UnlockBulletHitBlossom
     }
 }
