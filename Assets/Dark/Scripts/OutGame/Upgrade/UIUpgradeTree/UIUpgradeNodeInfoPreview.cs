@@ -18,7 +18,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private TextMeshProUGUI txtNodeName;
         [SerializeField] private TextMeshProUGUI txtNodeLore;
         [SerializeField] private TextMeshProUGUI txtNodeLevel;
-        [SerializeField] private TextMeshProUGUI[] txtNodeBonus;
+        [SerializeField] private TextMeshProUGUI txtNodeBonus;
 
         [Space] [Header("Requirement")] 
         [SerializeField] private RequirementInfo infoReqVestige;
@@ -55,16 +55,23 @@ namespace Dark.Scripts.OutGame.Upgrade
             txtNodeName.SetText(cacheConfig.nodeName);
             txtNodeLore.SetText(cacheConfig.description);
             txtNodeLevel.SetText($"{cacheData?.level ?? 0}/{cacheConfig.levelNum}");
-            
+
+            var descriptionStr = "";
+            var descriptions = cacheConfig.description.Split("\n");
             for (var i = 0; i < cacheConfig.nodeLogic.Length; i++)
             {
-                txtNodeBonus[i].SetText(cacheConfig.nodeLogic[i].GetDescription(cacheData?.level ?? 0));
-                txtNodeBonus[i].gameObject.SetActive(true);
+                if (i < descriptions.Length && descriptions[i].Contains("[X]"))
+                {
+                    descriptions[i] = descriptions[i].Replace("[X]",
+                        cacheConfig.nodeLogic[i].GetDisplayValue(cacheData?.level ?? 0));
+                    descriptionStr += descriptions[i] + "\n";
+                }
+                else
+                    descriptionStr += cacheConfig.nodeLogic[i].GetDisplayValue(cacheData?.level ?? 0) + "\n";
+
             }
-            for (var i = cacheConfig.nodeLogic.Length; i < txtNodeBonus.Length; i++)
-            {
-                txtNodeBonus[i].gameObject.SetActive(false);
-            }
+            txtNodeBonus.SetText(descriptionStr);
+            txtNodeBonus.gameObject.SetActive(true);
 
             // Setup requirement
             if (cacheData != null && cacheData.level >= cacheConfig.levelNum)
