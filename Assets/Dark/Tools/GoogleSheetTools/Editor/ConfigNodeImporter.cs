@@ -129,8 +129,8 @@ namespace Dark.Tools.GoogleSheetTool
                 var a = 1;
                     
                 config.nodeLogic = ConfigNodeLogicFactory.Generate(logicInfos);
-         
-                config.costInfo = new UpgradeNodeCostInfo[costTypeIndexes.Count];
+
+                var allCost = new List<UpgradeNodeCostInfo>();
                     
                 for (var index = 0; index < costTypeIndexes.Count; index++)
                 {
@@ -145,8 +145,10 @@ namespace Dark.Tools.GoogleSheetTool
                         costType = costType,
                     };
                             
-                    config.costInfo[index] = costInfo;
+                    allCost.Add(costInfo);
                 }
+                
+                config.costInfo = allCost.ToArray();
                 
                 EditorUtility.SetDirty(config);
             }
