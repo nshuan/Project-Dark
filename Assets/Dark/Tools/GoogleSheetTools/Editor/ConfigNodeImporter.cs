@@ -48,7 +48,6 @@ namespace Dark.Tools.GoogleSheetTool
             // Header is field names
             var fields = csvData[0];
             var costTypeIndexes = new List<int>();
-            var costValueIndexes = new List<int>();
             var logicIndexes = new List<LogicImportInfo>();
 
             var isLogicCols = false;
@@ -61,8 +60,6 @@ namespace Dark.Tools.GoogleSheetTool
                 {
                     if (fields[i].ToLower().Contains("cost_type"))
                         costTypeIndexes.Add(i);
-                    if (fields[i].ToLower().Contains("cost_value"))
-                        costValueIndexes.Add(i);
                     if (fields[i].ToLower().Contains("logic_type"))
                     {
                         isLogicCols = true;
@@ -132,12 +129,6 @@ namespace Dark.Tools.GoogleSheetTool
                 var a = 1;
                     
                 config.nodeLogic = ConfigNodeLogicFactory.Generate(logicInfos);
-
-                // Thêm cost
-                if (costTypeIndexes.Count != costValueIndexes.Count)
-                {
-                    Debug.LogError("Number of cost type and cost value do not match - Auto fill all missing cost value with 0");
-                }
          
                 config.costInfo = new UpgradeNodeCostInfo[costTypeIndexes.Count];
                     
@@ -149,24 +140,12 @@ namespace Dark.Tools.GoogleSheetTool
                         continue;
                     }
                         
-                    try
+                    var costInfo = new UpgradeNodeCostInfo()
                     {
-                        int[] costValue;
-                        if (index >= costValueIndexes.Count || string.IsNullOrEmpty(fields[costValueIndexes[index]])) costValue = new int[] { 0 };
-                        else costValue = cols[costValueIndexes[index]].Split(',').Select((str) => int.Parse(str, CultureInfo.InvariantCulture)).ToArray();;
-
-                        var costInfo = new UpgradeNodeCostInfo()
-                        {
-                            costType = costType,
-                            costValue = costValue,
-                        };
+                        costType = costType,
+                    };
                             
-                        config.costInfo[index] = costInfo;
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine($"Can't import cost - Invalid cost value string: {cols[costValueIndexes[index]]}, data index = {i}");
-                    }
+                    config.costInfo[index] = costInfo;
                 }
                 
                 EditorUtility.SetDirty(config);
