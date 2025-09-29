@@ -9,7 +9,6 @@ namespace InGame.Upgrade
     {
 	    public PassiveTriggerType triggerType;
 	    public PassiveType passiveType;
-	    public string bonusDescription;
 	    
 	    public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)
 	    {
@@ -20,9 +19,9 @@ namespace InGame.Upgrade
 			    bonusInfo.passiveMapByTriggerType[triggerType].Add(passiveType);
 	    }
 
-	    public string GetDescription(int level)
+	    public string GetDisplayValue(int level)
 	    {
-		    return bonusDescription;
+		    return "";
 	    }
     }
 }

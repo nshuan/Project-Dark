@@ -8,7 +8,6 @@ namespace InGame.Upgrade
         public BonusMoveTowerType bonusType;
         public float[] value;
         public bool isMultiply;
-        public string bonusDescription;
         
         public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)
         {
@@ -22,9 +21,10 @@ namespace InGame.Upgrade
             }
         }
 
-        public string GetDescription(int level)
+        public string GetDisplayValue(int level)
         {
-            return bonusDescription;
+            if (level < 0 || level > value.Length) return "??";
+            return value[level].ToString();
         }
 
         public enum BonusMoveTowerType

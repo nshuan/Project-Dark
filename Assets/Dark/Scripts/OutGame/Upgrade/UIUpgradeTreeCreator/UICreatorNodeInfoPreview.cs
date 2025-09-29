@@ -31,7 +31,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             
             for (var i = 0; i < config.nodeLogic.Length; i++)
             {
-                txtNodeBonus[i].SetText(config.nodeLogic[i].GetDescription(data?.level ?? 0));
+                txtNodeBonus[i].SetText(config.nodeLogic[i].GetDisplayValue(data?.level ?? 0));
                 txtNodeBonus[i].gameObject.SetActive(true);
             }
             for (var i = config.nodeLogic.Length; i < txtNodeBonus.Length; i++)
