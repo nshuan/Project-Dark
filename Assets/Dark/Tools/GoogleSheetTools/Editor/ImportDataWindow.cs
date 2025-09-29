@@ -94,6 +94,13 @@ public class ImportDataWindow : EditorWindow
                     () => data.GetConfigsSortByName());
             }
         }
+        else if (tabName.ToString().ToLower().Contains("costconfig"))
+        {
+            foreach (var data in listDataToUpdate)
+            {
+                ConfigNodeCostImporter.Import(data.configs[0], csvTable);
+            }
+        }
         else
         {
             foreach (var data in listDataToUpdate)

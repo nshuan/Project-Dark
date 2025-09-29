@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Core;
+using Dark.Scripts.InGame.Upgrade;
 using Dark.Scripts.Utils.Camera;
 using Economic;
 using InGame.Upgrade;
@@ -82,9 +83,12 @@ namespace Dark.Scripts.OutGame.Upgrade
                 var costSigils = 0;
                 foreach (var req in cacheConfig.costInfo)
                 {
-                    if (req.costType == WealthType.Vestige) costVestige += req.costValue[cacheData?.level ?? 0];
-                    else if (req.costType == WealthType.Echoes) costEchoes += req.costValue[cacheData?.level ?? 0];
-                    else if (req.costType == WealthType.Sigils) costSigils += req.costValue[cacheData?.level ?? 0];
+                    if (req.costType == WealthType.Vestige) 
+                        costVestige = UpgradeRequirementConfig.Instance.GetRequirement(WealthType.Vestige, UpgradeManager.Instance.GetRequirementIndex(WealthType.Vestige));
+                    else if (req.costType == WealthType.Echoes) 
+                        costEchoes = UpgradeRequirementConfig.Instance.GetRequirement(WealthType.Echoes, UpgradeManager.Instance.GetRequirementIndex(WealthType.Echoes));
+                    else if (req.costType == WealthType.Sigils) 
+                        costSigils = UpgradeRequirementConfig.Instance.GetRequirement(WealthType.Sigils, UpgradeManager.Instance.GetRequirementIndex(WealthType.Sigils));
                 }
                 infoReqVestige.txtReq.SetText(costVestige.ToString()); 
                 infoReqVestige.txtReq.color = WealthManager.Instance.CanSpend(WealthType.Vestige, costVestige) ? colorEnoughResource : colorNotEnoughResource;

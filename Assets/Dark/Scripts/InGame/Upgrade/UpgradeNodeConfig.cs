@@ -56,7 +56,6 @@ namespace InGame.Upgrade
     public class UpgradeNodeCostInfo
     {
         public WealthType costType; // Type of resource needed to unlock this node
-        public int[] costValue;
     }
 
     public enum UpgradeNodeState

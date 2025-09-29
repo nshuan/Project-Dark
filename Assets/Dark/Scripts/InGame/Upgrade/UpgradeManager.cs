@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Core;
+using Dark.Scripts.InGame.Upgrade;
 using Dark.Scripts.OutGame.Upgrade;
 using Data;
 using Economic;
@@ -112,16 +113,31 @@ namespace InGame.Upgrade
 
             var currentLevel = dataMapById[nodeId].level;
             var costInfo = nodeConfig.costInfo;
-            if (costInfo.Any((cost) =>
-                    WealthManager.Instance.CanSpend(cost.costType, cost.costValue[currentLevel]) == false))
+            var costValueToSpend = new Dictionary<WealthType, int>();
+            foreach (var cost in costInfo)
             {
-                DebugUtility.LogWarning($"Upgrade node {nodeConfig.nodeName} failed: Not enough resource!");
-                return false;
+                var costValueIndex = cost.costType switch
+                {
+                    WealthType.Vestige => data.indexVestige,
+                    WealthType.Echoes => data.indexEchoes,
+                    WealthType.Sigils => data.indexSigils,
+                    _ => 0
+                };
+                
+                var costValue = UpgradeRequirementConfig.Instance.GetRequirement(cost.costType, costValueIndex);
+                
+                if (!WealthManager.Instance.CanSpend(cost.costType, costValue)) 
+                {
+                    DebugUtility.LogWarning($"Upgrade node {nodeConfig.nodeName} failed: Not enough resource!");
+                    return false;
+                }
+                
+                costValueToSpend[cost.costType] = costValue;
             }
             
             foreach (var cost in nodeConfig.costInfo)
             {
-                WealthManager.Instance.Spend(cost.costType, cost.costValue[currentLevel]);    
+                WealthManager.Instance.Spend(cost.costType, costValueToSpend[cost.costType]);    
             }
             dataMapById[nodeId].Upgrade();
             Save();
@@ -131,6 +147,17 @@ namespace InGame.Upgrade
         public UpgradeNodeData GetData(int nodeId)
         {
             return dataMapById.GetValueOrDefault(nodeId);
+        }
+
+        public int GetRequirementIndex(WealthType costType)
+        {
+            return costType switch
+            {
+                WealthType.Vestige => data.indexVestige,
+                WealthType.Echoes => data.indexEchoes,
+                WealthType.Sigils => data.indexSigils,
+                _ => 0
+            };
         }
 
 #if UNITY_EDITOR
@@ -158,6 +185,9 @@ namespace InGame.Upgrade
     public class UpgradeData
     {
         public List<UpgradeNodeData> nodes;
+        public int indexVestige;
+        public int indexEchoes;
+        public int indexSigils;
 
         public UpgradeData()
         {
