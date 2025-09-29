@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f1427934e97420e88cdf1eeb6547fc2, type: 3}
+  m_Name: 6_Wanderfang
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: nodeLogic
+      Entry: 7
+      Data: 0|InGame.Upgrade.INodeActivateLogic[], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 1|InGame.Upgrade.NodeUnlockSkill, Assembly-CSharp
+    - Name: unlockType
+      Entry: 3
+      Data: 1
+    - Name: unlockDescription
+      Entry: 1
+      Data: Channels energy to unleash a barrage of arrows that automatically seek
+        out their targets
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  nodeId: 6
+  nodeName: Wanderfang
+  preRequire:
+  - {fileID: 11400000, guid: 2c2e91110e37ab54fbdcbf38026c8551, type: 2}
+  description: "While warriors clashed in the thick of battle, stray arrows posed
+    a deadly risk to their own. That is why the technique Wanderfang was conceived\u2014infusing
+    arrows with arcane essence so potent, they seem to possess a soul of their own,
+    seeking out enemies with unerring precision"
+  costInfo:
+  - costType: 2
+    costValue: 01000000
+  levelNum: 1
+  nodeSprite: {fileID: 21300000, guid: 4234805f935f7bf47869c49da25e0076, type: 3}
+  nodeSpriteLock: {fileID: 21300000, guid: 4b6b880aa2ea96c4e927a9433b05ed2d, type: 3}

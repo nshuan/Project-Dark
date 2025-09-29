@@ -1,0 +1,25 @@
+using System;
+
+namespace InGame.Upgrade
+{
+    [Serializable]
+    public class NodeBonusDropRate : INodeActivateLogic
+    {
+        public float[] value;
+        public bool isMultiply;
+        public string bonusDescription;
+        
+        public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)
+        {
+            if (level <= 0 || level > value.Length) return;
+            
+            if (isMultiply) bonusInfo.dropRateMultiply += value[level - 1];
+            else bonusInfo.dropRatePlus += value[level - 1];
+        }
+
+        public string GetDescription(int level)
+        {
+            return bonusDescription;
+        }
+    }
+}

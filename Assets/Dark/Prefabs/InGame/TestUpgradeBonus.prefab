@@ -1,0 +1,251 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7505955037445265209
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4085596194586854737}
+  - component: {fileID: 1048663012824614083}
+  m_Layer: 0
+  m_Name: TestUpgradeBonus
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4085596194586854737
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7505955037445265209}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1048663012824614083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7505955037445265209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f38329b873642b2b90ef7cd5388dec8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: testBonusInfo
+      Entry: 7
+      Data: 0|InGame.UpgradeBonusInfo, Assembly-CSharp
+    - Name: unlockedMoveToTower
+      Entry: 7
+      Data: 1|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: moveCooldownPlus
+      Entry: 4
+      Data: 0
+    - Name: damePlus
+      Entry: 3
+      Data: 0
+    - Name: dameMultiply
+      Entry: 4
+      Data: 0
+    - Name: criticalRatePlus
+      Entry: 4
+      Data: 0
+    - Name: criticalDame
+      Entry: 3
+      Data: 0
+    - Name: cooldownPlus
+      Entry: 4
+      Data: 0
+    - Name: hpPlus
+      Entry: 3
+      Data: 0
+    - Name: hpMultiply
+      Entry: 4
+      Data: 0
+    - Name: dropRatePlus
+      Entry: 4
+      Data: 0
+    - Name: dropRateMultiply
+      Entry: 4
+      Data: 0
+    - Name: unlockedTowerCounter
+      Entry: 6
+      Data: 
+    - Name: skillBonus
+      Entry: 7
+      Data: 2|InGame.UpgradeBonusSkillInfo, Assembly-CSharp
+    - Name: skillDamePlus
+      Entry: 3
+      Data: 0
+    - Name: skillDameMultiply
+      Entry: 4
+      Data: 0
+    - Name: skillCooldownPlus
+      Entry: 4
+      Data: 0
+    - Name: skillCooldownMultiply
+      Entry: 4
+      Data: 0
+    - Name: skillSizeMultiply
+      Entry: 4
+      Data: 0
+    - Name: skillRangeMultiply
+      Entry: 4
+      Data: 0
+    - Name: bulletPlus
+      Entry: 3
+      Data: 0
+    - Name: bulletMaxHitPlus
+      Entry: 3
+      Data: 0
+    - Name: staggerMultiply
+      Entry: 4
+      Data: 0
+    - Name: unlockedChargeDame
+      Entry: 5
+      Data: false
+    - Name: unlockedChargeBullet
+      Entry: 5
+      Data: false
+    - Name: unlockedChargeSize
+      Entry: 5
+      Data: false
+    - Name: unlockedChargeRange
+      Entry: 5
+      Data: false
+    - Name: projectileHitActions
+      Entry: 7
+      Data: 3|System.Collections.Generic.List`1[[InGame.IProjectileHit, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: projectileChargeHitActions
+      Entry: 6
+      Data: 
+    - Name: projectileActivateActions
+      Entry: 7
+      Data: 4|System.Collections.Generic.List`1[[InGame.IProjectileActivate, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: projectileChargeActivateActions
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: passiveMapByTriggerType
+      Entry: 7
+      Data: 5|System.Collections.Generic.Dictionary`2[[InGame.PassiveTriggerType,
+        Assembly-CSharp],[System.Collections.Generic.List`1[[InGame.PassiveType,
+        Assembly-CSharp]], mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 6|System.Collections.Generic.EnumEqualityComparer`1[[InGame.PassiveTriggerType,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 7
+      Data: 7|System.Collections.Generic.List`1[[InGame.PassiveType, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: passiveBonusCooldownMapByType
+      Entry: 6
+      Data: 
+    - Name: passiveBonusChanceMapByType
+      Entry: 6
+      Data: 
+    - Name: passiveBonusSizeMapByType
+      Entry: 6
+      Data: 
+    - Name: passiveBonusValueMapByType
+      Entry: 6
+      Data: 
+    - Name: passiveBonusStaggerMapByType
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  enableTest: 1

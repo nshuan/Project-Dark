@@ -1,0 +1,45 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Sirenix.Serialization;
+using UnityEngine;
+
+namespace InGame.Upgrade
+{
+    [Serializable]
+    public class NodeProjectileHitAction : INodeActivateLogic
+    {
+        [OdinSerialize, NonSerialized] public List<IProjectileHit> actions;
+        public bool isCharge;
+        [SerializeField] private string bonusDescription;
+        
+        public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)
+        {
+            if (actions  == null) return;
+            
+            if (isCharge)
+            {
+                bonusInfo.skillBonus.projectileChargeHitActions ??= new List<IProjectileHit>();
+                foreach (var action in actions)
+                {
+                    if (bonusInfo.skillBonus.projectileChargeHitActions.Any((a) => a.GetType() == action.GetType())) continue;
+                    bonusInfo.skillBonus.projectileChargeHitActions.Add(action);
+                }
+            }
+            else
+            {
+                bonusInfo.skillBonus.projectileHitActions ??= new List<IProjectileHit>();
+                foreach (var action in actions)
+                {
+                    if (bonusInfo.skillBonus.projectileHitActions.Any((a) => a.GetType() == action.GetType())) continue;
+                    bonusInfo.skillBonus.projectileHitActions.Add(action);
+                }
+            }
+        }
+
+        public string GetDescription(int level)
+        {
+            return bonusDescription;
+        }
+    }
+}

@@ -1,0 +1,99 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace InGame
+{
+    public class HomingProjectileV2Entity : ProjectileEntity
+    {
+        [Space]
+        [SerializeField] private float activateTime = 1f;
+        [SerializeField] private float activateSpeed = 2f;
+        [SerializeField] private float rotateSpeed; // Degree per seconds
+        
+        [Space]
+        [SerializeField] private AnimationCurve speedCurve;
+        [SerializeField] private float timeToReachMaxSpeed = 2f;
+
+        private Vector2 activateDirection;
+        private Transform targetToChase;
+        private bool canRotate = false;
+        private bool blockHit;
+
+        public override void Init(Vector2 startPos, Vector2 direction, float maxDistance, float size, float speedScale, int damage,
+            int criticalDamage, float criticalRate, float stagger, bool isCharge, int maxHit, List<IProjectileActivate> activateActions, List<IProjectileHit> hitActions, ProjectileType damageType)
+        {
+            base.Init(startPos, direction, maxDistance, size, speedScale, damage, criticalDamage, criticalRate, stagger, isCharge, maxHit, activateActions, hitActions, damageType);
+
+            canRotate = false;
+            blockHit = true;
+            transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+            
+            if (WeaponSupporter.EnemyTargetingIndex < WeaponSupporter.EnemiesCountInRange)
+            {
+                targetToChase = WeaponSupporter.EnemiesInRange[WeaponSupporter.EnemyTargetingIndex].transform;
+                WeaponSupporter.EnemyTargetingIndex += 1;
+            }
+        }
+
+        protected override IEnumerator IEActivate(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+
+            canRotate = true;
+            activated = true;
+            blockHit = false;
+            collider.CanTrigger = true;
+            
+            if (ActivateActions != null)
+            {
+                foreach (var action in ActivateActions)
+                {
+                    action.DoAction(this, direction);
+                }
+            }
+        }
+        
+        protected override void Update()
+        {
+            if (!activated && !canRotate) return;
+            if (Vector2.Distance(transform.position, StartPos) > maxDistance)
+            {
+                if (!BlockSpawnDeadBody)
+                    ProjectileDeadPool.Instance.Get(direction).position = transform.position;
+                ProjectileHit(null);
+            }
+            
+            // Change direction slowly to target
+            if (canRotate && targetToChase)
+            {
+                if (targetToChase.gameObject.activeInHierarchy)
+                {
+                    direction = Vector3.RotateTowards(direction, targetToChase.position - transform.position,
+                        Mathf.Deg2Rad * rotateSpeed * Time.deltaTime, 0f);
+                }
+            }
+            
+            transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+
+            if (activated)
+            {
+                transform.position += (Vector3)(Speed * (lifeTime < timeToReachMaxSpeed ? speedCurve.Evaluate(lifeTime / timeToReachMaxSpeed) : 1f) 
+                                                      * Time.deltaTime * direction);
+            }
+            
+            lifeTime += Time.deltaTime;
+            if (lifeTime > MaxLifeTime)
+            {
+                ProjectileHit(null);
+            }
+        }
+
+        public override void ProjectileHit(EnemyEntity hit)
+        {
+            if (blockHit) return;
+            targetToChase = null;
+            base.ProjectileHit(hit);
+        }
+    }
+}

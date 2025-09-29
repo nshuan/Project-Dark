@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f1427934e97420e88cdf1eeb6547fc2, type: 3}
+  m_Name: 55_Impact Disruptor
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: nodeLogic
+      Entry: 7
+      Data: 0|InGame.Upgrade.INodeActivateLogic[], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 1|InGame.Upgrade.NodeBonusPlayer, Assembly-CSharp
+    - Name: bonusType
+      Entry: 3
+      Data: 0
+    - Name: value
+      Entry: 7
+      Data: 2|System.Single[], mscorlib
+    - Name: 
+      Entry: 14
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 10
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isMultiply
+      Entry: 5
+      Data: true
+    - Name: bonusDescription
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  nodeId: 55
+  nodeName: Impact Disruptor
+  preRequire:
+  - {fileID: 11400000, guid: c98813cfee7b3f141bfd5958bf6b35b3, type: 2}
+  description: "Only the grandest archmages can wield this spell\u2014and even they
+    struggle."
+  costInfo:
+  - costType: 0
+    costValue: e8030000
+  - costType: 1
+    costValue: 01000000
+  levelNum: 1
+  nodeSprite: {fileID: 21300000, guid: 44173782f750d7b40b1554b1255f7a25, type: 3}
+  nodeSpriteLock: {fileID: 21300000, guid: 3c5b8f2f1826f444187d510a91aab8dd, type: 3}

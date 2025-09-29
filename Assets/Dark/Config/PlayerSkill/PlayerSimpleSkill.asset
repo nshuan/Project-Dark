@@ -1,0 +1,124 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe5818598bc7455b8a93bc1e2eb88c68, type: 3}
+  m_Name: PlayerSimpleSkill
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 6844351392576462872, guid: 5bf387a4936339542a95d194cf62d737, type: 3}
+    - {fileID: 6844351392576462872, guid: 3de001d91ec8b174eaa2d43aaf531f9d, type: 3}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: projectiles
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[InGame.PlayerProjectileType,
+        Assembly-CSharp],[InGame.ProjectileEntity, Assembly-CSharp]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[InGame.PlayerProjectileType,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 4
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: shootLogic
+      Entry: 7
+      Data: 2|InGame.PlayerShootStraight, Assembly-CSharp
+    - Name: cursorType
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+  skillId: 0
+  damePerBullet: 10
+  numberOfBullets: 1
+  cooldown: 0.75
+  range: 6
+  size: 1
+  chargeDameMax: -1
+  chargeDameTime: -1
+  chargeSizeMax: 3
+  chargeSizeTime: 5
+  chargeRangeMax: -1
+  chargeRangeTime: -1
+  chargeBulletInterval: 0.5
+  chargeBulletMaxAdd: 5
+  speedScale: 6
+  stagger: 0.8
