@@ -8,7 +8,6 @@ namespace InGame.Upgrade
     public class NodeUnlockSkill : INodeActivateLogic
     {
         public BonusUnlockSkillType unlockType;
-        public string unlockDescription;
         
         public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)
         {
@@ -37,9 +36,9 @@ namespace InGame.Upgrade
             }
         }
 
-        public string GetDescription(int level)
+        public string GetDisplayValue(int level)
         {
-            return unlockDescription;
+            return "";
         }
 
         public enum BonusUnlockSkillType

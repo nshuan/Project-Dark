@@ -6,17 +6,14 @@ namespace InGame.Upgrade
     [Serializable]
     public class NodeTowerCounter : INodeActivateLogic
     {
-        [SerializeField] private TowerCounterConfig counterConfig;
-        [SerializeField] private string bonusDescription;
-        
         public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)
         {
-            bonusInfo.unlockedTowerCounter = counterConfig;
+            bonusInfo.unlockedTowerCounter = true;
         }
 
-        public string GetDescription(int level)
+        public string GetDisplayValue(int level)
         {
-            return bonusDescription;
+            return "";
         }
     }
 }

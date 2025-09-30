@@ -1,25 +1,12 @@
 using System;
 using Core;
-using Dark.Scripts.Common;
-using Dark.Scripts.Common.UIWarning;
-using Dark.Scripts.SceneNavigation;
-using Dark.Scripts.Utils;
 using Data;
 using InGame.CharacterClass;
-using UnityEngine;
-using UnityEngine.UI;
 
 namespace Dark.Scripts.OutGame.SaveSlot
 {
-    public class SaveSlotManager : MonoSingleton<SaveSlotManager>
+    public class SaveSlotManager : Singleton<SaveSlotManager>
     {
-        #region UI
-
-        public UIPopupWarning popupConfirmClearSave;
-        [SerializeField] private Button btnBack;
-
-        #endregion
-
         #region Data
 
         private readonly string[] SlotDataKeys = new[]
@@ -111,17 +98,5 @@ namespace Dark.Scripts.OutGame.SaveSlot
         }
 
         #endregion
-
-        protected override void Awake()
-        {
-            base.Awake();
-            
-            btnBack.onClick.RemoveAllListeners();
-            btnBack.onClick.AddListener(() =>
-            {
-                btnBack.interactable = false;
-                this.DelayCall(UIConst.BtnDelayOnClick, () => Loading.Instance.LoadScene(SceneConstants.SceneMenu));
-            });
-        }
     }
 }

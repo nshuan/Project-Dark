@@ -12,7 +12,7 @@ namespace InGame.Upgrade
             
         }
 
-        public string GetDescription(int level)
+        public string GetDisplayValue(int level)
         {
             return bonusDescription;
         }

@@ -23,7 +23,6 @@ namespace Dark.Tools.GoogleSheetTool
                 {
                     bonusType = NodeBonusFlash.BonusType.Cooldown,
                     value = bonusValue,
-                    isMultiply = isMul
                 };
             }
             catch (Exception e)

@@ -1,3 +1,5 @@
+using Dark.Scripts.Common;
+using Dark.Scripts.Utils;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -17,7 +19,7 @@ namespace Dark.Scripts.OutGame.Home
 
         public override void OnPointerClick(PointerEventData eventData)
         {
-            OpenSteamWishlist();
+            this.DelayCall(UIConst.HomeBtnDelayOnClick, OpenSteamWishlist);
             base.OnPointerClick(eventData);
         }
     }

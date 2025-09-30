@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Core;
+using Dark.Scripts.InGame.Upgrade;
 using Dark.Scripts.Utils.Camera;
 using Economic;
 using InGame.Upgrade;
@@ -17,7 +18,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private TextMeshProUGUI txtNodeName;
         [SerializeField] private TextMeshProUGUI txtNodeLore;
         [SerializeField] private TextMeshProUGUI txtNodeLevel;
-        [SerializeField] private TextMeshProUGUI[] txtNodeBonus;
+        [SerializeField] private TextMeshProUGUI txtNodeBonus;
 
         [Space] [Header("Requirement")] 
         [SerializeField] private RequirementInfo infoReqVestige;
@@ -54,16 +55,23 @@ namespace Dark.Scripts.OutGame.Upgrade
             txtNodeName.SetText(cacheConfig.nodeName);
             txtNodeLore.SetText(cacheConfig.description);
             txtNodeLevel.SetText($"{cacheData?.level ?? 0}/{cacheConfig.levelNum}");
-            
+
+            var descriptionStr = "";
+            var descriptions = cacheConfig.description.Split("\n");
             for (var i = 0; i < cacheConfig.nodeLogic.Length; i++)
             {
-                txtNodeBonus[i].SetText(cacheConfig.nodeLogic[i].GetDescription(cacheData?.level ?? 0));
-                txtNodeBonus[i].gameObject.SetActive(true);
+                if (i < descriptions.Length && descriptions[i].Contains("[X]"))
+                {
+                    descriptions[i] = descriptions[i].Replace("[X]",
+                        cacheConfig.nodeLogic[i].GetDisplayValue(cacheData?.level ?? 0));
+                    descriptionStr += descriptions[i] + "\n";
+                }
+                else
+                    descriptionStr += cacheConfig.nodeLogic[i].GetDisplayValue(cacheData?.level ?? 0) + "\n";
+
             }
-            for (var i = cacheConfig.nodeLogic.Length; i < txtNodeBonus.Length; i++)
-            {
-                txtNodeBonus[i].gameObject.SetActive(false);
-            }
+            txtNodeBonus.SetText(descriptionStr);
+            txtNodeBonus.gameObject.SetActive(true);
 
             // Setup requirement
             if (cacheData != null && cacheData.level >= cacheConfig.levelNum)
@@ -82,9 +90,12 @@ namespace Dark.Scripts.OutGame.Upgrade
                 var costSigils = 0;
                 foreach (var req in cacheConfig.costInfo)
                 {
-                    if (req.costType == WealthType.Vestige) costVestige += req.costValue[cacheData?.level ?? 0];
-                    else if (req.costType == WealthType.Echoes) costEchoes += req.costValue[cacheData?.level ?? 0];
-                    else if (req.costType == WealthType.Sigils) costSigils += req.costValue[cacheData?.level ?? 0];
+                    if (req.costType == WealthType.Vestige) 
+                        costVestige = UpgradeRequirementConfig.Instance.GetRequirement(WealthType.Vestige, UpgradeManager.Instance.GetRequirementIndex(WealthType.Vestige));
+                    else if (req.costType == WealthType.Echoes) 
+                        costEchoes = UpgradeRequirementConfig.Instance.GetRequirement(WealthType.Echoes, UpgradeManager.Instance.GetRequirementIndex(WealthType.Echoes));
+                    else if (req.costType == WealthType.Sigils) 
+                        costSigils = UpgradeRequirementConfig.Instance.GetRequirement(WealthType.Sigils, UpgradeManager.Instance.GetRequirementIndex(WealthType.Sigils));
                 }
                 infoReqVestige.txtReq.SetText(costVestige.ToString()); 
                 infoReqVestige.txtReq.color = WealthManager.Instance.CanSpend(WealthType.Vestige, costVestige) ? colorEnoughResource : colorNotEnoughResource;
