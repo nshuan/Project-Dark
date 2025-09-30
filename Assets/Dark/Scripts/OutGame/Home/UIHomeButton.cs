@@ -1,7 +1,11 @@
 using System;
+using Coffee.UIExtensions;
+using Dark.Scripts.Common;
 using Dark.Scripts.OutGame.Common.NavButton;
+using Dark.Scripts.Utils;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Dark.Scripts.OutGame.Home
@@ -9,12 +13,12 @@ namespace Dark.Scripts.OutGame.Home
     public class UIHomeButton : UIButton
     {
         [SerializeField] private Image hoverPointer;
-        [SerializeField] private Image selectLight;
+        [SerializeField] private UIParticle vfxHover;
+        [SerializeField] private UIParticle vfxSelect;
 
         private void OnEnable()
         {
             hoverPointer.gameObject.SetActive(false);
-            selectLight.gameObject.SetActive(false);
         }
 
         public override void UpdateUI(UIButtonState state)
@@ -38,24 +42,22 @@ namespace Dark.Scripts.OutGame.Home
 
         private Tween DoShowLight()
         {
-            DOTween.Kill(selectLight);
-            return DOTween.Sequence(selectLight)
+            DOTween.Kill(vfxHover);
+            return DOTween.Sequence(vfxHover)
                 .AppendCallback(() =>
                 {
-                    selectLight.SetAlpha(0f);
-                    selectLight.gameObject.SetActive(true);
-                })
-                .Append(selectLight.DOFade(0.5f, 0.2f));
+                    vfxHover.gameObject.SetActive(true);
+                    vfxHover.Play();
+                });
         }
 
         private Tween DoHideLight()
         {
-            DOTween.Kill(selectLight);
-            return DOTween.Sequence(selectLight)
-                .Append(selectLight.DOFade(0f, 0.2f))
+            DOTween.Kill(vfxHover);
+            return DOTween.Sequence(vfxHover)
                 .AppendCallback(() =>
                 {
-                    selectLight.gameObject.SetActive(false);
+                    vfxHover.gameObject.SetActive(false);
                 });
         }
 
@@ -83,6 +85,28 @@ namespace Dark.Scripts.OutGame.Home
                 {
                     hoverPointer.gameObject.SetActive(false);
                 });
+        }
+
+        public override void OnPointerClick(PointerEventData eventData)
+        {
+            PlaySelectVfx();
+            base.OnPointerClick(eventData);
+        }
+
+        protected void PlaySelectVfx()
+        {
+            DOTween.Kill(vfxSelect);
+            DOTween.Sequence(vfxSelect)
+                .AppendCallback(() =>
+                {
+                    vfxSelect.gameObject.SetActive(true);
+                    vfxSelect.Play();
+                })
+                .AppendInterval(1f)
+                .AppendCallback(() =>
+                {
+                    vfxSelect.gameObject.SetActive(false);
+                }).Play();
         }
     }
 }

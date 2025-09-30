@@ -33,7 +33,7 @@ public static class UIPopupUtility
     /// </summary>
     /// <param name="popup"></param>
     /// <returns></returns>
-    public static Tween DoOpenFadeIn(this UIPopup popup)
+    public static Tween DoOpenFadeIn(this UIPopup popup, float delay = 0f)
     {
         var target = !popup.rectContent ? popup.transform : popup.rectContent;
         if (!target.TryGetComponent<CanvasGroup>(out var targetCanvasGroup))
@@ -43,6 +43,7 @@ public static class UIPopupUtility
 
         DOTween.Kill(popup);
         return DOTween.Sequence(popup).SetUpdate(true)
+            .AppendInterval(delay)
             .AppendCallback(() =>
             {
                 targetCanvasGroup.alpha = 0.3f;
