@@ -64,11 +64,15 @@ namespace InGame
         #endregion
         
         private WinLoseManager winLoseManager;
-        
+
+#if UNITY_EDITOR
+        [Space] public bool autoLoadLevel = true;
         private void Start()
         {
-            // LoadLevel(testLevel);
+            if (autoLoadLevel)
+                LoadLevel(testLevel);
         }
+#endif
 
         protected override void OnDestroy()
         {
