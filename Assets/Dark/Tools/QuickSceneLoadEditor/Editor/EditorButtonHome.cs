@@ -65,17 +65,6 @@ namespace Dark.Tools.QuickSceneLoadEditor.Editor
                 }
             }
             
-            if (GUILayout.Button("SaveSlot", GUILayout.Width(60)))
-            {
-                if (!EditorApplication.isPlayingOrWillChangePlaymode)
-                {
-                    if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
-                    {
-                        EditorSceneManager.OpenScene($"Assets/Dark/Scenes/Release/SaveSlot.unity"); 
-                    }
-                }
-            }
-            
             GUILayout.EndHorizontal();
         }
     }

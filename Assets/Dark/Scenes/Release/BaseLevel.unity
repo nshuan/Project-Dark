@@ -414,9 +414,6 @@ MonoBehaviour:
     - Name: dropRateMultiply
       Entry: 4
       Data: 0
-    - Name: unlockedTowerCounter
-      Entry: 6
-      Data: 
     - Name: skillBonus
       Entry: 7
       Data: 2|InGame.UpgradeBonusSkillInfo, Assembly-CSharp
@@ -494,6 +491,21 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: chargeDameBonus
+      Entry: 6
+      Data: 
+    - Name: chargeBulletBonus
+      Entry: 6
+      Data: 
+    - Name: chargeSizeBonus
+      Entry: 6
+      Data: 
+    - Name: chargeRangeBonus
+      Entry: 6
+      Data: 
+    - Name: unlockedTowerCounter
+      Entry: 5
+      Data: false
     - Name: toleranceRegenPerSecond
       Entry: 3
       Data: 0
@@ -2212,7 +2224,7 @@ PrefabInstance:
       objectReference: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
     - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
       propertyPath: serializationData.PrefabModifications.Array.size
-      value: 3
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
       propertyPath: serializationData.PrefabModifications.Array.data[0]
@@ -2221,21 +2233,39 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
       propertyPath: serializationData.PrefabModifications.Array.data[1]
-      value: '"path":"testBonusInfo.passiveMapByTriggerType.{0es}","value":{"$id":0,"$type":"System.Collections.Generic.List`1[[InGame.PassiveType,
-        Assembly-CSharp]], mscorlib","$rlength":1,"$rcontent":[1]}'
+      value: '"path":"testBonusInfo.skillBonus.projectileChargeHitActions","value":{"$id":0,"$type":"System.Collections.Generic.List`1[[InGame.IProjectileHit,
+        Assembly-CSharp]], mscorlib","$rlength":1,"$rcontent":[{"$id":1,"$type":"InGame.ProjectileHitBlossom,
+        Assembly-CSharp","bulletAmount":8,"blossomSize":3}]}'
       objectReference: {fileID: 0}
     - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
       propertyPath: serializationData.PrefabModifications.Array.data[2]
-      value: '"path":"testBonusInfo.unlockedTowerCounter","value":$eref:0'
+      value: '"path":"testBonusInfo.skillBonus.projectileChargeHitActions.[0]","value":{"$id":0,"$type":"InGame.ProjectileHitBlossom,
+        Assembly-CSharp","bulletAmount":8,"blossomSize":3}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[3]
+      value: '"path":"testBonusInfo.skillBonus.projectileChargeHitActions.[0].blossomSize","value":{"$id":0,"$type":"System.Single,
+        mscorlib",3}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[4]
+      value: '"path":"testBonusInfo.skillBonus.projectileChargeHitActions.[0].bulletAmount","value":{"$id":0,"$type":"System.Int32,
+        mscorlib",8}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[5]
+      value: '"path":"testBonusInfo.skillBonus.unlockedChargeDame","value":{"$id":0,"$type":"System.Boolean,
+        mscorlib",true}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[6]
+      value: '"path":"testBonusInfo.skillBonus.unlockedChargeSize","value":{"$id":0,"$type":"System.Boolean,
+        mscorlib",true}'
       objectReference: {fileID: 0}
     - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
       propertyPath: serializationData.PrefabModificationsReferencedUnityObjects.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModificationsReferencedUnityObjects.Array.data[0]
-      value: 
-      objectReference: {fileID: 11400000, guid: ab372ed54d6f51143af4237da03cdefd, type: 2}
     - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

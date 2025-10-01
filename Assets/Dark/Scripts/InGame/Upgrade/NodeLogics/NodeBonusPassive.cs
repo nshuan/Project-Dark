@@ -33,7 +33,7 @@ namespace InGame.Upgrade
 
         public string GetDisplayValue(int level)
         {
-            if (level < 0 || level > value.Length) return "??";
+            if (level < 0 || level >= value.Length) return "??";
             return value[level].ToString();
         }
 
