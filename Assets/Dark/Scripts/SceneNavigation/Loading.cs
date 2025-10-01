@@ -20,6 +20,7 @@ namespace Dark.Scripts.SceneNavigation
         
         public Action onStartLoading;
         private Action onSceneLoaded;
+        private Action onLoadingComplete;
         
         protected override void Awake()
         {
@@ -28,12 +29,12 @@ namespace Dark.Scripts.SceneNavigation
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
         
-        public void LoadScene(string sceneName, Action completeCallback = null)
+        public void LoadScene(string sceneName, Action completeCallback = null, float delay = 0f)
         {
             DebugUtility.LogWarning($"Loading scene {sceneName}");
-            onSceneLoaded = completeCallback;
+            onLoadingComplete = completeCallback;
             onStartLoading?.Invoke();
-            DoOpen(0.3f).OnComplete(() =>
+            DoOpen(0.3f, delay).OnComplete(() =>
             {
                 SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
             });
@@ -42,12 +43,17 @@ namespace Dark.Scripts.SceneNavigation
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
             DebugUtility.LogWarning($"Scene {scene.name} is loaded!");
-            DoClose(Random.Range(minDuration, maxDuration), 0.3f,0.5f);
+            DoClose(Random.Range(minDuration, maxDuration), 0.3f,0.5f)
+                .OnComplete(() =>
+                {
+                    onLoadingComplete?.Invoke();
+                    onLoadingComplete = null;
+                });
             onSceneLoaded?.Invoke();
             onSceneLoaded = null;
         }
 
-        private Tween DoOpen(float duration)
+        private Tween DoOpen(float duration, float delay)
         {
             loadingPanel.alpha = 0f;
             loadingPanel.gameObject.SetActive(false);
@@ -55,6 +61,7 @@ namespace Dark.Scripts.SceneNavigation
             blankPanel.gameObject.SetActive(true);
             DOTween.Kill(this);
             var seq = DOTween.Sequence(this).SetUpdate(true);
+            seq.AppendInterval(delay);
             seq.Append(blankPanel.DOFade(1f, duration));
             return seq;
         }
@@ -78,7 +85,7 @@ namespace Dark.Scripts.SceneNavigation
                     progressText.SetText($"{(int)(x * 100)}%");
                 }, 1f, duration))
                 .Append(loadingPanel.DOFade(0f, hideDuration))
-                .OnComplete(() =>
+                .AppendCallback(() =>
                 {
                     blankPanel.gameObject.SetActive(false);
                     loadingPanel.gameObject.SetActive(false);

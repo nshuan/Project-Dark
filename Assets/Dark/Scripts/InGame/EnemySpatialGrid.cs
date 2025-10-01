@@ -24,7 +24,8 @@ namespace InGame
         {
             if (agentCellMap.TryGetValue(agent, out cell))
             {
-                cells[cell].Remove(agent);
+                if (cells.ContainsKey(cell) && cells[cell].Contains(agent))
+                    cells[cell].Remove(agent);
             }
             
             GetCellNonAlloc(agent.transform.position, ref cell);

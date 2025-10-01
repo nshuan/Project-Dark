@@ -29,7 +29,7 @@ namespace Economic.UI
             // TH0: Show text trên đầu con enemy vừa die
             if (selectMethod == 0)
             {
-                if (Random.Range(0f, 0f) <= enemy.DarkRatio)
+                if (Random.Range(0f, 1f) <= enemy.DarkRatio)
                     WealthManager.Instance.AddDark(enemy.Dark);
                 if (enemy.BossPoint > 0)
                     WealthManager.Instance.AddBossPoint(enemy.BossPoint);    
@@ -40,7 +40,7 @@ namespace Economic.UI
             // TH1: Rớt item ra end wave thì tự động collect hết
             if (selectMethod == 1)
             {
-                if (Random.Range(0f, 0f) <= enemy.DarkRatio && enemy.Dark > 0)
+                if (Random.Range(0f, 1f) <= enemy.DarkRatio && enemy.Dark > 0)
                     EItemDropManager.Instance.DropOne(WealthType.Vestige, enemy.Dark, enemy.transform.position);
                 if (enemy.BossPoint > 0)
                     EItemDropManager.Instance.DropOne(WealthType.Sigils, enemy.BossPoint, enemy.transform.position);
@@ -49,7 +49,7 @@ namespace Economic.UI
             // TH2: Giống 1, nhưng rớt 1 item cho 1 đơn vị resource
             if (selectMethod == 2)
             {
-                if (Random.Range(0f, 0f) <= enemy.DarkRatio && enemy.Dark > 0)
+                if (Random.Range(0f, 1f) <= enemy.DarkRatio && enemy.Dark > 0)
                 {
                     for (var i = 0; i < enemy.Dark; i++)
                     {
@@ -69,7 +69,7 @@ namespace Economic.UI
             // TH3: Collect bằng cách di chuột qua item, cần tick vào enableCollectorMouse ở trong InputInGame
             if (selectMethod == 3)
             {
-                if (Random.Range(0f, 0f) <= enemy.DarkRatio && enemy.Dark > 0)
+                if (Random.Range(0f, 1f) <= enemy.DarkRatio && enemy.Dark > 0)
                 {
                     for (var i = 0; i < enemy.Dark; i++)
                     {

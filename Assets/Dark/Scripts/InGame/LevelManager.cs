@@ -67,7 +67,7 @@ namespace InGame
         
         private void Start()
         {
-            LoadLevel(testLevel);
+            // LoadLevel(testLevel);
         }
 
         protected override void OnDestroy()

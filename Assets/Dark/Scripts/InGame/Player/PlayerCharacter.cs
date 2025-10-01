@@ -149,5 +149,13 @@ namespace InGame
         }
 
         #endregion
+
+#if UNITY_EDITOR
+        [Space] [Header("Debug")] public Transform shotRadius;
+        public void DebugUpdateShotRadius(float radius)
+        {
+            shotRadius.localScale = new Vector3(radius, radius, radius);
+        }
+#endif
     }
 }
