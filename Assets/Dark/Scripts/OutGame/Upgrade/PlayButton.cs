@@ -1,4 +1,6 @@
+using Dark.Scripts.Common;
 using Dark.Scripts.SceneNavigation;
+using Dark.Scripts.Utils;
 using InGame;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -7,11 +9,19 @@ namespace Dark.Scripts.OutGame.Upgrade
 {
     public class PlayButton : MonoBehaviour, IPointerClickHandler
     {
+        private bool interactable = true;
+        
         public void OnPointerClick(PointerEventData eventData)
         {
-            Loading.Instance.LoadScene(SceneConstants.SceneInGame, () =>
+            if (!interactable) return;
+            interactable = false;
+            
+            this.DelayCall(0.5f, () =>
             {
-                LevelManager.Instance.LoadLevel(1);
+                Loading.Instance.LoadScene(SceneConstants.SceneInGame, () =>
+                {
+                    LevelManager.Instance.LoadLevel(1);
+                });
             });
         }
     }
