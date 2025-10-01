@@ -20,6 +20,7 @@ namespace Dark.Scripts.SceneNavigation
         
         public Action onStartLoading;
         private Action onSceneLoaded;
+        private Action onLoadingComplete;
         
         protected override void Awake()
         {
@@ -31,7 +32,7 @@ namespace Dark.Scripts.SceneNavigation
         public void LoadScene(string sceneName, Action completeCallback = null)
         {
             DebugUtility.LogWarning($"Loading scene {sceneName}");
-            onSceneLoaded = completeCallback;
+            onLoadingComplete = completeCallback;
             onStartLoading?.Invoke();
             DoOpen(0.3f).OnComplete(() =>
             {
@@ -42,7 +43,12 @@ namespace Dark.Scripts.SceneNavigation
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
             DebugUtility.LogWarning($"Scene {scene.name} is loaded!");
-            DoClose(Random.Range(minDuration, maxDuration), 0.3f,0.5f);
+            DoClose(Random.Range(minDuration, maxDuration), 0.3f,0.5f)
+                .OnComplete(() =>
+                {
+                    onLoadingComplete?.Invoke();
+                    onLoadingComplete = null;
+                });
             onSceneLoaded?.Invoke();
             onSceneLoaded = null;
         }
@@ -78,7 +84,7 @@ namespace Dark.Scripts.SceneNavigation
                     progressText.SetText($"{(int)(x * 100)}%");
                 }, 1f, duration))
                 .Append(loadingPanel.DOFade(0f, hideDuration))
-                .OnComplete(() =>
+                .AppendCallback(() =>
                 {
                     blankPanel.gameObject.SetActive(false);
                     loadingPanel.gameObject.SetActive(false);
