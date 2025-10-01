@@ -29,8 +29,10 @@ namespace InGame
         private IMouseInput mouseInput;
         private IMoveTowerMouseInput teleMouseInput;
         private IMoveMouseInput collectorMouseInput;
+        private IMouseInput mouseAutoAttack;
         public bool enableCollectorMouse;
         private MonoCursor cursor;
+        private PointerEventData.InputButton pressingButton = PointerEventData.InputButton.Middle;
 
         #region Move Towers
 
@@ -85,6 +87,14 @@ namespace InGame
                 mouseInput.Initialize(this, chargeControllerArcher);
                 mouseInput.ResetChargeVariable();
 
+                if (mouseAutoAttack != null)
+                {
+                    mouseAutoAttack.Dispose();
+                    mouseAutoAttack = null;
+                }
+                mouseAutoAttack = new MoveAutoAttack(cam, cursor);
+                mouseAutoAttack.Initialize(this, null);
+                
                 if (enableCollectorMouse)
                     collectorMouseInput = new MoveCollectResource(cam, PlayerVisual.transform);
                 
@@ -179,6 +189,7 @@ namespace InGame
             if (BlockAllInput) return;
             
             mouseInput?.OnUpdate();
+            mouseAutoAttack?.OnUpdate();
             teleMouseInput?.OnUpdate();
             if (enableCollectorMouse) collectorMouseInput?.OnUpdate();
         }
@@ -192,13 +203,27 @@ namespace InGame
         {
             if (BlockAllInput) return;
             
+            // Check nếu đang giữ chuột trái thì không bấm được chuột phải và ngược lại
+            if (pressingButton == PointerEventData.InputButton.Left && eventData.button == PointerEventData.InputButton.Right) return;
+            if (pressingButton == PointerEventData.InputButton.Right && eventData.button == PointerEventData.InputButton.Left) return;
+            
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                if (teleKeyPressed) return;
+                pressingButton = PointerEventData.InputButton.Left;
                 
+                if (teleKeyPressed) return;
+                   
                 holdDelayTime = 0f;
                 IsMousePressing = false;
                 IsMousePressingStarted = true;
+                Debug.LogError("Hold left");
+            }
+            else if (eventData.button == PointerEventData.InputButton.Right)
+            {
+                if (teleKeyPressed) return;
+                pressingButton = PointerEventData.InputButton.Right;
+                mouseAutoAttack.OnHoldStarted();
+                Debug.LogError("Hold Right");
             }
         }
 
@@ -207,6 +232,10 @@ namespace InGame
             if (BlockAllInput) return;
             if (eventData.button == PointerEventData.InputButton.Left)
             {
+                // Reset biên lưu nút chuột đang nhấn
+                if (pressingButton == PointerEventData.InputButton.Left)
+                    pressingButton = PointerEventData.InputButton.Middle;
+                
                 if (teleKeyPressed)
                 {
                     teleKeyPressed = false;
@@ -234,6 +263,11 @@ namespace InGame
             }
             else if (eventData.button == PointerEventData.InputButton.Right)
             {
+                // Release chuột auto attack, reset biến lưu chuột đang nhấn
+                mouseAutoAttack.OnHoldReleased();
+                if (pressingButton == PointerEventData.InputButton.Right)
+                    pressingButton = PointerEventData.InputButton.Middle;
+                
                 if (teleKeyPressed)
                 {
                     teleKeyPressed = false;
