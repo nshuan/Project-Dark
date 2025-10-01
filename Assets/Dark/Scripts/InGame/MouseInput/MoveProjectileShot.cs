@@ -352,6 +352,11 @@ namespace InGame
 
             // Draw the ray in Scene view
             Debug.DrawLine(ray.origin, rayEnd, Color.green);
+            
+            InputManager.PlayerVisual.DebugUpdateShotRadius(
+                LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId, 
+                    InputManager.CurrentSkillConfig.range, 
+                    canChargeRange && rangeChargeTime > 0 ? 1 + Mathf.Min(rangeChargeTime / maxRangeChargeTime, 1f) * maxRangeMultiplierAdd : 1f));
 #endif
         }
 
