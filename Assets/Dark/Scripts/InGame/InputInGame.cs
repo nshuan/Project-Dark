@@ -125,19 +125,6 @@ namespace InGame
             {
                 return;
             }
-            
-#if UNITY_EDITOR
-            // Test tower change
-            for (var i = 1; i <= 3; i++)
-            {
-                if (Input.GetKeyDown(i.ToString()))
-                {
-                    teleMouseInput?.OnActivated();
-                    teleMouseInput?.OnMouseClick(false);
-                    return;
-                }
-            }
-#endif
 
             if (!BlockTeleport)
             {
@@ -203,12 +190,15 @@ namespace InGame
         {
             if (BlockAllInput) return;
             
-            // Check nếu đang giữ chuột trái thì không bấm được chuột phải và ngược lại
+            // Check nếu đang giữ chuột trái thì không bấm được chuột phải
+            // Còn nếu đang dí chuột phải auto mà bấm chuột trái thì được
             if (pressingButton == PointerEventData.InputButton.Left && eventData.button == PointerEventData.InputButton.Right) return;
-            if (pressingButton == PointerEventData.InputButton.Right && eventData.button == PointerEventData.InputButton.Left) return;
             
             if (eventData.button == PointerEventData.InputButton.Left)
             {
+                // Nếu đang giữ chuột phải thì release luôn
+                if (pressingButton == PointerEventData.InputButton.Right)
+                    mouseAutoAttack.OnHoldReleased();
                 pressingButton = PointerEventData.InputButton.Left;
                 
                 if (teleKeyPressed) return;
