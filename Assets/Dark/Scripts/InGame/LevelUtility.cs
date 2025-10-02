@@ -18,9 +18,8 @@ namespace InGame
         }
         
         /// <summary>
-        /// Bullet_Dame = Player_Damage + SKill_Damage
         /// Player_Damage = [ Base_Damage + Total (Dame_Plus) ] * [1 + Total (Dame_Multiple) ]
-        /// SKill_Damage = [ Dame_Per_Bullet + Total (Skill_Dame_Plus) ] * [ 1 + Total (Skill_Dame_Multiple) ]
+        /// Bullet_Dame = [ Player_Damage + Dame_Per_Bullet + Total (Skill_Dame_Plus) ] * [ 1 + Total (Skill_Dame_Multiple) ]
         /// 
         /// Crit_Dame_Multiplier = Crit_Dame_Base + Total (Crit_Dame)
         /// 
@@ -40,9 +39,8 @@ namespace InGame
             float chargeDameMultiplier)
         {
             playerDamage = Mathf.RoundToInt((playerDamage + BonusInfo.damePlus) * (1 + BonusInfo.dameMultiply));
-            skillDamage = Mathf.RoundToInt((skillDamage + BonusInfo.skillBonus.skillDamePlus) * (1 + BonusInfo.skillBonus.skillDameMultiply));
+            var bulletDamage = Mathf.RoundToInt((playerDamage + skillDamage + BonusInfo.skillBonus.skillDamePlus) * (1 + BonusInfo.skillBonus.skillDameMultiply));
             criticalDameMultiplier = criticalDameMultiplier + BonusInfo.criticalDame;
-            var bulletDamage = playerDamage + skillDamage;
             return (
                 Mathf.RoundToInt(bulletDamage * chargeDameMultiplier), 
                 Mathf.RoundToInt(bulletDamage * criticalDameMultiplier * chargeDameMultiplier)

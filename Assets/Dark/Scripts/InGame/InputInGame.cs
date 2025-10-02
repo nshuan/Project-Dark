@@ -199,9 +199,13 @@ namespace InGame
                 // Nếu đang giữ chuột phải thì release luôn
                 if (pressingButton == PointerEventData.InputButton.Right)
                     mouseAutoAttack.OnHoldReleased();
+                
                 pressingButton = PointerEventData.InputButton.Left;
                 
                 if (teleKeyPressed) return;
+                
+                // Reset luôn auto attack, nếu ang press tele key thì thôi
+                mouseAutoAttack.ResetChargeVariable();
                    
                 holdDelayTime = 0f;
                 IsMousePressing = false;

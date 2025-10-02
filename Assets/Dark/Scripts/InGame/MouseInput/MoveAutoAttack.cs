@@ -21,6 +21,8 @@ namespace InGame
         protected float Cooldown { get; set; }
         protected float cdCounter;
 
+        private bool isActivating;
+
         public MoveAutoAttack()
         {
 
@@ -112,24 +114,40 @@ namespace InGame
 
         public void OnHoldStarted()
         {
-            CanShoot = true;
+            if (CanShoot) return;
+            isActivating = true;
+            cdCounter = 1f;
         }
 
         public void OnHoldReleased()
         {
-            CanShoot = false;
+            if (CanShoot) return;
+            isActivating = false;
         }
 
         public void ResetChargeVariable()
         {
-
+            CanShoot = false;
+            isActivating = false;
         }
 
         public bool CanMove => true;
 
         public virtual void OnUpdate()
         {
-            if (!CanShoot) return;
+            if (!CanShoot && !isActivating) return;
+            
+            if (isActivating)
+            {
+                cdCounter -= Time.deltaTime;
+                if (cdCounter <= 0f)
+                {
+                    isActivating = false;
+                    CanShoot = true;
+                }
+                
+                return;
+            }
             
             worldMousePosition = Cam.ScreenToWorldPoint(Input.mousePosition);
             
