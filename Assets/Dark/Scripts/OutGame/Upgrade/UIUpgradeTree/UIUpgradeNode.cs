@@ -92,28 +92,37 @@ namespace Dark.Scripts.OutGame.Upgrade
             hoverField.onHover = () =>
             {
                 UIUpgradeNodeInfoPreview.Instance.Setup(config, false);
-                UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.rectTransform.sizeDelta.x / 2, 0f), false);
+                UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.rectTransform.sizeDelta.x / 2, 0f), false, () => hoverField.interactable = true);
             };
-            hoverField.onHoverExit = () => UIUpgradeNodeInfoPreview.Instance.Hide(false);
+            hoverField.onHoverExit = () =>
+            {
+                hoverField.interactable = false;
+                UIUpgradeNodeInfoPreview.Instance.Hide(false);
+            };
             hoverField.onPointerClick = () =>
             {
                 // treeRef.SelectNode(this);
                 if (config.preRequire == null || config.preRequire.Select((node) => node.nodeId)
-                    .Any((id) => UpgradeManager.Instance.GetData(id) == null || UpgradeManager.Instance.GetData(id).level == 0))
+                        .Any((id) =>
+                            UpgradeManager.Instance.GetData(id) == null ||
+                            UpgradeManager.Instance.GetData(id).level == 0))
+                {
+                    UIUpgradeNodeInfoPreview.Instance.Shake();
                     return;
+                }
                 
                 var success = UpgradeManager.Instance.UpgradeNode(config.nodeId);
                 if (success)
                 {
                     UIUpgradeNodeInfoPreview.Instance.Setup(config, true);
-                    UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.rectTransform.sizeDelta.x / 2, 0f), true);
+                    UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.rectTransform.sizeDelta.x / 2, 0f), true, () => hoverField.interactable = true);
                     UpdateUI();
                     DoUpgrade().Play();
                     treeRef.UpdateChildren(config.nodeId);
                 }
                 else
                 {
-                    // TODO not success
+                    UIUpgradeNodeInfoPreview.Instance.Shake();
                 }
             };
         }

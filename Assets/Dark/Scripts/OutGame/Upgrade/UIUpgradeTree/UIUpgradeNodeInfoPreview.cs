@@ -3,6 +3,7 @@ using System.Linq;
 using Core;
 using Dark.Scripts.InGame.Upgrade;
 using Dark.Scripts.Utils.Camera;
+using DG.Tweening;
 using Economic;
 using InGame.Upgrade;
 using TMPro;
@@ -109,7 +110,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             }
         }
         
-        public void Show(Vector2 position, Vector2 padding, bool forceShow)
+        public void Show(Vector2 position, Vector2 padding, bool forceShow, Action onShow)
         {
             if (CanAutoShowHide == false && forceShow == false) return;
 
@@ -118,12 +119,14 @@ namespace Dark.Scripts.OutGame.Upgrade
             var framePivot = new Vector2(0f, 0.5f);
             if (position.x + padding.x + rectInfoFrame.sizeDelta.x - rectInfoFramePadding.x > SafeScaler.ScreenWidth)
             {
-                framePos.x = position.x - padding.x;
+                // framePos.x = position.x - padding.x;
+                framePos.x = position.x;
                 framePivot.x = 1f;
             }
             else
             {
-                framePos.x = position.x + padding.x;
+                // framePos.x = position.x + padding.x;
+                framePos.x = position.x;
                 framePivot.x = 0f;
             }
 
@@ -132,18 +135,48 @@ namespace Dark.Scripts.OutGame.Upgrade
             else if (position.y - rectInfoFrame.sizeDelta.y / 2 + rectInfoFramePadding.y < 0)
                 framePivot.y = 0f;
             else
-                framePivot.y = 0.5f;
+                framePivot.y = 1f;
 
             rectInfoFrame.position = framePos;
             rectInfoFrame.pivot = framePivot;
-            
-            rectInfoFrame.gameObject.SetActive(true);
+
+            DoShow().OnComplete(() => onShow?.Invoke());
         }
 
         public void Hide(bool forceHide)
         {
             if (CanAutoShowHide == false && forceHide == false) return;
-            rectInfoFrame.gameObject.SetActive(false);
+            DoHide();
+        }
+
+        public void Shake()
+        {
+            DOTween.Kill(rectInfoFrame);
+            DOTween.Sequence(rectInfoFrame)
+                .Append(rectInfoFrame.DOShakePosition(0.3f, new Vector3(0f, 8f, 0f), vibrato: 30, fadeOut: false, randomnessMode: ShakeRandomnessMode.Harmonic));
+        }
+
+        private Tween DoShow()
+        {
+            DOTween.Kill(rectInfoFrame);
+
+            rectInfoFrame.localScale = 0.8f * Vector3.one;
+            rectInfoFrame.gameObject.SetActive(true);
+
+            return DOTween.Sequence(rectInfoFrame)
+                .Append(rectInfoFrame.DOScale(1f, 0.2f).SetEase(Ease.OutBack));
+        }
+
+        private Tween DoHide()
+        {
+            DOTween.Kill(rectInfoFrame);
+
+            return DOTween.Sequence(rectInfoFrame)
+                .Append(rectInfoFrame.DOScale(0f, 0.2f).SetEase(Ease.InBack))
+                .AppendCallback(() =>
+                {
+                    rectInfoFrame.gameObject.SetActive(false);
+                });
         }
     }
 }
