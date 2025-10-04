@@ -83,7 +83,11 @@ namespace InGame
         private void OnStopGate(int index)
         {
             // Nếu mà gate vừa end ko phải gate cuối cùng đã mở thì bỏ qua
-            if (index < currentGateIndex) return;
+            if (index < currentGateIndex)
+            {
+                CheckStopAllGate();
+                return;
+            }
             
             var reduceStartTime = 0f;
             if (index + 1 < Gates.Length)
