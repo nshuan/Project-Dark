@@ -50,6 +50,7 @@ namespace InGame
         {
             if (!CanShoot) return;
             
+            var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(
                 InputManager.CurrentSkillConfig.skillId,
                 InputManager.PlayerStats.damage,
@@ -63,12 +64,12 @@ namespace InGame
                 1f);
             var skillRange = LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId,
                 InputManager.CurrentSkillConfig.range,
-                1f);
+                1f,
+                tempMousePos - InputManager.PlayerVisual.transform.position);
             var maxHit = 1 + LevelUtility.BonusInfo.skillBonus.bulletMaxHitPlus;
             var stagger = LevelUtility.GetBulletStagger(InputManager.CurrentSkillConfig.skillId,
                 InputManager.CurrentSkillConfig.stagger);
 
-            var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             InputManager.BlockTeleport = true;
             var delayShot = InputManager.PlayerVisual.PlayShoot(worldMousePosition);
             InputManager.DelayCall(delayShot, () =>

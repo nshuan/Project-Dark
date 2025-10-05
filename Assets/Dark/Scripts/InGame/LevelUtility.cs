@@ -88,9 +88,18 @@ namespace InGame
         /// <param name="baseRange"></param>
         /// <param name="chargeRange"></param>
         /// <returns></returns>
-        public static float GetSkillRange(int skillId, float baseRange, float chargeRange)
+        public static float GetSkillRange(int skillId, float baseRange, float chargeRange, Vector2 direction)
         {
-            return baseRange * (1 + BonusInfo.skillBonus.skillRangeMultiply) * chargeRange;
+            // Calculate the ratio: true_range / skill_range
+            var magnitude = direction.magnitude;
+            direction.x = Mathf.Abs(direction.x) / magnitude;
+            direction.y = Mathf.Abs(direction.y) / magnitude;
+            var angle = Mathf.Atan2(direction.y, direction.x);
+            var ratio = GameConst.IsoRatio
+                        / Mathf.Sqrt(Mathf.Pow(GameConst.IsoRatio * Mathf.Cos(angle), 2) +
+                                     Mathf.Pow(Mathf.Sin(angle), 2));
+            
+            return baseRange * (1 + BonusInfo.skillBonus.skillRangeMultiply) * chargeRange * ratio;
         }
 
         /// <summary>
