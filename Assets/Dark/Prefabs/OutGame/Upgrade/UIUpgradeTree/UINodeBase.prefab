@@ -148,6 +148,7 @@ MonoBehaviour:
   imgActivatedMaxGlow: {fileID: 6460200530950377625}
   imgAvailable: {fileID: 5855699267659595104}
   imgLock: {fileID: 988153753820117467}
+  vfxActivate: {fileID: 0}
   lineAnchorOffsetRadius: 0
 --- !u!1 &4790046826791335951
 GameObject:
@@ -161,6 +162,7 @@ GameObject:
   - component: {fileID: 7448392990399119122}
   - component: {fileID: 7488345468242851826}
   - component: {fileID: 3059954444044083529}
+  - component: {fileID: 7185841633494647636}
   m_Layer: 5
   m_Name: iconNodeBorder
   m_TagString: Untagged
@@ -237,6 +239,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efa081629d96420da5c3b69cc44061a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rectTransform: {fileID: 0}
+  interactable: 0
+--- !u!114 &7185841633494647636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4790046826791335951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3fd1256afd04b9ab84f3ce7be046d97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sourceIndex: 2
+  delay: 0
+  audioType: 0
 --- !u!1 &5855699267659595104
 GameObject:
   m_ObjectHideFlags: 0

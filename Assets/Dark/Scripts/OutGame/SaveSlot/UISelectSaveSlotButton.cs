@@ -2,6 +2,7 @@ using System;
 using Coffee.UIExtensions;
 using Dark.Scripts.OutGame.Common.NavButton;
 using Dark.Scripts.SceneNavigation;
+using Dark.Scripts.Utils;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -82,9 +83,13 @@ namespace Dark.Scripts.OutGame.SaveSlot
         public override void OnPointerClick(PointerEventData eventData)
         {
             interactable = false;
+            DoCLick(0.3f);
             base.OnPointerClick(eventData);
             SaveSlotManager.Instance.SelectSlot(slotIndex);
-            Loading.Instance.LoadScene(SceneConstants.SceneUpgrade);
+            this.DelayCall(0.5f, () =>
+            {
+                Loading.Instance.LoadScene(SceneConstants.SceneUpgrade);
+            });
         }
 
         private Tween DoHoverIn(float duration)
@@ -121,6 +126,16 @@ namespace Dark.Scripts.OutGame.SaveSlot
             {
                 seq.Join(txt.DOColor(colorTextUnselected, duration));
             }
+            
+            return seq;
+        }
+
+        private Tween DoCLick(float duration)
+        {
+            DOTween.Kill(this);
+            var seq = DOTween.Sequence(this);
+
+            seq.Append(resizeTarget.DOPunchScale(-0.1f * Vector3.one, duration));
             
             return seq;
         }
