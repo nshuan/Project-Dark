@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Coffee.UIExtensions;
+using Dark.Scripts.Audio;
 using DG.Tweening;
 using InGame.Upgrade;
 using Sirenix.OdinInspector;
@@ -29,6 +30,8 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private GameObject imgAvailable;
         [SerializeField] private GameObject imgLock;
         [SerializeField] private UIParticle vfxActivate;
+        [SerializeField] private AudioComponent sfxUnlockSuccess;
+        [SerializeField] private AudioComponent sfxUnlockFailure;
         public float lineAnchorOffsetRadius;
 
         private void OnEnable()
@@ -111,6 +114,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                             UpgradeManager.Instance.GetData(id).level == 0))
                 {
                     UIUpgradeNodeInfoPreview.Instance.Shake();
+                    sfxUnlockFailure.Play();
                     return;
                 }
                 
@@ -122,10 +126,12 @@ namespace Dark.Scripts.OutGame.Upgrade
                     UpdateUI();
                     DoUpgrade().Play();
                     treeRef.UpdateChildren(config.nodeId);
+                    sfxUnlockSuccess.Play();
                 }
                 else
                 {
                     UIUpgradeNodeInfoPreview.Instance.Shake();
+                    sfxUnlockFailure.Play();
                 }
             };
         }
