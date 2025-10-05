@@ -58,7 +58,7 @@ namespace Economic.InGame.DropItems
         {
             DOTween.Kill(this);
             var seq = DOTween.Sequence(this).SetDelay(delay)
-                .Append(transform.DOMove(target.position, CollectDuration).SetEase(Ease.InBack))
+                .Append(transform.DOMove(target.position, CollectDuration).SetEase(Ease.InQuad))
                 .AppendCallback(() =>
                 {
                     visual.gameObject.SetActive(false);
