@@ -124,6 +124,7 @@ namespace InGame
         {
             if (CanShoot) return;
             isActivating = false;
+            cursor.UpdateCooldown(false, 0f);
         }
 
         public void ResetChargeVariable()
@@ -141,6 +142,7 @@ namespace InGame
             if (isActivating)
             {
                 cdCounter -= Time.deltaTime;
+                cursor.UpdateCooldown(true, 1 - Mathf.Clamp(cdCounter / Cooldown, 0f, 1f));
                 if (cdCounter <= 0f)
                 {
                     isActivating = false;
@@ -158,6 +160,7 @@ namespace InGame
             InputManager.PlayerVisual.SetDirection(worldMousePosition);
             
             cdCounter -= Time.deltaTime;
+            cursor.UpdateCooldown(true, 1 - Mathf.Clamp(cdCounter / Cooldown, 0f, 1f));
             if (cdCounter <= 0)
                 OnMouseClick();
         }
