@@ -163,7 +163,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         {
             DOTween.Kill(rectInfoFrame);
             DOTween.Sequence(rectInfoFrame)
-                .Append(rectInfoFrameContent.DOShakePosition(0.3f, new Vector3(0f, 8f, 0f), vibrato: 30, fadeOut: false, randomnessMode: ShakeRandomnessMode.Harmonic));
+                .Append(rectInfoFrameContent.DOShakePosition(0.3f, new Vector3(0f, 5f, 0f), vibrato: 30, fadeOut: false, randomnessMode: ShakeRandomnessMode.Harmonic));
         }
 
         private Tween DoShow()

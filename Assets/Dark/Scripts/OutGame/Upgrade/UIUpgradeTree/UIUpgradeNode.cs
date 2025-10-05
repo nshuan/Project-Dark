@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Coffee.UIExtensions;
 using DG.Tweening;
 using InGame.Upgrade;
 using Sirenix.OdinInspector;
@@ -27,6 +28,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private GameObject imgActivatedMaxGlow;
         [SerializeField] private GameObject imgAvailable;
         [SerializeField] private GameObject imgLock;
+        [SerializeField] private UIParticle vfxActivate;
         public float lineAnchorOffsetRadius;
 
         private void OnEnable()
@@ -80,6 +82,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             {
                 imgAvailable.SetActive(true);
                 imgLock.SetActive(false);
+                vfxActivate?.Play();
                 imgActivatedGlow.SetActive(data.level < config.levelNum);
                 imgActivatedMaxGlow.SetActive(data.level >= config.levelNum);
                 
