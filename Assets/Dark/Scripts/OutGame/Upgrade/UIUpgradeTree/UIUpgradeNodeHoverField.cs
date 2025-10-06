@@ -11,6 +11,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         public Action onPointerClick;
         
         public RectTransform rectTransform;
+        public bool interactable;
 
         private void Awake()
         {
@@ -29,6 +30,7 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            if (!interactable) return;
             onPointerClick?.Invoke();
         }
     }

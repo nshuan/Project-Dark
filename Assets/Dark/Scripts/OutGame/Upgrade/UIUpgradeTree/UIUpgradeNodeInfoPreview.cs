@@ -3,6 +3,7 @@ using System.Linq;
 using Core;
 using Dark.Scripts.InGame.Upgrade;
 using Dark.Scripts.Utils.Camera;
+using DG.Tweening;
 using Economic;
 using InGame.Upgrade;
 using TMPro;
@@ -15,6 +16,8 @@ namespace Dark.Scripts.OutGame.Upgrade
     {
         [SerializeField] private Vector2 rectInfoFramePadding;
         [SerializeField] private RectTransform rectInfoFrame;
+        [SerializeField] private RectTransform rectInfoFrameContent;
+        [SerializeField] private UIInfoPreviewContentFitter contentFitter;
         [SerializeField] private TextMeshProUGUI txtNodeName;
         [SerializeField] private TextMeshProUGUI txtNodeLore;
         [SerializeField] private TextMeshProUGUI txtNodeLevel;
@@ -39,6 +42,8 @@ namespace Dark.Scripts.OutGame.Upgrade
         public bool CanAutoShowHide { get; set; } = true;
         private UpgradeNodeData cacheData;
         private UpgradeNodeConfig cacheConfig;
+        private bool isVisible;
+        private Vector2 mousePos = Vector2.zero;
 
         public void Setup(UpgradeNodeConfig config, bool forceUpdate)
         {
@@ -107,43 +112,81 @@ namespace Dark.Scripts.OutGame.Upgrade
                 infoReqEchoes.groupReq.SetActive(costEchoes > 0);
                 infoReqSigils.groupReq.SetActive(costSigils > 0);
             }
+            
+            rectInfoFrame.sizeDelta = contentFitter.GetSize();
         }
-        
-        public void Show(Vector2 position, Vector2 padding, bool forceShow)
-        {
-            if (CanAutoShowHide == false && forceShow == false) return;
 
+        private void Update()
+        {
+            if (!isVisible) return;
+
+            mousePos.x = Input.mousePosition.x;
+            mousePos.y = Input.mousePosition.y;
             // Check if the panel is outside the screen
-            var framePos = position + padding;
+            var framePos = mousePos;
             var framePivot = new Vector2(0f, 0.5f);
-            if (position.x + padding.x + rectInfoFrame.sizeDelta.x - rectInfoFramePadding.x > SafeScaler.ScreenWidth)
+            if (mousePos.x + rectInfoFrame.sizeDelta.x - rectInfoFramePadding.x > SafeScaler.ScreenWidth)
             {
-                framePos.x = position.x - padding.x;
                 framePivot.x = 1f;
             }
             else
             {
-                framePos.x = position.x + padding.x;
                 framePivot.x = 0f;
             }
 
-            if (position.y + rectInfoFrame.sizeDelta.y / 2 - rectInfoFramePadding.y > SafeScaler.ScreenHeight)
+            if (mousePos.y + rectInfoFrame.sizeDelta.y / 2 - rectInfoFramePadding.y > SafeScaler.ScreenHeight)
                 framePivot.y = 1f;
-            else if (position.y - rectInfoFrame.sizeDelta.y / 2 + rectInfoFramePadding.y < 0)
+            else if (mousePos.y - rectInfoFrame.sizeDelta.y / 2 + rectInfoFramePadding.y < 0)
                 framePivot.y = 0f;
             else
-                framePivot.y = 0.5f;
+                framePivot.y = 1f;
 
             rectInfoFrame.position = framePos;
             rectInfoFrame.pivot = framePivot;
-            
-            rectInfoFrame.gameObject.SetActive(true);
+        }
+
+        public void Show(Vector2 position, Vector2 padding, bool forceShow, Action onShow)
+        {
+            if (CanAutoShowHide == false && forceShow == false) return;
+            isVisible = true;
+            DoShow().OnComplete(() => onShow?.Invoke());
         }
 
         public void Hide(bool forceHide)
         {
             if (CanAutoShowHide == false && forceHide == false) return;
-            rectInfoFrame.gameObject.SetActive(false);
+            isVisible = false;
+            DoHide();
+        }
+
+        public void Shake()
+        {
+            DOTween.Kill(rectInfoFrame);
+            DOTween.Sequence(rectInfoFrame)
+                .Append(rectInfoFrameContent.DOShakePosition(0.3f, new Vector3(0f, 5f, 0f), vibrato: 30, fadeOut: false, randomnessMode: ShakeRandomnessMode.Harmonic));
+        }
+
+        private Tween DoShow()
+        {
+            DOTween.Kill(rectInfoFrame);
+
+            rectInfoFrame.localScale = 0.8f * Vector3.one;
+            rectInfoFrame.gameObject.SetActive(true);
+
+            return DOTween.Sequence(rectInfoFrame)
+                .Append(rectInfoFrame.DOScale(1f, 0.2f).SetEase(Ease.OutBack));
+        }
+
+        private Tween DoHide()
+        {
+            DOTween.Kill(rectInfoFrame);
+
+            return DOTween.Sequence(rectInfoFrame)
+                .Append(rectInfoFrame.DOScale(0f, 0.2f).SetEase(Ease.InBack))
+                .AppendCallback(() =>
+                {
+                    rectInfoFrame.gameObject.SetActive(false);
+                });
         }
     }
 }

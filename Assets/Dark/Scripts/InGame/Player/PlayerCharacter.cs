@@ -154,7 +154,7 @@ namespace InGame
         [Space] [Header("Debug")] public Transform shotRadius;
         public void DebugUpdateShotRadius(float radius)
         {
-            shotRadius.localScale = new Vector3(radius, radius, radius);
+            shotRadius.localScale = new Vector3(radius, radius * GameConst.IsoRatio, radius);
         }
 #endif
     }

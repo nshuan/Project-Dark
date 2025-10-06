@@ -8,9 +8,7 @@ namespace Dark.Scripts.Audio
         public int sourceIndex;
         public bool playOnEnable = false;
         public float delay;
-
-        private AudioSource source;
-
+        
         void OnEnable()
         {
             if (playOnEnable)
