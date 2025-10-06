@@ -598,6 +598,7 @@ MonoBehaviour:
   - {fileID: 495117603}
   - {fileID: 38852585}
   - {fileID: 2016680611}
+  autoLoadLevel: 1
   testLevel: {fileID: 11400000, guid: e182f814f86efba4ba5f56c05537fc1d, type: 2}
 --- !u!4 &355993393
 Transform:
@@ -2221,46 +2222,80 @@ PrefabInstance:
     - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
       propertyPath: serializationData.Prefab
       value: 
-      objectReference: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
       propertyPath: serializationData.PrefabModifications.Array.size
-      value: 7
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
       propertyPath: serializationData.PrefabModifications.Array.data[0]
       value: '"path":"testBonusInfo.damePlus","value":{"$id":0,"$type":"System.Int32,
-        mscorlib",15}'
+        mscorlib",10}'
       objectReference: {fileID: 0}
     - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
       propertyPath: serializationData.PrefabModifications.Array.data[1]
-      value: '"path":"testBonusInfo.skillBonus.projectileChargeHitActions","value":{"$id":0,"$type":"System.Collections.Generic.List`1[[InGame.IProjectileHit,
-        Assembly-CSharp]], mscorlib","$rlength":1,"$rcontent":[{"$id":1,"$type":"InGame.ProjectileHitBlossom,
-        Assembly-CSharp","bulletAmount":8,"blossomSize":3}]}'
+      value: '"path":"testBonusInfo.hpPlus","value":{"$id":0,"$type":"System.Int32,
+        mscorlib",0}'
       objectReference: {fileID: 0}
     - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
       propertyPath: serializationData.PrefabModifications.Array.data[2]
-      value: '"path":"testBonusInfo.skillBonus.projectileChargeHitActions.[0]","value":{"$id":0,"$type":"InGame.ProjectileHitBlossom,
-        Assembly-CSharp","bulletAmount":8,"blossomSize":3}'
+      value: '"path":"testBonusInfo.skillBonus.bulletPlus","value":{"$id":0,"$type":"System.Int32,
+        mscorlib",0}'
       objectReference: {fileID: 0}
     - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
       propertyPath: serializationData.PrefabModifications.Array.data[3]
+      value: '"path":"testBonusInfo.skillBonus.projectileChargeHitActions","value":{"$id":0,"$type":"System.Collections.Generic.List`1[[InGame.IProjectileHit,
+        Assembly-CSharp]], mscorlib","$rlength":1,"$rcontent":[{"$id":1,"$type":"InGame.ProjectileHitBlossom,
+        Assembly-CSharp","projectile":null,"bulletAmount":8,"blossomSize":3}]}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[4]
+      value: '"path":"testBonusInfo.skillBonus.projectileChargeHitActions.[0]","value":{"$id":0,"$type":"InGame.ProjectileHitBlossom,
+        Assembly-CSharp","projectile":null,"bulletAmount":8,"blossomSize":3}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[5]
       value: '"path":"testBonusInfo.skillBonus.projectileChargeHitActions.[0].blossomSize","value":{"$id":0,"$type":"System.Single,
         mscorlib",3}'
       objectReference: {fileID: 0}
     - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[4]
+      propertyPath: serializationData.PrefabModifications.Array.data[6]
       value: '"path":"testBonusInfo.skillBonus.projectileChargeHitActions.[0].bulletAmount","value":{"$id":0,"$type":"System.Int32,
         mscorlib",8}'
       objectReference: {fileID: 0}
     - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[5]
+      propertyPath: serializationData.PrefabModifications.Array.data[7]
+      value: '"path":"testBonusInfo.skillBonus.projectileChargeHitActions.[0].projectile","value":null'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[8]
+      value: '"path":"testBonusInfo.skillBonus.skillCooldownMultiply","value":{"$id":0,"$type":"System.Single,
+        mscorlib",0.1}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[9]
+      value: '"path":"testBonusInfo.skillBonus.skillDameMultiply","value":{"$id":0,"$type":"System.Single,
+        mscorlib",0.3}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[10]
+      value: '"path":"testBonusInfo.skillBonus.skillRangeMultiply","value":{"$id":0,"$type":"System.Single,
+        mscorlib",0.1}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[11]
       value: '"path":"testBonusInfo.skillBonus.unlockedChargeDame","value":{"$id":0,"$type":"System.Boolean,
         mscorlib",true}'
       objectReference: {fileID: 0}
     - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[6]
+      propertyPath: serializationData.PrefabModifications.Array.data[12]
       value: '"path":"testBonusInfo.skillBonus.unlockedChargeSize","value":{"$id":0,"$type":"System.Boolean,
         mscorlib",true}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[13]
+      value: '"path":"testBonusInfo.toleranceRegenPerSecond","value":{"$id":0,"$type":"System.Int32,
+        mscorlib",2}'
       objectReference: {fileID: 0}
     - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
       propertyPath: serializationData.PrefabModificationsReferencedUnityObjects.Array.size
