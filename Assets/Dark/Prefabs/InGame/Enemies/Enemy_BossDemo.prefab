@@ -106,6 +106,7 @@ MonoBehaviour:
   separationWeight: 0
   alignmentWeight: 0
   cohesionWeight: 0
+  boidCooldown: 0.5
 --- !u!114 &1367309541428699416
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,6 +124,7 @@ MonoBehaviour:
   boidAgent: {fileID: 708390462539577957}
   uiHealth: {fileID: 2775015567938810026}
   animController: {fileID: 2498714227618212496}
+  shadow: {fileID: 3947532968561510528}
 --- !u!1 &4456709303197038145
 GameObject:
   m_ObjectHideFlags: 0
@@ -634,6 +636,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f161fa5d481c6d844ba11b53f22a6b12, type: 3}
+--- !u!1 &3947532968561510528 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2392004393016874754, guid: f161fa5d481c6d844ba11b53f22a6b12, type: 3}
+  m_PrefabInstance: {fileID: 1727815468287352706}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6860184617083357714 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5246177398368179600, guid: f161fa5d481c6d844ba11b53f22a6b12, type: 3}
