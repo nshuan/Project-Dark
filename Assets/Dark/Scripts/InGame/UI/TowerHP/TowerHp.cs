@@ -18,10 +18,11 @@ namespace InGame.UI
         
         private void Start()
         {
-            tower.OnHit += OnTowerHit;
+            tower.OnHit += OnTowerHpChanged;
+            tower.OnRegenerate += OnTowerHpChanged;
         }
 
-        private void OnTowerHit(int damage)
+        private void OnTowerHpChanged(int valueChanged)
         {
             tempHpScale.x = hpFill.transform.localScale.x;
             tempHpScale.y = hpFill.transform.localScale.y;

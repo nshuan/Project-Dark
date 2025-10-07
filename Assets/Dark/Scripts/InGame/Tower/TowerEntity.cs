@@ -27,6 +27,7 @@ namespace InGame
         public bool IsDestroyed { get; set; }
         
         public Action<int> OnHit { get; set; }
+        public Action<int> OnRegenerate { get; set; }
         public Action<Vector2> OnHitAttackerPos { get; set; }
         public Action<TowerEntity> OnDestroyed;
         
@@ -100,8 +101,10 @@ namespace InGame
         public void Regenerate(int value)
         {
             if (IsDestroyed) return;
+            if (value <= 0) return;
 
             CurrentHp += value;
+            OnRegenerate?.Invoke(value);
             
             if (currentState < spriteStates.Length - 1 && (float)CurrentHp / MaxHp >= thresholdState[currentState + 1])
             {
