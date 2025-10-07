@@ -12,6 +12,7 @@ namespace InGame
         [SerializeField] public Vector3 standOffset;
         [SerializeField] private SpriteRenderer towerVisual;
         [SerializeField] private SpriteRenderer towerVisualUILayer;
+        [SerializeField] private GameObject towerOutline;
         [SerializeField] private Sprite[] spriteStates;
         [SerializeField] private float[] thresholdState = new[] { 0f, 0.3f, 0.7f };
         [SerializeField] private TowerAutoRegenerate autoRegenerate;
@@ -115,6 +116,7 @@ namespace InGame
         public void Hover(bool hovering)
         {
             hover.SetActive(hovering);
+            towerOutline.SetActive(hovering);
         }
         
         public void OnMotionBlur()
@@ -125,6 +127,7 @@ namespace InGame
         public void OnEndMotionBlur()
         {
             towerVisualUILayer.gameObject.SetActive(false);
+            towerOutline.SetActive(false);
         }
 
         /// <summary>
