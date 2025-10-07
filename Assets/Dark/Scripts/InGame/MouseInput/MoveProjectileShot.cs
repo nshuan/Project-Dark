@@ -106,7 +106,7 @@ namespace InGame
             var skillRange = LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId,
                 InputManager.CurrentSkillConfig.range,
                 canChargeRange && rangeChargeTime > 0 ? 1 + Mathf.Min(rangeChargeTime / maxRangeChargeTime, 1f) * maxRangeMultiplierAdd : 1f,
-                tempMousePos - InputManager.PlayerVisual.transform.position);
+                tempMousePos - LevelManager.Instance.CurrentTower.GetBaseCenter());
             var maxHit = 1 + LevelUtility.BonusInfo.skillBonus.bulletMaxHitPlus;
             var stagger = LevelUtility.GetBulletStagger(InputManager.CurrentSkillConfig.skillId,
                 InputManager.CurrentSkillConfig.stagger);
@@ -128,7 +128,8 @@ namespace InGame
                 
                 InputManager.CurrentSkillConfig.Shoot(
                     InputManager.CurrentSkillConfig.projectiles[PlayerProjectileType.Normal],
-                    InputManager.CursorRangeCenter.position,
+                    InputManager.ProjectileSpawnPos.position,
+                    LevelManager.Instance.CurrentTower.GetBaseCenter(),
                     tempMousePos,
                     damage,
                     isCharge ? 1 : bulletNum,
@@ -355,6 +356,7 @@ namespace InGame
             Debug.DrawLine(ray.origin, rayEnd, Color.green);
             
             InputManager.PlayerVisual.DebugUpdateShotRadius(
+                LevelManager.Instance.CurrentTower.GetBaseCenter(),
                 LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId, 
                     InputManager.CurrentSkillConfig.range, 
                     canChargeRange && rangeChargeTime > 0 ? 1 + Mathf.Min(rangeChargeTime / maxRangeChargeTime, 1f) * maxRangeMultiplierAdd : 1f,

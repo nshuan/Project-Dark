@@ -126,5 +126,15 @@ namespace InGame
         {
             towerVisualUILayer.gameObject.SetActive(false);
         }
+
+        /// <summary>
+        /// Get the true center of the base of the tower
+        /// the "towerVisual" should have the pivot on that center, then we only need to get the position of that
+        /// </summary>
+        /// <returns></returns>
+        public Vector3 GetBaseCenter()
+        {
+            return towerVisual.transform.position;
+        }
     }
 }

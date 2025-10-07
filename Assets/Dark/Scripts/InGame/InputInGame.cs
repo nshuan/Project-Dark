@@ -18,7 +18,7 @@ namespace InGame
         public PlayerCharacter PlayerVisual { get; set; }
         public PlayerStats PlayerStats { get; set; }
         public PlayerSkillConfig CurrentSkillConfig { get; set; }
-        public Transform CursorRangeCenter => PlayerVisual.transform;
+        public Transform ProjectileSpawnPos => PlayerVisual.transform;
         private List<MoveTowersConfig> availableTeleConfigs;
         private bool BlockAllInput { get; set; }
         public bool BlockTeleport { get; set; }

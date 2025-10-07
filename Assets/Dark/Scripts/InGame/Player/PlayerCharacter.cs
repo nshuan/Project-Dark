@@ -152,9 +152,10 @@ namespace InGame
 
 #if UNITY_EDITOR
         [Space] [Header("Debug")] public Transform shotRadius;
-        public void DebugUpdateShotRadius(float radius)
+        public void DebugUpdateShotRadius(Vector2 rangeCenter, float radius)
         {
-            shotRadius.localScale = new Vector3(radius, radius * GameConst.IsoRatio, radius);
+            shotRadius.position = rangeCenter;
+            shotRadius.localScale = new Vector3(radius, radius, radius);
         }
 #endif
     }
