@@ -1,3 +1,4 @@
+using System;
 using InGame;
 using Economic.InGame.DropItems;
 using Economic.UI.KillShowCollected;
@@ -9,21 +10,28 @@ namespace Economic.UI
     public class ECollector : MonoBehaviour
     {
         public int selectMethod = 1;
+        private PlayerCharacter player;
         
         private void Awake()
         {
             EnemyManager.Instance.OnOneEnemyDead += OnEnemyDead;
             LevelManager.Instance.onWaveEnded += OnWaveEnded;
+            LevelManager.Instance.OnLevelLoaded += OnLevelLoaded;
+        }
+
+        private void OnLevelLoaded(LevelConfig level)
+        {
+            player = LevelManager.Instance.Player;
         }
 
         private void OnEnemyDead(EnemyEntity enemy)
         {
             
-            // Show text + Exp trên đầu con enemy vừa die
+            // Show text [+Exp] trên đầu nhân vật
             if (enemy.Exp > 0)
             {
                 WealthManager.Instance.AddExp(enemy.Exp);
-                UIKillCollectedPool.Instance.ShowCollected(WealthType.Exp, enemy.Exp, enemy.transform.position);
+                UIKillCollectedPool.Instance.ShowCollected(WealthType.Exp, enemy.Exp, player.transform.position);
             }
             
             // TH0: Show text trên đầu con enemy vừa die

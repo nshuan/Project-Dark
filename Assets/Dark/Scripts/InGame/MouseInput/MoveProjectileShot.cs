@@ -80,6 +80,14 @@ namespace InGame
             
             ChargeController.SetProjectile(InputManager.CurrentSkillConfig.projectiles[PlayerProjectileType.ChargeBullet]);
             ChargeController.Cam = Cam;
+            
+            // Setup shot radius
+            InputManager.PlayerVisual.UpdateShotRadius(
+                LevelManager.Instance.CurrentTower.GetBaseCenter(),
+                LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId, 
+                    InputManager.CurrentSkillConfig.range, 
+                    1f,
+                    Vector2.right));
         }
         
         public virtual void OnMouseClick()
@@ -175,6 +183,14 @@ namespace InGame
             
             cdCounter = Cooldown;
             cdCounter += delayShot;
+
+            // Reset range
+            InputManager.PlayerVisual.UpdateShotRadius(
+                LevelManager.Instance.CurrentTower.GetBaseCenter(),
+                LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId, 
+                    InputManager.CurrentSkillConfig.range, 
+                    1f,
+                    Vector2.right), false);
             
             // Do cursor effect
             cursor.UpdateBulletAdd(false);
@@ -332,6 +348,14 @@ namespace InGame
                 if (canChargeRange && isChargingRange)
                 {
                     rangeChargeTime += Time.deltaTime;
+                    
+                    // Update shot radius
+                    InputManager.PlayerVisual.UpdateShotRadius(
+                        LevelManager.Instance.CurrentTower.GetBaseCenter(),
+                        LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId, 
+                            InputManager.CurrentSkillConfig.range, 
+                            canChargeRange && rangeChargeTime > 0 ? 1 + Mathf.Min(rangeChargeTime / maxRangeChargeTime, 1f) * maxRangeMultiplierAdd : 1f,
+                            Vector2.right));
                 }
             }
             
@@ -354,13 +378,6 @@ namespace InGame
 
             // Draw the ray in Scene view
             Debug.DrawLine(ray.origin, rayEnd, Color.green);
-            
-            InputManager.PlayerVisual.DebugUpdateShotRadius(
-                LevelManager.Instance.CurrentTower.GetBaseCenter(),
-                LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId, 
-                    InputManager.CurrentSkillConfig.range, 
-                    canChargeRange && rangeChargeTime > 0 ? 1 + Mathf.Min(rangeChargeTime / maxRangeChargeTime, 1f) * maxRangeMultiplierAdd : 1f,
-                    Vector2.right));
 #endif
         }
 
