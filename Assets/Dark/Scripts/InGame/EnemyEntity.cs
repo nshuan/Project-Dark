@@ -7,6 +7,7 @@ using InGame.EnemyEffect;
 using InGame.MapBoundary;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace InGame
@@ -96,6 +97,8 @@ namespace InGame
             config.Init(this);
             
             shadow.SetActive(true);
+            
+            ActivateELite(config.elite);
         }
 
         #endregion
@@ -311,6 +314,29 @@ namespace InGame
             HitDirectionY = 0f;
             Damage(CurrentHealth, transform.position, 0f);
         }
+        #endregion
+
+        #region Elite
+
+        [Space] [Header("Elite")] 
+        [SerializeField] private SpriteRenderer visual;
+        [SerializeField] private Material materialNormal;
+        [SerializeField] private Material materialElite;
+        
+        public void ActivateELite(bool active)
+        {
+            if (active)
+            {
+                visual.material = materialElite;
+                transform.localScale = GameConst.EnemyEliteScale * Vector3.one;
+            }
+            else
+            {
+                visual.material = materialNormal;
+                transform.localScale = Vector3.one;
+            }
+        }
+
         #endregion
     }
 }
