@@ -38,6 +38,7 @@ namespace InGame
         public void Initialize(InputInGame manager, MoveChargeController chargeController)
         {
             CanShoot = false;
+            cursor.SetAuto(false);
 
             InputManager = manager;
             Cooldown = LevelUtility.GetSkillCooldown(
@@ -132,6 +133,7 @@ namespace InGame
         {
             CanShoot = false;
             isActivating = false;
+            cursor.SetAuto(false);
         }
 
         public bool CanMove => true;
@@ -148,6 +150,7 @@ namespace InGame
                 {
                     isActivating = false;
                     CanShoot = true;
+                    cursor.SetAuto(true);
                 }
                 
                 return;

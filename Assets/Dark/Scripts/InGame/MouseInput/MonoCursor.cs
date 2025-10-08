@@ -16,6 +16,7 @@ namespace InGame
         [SerializeField] private Color cooldownMaxColor;
         [SerializeField] private TextMeshProUGUI txtChargeBulletAdd;
         [SerializeField] private TextMeshProUGUI txtMax;
+        [SerializeField] private GameObject txtAuto;
         
         public void UpdateCooldown(bool active, float value)
         {
@@ -44,6 +45,11 @@ namespace InGame
         {
             value = Mathf.Clamp(value, 0f, 1f);
             content.transform.localScale = Vector3.one * (1 + value);
+        }
+
+        public void SetAuto(bool active)
+        {
+            txtAuto.SetActive(active);
         }
     }
 }
