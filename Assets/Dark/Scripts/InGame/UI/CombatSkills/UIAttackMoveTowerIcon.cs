@@ -26,18 +26,18 @@ namespace InGame.UI.CombatSkills
         {
             UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
             
-            if (bonusInfo.unlockedMoveToTower != null && bonusInfo.unlockedMoveToTower.Count > 0)
+            // if (bonusInfo.unlockedMoveToTower is { Count: > 0 })
             {
                 available = true;
                 callbackShowSkill?.Invoke();
                 CombatActions.OnMoveTower -= OnSkillUsed;
                 CombatActions.OnMoveTower += OnSkillUsed;
             }
-            else
-            {
-                available = false;
-                callbackHideSkill?.Invoke();
-            }
+            // else
+            // {
+            //     available = false;
+            //     callbackHideSkill?.Invoke();
+            // }
         }
     }
 }
