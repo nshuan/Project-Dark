@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -49,7 +50,18 @@ namespace InGame
 
         public void SetAuto(bool active)
         {
-            txtAuto.SetActive(active);
+            DOTween.Kill(txtAuto);
+            if (active)
+            {
+                txtAuto.transform.localScale = 0.3f * Vector3.one;
+                txtAuto.SetActive(true);
+                txtAuto.transform.DOScale(1f, 0.3f).SetEase(Ease.OutBack).SetTarget(txtAuto);
+            }
+            else
+            {
+                txtAuto.transform.DOScale(0.3f, 0.3f).SetEase(Ease.InBack).SetTarget(txtAuto)
+                    .OnComplete(() => txtAuto.gameObject.SetActive(false));
+            }
         }
     }
 }

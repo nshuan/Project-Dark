@@ -19,6 +19,7 @@ namespace InGame
         
         public bool CanShoot { get; set; }
         protected float Cooldown { get; set; }
+        protected float ActivateDuration { get; set; } = 1f;
         protected float cdCounter;
 
         private bool isActivating;
@@ -45,6 +46,7 @@ namespace InGame
                 InputManager.CurrentSkillConfig.skillId,
                 InputManager.PlayerStats.cooldown,
                 InputManager.CurrentSkillConfig.cooldown);
+            ActivateDuration = 1f;
         }
         
         public virtual void OnMouseClick()
@@ -119,7 +121,7 @@ namespace InGame
         {
             if (CanShoot) return;
             isActivating = true;
-            cdCounter = 1f;
+            cdCounter = ActivateDuration;
         }
 
         public void OnHoldReleased()
@@ -145,7 +147,7 @@ namespace InGame
             if (isActivating)
             {
                 cdCounter -= Time.deltaTime;
-                cursor.UpdateCooldown(true, 1 - Mathf.Clamp(cdCounter / Cooldown, 0f, 1f));
+                cursor.UpdateCooldown(true, 1 - Mathf.Clamp(cdCounter / ActivateDuration, 0f, 1f));
                 if (cdCounter <= 0f)
                 {
                     isActivating = false;
