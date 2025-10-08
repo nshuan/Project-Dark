@@ -19,6 +19,7 @@ namespace InGame
         
         public bool CanShoot { get; set; }
         protected float Cooldown { get; set; }
+        protected float ActivateDuration { get; set; } = 1f;
         protected float cdCounter;
 
         private bool isActivating;
@@ -38,12 +39,14 @@ namespace InGame
         public void Initialize(InputInGame manager, MoveChargeController chargeController)
         {
             CanShoot = false;
+            cursor.SetAuto(false);
 
             InputManager = manager;
             Cooldown = LevelUtility.GetSkillCooldown(
                 InputManager.CurrentSkillConfig.skillId,
                 InputManager.PlayerStats.cooldown,
                 InputManager.CurrentSkillConfig.cooldown);
+            ActivateDuration = 1f;
         }
         
         public virtual void OnMouseClick()
@@ -65,7 +68,7 @@ namespace InGame
             var skillRange = LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId,
                 InputManager.CurrentSkillConfig.range,
                 1f,
-                tempMousePos - InputManager.PlayerVisual.transform.position);
+                tempMousePos - LevelManager.Instance.CurrentTower.GetBaseCenter());
             var maxHit = 1 + LevelUtility.BonusInfo.skillBonus.bulletMaxHitPlus;
             var stagger = LevelUtility.GetBulletStagger(InputManager.CurrentSkillConfig.skillId,
                 InputManager.CurrentSkillConfig.stagger);
@@ -78,7 +81,8 @@ namespace InGame
                 
                 InputManager.CurrentSkillConfig.Shoot(
                     InputManager.CurrentSkillConfig.projectiles[PlayerProjectileType.Normal],
-                    InputManager.CursorRangeCenter.position,
+                    InputManager.ProjectileSpawnPos.position,
+                    LevelManager.Instance.CurrentTower.GetBaseCenter(),
                     tempMousePos,
                     damage,
                     bulletNum,
@@ -117,7 +121,7 @@ namespace InGame
         {
             if (CanShoot) return;
             isActivating = true;
-            cdCounter = 1f;
+            cdCounter = ActivateDuration;
         }
 
         public void OnHoldReleased()
@@ -131,6 +135,7 @@ namespace InGame
         {
             CanShoot = false;
             isActivating = false;
+            cursor.SetAuto(false);
         }
 
         public bool CanMove => true;
@@ -142,11 +147,12 @@ namespace InGame
             if (isActivating)
             {
                 cdCounter -= Time.deltaTime;
-                cursor.UpdateCooldown(true, 1 - Mathf.Clamp(cdCounter / Cooldown, 0f, 1f));
+                cursor.UpdateCooldown(true, 1 - Mathf.Clamp(cdCounter / ActivateDuration, 0f, 1f));
                 if (cdCounter <= 0f)
                 {
                     isActivating = false;
                     CanShoot = true;
+                    cursor.SetAuto(true);
                 }
                 
                 return;

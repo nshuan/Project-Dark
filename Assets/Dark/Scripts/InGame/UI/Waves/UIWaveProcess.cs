@@ -27,7 +27,7 @@ namespace InGame.UI.Waves
             }
         }
 
-        private void OnWaveStart(int waveIndex)
+        private void OnWaveStart(int waveIndex, float waveDuration)
         {
             UpdateUI(waveIndex);
         }

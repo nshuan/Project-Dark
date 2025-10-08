@@ -31,6 +31,7 @@ namespace InGame
         public void Shoot(
             ProjectileEntity projectile,
             Vector2 spawnPos, 
+            Vector2 rangeCenter,
             Vector2 target, 
             int damagePerBullet, 
             int bulletNumber,
@@ -47,6 +48,7 @@ namespace InGame
             shootLogic.Shoot(
                 projectile,
                 spawnPos, 
+                rangeCenter,
                 target,
                 damagePerBullet,
                 criticalDamagePerBullet,
