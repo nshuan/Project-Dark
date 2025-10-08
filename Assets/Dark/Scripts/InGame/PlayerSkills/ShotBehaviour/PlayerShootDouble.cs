@@ -13,6 +13,7 @@ namespace InGame
         public override void Shoot(
             ProjectileEntity projectilePrefab, 
             Vector2 spawnPos, 
+            Vector2 rangeCenter,
             Vector2 target, 
             int damagePerBullet,
             int criticalDamagePerBullet,
@@ -31,13 +32,13 @@ namespace InGame
             var pDir = (Vector2)(Quaternion.Euler(0f, 0f, angle / 2) * dir);
             var p = ProjectilePool.Instance.Get(projectilePrefab, null, false);
             p.transform.position = spawnPos;
-            p.Init(spawnPos, pDir.normalized, skillRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, isCharge, maxHit, activateActions, projectileHitActions, ProjectileType.PlayerProjectile);
+            p.Init(rangeCenter, pDir.normalized, skillRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, isCharge, maxHit, activateActions, projectileHitActions, ProjectileType.PlayerProjectile);
             p.Activate(0);
             
             pDir = Quaternion.Euler(0f, 0f, - angle / 2) * dir;
             p = ProjectilePool.Instance.Get(projectilePrefab, null, false);
             p.transform.position = spawnPos;
-            p.Init(spawnPos, pDir.normalized, skillRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, isCharge, maxHit, activateActions, projectileHitActions, ProjectileType.PlayerProjectile);
+            p.Init(rangeCenter, pDir.normalized, skillRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, isCharge, maxHit, activateActions, projectileHitActions, ProjectileType.PlayerProjectile);
             p.Activate(0);
         }
     }

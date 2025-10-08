@@ -6,9 +6,6 @@ namespace InGame.UI.CombatSkills
 {
     public class UITowerCounterIcon : UIInGameSkillIcon
     {
-        [SerializeField] private GameObject skillIcon;
-        [SerializeField] private GameObject effectIconParent;
-
         private bool available;
         private Action callbackShowSkill;
         private Action callbackHideSkill;
@@ -29,7 +26,7 @@ namespace InGame.UI.CombatSkills
         {
             UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
             
-            if (bonusInfo.unlockedTowerCounter != null)
+            if (bonusInfo.unlockedTowerCounter)
             {
                 available = true;
                 callbackShowSkill?.Invoke();

@@ -55,7 +55,8 @@ namespace InGame
         public Action<LevelConfig> OnLevelLoaded { get; set; }
         public Action<TowerEntity> OnChangeTower { get; set; }
 
-        public event Action<int> OnWaveStart;
+        // <int waveIndex, float waveDuration>
+        public event Action<int, float> OnWaveStart;
         public event Action<int> onWaveEnded;
         
         public event Action OnWin;
@@ -151,6 +152,7 @@ namespace InGame
         
         #region Waves
 
+        // Start from 0
         private int currentWaveIndex;
         private Coroutine waveCoroutine;
         private IEnumerator IEWave(WaveInfo[] waves)
@@ -162,7 +164,7 @@ namespace InGame
             {
                 var currentWave = waves[currentWaveIndex];
                 currentWave.SetupWave(gatePrefab, Towers, Level.levelExpRatio, Level.levelDarkRatio, OnWaveForceStop);
-                OnWaveStart?.Invoke(currentWaveIndex);
+                OnWaveStart?.Invoke(currentWaveIndex, currentWave.timeToEnd);
                 currentWaveIndex += 1;
                 yield return currentWave.IEActivateWave();
                 onWaveEnded?.Invoke(currentWaveIndex - 1);

@@ -149,13 +149,21 @@ namespace InGame
         }
 
         #endregion
-
-#if UNITY_EDITOR
+        
         [Space] [Header("Debug")] public Transform shotRadius;
-        public void DebugUpdateShotRadius(float radius)
+        public void UpdateShotRadius(Vector2 rangeCenter, float radius, bool immediatelly = true)
         {
-            shotRadius.localScale = new Vector3(radius, radius * GameConst.IsoRatio, radius);
+            if (immediatelly)
+            {
+                shotRadius.position = rangeCenter;
+                shotRadius.localScale = new Vector3(radius, radius, radius);
+            }
+            else
+            {
+                DOTween.Kill(shotRadius);
+                shotRadius.position = rangeCenter;
+                shotRadius.DOScale(radius, 0.3f).SetTarget(shotRadius).SetDelay(0.3f);
+            }
         }
-#endif
     }
 }
