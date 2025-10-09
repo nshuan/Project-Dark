@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Coffee.UIExtensions;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -15,6 +16,7 @@ namespace InGame.UI.CombatSkills
         [SerializeField] private Image imgPassiveLine;
         [SerializeField] private Transform groupPassive;
         [SerializeField] private Transform groupIcon;
+        [SerializeField] private UIParticle vfxCooldownComplete;
 
         [Space] [Header("Config")] 
         [SerializeField] private float buttonXLocalOnShow = 106f;
@@ -47,6 +49,9 @@ namespace InGame.UI.CombatSkills
                 imgFillCooldown.fillAmount = 1 - cooldownTimer / cooldown;
                 yield return null;
             }
+
+            groupIcon.DOPunchScale(0.1f * Vector3.one, 0.2f);
+            vfxCooldownComplete.Play();
         }
 
         private bool isShowPassive = true;
