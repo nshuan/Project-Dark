@@ -65,7 +65,8 @@ namespace InGame
             var hitCount = Physics2D.CircleCastNonAlloc(lastPosition, capsuleCollider.size.y, direction, hits, direction.magnitude, hitLayer);
             if (hitCount > 0)
             {
-                for (var i = 0; i < hitCount; i++)
+                // Chỉ check hit 1 object đầu tiên va chạm
+                for (var i = 0; i < 1; i++)
                 {
                     if (hits[i].transform.CompareTag("Tower"))
                     {

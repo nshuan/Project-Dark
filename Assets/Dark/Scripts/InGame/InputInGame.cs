@@ -210,14 +210,12 @@ namespace InGame
                 holdDelayTime = 0f;
                 IsMousePressing = false;
                 IsMousePressingStarted = true;
-                Debug.LogError("Hold left");
             }
             else if (eventData.button == PointerEventData.InputButton.Right)
             {
                 if (teleKeyPressed) return;
                 pressingButton = PointerEventData.InputButton.Right;
                 mouseAutoAttack.OnHoldStarted();
-                Debug.LogError("Hold Right");
             }
         }
 
