@@ -57,7 +57,7 @@ namespace InGame
 
         // <int waveIndex, float waveDuration>
         public event Action<int, float> OnWaveStart;
-        public event Action<int> onWaveEnded;
+        public event Action<int, WaveEndReason> onWaveEnded;
         
         public event Action OnWin;
         public event Action OnLose;
@@ -167,14 +167,14 @@ namespace InGame
                 OnWaveStart?.Invoke(currentWaveIndex, currentWave.timeToEnd);
                 currentWaveIndex += 1;
                 yield return currentWave.IEActivateWave();
-                onWaveEnded?.Invoke(currentWaveIndex - 1);
+                onWaveEnded?.Invoke(currentWaveIndex - 1, WaveEndReason.EndTime);
             }
         }
 
-        private void OnWaveForceStop()
+        private void OnWaveForceStop(WaveEndReason reason)
         {
             if (waveCoroutine != null) StopCoroutine(waveCoroutine);
-            onWaveEnded?.Invoke(currentWaveIndex - 1);
+            onWaveEnded?.Invoke(currentWaveIndex - 1, reason);
             winLoseManager.CheckWin(this);
             waveCoroutine = StartCoroutine(IEWave(Level.waveInfo));
         }
