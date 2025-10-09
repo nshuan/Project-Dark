@@ -90,8 +90,8 @@ namespace InGame.UI.Waves
                 .AppendInterval(0.2f)
                 .AppendCallback(() =>
                 {
-                    currentWave.transform.DOScale(0f, 0.2f).SetEase(Ease.InBack);
-                    txtWave.transform.DOScale(0f, 0.2f).SetEase(Ease.InBack).SetDelay(0.1f);
+                    currentWave.transform.DOScale(0f, 0.2f).SetEase(Ease.InQuad);
+                    txtWave.transform.DOScale(0f, 0.2f).SetEase(Ease.InQuad).SetDelay(0.1f);
                 })
                 .AppendInterval(0.2f)
                 .AppendCallback(() =>
