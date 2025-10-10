@@ -68,21 +68,24 @@ namespace InGame
                 // Chỉ check hit 1 object đầu tiên va chạm
                 for (var i = 0; i < 1; i++)
                 {
+                    if (hits[i].transform.TryGetComponent<EnemyEntity>(out hitEnemy))
+                    {
+                        Projectile.ProjectileHit(hitEnemy);
+                        DebugUtility.Log($"Hit enemy {hitEnemy.name}");
+                    }
+                    
                     if (hits[i].transform.CompareTag("Tower"))
                     {
-                        Projectile.ProjectileHit(null);    
+                        if (hits[i].transform.TryGetComponent<TowerEntity>(out var towerEntity))
+                        {
+                            if (towerEntity.Id != LevelManager.Instance.CurrentTower.Id) Projectile.ProjectileHit(null);    
+                        }
                     }
                     
                     if (hits[i].transform.CompareTag("InGameBoundary"))
                     {
                         Projectile.BlockSpawnDeadBody = true;
                         continue;
-                    }
-                    
-                    if (hits[i].transform.TryGetComponent<EnemyEntity>(out hitEnemy))
-                    {
-                        Projectile.ProjectileHit(hitEnemy);
-                        DebugUtility.Log($"Hit enemy {hitEnemy.name}");
                     }
                 }
             }
