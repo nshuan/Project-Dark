@@ -9,7 +9,7 @@ namespace InGame
 {
     public class TowerEntity : MonoBehaviour, IDamageable
     {
-        [SerializeField] public Vector3 standOffset;
+        [SerializeField] private Vector3[] standOffset;
         [SerializeField] private SpriteRenderer towerVisual;
         [SerializeField] private SpriteRenderer towerVisualUILayer;
         [SerializeField] private GameObject towerOutline;
@@ -141,6 +141,11 @@ namespace InGame
         public Vector3 GetBaseCenter()
         {
             return towerVisual.transform.position;
+        }
+
+        public Vector3 GetTowerHeight()
+        {
+            return standOffset[currentState];
         }
     }
 }
