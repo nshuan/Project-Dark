@@ -99,11 +99,8 @@ namespace Economic.UI
         {
             // TH1: Rớt item ra end wave thì tự động collect hết
             // TH2: Giống 1, nhưng rớt 1 item cho 1 đơn vị resource
-            if (reason == WaveEndReason.AllDead)
-            {
-                if (selectMethod == 1 ||  selectMethod == 2)
-                    EItemDropManager.Instance.CollectAll();
-            }
+            if (selectMethod == 1 ||  selectMethod == 2)
+                EItemDropManager.Instance.CollectAll();
         }
     }
 }
