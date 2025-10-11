@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public static class UIUtility
 {
-    public static void SetAlpha(this Image image, float alpha)
+    public static void SetAlpha(this Graphic image, float alpha)
     {
         var color = image.color;
         color.a = alpha;

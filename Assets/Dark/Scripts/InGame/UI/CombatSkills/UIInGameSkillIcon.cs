@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Coffee.UIExtensions;
 using DG.Tweening;
+using InGame.UI.InGameToast;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -50,6 +51,7 @@ namespace InGame.UI.CombatSkills
                 yield return null;
             }
 
+            ShowToast();
             groupIcon.DOPunchScale(0.1f * Vector3.one, 0.2f);
             vfxCooldownComplete.Play();
         }
@@ -112,6 +114,11 @@ namespace InGame.UI.CombatSkills
                 .Append(groupPassive.DOLocalMoveY(passiveYLocalOnHide, 0.2f))
                 .Append(imgPassiveLine.DOFillAmount(0f, 0.2f))
                 .Append(iconTogglePassive.transform.DOLocalMoveX(buttonXLocalOnShow, 0.2f));
+        }
+
+        protected virtual void ShowToast()
+        {
+            ToastInGameManager.Instance.Register(string.Empty, null);
         }
     }
 }
