@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Dark.Scripts.Audio;
 using InGame.Effects;
+using InGame.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -89,6 +90,8 @@ namespace InGame
                     towerVisual.sprite = spriteStates[currentState];
                     towerVisualUILayer.sprite = spriteStates[currentState];
                 }
+                
+                if (currentState == 0) UIWarningManager.Instance.WarnOnce(false);
             }
             
             autoRegenerate.Activate();
