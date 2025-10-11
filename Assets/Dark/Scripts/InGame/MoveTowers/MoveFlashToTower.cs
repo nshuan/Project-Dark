@@ -9,8 +9,10 @@ namespace InGame
     [Serializable]
     public class MoveFlashToTower : IMoveTowersLogic
     {
+        [Space] [Header("Combat")] 
+        [SerializeField] private LayerMask enemyLayer;
+        
         private float explodeSize = 2f;
-        private LayerMask enemyLayer;
         private int damage;
         private float stagger;
         
