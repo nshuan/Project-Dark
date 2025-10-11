@@ -105,7 +105,7 @@ namespace InGame
             
             if (Player != null) Destroy(Player.gameObject);
             Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)skillConfig.skillId);
-            Player.transform.position = CurrentTower.transform.position + CurrentTower.standOffset;
+            Player.transform.position = CurrentTower.transform.position + CurrentTower.GetTowerHeight();
             
             // Start waves
             currentWaveIndex = 0;

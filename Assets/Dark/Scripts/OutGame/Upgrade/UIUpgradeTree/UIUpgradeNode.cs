@@ -7,6 +7,7 @@ using DG.Tweening;
 using InGame.Upgrade;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -149,6 +150,22 @@ namespace Dark.Scripts.OutGame.Upgrade
         {
             Gizmos.DrawWireSphere(transform.position, lineAnchorOffsetRadius);
         }
+
+#if UNITY_EDITOR
+        public void SetIconNormal(Sprite sprite)
+        {
+            nodeVisual.sprite = sprite;
+            nodeVisual.SetNativeSize();
+            EditorUtility.SetDirty(nodeVisual);
+        }
+
+        public void SetIconLocked(Sprite sprite)
+        {
+            nodeLockVisual.sprite = sprite;
+            nodeLockVisual.SetNativeSize();
+            EditorUtility.SetDirty(nodeLockVisual);
+        }
+#endif
     }
 
     [Serializable]

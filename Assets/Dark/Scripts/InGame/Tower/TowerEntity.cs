@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Dark.Scripts.Audio;
 using InGame.Effects;
+using InGame.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +10,7 @@ namespace InGame
 {
     public class TowerEntity : MonoBehaviour, IDamageable
     {
-        [SerializeField] public Vector3 standOffset;
+        [SerializeField] private Vector3[] standOffset;
         [SerializeField] private SpriteRenderer towerVisual;
         [SerializeField] private SpriteRenderer towerVisualUILayer;
         [SerializeField] private GameObject towerOutline;
@@ -89,6 +90,8 @@ namespace InGame
                     towerVisual.sprite = spriteStates[currentState];
                     towerVisualUILayer.sprite = spriteStates[currentState];
                 }
+                
+                if (currentState == 0) UIWarningManager.Instance.WarnOnce(false);
             }
             
             autoRegenerate.Activate();
@@ -141,6 +144,11 @@ namespace InGame
         public Vector3 GetBaseCenter()
         {
             return towerVisual.transform.position;
+        }
+
+        public Vector3 GetTowerHeight()
+        {
+            return standOffset[currentState];
         }
     }
 }

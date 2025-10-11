@@ -70,7 +70,7 @@ namespace InGame
                     Character.StartCoroutine(LongConfig.moveLogic.IEMove(
                         Character, 
                         Character.transform.position, 
-                        Towers[selectingTower].transform.position + Towers[selectingTower].standOffset,
+                        Towers[selectingTower].transform.position + Towers[selectingTower].GetTowerHeight(),
                         () =>
                         {
                             LevelManager.Instance.TeleportTower(selectingTower); 
@@ -92,7 +92,7 @@ namespace InGame
                     Character.StartCoroutine(ShortConfig.moveLogic.IEMove(
                         Character, 
                         Character.transform.position, 
-                        Towers[selectingTower].transform.position + Towers[selectingTower].standOffset,
+                        Towers[selectingTower].transform.position + Towers[selectingTower].GetTowerHeight(),
                         () =>
                         {
                             LevelManager.Instance.TeleportTower(selectingTower);
