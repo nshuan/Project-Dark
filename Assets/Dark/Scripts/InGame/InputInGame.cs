@@ -52,13 +52,13 @@ namespace InGame
         {
             BlockAllInput = true;
             
-            availableTeleConfigs = new List<MoveTowersConfig>();
             
             LevelManager.Instance.OnLevelLoaded += (level) =>
             {
                 PlayerVisual = LevelManager.Instance.Player;
                 PlayerStats = LevelManager.Instance.PlayerStats;
                 
+                availableTeleConfigs = new List<MoveTowersConfig>();
                 if (LevelUtility.BonusInfo.unlockedMoveToTower == null || LevelUtility.BonusInfo.unlockedMoveToTower.Count == 0)
                     availableTeleConfigs.Add(LevelManager.Instance.defaultTeleConfig);
                 else
