@@ -9,6 +9,12 @@ namespace InGame.UI.CombatSkills
     {
         [Space] [Header("Toast")]
         [SerializeField] private Sprite toastIcon;
+
+        [Space] [Header("Multiple skill")] 
+        [SerializeField] private GameObject secondSkill;
+        [SerializeField] private Transform groupPassiveAndArrow;
+        [SerializeField] private float groupPassiveOneSkillX = 0f;
+        [SerializeField] private float groupPassiveTwoSkillX = 0f;
         
         private bool available;
         private Action callbackShowSkill;
@@ -29,7 +35,18 @@ namespace InGame.UI.CombatSkills
         private void OnUpgradeBonusActivated(UpgradeBonusInfo bonusInfo)
         {
             UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
-            
+
+            if (bonusInfo.unlockedMoveToTower.Count == 2)
+            {
+                secondSkill.SetActive(true);
+                groupPassiveAndArrow.localPosition = new Vector3(groupPassiveTwoSkillX, groupPassiveAndArrow.localPosition.y, groupPassiveAndArrow.localPosition.z);
+            }
+            else
+            {
+                secondSkill.SetActive(false);
+                groupPassiveAndArrow.localPosition = new Vector3(groupPassiveOneSkillX, groupPassiveAndArrow.localPosition.y,
+                    groupPassiveAndArrow.localPosition.z);
+            }
             // if (bonusInfo.unlockedMoveToTower is { Count: > 0 })
             {
                 available = true;
