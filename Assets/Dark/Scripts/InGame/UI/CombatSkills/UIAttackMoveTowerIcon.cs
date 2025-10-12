@@ -57,7 +57,7 @@ namespace InGame.UI.CombatSkills
             {
                 if (LevelUtility.BonusInfo.unlockedMoveToTower[0] == 1)
                     message = "Echofall is ready!";
-                else if (LevelUtility.BonusInfo.unlockedMoveToTower[1] == 2)
+                else if (LevelUtility.BonusInfo.unlockedMoveToTower[0] == 2)
                     message = "Vanguard’s Line is ready";
             }
             

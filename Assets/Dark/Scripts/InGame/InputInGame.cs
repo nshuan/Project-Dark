@@ -65,8 +65,8 @@ namespace InGame
                 {
                     foreach (var moveId in LevelUtility.BonusInfo.unlockedMoveToTower)
                     {
-                        if (moveId == 1) availableTeleConfigs.Add(LevelManager.Instance.shortTeleConfig);
-                        else if (moveId == 2) availableTeleConfigs.Add(LevelManager.Instance.longTeleConfig);
+                        if (moveId == 1) availableTeleConfigs.Add(LevelManager.Instance.flashConfig);
+                        else if (moveId == 2) availableTeleConfigs.Add(LevelManager.Instance.dashConfig);
                     }
                 }
                 teleMouseInput = new MoveToTower(cam, PlayerVisual, availableTeleConfigs[0], availableTeleConfigs.Count > 1 ? availableTeleConfigs[1] : null, LevelManager.Instance.Towers, LevelManager.Instance.CurrentTower.Id, this.TryDelayCall);

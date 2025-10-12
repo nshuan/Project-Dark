@@ -17,8 +17,8 @@ namespace InGame
     {
         [SerializeField] private PlayerStats playerStats;
         public MoveTowersConfig defaultTeleConfig;
-        public MoveTowersConfig shortTeleConfig;
-        public MoveTowersConfig longTeleConfig;
+        public MoveTowersConfig flashConfig;
+        public MoveTowersConfig dashConfig;
 
         [SerializeField] private PlayerSpawner playerSpawner;
         [SerializeField] private GateEntity gatePrefab;
