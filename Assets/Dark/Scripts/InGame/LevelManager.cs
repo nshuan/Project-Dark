@@ -121,6 +121,7 @@ namespace InGame
             if (IsEndLevel) return;
             
             WealthManager.Instance.Save();
+            PlayerDataManager.Instance.CompleteLevel();
             
             DebugUtility.LogError($"Level {Level.level} is ended: WIN");
             IsEndLevel = true;

@@ -37,6 +37,12 @@ namespace Data
                 data = new PlayerData();
             }
         }
+
+        public void CompleteLevel()
+        {
+            data.level += 1;
+            Save();
+        }
         
         #region SAVE LOAD
 
