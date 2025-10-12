@@ -9,15 +9,17 @@ namespace InGame
     [Serializable]
     public class MoveFlashToTower : IMoveTowersLogic
     {
-        private float explodeSize = 2f;
-        private LayerMask enemyLayer;
-        private int damage;
-        private float stagger;
+        [Space] [Header("Combat")] 
+        public LayerMask enemyLayer;
         
-        private RaycastHit2D[] hits = new RaycastHit2D[50];
-        private IDamageable hitTarget;
-        private PlayerCharacter characterRef;
-        private CameraShake cameraShake;
+        protected float explodeSize = 2f;
+        protected int damage;
+        protected float stagger;
+        
+        protected RaycastHit2D[] hits = new RaycastHit2D[50];
+        protected IDamageable hitTarget;
+        protected PlayerCharacter characterRef;
+        protected CameraShake cameraShake;
 
         public void SetStats(int damage, float stagger, int maxHitEachTrigger, float size)
         {
@@ -26,14 +28,19 @@ namespace InGame
             this.explodeSize = size;
         }
 
-        public IEnumerator IEMove(PlayerCharacter character, Vector2 startPos, Vector2 endPos, Action onComplete)
+        public virtual void SetStatsFuse(int damage, float stagger, int maxHitEachTrigger, float size)
+        {
+            
+        }
+
+        public virtual IEnumerator IEMove(PlayerCharacter character, TowerEntity fromTower, TowerEntity toTower, Action onComplete)
         {
             hits ??= new RaycastHit2D[50];
             characterRef = character;
-            
+                
             yield return character.PLayFlashEffect().WaitForCompletion(); 
             
-            character.transform.position = endPos;
+            character.transform.position = toTower.transform.position + toTower.GetTowerHeight();
             yield return new WaitForEndOfFrame();
             
             yield return character.StopFlashEffect(() =>
@@ -57,7 +64,7 @@ namespace InGame
             onComplete?.Invoke();
         }
         
-        private void FlashHit(Transform hitTransform, float value)
+        protected void FlashHit(Transform hitTransform, float value)
         {
             if (hitTransform)
             {

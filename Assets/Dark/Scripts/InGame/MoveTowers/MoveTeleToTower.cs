@@ -13,11 +13,16 @@ namespace InGame
             
         }
 
-        public IEnumerator IEMove(PlayerCharacter character, Vector2 startPos, Vector2 endPos, Action onComplete)
+        public void SetStatsFuse(int damage, float stagger, int maxHitEachTrigger, float size)
         {
-            yield return character.PLayTeleEffect(endPos).WaitForCompletion();
             
-            character.transform.position = endPos;
+        }
+
+        public IEnumerator IEMove(PlayerCharacter character, TowerEntity fromTower, TowerEntity toTower, Action onComplete)
+        {
+            yield return character.PLayTeleEffect(toTower.transform.position + toTower.GetTowerHeight()).WaitForCompletion();
+            
+            character.transform.position = toTower.transform.position + toTower.GetTowerHeight();
             yield return new WaitForEndOfFrame();
             
             yield return character.StopTeleEffect().WaitForCompletion();

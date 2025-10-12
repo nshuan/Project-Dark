@@ -26,6 +26,7 @@ namespace InGame.UI.CombatSkills
 
         protected override void ShowToast()
         {
+            return;
             ToastInGameManager.Instance.Register(
                 message: "Attack is ready!",
                 icon: toastIcon);

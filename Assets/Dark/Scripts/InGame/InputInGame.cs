@@ -52,21 +52,21 @@ namespace InGame
         {
             BlockAllInput = true;
             
-            availableTeleConfigs = new List<MoveTowersConfig>();
             
             LevelManager.Instance.OnLevelLoaded += (level) =>
             {
                 PlayerVisual = LevelManager.Instance.Player;
                 PlayerStats = LevelManager.Instance.PlayerStats;
                 
+                availableTeleConfigs = new List<MoveTowersConfig>();
                 if (LevelUtility.BonusInfo.unlockedMoveToTower == null || LevelUtility.BonusInfo.unlockedMoveToTower.Count == 0)
                     availableTeleConfigs.Add(LevelManager.Instance.defaultTeleConfig);
                 else
                 {
                     foreach (var moveId in LevelUtility.BonusInfo.unlockedMoveToTower)
                     {
-                        if (moveId == 1) availableTeleConfigs.Add(LevelManager.Instance.shortTeleConfig);
-                        else if (moveId == 2) availableTeleConfigs.Add(LevelManager.Instance.longTeleConfig);
+                        if (moveId == 1) availableTeleConfigs.Add(LevelManager.Instance.flashConfig);
+                        else if (moveId == 2) availableTeleConfigs.Add(LevelManager.Instance.dashConfig);
                     }
                 }
                 teleMouseInput = new MoveToTower(cam, PlayerVisual, availableTeleConfigs[0], availableTeleConfigs.Count > 1 ? availableTeleConfigs[1] : null, LevelManager.Instance.Towers, LevelManager.Instance.CurrentTower.Id, this.TryDelayCall);

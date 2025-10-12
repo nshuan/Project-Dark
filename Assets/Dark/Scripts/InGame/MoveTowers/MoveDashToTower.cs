@@ -7,22 +7,25 @@ namespace InGame
     [Serializable]
     public class MoveDashToTower : IMoveTowersLogic
     {
-        [SerializeField] private AnimationCurve speedCurve;
-        [SerializeField] private float duration;
+        public AnimationCurve speedCurve;
+        public float duration;
 
         [Space] [Header("Combat")] 
-        [SerializeField] private LayerMask enemyLayer;
+        public LayerMask enemyLayer;
         
-        private int damage;
-        private float stagger;
-        private int maxHitEachTrigger = 5;
-        private float hitRadius = 2f;
+        protected int damage;
+        protected float stagger;
+        protected int maxHitEachTrigger = 5;
+        protected float hitRadius = 2f;
         
-        private RaycastHit2D[] hits = new RaycastHit2D[10];
-        private IDamageable hitTarget;
-        private Vector2 direction;
-        private PlayerCharacter characterRef;
+        protected RaycastHit2D[] hits = new RaycastHit2D[10];
+        protected IDamageable hitTarget;
+        protected Vector2 direction;
+        protected PlayerCharacter characterRef;
 
+        protected Vector2 startPos;
+        protected Vector2 endPos;
+        
         public void SetStats(int damage, float stagger, int maxHitEachTrigger, float size)
         {
             this.damage = damage;
@@ -31,9 +34,18 @@ namespace InGame
             this.hitRadius = size;
         }
 
-        public IEnumerator IEMove(PlayerCharacter character, Vector2 startPos, Vector2 endPos, Action onComplete)
+        public virtual void SetStatsFuse(int damage, float stagger, int maxHitEachTrigger, float size)
+        {
+            
+        }
+
+        public virtual IEnumerator IEMove(PlayerCharacter character, TowerEntity fromTower, TowerEntity toTower, Action onComplete)
         {
             hits ??= new RaycastHit2D[50];
+            startPos.x = fromTower.transform.position.x + fromTower.GetTowerHeight().x;
+            startPos.y = fromTower.transform.position.y + fromTower.GetTowerHeight().y;
+            endPos.x = toTower.transform.position.x + toTower.GetTowerHeight().x;
+            endPos.y = toTower.transform.position.y + toTower.GetTowerHeight().y;
             characterRef = character;
             direction = endPos - startPos;
             character.PlayDashEffect(endPos - startPos);
@@ -65,7 +77,7 @@ namespace InGame
             onComplete?.Invoke();
         }
         
-        private void DashHit(Transform hitTransform, float value)
+        protected void DashHit(Transform hitTransform, float value)
         {
             if (hitTransform)
             {

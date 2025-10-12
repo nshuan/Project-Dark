@@ -17,8 +17,8 @@ namespace InGame
     {
         [SerializeField] private PlayerStats playerStats;
         public MoveTowersConfig defaultTeleConfig;
-        public MoveTowersConfig shortTeleConfig;
-        public MoveTowersConfig longTeleConfig;
+        public MoveTowersConfig flashConfig;
+        public MoveTowersConfig dashConfig;
 
         [SerializeField] private PlayerSpawner playerSpawner;
         [SerializeField] private GateEntity gatePrefab;
@@ -68,9 +68,10 @@ namespace InGame
 
 #if UNITY_EDITOR
         [Space] public bool autoLoadLevel = true;
-        private void Start()
+        private IEnumerator Start()
         {
-            if (autoLoadLevel)
+            yield return new WaitForSeconds(2f);
+            if (autoLoadLevel && Level == null)
                 LoadLevel(testLevel);
         }
 #endif

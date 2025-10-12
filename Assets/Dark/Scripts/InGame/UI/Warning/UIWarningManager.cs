@@ -19,7 +19,7 @@ namespace InGame.UI
             
             DOTween.Sequence(imgVignette)
                 .Append(imgVignette.DOFade(1f, 0.1f))
-                .Append(imgVignette.DOFade(0f, 1.5f))
+                .Append(imgVignette.DOFade(0f, 1.5f).SetEase(Ease.InQuad))
                 .AppendCallback(() => imgVignette.gameObject.SetActive(false));
         }
     }

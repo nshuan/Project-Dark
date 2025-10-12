@@ -45,7 +45,7 @@ namespace InGame.UI.InGameToast
                 
             seq.AppendCallback(() =>
                 {
-                    transform.DOScale(0.75f, 0.2f);
+                    transform.DOScale(0.85f, 0.2f);
                     imgLight.DOFade(0f, 0.3f);
                 })
                 .AppendInterval(3f)
