@@ -135,7 +135,7 @@ namespace Dark.Scripts.OutGame.SaveSlot
             DOTween.Kill(this);
             var seq = DOTween.Sequence(this);
 
-            seq.Append(resizeTarget.DOPunchScale(-0.1f * Vector3.one, duration));
+            seq.Append(resizeTarget.DOPunchScale(-0.05f * Vector3.one, duration));
             
             return seq;
         }
