@@ -1,6 +1,7 @@
 using Dark.Scripts.Common;
 using Dark.Scripts.SceneNavigation;
 using Dark.Scripts.Utils;
+using Data;
 using InGame;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -20,7 +21,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             {
                 Loading.Instance.LoadScene(SceneConstants.SceneInGame, () =>
                 {
-                    LevelManager.Instance.LoadLevel(1);
+                    LevelManager.Instance.LoadLevel(PlayerDataManager.Instance.Data.level + 1);
                 });
             });
         }

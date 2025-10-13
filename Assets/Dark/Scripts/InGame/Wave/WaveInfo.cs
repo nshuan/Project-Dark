@@ -65,7 +65,6 @@ namespace InGame
             
             yield return new WaitForSeconds(timeToEnd);
             DebugUtility.LogError($"Wave {waveIndex}: End duration");
-            OnWaveForceStop = null;
             CheckStopAllGate();
         }
         
