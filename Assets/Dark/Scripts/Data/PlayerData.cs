@@ -26,7 +26,7 @@ namespace Data
         
         public PlayerData()
         {
-            level = 1;
+            level = 0;
             grade = 1;
         }
         

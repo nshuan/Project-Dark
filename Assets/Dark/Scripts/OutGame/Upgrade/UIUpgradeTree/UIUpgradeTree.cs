@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEditor;
@@ -45,6 +46,9 @@ namespace Dark.Scripts.OutGame.Upgrade
         }
 
 #if UNITY_EDITOR
+        [Space] [Header("Editor")] 
+        [SerializeField] private string spritesPath = "Assets/Dark/Config/Upgrade/Skill_Tree_Sprites";
+        
         [Button]
         public void ValidateNodes()
         {
@@ -95,6 +99,8 @@ namespace Dark.Scripts.OutGame.Upgrade
             }
             
             EditorUtility.SetDirty(this);
+            
+            UpdateNodeSprites();
         }
         
         private UIUpgradeLine ShowPreRequiredLine(Vector2 from, float fromOffsetRadius, Vector2 to, float toOffsetRadius)
@@ -109,6 +115,73 @@ namespace Dark.Scripts.OutGame.Upgrade
             line.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + 90);
 
             return line.GetComponent<UIUpgradeLine>();
+        }
+
+        [Button]
+        public void UpdateNodeSprites()
+        {
+            var spriteMap = GetSpritesMapById();
+            
+            var nodes = GetComponentsInChildren<UIUpgradeNode>();
+            foreach (var node in nodes)
+            {
+                var id = node.config.nodeId;
+                if (spriteMap.TryGetValue(id, out var spriteInfo))
+                {
+                    node.SetIconNormal(spriteInfo.normalSprite);
+                    node.SetIconLocked(spriteInfo.lockedSprite);
+                }
+            }
+            
+            EditorUtility.SetDirty(this);
+        }
+        
+        private Dictionary<int, NodeSpriteInfo> GetSpritesMapById()
+        {
+            // Get all sprites from path
+            string[] guids = AssetDatabase.FindAssets("t:Sprite", new[] { spritesPath });
+            Sprite[] sprites = new Sprite[guids.Length];
+        
+            for (int i = 0; i < guids.Length; i++)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guids[i]);
+                sprites[i] = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+            }
+            
+            // Sprite should be named as one of the below, the name with "locked" is the locked state of the node
+            // [nodeId]_UI_Icon_[nodeType]_[nodeName]
+            // [nodeId]_UI_Icon_[nodeType]_locked_[nodeName]
+            var map = new Dictionary<int, NodeSpriteInfo>();
+            foreach (var sprite in sprites)
+            {
+                var nameParts = sprite.name.Split('_');
+                if (nameParts.Length == 0)
+                {
+                    Debug.LogError($"Invalid name: {sprite.name}");
+                    continue;
+                }
+
+                if (!int.TryParse(nameParts[0], out var id))
+                {
+                    Debug.LogError($"Invalid id: {sprite.name}");
+                    continue;
+                }
+
+                map.TryAdd(id, new NodeSpriteInfo());
+                if (nameParts.Any(part => part == "locked"))
+                    map[id].lockedSprite = sprite;
+                else
+                    map[id].normalSprite = sprite;
+            }
+
+            return map;
+        }
+
+        [Serializable]
+        class NodeSpriteInfo
+        {
+            public Sprite normalSprite;
+            public Sprite lockedSprite;
         }
 #endif
     }

@@ -30,9 +30,21 @@ namespace InGame
         private float dist;
         private float cohesionMag;
         private float alignmentMag;
+        
+        // cooldown between 2 boid 
+        public float boidCooldown = 0.5f;
+        private float boidCdCounter;
 
         public void GetBoidAdditionNonAlloc(ref Vector2 addition)
-        { 
+        {
+            if (boidCdCounter > 0)
+            {
+                boidCdCounter -= Time.deltaTime;
+                addition.x = 0;
+                addition.y = 0;
+                return;
+            }
+            
             EnemyBoidManager.Instance.grid.Register(this, ref currentCell);
             
             neighborCount = EnemyBoidManager.Instance.grid.GetNearbyNonAlloc(this, Mathf.Max(separationRadius, alignmentRadius, cohesionRadius), ref currentCell, ref neighbors);
@@ -102,6 +114,8 @@ namespace InGame
                              cohesion.x * cohesionWeight;
             addition.y = separation.y * separationWeight + alignment.y / alignmentMag * alignmentWeight +
                              cohesion.y * cohesionWeight;
+            
+            boidCdCounter = boidCooldown;
         }   
     }
 }

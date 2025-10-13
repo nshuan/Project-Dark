@@ -12,6 +12,7 @@ namespace Dark.Scripts.OutGame.SaveSlot
     public class UISelectSaveSlotInfo : MonoBehaviour
     {
         [SerializeField] private UISelectSaveSlotButton btnSelect;
+        public CanvasGroup canvasGroup;
         [SerializeField] private GameObject panelEmptySlot;
         [SerializeField] private GameObject panelSlot;
         [SerializeField] private GameObject[] imgClass;
@@ -22,18 +23,12 @@ namespace Dark.Scripts.OutGame.SaveSlot
         [SerializeField] private TextMeshProUGUI txtPlayedTime;
         [SerializeField] private Button btnClearSave;
 
-        private SaveSlotManager saveSlotManager;
+        public Action<int> ActionClearSaveSlot { get; set; }
         
-        private void Start()
-        {
-            saveSlotManager = SaveSlotManager.Instance;
-            UpdateUI();
-        }
-
-        private void UpdateUI()
+        public void UpdateUI()
         {
             var slotIndex = btnSelect.slotIndex;
-            var isEmptySlot = saveSlotManager.IsEmptySlot(slotIndex);
+            var isEmptySlot = SaveSlotManager.Instance.IsEmptySlot(slotIndex);
             
             panelEmptySlot.SetActive(isEmptySlot);
             panelSlot.SetActive(!isEmptySlot);
@@ -48,30 +43,18 @@ namespace Dark.Scripts.OutGame.SaveSlot
             
             if (!isEmptySlot)
             {
-                var classType = saveSlotManager.GetClassTypeIndex(slotIndex);
+                var classType = SaveSlotManager.Instance.GetClassTypeIndex(slotIndex);
                 if (classType >= 0 || classType < imgClass.Length) imgClass[classType].SetActive(true);
                 if (classType >= 0 || classType < imgClassLight.Length) imgClassLight[classType].SetActive(true);
                 
-                txtClassName.SetText(saveSlotManager.GetDisplayClassName(slotIndex));
-                txtDayPassed.SetText(saveSlotManager.GetDisplayPassedDays(slotIndex));
-                txtLevel.SetText(saveSlotManager.GetDisplayLevel(slotIndex));
-                txtPlayedTime.SetText(saveSlotManager.GetDisplayTimePlayed(slotIndex));
+                txtClassName.SetText(SaveSlotManager.Instance.GetDisplayClassName(slotIndex));
+                txtDayPassed.SetText(SaveSlotManager.Instance.GetDisplayPassedDays(slotIndex));
+                txtLevel.SetText(SaveSlotManager.Instance.GetDisplayLevel(slotIndex));
+                txtPlayedTime.SetText(SaveSlotManager.Instance.GetDisplayTimePlayed(slotIndex));
                 
                 btnClearSave.onClick.AddListener(() =>
                 { 
-                    saveSlotManager.popupConfirmClearSave.Setup(
-                        "your data will be lost", 
-                        $"Are you sure?",
-                        () =>
-                        {
-                            saveSlotManager.ClearSlot(btnSelect.Index);
-                            saveSlotManager.popupConfirmClearSave.DoCloseFadeOut();
-                            UpdateUI();
-                        });
-                    this.DelayCall(UIConst.BtnDelayOnClick, () =>
-                    {
-                        saveSlotManager.popupConfirmClearSave.DoOpenFadeIn();
-                    });
+                    ActionClearSaveSlot?.Invoke(slotIndex);
                 });
             }
         }

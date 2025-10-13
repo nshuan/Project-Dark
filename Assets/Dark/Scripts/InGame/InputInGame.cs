@@ -18,7 +18,7 @@ namespace InGame
         public PlayerCharacter PlayerVisual { get; set; }
         public PlayerStats PlayerStats { get; set; }
         public PlayerSkillConfig CurrentSkillConfig { get; set; }
-        public Transform CursorRangeCenter => PlayerVisual.transform;
+        public Transform ProjectileSpawnPos => PlayerVisual.transform;
         private List<MoveTowersConfig> availableTeleConfigs;
         private bool BlockAllInput { get; set; }
         public bool BlockTeleport { get; set; }
@@ -29,8 +29,10 @@ namespace InGame
         private IMouseInput mouseInput;
         private IMoveTowerMouseInput teleMouseInput;
         private IMoveMouseInput collectorMouseInput;
+        private IMouseInput mouseAutoAttack;
         public bool enableCollectorMouse;
         private MonoCursor cursor;
+        private PointerEventData.InputButton pressingButton = PointerEventData.InputButton.Middle;
 
         #region Move Towers
 
@@ -50,21 +52,21 @@ namespace InGame
         {
             BlockAllInput = true;
             
-            availableTeleConfigs = new List<MoveTowersConfig>();
             
             LevelManager.Instance.OnLevelLoaded += (level) =>
             {
                 PlayerVisual = LevelManager.Instance.Player;
                 PlayerStats = LevelManager.Instance.PlayerStats;
                 
+                availableTeleConfigs = new List<MoveTowersConfig>();
                 if (LevelUtility.BonusInfo.unlockedMoveToTower == null || LevelUtility.BonusInfo.unlockedMoveToTower.Count == 0)
                     availableTeleConfigs.Add(LevelManager.Instance.defaultTeleConfig);
                 else
                 {
                     foreach (var moveId in LevelUtility.BonusInfo.unlockedMoveToTower)
                     {
-                        if (moveId == 1) availableTeleConfigs.Add(LevelManager.Instance.shortTeleConfig);
-                        else if (moveId == 2) availableTeleConfigs.Add(LevelManager.Instance.longTeleConfig);
+                        if (moveId == 1) availableTeleConfigs.Add(LevelManager.Instance.flashConfig);
+                        else if (moveId == 2) availableTeleConfigs.Add(LevelManager.Instance.dashConfig);
                     }
                 }
                 teleMouseInput = new MoveToTower(cam, PlayerVisual, availableTeleConfigs[0], availableTeleConfigs.Count > 1 ? availableTeleConfigs[1] : null, LevelManager.Instance.Towers, LevelManager.Instance.CurrentTower.Id, this.TryDelayCall);
@@ -85,6 +87,14 @@ namespace InGame
                 mouseInput.Initialize(this, chargeControllerArcher);
                 mouseInput.ResetChargeVariable();
 
+                if (mouseAutoAttack != null)
+                {
+                    mouseAutoAttack.Dispose();
+                    mouseAutoAttack = null;
+                }
+                mouseAutoAttack = new MoveAutoAttack(cam, cursor);
+                mouseAutoAttack.Initialize(this, null);
+                
                 if (enableCollectorMouse)
                     collectorMouseInput = new MoveCollectResource(cam, PlayerVisual.transform);
                 
@@ -115,19 +125,6 @@ namespace InGame
             {
                 return;
             }
-            
-#if UNITY_EDITOR
-            // Test tower change
-            for (var i = 1; i <= 3; i++)
-            {
-                if (Input.GetKeyDown(i.ToString()))
-                {
-                    teleMouseInput?.OnActivated();
-                    teleMouseInput?.OnMouseClick(false);
-                    return;
-                }
-            }
-#endif
 
             if (!BlockTeleport)
             {
@@ -179,6 +176,7 @@ namespace InGame
             if (BlockAllInput) return;
             
             mouseInput?.OnUpdate();
+            mouseAutoAttack?.OnUpdate();
             teleMouseInput?.OnUpdate();
             if (enableCollectorMouse) collectorMouseInput?.OnUpdate();
         }
@@ -192,13 +190,32 @@ namespace InGame
         {
             if (BlockAllInput) return;
             
+            // Check nếu đang giữ chuột trái thì không bấm được chuột phải
+            // Còn nếu đang dí chuột phải auto mà bấm chuột trái thì được
+            if (pressingButton == PointerEventData.InputButton.Left && eventData.button == PointerEventData.InputButton.Right) return;
+            
             if (eventData.button == PointerEventData.InputButton.Left)
             {
+                // Nếu đang giữ chuột phải thì release luôn
+                if (pressingButton == PointerEventData.InputButton.Right)
+                    mouseAutoAttack.OnHoldReleased();
+                
+                pressingButton = PointerEventData.InputButton.Left;
+                
                 if (teleKeyPressed) return;
                 
+                // Reset luôn auto attack, nếu ang press tele key thì thôi
+                mouseAutoAttack.ResetChargeVariable();
+                   
                 holdDelayTime = 0f;
                 IsMousePressing = false;
                 IsMousePressingStarted = true;
+            }
+            else if (eventData.button == PointerEventData.InputButton.Right)
+            {
+                if (teleKeyPressed) return;
+                pressingButton = PointerEventData.InputButton.Right;
+                mouseAutoAttack.OnHoldStarted();
             }
         }
 
@@ -207,6 +224,10 @@ namespace InGame
             if (BlockAllInput) return;
             if (eventData.button == PointerEventData.InputButton.Left)
             {
+                // Reset biên lưu nút chuột đang nhấn
+                if (pressingButton == PointerEventData.InputButton.Left)
+                    pressingButton = PointerEventData.InputButton.Middle;
+                
                 if (teleKeyPressed)
                 {
                     teleKeyPressed = false;
@@ -234,6 +255,11 @@ namespace InGame
             }
             else if (eventData.button == PointerEventData.InputButton.Right)
             {
+                // Release chuột auto attack, reset biến lưu chuột đang nhấn
+                mouseAutoAttack.OnHoldReleased();
+                if (pressingButton == PointerEventData.InputButton.Right)
+                    pressingButton = PointerEventData.InputButton.Middle;
+                
                 if (teleKeyPressed)
                 {
                     teleKeyPressed = false;

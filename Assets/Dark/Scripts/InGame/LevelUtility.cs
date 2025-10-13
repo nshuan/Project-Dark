@@ -18,9 +18,8 @@ namespace InGame
         }
         
         /// <summary>
-        /// Bullet_Dame = Player_Damage + SKill_Damage
         /// Player_Damage = [ Base_Damage + Total (Dame_Plus) ] * [1 + Total (Dame_Multiple) ]
-        /// SKill_Damage = [ Dame_Per_Bullet + Total (Skill_Dame_Plus) ] * [ 1 + Total (Skill_Dame_Multiple) ]
+        /// Bullet_Dame = [ Player_Damage + Dame_Per_Bullet + Total (Skill_Dame_Plus) ] * [ 1 + Total (Skill_Dame_Multiple) ]
         /// 
         /// Crit_Dame_Multiplier = Crit_Dame_Base + Total (Crit_Dame)
         /// 
@@ -40,9 +39,8 @@ namespace InGame
             float chargeDameMultiplier)
         {
             playerDamage = Mathf.RoundToInt((playerDamage + BonusInfo.damePlus) * (1 + BonusInfo.dameMultiply));
-            skillDamage = Mathf.RoundToInt((skillDamage + BonusInfo.skillBonus.skillDamePlus) * (1 + BonusInfo.skillBonus.skillDameMultiply));
+            var bulletDamage = Mathf.RoundToInt((playerDamage + skillDamage + BonusInfo.skillBonus.skillDamePlus) * (1 + BonusInfo.skillBonus.skillDameMultiply));
             criticalDameMultiplier = criticalDameMultiplier + BonusInfo.criticalDame;
-            var bulletDamage = playerDamage + skillDamage;
             return (
                 Mathf.RoundToInt(bulletDamage * chargeDameMultiplier), 
                 Mathf.RoundToInt(bulletDamage * criticalDameMultiplier * chargeDameMultiplier)
@@ -74,14 +72,14 @@ namespace InGame
         /// <summary>
         /// Player_Cooldown = Base_Cooldown + Total (Cooldown_Plus)
         /// Skill_Cooldown = [Skill_Cooldown_Base - Total (Skill_Cooldown_Plus) ] * [ 1 - Total (Skill_Cooldown_Multiple) ]
-        /// Final_Cooldown = Skill_Cooldown * Player_Cooldown
+        /// Final_Cooldown = Skill_Cooldown * (1 - Player_Cooldown)
         /// </summary>
         /// <param name="playerCooldown"></param>
         /// <param name="baseSkillCooldown"></param>
         /// <returns></returns>
         public static float GetSkillCooldown(int skillId, float playerCooldown, float baseSkillCooldown)
         {
-            return Mathf.Max(0f, (baseSkillCooldown - BonusInfo.skillBonus.skillCooldownPlus) * (1 - BonusInfo.skillBonus.skillCooldownMultiply) * (playerCooldown - BonusInfo.cooldownPlus));
+            return Mathf.Max(0f, (baseSkillCooldown - BonusInfo.skillBonus.skillCooldownPlus) * (1 - BonusInfo.skillBonus.skillCooldownMultiply) * (1 - playerCooldown - BonusInfo.cooldownPlus));
         }
 
         /// <summary>
@@ -90,9 +88,18 @@ namespace InGame
         /// <param name="baseRange"></param>
         /// <param name="chargeRange"></param>
         /// <returns></returns>
-        public static float GetSkillRange(int skillId, float baseRange, float chargeRange)
+        public static float GetSkillRange(int skillId, float baseRange, float chargeRange, Vector2 direction)
         {
-            return baseRange * (1 + BonusInfo.skillBonus.skillRangeMultiply) * chargeRange;
+            // Calculate the ratio: true_range / skill_range
+            var magnitude = direction.magnitude;
+            direction.x = Mathf.Abs(direction.x) / magnitude;
+            direction.y = Mathf.Abs(direction.y) / magnitude;
+            var angle = Mathf.Atan2(direction.y, direction.x);
+            var ratio = GameConst.IsoRatio
+                        / Mathf.Sqrt(Mathf.Pow(GameConst.IsoRatio * Mathf.Cos(angle), 2) +
+                                     Mathf.Pow(Mathf.Sin(angle), 2));
+            
+            return baseRange * (1 + BonusInfo.skillBonus.skillRangeMultiply) * chargeRange * ratio;
         }
 
         /// <summary>

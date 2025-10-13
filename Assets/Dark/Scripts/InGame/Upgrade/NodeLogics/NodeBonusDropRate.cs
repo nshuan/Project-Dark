@@ -7,7 +7,6 @@ namespace InGame.Upgrade
     {
         public float[] value;
         public bool isMultiply;
-        public string bonusDescription;
         
         public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)
         {
@@ -17,9 +16,10 @@ namespace InGame.Upgrade
             else bonusInfo.dropRatePlus += value[level - 1];
         }
 
-        public string GetDescription(int level)
+        public string GetDisplayValue(int level)
         {
-            return bonusDescription;
+            if (level < 0 || level >= value.Length) return "??";
+            return value[level].ToString();
         }
     }
 }

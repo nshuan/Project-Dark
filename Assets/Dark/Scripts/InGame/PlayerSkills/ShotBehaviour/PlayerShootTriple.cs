@@ -12,6 +12,7 @@ namespace InGame
         public override void Shoot(
             ProjectileEntity projectilePrefab, 
             Vector2 spawnPos,
+            Vector2 rangeCenter,
             Vector2 target,
             int damagePerBullet, 
             int criticalDamagePerBullet, 

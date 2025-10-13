@@ -65,23 +65,27 @@ namespace InGame
             var hitCount = Physics2D.CircleCastNonAlloc(lastPosition, capsuleCollider.size.y, direction, hits, direction.magnitude, hitLayer);
             if (hitCount > 0)
             {
-                for (var i = 0; i < hitCount; i++)
+                // Chỉ check hit 1 object đầu tiên va chạm
+                for (var i = 0; i < 1; i++)
                 {
+                    if (hits[i].transform.TryGetComponent<EnemyEntity>(out hitEnemy))
+                    {
+                        Projectile.ProjectileHit(hitEnemy);
+                        DebugUtility.Log($"Hit enemy {hitEnemy.name}");
+                    }
+                    
                     if (hits[i].transform.CompareTag("Tower"))
                     {
-                        Projectile.ProjectileHit(null);    
+                        if (hits[i].transform.TryGetComponent<TowerEntity>(out var towerEntity))
+                        {
+                            if (towerEntity.Id != LevelManager.Instance.CurrentTower.Id) Projectile.ProjectileHit(null);    
+                        }
                     }
                     
                     if (hits[i].transform.CompareTag("InGameBoundary"))
                     {
                         Projectile.BlockSpawnDeadBody = true;
                         continue;
-                    }
-                    
-                    if (hits[i].transform.TryGetComponent<EnemyEntity>(out hitEnemy))
-                    {
-                        Projectile.ProjectileHit(hitEnemy);
-                        DebugUtility.Log($"Hit enemy {hitEnemy.name}");
                     }
                 }
             }

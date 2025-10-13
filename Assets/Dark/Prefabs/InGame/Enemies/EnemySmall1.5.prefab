@@ -100,6 +100,9 @@ MonoBehaviour:
   uiHealth: {fileID: 2775015567938810026}
   animController: {fileID: 6657011251685399174}
   shadow: {fileID: 6146576754246497612}
+  visual: {fileID: 2164173735719195637}
+  materialNormal: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  materialElite: {fileID: 2100000, guid: 9cc43911995a5cd4b80f150967a2a7f4, type: 2}
 --- !u!70 &8131059031516112919
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -153,6 +156,7 @@ MonoBehaviour:
   separationWeight: 1.5
   alignmentWeight: 1
   cohesionWeight: 1
+  boidCooldown: 0.5
 --- !u!1 &3619857512061660546
 GameObject:
   m_ObjectHideFlags: 0

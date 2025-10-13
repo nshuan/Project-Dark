@@ -1,3 +1,5 @@
+using Dark.Scripts.Common;
+using Dark.Scripts.Utils;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -7,7 +9,8 @@ namespace Dark.Scripts.OutGame.Home
     {
         public override void OnPointerClick(PointerEventData eventData)
         {
-            Application.Quit();
+            this.DelayCall(UIConst.HomeBtnDelayOnClick, Application.Quit);
+            base.OnPointerClick(eventData);
         }
     }
 }

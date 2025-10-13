@@ -99,6 +99,16 @@ namespace InGame
         {
             spriteRenderer.gameObject.SetActive(true);
             dashEffect.PLayEnd();
+            dashEffect.transform.position = transform.position;
+            dashEffect.transform.SetParent(transform);
+        }
+
+        public Transform PlayOnlyDashEffect(Vector2 startPos, Vector2 direction)
+        {
+            dashEffect.transform.SetParent(null);
+            dashEffect.transform.position = startPos;
+            dashEffect.PLayStart(direction);
+            return dashEffect.transform;
         }
 
         #endregion
@@ -124,10 +134,15 @@ namespace InGame
             return flashSequence.AppendInterval(Mathf.Max(0f, 0.15f))
                 .AppendCallback(() =>
                 {
-                    flashEffect.PlayAoe();
+                    PlayAoe();
                     onLanded?.Invoke();
                 })
                 .Append(spriteRenderer.DOFade(1f, 0.2f));
+        }
+
+        public void PlayAoe()
+        {
+            flashEffect.PlayAoe();
         }
         
         #endregion
@@ -149,5 +164,21 @@ namespace InGame
         }
 
         #endregion
+        
+        [Space] [Header("Debug")] public Transform shotRadius;
+        public void UpdateShotRadius(Vector2 rangeCenter, float radius, bool immediatelly = true)
+        {
+            if (immediatelly)
+            {
+                shotRadius.position = rangeCenter;
+                shotRadius.localScale = new Vector3(radius, radius, radius);
+            }
+            else
+            {
+                DOTween.Kill(shotRadius);
+                shotRadius.position = rangeCenter;
+                shotRadius.DOScale(radius, 0.3f).SetTarget(shotRadius).SetDelay(0.3f);
+            }
+        }
     }
 }

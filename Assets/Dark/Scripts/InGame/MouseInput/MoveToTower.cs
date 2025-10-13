@@ -34,15 +34,18 @@ namespace InGame
         {
             Cam = cam;
             Character = player;
-            ShortConfig = shortConfig;
-            LongConfig = longConfig;
             Towers = towers;
             CurrentTowerIndex = currentTowerIndex;
             DelayCallFunction = delayCallFunction;
             actionTowerChanged = OnTowerChanged;
             CanMove = false;
             CanCountdown = true;
-            CanMoveLong = longConfig != null;
+            
+            // bỏ cơ chế move bằng chuột phải, thay bằng cơ chế kết hợp 2 loại move
+            // CanMoveLong = longConfig != null;
+            CanMoveLong = false;
+            ShortConfig = shortConfig;
+            LongConfig = longConfig;
 
             LevelManager.Instance.OnChangeTower += actionTowerChanged;
         }
@@ -51,7 +54,7 @@ namespace InGame
         {
             actionTowerChanged = null;
         }
-
+        
         public void OnMouseClick(bool isLongTele)
         {
             if (!CanMove) return;
@@ -60,48 +63,45 @@ namespace InGame
             {
                 CanMove = false;
                 CanCountdown = false;
-                if (isLongTele)
+
+                Action callbackComplete = () =>
                 {
-                    LongConfig.moveLogic.SetStats(
+                    LevelManager.Instance.TeleportTower(selectingTower);
+                    Cooldown = GetCooldown(ShortConfig);
+                    cdCounter = Cooldown;
+                    CanCountdown = true;
+                    CurrentTowerIndex = selectingTower;
+                    CombatActions.OnMoveTower?.Invoke(Cooldown);
+                };
+                
+                ShortConfig.moveLogic.SetStats(
+                    GetDamage(ShortConfig),
+                    ShortConfig.stagger,
+                    ShortConfig.maxHitEachTrigger,
+                    GetSize(ShortConfig));
+                if (!LongConfig)
+                {
+                    Character.StartCoroutine(ShortConfig.moveLogic.IEMove(
+                        Character, 
+                        Towers[CurrentTowerIndex], 
+                        Towers[selectingTower],
+                        callbackComplete
+                    ));
+                }
+                else
+                {
+                    ShortConfig.moveLogic.SetStatsFuse(
                         GetDamage(LongConfig),
                         LongConfig.stagger,
                         LongConfig.maxHitEachTrigger,
                         GetSize(LongConfig));
-                    Character.StartCoroutine(LongConfig.moveLogic.IEMove(
-                        Character, 
-                        Character.transform.position, 
-                        Towers[selectingTower].transform.position + Towers[selectingTower].standOffset,
-                        () =>
-                        {
-                            LevelManager.Instance.TeleportTower(selectingTower); 
-                            Cooldown = GetCooldown(LongConfig);
-                            cdCounter = Cooldown;
-                            CanCountdown = true;
-                            CurrentTowerIndex = selectingTower;
-                            CombatActions.OnMoveTower?.Invoke(Cooldown);
-                        }));
                     
-                }
-                else
-                {
-                    ShortConfig.moveLogic.SetStats(
-                        GetDamage(ShortConfig),
-                        ShortConfig.stagger,
-                        ShortConfig.maxHitEachTrigger,
-                        GetSize(ShortConfig));
-                    Character.StartCoroutine(ShortConfig.moveLogic.IEMove(
+                    Character.StartCoroutine(ShortConfig.MoveFuseLogic.IEMove(
                         Character, 
-                        Character.transform.position, 
-                        Towers[selectingTower].transform.position + Towers[selectingTower].standOffset,
-                        () =>
-                        {
-                            LevelManager.Instance.TeleportTower(selectingTower);
-                            Cooldown = GetCooldown(ShortConfig);
-                            cdCounter = Cooldown;
-                            CanCountdown = true;
-                            CurrentTowerIndex = selectingTower;
-                            CombatActions.OnMoveTower?.Invoke(Cooldown);
-                        }));
+                        Towers[CurrentTowerIndex], 
+                        Towers[selectingTower],
+                        callbackComplete
+                    ));
                 }
                 
                 foreach (var tower in Towers)

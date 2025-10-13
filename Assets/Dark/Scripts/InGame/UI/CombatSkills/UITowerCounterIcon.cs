@@ -1,4 +1,6 @@
 using System;
+using Data;
+using InGame.UI.InGameToast;
 using InGame.Upgrade;
 using UnityEngine;
 
@@ -6,9 +8,9 @@ namespace InGame.UI.CombatSkills
 {
     public class UITowerCounterIcon : UIInGameSkillIcon
     {
-        [SerializeField] private GameObject skillIcon;
-        [SerializeField] private GameObject effectIconParent;
-
+        [Space] [Header("Toast")]
+        [SerializeField] private Sprite toastIcon;
+        
         private bool available;
         private Action callbackShowSkill;
         private Action callbackHideSkill;
@@ -29,7 +31,7 @@ namespace InGame.UI.CombatSkills
         {
             UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
             
-            if (bonusInfo.unlockedTowerCounter != null)
+            if (bonusInfo.unlockedTowerCounter)
             {
                 available = true;
                 callbackShowSkill?.Invoke();
@@ -41,6 +43,24 @@ namespace InGame.UI.CombatSkills
                 available = false;
                 callbackHideSkill?.Invoke();
             }
+        }
+        
+        protected override void ShowToast()
+        {
+            var message = "";
+            switch ((CharacterClass.CharacterClass)PlayerDataManager.Instance.Data.characterClass)
+            {
+                case CharacterClass.CharacterClass.Archer:
+                    message = "Vowpierce is ready!";
+                    break;
+                case CharacterClass.CharacterClass.Knight:
+                    message = "Trine Severance is ready!";
+                    break;
+            }
+            
+            ToastInGameManager.Instance.Register(
+                message: message,
+                icon: toastIcon);
         }
     }
 }

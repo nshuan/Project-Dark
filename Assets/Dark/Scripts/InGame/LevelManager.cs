@@ -17,8 +17,8 @@ namespace InGame
     {
         [SerializeField] private PlayerStats playerStats;
         public MoveTowersConfig defaultTeleConfig;
-        public MoveTowersConfig shortTeleConfig;
-        public MoveTowersConfig longTeleConfig;
+        public MoveTowersConfig flashConfig;
+        public MoveTowersConfig dashConfig;
 
         [SerializeField] private PlayerSpawner playerSpawner;
         [SerializeField] private GateEntity gatePrefab;
@@ -55,8 +55,9 @@ namespace InGame
         public Action<LevelConfig> OnLevelLoaded { get; set; }
         public Action<TowerEntity> OnChangeTower { get; set; }
 
-        public event Action<int> OnWaveStart;
-        public event Action<int> onWaveEnded;
+        // <int waveIndex, float waveDuration>
+        public event Action<int, float> OnWaveStart;
+        public event Action<int, WaveEndReason> onWaveEnded;
         
         public event Action OnWin;
         public event Action OnLose;
@@ -64,11 +65,16 @@ namespace InGame
         #endregion
         
         private WinLoseManager winLoseManager;
-        
-        private void Start()
+
+#if UNITY_EDITOR
+        [Space] public bool autoLoadLevel = true;
+        private IEnumerator Start()
         {
-            LoadLevel(testLevel);
+            yield return new WaitForSeconds(2f);
+            if (autoLoadLevel && Level == null)
+                LoadLevel(testLevel);
         }
+#endif
 
         protected override void OnDestroy()
         {
@@ -100,7 +106,7 @@ namespace InGame
             
             if (Player != null) Destroy(Player.gameObject);
             Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)skillConfig.skillId);
-            Player.transform.position = CurrentTower.transform.position + CurrentTower.standOffset;
+            Player.transform.position = CurrentTower.transform.position + CurrentTower.GetTowerHeight();
             
             // Start waves
             currentWaveIndex = 0;
@@ -115,6 +121,7 @@ namespace InGame
             if (IsEndLevel) return;
             
             WealthManager.Instance.Save();
+            PlayerDataManager.Instance.CompleteLevel();
             
             DebugUtility.LogError($"Level {Level.level} is ended: WIN");
             IsEndLevel = true;
@@ -147,6 +154,7 @@ namespace InGame
         
         #region Waves
 
+        // Start from 0
         private int currentWaveIndex;
         private Coroutine waveCoroutine;
         private IEnumerator IEWave(WaveInfo[] waves)
@@ -158,17 +166,17 @@ namespace InGame
             {
                 var currentWave = waves[currentWaveIndex];
                 currentWave.SetupWave(gatePrefab, Towers, Level.levelExpRatio, Level.levelDarkRatio, OnWaveForceStop);
-                OnWaveStart?.Invoke(currentWaveIndex);
+                OnWaveStart?.Invoke(currentWaveIndex, currentWave.timeToEnd);
                 currentWaveIndex += 1;
                 yield return currentWave.IEActivateWave();
-                onWaveEnded?.Invoke(currentWaveIndex - 1);
+                onWaveEnded?.Invoke(currentWaveIndex - 1, WaveEndReason.EndTime);
             }
         }
 
-        private void OnWaveForceStop()
+        private void OnWaveForceStop(WaveEndReason reason)
         {
             if (waveCoroutine != null) StopCoroutine(waveCoroutine);
-            onWaveEnded?.Invoke(currentWaveIndex - 1);
+            onWaveEnded?.Invoke(currentWaveIndex - 1, reason);
             winLoseManager.CheckWin(this);
             waveCoroutine = StartCoroutine(IEWave(Level.waveInfo));
         }

@@ -11,6 +11,7 @@ namespace InGame
         public override void Shoot(
             ProjectileEntity projectilePrefab,
             Vector2 spawnPos, 
+            Vector2 rangeCenter,
             Vector2 target,
             int damagePerBullet, 
             int criticalDamagePerBullet, 
@@ -32,7 +33,7 @@ namespace InGame
                 var direction = (target - spawnPos).normalized;
                 p.transform.position = spawnPos;
                 p.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
-                p.Init(spawnPos, (target - spawnPos).normalized, skillRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, isCharge, maxHit, activateActions, projectileHitActions, ProjectileType.PlayerProjectile);
+                p.Init(rangeCenter, (target - spawnPos).normalized, skillRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, isCharge, maxHit, activateActions, projectileHitActions, ProjectileType.PlayerProjectile);
                 p.Activate(delayEachBullet * i);
             }
         }

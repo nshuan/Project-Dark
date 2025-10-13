@@ -16,7 +16,7 @@ namespace InGame
         [Space] [Header("Bullet config")]
         [SerializeField] private float baseSpeed = 5f;
         protected Vector2 direction;
-        public Vector2 StartPos { get; set; }
+        public Vector2 RangeCenter { get; set; }
         public float maxDistance;
         public int Damage { get; set; }
         public float Size { get; set; }
@@ -60,7 +60,7 @@ namespace InGame
         }
 
         public virtual void Init(
-            Vector2 startPos,
+            Vector2 rangeCenter,
             Vector2 direction,
             float maxDistance,
             float size,
@@ -79,7 +79,7 @@ namespace InGame
             transform.localScale = size * Vector3.one;
             SpeedScale = speedScale;
             Speed = baseSpeed * speedScale;
-            this.StartPos = startPos;
+            this.RangeCenter = rangeCenter;
             this.direction = direction;
             this.maxDistance = maxDistance;
             lifeTime = 0f;
@@ -121,7 +121,7 @@ namespace InGame
         protected virtual void Update()
         {
             if (!activated) return;
-            if (Vector2.Distance(transform.position, StartPos) > maxDistance)
+            if (Vector2.Distance(transform.position, RangeCenter) > maxDistance)
             {
                 if (!BlockSpawnDeadBody)
                     ProjectileDeadPool.Instance.Get(direction).position = transform.position;

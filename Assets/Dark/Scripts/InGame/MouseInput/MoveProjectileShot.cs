@@ -80,6 +80,14 @@ namespace InGame
             
             ChargeController.SetProjectile(InputManager.CurrentSkillConfig.projectiles[PlayerProjectileType.ChargeBullet]);
             ChargeController.Cam = Cam;
+            
+            // Setup shot radius
+            InputManager.PlayerVisual.UpdateShotRadius(
+                LevelManager.Instance.CurrentTower.GetBaseCenter(),
+                LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId, 
+                    InputManager.CurrentSkillConfig.range, 
+                    1f,
+                    Vector2.right));
         }
         
         public virtual void OnMouseClick()
@@ -91,6 +99,7 @@ namespace InGame
             var isCharge = (canChargeBullet && bulletAdd > 0) || (canChargeDame && dameChargeTime > 0) ||
                            (canChargeSize && sizeChargeTime > 0) || (canChargeRange && rangeChargeTime > 0);
             
+            var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(
                 InputManager.CurrentSkillConfig.skillId,
                 InputManager.PlayerStats.damage,
@@ -104,12 +113,12 @@ namespace InGame
                 canChargeSize && sizeChargeTime > 0 ? 1 + Mathf.Min(sizeChargeTime / maxSizeChargeTime, 1f) * maxSizeMultiplierAdd : 1f);
             var skillRange = LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId,
                 InputManager.CurrentSkillConfig.range,
-                canChargeRange && rangeChargeTime > 0 ? 1 + Mathf.Min(rangeChargeTime / maxRangeChargeTime, 1f) * maxRangeMultiplierAdd : 1f);
+                canChargeRange && rangeChargeTime > 0 ? 1 + Mathf.Min(rangeChargeTime / maxRangeChargeTime, 1f) * maxRangeMultiplierAdd : 1f,
+                tempMousePos - LevelManager.Instance.CurrentTower.GetBaseCenter());
             var maxHit = 1 + LevelUtility.BonusInfo.skillBonus.bulletMaxHitPlus;
             var stagger = LevelUtility.GetBulletStagger(InputManager.CurrentSkillConfig.skillId,
                 InputManager.CurrentSkillConfig.stagger);
 
-            var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             InputManager.BlockTeleport = true;
             var delayShot = 0f;
             if (isCharge)
@@ -127,7 +136,8 @@ namespace InGame
                 
                 InputManager.CurrentSkillConfig.Shoot(
                     InputManager.CurrentSkillConfig.projectiles[PlayerProjectileType.Normal],
-                    InputManager.CursorRangeCenter.position,
+                    InputManager.ProjectileSpawnPos.position,
+                    LevelManager.Instance.CurrentTower.GetBaseCenter(),
                     tempMousePos,
                     damage,
                     isCharge ? 1 : bulletNum,
@@ -173,6 +183,14 @@ namespace InGame
             
             cdCounter = Cooldown;
             cdCounter += delayShot;
+
+            // Reset range
+            InputManager.PlayerVisual.UpdateShotRadius(
+                LevelManager.Instance.CurrentTower.GetBaseCenter(),
+                LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId, 
+                    InputManager.CurrentSkillConfig.range, 
+                    1f,
+                    Vector2.right), false);
             
             // Do cursor effect
             cursor.UpdateBulletAdd(false);
@@ -330,6 +348,14 @@ namespace InGame
                 if (canChargeRange && isChargingRange)
                 {
                     rangeChargeTime += Time.deltaTime;
+                    
+                    // Update shot radius
+                    InputManager.PlayerVisual.UpdateShotRadius(
+                        LevelManager.Instance.CurrentTower.GetBaseCenter(),
+                        LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId, 
+                            InputManager.CurrentSkillConfig.range, 
+                            canChargeRange && rangeChargeTime > 0 ? 1 + Mathf.Min(rangeChargeTime / maxRangeChargeTime, 1f) * maxRangeMultiplierAdd : 1f,
+                            Vector2.right));
                 }
             }
             

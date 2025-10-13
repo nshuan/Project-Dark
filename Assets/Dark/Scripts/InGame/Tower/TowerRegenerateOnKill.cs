@@ -25,6 +25,8 @@ namespace InGame
 
         private void OnOneEnemyKilled(EnemyEntity enemy)
         {
+            if (regenAmount <= 0) return;
+            
             if (tower.CurrentHp < tower.MaxHp && tower.CurrentHp > 0)
             {
                 if (coroutineRegenerate != null)
