@@ -41,8 +41,8 @@ namespace Dark.Scripts.OutGame.Upgrade
                     btnSelect.onClick.RemoveAllListeners();
                     btnSelect.onClick.AddListener(() =>
                     {
-                        btnSelect.gameObject.SetActive(false);
-                        imgSelected.gameObject.SetActive(true);
+                        // btnSelect.gameObject.SetActive(false);
+                        // imgSelected.gameObject.SetActive(true);
                         
                         // Select class
                         UIUpgradeScene.Instance.SelectClass(classType);

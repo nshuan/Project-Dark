@@ -2,6 +2,7 @@ using System;
 using Core;
 using Data;
 using InGame.CharacterClass;
+using InGame.Upgrade;
 
 namespace Dark.Scripts.OutGame.SaveSlot
 {
@@ -35,6 +36,7 @@ namespace Dark.Scripts.OutGame.SaveSlot
         {
             if (index < 0 || index >= SlotDataKeys.Length) return;
             PlayerDataManager.Instance.ClearData(SlotDataKeys[index]);
+            UpgradeManager.Instance.ClearData(UpgradeManager.GetDataKey(SlotDataKeys[index]));
         }
 
         #endregion

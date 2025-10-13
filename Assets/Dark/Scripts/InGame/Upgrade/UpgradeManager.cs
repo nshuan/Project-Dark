@@ -20,7 +20,7 @@ namespace InGame.Upgrade
         
         #region Data
 
-        private static string DataKey => PlayerDataManager.DataKey + "_UpgradeData";
+        private static string DataKey => GetDataKey(PlayerDataManager.DataKey);
         private UpgradeData data;
 
         public UpgradeData Data
@@ -49,7 +49,19 @@ namespace InGame.Upgrade
 
         private void Save()
         {
-            DataHandler.Save(DataKey, data);
+            DataHandler.Save(DataKey, Data);
+        }
+
+        public void ClearData(string dataKey)
+        {
+            data = null;
+            if (DataHandler.Exist<UpgradeData>(dataKey))
+                DataHandler.Clear(dataKey);
+        }
+
+        public static string GetDataKey(string playerDataKey)
+        {
+            return playerDataKey + "_UpgradeData";
         }
 
         public UpgradeManager()
@@ -102,7 +114,7 @@ namespace InGame.Upgrade
             if (!dataMapById.ContainsKey(nodeId))
             {
                 var newNodeData = new UpgradeNodeData() { id = nodeId, level = 0 };
-                data.nodes.Add(newNodeData);
+                Data.nodes.Add(newNodeData);
                 dataMapById.Add(nodeId, newNodeData);
             }
 
@@ -118,9 +130,9 @@ namespace InGame.Upgrade
             {
                 var costValueIndex = cost.costType switch
                 {
-                    WealthType.Vestige => data.indexVestige,
-                    WealthType.Echoes => data.indexEchoes,
-                    WealthType.Sigils => data.indexSigils,
+                    WealthType.Vestige => Data.indexVestige,
+                    WealthType.Echoes => Data.indexEchoes,
+                    WealthType.Sigils => Data.indexSigils,
                     _ => 0
                 };
                 
@@ -153,9 +165,9 @@ namespace InGame.Upgrade
         {
             return costType switch
             {
-                WealthType.Vestige => data.indexVestige,
-                WealthType.Echoes => data.indexEchoes,
-                WealthType.Sigils => data.indexSigils,
+                WealthType.Vestige => Data.indexVestige,
+                WealthType.Echoes => Data.indexEchoes,
+                WealthType.Sigils => Data.indexSigils,
                 _ => 0
             };
         }
