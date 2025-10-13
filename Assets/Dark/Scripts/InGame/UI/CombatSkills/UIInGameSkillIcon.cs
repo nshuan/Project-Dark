@@ -63,7 +63,8 @@ namespace InGame.UI.CombatSkills
             btnTogglePassive.onClick.RemoveAllListeners();
             btnTogglePassive.onClick.AddListener(() =>
             {
-                groupIcon.DOPunchScale(-0.2f * Vector3.one, 0.2f);
+                DOTween.Kill(groupIcon, complete:true);
+                groupIcon.DOPunchScale(-0.2f * Vector3.one, 0.2f).SetTarget(groupIcon);
                 btnTogglePassive.interactable = false;
                 isShowPassive = !isShowPassive;
                 TogglePassive(isShowPassive);
