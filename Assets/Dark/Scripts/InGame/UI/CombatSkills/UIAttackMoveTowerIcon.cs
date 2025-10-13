@@ -36,7 +36,7 @@ namespace InGame.UI.CombatSkills
         {
             UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
 
-            if (bonusInfo.unlockedMoveToTower.Count == 2)
+            if (bonusInfo.unlockedMoveToTower is { Count: 2 })
             {
                 secondSkill.SetActive(true);
                 groupPassiveAndArrow.localPosition = new Vector3(groupPassiveTwoSkillX, groupPassiveAndArrow.localPosition.y, groupPassiveAndArrow.localPosition.z);
@@ -66,7 +66,7 @@ namespace InGame.UI.CombatSkills
             // Nếu mới unlock 1 loại thì dùng tên loại đó
             // Nếu đã unlock cả 2 loại thì dùng tên loại unlock trước
             var message = "";
-            if (LevelUtility.BonusInfo.unlockedMoveToTower is { Count: 0 })
+            if (LevelUtility.BonusInfo.unlockedMoveToTower == null || LevelUtility.BonusInfo.unlockedMoveToTower.Count == 0)
             {
                 message = "Ready to move!";
             }
