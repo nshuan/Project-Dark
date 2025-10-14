@@ -6,7 +6,7 @@ using Dark.Scripts.InGame.Upgrade;
 using Dark.Scripts.OutGame.Upgrade;
 using Data;
 using Economic;
-using InGame.Upgrade.CheatBonus;
+using Cheat;
 using UnityEngine;
 
 namespace InGame.Upgrade

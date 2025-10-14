@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 using InGame;
-using InGame.Upgrade.CheatBonus;
+using Cheat;
 using UnityEditor;
 using UnityEngine;
 using Sirenix.OdinInspector;
@@ -20,7 +20,7 @@ public class CheatBonusWindow : OdinEditorWindow
     private static void Open()
     {
         var w = GetWindow<CheatBonusWindow>();
-        w.titleContent = new GUIContent("My Data");
+        w.titleContent = new GUIContent("Cheat Bonus");
         w.minSize = new Vector2(500, 350);
         w.Refresh();
         w.Show();

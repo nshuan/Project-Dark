@@ -1,11 +1,12 @@
 using System;
 using Dark.Tools.Utils;
+using InGame;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEditor;
 using UnityEngine;
 
-namespace InGame.Upgrade.CheatBonus
+namespace Cheat
 {
     public class CheatBonusData : SerializedScriptableObject
     {
