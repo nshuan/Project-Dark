@@ -191,6 +191,13 @@ namespace InGame.Upgrade
             OnActivated?.Invoke(testBonusInfo);
         }
 #endif
+        
+#if HOT_CHEAT
+        public void CheatUpdateBonusInfo(UpgradeBonusInfo bonusInfo)
+        {
+            OnActivated?.Invoke(bonusInfo);
+        }
+#endif
     }
 
     [Serializable]
