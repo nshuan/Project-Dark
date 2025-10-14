@@ -148,23 +148,31 @@ public class CheatPlayerDataWindow : OdinEditorWindow
             
             // Slot 1
             var dataPath = GetDataPath(1);
+            var upgradeDataPath = GetUpgradeDataPath(1);
             dataSlot1 = null;
             File.Delete(dataPath);
+            File.Delete(upgradeDataPath);
         
             // Slot 2
             dataPath = GetDataPath(2);
+            upgradeDataPath = GetUpgradeDataPath(2);
             dataSlot2 = null;
             File.Delete(dataPath);
+            File.Delete(upgradeDataPath);
         
             // Slot 3
             dataPath = GetDataPath(3);
+            upgradeDataPath = GetUpgradeDataPath(3);
             dataSlot3 = null;
             File.Delete(dataPath);
+            File.Delete(upgradeDataPath);
         
             // Slot 4
             dataPath = GetDataPath(4);
+            upgradeDataPath = GetUpgradeDataPath(4);
             dataSlot4 = null;
             File.Delete(dataPath);
+            File.Delete(upgradeDataPath);
             
             AssetDatabase.Refresh();
             
@@ -185,6 +193,19 @@ public class CheatPlayerDataWindow : OdinEditorWindow
             case 2: return DataHandler.DataPath + "/playerDataSlot1.json";
             case 3: return DataHandler.DataPath + "/playerDataSlot2.json";
             case 4: return DataHandler.DataPath + "/playerDataSlot3.json";
+        }
+
+        return "";
+    }
+
+    private string GetUpgradeDataPath(int slot)
+    {
+        switch (slot)
+        {
+            case 1: return DataHandler.DataPath + "/playerDataSlot0_UpgradeData.json";
+            case 2: return DataHandler.DataPath + "/playerDataSlot1_UpgradeData.json";
+            case 3: return DataHandler.DataPath + "/playerDataSlot2_UpgradeData.json";
+            case 4: return DataHandler.DataPath + "/playerDataSlot3_UpgradeData.json";
         }
 
         return "";
