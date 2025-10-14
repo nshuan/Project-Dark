@@ -6,6 +6,7 @@ using Dark.Scripts.InGame.Upgrade;
 using Dark.Scripts.OutGame.Upgrade;
 using Data;
 using Economic;
+using InGame.Upgrade.CheatBonus;
 using UnityEngine;
 
 namespace InGame.Upgrade
@@ -91,16 +92,14 @@ namespace InGame.Upgrade
         {
             // Init bonus infor
             bonusInfo = new UpgradeBonusInfo();
-            bonusInfo.skillBonus = new UpgradeBonusSkillInfo();
-
-            bonusInfo.passiveMapByTriggerType = new Dictionary<PassiveTriggerType, List<PassiveType>>();
-                
+           
             TreeConfig.ActivateTree(Data.nodes, ref bonusInfo);
 
 #if UNITY_EDITOR
-            if (testBonusInfo != null)
+            var testBonusInfo = CheatBonusData.GetBonus();
+            if (testBonusInfo.Item1) // enabled = true
             {
-                bonusInfo = testBonusInfo;
+                bonusInfo = testBonusInfo.Item2;
                 bonusInfo.skillBonus ??= new UpgradeBonusSkillInfo();
                 bonusInfo.passiveMapByTriggerType ??= new Dictionary<PassiveTriggerType, List<PassiveType>>();
             }
@@ -171,26 +170,6 @@ namespace InGame.Upgrade
                 _ => 0
             };
         }
-
-#if UNITY_EDITOR
-        private UpgradeBonusInfo testBonusInfo;
-        public void ForceTestBonusInfo(UpgradeBonusInfo bonusInfo)
-        {
-            testBonusInfo = bonusInfo;
-        }
-
-        public void ForceReactivateTree()
-        {
-            if (testBonusInfo != null)
-            {
-                testBonusInfo.skillBonus ??= new UpgradeBonusSkillInfo();
-                testBonusInfo.passiveMapByTriggerType ??= new Dictionary<PassiveTriggerType, List<PassiveType>>();
-            }
-            
-            LevelUtility.BonusInfo = testBonusInfo;
-            OnActivated?.Invoke(testBonusInfo);
-        }
-#endif
         
 #if HOT_CHEAT
         public void CheatUpdateBonusInfo(UpgradeBonusInfo bonusInfo)

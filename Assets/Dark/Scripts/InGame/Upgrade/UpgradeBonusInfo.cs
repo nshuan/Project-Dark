@@ -78,6 +78,12 @@ namespace InGame
         [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusStaggerMapByType;
 
         #endregion
+
+        public UpgradeBonusInfo()
+        {
+            skillBonus = new UpgradeBonusSkillInfo();
+            passiveMapByTriggerType = new Dictionary<PassiveTriggerType, List<PassiveType>>();
+        }
     }
 
     [Serializable]
