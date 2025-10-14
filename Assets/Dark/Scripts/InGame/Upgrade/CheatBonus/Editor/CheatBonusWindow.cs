@@ -33,6 +33,8 @@ public class CheatBonusWindow : OdinEditorWindow
         {
             var dataAsset = AssetDatabase.LoadAssetAtPath<CheatBonusData>(CheatBonusData.FilePath);
             dataAsset.bonus = data;
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
             EditorUtility.SetDirty(dataAsset);
         }
         else
