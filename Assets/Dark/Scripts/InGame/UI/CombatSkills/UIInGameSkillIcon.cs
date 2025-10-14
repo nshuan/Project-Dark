@@ -11,7 +11,7 @@ namespace InGame.UI.CombatSkills
 {
     public abstract class UIInGameSkillIcon : MonoBehaviour
     {
-        [SerializeField] private Image imgFillCooldown;
+        [SerializeField] protected Image imgFillCooldown;
         [SerializeField] private Button btnTogglePassive;
         [SerializeField] private Image iconTogglePassive;
         [SerializeField] private Image imgPassiveLine;
