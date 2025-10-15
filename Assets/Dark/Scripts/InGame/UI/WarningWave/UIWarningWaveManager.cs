@@ -15,6 +15,7 @@ namespace InGame.UI.WarningWave
         [Space] [Header("Boss Wave")]
         [SerializeField] private RectTransform panelWarningBossWave;
         [SerializeField] private TextMeshProUGUI txtWarningBossWave;
+        [SerializeField] private CanvasGroup infoWarningBossWave;
 
         protected override void Awake()
         {
@@ -30,8 +31,17 @@ namespace InGame.UI.WarningWave
         
         public void WarnWave(int wave)
         {
-            txtWarningNormalWave.SetText($"wave {wave}");
-            DoWarning(panelWarningNormalWave, infoWarningNormalWave);
+            // Wave cuối cùng là wave boss
+            if (wave < 9)
+            {
+                txtWarningNormalWave.SetText($"wave {wave + 1}");
+                DoWarning(panelWarningNormalWave, infoWarningNormalWave);
+            }
+            else if (wave == 9)
+            {
+                txtWarningBossWave.SetText("warning");
+                DoWarning(panelWarningBossWave, infoWarningBossWave);
+            }
         }
 
         public Tween DoWarning(RectTransform panel, CanvasGroup info)
