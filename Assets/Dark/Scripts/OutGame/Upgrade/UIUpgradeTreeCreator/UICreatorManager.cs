@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dark.Scripts.Common.UIWarning;
 using InGame.Upgrade;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -53,6 +54,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         [SerializeField] private Button btnNewTree;
         [SerializeField] private Button btnDeleteNode;
         [SerializeField] private Button btnChangeMode;
+        [SerializeField] private Button btnDeleteAll;
         [SerializeField] private TextMeshProUGUI txtMode;
         [SerializeField] private Button[] btnToggleNodes;
         [SerializeField] private Transform[] nodeButtonGroups;
@@ -64,6 +66,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         [SerializeField] private Button btnCloseLoadTree;
         [SerializeField] private Button btnLoadTree;
         [SerializeField] private TMP_InputField inputTreeNameToLoad;
+        [SerializeField] private UIPopupWarning popupConfirm;
         
         [Space]
         [Header("Tree Visual")]
@@ -129,6 +132,9 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             btnCloseLoadTree.onClick.AddListener(() => groupBtnLoadTree.SetActive(false));
             btnLoadTree.onClick.RemoveAllListeners();
             btnLoadTree.onClick.AddListener(LoadTree);
+            
+            btnDeleteAll.onClick.RemoveAllListeners();
+            btnDeleteAll.onClick.AddListener(ClearAll);
         }
 
         public void ToggleNodeGroup(int index)
@@ -142,6 +148,70 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             {
                 group.gameObject.SetActive(false);
             }
+        }
+
+        public void ClearAll()
+        {
+            Action actionClearAll = () =>
+            {
+                HideAllNodeGroup();
+                UICreatorNodeInfoPreview.Instance.Hide();
+                // Destroy all nodes
+                var children = new GameObject[treeParent.childCount];
+                for (int i = 0; i < treeParent.childCount; i++)
+                {
+                    children[i] = treeParent.GetChild(i).gameObject;
+                }
+
+                foreach (var child in children)
+                {
+                    Destroy(child);
+                }
+
+                // Destroy all lines
+                if (linesMap != null)
+                {
+                    foreach (var pair1 in linesMap)
+                    {
+                        if (pair1.Value != null)
+                        {
+                            foreach (var pair2 in pair1.Value)
+                            {
+                                if (pair2.Value != null)
+                                    Destroy(pair2.Value.gameObject);
+                            }
+                        }
+                    }
+                }
+
+                foreach (var config in configLoader.GetAllConfigs())
+                {
+                    config.preRequire = null;
+                    EditorUtility.SetDirty(config);
+                }
+                
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+                Debug.Log("ScriptableObject changes saved to asset.");
+
+                newTree = new TreeDataStruct() { nodes = new List<NodeDataStruct>() };
+                nodesMap = new Dictionary<int, UICreatorUpgradeNode>();
+                linesMap = new Dictionary<int, Dictionary<int, RectTransform>>();
+                nodeChildMap = new Dictionary<int, List<UICreatorUpgradeNode>>();
+                nodeParentMap = new Dictionary<int, List<UICreatorUpgradeNode>>();
+                selectingNode = null;
+            };
+            
+            popupConfirm.Setup(
+                "Clear all nodes?",
+                "This action will also clear all pre-required references in node configs",
+                () =>
+                {
+                    popupConfirm.gameObject.SetActive(false);
+                    actionClearAll?.Invoke();
+                },
+                () => popupConfirm.gameObject.SetActive(false));
+            popupConfirm.gameObject.SetActive(true);
         }
 
         public void CreateNewTree()
