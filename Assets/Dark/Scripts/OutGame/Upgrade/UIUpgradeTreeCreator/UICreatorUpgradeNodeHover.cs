@@ -40,24 +40,26 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         private RaycastHit2D[] hits;
         public void Align()
         {
-            hits ??= new RaycastHit2D[10];
-            var count = Physics2D.CircleCastNonAlloc(rectTransform.position,
-                UIAlignManager.Instance.anchorDistance / Mathf.Sqrt(2), Vector2.right, hits, 0f, UIAlignManager.Instance.anchorLayer);
-
-            var minDistance = UIAlignManager.Instance.anchorDistance;
-            Transform nearestHit = null;
-            for (var i = 0; i < Math.Min(count, hits.Length); i++)
-            {
-                var tempDistance = Vector2.Distance(hits[i].transform.position, rectTransform.position);
-                if (tempDistance <= minDistance)
-                {
-                    minDistance = tempDistance;
-                    nearestHit = hits[i].transform;
-                }
-            }
+            // hits ??= new RaycastHit2D[10];
+            // var count = Physics2D.CircleCastNonAlloc(rectTransform.position,
+            //     UIAlignManager.Instance.anchorDistance / Mathf.Sqrt(2), Vector2.right, hits, 0f, UIAlignManager.Instance.anchorLayer);
+            //
+            // var minDistance = UIAlignManager.Instance.anchorDistance;
+            // Transform nearestHit = null;
+            // for (var i = 0; i < Math.Min(count, hits.Length); i++)
+            // {
+            //     var tempDistance = Vector2.Distance(hits[i].transform.position, rectTransform.position);
+            //     if (tempDistance <= minDistance)
+            //     {
+            //         minDistance = tempDistance;
+            //         nearestHit = hits[i].transform;
+            //     }
+            // }
+            //
+            // if (nearestHit)
+            //     rectTransform.position = nearestHit.position;
             
-            if (nearestHit)
-                rectTransform.position = nearestHit.position;
+            UIAlignManager.Instance.Align(rectTransform);
         }
     }
 }
