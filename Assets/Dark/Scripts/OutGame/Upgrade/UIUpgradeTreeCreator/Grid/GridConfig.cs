@@ -8,6 +8,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator.Grid
 {
     public class GridConfig : ScriptableObject
     {
+        public bool enableGrid = true;
         public Color lineColor = Color.white;
         public float thickness = 2.0f;
         public Vector2 spacing = new Vector2(8f, 8f);

@@ -13,7 +13,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator.Grid
 
         private void Start()
         {
-            SetupGrid();
+            if (GridConfig.Instance.enableGrid)
+                SetupGrid();
         }
 
         public void SetupGrid()
@@ -50,6 +51,25 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator.Grid
         public void Clear()
         {
             UIMultiLineRenderer.Clear();
+            UIMultiLineRenderer.ForceUpdateLines();
+        }
+
+        public void UpdateGrid()
+        {
+            UIMultiLineRenderer.Clear();  
+            SetupGrid();
+        }
+        
+        public void EnableGrid(bool enable)
+        {
+            if (enable && (UIMultiLineRenderer.lines == null || UIMultiLineRenderer.lines.Count == 0))
+            {
+                SetupGrid();
+            }
+            else
+            {
+                Clear();
+            }
         }
 
         public void Align(RectTransform target)

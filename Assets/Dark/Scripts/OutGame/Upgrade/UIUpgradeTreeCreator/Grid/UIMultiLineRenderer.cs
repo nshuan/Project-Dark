@@ -80,9 +80,13 @@ public class UIMultiLineRenderer : MaskableGraphic
         onUpdateLines?.Invoke();
     }
 
+    public static void ForceUpdateLines()
+    {
+        onUpdateLines?.Invoke();
+    }
+
     public static void Clear()
     {
         lines.Clear();
-        onUpdateLines?.Invoke();
     }
 }
