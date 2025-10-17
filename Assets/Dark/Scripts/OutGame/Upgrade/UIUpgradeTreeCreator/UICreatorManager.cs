@@ -187,11 +187,15 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 foreach (var config in configLoader.GetAllConfigs())
                 {
                     config.preRequire = null;
+#if UNITY_EDITOR
                     EditorUtility.SetDirty(config);
+#endif
                 }
-                
+
+#if UNITY_EDITOR
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
+#endif
                 Debug.Log("ScriptableObject changes saved to asset.");
 
                 newTree = new TreeDataStruct() { nodes = new List<NodeDataStruct>() };
