@@ -16,7 +16,7 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 11400000, guid: 069b975ce94f01440bd5ab708829c966, type: 2}
+    - {fileID: 11400000, guid: b67db2869a9a4754aa2225de5e37b6fb, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -34,7 +34,7 @@ MonoBehaviour:
       Data: 1|InGame.GateConfig, Assembly-CSharp
     - Name: isBossGate
       Entry: 5
-      Data: false
+      Data: true
     - Name: position
       Entry: 7
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
@@ -47,21 +47,21 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: showVisual
-      Entry: 5
-      Data: true
     - Name: targetBaseIndex
       Entry: 7
       Data: 2|System.Int32[], mscorlib
     - Name: 
       Entry: 14
-      Data: 2
+      Data: 3
     - Name: 
       Entry: 3
       Data: 0
     - Name: 
       Entry: 3
       Data: 2
+    - Name: 
+      Entry: 3
+      Data: 1
     - Name: 
       Entry: 13
       Data: 
@@ -73,7 +73,7 @@ MonoBehaviour:
       Data: 2
     - Name: duration
       Entry: 4
-      Data: 10
+      Data: 1
     - Name: spawnType
       Entry: 10
       Data: 0
@@ -83,9 +83,18 @@ MonoBehaviour:
     - Name: spawnLogic
       Entry: 7
       Data: 3|InGame.GateSpawnSingle, Assembly-CSharp
+    - Name: radius
+      Entry: 4
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
+    - Name: startTimeVisual
+      Entry: 4
+      Data: 1000
+    - Name: durationVisual
+      Entry: 4
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
