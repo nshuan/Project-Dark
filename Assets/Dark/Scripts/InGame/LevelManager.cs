@@ -68,10 +68,11 @@ namespace InGame
 
 #if UNITY_EDITOR
         [Space] public bool autoLoadLevel = true;
+        public static bool isLoadFromInit;
         private IEnumerator Start()
         {
             yield return new WaitForSeconds(2f);
-            if (autoLoadLevel && Level == null)
+            if (isLoadFromInit == false && autoLoadLevel && Level == null)
                 LoadLevel(testLevel);
         }
 #endif
