@@ -16,18 +16,19 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case BonusType.AutoRegenerate:
-                    bonusInfo.toleranceRegenPerSecond += (int)value[level - 1];
+                    bonusInfo.toleranceRegenPercentPerSecond += value[level - 1];
                     break;
                 case BonusType.OnEnemyDied:
-                    bonusInfo.toleranceRegenWhenKill += (int)value[level - 1];
+                    bonusInfo.toleranceRegenPercentWhenKill += value[level - 1];
                     break;
             }
         }
 
         public string GetDisplayValue(int level)
         {
-            if (level < 0 || level >= value.Length) return "??";
-            return value[level].ToString();
+            if (level < 0) return "??";
+            if (level >= value.Length) level = value.Length - 1;
+            return (value[level] * 100).ToString();
         }
 
         public enum BonusType

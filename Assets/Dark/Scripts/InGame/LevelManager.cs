@@ -190,7 +190,7 @@ namespace InGame
         {
             for (var i = 0; i < towers.Length; i++)
             {
-                towers[i].Initialize(i, playerStats.hp);
+                towers[i].Initialize(i, LevelUtility.GetTowerHp(playerStats.hp));
                 towers[i].OnDestroyed += OnTowerDestroyed;
             }
         }

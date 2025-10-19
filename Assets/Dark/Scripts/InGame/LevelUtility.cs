@@ -411,7 +411,12 @@ namespace InGame
 
         #endregion
 
-        #region Tower Counter
+        #region Tower
+
+        public static int GetTowerHp(int baseHp)
+        {
+            return (int)((1f + BonusInfo.hpMultiply) * (baseHp + BonusInfo.hpPlus));
+        }
 
         public static int GetTowerCounterDamage(int baseDamage)
         {
@@ -423,6 +428,16 @@ namespace InGame
             return Mathf.Max(baseCooldown - BonusInfo.towerCounterCooldownPlus, 0f);
         }
 
+        public static int GetTowerAutoRegen(int maxHp)
+        {
+            return (int)(BonusInfo.toleranceRegenPercentPerSecond * maxHp);
+        }
+
+        public static int GetTowerRegenOnKill(int maxHp)
+        {
+            return (int)(BonusInfo.toleranceRegenPercentWhenKill * maxHp);
+        }
+        
         #endregion
     }
 }

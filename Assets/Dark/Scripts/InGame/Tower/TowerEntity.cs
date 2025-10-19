@@ -52,8 +52,8 @@ namespace InGame
             towerVisual.sprite = spriteStates[currentState];
             towerVisualUILayer.sprite = spriteStates[currentState];
             towerOutline.sprite = spriteStates[currentState];
-            autoRegenerate.Initialize(this, LevelUtility.BonusInfo.toleranceRegenPerSecond);
-            regenerateOnKill.Initialize(this, LevelUtility.BonusInfo.toleranceRegenWhenKill);
+            autoRegenerate.Initialize(this, LevelUtility.GetTowerAutoRegen(MaxHp));
+            regenerateOnKill.Initialize(this, LevelUtility.GetTowerRegenOnKill(MaxHp));
         }
 
         public void EnterTower()
