@@ -6,7 +6,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator.Grid
 {
     public class UIAlignManager : MonoSingleton<UIAlignManager>
     {
-        [Header("Setup")]
+        [Header("Setup")] 
+        public UIMultiLineRenderer uiLineRenderer;
         public RectTransform parentRect;         // The parent container (e.g., Content of a ScrollView)
         
         private Vector2 spacing = new Vector2(8f, 8f);   // distance between NEAREST edges (x,y)
@@ -22,6 +23,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator.Grid
             if (parentRect == null ) return;
             Clear();
 
+            UpdateLineColor(GridConfig.Instance.lineColor);
+            UpdateLineThickness(GridConfig.Instance.thickness);
             spacing = GridConfig.Instance.spacing;
 
             // Ensure parent pivot is center so (0,0) is center anchor space.
@@ -39,30 +42,30 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator.Grid
 
             for (int y = -maxIy; y <= maxIy; y++)
             {
-                UIMultiLineRenderer.DrawLine(new Vector2(-maxIx * step.x, y * step.y), new Vector2(maxIx * step.x, y * step.y));
+                uiLineRenderer.DrawLine(new Vector2(-maxIx * step.x, y * step.y), new Vector2(maxIx * step.x, y * step.y));
             }
 
             for (int x = -maxIx; x <= maxIx ; x++)
             {
-                UIMultiLineRenderer.DrawLine(new Vector2(x * step.x, -maxIy * step.y), new Vector2(x * step.x, maxIy * step.y));
+                uiLineRenderer.DrawLine(new Vector2(x * step.x, -maxIy * step.y), new Vector2(x * step.x, maxIy * step.y));
             }
         }
 
         public void Clear()
         {
-            UIMultiLineRenderer.Clear();
-            UIMultiLineRenderer.ForceUpdateLines();
+            uiLineRenderer.Clear();
+            uiLineRenderer.ForceUpdateLines();
         }
 
         public void UpdateGrid()
         {
-            UIMultiLineRenderer.Clear();  
+            uiLineRenderer.Clear();  
             SetupGrid();
         }
         
         public void EnableGrid(bool enable)
         {
-            if (enable && (UIMultiLineRenderer.lines == null || UIMultiLineRenderer.lines.Count == 0))
+            if (enable && (uiLineRenderer.lines == null || uiLineRenderer.lines.Count == 0))
             {
                 SetupGrid();
             }
@@ -70,6 +73,16 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator.Grid
             {
                 Clear();
             }
+        }
+        
+        public void UpdateLineThickness(float thickness)
+        {
+            uiLineRenderer.LineThickness = thickness;
+        }
+
+        public void UpdateLineColor(Color color)
+        {
+            uiLineRenderer.LineColor = color;
         }
 
         public void Align(RectTransform target)

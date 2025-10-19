@@ -17,11 +17,12 @@ public class UIMultiLineRenderer : MaskableGraphic
         public List<Vector2> points = new List<Vector2>();
     }
 
-    public static List<Line> lines = new List<Line>();
+    public List<Line> lines = new List<Line>();
 
-    private static Action onUpdateLines;
+    private Action onUpdateLines;
 
-    private GridConfig config;
+    public float LineThickness;
+    public Color LineColor;
     
     protected override void Awake()
     {
@@ -29,8 +30,6 @@ public class UIMultiLineRenderer : MaskableGraphic
 
         onUpdateLines = null;
         onUpdateLines += SetVerticesDirty;
-        
-        config = GridConfig.Instance;
     }
 
     protected override void OnPopulateMesh(VertexHelper vh)
@@ -48,7 +47,7 @@ public class UIMultiLineRenderer : MaskableGraphic
             {
                 Vector2 start = line.points[i];
                 Vector2 end = line.points[i + 1];
-                DrawLine(vh, start, end, config.lineColor);
+                DrawLine(vh, start, end, LineColor);
             }
         }
     }
@@ -56,7 +55,7 @@ public class UIMultiLineRenderer : MaskableGraphic
     void DrawLine(VertexHelper vh, Vector2 start, Vector2 end, Color col)
     {
         Vector2 dir = (end - start).normalized;
-        Vector2 normal = new Vector2(-dir.y, dir.x) * (config.thickness / 2f);
+        Vector2 normal = new Vector2(-dir.y, dir.x) * (LineThickness / 2f);
 
         UIVertex v0 = UIVertex.simpleVert;
         UIVertex v1 = UIVertex.simpleVert;
@@ -73,19 +72,19 @@ public class UIMultiLineRenderer : MaskableGraphic
         vh.AddUIVertexQuad(new[] { v0, v1, v2, v3 });
     }
 
-    public static void DrawLine(Vector2 start, Vector2 end)
+    public void DrawLine(Vector2 start, Vector2 end)
     {
         lines ??= new List<Line>();
         lines.Add(new Line() { points = new List<Vector2>() { start, end } });
         onUpdateLines?.Invoke();
     }
 
-    public static void ForceUpdateLines()
+    public void ForceUpdateLines()
     {
         onUpdateLines?.Invoke();
     }
 
-    public static void Clear()
+    public void Clear()
     {
         lines.Clear();
     }
