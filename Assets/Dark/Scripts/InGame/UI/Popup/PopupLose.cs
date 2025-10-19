@@ -3,6 +3,7 @@ using Dark.Scripts.CoreUI;
 using Dark.Scripts.SceneNavigation;
 using DG.Tweening;
 using Economic;
+using InGame.UI.EndingLevel;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -17,6 +18,9 @@ namespace InGame.UI
         [Space]
         [SerializeField] private Button btnBackToTree;
         [SerializeField] private Button btnReplay;
+
+        [Space] [Header("Ending Level")] 
+        [SerializeField] private UITowerDestroyedVersion1 uiEndingLevel;
 
         public static event Action onShowPopup;
         
@@ -33,6 +37,7 @@ namespace InGame.UI
         private void OnLose()
         {
             UpdateUI();
+            // uiEndingLevel.Play();
             ui.DoOpenFadeIn().SetDelay(delayShowPopup).OnComplete(() => onShowPopup?.Invoke());
         }
 
