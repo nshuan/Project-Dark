@@ -123,6 +123,11 @@ namespace InGame
             return baseStagger * (1 + BonusInfo.skillBonus.staggerMultiply);
         }
 
+        public static float GetDropRate(float baseDropRate)
+        {
+            return (baseDropRate + BonusInfo.dropRatePlus) * (1f + BonusInfo.dropRateMultiply);
+        }
+
         #region Charge
 
         /// <summary>
@@ -430,7 +435,7 @@ namespace InGame
 
         public static int GetTowerAutoRegen(int maxHp)
         {
-            return (int)(BonusInfo.toleranceRegenPercentPerSecond * maxHp);
+            return (int)(BonusInfo.toleranceRegenPercentPerSecond);
         }
 
         public static int GetTowerRegenOnKill(int maxHp)

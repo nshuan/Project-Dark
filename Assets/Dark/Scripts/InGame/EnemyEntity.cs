@@ -88,7 +88,7 @@ namespace InGame
             CurrentDamage = Mathf.RoundToInt(config.dmg * dmgMultiplier);
             Exp = Mathf.RoundToInt(config.exp * levelExpRatio);
             Dark = Mathf.RoundToInt(config.dark * levelDarkRatio);
-            DarkRatio = config.darkRatio;
+            DarkRatio = LevelUtility.GetDropRate(config.darkRatio);
             BossPoint = config.bossPoint;
             
             State = EnemyState.Spawn;

@@ -51,7 +51,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         public void UpdateUI()
         {
             var data = UpgradeManager.Instance.GetData(config.nodeId);
-            if (data == null) // Not activated yet
+            if (data == null || data.level == 0) // Not activated yet
             {
                 // Always available or all pre-required nodes are activated
                 if (config.preRequire == null || config.preRequire.All((preRequire) => UpgradeManager.Instance.GetData(preRequire.nodeId) != null))

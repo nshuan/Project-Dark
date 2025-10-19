@@ -28,7 +28,14 @@ namespace InGame.Upgrade
         {
             if (level < 0) return "??";
             if (level >= value.Length) level = value.Length - 1;
-            return (value[level] * 100).ToString();
+            switch (bonusType)
+            {
+                case BonusType.AutoRegenerate:
+                    return value[level].ToString();
+                case BonusType.OnEnemyDied:
+                    return (value[level] * 100).ToString();
+            }
+            return value[level].ToString();
         }
 
         public enum BonusType

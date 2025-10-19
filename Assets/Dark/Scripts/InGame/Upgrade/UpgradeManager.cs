@@ -110,6 +110,8 @@ namespace InGame.Upgrade
         
         public bool UpgradeNode(int nodeId)
         {
+            if (TreeConfig.GetNodeById(nodeId) == null) return false;
+            
             if (!dataMapById.ContainsKey(nodeId))
             {
                 var newNodeData = new UpgradeNodeData() { id = nodeId, level = 0 };
@@ -117,7 +119,6 @@ namespace InGame.Upgrade
                 dataMapById.Add(nodeId, newNodeData);
             }
 
-            if (TreeConfig.GetNodeById(nodeId) == null) return false;
             var nodeConfig = TreeConfig.GetNodeById(nodeId);
             
             if (dataMapById[nodeId].level >= nodeConfig.levelNum) return false;
@@ -148,7 +149,19 @@ namespace InGame.Upgrade
             
             foreach (var cost in nodeConfig.costInfo)
             {
-                WealthManager.Instance.Spend(cost.costType, costValueToSpend[cost.costType]);    
+                WealthManager.Instance.Spend(cost.costType, costValueToSpend[cost.costType]);
+                switch (cost.costType)
+                {
+                    case WealthType.Vestige:
+                        Data.indexVestige += 1;
+                        break;
+                    case WealthType.Echoes:
+                        Data.indexEchoes += 1;
+                        break;
+                    case WealthType.Sigils:
+                        Data.indexSigils += 1;
+                        break;
+                }
             }
             dataMapById[nodeId].Upgrade();
             Save();
