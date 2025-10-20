@@ -37,7 +37,20 @@ namespace InGame.Upgrade
 
         public string GetDisplayValue(int level)
         {
-            if (level < 0 || level >= value.Length) return "??";
+            if (level < 0) return "??";
+            if (level >= value.Length) level = value.Length - 1;
+            switch (bonusType)
+            {
+                case BonusPlayerType.Health:
+                case BonusPlayerType.Damage:
+                    if (isMultiply) return (value[level] * 100).ToString();
+                    else return value[level].ToString();
+                case BonusPlayerType.CriticalRate:
+                    return (value[level] * 100).ToString();
+                case BonusPlayerType.Cooldown:
+                case BonusPlayerType.CriticalDame:
+                    break;
+            }
             return value[level].ToString();
         }
 

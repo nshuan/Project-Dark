@@ -64,6 +64,9 @@ namespace Dark.Scripts.OutGame.Upgrade
             // Instantiate(UpgradeTreeManifest.GetTreePrefab(classType), treeParent);
             
             // Load level
+#if UNITY_EDITOR
+            LevelManager.isLoadFromInit = true;
+#endif
             this.DelayCall(0.5f, () =>
             {
                 Loading.Instance.LoadScene(SceneConstants.SceneInGame, () =>

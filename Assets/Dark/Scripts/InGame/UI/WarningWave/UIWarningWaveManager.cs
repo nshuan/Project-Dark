@@ -21,7 +21,7 @@ namespace InGame.UI.WarningWave
         {
             base.Awake();
 
-            LevelManager.Instance.OnWaveStart += OnWaveStart;
+            // LevelManager.Instance.OnWaveStart += OnWaveStart;
         }
 
         private void OnWaveStart(int waveIndex, float timeToEnd)

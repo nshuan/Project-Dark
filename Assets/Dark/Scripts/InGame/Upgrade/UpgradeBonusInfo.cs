@@ -60,8 +60,8 @@ namespace InGame
         #region Tower
 
         public bool unlockedTowerCounter;
-        public int toleranceRegenPerSecond = 0;
-        public int toleranceRegenWhenKill = 0;
+        public float toleranceRegenPercentPerSecond = 0;
+        public float toleranceRegenPercentWhenKill = 0;
         public float towerCounterCooldownPlus = 0f;
         public int towerCounterDamagePlus = 0;  
 

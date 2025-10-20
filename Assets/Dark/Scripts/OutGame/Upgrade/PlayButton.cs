@@ -16,7 +16,10 @@ namespace Dark.Scripts.OutGame.Upgrade
         {
             if (!interactable) return;
             interactable = false;
-            
+
+#if UNITY_EDITOR
+            LevelManager.isLoadFromInit = true;
+#endif
             this.DelayCall(0.5f, () =>
             {
                 Loading.Instance.LoadScene(SceneConstants.SceneInGame, () =>

@@ -43,7 +43,22 @@ namespace InGame.Upgrade
 
 	    public string GetDisplayValue(int level)
 	    {
-		    if (level < 0 || level >= value.Length) return "??";
+		    if (level < 0) return "??";
+		    if (level >= value.Length) level = value.Length - 1;
+		    switch (bonusType)
+		    {
+			    case BonusType.MaxDame:
+			    case BonusType.MaxSize:
+			    case BonusType.MaxRange:
+				    return (value[level] * 100).ToString();
+			    case BonusType.MaxDameTime:
+			    case BonusType.MaxSizeTime:
+			    case BonusType.MaxRangeTime:
+			    case BonusType.MaxBulletAdd:
+			    case BonusType.BulletAddInterval:
+				    break;
+		    }
+		    
 		    return value[level].ToString();
 	    }
 	    

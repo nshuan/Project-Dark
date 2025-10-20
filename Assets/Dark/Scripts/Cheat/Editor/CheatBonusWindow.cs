@@ -12,8 +12,9 @@ using Sirenix.Serialization;
 public class CheatBonusWindow : OdinEditorWindow
 {
     // The data you want to edit & serialize
-    [Title("Cheat Upgrade Bonus")]
-    [InlineProperty, HideLabel]
+    [Title("Cheat Upgrade Bonus")] 
+    [OdinSerialize, NonSerialized] public bool enable;
+    [InlineProperty, HideLabel] 
     [OdinSerialize, NonSerialized] public UpgradeBonusInfo data = new UpgradeBonusInfo();
 
     [MenuItem("Dark/Cheat/Cheat Bonus Window")]
@@ -32,6 +33,7 @@ public class CheatBonusWindow : OdinEditorWindow
         if (File.Exists(CheatBonusData.FilePath))
         {
             var dataAsset = AssetDatabase.LoadAssetAtPath<CheatBonusData>(CheatBonusData.FilePath);
+            dataAsset.enabled = enable;
             dataAsset.bonus = data;
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -49,6 +51,7 @@ public class CheatBonusWindow : OdinEditorWindow
         if (File.Exists(CheatBonusData.FilePath))
         {
             var dataAsset = AssetDatabase.LoadAssetAtPath<CheatBonusData>(CheatBonusData.FilePath);
+            enable = dataAsset.enabled;
             data = dataAsset.bonus;
         }
         else
