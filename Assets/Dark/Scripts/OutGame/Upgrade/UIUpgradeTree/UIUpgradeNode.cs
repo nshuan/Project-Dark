@@ -38,6 +38,14 @@ namespace Dark.Scripts.OutGame.Upgrade
         private void OnEnable()
         {
             UpdateUI();
+
+            if (config.preRequire == null || config.preRequire.Length == 0)
+            {
+                UpgradeManager.Instance.UpgradeNode(config.nodeId);
+                UpdateUI();
+                DoUpgrade().Play();
+                treeRef.UpdateChildren(config.nodeId);
+            }
         }
 
         public void SetVisual(Sprite sprite, Sprite lockSprite)
@@ -115,7 +123,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                             UpgradeManager.Instance.GetData(id).level == 0))
                 {
                     UIUpgradeNodeInfoPreview.Instance.Shake();
-                    sfxUnlockFailure.Play();
+                    sfxUnlockFailure?.Play();
                     return;
                 }
                 
@@ -127,12 +135,12 @@ namespace Dark.Scripts.OutGame.Upgrade
                     UpdateUI();
                     DoUpgrade().Play();
                     treeRef.UpdateChildren(config.nodeId);
-                    sfxUnlockSuccess.Play();
+                    sfxUnlockSuccess?.Play();
                 }
                 else
                 {
                     UIUpgradeNodeInfoPreview.Instance.Shake();
-                    sfxUnlockFailure.Play();
+                    sfxUnlockFailure?.Play();
                 }
             };
         }
