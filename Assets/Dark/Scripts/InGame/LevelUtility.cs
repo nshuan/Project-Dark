@@ -396,7 +396,7 @@ namespace InGame
 
         public static int GetDashDamage(int baseDamage)
         {
-            return baseDamage + BonusInfo.dashDamagePlus;
+            return (int)((1f + BonusInfo.dashDamageMultiplier) * (baseDamage + BonusInfo.dashDamagePlus));
         }
 
         public static float GetFlashCooldown(float baseCooldown)
@@ -411,7 +411,7 @@ namespace InGame
 
         public static int GetFlashDamage(int baseDamage)
         {
-            return baseDamage + BonusInfo.flashDamagePlus;
+            return (int)((1f + BonusInfo.flashDamageMultiplier) * (baseDamage + BonusInfo.flashDamagePlus));
         }
 
         #endregion

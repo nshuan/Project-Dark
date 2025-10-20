@@ -13,12 +13,13 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator.Grid
         public float thickness = 2.0f;
         public Vector2 spacing = new Vector2(8f, 8f);
         
-#if UNITY_EDITOR
         private static string FilePath = "Assets/Dark/Scripts/OutGame/Upgrade/UIUpgradeTreeCreator/Grid/UpgradeCreatorGridConfig.asset";
         
         public static void CreateInstance()
         {
+#if UNITY_EDITOR
             AssetDatabaseUtils.CreateSOInstance<GridConfig>(FilePath);
+#endif
         }
 
         private static GridConfig instance;
@@ -26,6 +27,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator.Grid
         {
             get
             {
+#if UNITY_EDITOR
                 if (instance) return instance;
                 if (!File.Exists(FilePath))
                 {
@@ -33,9 +35,9 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator.Grid
                 }
 
                 instance = AssetDatabase.LoadAssetAtPath<GridConfig>(FilePath);
+#endif
                 return instance;
             }
         }
-#endif
     }
 }

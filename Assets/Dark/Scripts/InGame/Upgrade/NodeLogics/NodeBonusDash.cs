@@ -22,6 +22,7 @@ namespace InGame.Upgrade
                     bonusInfo.dashSizePlus += value[level - 1];
                     break;
                 case BonusType.Damage:
+                    if (isMultiply) bonusInfo.dashDamageMultiplier += (int)value[level - 1];
                     bonusInfo.dashDamagePlus += (int)value[level - 1];
                     break;
             }
