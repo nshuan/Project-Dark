@@ -37,6 +37,7 @@ namespace InGame
 
         [Space] 
         public float cooldownPlus = 0f;
+        public float cooldownMultiplier = 0f;
         
         [Space]
         public int hpPlus = 0;

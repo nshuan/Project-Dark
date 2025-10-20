@@ -24,7 +24,8 @@ namespace InGame.Upgrade
                     else bonusInfo.damePlus += (int)value[level - 1];
                     break;
                 case BonusPlayerType.Cooldown:
-                    bonusInfo.cooldownPlus += value[level - 1];
+                    if (isMultiply) bonusInfo.cooldownMultiplier += value[level - 1];
+                    else bonusInfo.cooldownPlus += value[level - 1];
                     break;
                 case BonusPlayerType.CriticalRate:
                     bonusInfo.criticalRatePlus += value[level - 1];
@@ -43,11 +44,11 @@ namespace InGame.Upgrade
             {
                 case BonusPlayerType.Health:
                 case BonusPlayerType.Damage:
+                case BonusPlayerType.Cooldown:
                     if (isMultiply) return (value[level] * 100).ToString();
                     else return value[level].ToString();
                 case BonusPlayerType.CriticalRate:
                     return (value[level] * 100).ToString();
-                case BonusPlayerType.Cooldown:
                 case BonusPlayerType.CriticalDame:
                     break;
             }
