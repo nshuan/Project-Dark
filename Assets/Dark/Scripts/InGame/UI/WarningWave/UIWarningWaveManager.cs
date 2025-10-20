@@ -21,27 +21,31 @@ namespace InGame.UI.WarningWave
         {
             base.Awake();
 
-            // LevelManager.Instance.OnWaveStart += OnWaveStart;
+            LevelManager.Instance.OnWaveStart += OnWaveStart;
+            LevelManager.Instance.OnBossWaveStart += OnBossWaveStart;
         }
 
         private void OnWaveStart(int waveIndex, float timeToEnd)
         {
-            WarnWave(waveIndex);
+            // Tạm thời ko show cái này cho wave thường
+            // WarnWave(waveIndex);
+        }
+
+        private void OnBossWaveStart()
+        {
+            WarnBossWave();
         }
         
         public void WarnWave(int wave)
         {
-            // Wave cuối cùng là wave boss
-            if (wave < 9)
-            {
-                txtWarningNormalWave.SetText($"wave {wave + 1}");
-                DoWarning(panelWarningNormalWave, infoWarningNormalWave);
-            }
-            else if (wave == 9)
-            {
-                txtWarningBossWave.SetText("warning");
-                DoWarning(panelWarningBossWave, infoWarningBossWave);
-            }
+            txtWarningNormalWave.SetText($"wave {wave + 1}");
+            DoWarning(panelWarningNormalWave, infoWarningNormalWave);
+        }
+
+        public void WarnBossWave()
+        {
+            txtWarningBossWave.SetText("warning");
+            DoWarning(panelWarningBossWave, infoWarningBossWave);
         }
 
         public Tween DoWarning(RectTransform panel, CanvasGroup info)

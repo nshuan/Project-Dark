@@ -99,6 +99,8 @@ namespace InGame
             
             CheckStopAllGate();
         }
+
+        public bool IsBossWave => waveConfig.gateConfigs.Any((gate) => gate.isBossGate);
     }
 
     public enum WaveEndReason

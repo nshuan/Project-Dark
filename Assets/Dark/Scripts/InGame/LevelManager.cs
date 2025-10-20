@@ -57,6 +57,7 @@ namespace InGame
 
         // <int waveIndex, float waveDuration>
         public event Action<int, float> OnWaveStart;
+        public event Action OnBossWaveStart;
         public event Action<int, WaveEndReason> onWaveEnded;
         
         public event Action OnWin;
@@ -150,6 +151,7 @@ namespace InGame
             OnLose = null;
             OnChangeTower = null;
             OnWaveStart = null;
+            OnBossWaveStart = null;
             onWaveEnded = null;
         }
         
@@ -168,6 +170,7 @@ namespace InGame
                 var currentWave = waves[currentWaveIndex];
                 currentWave.SetupWave(gatePrefab, Towers, Level.levelExpRatio, Level.levelDarkRatio, OnWaveForceStop);
                 OnWaveStart?.Invoke(currentWaveIndex, currentWave.timeToEnd);
+                if (currentWave.IsBossWave) OnBossWaveStart?.Invoke();
                 currentWaveIndex += 1;
                 yield return currentWave.IEActivateWave();
                 onWaveEnded?.Invoke(currentWaveIndex - 1, WaveEndReason.EndTime);
