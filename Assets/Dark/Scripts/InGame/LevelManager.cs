@@ -177,12 +177,24 @@ namespace InGame
             }
         }
 
-        private void OnWaveForceStop(WaveEndReason reason)
+        private void OnWaveForceStop(int waveIndex, WaveEndReason reason)
         {
-            if (waveCoroutine != null) StopCoroutine(waveCoroutine);
-            onWaveEnded?.Invoke(currentWaveIndex - 1, reason);
+            // Nếu ko phải wave đang chạy thì ko stop coroutine
+            if (waveIndex == currentWaveIndex - 1)
+            {
+                if (waveCoroutine != null) StopCoroutine(waveCoroutine);
+            }
+
+            // Nếu wave stop vì hết thời gian thì invoke hàm này
+            if (reason == WaveEndReason.EndTime)
+                onWaveEnded?.Invoke(currentWaveIndex - 1, reason);
+            
             winLoseManager.CheckWin(this);
-            waveCoroutine = StartCoroutine(IEWave(Level.waveInfo));
+                
+            if (waveIndex == currentWaveIndex - 1)
+            {
+                waveCoroutine = StartCoroutine(IEWave(Level.waveInfo));
+            }
         }
 
         #endregion

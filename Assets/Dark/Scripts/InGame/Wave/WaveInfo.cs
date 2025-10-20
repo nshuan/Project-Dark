@@ -21,11 +21,11 @@ namespace InGame
         public bool isRandomWaveConfig;
 
         public GateEntity[] Gates { get; private set; }
-        public Action<WaveEndReason> OnWaveForceStop { get; set; }
+        public Action<int, WaveEndReason> OnWaveForceStop { get; set; }
         public bool WaveEndedCompletely { get; set; }
         private int currentGateIndex = 0;
         
-        public void SetupWave(GateEntity gatePrefab, TowerEntity[] towers, float levelExpRatio, float levelDarkRatio, Action<WaveEndReason> onWaveForceEnded)
+        public void SetupWave(GateEntity gatePrefab, TowerEntity[] towers, float levelExpRatio, float levelDarkRatio, Action<int, WaveEndReason> onWaveForceEnded)
         {
             if (isRandomWaveConfig)
                 waveConfig = randomWaveConfigs[Random.Range(0, randomWaveConfigs.Length)];
@@ -74,7 +74,7 @@ namespace InGame
             {
                 DebugUtility.LogError($"Stop wave {waveIndex}: All enemies are dead");
                 WaveEndedCompletely = true;
-                OnWaveForceStop?.Invoke(WaveEndReason.AllDead);
+                OnWaveForceStop?.Invoke(waveIndex, WaveEndReason.AllDead);
                 OnWaveForceStop = null;
             }
         }
