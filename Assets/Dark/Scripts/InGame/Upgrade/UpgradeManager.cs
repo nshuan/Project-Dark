@@ -35,7 +35,7 @@ namespace InGame.Upgrade
 
         private Dictionary<int, UpgradeNodeData> dataMapById;
 
-        private void InitData()
+        public void InitData()
         {
             data = DataHandler.Load<UpgradeData>(DataKey, new UpgradeData());
 #if UNITY_EDITOR

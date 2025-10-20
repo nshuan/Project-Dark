@@ -11,15 +11,33 @@ namespace Economic
     {
         [NonSerialized, OdinSerialize] private int[] gradeRequireMap;
 
+        private List<int> requireMapByTarget;
+
+        public List<int> RequireMapByTarget
+        {
+            get
+            {
+                if (requireMapByTarget == null || requireMapByTarget.Count == 0) 
+                    GetAllRequirement();
+
+                return requireMapByTarget;
+            }
+        }
+        
         public int GetRequirement(int grade)
         {
             if (grade <= 0) return 0;
-            return grade > gradeRequireMap.Length ? int.MaxValue : gradeRequireMap[grade - 1];
+            return grade > RequireMapByTarget.Count ? int.MaxValue : RequireMapByTarget[grade];
         }
 
-        public int[] GetAllRequirement()
+        public void GetAllRequirement()
         {
-            return gradeRequireMap;
+            requireMapByTarget = new List<int>();
+            for (int i = 0; i < gradeRequireMap.Length; i++)
+            {
+                if (i == 0) requireMapByTarget.Add(gradeRequireMap[i]);
+                else requireMapByTarget.Add(requireMapByTarget[i - 1] + gradeRequireMap[i]);
+            }
         }
         
         #region SINGLETON
