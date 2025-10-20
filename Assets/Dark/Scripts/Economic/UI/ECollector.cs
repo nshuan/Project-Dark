@@ -11,23 +11,29 @@ namespace Economic.UI
     {
         public int selectMethod = 1;
 
-        private LevelManager levelManager;
+        private PlayerCharacter player;
         
         private void Awake()
         {
-            levelManager = LevelManager.Instance;
             EnemyManager.Instance.OnOneEnemyDead += OnEnemyDead;
             LevelManager.Instance.onWaveEnded += OnWaveEnded;
+            LevelManager.Instance.OnLevelLoaded += OnLevelLoaded;
+        }
+
+        private void OnLevelLoaded(LevelConfig levelConfig)
+        {
+            player = LevelManager.Instance.Player;
         }
         
         private void OnEnemyDead(EnemyEntity enemy)
         {
+            if (!player) player = LevelManager.Instance.Player;
             
             // Show text [+Exp] trên đầu nhân vật
             if (enemy.Exp > 0)
             {
                 WealthManager.Instance.AddExp(enemy.Exp);
-                UIKillCollectedPool.Instance.ShowCollected(WealthType.Exp, enemy.Exp, levelManager.Player.transform.position);
+                UIKillCollectedPool.Instance.ShowCollected(WealthType.Exp, enemy.Exp, player.transform.position);
             }
             
             // TH0: Show text trên đầu con enemy vừa die
