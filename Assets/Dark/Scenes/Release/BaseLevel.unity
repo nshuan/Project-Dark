@@ -440,6 +440,9 @@ MonoBehaviour:
     - Name: dashDamagePlus
       Entry: 3
       Data: 0
+    - Name: dashDamageMultiplier
+      Entry: 4
+      Data: 0
     - Name: flashCooldownPlus
       Entry: 4
       Data: 0
@@ -448,6 +451,9 @@ MonoBehaviour:
       Data: 0
     - Name: flashDamagePlus
       Entry: 3
+      Data: 0
+    - Name: flashDamageMultiplier
+      Entry: 4
       Data: 0
     - Name: damePlus
       Entry: 3
@@ -462,6 +468,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cooldownPlus
+      Entry: 4
+      Data: 0
+    - Name: cooldownMultiplier
       Entry: 4
       Data: 0
     - Name: hpPlus
@@ -568,11 +577,11 @@ MonoBehaviour:
     - Name: unlockedTowerCounter
       Entry: 5
       Data: false
-    - Name: toleranceRegenPerSecond
-      Entry: 3
+    - Name: toleranceRegenPercentPerSecond
+      Entry: 4
       Data: 0
-    - Name: toleranceRegenWhenKill
-      Entry: 3
+    - Name: toleranceRegenPercentWhenKill
+      Entry: 4
       Data: 0
     - Name: towerCounterCooldownPlus
       Entry: 4
@@ -2201,6 +2210,63 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c7c32f2213925344abe57070303dc8b1, type: 3}
+--- !u!1001 &2848116565618406748
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2731503021594412220, guid: db8c408850fb4784a8a7e646cc3c0e56, type: 3}
+      propertyPath: m_Name
+      value: InGameBgm
+      objectReference: {fileID: 0}
+    - target: {fileID: 4199785403422625106, guid: db8c408850fb4784a8a7e646cc3c0e56, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4199785403422625106, guid: db8c408850fb4784a8a7e646cc3c0e56, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4199785403422625106, guid: db8c408850fb4784a8a7e646cc3c0e56, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4199785403422625106, guid: db8c408850fb4784a8a7e646cc3c0e56, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4199785403422625106, guid: db8c408850fb4784a8a7e646cc3c0e56, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4199785403422625106, guid: db8c408850fb4784a8a7e646cc3c0e56, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4199785403422625106, guid: db8c408850fb4784a8a7e646cc3c0e56, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4199785403422625106, guid: db8c408850fb4784a8a7e646cc3c0e56, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4199785403422625106, guid: db8c408850fb4784a8a7e646cc3c0e56, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4199785403422625106, guid: db8c408850fb4784a8a7e646cc3c0e56, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: db8c408850fb4784a8a7e646cc3c0e56, type: 3}
 --- !u!1001 &4932250673216303162
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2262,145 +2328,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7a1fcdef7bc8aa4d9e43bbc0eb92111, type: 3}
---- !u!1001 &5547804633881771799
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.Prefab
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.size
-      value: 14
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[0]
-      value: '"path":"testBonusInfo.damePlus","value":{"$id":0,"$type":"System.Int32,
-        mscorlib",10}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[1]
-      value: '"path":"testBonusInfo.hpPlus","value":{"$id":0,"$type":"System.Int32,
-        mscorlib",0}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[2]
-      value: '"path":"testBonusInfo.skillBonus.bulletPlus","value":{"$id":0,"$type":"System.Int32,
-        mscorlib",0}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[3]
-      value: '"path":"testBonusInfo.skillBonus.projectileChargeHitActions","value":{"$id":0,"$type":"System.Collections.Generic.List`1[[InGame.IProjectileHit,
-        Assembly-CSharp]], mscorlib","$rlength":1,"$rcontent":[{"$id":1,"$type":"InGame.ProjectileHitBlossom,
-        Assembly-CSharp","projectile":null,"bulletAmount":8,"blossomSize":3}]}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[4]
-      value: '"path":"testBonusInfo.skillBonus.projectileChargeHitActions.[0]","value":{"$id":0,"$type":"InGame.ProjectileHitBlossom,
-        Assembly-CSharp","projectile":null,"bulletAmount":8,"blossomSize":3}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[5]
-      value: '"path":"testBonusInfo.skillBonus.projectileChargeHitActions.[0].blossomSize","value":{"$id":0,"$type":"System.Single,
-        mscorlib",3}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[6]
-      value: '"path":"testBonusInfo.skillBonus.projectileChargeHitActions.[0].bulletAmount","value":{"$id":0,"$type":"System.Int32,
-        mscorlib",8}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[7]
-      value: '"path":"testBonusInfo.skillBonus.projectileChargeHitActions.[0].projectile","value":null'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[8]
-      value: '"path":"testBonusInfo.skillBonus.skillCooldownMultiply","value":{"$id":0,"$type":"System.Single,
-        mscorlib",0.1}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[9]
-      value: '"path":"testBonusInfo.skillBonus.skillDameMultiply","value":{"$id":0,"$type":"System.Single,
-        mscorlib",0.3}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[10]
-      value: '"path":"testBonusInfo.skillBonus.skillRangeMultiply","value":{"$id":0,"$type":"System.Single,
-        mscorlib",0.1}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[11]
-      value: '"path":"testBonusInfo.skillBonus.unlockedChargeDame","value":{"$id":0,"$type":"System.Boolean,
-        mscorlib",true}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[12]
-      value: '"path":"testBonusInfo.skillBonus.unlockedChargeSize","value":{"$id":0,"$type":"System.Boolean,
-        mscorlib",true}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[13]
-      value: '"path":"testBonusInfo.toleranceRegenPerSecond","value":{"$id":0,"$type":"System.Int32,
-        mscorlib",2}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModificationsReferencedUnityObjects.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7505955037445265209, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: m_Name
-      value: TestUpgradeBonus
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
 --- !u!1001 &6189557801817801400
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3272,4 +3199,4 @@ SceneRoots:
   - {fileID: 4932250673216303162}
   - {fileID: 691118427}
   - {fileID: 974580512}
-  - {fileID: 5547804633881771799}
+  - {fileID: 2848116565618406748}
