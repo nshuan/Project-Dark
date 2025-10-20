@@ -27,7 +27,7 @@ namespace InGame
             var t = typeof(T);
 
             if (!effectMap.ContainsKey(t) && effectInstance == null) return;
-            if (effectCoroutineMap.TryGetValue(t, out var coroutine)) StopCoroutine(coroutine);
+            if (effectCoroutineMap.TryGetValue(t, out var coroutine) && coroutine != null) StopCoroutine(coroutine);
 
             if (effectMap.TryGetValue(t, out var effect))
             {

@@ -10,20 +10,16 @@ namespace Economic.UI
     public class ECollector : MonoBehaviour
     {
         public int selectMethod = 1;
-        private PlayerCharacter player;
+
+        private LevelManager levelManager;
         
         private void Awake()
         {
+            levelManager = LevelManager.Instance;
             EnemyManager.Instance.OnOneEnemyDead += OnEnemyDead;
             LevelManager.Instance.onWaveEnded += OnWaveEnded;
-            LevelManager.Instance.OnLevelLoaded += OnLevelLoaded;
         }
-
-        private void OnLevelLoaded(LevelConfig level)
-        {
-            player = LevelManager.Instance.Player;
-        }
-
+        
         private void OnEnemyDead(EnemyEntity enemy)
         {
             
@@ -31,7 +27,7 @@ namespace Economic.UI
             if (enemy.Exp > 0)
             {
                 WealthManager.Instance.AddExp(enemy.Exp);
-                UIKillCollectedPool.Instance.ShowCollected(WealthType.Exp, enemy.Exp, player.transform.position);
+                UIKillCollectedPool.Instance.ShowCollected(WealthType.Exp, enemy.Exp, levelManager.Player.transform.position);
             }
             
             // TH0: Show text trên đầu con enemy vừa die

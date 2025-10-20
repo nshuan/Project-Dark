@@ -13,10 +13,10 @@ namespace InGame
         [Space] [Header("Combat")] 
         public LayerMask enemyLayer;
         
-        protected int damage;
-        protected float stagger;
-        protected int maxHitEachTrigger = 5;
-        protected float hitRadius = 2f;
+        public int damage;
+        public float stagger;
+        public int maxHitEachTrigger = 5;
+        public float hitRadius = 2f;
         
         protected RaycastHit2D[] hits = new RaycastHit2D[10];
         protected IDamageable hitTarget;
