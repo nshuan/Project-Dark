@@ -21,6 +21,7 @@ namespace Dark.Scripts.SceneNavigation
         public Action onStartLoading;
         private Action onSceneLoaded;
         private Action onLoadingComplete;
+        private bool isQuickLoad;
         
         protected override void Awake()
         {
@@ -29,6 +30,33 @@ namespace Dark.Scripts.SceneNavigation
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
         
+        private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+        {
+            DebugUtility.LogWarning($"Scene {scene.name} is loaded!");
+            if (isQuickLoad)
+            {
+                DoQuickClose(0.5f)
+                    .OnComplete(() =>
+                    {
+                        onLoadingComplete?.Invoke();
+                        onLoadingComplete = null;
+                    });
+            }
+            else
+            {
+                DoClose(Random.Range(minDuration, maxDuration), 0.3f,0.5f)
+                    .OnComplete(() =>
+                    {
+                        onLoadingComplete?.Invoke();
+                        onLoadingComplete = null;
+                    });
+            }
+            onSceneLoaded?.Invoke();
+            onSceneLoaded = null;
+        }
+        
+        #region Normal Load
+        
         public void LoadScene(string sceneName, Action completeCallback = null, float delay = 0f)
         {
             DebugUtility.LogWarning($"Loading scene {sceneName}");
@@ -36,21 +64,9 @@ namespace Dark.Scripts.SceneNavigation
             onStartLoading?.Invoke();
             DoOpen(0.3f, delay).OnComplete(() =>
             {
+                isQuickLoad = false;
                 SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
             });
-        }
-
-        private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
-        {
-            DebugUtility.LogWarning($"Scene {scene.name} is loaded!");
-            DoClose(Random.Range(minDuration, maxDuration), 0.3f,0.5f)
-                .OnComplete(() =>
-                {
-                    onLoadingComplete?.Invoke();
-                    onLoadingComplete = null;
-                });
-            onSceneLoaded?.Invoke();
-            onSceneLoaded = null;
         }
 
         private Tween DoOpen(float duration, float delay)
@@ -92,5 +108,48 @@ namespace Dark.Scripts.SceneNavigation
                 });
             return seq.Play();
         }
+
+        #endregion
+
+        #region QuickLoad
+
+        public void QuickLoadScene(string sceneName, Action completeCallback = null, float delay = 0f)
+        {
+            DebugUtility.LogWarning($"Loading (quick) scene {sceneName}");
+            onLoadingComplete = completeCallback;
+            onStartLoading?.Invoke();
+            DoQuickOpen(0.3f, delay).OnComplete(() =>
+            {
+                isQuickLoad = true;
+                SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+            });
+        }
+
+        private Tween DoQuickOpen(float duration, float delay)
+        {
+            loadingPanel.gameObject.SetActive(false);
+            blankPanel.alpha = 0f;
+            blankPanel.gameObject.SetActive(true);
+            DOTween.Kill(this);
+            var seq = DOTween.Sequence(this).SetUpdate(true);
+            seq.AppendInterval(delay);
+            seq.Append(blankPanel.DOFade(1f, duration));
+            return seq;
+        }
+
+        private Tween DoQuickClose(float hideBlankDuration)
+        {
+            DOTween.Kill(this);
+            var seq = DOTween.Sequence(this).SetUpdate(true);
+            seq.Append(blankPanel.DOFade(0f, hideBlankDuration).SetEase(Ease.InQuad))
+                .AppendCallback(() =>
+                {
+                    blankPanel.gameObject.SetActive(false);
+                    loadingPanel.gameObject.SetActive(false);
+                });
+            return seq.Play();
+        }
+
+        #endregion
     }
 }

@@ -48,7 +48,7 @@ namespace InGame.UI
             {
                 PauseGame.Instance.onPause -= OnPauseGame;
                 PauseGame.Instance.Resume();
-                Loading.Instance.LoadScene(SceneConstants.SceneUpgrade);
+                Loading.Instance.QuickLoadScene(SceneConstants.SceneUpgrade);
             });
             
             // Todo reload level

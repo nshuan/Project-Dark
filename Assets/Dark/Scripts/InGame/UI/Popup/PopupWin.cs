@@ -40,7 +40,7 @@ namespace InGame.UI
             btnBackToTree.onClick.RemoveAllListeners();
             btnBackToTree.onClick.AddListener(() =>
             {
-                Loading.Instance.LoadScene(SceneConstants.SceneUpgrade);
+                Loading.Instance.QuickLoadScene(SceneConstants.SceneUpgrade);
             });
             
             // Todo load next level
@@ -48,7 +48,7 @@ namespace InGame.UI
             btnNextLevel.onClick.AddListener(() =>
             {
                 ui.gameObject.SetActive(false);
-                Loading.Instance.LoadScene(SceneConstants.SceneInGame, () =>
+                Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame, () =>
                 {
                     LevelManager.Instance.LoadLevel(PlayerDataManager.Instance.Data.level + 1);
                 });

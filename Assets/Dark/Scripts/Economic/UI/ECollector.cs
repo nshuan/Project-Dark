@@ -69,10 +69,7 @@ namespace Economic.UI
 
                 if (enemy.BossPoint > 0)
                 {
-                    for (var i = 0; i < enemy.Dark; i++)
-                    {
-                        EItemDropManager.Instance.DropOne(WealthType.Sigils, 1, enemy.transform.position);
-                    }
+                    EItemDropManager.Instance.DropOne(WealthType.Sigils, enemy.BossPoint, enemy.transform.position, true);
                 }
             }
             
@@ -89,10 +86,7 @@ namespace Economic.UI
 
                 if (enemy.BossPoint > 0)
                 {
-                    for (var i = 0; i < enemy.Dark; i++)
-                    {
-                        EItemDropManager.Instance.DropOne(WealthType.Sigils, 1, enemy.transform.position, true);
-                    }
+                    EItemDropManager.Instance.DropOne(WealthType.Sigils, enemy.BossPoint, enemy.transform.position, true);
                 }
             }
         }

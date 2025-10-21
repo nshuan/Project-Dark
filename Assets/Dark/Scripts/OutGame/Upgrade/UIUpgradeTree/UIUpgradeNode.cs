@@ -43,7 +43,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             {
                 UpgradeManager.Instance.UpgradeNode(config.nodeId);
                 UpdateUI();
-                DoUpgrade().Play();
+                DoUpgrade().SetDelay(0.5f).Play();
                 treeRef.UpdateChildren(config.nodeId);
             }
         }

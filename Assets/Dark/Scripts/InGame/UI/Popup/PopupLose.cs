@@ -48,7 +48,7 @@ namespace InGame.UI
             {
                 btnReplay.interactable = false;
                 btnBackToTree.interactable = false;
-                Loading.Instance.LoadScene(SceneConstants.SceneUpgrade);
+                Loading.Instance.QuickLoadScene(SceneConstants.SceneUpgrade);
             });
             
             // Todo reload level
@@ -57,7 +57,7 @@ namespace InGame.UI
             {
                 btnReplay.interactable = false;
                 btnBackToTree.interactable = false;
-                Loading.Instance.LoadScene(SceneConstants.SceneInGame, () =>
+                Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame, () =>
                 {
                     LevelManager.Instance.LoadLevel(1);
                 });

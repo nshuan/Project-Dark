@@ -22,7 +22,7 @@ namespace Dark.Scripts.OutGame.Upgrade
 #endif
             this.DelayCall(0.5f, () =>
             {
-                Loading.Instance.LoadScene(SceneConstants.SceneInGame, () =>
+                Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame, () =>
                 {
                     LevelManager.Instance.LoadLevel(PlayerDataManager.Instance.Data.level + 1);
                 });
