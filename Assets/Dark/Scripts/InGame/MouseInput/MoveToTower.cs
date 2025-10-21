@@ -90,7 +90,7 @@ namespace InGame
                 }
                 else
                 {
-                    ShortConfig.moveLogic.SetStatsFuse(
+                    ShortConfig.MoveFuseLogic.SetStatsFuse(
                         GetDamage(LongConfig),
                         LongConfig.stagger,
                         LongConfig.maxHitEachTrigger,

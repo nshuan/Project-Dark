@@ -38,6 +38,14 @@ namespace Dark.Scripts.OutGame.Upgrade
         private void OnEnable()
         {
             UpdateUI();
+
+            if (config.preRequire == null || config.preRequire.Length == 0)
+            {
+                UpgradeManager.Instance.UpgradeNode(config.nodeId);
+                UpdateUI();
+                DoUpgrade().Play();
+                treeRef.UpdateChildren(config.nodeId);
+            }
         }
 
         public void SetVisual(Sprite sprite, Sprite lockSprite)
@@ -51,7 +59,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         public void UpdateUI()
         {
             var data = UpgradeManager.Instance.GetData(config.nodeId);
-            if (data == null) // Not activated yet
+            if (data == null || data.level == 0) // Not activated yet
             {
                 // Always available or all pre-required nodes are activated
                 if (config.preRequire == null || config.preRequire.All((preRequire) => UpgradeManager.Instance.GetData(preRequire.nodeId) != null))
@@ -115,7 +123,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                             UpgradeManager.Instance.GetData(id).level == 0))
                 {
                     UIUpgradeNodeInfoPreview.Instance.Shake();
-                    sfxUnlockFailure.Play();
+                    sfxUnlockFailure?.Play();
                     return;
                 }
                 
@@ -127,12 +135,12 @@ namespace Dark.Scripts.OutGame.Upgrade
                     UpdateUI();
                     DoUpgrade().Play();
                     treeRef.UpdateChildren(config.nodeId);
-                    sfxUnlockSuccess.Play();
+                    sfxUnlockSuccess?.Play();
                 }
                 else
                 {
                     UIUpgradeNodeInfoPreview.Instance.Shake();
-                    sfxUnlockFailure.Play();
+                    sfxUnlockFailure?.Play();
                 }
             };
         }

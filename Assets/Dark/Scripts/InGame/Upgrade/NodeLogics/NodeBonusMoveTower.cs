@@ -23,7 +23,16 @@ namespace InGame.Upgrade
 
         public string GetDisplayValue(int level)
         {
-            if (level < 0 || level >= value.Length) return "??";
+            if (level < 0) return "??";
+            if (level >= value.Length) level = value.Length - 1;
+            switch (bonusType)
+            {
+                case BonusMoveTowerType.Cooldown:
+                    break;
+                case BonusMoveTowerType.CastTime:
+                    return (value[level] * 100).ToString();
+            }
+            
             return value[level].ToString();
         }
 

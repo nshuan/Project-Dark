@@ -16,6 +16,9 @@ namespace InGame
         
         public MoveFlashFuseToTower(MoveFlashToTower baseLogic)
         {
+            damage = baseLogic.damage;
+            stagger = baseLogic.stagger;
+            explodeSize = baseLogic.explodeSize;
             enemyLayer = baseLogic.enemyLayer;
         }
 

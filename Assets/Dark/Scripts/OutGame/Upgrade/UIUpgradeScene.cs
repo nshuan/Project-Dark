@@ -1,7 +1,9 @@
 using System;
 using Core;
 using Dark.Scripts.SceneNavigation;
+using Dark.Scripts.Utils;
 using Data;
+using InGame;
 using InGame.CharacterClass;
 using InGame.Upgrade;
 using UnityEngine;
@@ -56,10 +58,22 @@ namespace Dark.Scripts.OutGame.Upgrade
                 PlayerDataManager.Instance.Save(data);
             }
             
-            // Load Upgrade tree
-            panelUpgradeTree.SetActive(true);
-            panelSelectClass.SetActive(false);
-            Instantiate(UpgradeTreeManifest.GetTreePrefab(classType), treeParent);
+            // // Load Upgrade tree
+            // panelUpgradeTree.SetActive(true);
+            // panelSelectClass.SetActive(false);
+            // Instantiate(UpgradeTreeManifest.GetTreePrefab(classType), treeParent);
+            
+            // Load level
+#if UNITY_EDITOR
+            LevelManager.isLoadFromInit = true;
+#endif
+            this.DelayCall(0.5f, () =>
+            {
+                Loading.Instance.LoadScene(SceneConstants.SceneInGame, () =>
+                {
+                    LevelManager.Instance.LoadLevel(PlayerDataManager.Instance.Data.level + 1);
+                });
+            });
         }
     }
 }

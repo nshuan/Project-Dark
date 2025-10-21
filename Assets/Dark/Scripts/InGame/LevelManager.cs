@@ -57,6 +57,7 @@ namespace InGame
 
         // <int waveIndex, float waveDuration>
         public event Action<int, float> OnWaveStart;
+        public event Action OnBossWaveStart;
         public event Action<int, WaveEndReason> onWaveEnded;
         
         public event Action OnWin;
@@ -68,10 +69,11 @@ namespace InGame
 
 #if UNITY_EDITOR
         [Space] public bool autoLoadLevel = true;
+        public static bool isLoadFromInit;
         private IEnumerator Start()
         {
             yield return new WaitForSeconds(2f);
-            if (autoLoadLevel && Level == null)
+            if (isLoadFromInit == false && autoLoadLevel && Level == null)
                 LoadLevel(testLevel);
         }
 #endif
@@ -149,6 +151,7 @@ namespace InGame
             OnLose = null;
             OnChangeTower = null;
             OnWaveStart = null;
+            OnBossWaveStart = null;
             onWaveEnded = null;
         }
         
@@ -167,18 +170,31 @@ namespace InGame
                 var currentWave = waves[currentWaveIndex];
                 currentWave.SetupWave(gatePrefab, Towers, Level.levelExpRatio, Level.levelDarkRatio, OnWaveForceStop);
                 OnWaveStart?.Invoke(currentWaveIndex, currentWave.timeToEnd);
+                if (currentWave.IsBossWave) OnBossWaveStart?.Invoke();
                 currentWaveIndex += 1;
                 yield return currentWave.IEActivateWave();
                 onWaveEnded?.Invoke(currentWaveIndex - 1, WaveEndReason.EndTime);
             }
         }
 
-        private void OnWaveForceStop(WaveEndReason reason)
+        private void OnWaveForceStop(int waveIndex, WaveEndReason reason)
         {
-            if (waveCoroutine != null) StopCoroutine(waveCoroutine);
-            onWaveEnded?.Invoke(currentWaveIndex - 1, reason);
+            // Nếu ko phải wave đang chạy thì ko stop coroutine
+            if (waveIndex == currentWaveIndex - 1)
+            {
+                if (waveCoroutine != null) StopCoroutine(waveCoroutine);
+            }
+
+            // Nếu wave stop vì hết thời gian thì invoke hàm này
+            if (reason == WaveEndReason.EndTime)
+                onWaveEnded?.Invoke(currentWaveIndex - 1, reason);
+            
             winLoseManager.CheckWin(this);
-            waveCoroutine = StartCoroutine(IEWave(Level.waveInfo));
+                
+            if (waveIndex == currentWaveIndex - 1)
+            {
+                waveCoroutine = StartCoroutine(IEWave(Level.waveInfo));
+            }
         }
 
         #endregion
@@ -189,7 +205,7 @@ namespace InGame
         {
             for (var i = 0; i < towers.Length; i++)
             {
-                towers[i].Initialize(i, playerStats.hp);
+                towers[i].Initialize(i, LevelUtility.GetTowerHp(playerStats.hp));
                 towers[i].OnDestroyed += OnTowerDestroyed;
             }
         }

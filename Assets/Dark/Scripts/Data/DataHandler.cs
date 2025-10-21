@@ -5,7 +5,7 @@ namespace Data
 {
     public class DataHandler
     {
-        private static string DataPath
+        public static string DataPath
         {
             get
             {

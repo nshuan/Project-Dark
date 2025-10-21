@@ -98,5 +98,23 @@ namespace InGame
             lastPosition.x = position.x;
             lastPosition.y = position.y;
         }
+
+        public void CheckHitEnemiesOnInit(float radius = 1f)
+        {
+            // Lấy y làm radius nếu ảnh viên đạn trong prefab nằm ngang
+            var hitCount = Physics2D.CircleCastNonAlloc(projectile.transform.position, radius, direction, hits, 0f, hitLayer);
+            if (hitCount > 0)
+            {
+                // Chỉ check hit 1 object đầu tiên va chạm
+                for (var i = 0; i < 1; i++)
+                {
+                    if (hits[i].transform.TryGetComponent<EnemyEntity>(out hitEnemy))
+                    {
+                        Projectile.ProjectileHit(hitEnemy);
+                        DebugUtility.Log($"Hit enemy {hitEnemy.name}");
+                    }
+                }
+            }
+        }
     }
 }

@@ -22,6 +22,7 @@ namespace InGame.Upgrade
                     bonusInfo.dashSizePlus += value[level - 1];
                     break;
                 case BonusType.Damage:
+                    if (isMultiply) bonusInfo.dashDamageMultiplier += (int)value[level - 1];
                     bonusInfo.dashDamagePlus += (int)value[level - 1];
                     break;
             }
@@ -29,7 +30,8 @@ namespace InGame.Upgrade
 
         public string GetDisplayValue(int level)
         {
-            if (level < 0 || level >= value.Length) return "??";
+            if (level < 0) return "??";
+            if (level >= value.Length) level = value.Length - 1;
             return value[level].ToString();
         }
         

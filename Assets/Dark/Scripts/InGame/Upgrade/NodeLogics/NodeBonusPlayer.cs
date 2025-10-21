@@ -24,7 +24,8 @@ namespace InGame.Upgrade
                     else bonusInfo.damePlus += (int)value[level - 1];
                     break;
                 case BonusPlayerType.Cooldown:
-                    bonusInfo.cooldownPlus += value[level - 1];
+                    if (isMultiply) bonusInfo.cooldownMultiplier += value[level - 1];
+                    else bonusInfo.cooldownPlus += value[level - 1];
                     break;
                 case BonusPlayerType.CriticalRate:
                     bonusInfo.criticalRatePlus += value[level - 1];
@@ -37,7 +38,20 @@ namespace InGame.Upgrade
 
         public string GetDisplayValue(int level)
         {
-            if (level < 0 || level >= value.Length) return "??";
+            if (level < 0) return "??";
+            if (level >= value.Length) level = value.Length - 1;
+            switch (bonusType)
+            {
+                case BonusPlayerType.Health:
+                case BonusPlayerType.Damage:
+                case BonusPlayerType.Cooldown:
+                    if (isMultiply) return (value[level] * 100).ToString();
+                    else return value[level].ToString();
+                case BonusPlayerType.CriticalRate:
+                    return (value[level] * 100).ToString();
+                case BonusPlayerType.CriticalDame:
+                    break;
+            }
             return value[level].ToString();
         }
 

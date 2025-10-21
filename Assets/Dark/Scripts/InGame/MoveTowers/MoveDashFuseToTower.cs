@@ -16,6 +16,10 @@ namespace InGame
 
         public MoveDashFuseToTower(MoveDashToTower baseLogic)
         {
+            damage = baseLogic.damage;
+            stagger = baseLogic.stagger;
+            maxHitEachTrigger = baseLogic.maxHitEachTrigger;
+            hitRadius = baseLogic.hitRadius;
             speedCurve = baseLogic.speedCurve;
             duration = baseLogic.duration;
             enemyLayer = baseLogic.enemyLayer;

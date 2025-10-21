@@ -79,7 +79,8 @@ namespace InGame
         /// <returns></returns>
         public static float GetSkillCooldown(int skillId, float playerCooldown, float baseSkillCooldown)
         {
-            return Mathf.Max(0f, (baseSkillCooldown - BonusInfo.skillBonus.skillCooldownPlus) * (1 - BonusInfo.skillBonus.skillCooldownMultiply) * (1 - playerCooldown - BonusInfo.cooldownPlus));
+            return Mathf.Max(0f, (baseSkillCooldown - BonusInfo.skillBonus.skillCooldownPlus) * (1 - BonusInfo.skillBonus.skillCooldownMultiply) 
+                * Mathf.Clamp(1 - (playerCooldown + BonusInfo.cooldownPlus) * (1f + BonusInfo.cooldownMultiplier), 0f, 1f));
         }
 
         /// <summary>
@@ -121,6 +122,11 @@ namespace InGame
         public static float GetBulletStagger(int skillId, float baseStagger)
         {
             return baseStagger * (1 + BonusInfo.skillBonus.staggerMultiply);
+        }
+
+        public static float GetDropRate(float baseDropRate)
+        {
+            return (baseDropRate + BonusInfo.dropRatePlus) * (1f + BonusInfo.dropRateMultiply);
         }
 
         #region Charge
@@ -391,7 +397,7 @@ namespace InGame
 
         public static int GetDashDamage(int baseDamage)
         {
-            return baseDamage + BonusInfo.dashDamagePlus;
+            return (int)((1f + BonusInfo.dashDamageMultiplier) * (baseDamage + BonusInfo.dashDamagePlus));
         }
 
         public static float GetFlashCooldown(float baseCooldown)
@@ -406,12 +412,17 @@ namespace InGame
 
         public static int GetFlashDamage(int baseDamage)
         {
-            return baseDamage + BonusInfo.flashDamagePlus;
+            return (int)((1f + BonusInfo.flashDamageMultiplier) * (baseDamage + BonusInfo.flashDamagePlus));
         }
 
         #endregion
 
-        #region Tower Counter
+        #region Tower
+
+        public static int GetTowerHp(int baseHp)
+        {
+            return (int)((1f + BonusInfo.hpMultiply) * (baseHp + BonusInfo.hpPlus));
+        }
 
         public static int GetTowerCounterDamage(int baseDamage)
         {
@@ -423,6 +434,16 @@ namespace InGame
             return Mathf.Max(baseCooldown - BonusInfo.towerCounterCooldownPlus, 0f);
         }
 
+        public static int GetTowerAutoRegen(int maxHp)
+        {
+            return (int)(BonusInfo.toleranceRegenPercentPerSecond);
+        }
+
+        public static int GetTowerRegenOnKill(int maxHp)
+        {
+            return (int)(BonusInfo.toleranceRegenPercentWhenKill * maxHp);
+        }
+        
         #endregion
     }
 }

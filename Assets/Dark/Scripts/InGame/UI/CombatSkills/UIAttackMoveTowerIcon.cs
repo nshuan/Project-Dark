@@ -2,6 +2,7 @@ using System;
 using InGame.UI.InGameToast;
 using InGame.Upgrade;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace InGame.UI.CombatSkills
 {
@@ -15,6 +16,11 @@ namespace InGame.UI.CombatSkills
         [SerializeField] private Transform groupPassiveAndArrow;
         [SerializeField] private float groupPassiveOneSkillX = 0f;
         [SerializeField] private float groupPassiveTwoSkillX = 0f;
+
+        [Space] [Header("Skill icon")] 
+        [SerializeField] private Image imgIconBaseSkill1;
+        [SerializeField] private Image imgIconBaseSkill2;
+        [SerializeField] private Sprite[] iconSkills;
         
         private bool available;
         private Action callbackShowSkill;
@@ -38,27 +44,33 @@ namespace InGame.UI.CombatSkills
 
             if (bonusInfo.unlockedMoveToTower is { Count: 2 })
             {
+                SetSkillSprite(imgIconBaseSkill1, bonusInfo.unlockedMoveToTower[0]);
+                SetSkillSprite(imgIconBaseSkill2, bonusInfo.unlockedMoveToTower[1]);
+                SetSkillSprite(imgFillCooldown, bonusInfo.unlockedMoveToTower[0]);
                 secondSkill.SetActive(true);
                 groupPassiveAndArrow.localPosition = new Vector3(groupPassiveTwoSkillX, groupPassiveAndArrow.localPosition.y, groupPassiveAndArrow.localPosition.z);
             }
-            else
+            else if (bonusInfo.unlockedMoveToTower is { Count: 1 })
             {
+                SetSkillSprite(imgIconBaseSkill1, bonusInfo.unlockedMoveToTower[0]);
+                SetSkillSprite(imgFillCooldown, bonusInfo.unlockedMoveToTower[0]);
                 secondSkill.SetActive(false);
                 groupPassiveAndArrow.localPosition = new Vector3(groupPassiveOneSkillX, groupPassiveAndArrow.localPosition.y,
                     groupPassiveAndArrow.localPosition.z);
             }
-            // if (bonusInfo.unlockedMoveToTower is { Count: > 0 })
+            else
             {
-                available = true;
-                callbackShowSkill?.Invoke();
-                CombatActions.OnMoveTower -= OnSkillUsed;
-                CombatActions.OnMoveTower += OnSkillUsed;
+                SetSkillSprite(imgIconBaseSkill1, 0);
+                SetSkillSprite(imgFillCooldown, 0);
+                secondSkill.SetActive(false);
+                groupPassiveAndArrow.localPosition = new Vector3(groupPassiveOneSkillX, groupPassiveAndArrow.localPosition.y,
+                    groupPassiveAndArrow.localPosition.z);
             }
-            // else
-            // {
-            //     available = false;
-            //     callbackHideSkill?.Invoke();
-            // }
+            
+            available = true;
+            callbackShowSkill?.Invoke();
+            CombatActions.OnMoveTower -= OnSkillUsed;
+            CombatActions.OnMoveTower += OnSkillUsed;
         }
         
         protected override void ShowToast()
@@ -81,6 +93,12 @@ namespace InGame.UI.CombatSkills
             ToastInGameManager.Instance.Register(
                 message: message,
                 icon: toastIcon);
+        }
+
+        private void SetSkillSprite(Image skillImage, int skillId)
+        {
+            if (skillId is 1 or 2) skillImage.sprite = iconSkills[skillId];
+            skillImage.sprite = iconSkills[0];
         }
     }
 }

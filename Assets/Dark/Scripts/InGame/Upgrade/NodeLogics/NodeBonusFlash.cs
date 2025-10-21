@@ -22,14 +22,16 @@ namespace InGame.Upgrade
                     bonusInfo.flashSizePlus += value[level - 1];
                     break;
                 case BonusType.Damage:
-                    bonusInfo.flashDamagePlus += (int)value[level - 1];
+                    if (isMultiply) bonusInfo.flashDamageMultiplier += (int)value[level - 1];
+                    else bonusInfo.flashDamagePlus += (int)value[level - 1];
                     break;
             }
         }
 
         public string GetDisplayValue(int level)
         {
-            if (level < 0 || level >= value.Length) return "??";
+            if (level < 0) return "??";
+            if (level >= value.Length) level = value.Length - 1;
             return value[level].ToString();
         }
         

@@ -440,6 +440,9 @@ MonoBehaviour:
     - Name: dashDamagePlus
       Entry: 3
       Data: 0
+    - Name: dashDamageMultiplier
+      Entry: 4
+      Data: 0
     - Name: flashCooldownPlus
       Entry: 4
       Data: 0
@@ -448,6 +451,9 @@ MonoBehaviour:
       Data: 0
     - Name: flashDamagePlus
       Entry: 3
+      Data: 0
+    - Name: flashDamageMultiplier
+      Entry: 4
       Data: 0
     - Name: damePlus
       Entry: 3
@@ -462,6 +468,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cooldownPlus
+      Entry: 4
+      Data: 0
+    - Name: cooldownMultiplier
       Entry: 4
       Data: 0
     - Name: hpPlus
@@ -568,11 +577,11 @@ MonoBehaviour:
     - Name: unlockedTowerCounter
       Entry: 5
       Data: false
-    - Name: toleranceRegenPerSecond
-      Entry: 3
+    - Name: toleranceRegenPercentPerSecond
+      Entry: 4
       Data: 0
-    - Name: toleranceRegenWhenKill
-      Entry: 3
+    - Name: toleranceRegenPercentWhenKill
+      Entry: 4
       Data: 0
     - Name: towerCounterCooldownPlus
       Entry: 4
@@ -1496,18 +1505,6 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 8c055273bf84a3644ae98503ce0d1793, type: 2}
     - {fileID: 11400000, guid: 6d76ddd90916f7849921b8de9e431e22, type: 2}
     - {fileID: 11400000, guid: 0ebbfe762cfe9f5428e622513f236643, type: 2}
-    - {fileID: 11400000, guid: b6027d477a604d7419ba6a88b4586146, type: 2}
-    - {fileID: 11400000, guid: b35f4962f1e7bce40892f147370d450f, type: 2}
-    - {fileID: 11400000, guid: 83d73b8115ae8a248b1ebb54e57afcd8, type: 2}
-    - {fileID: 11400000, guid: b8fc445265aaedd409c022cc3a22bedc, type: 2}
-    - {fileID: 11400000, guid: 7e5fc466c5804674cbe4ed4d2c996b23, type: 2}
-    - {fileID: 11400000, guid: 92b5a08e977181c4aaec18802db036ed, type: 2}
-    - {fileID: 11400000, guid: b6b80bb6783242d4ba26471141d155f1, type: 2}
-    - {fileID: 11400000, guid: 4aeb50b1f095eed4fa7b409b6a0b43f3, type: 2}
-    - {fileID: 11400000, guid: 3739ee72067f30d4da437b49d225d076, type: 2}
-    - {fileID: 11400000, guid: 73c3d723a2e5a7f4a99c22c8c5e304e4, type: 2}
-    - {fileID: 11400000, guid: 1a32ddc9bd76b3348984574a4bb2e254, type: 2}
-    - {fileID: 11400000, guid: abe50338c5597e942844098ccfa977f8, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -1641,7 +1638,7 @@ MonoBehaviour:
       Data: 2
     - Name: $v
       Entry: 10
-      Data: 4
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1653,7 +1650,7 @@ MonoBehaviour:
       Data: 0
     - Name: $v
       Entry: 10
-      Data: 5
+      Data: 1
     - Name: 
       Entry: 8
       Data: 
@@ -1665,7 +1662,7 @@ MonoBehaviour:
       Data: 1
     - Name: $v
       Entry: 10
-      Data: 6
+      Data: 2
     - Name: 
       Entry: 8
       Data: 
@@ -1677,7 +1674,7 @@ MonoBehaviour:
       Data: 3
     - Name: $v
       Entry: 10
-      Data: 7
+      Data: 3
     - Name: 
       Entry: 8
       Data: 
@@ -1714,7 +1711,7 @@ MonoBehaviour:
       Data: 0
     - Name: $v
       Entry: 10
-      Data: 8
+      Data: 1
     - Name: 
       Entry: 8
       Data: 
@@ -1726,7 +1723,7 @@ MonoBehaviour:
       Data: 1
     - Name: $v
       Entry: 10
-      Data: 9
+      Data: 2
     - Name: 
       Entry: 8
       Data: 
@@ -1738,7 +1735,7 @@ MonoBehaviour:
       Data: 2
     - Name: $v
       Entry: 10
-      Data: 10
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1750,7 +1747,7 @@ MonoBehaviour:
       Data: 3
     - Name: $v
       Entry: 10
-      Data: 11
+      Data: 3
     - Name: 
       Entry: 8
       Data: 
@@ -1787,7 +1784,7 @@ MonoBehaviour:
       Data: 0
     - Name: $v
       Entry: 10
-      Data: 12
+      Data: 1
     - Name: 
       Entry: 8
       Data: 
@@ -1799,7 +1796,7 @@ MonoBehaviour:
       Data: 1
     - Name: $v
       Entry: 10
-      Data: 13
+      Data: 2
     - Name: 
       Entry: 8
       Data: 
@@ -1811,7 +1808,7 @@ MonoBehaviour:
       Data: 2
     - Name: $v
       Entry: 10
-      Data: 14
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1823,7 +1820,7 @@ MonoBehaviour:
       Data: 3
     - Name: $v
       Entry: 10
-      Data: 15
+      Data: 3
     - Name: 
       Entry: 8
       Data: 
@@ -2213,6 +2210,63 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c7c32f2213925344abe57070303dc8b1, type: 3}
+--- !u!1001 &2848116565618406748
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2731503021594412220, guid: db8c408850fb4784a8a7e646cc3c0e56, type: 3}
+      propertyPath: m_Name
+      value: InGameBgm
+      objectReference: {fileID: 0}
+    - target: {fileID: 4199785403422625106, guid: db8c408850fb4784a8a7e646cc3c0e56, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4199785403422625106, guid: db8c408850fb4784a8a7e646cc3c0e56, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4199785403422625106, guid: db8c408850fb4784a8a7e646cc3c0e56, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4199785403422625106, guid: db8c408850fb4784a8a7e646cc3c0e56, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4199785403422625106, guid: db8c408850fb4784a8a7e646cc3c0e56, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4199785403422625106, guid: db8c408850fb4784a8a7e646cc3c0e56, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4199785403422625106, guid: db8c408850fb4784a8a7e646cc3c0e56, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4199785403422625106, guid: db8c408850fb4784a8a7e646cc3c0e56, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4199785403422625106, guid: db8c408850fb4784a8a7e646cc3c0e56, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4199785403422625106, guid: db8c408850fb4784a8a7e646cc3c0e56, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: db8c408850fb4784a8a7e646cc3c0e56, type: 3}
 --- !u!1001 &4932250673216303162
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2274,111 +2328,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7a1fcdef7bc8aa4d9e43bbc0eb92111, type: 3}
---- !u!1001 &5547804633881771799
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.Prefab
-      value: 
-      objectReference: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.size
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[0]
-      value: '"path":"testBonusInfo.damePlus","value":{"$id":0,"$type":"System.Int32,
-        mscorlib",15}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[1]
-      value: '"path":"testBonusInfo.skillBonus.projectileChargeHitActions","value":{"$id":0,"$type":"System.Collections.Generic.List`1[[InGame.IProjectileHit,
-        Assembly-CSharp]], mscorlib","$rlength":1,"$rcontent":[{"$id":1,"$type":"InGame.ProjectileHitBlossom,
-        Assembly-CSharp","bulletAmount":8,"blossomSize":3}]}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[2]
-      value: '"path":"testBonusInfo.skillBonus.projectileChargeHitActions.[0]","value":{"$id":0,"$type":"InGame.ProjectileHitBlossom,
-        Assembly-CSharp","bulletAmount":8,"blossomSize":3}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[3]
-      value: '"path":"testBonusInfo.skillBonus.projectileChargeHitActions.[0].blossomSize","value":{"$id":0,"$type":"System.Single,
-        mscorlib",3}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[4]
-      value: '"path":"testBonusInfo.skillBonus.projectileChargeHitActions.[0].bulletAmount","value":{"$id":0,"$type":"System.Int32,
-        mscorlib",8}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[5]
-      value: '"path":"testBonusInfo.skillBonus.unlockedChargeDame","value":{"$id":0,"$type":"System.Boolean,
-        mscorlib",true}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[6]
-      value: '"path":"testBonusInfo.skillBonus.unlockedChargeSize","value":{"$id":0,"$type":"System.Boolean,
-        mscorlib",true}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048663012824614083, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: serializationData.PrefabModificationsReferencedUnityObjects.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4085596194586854737, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7505955037445265209, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
-      propertyPath: m_Name
-      value: TestUpgradeBonus
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 036adc2acf19af74aa199500adb1d0bd, type: 3}
 --- !u!1001 &6189557801817801400
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3250,4 +3199,4 @@ SceneRoots:
   - {fileID: 4932250673216303162}
   - {fileID: 691118427}
   - {fileID: 974580512}
-  - {fileID: 5547804633881771799}
+  - {fileID: 2848116565618406748}

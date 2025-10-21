@@ -71,9 +71,27 @@ MonoBehaviour:
     - Name: moveCooldownPlus
       Entry: 4
       Data: 0
-    - Name: damePlus
+    - Name: dashCooldownPlus
+      Entry: 4
+      Data: 0
+    - Name: dashSizePlus
+      Entry: 4
+      Data: 0
+    - Name: dashDamagePlus
       Entry: 3
       Data: 0
+    - Name: flashCooldownPlus
+      Entry: 4
+      Data: 0
+    - Name: flashSizePlus
+      Entry: 4
+      Data: 0
+    - Name: flashDamagePlus
+      Entry: 3
+      Data: 0
+    - Name: damePlus
+      Entry: 3
+      Data: 10
     - Name: dameMultiply
       Entry: 4
       Data: 0
@@ -98,9 +116,6 @@ MonoBehaviour:
     - Name: dropRateMultiply
       Entry: 4
       Data: 0
-    - Name: unlockedTowerCounter
-      Entry: 6
-      Data: 
     - Name: skillBonus
       Entry: 7
       Data: 2|InGame.UpgradeBonusSkillInfo, Assembly-CSharp
@@ -109,37 +124,37 @@ MonoBehaviour:
       Data: 0
     - Name: skillDameMultiply
       Entry: 4
-      Data: 0
+      Data: 0.3
     - Name: skillCooldownPlus
       Entry: 4
       Data: 0
     - Name: skillCooldownMultiply
       Entry: 4
-      Data: 0
+      Data: 0.1
     - Name: skillSizeMultiply
       Entry: 4
       Data: 0
     - Name: skillRangeMultiply
       Entry: 4
-      Data: 0
+      Data: 0.1
     - Name: bulletPlus
       Entry: 3
       Data: 0
     - Name: bulletMaxHitPlus
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: staggerMultiply
       Entry: 4
       Data: 0
     - Name: unlockedChargeDame
       Entry: 5
-      Data: false
+      Data: true
     - Name: unlockedChargeBullet
       Entry: 5
       Data: false
     - Name: unlockedChargeSize
       Entry: 5
-      Data: false
+      Data: true
     - Name: unlockedChargeRange
       Entry: 5
       Data: false
@@ -157,11 +172,36 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: projectileChargeHitActions
+      Entry: 7
+      Data: 4|System.Collections.Generic.List`1[[InGame.IProjectileHit, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 5|InGame.ProjectileHitBlossom, Assembly-CSharp
+    - Name: projectile
       Entry: 6
+      Data: 
+    - Name: bulletAmount
+      Entry: 3
+      Data: 8
+    - Name: blossomSize
+      Entry: 4
+      Data: 3
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
       Data: 
     - Name: projectileActivateActions
       Entry: 7
-      Data: 4|System.Collections.Generic.List`1[[InGame.IProjectileActivate, Assembly-CSharp]],
+      Data: 6|System.Collections.Generic.List`1[[InGame.IProjectileActivate, Assembly-CSharp]],
         mscorlib
     - Name: 
       Entry: 12
@@ -178,14 +218,41 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: chargeDameBonus
+      Entry: 6
+      Data: 
+    - Name: chargeBulletBonus
+      Entry: 6
+      Data: 
+    - Name: chargeSizeBonus
+      Entry: 6
+      Data: 
+    - Name: chargeRangeBonus
+      Entry: 6
+      Data: 
+    - Name: unlockedTowerCounter
+      Entry: 5
+      Data: false
+    - Name: toleranceRegenPerSecond
+      Entry: 3
+      Data: 2
+    - Name: toleranceRegenWhenKill
+      Entry: 3
+      Data: 0
+    - Name: towerCounterCooldownPlus
+      Entry: 4
+      Data: 0
+    - Name: towerCounterDamagePlus
+      Entry: 3
+      Data: 0
     - Name: passiveMapByTriggerType
       Entry: 7
-      Data: 5|System.Collections.Generic.Dictionary`2[[InGame.PassiveTriggerType,
+      Data: 7|System.Collections.Generic.Dictionary`2[[InGame.PassiveTriggerType,
         Assembly-CSharp],[System.Collections.Generic.List`1[[InGame.PassiveType,
         Assembly-CSharp]], mscorlib]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 6|System.Collections.Generic.EnumEqualityComparer`1[[InGame.PassiveTriggerType,
+      Data: 8|System.Collections.Generic.EnumEqualityComparer`1[[InGame.PassiveTriggerType,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
@@ -207,7 +274,7 @@ MonoBehaviour:
       Data: 1
     - Name: $v
       Entry: 7
-      Data: 7|System.Collections.Generic.List`1[[InGame.PassiveType, Assembly-CSharp]],
+      Data: 9|System.Collections.Generic.List`1[[InGame.PassiveType, Assembly-CSharp]],
         mscorlib
     - Name: 
       Entry: 12
@@ -230,16 +297,16 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: passiveBonusCooldownMapByType
-      Entry: 6
-      Data: 
-    - Name: passiveBonusChanceMapByType
-      Entry: 6
-      Data: 
     - Name: passiveBonusSizeMapByType
       Entry: 6
       Data: 
     - Name: passiveBonusValueMapByType
+      Entry: 6
+      Data: 
+    - Name: passiveBonusCooldownMapByType
+      Entry: 6
+      Data: 
+    - Name: passiveBonusChanceMapByType
       Entry: 6
       Data: 
     - Name: passiveBonusStaggerMapByType
@@ -248,4 +315,4 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  enableTest: 1
+  enableTest: 0

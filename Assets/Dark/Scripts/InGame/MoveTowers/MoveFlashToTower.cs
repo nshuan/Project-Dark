@@ -12,9 +12,9 @@ namespace InGame
         [Space] [Header("Combat")] 
         public LayerMask enemyLayer;
         
-        protected float explodeSize = 2f;
-        protected int damage;
-        protected float stagger;
+        public float explodeSize = 2f;
+        public int damage;
+        public float stagger;
         
         protected RaycastHit2D[] hits = new RaycastHit2D[50];
         protected IDamageable hitTarget;

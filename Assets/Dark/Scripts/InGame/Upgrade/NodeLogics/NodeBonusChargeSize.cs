@@ -43,7 +43,21 @@ namespace InGame.Upgrade
 
         public string GetDisplayValue(int level)
         {
-            if (level < 0 || level >= value.Length) return "??";
+            if (level < 0) return "??";
+            if (level >= value.Length) level = value.Length - 1;
+            switch (bonusType)
+            {
+                case NodeBonusChargeBullet.BonusType.MaxDame:
+                case NodeBonusChargeBullet.BonusType.MaxSize:
+                case NodeBonusChargeBullet.BonusType.MaxRange:
+                    return (value[level] * 100).ToString();
+                case NodeBonusChargeBullet.BonusType.MaxDameTime:
+                case NodeBonusChargeBullet.BonusType.MaxSizeTime:
+                case NodeBonusChargeBullet.BonusType.MaxRangeTime:
+                case NodeBonusChargeBullet.BonusType.MaxBulletAdd:
+                case NodeBonusChargeBullet.BonusType.BulletAddInterval:
+                    break;
+            }
             return value[level].ToString();
         }
     }
