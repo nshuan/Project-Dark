@@ -6,17 +6,7 @@ namespace InGame
     public class LevelUtility
     {
         public static UpgradeBonusInfo BonusInfo { get; set; } = new UpgradeBonusInfo();
-        
-        /// <summary>
-        /// HP = [ Player_HP + Total (HP_Plus) ] * [ 1 + Total (HP_Multiple) ]
-        /// </summary>
-        /// <param name="baseHealth"></param>
-        /// <returns></returns>
-        public static int GetPlayerHealth(int baseHealth)
-        {
-            return Mathf.RoundToInt((baseHealth + BonusInfo.hpPlus) * (1 + BonusInfo.hpMultiply));
-        }
-        
+
         /// <summary>
         /// Player_Damage = [ Base_Damage + Total (Dame_Plus) ] * [1 + Total (Dame_Multiple) ]
         /// Bullet_Dame = [ Player_Damage + Dame_Per_Bullet + Total (Skill_Dame_Plus) ] * [ 1 + Total (Skill_Dame_Multiple) ]
@@ -41,10 +31,10 @@ namespace InGame
             playerDamage = Mathf.RoundToInt((playerDamage + BonusInfo.damePlus) * (1 + BonusInfo.dameMultiply));
             var bulletDamage = Mathf.RoundToInt((playerDamage + skillDamage + BonusInfo.skillBonus.skillDamePlus) * (1 + BonusInfo.skillBonus.skillDameMultiply));
             criticalDameMultiplier = criticalDameMultiplier + BonusInfo.criticalDame;
-            return (
-                Mathf.RoundToInt(bulletDamage * chargeDameMultiplier), 
-                Mathf.RoundToInt(bulletDamage * criticalDameMultiplier * chargeDameMultiplier)
-                );
+            return LevelTemporaryUtility.FilterPlayerBulletDamage(
+                Mathf.RoundToInt(bulletDamage * chargeDameMultiplier),
+                Mathf.RoundToInt(bulletDamage * criticalDameMultiplier * chargeDameMultiplier), 
+                BonusInfo);
         }
 
         /// <summary>
@@ -79,8 +69,14 @@ namespace InGame
         /// <returns></returns>
         public static float GetSkillCooldown(int skillId, float playerCooldown, float baseSkillCooldown)
         {
-            return Mathf.Max(0f, (baseSkillCooldown - BonusInfo.skillBonus.skillCooldownPlus) * (1 - BonusInfo.skillBonus.skillCooldownMultiply) 
-                * Mathf.Clamp(1 - (playerCooldown + BonusInfo.cooldownPlus) * (1f + BonusInfo.cooldownMultiplier), 0f, 1f));
+            return LevelTemporaryUtility.FilterSkillCooldown(Mathf.Max(0f,
+                (baseSkillCooldown - BonusInfo.skillBonus.skillCooldownPlus) * (1 - BonusInfo.skillBonus
+                                                                                 .skillCooldownMultiply)
+                                                                             * Mathf.Clamp(
+                                                                                 1 - (playerCooldown +
+                                                                                     BonusInfo.cooldownPlus) *
+                                                                                 (1f + BonusInfo.cooldownMultiplier),
+                                                                                 0f, 1f)), BonusInfo);
         }
 
         /// <summary>
@@ -419,6 +415,11 @@ namespace InGame
 
         #region Tower
 
+        /// <summary>
+        /// HP = [ Player_HP + Total (HP_Plus) ] * [ 1 + Total (HP_Multiple) ]
+        /// </summary>
+        /// <param name="baseHealth"></param>
+        /// <returns></returns>
         public static int GetTowerHp(int baseHp)
         {
             return (int)((1f + BonusInfo.hpMultiply) * (baseHp + BonusInfo.hpPlus));

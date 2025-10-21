@@ -153,6 +153,8 @@ namespace InGame
             OnWaveStart = null;
             OnBossWaveStart = null;
             onWaveEnded = null;
+            
+            CombatActions.Clear();
         }
         
         #region Waves

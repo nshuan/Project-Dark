@@ -144,6 +144,10 @@ namespace Dark.Tools.GoogleSheetTool
         BonusPassiveSize,
         BonusChargeSize,
         BonusChargeBullet,
-        BonusSkillAttackRange
+        BonusSkillAttackRange,
+        TempBonusAttackSpeedDuration,
+        TempBonusDamageDuration,
+        TempBonusCriticalRateDuration,
+        TempBonusCriticalDamageDuration,
     }
 }

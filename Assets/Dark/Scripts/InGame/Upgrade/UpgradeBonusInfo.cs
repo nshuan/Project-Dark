@@ -82,6 +82,15 @@ namespace InGame
 
         #endregion
 
+        #region Temporary
+
+        public UpgradeBonusTempInfo tempDamageBonusOnMove;
+        public UpgradeBonusTempInfo tempDamageBonusOnKill;
+        public UpgradeBonusTempInfo tempAtkSpeBonusOnMove;
+        public UpgradeBonusTempInfo tempAtkSpeBonusOnKill;
+
+        #endregion
+        
         public UpgradeBonusInfo()
         {
             skillBonus = new UpgradeBonusSkillInfo();
@@ -150,5 +159,12 @@ namespace InGame
 
         public float maxRangeMultiplier;
         public float maxRangeChargeTime;
+    }
+
+    [Serializable]
+    public class UpgradeBonusTempInfo
+    {
+        public float bonusValue;
+        public float bonusDuration;
     }
 }

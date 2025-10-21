@@ -15,7 +15,7 @@ namespace Economic.UI
         
         private void Awake()
         {
-            EnemyManager.Instance.OnOneEnemyDead += OnEnemyDead;
+            CombatActions.OnOneEnemyDead += OnEnemyDead;
             LevelManager.Instance.onWaveEnded += OnWaveEnded;
             LevelManager.Instance.OnLevelLoaded += OnLevelLoaded;
         }
