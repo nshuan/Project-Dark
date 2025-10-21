@@ -59,7 +59,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             if (cacheConfig == null) return;
             txtNodeName.SetText(cacheConfig.nodeName);
             txtNodeLore.SetText(cacheConfig.description);
-            txtNodeLevel.SetText($"{cacheData?.level ?? 0}/{cacheConfig.levelNum}");
+            txtNodeLevel.SetText($"{cacheData?.level ?? 0}/{cacheConfig.MaxLevel}");
 
             var descriptionStr = "";
             var descriptions = cacheConfig.description.Split("\n");
@@ -79,7 +79,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             txtNodeBonus.gameObject.SetActive(true);
 
             // Setup requirement
-            if (cacheData != null && cacheData.level >= cacheConfig.levelNum)
+            if (cacheData != null && cacheData.level >= cacheConfig.MaxLevel)
             {
                 groupStillAvailable.gameObject.SetActive(false);
                 groupMax.SetActive(true);

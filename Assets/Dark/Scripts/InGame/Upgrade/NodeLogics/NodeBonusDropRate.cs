@@ -22,5 +22,7 @@ namespace InGame.Upgrade
             if (level >= value.Length) level = value.Length - 1;
             return (value[level] * 100).ToString();
         }
+
+        public int MaxLevel => value.Length;
     }
 }

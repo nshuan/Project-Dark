@@ -41,6 +41,8 @@ namespace InGame.Upgrade
             return (value[level] * 100).ToString();
         }
 
+        public int MaxLevel => value.Length;
+
         public enum BonusTemporaryType
         {
             DamageOnKill,

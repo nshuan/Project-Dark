@@ -38,6 +38,8 @@ namespace InGame.Upgrade
             return value[level].ToString();
         }
 
+        public int MaxLevel => value.Length;
+
         public enum BonusType
         {
             Damage,

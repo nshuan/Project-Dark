@@ -41,6 +41,8 @@ namespace InGame.Upgrade
             return "";
         }
 
+        public int MaxLevel => 1;
+
         public enum BonusUnlockSkillType
         {
             ChargeDamage,

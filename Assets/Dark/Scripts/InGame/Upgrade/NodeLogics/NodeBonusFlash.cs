@@ -34,7 +34,9 @@ namespace InGame.Upgrade
             if (level >= value.Length) level = value.Length - 1;
             return value[level].ToString();
         }
-        
+
+        public int MaxLevel => value.Length;
+
         public enum BonusType
         {
             Cooldown,

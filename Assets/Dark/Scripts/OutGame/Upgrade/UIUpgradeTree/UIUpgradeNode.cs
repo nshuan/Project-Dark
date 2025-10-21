@@ -95,8 +95,8 @@ namespace Dark.Scripts.OutGame.Upgrade
                 imgAvailable.SetActive(true);
                 imgLock.SetActive(false);
                 vfxActivate?.Play();
-                imgActivatedGlow.SetActive(data.level < config.levelNum);
-                imgActivatedMaxGlow.SetActive(data.level >= config.levelNum);
+                imgActivatedGlow.SetActive(data.level < config.MaxLevel);
+                imgActivatedMaxGlow.SetActive(data.level >= config.MaxLevel);
                 
                 foreach (var lineInfo in preRequireLines)
                 {

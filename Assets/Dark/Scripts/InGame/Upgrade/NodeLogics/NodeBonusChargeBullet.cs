@@ -61,8 +61,10 @@ namespace InGame.Upgrade
 		    
 		    return value[level].ToString();
 	    }
-	    
-		public enum BonusType
+
+	    public int MaxLevel => value.Length;
+
+	    public enum BonusType
 		{
 			MaxDame,
 			MaxDameTime,

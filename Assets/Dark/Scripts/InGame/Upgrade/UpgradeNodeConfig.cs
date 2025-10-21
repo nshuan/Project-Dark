@@ -15,7 +15,6 @@ namespace InGame.Upgrade
         public UpgradeNodeConfig[] preRequire;
         public string description; // Description to display
         public UpgradeNodeCostInfo[] costInfo; 
-        public int levelNum = 1;
         [NonSerialized, OdinSerialize] public INodeActivateLogic[] nodeLogic;
         [Space] [Header("Visual")] 
         public Sprite nodeSprite;
@@ -24,10 +23,19 @@ namespace InGame.Upgrade
         public UpgradeNodeState State { get; set; }
         public bool Activated { get; set; }
 
+        public int MaxLevel
+        {
+            get
+            {
+                if (nodeLogic == null || nodeLogic.Length == 0) return 0;
+                return nodeLogic.Max((logic) => logic.MaxLevel);
+            }
+        }
+
         public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)
         {
             if (nodeLogic == null) return;
-            if (level <= 0 || level > levelNum) return;
+            if (level <= 0 || level > MaxLevel) return;
             for (var i = 1; i <= level; i++)
             {
                 foreach (var logic in nodeLogic)
