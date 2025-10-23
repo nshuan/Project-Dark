@@ -55,6 +55,9 @@ namespace InGame.UI
                     iconGlowLowHp.gameObject.SetActive(true);
                     iconGlowLowHp.DOFade(1f, 0.3f).SetTarget(iconGlowLowHp);
                 }
+                DOTween.Kill(this, complete:true);
+                transform.localScale = Vector3.one;
+                transform.DOPunchScale(0.2f * Vector3.one, 0.2f).SetTarget(this);
             }
             else
             {

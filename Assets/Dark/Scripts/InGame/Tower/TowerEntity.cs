@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Dark.Scripts.Audio;
 using InGame.Effects;
+using InGame.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,10 +10,10 @@ namespace InGame
 {
     public class TowerEntity : MonoBehaviour, IDamageable
     {
-        [SerializeField] public Vector3 standOffset;
+        [SerializeField] private Vector3[] standOffset;
         [SerializeField] private SpriteRenderer towerVisual;
         [SerializeField] private SpriteRenderer towerVisualUILayer;
-        [SerializeField] private GameObject towerOutline;
+        [SerializeField] private SpriteRenderer towerOutline;
         [SerializeField] private Sprite[] spriteStates;
         [SerializeField] private float[] thresholdState = new[] { 0f, 0.3f, 0.7f };
         [SerializeField] private TowerAutoRegenerate autoRegenerate;
@@ -50,8 +51,9 @@ namespace InGame
             currentState = spriteStates.Length - 1;
             towerVisual.sprite = spriteStates[currentState];
             towerVisualUILayer.sprite = spriteStates[currentState];
-            autoRegenerate.Initialize(this, LevelUtility.BonusInfo.toleranceRegenPerSecond);
-            regenerateOnKill.Initialize(this, LevelUtility.BonusInfo.toleranceRegenWhenKill);
+            towerOutline.sprite = spriteStates[currentState];
+            autoRegenerate.Initialize(this, LevelUtility.GetTowerAutoRegen(MaxHp));
+            regenerateOnKill.Initialize(this, LevelUtility.GetTowerRegenOnKill(MaxHp));
         }
 
         public void EnterTower()
@@ -88,7 +90,10 @@ namespace InGame
                     currentState -= 1;
                     towerVisual.sprite = spriteStates[currentState];
                     towerVisualUILayer.sprite = spriteStates[currentState];
+                    towerOutline.sprite = spriteStates[currentState];
                 }
+                
+                if (currentState == 0) UIWarningManager.Instance.WarnOnce(false);
             }
             
             autoRegenerate.Activate();
@@ -111,6 +116,7 @@ namespace InGame
                 currentState += 1;
                 towerVisual.sprite = spriteStates[currentState];
                 towerVisualUILayer.sprite = spriteStates[currentState];
+                towerOutline.sprite = spriteStates[currentState];
             }
         }
         
@@ -119,7 +125,7 @@ namespace InGame
         public void Hover(bool hovering)
         {
             hover.SetActive(hovering);
-            towerOutline.SetActive(hovering);
+            towerOutline.gameObject.SetActive(hovering);
         }
         
         public void OnMotionBlur()
@@ -130,7 +136,7 @@ namespace InGame
         public void OnEndMotionBlur()
         {
             towerVisualUILayer.gameObject.SetActive(false);
-            towerOutline.SetActive(false);
+            towerOutline.gameObject.SetActive(false);
         }
 
         /// <summary>
@@ -141,6 +147,11 @@ namespace InGame
         public Vector3 GetBaseCenter()
         {
             return towerVisual.transform.position;
+        }
+
+        public Vector3 GetTowerHeight()
+        {
+            return standOffset[currentState];
         }
     }
 }

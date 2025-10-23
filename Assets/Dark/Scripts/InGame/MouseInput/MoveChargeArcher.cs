@@ -26,8 +26,8 @@ namespace InGame
             var p = ProjectilePool.Instance.Get(projectilePrefab, null, false);
             p.transform.position = spawnPos;
             p.transform.localScale = Vector3.one;
-            // Do đây setactive rồi nhng mà chưa set spawn pos cho projectile nên check trong update bị sai
-            // Nên ở đây phải set startpos luoon
+            // Do đây setactive rồi nhng mà chưa set RangeCenter cho projectile nên check trong update bị sai
+            // Nên ở đây phải set RangeCenter luoon
             p.RangeCenter = spawnPos;
             p.gameObject.SetActive(true);
             projectiles.Add(p);

@@ -21,11 +21,11 @@ namespace InGame
         public bool isRandomWaveConfig;
 
         public GateEntity[] Gates { get; private set; }
-        public Action OnWaveForceStop { get; set; }
+        public Action<int, WaveEndReason> OnWaveForceStop { get; set; }
         public bool WaveEndedCompletely { get; set; }
         private int currentGateIndex = 0;
         
-        public void SetupWave(GateEntity gatePrefab, TowerEntity[] towers, float levelExpRatio, float levelDarkRatio, Action onWaveForceEnded)
+        public void SetupWave(GateEntity gatePrefab, TowerEntity[] towers, float levelExpRatio, float levelDarkRatio, Action<int, WaveEndReason> onWaveForceEnded)
         {
             if (isRandomWaveConfig)
                 waveConfig = randomWaveConfigs[Random.Range(0, randomWaveConfigs.Length)];
@@ -65,7 +65,6 @@ namespace InGame
             
             yield return new WaitForSeconds(timeToEnd);
             DebugUtility.LogError($"Wave {waveIndex}: End duration");
-            OnWaveForceStop = null;
             CheckStopAllGate();
         }
         
@@ -75,7 +74,7 @@ namespace InGame
             {
                 DebugUtility.LogError($"Stop wave {waveIndex}: All enemies are dead");
                 WaveEndedCompletely = true;
-                OnWaveForceStop?.Invoke();
+                OnWaveForceStop?.Invoke(waveIndex, WaveEndReason.AllDead);
                 OnWaveForceStop = null;
             }
         }
@@ -100,5 +99,13 @@ namespace InGame
             
             CheckStopAllGate();
         }
+
+        public bool IsBossWave => waveConfig.gateConfigs.Any((gate) => gate.isBossGate);
+    }
+
+    public enum WaveEndReason
+    {
+        EndTime,
+        AllDead
     }
 }

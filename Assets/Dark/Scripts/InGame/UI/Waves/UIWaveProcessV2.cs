@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Coffee.UIExtensions;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -11,7 +12,9 @@ namespace InGame.UI.Waves
         [SerializeField] private List<UIWaveProcessItemV2> waveItems;
         [SerializeField] private Image waveLineActive;
         [SerializeField] private Image waveLineInactive;
+        [SerializeField] private Transform currentWaveGroup;
         [SerializeField] private Image currentWave;
+        [SerializeField] private UIParticle vfxCurrentWave;
         [SerializeField] private TextMeshProUGUI txtWave;
 
         [Space] [Header("Config")] 
@@ -21,7 +24,6 @@ namespace InGame.UI.Waves
         private int totalWave = 10;
         private float fillAmountPerWave;
         private Vector3 wavesGapLength = new Vector3(0, 0, 0);
-        private float txtWaveOffsetFromCurrentWave;
         private int currentWaveIndex;
         private float waveTotalDuration;
         private float waveCurrentDuration;
@@ -37,11 +39,12 @@ namespace InGame.UI.Waves
             }
             waveLineActive.gameObject.SetActive(false);
             waveLineInactive.gameObject.SetActive(false);
-            currentWave.gameObject.SetActive(false);
+            currentWaveGroup.gameObject.SetActive(false);
             txtWave.gameObject.SetActive(false);
             
             LevelManager.Instance.OnLevelLoaded += OnLevelLoaded;
             LevelManager.Instance.OnWaveStart += OnWaveStart;
+            LevelManager.Instance.onWaveEnded += OnWaveEnded;
             LevelManager.Instance.OnWin += () => isLevelEnded = true;
             LevelManager.Instance.OnLose += () => isLevelEnded = true;
         }
@@ -49,9 +52,8 @@ namespace InGame.UI.Waves
         private void OnLevelLoaded(LevelConfig level)
         {
             totalWave = level.waveInfo.Length;
-            currentWave.transform.position = waveItems[0].transform.position;
-            txtWaveOffsetFromCurrentWave = txtWave.transform.position.y - currentWave.transform.position.y; 
-            txtWave.transform.position = currentWave.transform.position + new Vector3(0f, txtWaveOffsetFromCurrentWave, 0f);
+            currentWaveGroup.transform.position = waveItems[0].transform.position;
+            currentWaveGroup.gameObject.SetActive(true);
             
             // Cook an animation to show all wave nodes
             DoShowAllNodes().Play();
@@ -68,13 +70,45 @@ namespace InGame.UI.Waves
                 0f, 0f);
             
             waveItems[waveIndex].DoPassed();
-            if (waveIndex > 0) currentWave.transform.DOPunchScale(0.2f * Vector3.one, 0.2f).Play();
             if (!isLevelStarted) isLevelStarted = true;
-            
-            txtWave.SetText($"wave {waveIndex + 1}");
-            if (waveIndex > 0) txtWave.transform.DOPunchScale(0.2f * Vector3.one, 0.2f).SetDelay(0.1f).Play();
         }
 
+        private void OnWaveEnded(int waveIndex, WaveEndReason reason)
+        {
+            // Put currentWave and txtWave out of its parent (currentWaveGroup) and do animation, then put it back
+            currentWave.transform.SetParent(currentWaveGroup.parent);
+            txtWave.transform.SetParent(currentWaveGroup.parent);
+            
+            txtWave.SetText("Completed");
+
+            DOTween.Sequence()
+                .AppendCallback(() =>
+                {
+                    txtWave.transform.DOPunchScale(0.2f * Vector3.one, 0.2f);
+                    txtWave.transform.DOShakeRotation(0.15f, new Vector3(0f, 0f, 15f), 10, fadeOut: false);
+                })
+                .AppendInterval(0.2f)
+                .AppendCallback(() =>
+                {
+                    currentWave.transform.DOScale(0f, 0.2f).SetEase(Ease.InQuad);
+                    txtWave.transform.DOScale(0f, 0.2f).SetEase(Ease.InQuad).SetDelay(0.1f);
+                })
+                .AppendInterval(0.2f)
+                .AppendCallback(() =>
+                {
+                    currentWave.transform.SetParent(currentWaveGroup);
+                    txtWave.transform.SetParent(currentWaveGroup);
+                    currentWave.transform.localPosition = Vector3.zero;
+                    txtWave.transform.localPosition = new Vector3(0f,
+                        txtWave.transform.position.y - currentWave.transform.position.y, 0f);
+                    txtWave.SetText($"wave {waveIndex + 1 + 1}");
+
+                    currentWave.transform.DOScale(1f, 0.2f).SetEase(Ease.OutBack);
+                    vfxCurrentWave.Play();
+                    txtWave.transform.DOScale(1f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.1f);
+                }).Play();
+        }
+        
         private Tween DoShowAllNodes()
         {
             DOTween.Kill(this);
@@ -100,10 +134,10 @@ namespace InGame.UI.Waves
             waveLineActive.gameObject.SetActive(true);
             waveLineInactive.gameObject.SetActive(true);
             currentWave.transform.localScale = Vector3.zero;
-            currentWave.transform.position = waveItems[0].transform.position;
             currentWave.gameObject.SetActive(true);
             txtWave.transform.localScale = Vector3.zero;
             txtWave.gameObject.SetActive(true);
+            currentWaveGroup.transform.position = waveItems[0].transform.position;
             
             // Continuously show node from 0 to end
             var seq = DOTween.Sequence(this);
@@ -134,8 +168,7 @@ namespace InGame.UI.Waves
 
             var ratio = waveCurrentDuration / waveTotalDuration;
             waveLineInactive.fillAmount = fillAmountPerWave * (currentWaveIndex + ratio);
-            currentWave.transform.position = waveItems[currentWaveIndex].transform.position + wavesGapLength * ratio;
-            txtWave.transform.position = currentWave.transform.position + new Vector3(0f, txtWaveOffsetFromCurrentWave, 0f);
+            currentWaveGroup.transform.position = waveItems[currentWaveIndex].transform.position + wavesGapLength * ratio;
             waveCurrentDuration += Time.deltaTime;
         }
     }

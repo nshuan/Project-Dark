@@ -20,12 +20,12 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             txtNodeLore.SetText(config.description);
             if (data != null)
             {
-                txtNodeLevel.SetText($"{data.level}/{config.levelNum}");
+                txtNodeLevel.SetText($"{data.level}/{config.MaxLevel}");
                 txtNodePrice.SetText($"{0}/{1}");
             }
             else
             {
-                txtNodeLevel.SetText($"{0}/{config.levelNum}");
+                txtNodeLevel.SetText($"{0}/{config.MaxLevel}");
                 txtNodePrice.gameObject.SetActive(false);
             }
             

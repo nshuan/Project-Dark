@@ -19,6 +19,11 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         {
             return nodeConfigMap.GetValueOrDefault(nodeId);
         }
+
+        public List<UpgradeNodeConfig> GetAllConfigs()
+        {
+            return nodeConfigMap.Values.ToList();
+        }
         
 #if UNITY_EDITOR
         [Button]

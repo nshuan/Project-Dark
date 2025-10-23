@@ -17,10 +17,12 @@ namespace InGame
         public float dashCooldownPlus = 0f;
         public float dashSizePlus = 0f;
         public int dashDamagePlus = 0;
+        public float dashDamageMultiplier = 0f;
         
         public float flashCooldownPlus = 0f;
         public float flashSizePlus = 0f;
         public int flashDamagePlus = 0;
+        public float flashDamageMultiplier = 0f;
 
         #endregion
         
@@ -35,6 +37,7 @@ namespace InGame
 
         [Space] 
         public float cooldownPlus = 0f;
+        public float cooldownMultiplier = 0f;
         
         [Space]
         public int hpPlus = 0;
@@ -60,8 +63,8 @@ namespace InGame
         #region Tower
 
         public bool unlockedTowerCounter;
-        public int toleranceRegenPerSecond = 0;
-        public int toleranceRegenWhenKill = 0;
+        public float toleranceRegenPercentPerSecond = 0;
+        public float toleranceRegenPercentWhenKill = 0;
         public float towerCounterCooldownPlus = 0f;
         public int towerCounterDamagePlus = 0;  
 
@@ -78,6 +81,21 @@ namespace InGame
         [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusStaggerMapByType;
 
         #endregion
+
+        #region Temporary
+
+        public UpgradeBonusTempInfo tempDamageBonusOnMove;
+        public UpgradeBonusTempInfo tempDamageBonusOnKill;
+        public UpgradeBonusTempInfo tempAtkSpeBonusOnMove;
+        public UpgradeBonusTempInfo tempAtkSpeBonusOnKill;
+
+        #endregion
+        
+        public UpgradeBonusInfo()
+        {
+            skillBonus = new UpgradeBonusSkillInfo();
+            passiveMapByTriggerType = new Dictionary<PassiveTriggerType, List<PassiveType>>();
+        }
     }
 
     [Serializable]
@@ -131,15 +149,26 @@ namespace InGame
     public class UpgradeBonusChargeInfo
     {
         public float maxDameMultiplier;
-        public float maxDameChargeTime;
+        public float maxDameChargeTimeMinus;
+        public float maxDameChargeTimeMinusMul;
 
         public int maxBulletAdd;
-        public float bulletAddInterval;
+        public float bulletAddIntervalMinus;
+        public float bulletAddIntervalMinusMul;
 
         public float maxSizeMultiplier;
-        public float maxSizeChargeTime;
+        public float maxSizeChargeTimeMinus;
+        public float maxSizeChargeTimeMinusMul;
 
         public float maxRangeMultiplier;
-        public float maxRangeChargeTime;
+        public float maxRangeChargeTimeMinus;
+        public float maxRangeChargeTimeMinusMul;
+    }
+
+    [Serializable]
+    public class UpgradeBonusTempInfo
+    {
+        public float bonusValue;
+        public float bonusDuration;
     }
 }

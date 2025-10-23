@@ -11,8 +11,6 @@ namespace InGame
         public Dictionary<int, bool> EnemiesAliveMap {get; private set; } = new Dictionary<int, bool>();
         public int CurrentEnemyIndex { get; private set; } // index is stored as enemy id
         
-        public Action<EnemyEntity> OnOneEnemyDead { get; set; }
-        
         public void Initialize()
         { 
             Enemies = new Dictionary<int, EnemyEntity>();
@@ -25,7 +23,7 @@ namespace InGame
 
         private void OnLevelCompleted()
         {
-            OnOneEnemyDead = null;
+            CombatActions.OnOneEnemyDead = null;
             
             for (var i = 0; i < Enemies.Count; i++)
             {
@@ -44,7 +42,7 @@ namespace InGame
         public void OnEnemyDead(EnemyEntity enemy)
         {
             EnemiesAliveMap[enemy.UniqueId] = false;
-            OnOneEnemyDead?.Invoke(enemy);
+            CombatActions.OnOneEnemyDead?.Invoke(enemy);
         }
 
         public int FilterEnemiesNonAlloc(Func<EnemyEntity, bool> filter, ref EnemyEntity[] enemies, bool aliveOnly = true)

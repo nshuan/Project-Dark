@@ -71,4 +71,31 @@ namespace Dark.Tools.GoogleSheetTool
             }
         }
     }
+    
+    [ConfigNodeLogicType(LogicType.BonusChargeTime)]
+    public class NodeBonusChargeTimeGenerator : INodeLogicGenerator
+    {
+        public INodeActivateLogic Generate(string subType, List<string> value, bool isMul)
+        {
+            if (value == null || value.Count == 0)
+            {
+                return null;
+            }
+
+            try
+            {
+                var bonusValue = value[0].Split(',').Select((str) => float.Parse(str, CultureInfo.InvariantCulture)).ToArray();
+                return new NodeBonusCharge()
+                {
+                    bonusType = NodeBonusCharge.BonusType.MaxTime,
+                    value = bonusValue,
+                    isMul = isMul
+                };
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Invalid BonusChargeTime value string: {value[0]}");
+            }
+        }
+    }
 }

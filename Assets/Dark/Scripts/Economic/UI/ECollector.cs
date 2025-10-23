@@ -1,31 +1,33 @@
 using System;
+using Core;
 using InGame;
 using Economic.InGame.DropItems;
 using Economic.UI.KillShowCollected;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Economic.UI
 {
     public class ECollector : MonoBehaviour
     {
         public int selectMethod = 1;
+
         private PlayerCharacter player;
         
         private void Awake()
         {
-            EnemyManager.Instance.OnOneEnemyDead += OnEnemyDead;
+            CombatActions.OnOneEnemyDead += OnEnemyDead;
             LevelManager.Instance.onWaveEnded += OnWaveEnded;
             LevelManager.Instance.OnLevelLoaded += OnLevelLoaded;
         }
 
-        private void OnLevelLoaded(LevelConfig level)
+        private void OnLevelLoaded(LevelConfig levelConfig)
         {
             player = LevelManager.Instance.Player;
         }
-
+        
         private void OnEnemyDead(EnemyEntity enemy)
         {
+            if (!player) player = LevelManager.Instance.Player;
             
             // Show text [+Exp] trên đầu nhân vật
             if (enemy.Exp > 0)
@@ -37,7 +39,7 @@ namespace Economic.UI
             // TH0: Show text trên đầu con enemy vừa die
             if (selectMethod == 0)
             {
-                if (Random.Range(0f, 1f) <= enemy.DarkRatio)
+                if (RandomUtil.Range(0f, 1f) <= enemy.DarkRatio)
                     WealthManager.Instance.AddDark(enemy.Dark);
                 if (enemy.BossPoint > 0)
                     WealthManager.Instance.AddBossPoint(enemy.BossPoint);    
@@ -48,7 +50,7 @@ namespace Economic.UI
             // TH1: Rớt item ra end wave thì tự động collect hết
             if (selectMethod == 1)
             {
-                if (Random.Range(0f, 1f) <= enemy.DarkRatio && enemy.Dark > 0)
+                if (RandomUtil.Range(0f, 1f) <= enemy.DarkRatio && enemy.Dark > 0)
                     EItemDropManager.Instance.DropOne(WealthType.Vestige, enemy.Dark, enemy.transform.position);
                 if (enemy.BossPoint > 0)
                     EItemDropManager.Instance.DropOne(WealthType.Sigils, enemy.BossPoint, enemy.transform.position);
@@ -57,7 +59,7 @@ namespace Economic.UI
             // TH2: Giống 1, nhưng rớt 1 item cho 1 đơn vị resource
             if (selectMethod == 2)
             {
-                if (Random.Range(0f, 1f) <= enemy.DarkRatio && enemy.Dark > 0)
+                if (RandomUtil.Range(0f, 1f) <= enemy.DarkRatio && enemy.Dark > 0)
                 {
                     for (var i = 0; i < enemy.Dark; i++)
                     {
@@ -67,17 +69,14 @@ namespace Economic.UI
 
                 if (enemy.BossPoint > 0)
                 {
-                    for (var i = 0; i < enemy.Dark; i++)
-                    {
-                        EItemDropManager.Instance.DropOne(WealthType.Sigils, 1, enemy.transform.position);
-                    }
+                    EItemDropManager.Instance.DropOne(WealthType.Sigils, enemy.BossPoint, enemy.transform.position, true);
                 }
             }
             
             // TH3: Collect bằng cách di chuột qua item, cần tick vào enableCollectorMouse ở trong InputInGame
             if (selectMethod == 3)
             {
-                if (Random.Range(0f, 1f) <= enemy.DarkRatio && enemy.Dark > 0)
+                if (RandomUtil.Range(0f, 1f) <= enemy.DarkRatio && enemy.Dark > 0)
                 {
                     for (var i = 0; i < enemy.Dark; i++)
                     {
@@ -87,15 +86,12 @@ namespace Economic.UI
 
                 if (enemy.BossPoint > 0)
                 {
-                    for (var i = 0; i < enemy.Dark; i++)
-                    {
-                        EItemDropManager.Instance.DropOne(WealthType.Sigils, 1, enemy.transform.position, true);
-                    }
+                    EItemDropManager.Instance.DropOne(WealthType.Sigils, enemy.BossPoint, enemy.transform.position, true);
                 }
             }
         }
 
-        private void OnWaveEnded(int waveIndex)
+        private void OnWaveEnded(int waveIndex, WaveEndReason reason)
         {
             // TH1: Rớt item ra end wave thì tự động collect hết
             // TH2: Giống 1, nhưng rớt 1 item cho 1 đơn vị resource

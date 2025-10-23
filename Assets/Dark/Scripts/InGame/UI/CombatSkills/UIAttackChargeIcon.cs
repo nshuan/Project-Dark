@@ -1,4 +1,5 @@
 using System;
+using InGame.UI.InGameToast;
 using InGame.Upgrade;
 using UnityEngine;
 
@@ -6,6 +7,9 @@ namespace InGame.UI.CombatSkills
 {
     public class UIAttackChargeIcon : UIInGameSkillIcon
     {
+        [Space] [Header("Toast")]
+        [SerializeField] private Sprite toastIcon;
+        
         private bool available;
         private Action callbackShowSkill;
         private Action callbackHideSkill;
@@ -41,6 +45,13 @@ namespace InGame.UI.CombatSkills
                 available = false;
                 callbackHideSkill?.Invoke();
             }
+        }
+        
+        protected override void ShowToast()
+        {
+            ToastInGameManager.Instance.Register(
+                message: "Charge is ready!",
+                icon: toastIcon);
         }
     }
 }

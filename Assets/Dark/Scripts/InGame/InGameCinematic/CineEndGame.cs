@@ -15,6 +15,7 @@ namespace InGame.InGameCinematic
         
         private void Awake()
         {
+            // return;
             LevelManager.Instance.OnLevelLoaded += OnLevelLoaded;
             LevelManager.Instance.OnLose += OnGameOver;
             

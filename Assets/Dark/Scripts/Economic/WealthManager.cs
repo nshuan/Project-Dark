@@ -115,7 +115,7 @@ namespace Economic
             Initialize();    
         }
         
-        private void Initialize()
+        public void Initialize()
         {
             var data = PlayerDataManager.Instance.Data;
             grade = data.grade;
@@ -163,7 +163,7 @@ namespace Economic
                     UseLevelPoint(amount);
                     break;
                 case WealthType.Sigils:
-                    UseLevelPoint(amount);
+                    UseBossPoint(amount);
                     break;
             }    
         }

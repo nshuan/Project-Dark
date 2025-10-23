@@ -88,7 +88,7 @@ namespace InGame
             CurrentDamage = Mathf.RoundToInt(config.dmg * dmgMultiplier);
             Exp = Mathf.RoundToInt(config.exp * levelExpRatio);
             Dark = Mathf.RoundToInt(config.dark * levelDarkRatio);
-            DarkRatio = config.darkRatio;
+            DarkRatio = LevelUtility.GetDropRate(config.darkRatio);
             BossPoint = config.bossPoint;
             
             State = EnemyState.Spawn;
@@ -260,6 +260,12 @@ namespace InGame
         {
             if (attackCoroutine != null)
                 StopCoroutine(attackCoroutine);
+            
+            // reset stagger
+            staggerDuration = 0f;
+            freezeDuration = 0f;
+            invisibleTimer = 0f;
+            
             collider2d.enabled = false;
             IsDestroyed = true;
             OnDead?.Invoke();

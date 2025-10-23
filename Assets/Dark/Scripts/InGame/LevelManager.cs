@@ -17,8 +17,8 @@ namespace InGame
     {
         [SerializeField] private PlayerStats playerStats;
         public MoveTowersConfig defaultTeleConfig;
-        public MoveTowersConfig shortTeleConfig;
-        public MoveTowersConfig longTeleConfig;
+        public MoveTowersConfig flashConfig;
+        public MoveTowersConfig dashConfig;
 
         [SerializeField] private PlayerSpawner playerSpawner;
         [SerializeField] private GateEntity gatePrefab;
@@ -57,7 +57,8 @@ namespace InGame
 
         // <int waveIndex, float waveDuration>
         public event Action<int, float> OnWaveStart;
-        public event Action<int> onWaveEnded;
+        public event Action OnBossWaveStart;
+        public event Action<int, WaveEndReason> onWaveEnded;
         
         public event Action OnWin;
         public event Action OnLose;
@@ -68,9 +69,11 @@ namespace InGame
 
 #if UNITY_EDITOR
         [Space] public bool autoLoadLevel = true;
-        private void Start()
+        public static bool isLoadFromInit;
+        private IEnumerator Start()
         {
-            if (autoLoadLevel)
+            yield return new WaitForSeconds(2f);
+            if (isLoadFromInit == false && autoLoadLevel && Level == null)
                 LoadLevel(testLevel);
         }
 #endif
@@ -105,7 +108,7 @@ namespace InGame
             
             if (Player != null) Destroy(Player.gameObject);
             Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)skillConfig.skillId);
-            Player.transform.position = CurrentTower.transform.position + CurrentTower.standOffset;
+            Player.transform.position = CurrentTower.transform.position + CurrentTower.GetTowerHeight();
             
             // Start waves
             currentWaveIndex = 0;
@@ -120,6 +123,7 @@ namespace InGame
             if (IsEndLevel) return;
             
             WealthManager.Instance.Save();
+            PlayerDataManager.Instance.CompleteLevel();
             
             DebugUtility.LogError($"Level {Level.level} is ended: WIN");
             IsEndLevel = true;
@@ -147,7 +151,10 @@ namespace InGame
             OnLose = null;
             OnChangeTower = null;
             OnWaveStart = null;
+            OnBossWaveStart = null;
             onWaveEnded = null;
+            
+            CombatActions.Clear();
         }
         
         #region Waves
@@ -165,18 +172,31 @@ namespace InGame
                 var currentWave = waves[currentWaveIndex];
                 currentWave.SetupWave(gatePrefab, Towers, Level.levelExpRatio, Level.levelDarkRatio, OnWaveForceStop);
                 OnWaveStart?.Invoke(currentWaveIndex, currentWave.timeToEnd);
+                if (currentWave.IsBossWave) OnBossWaveStart?.Invoke();
                 currentWaveIndex += 1;
                 yield return currentWave.IEActivateWave();
-                onWaveEnded?.Invoke(currentWaveIndex - 1);
+                onWaveEnded?.Invoke(currentWaveIndex - 1, WaveEndReason.EndTime);
             }
         }
 
-        private void OnWaveForceStop()
+        private void OnWaveForceStop(int waveIndex, WaveEndReason reason)
         {
-            if (waveCoroutine != null) StopCoroutine(waveCoroutine);
-            onWaveEnded?.Invoke(currentWaveIndex - 1);
+            // Nếu ko phải wave đang chạy thì ko stop coroutine
+            if (waveIndex == currentWaveIndex - 1)
+            {
+                if (waveCoroutine != null) StopCoroutine(waveCoroutine);
+            }
+
+            // Nếu wave stop vì hết thời gian thì invoke hàm này
+            if (reason == WaveEndReason.EndTime)
+                onWaveEnded?.Invoke(currentWaveIndex - 1, reason);
+            
             winLoseManager.CheckWin(this);
-            waveCoroutine = StartCoroutine(IEWave(Level.waveInfo));
+                
+            if (waveIndex == currentWaveIndex - 1)
+            {
+                waveCoroutine = StartCoroutine(IEWave(Level.waveInfo));
+            }
         }
 
         #endregion
@@ -187,7 +207,7 @@ namespace InGame
         {
             for (var i = 0; i < towers.Length; i++)
             {
-                towers[i].Initialize(i, playerStats.hp);
+                towers[i].Initialize(i, LevelUtility.GetTowerHp(playerStats.hp));
                 towers[i].OnDestroyed += OnTowerDestroyed;
             }
         }

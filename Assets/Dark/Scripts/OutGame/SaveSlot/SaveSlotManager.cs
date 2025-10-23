@@ -1,7 +1,9 @@
 using System;
 using Core;
 using Data;
+using Economic;
 using InGame.CharacterClass;
+using InGame.Upgrade;
 
 namespace Dark.Scripts.OutGame.SaveSlot
 {
@@ -24,6 +26,8 @@ namespace Dark.Scripts.OutGame.SaveSlot
             index = Math.Clamp(index, 0, SlotDataKeys.Length - 1);
             PlayerDataManager.CurrentDataKey = SlotDataKeys[index];
             PlayerDataManager.Instance.Initialize();
+            WealthManager.Instance.Initialize();
+            UpgradeManager.Instance.InitData();
         }
 
         private PlayerData GetSlotData(int slotIndex)
@@ -35,6 +39,7 @@ namespace Dark.Scripts.OutGame.SaveSlot
         {
             if (index < 0 || index >= SlotDataKeys.Length) return;
             PlayerDataManager.Instance.ClearData(SlotDataKeys[index]);
+            UpgradeManager.Instance.ClearData(UpgradeManager.GetDataKey(SlotDataKeys[index]));
         }
 
         #endregion

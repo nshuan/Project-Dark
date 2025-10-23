@@ -7,6 +7,8 @@ using DG.Tweening;
 using InGame.Upgrade;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,11 +34,20 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private UIParticle vfxActivate;
         [SerializeField] private AudioComponent sfxUnlockSuccess;
         [SerializeField] private AudioComponent sfxUnlockFailure;
+        [SerializeField] private TextMeshProUGUI txtNodeLevel;
         public float lineAnchorOffsetRadius;
 
         private void OnEnable()
         {
             UpdateUI();
+
+            if (config.preRequire == null || config.preRequire.Length == 0)
+            {
+                UpgradeManager.Instance.UpgradeNode(config.nodeId);
+                UpdateUI();
+                DoUpgrade().SetDelay(0.5f).Play();
+                treeRef.UpdateChildren(config.nodeId);
+            }
         }
 
         public void SetVisual(Sprite sprite, Sprite lockSprite)
@@ -50,11 +61,13 @@ namespace Dark.Scripts.OutGame.Upgrade
         public void UpdateUI()
         {
             var data = UpgradeManager.Instance.GetData(config.nodeId);
-            if (data == null) // Not activated yet
+            if (data == null || data.level == 0) // Not activated yet
             {
                 // Always available or all pre-required nodes are activated
                 if (config.preRequire == null || config.preRequire.All((preRequire) => UpgradeManager.Instance.GetData(preRequire.nodeId) != null))
                 {
+                    txtNodeLevel.SetText($"0/{config.MaxLevel}");
+                    txtNodeLevel.transform.parent.gameObject.SetActive(true);
                     imgAvailable.SetActive(true);
                     imgLock.SetActive(false);
                     imgActivatedGlow.SetActive(false);
@@ -67,6 +80,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                 }
                 else
                 {
+                    txtNodeLevel.transform.parent.gameObject.SetActive(false);
                     imgAvailable.SetActive(false);
                     imgLock.SetActive(true);
                     imgActivatedGlow.SetActive(false);
@@ -83,11 +97,13 @@ namespace Dark.Scripts.OutGame.Upgrade
             }
             else // Activated
             {
+                txtNodeLevel.SetText($"{data.level}/{config.MaxLevel}");
+                txtNodeLevel.transform.parent.gameObject.SetActive(true);
                 imgAvailable.SetActive(true);
                 imgLock.SetActive(false);
                 vfxActivate?.Play();
-                imgActivatedGlow.SetActive(data.level < config.levelNum);
-                imgActivatedMaxGlow.SetActive(data.level >= config.levelNum);
+                imgActivatedGlow.SetActive(data.level < config.MaxLevel);
+                imgActivatedMaxGlow.SetActive(data.level >= config.MaxLevel);
                 
                 foreach (var lineInfo in preRequireLines)
                 {
@@ -114,7 +130,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                             UpgradeManager.Instance.GetData(id).level == 0))
                 {
                     UIUpgradeNodeInfoPreview.Instance.Shake();
-                    sfxUnlockFailure.Play();
+                    sfxUnlockFailure?.Play();
                     return;
                 }
                 
@@ -126,12 +142,12 @@ namespace Dark.Scripts.OutGame.Upgrade
                     UpdateUI();
                     DoUpgrade().Play();
                     treeRef.UpdateChildren(config.nodeId);
-                    sfxUnlockSuccess.Play();
+                    sfxUnlockSuccess?.Play();
                 }
                 else
                 {
                     UIUpgradeNodeInfoPreview.Instance.Shake();
-                    sfxUnlockFailure.Play();
+                    sfxUnlockFailure?.Play();
                 }
             };
         }
@@ -149,6 +165,22 @@ namespace Dark.Scripts.OutGame.Upgrade
         {
             Gizmos.DrawWireSphere(transform.position, lineAnchorOffsetRadius);
         }
+
+#if UNITY_EDITOR
+        public void SetIconNormal(Sprite sprite)
+        {
+            nodeVisual.sprite = sprite;
+            nodeVisual.SetNativeSize();
+            EditorUtility.SetDirty(nodeVisual);
+        }
+
+        public void SetIconLocked(Sprite sprite)
+        {
+            nodeLockVisual.sprite = sprite;
+            nodeLockVisual.SetNativeSize();
+            EditorUtility.SetDirty(nodeLockVisual);
+        }
+#endif
     }
 
     [Serializable]

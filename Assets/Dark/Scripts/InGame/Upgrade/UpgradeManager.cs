@@ -6,6 +6,7 @@ using Dark.Scripts.InGame.Upgrade;
 using Dark.Scripts.OutGame.Upgrade;
 using Data;
 using Economic;
+using Cheat;
 using UnityEngine;
 
 namespace InGame.Upgrade
@@ -20,7 +21,7 @@ namespace InGame.Upgrade
         
         #region Data
 
-        private static string DataKey => PlayerDataManager.DataKey + "_UpgradeData";
+        private static string DataKey => GetDataKey(PlayerDataManager.DataKey);
         private UpgradeData data;
 
         public UpgradeData Data
@@ -34,7 +35,7 @@ namespace InGame.Upgrade
 
         private Dictionary<int, UpgradeNodeData> dataMapById;
 
-        private void InitData()
+        public void InitData()
         {
             data = DataHandler.Load<UpgradeData>(DataKey, new UpgradeData());
 #if UNITY_EDITOR
@@ -49,7 +50,19 @@ namespace InGame.Upgrade
 
         private void Save()
         {
-            DataHandler.Save(DataKey, data);
+            DataHandler.Save(DataKey, Data);
+        }
+
+        public void ClearData(string dataKey)
+        {
+            data = null;
+            if (DataHandler.Exist<UpgradeData>(dataKey))
+                DataHandler.Clear(dataKey);
+        }
+
+        public static string GetDataKey(string playerDataKey)
+        {
+            return playerDataKey + "_UpgradeData";
         }
 
         public UpgradeManager()
@@ -79,16 +92,14 @@ namespace InGame.Upgrade
         {
             // Init bonus infor
             bonusInfo = new UpgradeBonusInfo();
-            bonusInfo.skillBonus = new UpgradeBonusSkillInfo();
-
-            bonusInfo.passiveMapByTriggerType = new Dictionary<PassiveTriggerType, List<PassiveType>>();
-                
+           
             TreeConfig.ActivateTree(Data.nodes, ref bonusInfo);
 
 #if UNITY_EDITOR
-            if (testBonusInfo != null)
+            var testBonusInfo = CheatBonusData.GetBonus();
+            if (testBonusInfo.Item1) // enabled = true
             {
-                bonusInfo = testBonusInfo;
+                bonusInfo = testBonusInfo.Item2;
                 bonusInfo.skillBonus ??= new UpgradeBonusSkillInfo();
                 bonusInfo.passiveMapByTriggerType ??= new Dictionary<PassiveTriggerType, List<PassiveType>>();
             }
@@ -99,17 +110,18 @@ namespace InGame.Upgrade
         
         public bool UpgradeNode(int nodeId)
         {
+            if (TreeConfig.GetNodeById(nodeId) == null) return false;
+            
             if (!dataMapById.ContainsKey(nodeId))
             {
                 var newNodeData = new UpgradeNodeData() { id = nodeId, level = 0 };
-                data.nodes.Add(newNodeData);
+                Data.nodes.Add(newNodeData);
                 dataMapById.Add(nodeId, newNodeData);
             }
 
-            if (TreeConfig.GetNodeById(nodeId) == null) return false;
             var nodeConfig = TreeConfig.GetNodeById(nodeId);
             
-            if (dataMapById[nodeId].level >= nodeConfig.levelNum) return false;
+            if (dataMapById[nodeId].level >= nodeConfig.MaxLevel) return false;
 
             var currentLevel = dataMapById[nodeId].level;
             var costInfo = nodeConfig.costInfo;
@@ -118,9 +130,9 @@ namespace InGame.Upgrade
             {
                 var costValueIndex = cost.costType switch
                 {
-                    WealthType.Vestige => data.indexVestige,
-                    WealthType.Echoes => data.indexEchoes,
-                    WealthType.Sigils => data.indexSigils,
+                    WealthType.Vestige => Data.indexVestige,
+                    WealthType.Echoes => Data.indexEchoes,
+                    WealthType.Sigils => Data.indexSigils,
                     _ => 0
                 };
                 
@@ -137,7 +149,19 @@ namespace InGame.Upgrade
             
             foreach (var cost in nodeConfig.costInfo)
             {
-                WealthManager.Instance.Spend(cost.costType, costValueToSpend[cost.costType]);    
+                WealthManager.Instance.Spend(cost.costType, costValueToSpend[cost.costType]);
+                switch (cost.costType)
+                {
+                    case WealthType.Vestige:
+                        Data.indexVestige += 1;
+                        break;
+                    case WealthType.Echoes:
+                        Data.indexEchoes += 1;
+                        break;
+                    case WealthType.Sigils:
+                        Data.indexSigils += 1;
+                        break;
+                }
             }
             dataMapById[nodeId].Upgrade();
             Save();
@@ -153,30 +177,17 @@ namespace InGame.Upgrade
         {
             return costType switch
             {
-                WealthType.Vestige => data.indexVestige,
-                WealthType.Echoes => data.indexEchoes,
-                WealthType.Sigils => data.indexSigils,
+                WealthType.Vestige => Data.indexVestige,
+                WealthType.Echoes => Data.indexEchoes,
+                WealthType.Sigils => Data.indexSigils,
                 _ => 0
             };
         }
-
-#if UNITY_EDITOR
-        private UpgradeBonusInfo testBonusInfo;
-        public void ForceTestBonusInfo(UpgradeBonusInfo bonusInfo)
+        
+#if HOT_CHEAT
+        public void CheatUpdateBonusInfo(UpgradeBonusInfo bonusInfo)
         {
-            testBonusInfo = bonusInfo;
-        }
-
-        public void ForceReactivateTree()
-        {
-            if (testBonusInfo != null)
-            {
-                testBonusInfo.skillBonus ??= new UpgradeBonusSkillInfo();
-                testBonusInfo.passiveMapByTriggerType ??= new Dictionary<PassiveTriggerType, List<PassiveType>>();
-            }
-            
-            LevelUtility.BonusInfo = testBonusInfo;
-            OnActivated?.Invoke(testBonusInfo);
+            OnActivated?.Invoke(bonusInfo);
         }
 #endif
     }

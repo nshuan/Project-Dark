@@ -107,8 +107,13 @@ namespace InGame
         protected virtual IEnumerator IEActivate(float delay)
         {
             yield return new WaitForSeconds(delay);
+            
+            // Khi vừa activate đạn thì check luôn tại vị trí spawn, bán kính [x] để xử lý những enemy ở quá gân
+            collider.CheckHitEnemiesOnInit();
+            
             activated = true;
             collider.CanTrigger = true;
+            
             if (ActivateActions != null)
             {
                 foreach (var action in ActivateActions)

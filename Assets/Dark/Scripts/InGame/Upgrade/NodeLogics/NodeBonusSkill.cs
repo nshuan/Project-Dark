@@ -17,9 +17,26 @@ namespace InGame.Upgrade
 
         public string GetDisplayValue(int level)
         {
-            if (level < 0 || level >= value.Length) return "??";
+            if (level < 0) return "??";
+            if (level >= value.Length) level = value.Length - 1;
+            switch (bonusType)
+            {
+                case BonusSkillType.Damage:
+                case BonusSkillType.Cooldown:
+                case BonusSkillType.Size:
+                case BonusSkillType.Range:
+                    if (isMultiply) return (value[level] * 100).ToString();
+                    else return value[level].ToString();
+                case BonusSkillType.Stagger:
+                    return (value[level] * 100).ToString();
+                case BonusSkillType.BulletNum:
+                case BonusSkillType.BulletMaxHit:
+                    break;
+            }
             return value[level].ToString();
         }
+
+        public int MaxLevel => value.Length;
 
         private void BonusSkill(int level, ref UpgradeBonusInfo bonusInfo)
         {
