@@ -27,7 +27,7 @@ namespace InGame.Upgrade
         {
             get
             {
-                if (nodeLogic == null || nodeLogic.Length == 0) return 0;
+                if (nodeLogic == null || nodeLogic.Length == 0) return 1;
                 return nodeLogic.Max((logic) => logic.MaxLevel);
             }
         }

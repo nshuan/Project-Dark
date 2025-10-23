@@ -188,8 +188,8 @@ namespace InGame
             }
 
             // Nếu wave stop vì hết thời gian thì invoke hàm này
-            if (reason == WaveEndReason.EndTime)
-                onWaveEnded?.Invoke(currentWaveIndex - 1, reason);
+            // if (reason == WaveEndReason.EndTime)
+            onWaveEnded?.Invoke(currentWaveIndex - 1, reason);
             
             winLoseManager.CheckWin(this);
                 

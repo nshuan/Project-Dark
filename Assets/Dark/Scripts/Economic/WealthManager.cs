@@ -29,6 +29,7 @@ namespace Economic
         public void AddExp(int value)
         {
             exp += value;
+            Save();
             OnExpChanged?.Invoke(exp - value, exp);
         }
         
@@ -42,6 +43,7 @@ namespace Economic
         public void AddLevelPoint(int value)
         {
             levelPoint += value;
+            Save();
             OnLevelPointChanged?.Invoke(levelPoint - value, levelPoint);
         }
 
@@ -64,6 +66,7 @@ namespace Economic
         public void AddDark(int value)
         {
             dark += value;
+            Save();
             OnDarkChanged?.Invoke(dark - value, dark);
         }
 
@@ -86,6 +89,7 @@ namespace Economic
         public void AddBossPoint(int value)
         {
             bossPoint += value;
+            Save();
             OnBossPointChanged?.Invoke(bossPoint - value, bossPoint);
         }
 
