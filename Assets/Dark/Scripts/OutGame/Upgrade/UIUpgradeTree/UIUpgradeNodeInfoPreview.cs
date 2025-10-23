@@ -69,11 +69,14 @@ namespace Dark.Scripts.OutGame.Upgrade
                 {
                     descriptions[i] = descriptions[i].Replace("[X]",
                         cacheConfig.nodeLogic[i].GetDisplayValue(cacheData?.level ?? 0));
-                    descriptionStr += descriptions[i] + "\n";
+                    descriptionStr += descriptions[i];
+                    if (i == descriptions.Length - 1) descriptionStr += "\n";
                 }
                 else
-                    descriptionStr += cacheConfig.nodeLogic[i].GetDisplayValue(cacheData?.level ?? 0) + "\n";
-
+                {
+                    descriptionStr += descriptions[i];
+                    if (i == descriptions.Length - 1) descriptionStr += "\n";
+                }
             }
             txtNodeBonus.SetText(descriptionStr);
             txtNodeBonus.gameObject.SetActive(true);
