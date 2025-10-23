@@ -18,25 +18,25 @@ namespace InGame.Upgrade
 				    bonusInfo.chargeBulletBonus.maxDameMultiplier += value[level - 1];
 				    break;
 			    case BonusType.MaxDameTime:
-				    bonusInfo.chargeBulletBonus.maxDameChargeTime += value[level - 1];
+				    bonusInfo.chargeBulletBonus.maxDameChargeTimeMinus += value[level - 1];
 				    break;
 			    case BonusType.MaxSize:
 				    bonusInfo.chargeBulletBonus.maxSizeMultiplier += value[level - 1];
 				    break;
 			    case BonusType.MaxSizeTime:
-				    bonusInfo.chargeBulletBonus.maxSizeChargeTime += value[level - 1];
+				    bonusInfo.chargeBulletBonus.maxSizeChargeTimeMinus += value[level - 1];
 				    break;
 			    case BonusType.MaxRange:
 				    bonusInfo.chargeBulletBonus.maxRangeMultiplier += value[level - 1];
 				    break;
 			    case BonusType.MaxRangeTime:
-				    bonusInfo.chargeBulletBonus.maxRangeChargeTime += value[level - 1];
+				    bonusInfo.chargeBulletBonus.maxRangeChargeTimeMinus += value[level - 1];
 				    break;
 			    case BonusType.MaxBulletAdd:
 				    bonusInfo.chargeBulletBonus.maxBulletAdd += (int)value[level - 1];
 				    break;
 			    case BonusType.BulletAddInterval:
-				    bonusInfo.chargeBulletBonus.bulletAddInterval += value[level - 1];
+				    bonusInfo.chargeBulletBonus.bulletAddIntervalMinus += value[level - 1];
 				    break;
 		    }
 	    }

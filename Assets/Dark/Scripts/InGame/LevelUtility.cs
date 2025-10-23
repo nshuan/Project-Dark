@@ -129,6 +129,7 @@ namespace InGame
 
         /// <summary>
         /// Get the MaxDameMultiplier of the max MaxDameMultiplierAdd / MaxDameChargeTime
+        /// 4 loại charge đều sẽ bonus vào damage, lấy bonus từ loọi charge mà MaxDameMultiplierAdd / MaxDameChargeTime lớn nhất
         /// </summary>
         /// <param name="baseChargeMaxDameMultiplier"></param>
         /// <param name="baseChargeMaxTime"></param>
@@ -139,51 +140,51 @@ namespace InGame
             var resultMD = 0f;
             var resultMCT = 0f;
             var temp = 0f;
-            if (BonusInfo.chargeBulletBonus?.maxDameChargeTime > 0)
+            if (BonusInfo.chargeBulletBonus?.maxDameChargeTimeMinus > 0)
             {
-                temp = BonusInfo.chargeBulletBonus.maxDameMultiplier / BonusInfo.chargeBulletBonus.maxDameChargeTime;
+                temp = (baseChargeMaxDameMultiplier + BonusInfo.chargeBulletBonus.maxDameMultiplier) / (baseChargeMaxTime - BonusInfo.chargeBulletBonus.maxDameChargeTimeMinus) / (1f - BonusInfo.chargeBulletBonus.maxDameChargeTimeMinusMul);
                 if (temp > max)
                 {
                     max = temp;
                     resultMD = BonusInfo.chargeBulletBonus.maxDameMultiplier;
-                    resultMCT = BonusInfo.chargeBulletBonus.maxDameChargeTime;
+                    resultMCT = (baseChargeMaxTime - BonusInfo.chargeBulletBonus.maxDameChargeTimeMinus) * (1f - BonusInfo.chargeBulletBonus.maxDameChargeTimeMinusMul);
                 }
             }
 
-            if (BonusInfo.chargeSizeBonus?.maxDameChargeTime > 0)
+            if (BonusInfo.chargeSizeBonus?.maxDameChargeTimeMinus > 0)
             {
-                temp = BonusInfo.chargeSizeBonus.maxDameMultiplier / BonusInfo.chargeSizeBonus.maxDameChargeTime;
+                temp = (baseChargeMaxDameMultiplier + BonusInfo.chargeSizeBonus.maxDameMultiplier) / (baseChargeMaxTime - BonusInfo.chargeSizeBonus.maxDameChargeTimeMinus) / (1f - BonusInfo.chargeSizeBonus.maxDameChargeTimeMinusMul);
                 if (temp > max)
                 {
                     max = temp;
                     resultMD = BonusInfo.chargeSizeBonus.maxDameMultiplier;
-                    resultMCT = BonusInfo.chargeSizeBonus.maxDameChargeTime;
+                    resultMCT = (baseChargeMaxTime - BonusInfo.chargeSizeBonus.maxDameChargeTimeMinus) * (1f - BonusInfo.chargeSizeBonus.maxDameChargeTimeMinusMul);
                 }
             }
 
-            if (BonusInfo.chargeRangeBonus?.maxDameChargeTime > 0)
+            if (BonusInfo.chargeRangeBonus?.maxDameChargeTimeMinus > 0)
             {
-                temp = BonusInfo.chargeRangeBonus.maxDameMultiplier / BonusInfo.chargeRangeBonus.maxDameChargeTime;
+                temp = (baseChargeMaxDameMultiplier + BonusInfo.chargeRangeBonus.maxDameMultiplier) / (baseChargeMaxTime - BonusInfo.chargeRangeBonus.maxDameChargeTimeMinus) / (1f - BonusInfo.chargeRangeBonus.maxDameChargeTimeMinusMul);
                 if (temp > max)
                 {
                     max = temp;
                     resultMD = BonusInfo.chargeRangeBonus.maxDameMultiplier;
-                    resultMCT = BonusInfo.chargeRangeBonus.maxDameChargeTime;
+                    resultMCT = (baseChargeMaxTime - BonusInfo.chargeRangeBonus.maxDameChargeTimeMinus) * (1f - BonusInfo.chargeRangeBonus.maxDameChargeTimeMinusMul);
                 }
             }
 
-            if (BonusInfo.chargeDameBonus?.maxDameChargeTime > 0)
+            if (BonusInfo.chargeDameBonus?.maxDameChargeTimeMinus > 0)
             {
-                temp = BonusInfo.chargeDameBonus.maxDameMultiplier / BonusInfo.chargeDameBonus.maxDameChargeTime;
+                temp = (baseChargeMaxDameMultiplier + BonusInfo.chargeDameBonus.maxDameMultiplier) / (baseChargeMaxTime - BonusInfo.chargeDameBonus.maxDameChargeTimeMinus) / (1f - BonusInfo.chargeDameBonus.maxDameChargeTimeMinusMul);
                 if (temp > max)
                 {
                     max = temp;
                     resultMD = BonusInfo.chargeDameBonus.maxDameMultiplier;
-                    resultMCT = BonusInfo.chargeDameBonus.maxDameChargeTime;
+                    resultMCT = (baseChargeMaxTime - BonusInfo.chargeDameBonus.maxDameChargeTimeMinus) * (1f - BonusInfo.chargeDameBonus.maxDameChargeTimeMinusMul);
                 }
             }
 
-            return (baseChargeMaxDameMultiplier + resultMD, baseChargeMaxTime + resultMCT);
+            return (baseChargeMaxDameMultiplier + resultMD, resultMCT);
         }
 
         public static (float, float) GetChargeSizeMax(float baseChargeSize, float baseChargeSizeTime)
@@ -192,51 +193,51 @@ namespace InGame
             var resultMD = 0f;
             var resultMCT = 0f;
             var temp = 0f;
-            if (BonusInfo.chargeBulletBonus?.maxSizeChargeTime > 0)
+            if (BonusInfo.chargeBulletBonus?.maxSizeChargeTimeMinus > 0)
             {
-                temp = BonusInfo.chargeBulletBonus.maxSizeMultiplier / BonusInfo.chargeBulletBonus.maxSizeChargeTime;
+                temp = (baseChargeSize + BonusInfo.chargeBulletBonus.maxSizeMultiplier) / (baseChargeSizeTime - BonusInfo.chargeBulletBonus.maxSizeChargeTimeMinus) / (1f - BonusInfo.chargeBulletBonus.maxSizeChargeTimeMinusMul);
                 if (temp > max)
                 {
                     max = temp;
                     resultMD = BonusInfo.chargeBulletBonus.maxSizeMultiplier;
-                    resultMCT = BonusInfo.chargeBulletBonus.maxSizeChargeTime;
+                    resultMCT = (baseChargeSizeTime - BonusInfo.chargeBulletBonus.maxSizeChargeTimeMinus) * (1f - BonusInfo.chargeBulletBonus.maxSizeChargeTimeMinusMul);
                 }
             }
 
-            if (BonusInfo.chargeRangeBonus?.maxSizeChargeTime > 0)
+            if (BonusInfo.chargeRangeBonus?.maxSizeChargeTimeMinus > 0)
             {
-                temp = BonusInfo.chargeRangeBonus.maxSizeMultiplier / BonusInfo.chargeRangeBonus.maxSizeChargeTime;
+                temp = (baseChargeSize + BonusInfo.chargeRangeBonus.maxSizeMultiplier) / (baseChargeSizeTime - BonusInfo.chargeRangeBonus.maxSizeChargeTimeMinus) / (1f - BonusInfo.chargeRangeBonus.maxSizeChargeTimeMinusMul);
                 if (temp > max)
                 {
                     max = temp;
                     resultMD = BonusInfo.chargeRangeBonus.maxSizeMultiplier;
-                    resultMCT = BonusInfo.chargeRangeBonus.maxSizeChargeTime;
+                    resultMCT = (baseChargeSizeTime - BonusInfo.chargeRangeBonus.maxSizeChargeTimeMinus) * (1f - BonusInfo.chargeRangeBonus.maxSizeChargeTimeMinusMul);
                 }
             }
 
-            if (BonusInfo.chargeDameBonus?.maxSizeChargeTime > 0)
+            if (BonusInfo.chargeDameBonus?.maxSizeChargeTimeMinus > 0)
             {
-                temp = BonusInfo.chargeDameBonus.maxSizeMultiplier / BonusInfo.chargeDameBonus.maxSizeChargeTime;
+                temp = (baseChargeSize + BonusInfo.chargeDameBonus.maxSizeMultiplier) / (baseChargeSizeTime - BonusInfo.chargeDameBonus.maxSizeChargeTimeMinus) / (1f - BonusInfo.chargeDameBonus.maxSizeChargeTimeMinusMul);
                 if (temp > max)
                 {
                     max = temp;
                     resultMD = BonusInfo.chargeDameBonus.maxSizeMultiplier;
-                    resultMCT = BonusInfo.chargeDameBonus.maxSizeChargeTime;
+                    resultMCT = (baseChargeSizeTime - BonusInfo.chargeDameBonus.maxSizeChargeTimeMinus) * (1f - BonusInfo.chargeDameBonus.maxSizeChargeTimeMinusMul);
                 }
             }
             
-            if (BonusInfo.chargeSizeBonus?.maxDameChargeTime > 0)
+            if (BonusInfo.chargeSizeBonus?.maxDameChargeTimeMinus > 0)
             {
-                temp = BonusInfo.chargeSizeBonus.maxSizeMultiplier / BonusInfo.chargeSizeBonus.maxSizeChargeTime;
+                temp = (baseChargeSize + BonusInfo.chargeSizeBonus.maxSizeMultiplier) / (baseChargeSizeTime - BonusInfo.chargeSizeBonus.maxSizeChargeTimeMinus) / (1f - BonusInfo.chargeSizeBonus.maxSizeChargeTimeMinusMul);
                 if (temp > max)
                 {
                     max = temp;
                     resultMD = BonusInfo.chargeSizeBonus.maxSizeMultiplier;
-                    resultMCT = BonusInfo.chargeSizeBonus.maxSizeChargeTime;
+                    resultMCT = (baseChargeSizeTime - BonusInfo.chargeSizeBonus.maxSizeChargeTimeMinus) * (1f - BonusInfo.chargeSizeBonus.maxSizeChargeTimeMinusMul);
                 }
             }
 
-            return (baseChargeSize + resultMD, baseChargeSizeTime + resultMCT);
+            return (baseChargeSize + resultMD, resultMCT);
         }
         
         public static (int, float) GetChargeBulletMax(int baseChargeBullet, float baseChargeBulletInterval)
@@ -248,31 +249,31 @@ namespace InGame
             {
                 max = BonusInfo.chargeBulletBonus.maxBulletAdd;
                 resultBullet = BonusInfo.chargeBulletBonus.maxBulletAdd;
-                resultInterval = BonusInfo.chargeBulletBonus.bulletAddInterval;
+                resultInterval = (baseChargeBulletInterval - BonusInfo.chargeBulletBonus.bulletAddIntervalMinus) * (1f - BonusInfo.chargeBulletBonus.bulletAddIntervalMinusMul);
             }
 
             if (BonusInfo.chargeDameBonus?.maxBulletAdd > max)
             {
                 max = BonusInfo.chargeDameBonus.maxBulletAdd;
                 resultBullet = BonusInfo.chargeDameBonus.maxBulletAdd;
-                resultInterval = BonusInfo.chargeDameBonus.bulletAddInterval;
+                resultInterval = (baseChargeBulletInterval - BonusInfo.chargeDameBonus.bulletAddIntervalMinus) * (1f - BonusInfo.chargeDameBonus.bulletAddIntervalMinusMul);
             }
 
             if (BonusInfo.chargeRangeBonus?.maxBulletAdd > max)
             {
                 max = BonusInfo.chargeRangeBonus.maxBulletAdd;
                 resultBullet = BonusInfo.chargeRangeBonus.maxBulletAdd;
-                resultInterval = BonusInfo.chargeRangeBonus.bulletAddInterval;
+                resultInterval = (baseChargeBulletInterval - BonusInfo.chargeRangeBonus.bulletAddIntervalMinus) * (1f - BonusInfo.chargeRangeBonus.bulletAddIntervalMinusMul);
             }
             
             if (BonusInfo.chargeSizeBonus?.maxBulletAdd > max)
             {
                 max = BonusInfo.chargeSizeBonus.maxBulletAdd;
                 resultBullet = BonusInfo.chargeSizeBonus.maxBulletAdd;
-                resultInterval = BonusInfo.chargeSizeBonus.bulletAddInterval;
+                resultInterval = (baseChargeBulletInterval - BonusInfo.chargeSizeBonus.bulletAddIntervalMinus) * (1f - BonusInfo.chargeSizeBonus.bulletAddIntervalMinusMul);
             }
 
-            return (baseChargeBullet + resultBullet, baseChargeBulletInterval + resultInterval);
+            return (baseChargeBullet + resultBullet, resultInterval);
         }
         
         public static (float, float) GetChargeRangeMax(float baseChargeRange, float baseChargeRangeTime)
@@ -281,51 +282,51 @@ namespace InGame
             var resultMR = 0f;
             var resultMRT = 0f;
             var temp = 0f;
-            if (BonusInfo.chargeBulletBonus?.maxRangeChargeTime > 0)
+            if (BonusInfo.chargeBulletBonus?.maxRangeChargeTimeMinus > 0)
             {
-                temp = BonusInfo.chargeBulletBonus.maxRangeMultiplier / BonusInfo.chargeBulletBonus.maxRangeChargeTime;
+                temp = (baseChargeRange + BonusInfo.chargeBulletBonus.maxRangeMultiplier) / (baseChargeRangeTime - BonusInfo.chargeBulletBonus.maxRangeChargeTimeMinus) / (1f - BonusInfo.chargeBulletBonus.maxRangeChargeTimeMinusMul);
                 if (temp > max)
                 {
                     max = temp;
                     resultMR = BonusInfo.chargeBulletBonus.maxRangeMultiplier;
-                    resultMRT = BonusInfo.chargeBulletBonus.maxRangeChargeTime;
+                    resultMRT = (baseChargeRangeTime - BonusInfo.chargeBulletBonus.maxRangeChargeTimeMinus) * (1f - BonusInfo.chargeBulletBonus.maxRangeChargeTimeMinusMul);
                 }
             }
 
-            if (BonusInfo.chargeRangeBonus?.maxRangeChargeTime > 0)
+            if (BonusInfo.chargeRangeBonus?.maxRangeChargeTimeMinus > 0)
             {
-                temp = BonusInfo.chargeRangeBonus.maxRangeMultiplier / BonusInfo.chargeRangeBonus.maxRangeChargeTime;
+                temp = (baseChargeRange + BonusInfo.chargeRangeBonus.maxRangeMultiplier) / (baseChargeRangeTime - BonusInfo.chargeRangeBonus.maxRangeChargeTimeMinus) / (1f - BonusInfo.chargeRangeBonus.maxRangeChargeTimeMinusMul);
                 if (temp > max)
                 {
                     max = temp;
                     resultMR = BonusInfo.chargeRangeBonus.maxRangeMultiplier;
-                    resultMRT = BonusInfo.chargeRangeBonus.maxRangeChargeTime;
+                    resultMRT = (baseChargeRangeTime - BonusInfo.chargeRangeBonus.maxRangeChargeTimeMinus) * (1f - BonusInfo.chargeRangeBonus.maxRangeChargeTimeMinusMul);
                 }
             }
 
-            if (BonusInfo.chargeDameBonus?.maxRangeChargeTime > 0)
+            if (BonusInfo.chargeDameBonus?.maxRangeChargeTimeMinus > 0)
             {
-                temp = BonusInfo.chargeDameBonus.maxRangeMultiplier / BonusInfo.chargeDameBonus.maxRangeChargeTime;
+                temp = (baseChargeRange + BonusInfo.chargeDameBonus.maxRangeMultiplier) / (baseChargeRangeTime - BonusInfo.chargeDameBonus.maxRangeChargeTimeMinus) / (1f - BonusInfo.chargeDameBonus.maxRangeChargeTimeMinusMul);
                 if (temp > max)
                 {
                     max = temp;
                     resultMR = BonusInfo.chargeDameBonus.maxRangeMultiplier;
-                    resultMRT = BonusInfo.chargeDameBonus.maxRangeChargeTime;
+                    resultMRT = (baseChargeRangeTime - BonusInfo.chargeDameBonus.maxRangeChargeTimeMinus) * (1f - BonusInfo.chargeDameBonus.maxRangeChargeTimeMinusMul);
                 }
             }
             
-            if (BonusInfo.chargeSizeBonus?.maxRangeChargeTime > 0)
+            if (BonusInfo.chargeSizeBonus?.maxRangeChargeTimeMinus > 0)
             {
-                temp = BonusInfo.chargeSizeBonus.maxRangeMultiplier / BonusInfo.chargeSizeBonus.maxRangeChargeTime;
+                temp = (baseChargeRange + BonusInfo.chargeSizeBonus.maxRangeMultiplier) / (baseChargeRangeTime - BonusInfo.chargeSizeBonus.maxRangeChargeTimeMinus) / (1f - BonusInfo.chargeSizeBonus.maxRangeChargeTimeMinusMul);
                 if (temp > max)
                 {
                     max = temp;
                     resultMR = BonusInfo.chargeSizeBonus.maxRangeMultiplier;
-                    resultMRT = BonusInfo.chargeSizeBonus.maxRangeChargeTime;
+                    resultMRT = (baseChargeRangeTime - BonusInfo.chargeSizeBonus.maxRangeChargeTimeMinus) * (1f - BonusInfo.chargeSizeBonus.maxRangeChargeTimeMinusMul);
                 }
             }
 
-            return (baseChargeRange + resultMR, baseChargeRangeTime + resultMRT);
+            return (baseChargeRange + resultMR, resultMRT);
         }
         
         #endregion

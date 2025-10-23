@@ -131,7 +131,7 @@ namespace Dark.Tools.GoogleSheetTool
         TempBonusDamage,
         TempBonusCriticalRate,
         TempBonusCriticalDamage,
-        BonusChargeTime,
+        BonusChargeTime, // Bonus for all type of charge
         BonusDashCooldown,
         BonusDashSize,
         BonusDashDamage,

@@ -18,25 +18,25 @@ namespace InGame.Upgrade
                     bonusInfo.chargeSizeBonus.maxDameMultiplier += value[level - 1];
                     break;
                 case NodeBonusChargeBullet.BonusType.MaxDameTime:
-                    bonusInfo.chargeSizeBonus.maxDameChargeTime += value[level - 1];
+                    bonusInfo.chargeSizeBonus.maxDameChargeTimeMinus += value[level - 1];
                     break;
                 case NodeBonusChargeBullet.BonusType.MaxSize:
                     bonusInfo.chargeSizeBonus.maxSizeMultiplier += value[level - 1];
                     break;
                 case NodeBonusChargeBullet.BonusType.MaxSizeTime:
-                    bonusInfo.chargeSizeBonus.maxSizeChargeTime += value[level - 1];
+                    bonusInfo.chargeSizeBonus.maxSizeChargeTimeMinus += value[level - 1];
                     break;
                 case NodeBonusChargeBullet.BonusType.MaxRange:
                     bonusInfo.chargeSizeBonus.maxRangeMultiplier += value[level - 1];
                     break;
                 case NodeBonusChargeBullet.BonusType.MaxRangeTime:
-                    bonusInfo.chargeSizeBonus.maxRangeChargeTime += value[level - 1];
+                    bonusInfo.chargeSizeBonus.maxRangeChargeTimeMinus += value[level - 1];
                     break;
                 case NodeBonusChargeBullet.BonusType.MaxBulletAdd:
                     bonusInfo.chargeSizeBonus.maxBulletAdd += (int)value[level - 1];
                     break;
                 case NodeBonusChargeBullet.BonusType.BulletAddInterval:
-                    bonusInfo.chargeSizeBonus.bulletAddInterval += value[level - 1];
+                    bonusInfo.chargeSizeBonus.bulletAddIntervalMinus += value[level - 1];
                     break;
             }
         }

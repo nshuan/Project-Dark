@@ -149,16 +149,20 @@ namespace InGame
     public class UpgradeBonusChargeInfo
     {
         public float maxDameMultiplier;
-        public float maxDameChargeTime;
+        public float maxDameChargeTimeMinus;
+        public float maxDameChargeTimeMinusMul;
 
         public int maxBulletAdd;
-        public float bulletAddInterval;
+        public float bulletAddIntervalMinus;
+        public float bulletAddIntervalMinusMul;
 
         public float maxSizeMultiplier;
-        public float maxSizeChargeTime;
+        public float maxSizeChargeTimeMinus;
+        public float maxSizeChargeTimeMinusMul;
 
         public float maxRangeMultiplier;
-        public float maxRangeChargeTime;
+        public float maxRangeChargeTimeMinus;
+        public float maxRangeChargeTimeMinusMul;
     }
 
     [Serializable]
