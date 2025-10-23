@@ -64,10 +64,12 @@ namespace Dark.Scripts.OutGame.Upgrade
             if (data == null || data.level == 0) // Not activated yet
             {
                 // Always available or all pre-required nodes are activated
-                if (config.preRequire == null || config.preRequire.All((preRequire) => UpgradeManager.Instance.GetData(preRequire.nodeId) != null))
+                if (config.preRequire == null || config.preRequire.Length == 0 || config.preRequire.All((preRequire) => UpgradeManager.Instance.GetData(preRequire.nodeId) != null && UpgradeManager.Instance.GetData(preRequire.nodeId).level > 0))
                 {
                     txtNodeLevel.SetText($"0/{config.MaxLevel}");
                     txtNodeLevel.transform.parent.gameObject.SetActive(true);
+                    if (config.preRequire == null || config.preRequire.Length == 0)
+                        txtNodeLevel.transform.parent.gameObject.SetActive(false);
                     imgAvailable.SetActive(true);
                     imgLock.SetActive(false);
                     imgActivatedGlow.SetActive(false);
@@ -99,6 +101,8 @@ namespace Dark.Scripts.OutGame.Upgrade
             {
                 txtNodeLevel.SetText($"{data.level}/{config.MaxLevel}");
                 txtNodeLevel.transform.parent.gameObject.SetActive(true);
+                if (config.preRequire == null || config.preRequire.Length == 0)
+                    txtNodeLevel.transform.parent.gameObject.SetActive(false);
                 imgAvailable.SetActive(true);
                 imgLock.SetActive(false);
                 vfxActivate?.Play();
@@ -124,7 +128,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             hoverField.onPointerClick = () =>
             {
                 // treeRef.SelectNode(this);
-                if (config.preRequire == null || config.preRequire.Select((node) => node.nodeId)
+                if (config.preRequire != null && config.preRequire.Select((node) => node.nodeId)
                         .Any((id) =>
                             UpgradeManager.Instance.GetData(id) == null ||
                             UpgradeManager.Instance.GetData(id).level == 0))
