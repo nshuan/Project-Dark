@@ -6,7 +6,7 @@ namespace InGame
     [Serializable]
     public class ProjectileActivateSplit : IProjectileActivate
     {
-        [SerializeField] private ProjectileEntity projectile;
+        public ProjectileEntity projectile;
         public int amount;
         [Range(0f, 180f)] 
         public float angle;
@@ -94,6 +94,18 @@ namespace InGame
                 );
                 p.Activate(0f);
             }
+        }
+
+        public void Combine<T>(T combineWith) where T : IProjectileActivate
+        {
+            if (combineWith is not ProjectileActivateSplit casted) return;
+            this.amount += casted.amount;
+            this.angle += casted.angle;
+        }
+
+        public float GetValue()
+        {
+            return amount;
         }
     }
 }

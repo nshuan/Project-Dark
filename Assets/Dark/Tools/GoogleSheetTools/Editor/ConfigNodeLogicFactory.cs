@@ -149,5 +149,6 @@ namespace Dark.Tools.GoogleSheetTool
         TempBonusDamageDuration,
         TempBonusCriticalRateDuration,
         TempBonusCriticalDamageDuration,
+        UnlockNormalBulletSplit
     }
 }
