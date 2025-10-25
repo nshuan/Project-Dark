@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Dark.Scripts.InGame.Upgrade;
+using Economic;
 using InGame;
 using InGame.Upgrade;
 using Sirenix.OdinInspector;
@@ -117,6 +118,21 @@ namespace Dark.Tools.GoogleSheetTool
             configs = new[]
             {
                 AssetDatabase.LoadAssetAtPath<UpgradeRequirementConfig>(UpgradeRequirementConfig.FilePath),
+            };
+            EditorUtility.SetDirty(AssetDatabase.LoadAssetAtPath<GoogleSheetConfig>(GoogleSheetConfig.Path));
+        }
+#endif
+    }
+    
+    [Serializable]
+    public class GoogleSheetNodeLevelUpInfo : GoogleSheetDataInfo
+    {
+#if UNITY_EDITOR
+        public override void GetConfigsSortByName()
+        {
+            configs = new[]
+            {
+                AssetDatabase.LoadAssetAtPath<GradeConfig>(GradeConfig.FilePath),
             };
             EditorUtility.SetDirty(AssetDatabase.LoadAssetAtPath<GoogleSheetConfig>(GoogleSheetConfig.Path));
         }
