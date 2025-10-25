@@ -5,8 +5,6 @@ using Coffee.UIExtensions;
 using Dark.Scripts.Audio;
 using DG.Tweening;
 using InGame.Upgrade;
-using Sirenix.OdinInspector;
-using Sirenix.Serialization;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -22,32 +20,25 @@ namespace Dark.Scripts.OutGame.Upgrade
         
         [Space]
         [Header("UI")]
-        [SerializeField] private UIUpgradeNodeHoverField hoverField;
+        [SerializeField] protected UIUpgradeNodeHoverField hoverField;
 
-        [SerializeField] private Image nodeVisual;
-        [SerializeField] private Image nodeLockVisual;
-        [SerializeField] private Transform imgBorder;
-        [SerializeField] private GameObject imgActivatedGlow;
-        [SerializeField] private GameObject imgActivatedMaxGlow;
-        [SerializeField] private GameObject imgAvailable;
-        [SerializeField] private GameObject imgLock;
-        [SerializeField] private UIParticle vfxActivate;
-        [SerializeField] private AudioComponent sfxUnlockSuccess;
-        [SerializeField] private AudioComponent sfxUnlockFailure;
-        [SerializeField] private TextMeshProUGUI txtNodeLevel;
+        [SerializeField] protected Image nodeVisual;
+        [SerializeField] protected Image nodeLockVisual;
+        [SerializeField] protected Transform imgBorder;
+        [SerializeField] protected GameObject imgActivatedGlow;
+        [SerializeField] protected GameObject imgActivatedMaxGlow;
+        [SerializeField] protected Transform rectActivatedMaxOutline;
+        [SerializeField] protected GameObject imgAvailable;
+        [SerializeField] protected GameObject imgLock;
+        [SerializeField] protected UIParticle vfxActivate;
+        [SerializeField] protected AudioComponent sfxUnlockSuccess;
+        [SerializeField] protected AudioComponent sfxUnlockFailure;
+        [SerializeField] protected TextMeshProUGUI txtNodeLevel;
         public float lineAnchorOffsetRadius;
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             UpdateUI();
-
-            if (config.preRequire == null || config.preRequire.Length == 0)
-            {
-                UpgradeManager.Instance.UpgradeNode(config.nodeId);
-                UpdateUI();
-                DoUpgrade().SetDelay(0.5f).Play();
-                treeRef.UpdateChildren(config.nodeId);
-            }
         }
 
         public void SetVisual(Sprite sprite, Sprite lockSprite)
@@ -58,7 +49,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             nodeLockVisual.SetNativeSize();
         }
         
-        public void UpdateUI()
+        public virtual void UpdateUI()
         {
             var data = UpgradeManager.Instance.GetData(config.nodeId);
             if (data == null || data.level == 0) // Not activated yet
@@ -74,6 +65,8 @@ namespace Dark.Scripts.OutGame.Upgrade
                     imgLock.SetActive(false);
                     imgActivatedGlow.SetActive(false);
                     imgActivatedMaxGlow.SetActive(false);
+                    rectActivatedMaxOutline.gameObject.SetActive(false);
+                    imgBorder.gameObject.SetActive(true);
 
                     foreach (var lineInfo in preRequireLines)
                     {
@@ -87,6 +80,8 @@ namespace Dark.Scripts.OutGame.Upgrade
                     imgLock.SetActive(true);
                     imgActivatedGlow.SetActive(false);
                     imgActivatedMaxGlow.SetActive(false);
+                    rectActivatedMaxOutline.gameObject.SetActive(false);
+                    imgBorder.gameObject.SetActive(true);
                     
                     foreach (var lineInfo in preRequireLines)
                     {
@@ -107,7 +102,24 @@ namespace Dark.Scripts.OutGame.Upgrade
                 imgLock.SetActive(false);
                 vfxActivate?.Play();
                 imgActivatedGlow.SetActive(data.level < config.MaxLevel);
-                imgActivatedMaxGlow.SetActive(data.level >= config.MaxLevel);
+                if (data.level >= config.MaxLevel)
+                {
+                    imgActivatedMaxGlow.SetActive(true);
+                    rectActivatedMaxOutline.gameObject.SetActive(true);
+                    imgBorder.gameObject.SetActive(false);
+                    DOTween.Kill(rectActivatedMaxOutline);
+                    DOTween.Sequence(rectActivatedMaxOutline)
+                        .Append(rectActivatedMaxOutline.DOLocalRotate(new Vector3(0f, 0f, 180f), 0.4f).SetRelative())
+                        .Join(rectActivatedMaxOutline.DOScale(1.2f, 0.4f).SetEase(Ease.OutQuad))
+                        .Append(rectActivatedMaxOutline.DOScale(1f, 0.2f).SetEase(Ease.InQuad));
+                }
+                else
+                {
+                    imgActivatedMaxGlow.SetActive(false);
+                    rectActivatedMaxOutline.gameObject.SetActive(false);
+                    imgBorder.gameObject.SetActive(true);
+                }
+                
                 
                 foreach (var lineInfo in preRequireLines)
                 {
