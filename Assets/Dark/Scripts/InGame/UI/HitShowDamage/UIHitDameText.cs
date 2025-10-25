@@ -25,9 +25,9 @@ namespace InGame.UI.HitShowDamage
             }
         }
 
-        private void OnDamaged(int damage)
+        private void OnDamaged(int damage, DamageType dmgType)
         {
-            UIHitDameTextPool.Instance.ShowDamage(damage, transform.position);
+            UIHitDameTextPool.Instance.ShowDamage(damage, transform.position, dmgType);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace InGame
         public int CurrentHp { get; private set; }
         public bool IsDestroyed { get; set; }
         
-        public Action<int> OnHit { get; set; }
+        public Action<int, DamageType> OnHit { get; set; }
         public Action<int> OnRegenerate { get; set; }
         public Action<Vector2> OnHitAttackerPos { get; set; }
         public Action<TowerEntity> OnDestroyed;
@@ -69,14 +69,14 @@ namespace InGame
         public float HitDirectionX { get; set; }
         public float HitDirectionY { get; set; }
 
-        public void Damage(int damage, Vector2 dealerPosition, float stagger)
+        public void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
         {
             if (IsDestroyed) return;
             
             stagger = 0;
             CurrentHp -= damage;
             
-            OnHit?.Invoke(damage);
+            OnHit?.Invoke(damage, dmgType);
             OnHitAttackerPos?.Invoke(dealerPosition);
             if (CurrentHp <= 0)
             {

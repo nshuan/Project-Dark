@@ -12,20 +12,22 @@ namespace InGame.UI.HitShowDamage
         [SerializeField] private Camera cam;
         
         [Space]
-        [Header("Text color")]
-        [SerializeField] private List<Color> colorInfos;
+        [Header("Text config")]
+        [SerializeField] private List<float> scaleInfos;
+        [SerializeField] private Color criticalColor;
         [SerializeField] private int damageGap;
 
-        public void ShowDamage(TextMeshProUGUI txtDamage, int damage, Vector3 worldPos)
+        public void ShowDamage(TextMeshProUGUI txtDamage, int damage, Vector3 worldPos, DamageType dmgType)
         {
-            StartCoroutine(IEShowDamage(txtDamage, damage, worldPos));
+            StartCoroutine(IEShowDamage(txtDamage, damage, worldPos, dmgType));
         }
 
-        private IEnumerator IEShowDamage(TextMeshProUGUI txtDamage, int damage, Vector3 worldPos)
+        private IEnumerator IEShowDamage(TextMeshProUGUI txtDamage, int damage, Vector3 worldPos, DamageType dmgType)
         {
-            var indexColor = damage / damageGap;
-            txtDamage.color = colorInfos[Math.Clamp(indexColor, 0, colorInfos.Count - 1)];
+            var indexScale = damage / damageGap;
+            txtDamage.color = dmgType == DamageType.NormalCritical ? criticalColor : Color.white;
             txtDamage.transform.position = cam.WorldToScreenPoint(worldPos) + new Vector3(Random.Range(-30f, 30f), 0f, 0f);
+            txtDamage.transform.localScale = scaleInfos[Math.Clamp(indexScale, 0, scaleInfos.Count - 1)] * Vector3.one;
             txtDamage.SetText(damage.ToString());
             txtDamage.gameObject.SetActive(true);
             var endPos = txtDamage.transform.position + new Vector3(0f, 50f, 0f);

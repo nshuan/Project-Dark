@@ -17,7 +17,7 @@ namespace InGame.EnemyEffect
             enemy.OnHit += OnHit;
         }
 
-        private void OnHit(int damage)
+        private void OnHit(int damage, DamageType dmgType)
         {
             if (enemy.HitDirectionX is < 0.5f and > -0.5f) return;
             EnemySplashPool.Instance.GetAndRelease(null, enemy.transform.position, enemy.HitDirectionX > 0, 0f, 1f);

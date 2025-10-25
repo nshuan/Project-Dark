@@ -89,7 +89,7 @@ namespace InGame
                 {
                     hitTarget.HitDirectionX = dashDirection.x;
                     hitTarget.HitDirectionY = dashDirection.y;
-                    hitTarget.Damage((int)value, characterRef.FlashExplodeCenter, dashStagger);
+                    hitTarget.Damage((int)value, characterRef.FlashExplodeCenter, dashStagger, DamageType.Normal);
                 }
             }
         }

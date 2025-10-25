@@ -22,10 +22,10 @@ namespace InGame.UI.HitShowDamage
             pool = new Queue<TextMeshProUGUI>();
         }
 
-        public void ShowDamage(int damage, Vector3 worldPos)
+        public void ShowDamage(int damage, Vector3 worldPos, DamageType dmgType)
         {
             Get();
-            manager.ShowDamage(tempText, damage, worldPos);
+            manager.ShowDamage(tempText, damage, worldPos, dmgType);
         }
         
         public TextMeshProUGUI Get()
