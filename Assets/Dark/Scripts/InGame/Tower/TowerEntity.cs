@@ -12,8 +12,7 @@ namespace InGame
     {
         [SerializeField] private Vector3[] standOffset;
         [SerializeField] private TowerAnim towerAnim;
-        [SerializeField] private SpriteRenderer towerVisualUILayer;
-        [SerializeField] private SpriteRenderer towerOutline;
+        [SerializeField] private TowerAnim towerVisualUILayer;
         [SerializeField] private Sprite[] spriteStates;
         [SerializeField] private float[] thresholdState = new[] { 0f, 0.3f, 0.7f };
         [SerializeField] private TowerAutoRegenerate autoRegenerate;
@@ -42,8 +41,8 @@ namespace InGame
             OnDestroyed = null;
             currentState = 3; // 3 trạng thái máu và 1 trạng thái vỡ
             towerAnim.PlayIdle(currentState);
-            towerVisualUILayer.sprite = spriteStates[currentState];
-            towerOutline.sprite = spriteStates[currentState];
+            towerVisualUILayer.PlayIdle(currentState);
+            towerVisualUILayer.SetActiveOutline(false);
             autoRegenerate.Initialize(this, LevelUtility.GetTowerAutoRegen(MaxHp));
             regenerateOnKill.Initialize(this, LevelUtility.GetTowerRegenOnKill(MaxHp));
         }
@@ -81,8 +80,6 @@ namespace InGame
                 {
                     currentState -= 1;
                     towerAnim.TransitionToIdle(currentState, true);
-                    towerVisualUILayer.sprite = spriteStates[currentState];
-                    towerOutline.sprite = spriteStates[currentState];
                 }
                 
                 if (currentState == 1) UIWarningManager.Instance.WarnOnce(false);
@@ -107,8 +104,6 @@ namespace InGame
             {
                 currentState += 1;
                 towerAnim.TransitionToIdle(currentState, false);
-                towerVisualUILayer.sprite = spriteStates[currentState];
-                towerOutline.sprite = spriteStates[currentState];
             }
         }
         
@@ -117,18 +112,19 @@ namespace InGame
         public void Hover(bool hovering)
         {
             hover.SetActive(hovering);
-            towerOutline.gameObject.SetActive(hovering);
+            towerVisualUILayer.SetActiveOutline(true);
         }
         
         public void OnMotionBlur()
         {
+            towerVisualUILayer.PlayIdle(currentState);
             towerVisualUILayer.gameObject.SetActive(true);
         }
 
         public void OnEndMotionBlur()
         {
             towerVisualUILayer.gameObject.SetActive(false);
-            towerOutline.gameObject.SetActive(false);
+            towerVisualUILayer.SetActiveOutline(false);
         }
 
         /// <summary>
