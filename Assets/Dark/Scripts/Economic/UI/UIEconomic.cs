@@ -9,6 +9,7 @@ namespace Economic.UI
         protected int current;
         protected int target;
         protected float updateInterval = 0.05f;
+        protected float maxUpdateDuration = 3f;
 
         public virtual void UpdateUI()
         {
@@ -28,25 +29,34 @@ namespace Economic.UI
 
         private IEnumerator IEAnimatedUpdating()
         {
+            var step = 1;
             if (current < target)
             {
+                if ((target - current) * updateInterval > maxUpdateDuration)
+                    step = (int)((target - current) / maxUpdateDuration * updateInterval);
+                
                 while (current < target)
                 {
-                    current += 1;
+                    current += step;
                     UpdateUI();
                     yield return new WaitForSeconds(updateInterval);
                 }
             }
             else if (current > target)
             {
+                if ((- target + current) * updateInterval > maxUpdateDuration)
+                    step = (int)((- target + current) / maxUpdateDuration * updateInterval);
+                
                 while (current > target)
                 {
-                    current -= 1;
+                    current -= step;
                     UpdateUI();
                     yield return new WaitForSeconds(updateInterval);
                 }
             }
 
+            current = target;
+            UpdateUI();
             coroutineAnimatedUpdating = null;
         }
     }
