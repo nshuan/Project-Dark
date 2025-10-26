@@ -44,7 +44,7 @@ namespace InGame
                             }
                             else
                             {
-                                triggerredEnemy.Damage((int)(triggerredEnemy.MaxHealth * value), triggerredEnemy.transform.position, stagger);
+                                triggerredEnemy.Damage((int)(triggerredEnemy.MaxHealth * value), triggerredEnemy.transform.position, stagger, DamageType.Normal);
                             }
                             sfx.Play();
                         }
@@ -72,7 +72,7 @@ namespace InGame
                         }
                         else
                         {
-                            triggerredEnemy.Damage((int)(triggerredEnemy.MaxHealth * value / 100), triggerredEnemy.transform.position, stagger);
+                            triggerredEnemy.Damage((int)(triggerredEnemy.MaxHealth * value / 100), triggerredEnemy.transform.position, stagger, DamageType.Normal);
                         }
                         sfx.Play();
                     }

@@ -19,7 +19,7 @@ namespace Dark.Tools.Language.Runtime
         private Dictionary<LanguageType, TMP_FontAsset> fontMap;
 
         private TextMeshProUGUI txt;
-        
+
         private void OnEnable()
         {
             txt = GetComponent<TextMeshProUGUI>();
@@ -38,8 +38,9 @@ namespace Dark.Tools.Language.Runtime
         
 #if UNITY_EDITOR
         [Button]
-        private void Validate()
+        public void Validate()
         {
+            
             var data = LanguageData.GetLanguageItem(key);
             if (data == null) return;
             

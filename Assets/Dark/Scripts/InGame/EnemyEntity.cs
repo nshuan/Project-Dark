@@ -35,7 +35,7 @@ namespace InGame
         #endregion
 
         public float PercentageHpLeft => CurrentHealth / MaxHealth * 100f;
-        public Action<int> OnHit { get; set; }
+        public Action<int, DamageType> OnHit { get; set; }
         public Action OnDead { get; set; }
         public EnemyState State { get; set; }
         public int UniqueId { get; set; }
@@ -214,7 +214,7 @@ namespace InGame
         public float HitDirectionX { get; set; }
         public float HitDirectionY { get; set; }
 
-        public void Damage(int damage, Vector2 dealerPosition, float stagger)
+        public void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
         {
             if (IsDestroyed) return;
             if (State == EnemyState.Invisible) return;
@@ -222,7 +222,7 @@ namespace InGame
             CurrentHealth -= damage;
             
             
-            OnHit?.Invoke(damage);
+            OnHit?.Invoke(damage, dmgType);
             if (CurrentHealth <= 0)
             {
                 OnDie();
@@ -306,7 +306,7 @@ namespace InGame
                 yield return new WaitForSeconds(delayEachBurn);
                 HitDirectionX = 0f;
                 HitDirectionY = 0f;
-                Damage(damage, transform.position, 0f);
+                Damage(damage, transform.position, 0f, DamageType.Normal);
                 totalBurn -= 1;
             }
             
@@ -318,7 +318,7 @@ namespace InGame
         {
             HitDirectionX = 0f;
             HitDirectionY = 0f;
-            Damage(CurrentHealth, transform.position, 0f);
+            Damage(CurrentHealth, transform.position, 0f, DamageType.Normal);
         }
         #endregion
 

@@ -9,6 +9,7 @@ namespace Dark.Tools.GoogleSheetTool
         MoveConfig = 545988098, // "MoveConfig"
         NodeConfig = 1947278781, // "NodeConfig"
         CostConfig = 677348826, // "CostConfig"
+        LevelUpConfig = 468570559, // "LevelUpConfig"
         Wave = 230897661, // "Wave"
         LevelConfig = 992670229, // "LevelConfig"
         TowerCounter = 1956116879, // "TowerCounter"

@@ -101,13 +101,13 @@ namespace InGame
                     {
                         hitTarget.HitDirectionX = 0f;
                         hitTarget.HitDirectionY = 0f;
-                        hitTarget.Damage((int)damage, Position, Stagger);
+                        hitTarget.Damage((int)damage, Position, Stagger, DamageType.Normal);
                     }
                     else
                     {
                         hitTarget.HitDirectionX = hitOrder[i].position.x - hitOrder[i - 1].position.x;
                         hitTarget.HitDirectionY = hitOrder[i].position.y - hitOrder[i - 1].position.y;
-                        hitTarget.Damage((int)damage, hitOrder[i - 1].position, Stagger);
+                        hitTarget.Damage((int)damage, hitOrder[i - 1].position, Stagger, DamageType.Normal);
                     }
                 }
 

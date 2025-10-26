@@ -11,5 +11,7 @@ namespace InGame
     public interface IProjectileActivate
     {
         void DoAction(ProjectileEntity parentProjectile, Vector2 direction);
+        void Combine<T>(T combineWith) where T : IProjectileActivate;
+        float GetValue();
     }
 }

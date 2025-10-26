@@ -101,6 +101,13 @@ public class ImportDataWindow : EditorWindow
                 ConfigNodeCostImporter.Import(data.configs[0], csvTable);
             }
         }
+        else if (tabName.ToString().ToLower().Contains("levelupconfig"))
+        {
+            foreach (var data in listDataToUpdate)
+            {
+                ConfigNodeLevelUpImporter.Import(data.configs[0], csvTable);
+            }
+        }
         else
         {
             foreach (var data in listDataToUpdate)

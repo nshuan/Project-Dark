@@ -11,9 +11,8 @@ namespace InGame
     public class TowerEntity : MonoBehaviour, IDamageable
     {
         [SerializeField] private Vector3[] standOffset;
-        [SerializeField] private SpriteRenderer towerVisual;
-        [SerializeField] private SpriteRenderer towerVisualUILayer;
-        [SerializeField] private SpriteRenderer towerOutline;
+        [SerializeField] private TowerAnim towerAnim;
+        [SerializeField] private TowerAnim towerVisualUILayer;
         [SerializeField] private Sprite[] spriteStates;
         [SerializeField] private float[] thresholdState = new[] { 0f, 0.3f, 0.7f };
         [SerializeField] private TowerAutoRegenerate autoRegenerate;
@@ -21,18 +20,17 @@ namespace InGame
         [SerializeField] private AudioComponent sfxHit;
 
         private int currentState;
+        public int CurrentState => currentState;
         
         public int Id { get; private set; }
         public int MaxHp { get; private set; }
         public int CurrentHp { get; private set; }
         public bool IsDestroyed { get; set; }
         
-        public Action<int> OnHit { get; set; }
+        public Action<int, DamageType> OnHit { get; set; }
         public Action<int> OnRegenerate { get; set; }
         public Action<Vector2> OnHitAttackerPos { get; set; }
         public Action<TowerEntity> OnDestroyed;
-        
-        private FlashColor damageEffect;
         
         public void Initialize(int id, int hp)
         {
@@ -42,16 +40,11 @@ namespace InGame
             IsDestroyed = false;
 
             OnDestroyed = null;
-            damageEffect = new FlashColor() 
-            {
-                SpriteRendererTarget = towerVisual,
-                FlashDuration = 0.1f,
-                Color = new Color(1f, 0.6f, 0.6f, 1f)
-            };
-            currentState = spriteStates.Length - 1;
-            towerVisual.sprite = spriteStates[currentState];
-            towerVisualUILayer.sprite = spriteStates[currentState];
-            towerOutline.sprite = spriteStates[currentState];
+            currentState = 3; // 3 trạng thái máu và 1 trạng thái vỡ
+            towerAnim.PlayIdle(currentState);
+            towerVisualUILayer.PlayIdle(currentState);
+            towerVisualUILayer.SetActiveOutline(false);
+            towerVisualUILayer.gameObject.SetActive(false);
             autoRegenerate.Initialize(this, LevelUtility.GetTowerAutoRegen(MaxHp));
             regenerateOnKill.Initialize(this, LevelUtility.GetTowerRegenOnKill(MaxHp));
         }
@@ -69,14 +62,14 @@ namespace InGame
         public float HitDirectionX { get; set; }
         public float HitDirectionY { get; set; }
 
-        public void Damage(int damage, Vector2 dealerPosition, float stagger)
+        public void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
         {
             if (IsDestroyed) return;
             
             stagger = 0;
             CurrentHp -= damage;
             
-            OnHit?.Invoke(damage);
+            OnHit?.Invoke(damage, dmgType);
             OnHitAttackerPos?.Invoke(dealerPosition);
             if (CurrentHp <= 0)
             {
@@ -88,19 +81,17 @@ namespace InGame
                 if ((float)CurrentHp / MaxHp < thresholdState[currentState])
                 {
                     currentState -= 1;
-                    towerVisual.sprite = spriteStates[currentState];
-                    towerVisualUILayer.sprite = spriteStates[currentState];
-                    towerOutline.sprite = spriteStates[currentState];
+                    towerAnim.TransitionToIdle(currentState, true);
                 }
                 
-                if (currentState == 0) UIWarningManager.Instance.WarnOnce(false);
+                if (currentState == 1) UIWarningManager.Instance.WarnOnce(false);
             }
             
             autoRegenerate.Activate();
             
             // Do damage effect
             sfxHit.Play();
-            VisualEffectHelper.Instance.PlayEffect(damageEffect);
+            towerAnim.PlayHit();
         }
 
         public void Regenerate(int value)
@@ -111,12 +102,10 @@ namespace InGame
             CurrentHp += value;
             OnRegenerate?.Invoke(value);
             
-            if (currentState < spriteStates.Length - 1 && (float)CurrentHp / MaxHp >= thresholdState[currentState + 1])
+            if (currentState < thresholdState.Length - 1 && (float)CurrentHp / MaxHp >= thresholdState[currentState + 1])
             {
                 currentState += 1;
-                towerVisual.sprite = spriteStates[currentState];
-                towerVisualUILayer.sprite = spriteStates[currentState];
-                towerOutline.sprite = spriteStates[currentState];
+                towerAnim.TransitionToIdle(currentState, false);
             }
         }
         
@@ -125,18 +114,19 @@ namespace InGame
         public void Hover(bool hovering)
         {
             hover.SetActive(hovering);
-            towerOutline.gameObject.SetActive(hovering);
+            towerVisualUILayer.SetActiveOutline(hovering);
         }
         
         public void OnMotionBlur()
         {
+            towerVisualUILayer.PlayIdle(currentState);
             towerVisualUILayer.gameObject.SetActive(true);
         }
 
         public void OnEndMotionBlur()
         {
             towerVisualUILayer.gameObject.SetActive(false);
-            towerOutline.gameObject.SetActive(false);
+            towerVisualUILayer.SetActiveOutline(false);
         }
 
         /// <summary>
@@ -146,7 +136,7 @@ namespace InGame
         /// <returns></returns>
         public Vector3 GetBaseCenter()
         {
-            return towerVisual.transform.position;
+            return towerAnim.transform.position;
         }
 
         public Vector3 GetTowerHeight()

@@ -85,7 +85,7 @@ namespace InGame
                 {
                     hitTarget.HitDirectionX = direction.x;
                     hitTarget.HitDirectionY = direction.y;
-                    hitTarget.Damage((int)value, characterRef.FlashExplodeCenter, stagger);
+                    hitTarget.Damage((int)value, characterRef.FlashExplodeCenter, stagger, DamageType.Normal);
                 }
             }
         }
