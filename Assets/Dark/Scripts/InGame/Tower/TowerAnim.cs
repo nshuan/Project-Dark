@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Dark.Scripts.Utils.Skeleton;
 using Spine.Unity;
 using Spine.Unity.Editor;
@@ -41,27 +42,29 @@ namespace InGame
         [SpineAnimationName(nameof(skeleton))]
         [SerializeField] private string animHealTo30;
 
-        private Material material;
+        private Material outlineMaterial;
 
         private void Awake()
         {
-            // Clone the materials used by this skeleton
-            var materials = skeleton.GetComponent<Renderer>().materials;
-            for (int i = 0; i < materials.Length; i++)
-            {
-                materials[i] = new Material(materials[i]);
-            }
+            // Get the first original material
+            var baseMat = skeleton.CustomMaterialOverride.Count > 0
+                ? skeleton.CustomMaterialOverride.Keys.First()
+                : skeleton.GetComponent<Renderer>().sharedMaterial;
 
-            // Assign the cloned materials back
-            skeleton.GetComponent<Renderer>().materials = materials;
+            // Create your unique copy
+            outlineMaterial = new Material(baseMat);
+
+            // Register it with the override system
+            skeleton.CustomMaterialOverride.Clear();
+            skeleton.CustomMaterialOverride.Add(baseMat, outlineMaterial);
         }
 
         public void SetActiveOutline(bool active)
         {
-            // if (active)
-            //     material.SetFloat("Outline Width", 2f);
-            // else 
-            //     material.SetFloat("Outline Width", 0f);
+            if (active)
+                outlineMaterial.SetFloat("_OutlineWidth", 2f);
+            else 
+                outlineMaterial.SetFloat("_OutlineWidth", 0f);
         }
 
         #region Idle

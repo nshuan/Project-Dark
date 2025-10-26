@@ -112,7 +112,7 @@ namespace InGame
         public void Hover(bool hovering)
         {
             hover.SetActive(hovering);
-            towerVisualUILayer.SetActiveOutline(true);
+            towerVisualUILayer.SetActiveOutline(hovering);
         }
         
         public void OnMotionBlur()
