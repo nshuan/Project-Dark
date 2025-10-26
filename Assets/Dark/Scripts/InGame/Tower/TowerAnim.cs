@@ -2,9 +2,7 @@ using System;
 using System.Linq;
 using Dark.Scripts.Utils.Skeleton;
 using Spine.Unity;
-using Spine.Unity.Editor;
 using UnityEngine;
-using AnimationState = Spine.AnimationState;
 
 namespace InGame
 {

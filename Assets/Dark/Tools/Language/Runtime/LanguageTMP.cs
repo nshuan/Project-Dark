@@ -20,11 +20,6 @@ namespace Dark.Tools.Language.Runtime
 
         private TextMeshProUGUI txt;
 
-        private void Awake()
-        {
-            Validate();
-        }
-
         private void OnEnable()
         {
             txt = GetComponent<TextMeshProUGUI>();
@@ -41,9 +36,11 @@ namespace Dark.Tools.Language.Runtime
             txt.SetText(valueMap[currentLanguage]);
         }
         
+#if UNITY_EDITOR
         [Button]
         public void Validate()
         {
+            
             var data = LanguageData.GetLanguageItem(key);
             if (data == null) return;
             
@@ -55,5 +52,6 @@ namespace Dark.Tools.Language.Runtime
                 fontMap.Add(item.Key, LanguageData.GetFontAsset(item.Key));
             }
         }
+#endif
     }
 }

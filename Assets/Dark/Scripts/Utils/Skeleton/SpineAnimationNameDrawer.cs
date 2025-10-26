@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Dark.Scripts.Utils.Skeleton
 {
+#if UNITY_EDITOR
     [CustomPropertyDrawer(typeof(SpineAnimationNameAttribute))]
     public class SpineAnimationNameDrawer : PropertyDrawer
     {
@@ -51,4 +52,5 @@ namespace Dark.Scripts.Utils.Skeleton
             EditorGUI.EndProperty();
         }
     }
+#endif
 }
