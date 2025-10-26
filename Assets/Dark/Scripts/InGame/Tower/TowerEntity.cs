@@ -20,6 +20,7 @@ namespace InGame
         [SerializeField] private AudioComponent sfxHit;
 
         private int currentState;
+        public int CurrentState => currentState;
         
         public int Id { get; private set; }
         public int MaxHp { get; private set; }
@@ -43,6 +44,7 @@ namespace InGame
             towerAnim.PlayIdle(currentState);
             towerVisualUILayer.PlayIdle(currentState);
             towerVisualUILayer.SetActiveOutline(false);
+            towerVisualUILayer.gameObject.SetActive(false);
             autoRegenerate.Initialize(this, LevelUtility.GetTowerAutoRegen(MaxHp));
             regenerateOnKill.Initialize(this, LevelUtility.GetTowerRegenOnKill(MaxHp));
         }

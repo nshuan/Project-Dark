@@ -26,10 +26,9 @@ namespace Dark.Tools.GoogleSheetTool
                 Debug.LogError($"Invalid sub-type string: {subType}");
                 return null;
             }
-
-            return new NodeUnlockPassive()
+            
+            return new NodeUnlockPassiveAllTriggerType()
             {
-                triggerType = PassiveTriggerType.DameByNormalAttack,
                 passiveType = (PassiveType)passiveIndex,
             };
         }
@@ -57,9 +56,8 @@ namespace Dark.Tools.GoogleSheetTool
                 return null;
             }
 
-            return new NodeUnlockPassive()
+            return new NodeUnlockPassiveAllTriggerType()
             {
-                triggerType = PassiveTriggerType.DameByChargeAttack,
                 passiveType = (PassiveType)passiveIndex,
             };
         }
@@ -87,9 +85,8 @@ namespace Dark.Tools.GoogleSheetTool
                 return null;
             }
 
-            return new NodeUnlockPassive()
+            return new NodeUnlockPassiveAllTriggerType()
             {
-                triggerType = PassiveTriggerType.DameByMoveSKill,
                 passiveType = (PassiveType)passiveIndex,
             };
         }
@@ -117,9 +114,8 @@ namespace Dark.Tools.GoogleSheetTool
                 return null;
             }
 
-            return new NodeUnlockPassive()
+            return new NodeUnlockPassiveAllTriggerType()
             {
-                triggerType = PassiveTriggerType.TowerTakeDame,
                 passiveType = (PassiveType)passiveIndex,
             };
         }
