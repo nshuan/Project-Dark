@@ -6,6 +6,26 @@ namespace InGame
     public class LevelUtility
     {
         public static UpgradeBonusInfo BonusInfo { get; set; } = new UpgradeBonusInfo();
+        public static int BasePlayerDamage { get; set; }
+        public static float BasePlayerCooldown { get; set; }
+
+        public static int BasePlayerDamageWithBonus
+        {
+            get
+            {
+                if (BonusInfo == null) return BasePlayerDamage;
+                return (int)((BasePlayerDamage + BonusInfo.damePlus) * (1f + BonusInfo.dameMultiply));
+            }
+        }
+
+        public static float BasePLayerCooldownWithBonus
+        {
+            get
+            {
+                if (BonusInfo == null) return BasePlayerCooldown;
+                return (BasePlayerCooldown + BonusInfo.cooldownPlus) * (1f + BonusInfo.cooldownMultiplier);
+            }
+        }
 
         /// <summary>
         /// Player_Damage = [ Base_Damage + Total (Dame_Plus) ] * [1 + Total (Dame_Multiple) ]
@@ -23,13 +43,11 @@ namespace InGame
         /// <returns></returns>
         public static (int, int) GetPlayerBulletDamage(
             int skillId,
-            int playerDamage, 
             int skillDamage, 
             float criticalDameMultiplier, 
             float chargeDameMultiplier)
         {
-            playerDamage = Mathf.RoundToInt((playerDamage + BonusInfo.damePlus) * (1 + BonusInfo.dameMultiply));
-            var bulletDamage = Mathf.RoundToInt((playerDamage + skillDamage + BonusInfo.skillBonus.skillDamePlus) * (1 + BonusInfo.skillBonus.skillDameMultiply));
+            var bulletDamage = Mathf.RoundToInt((BasePlayerDamageWithBonus + skillDamage + BonusInfo.skillBonus.skillDamePlus) * (1 + BonusInfo.skillBonus.skillDameMultiply));
             criticalDameMultiplier = criticalDameMultiplier + BonusInfo.criticalDame;
             return LevelTemporaryUtility.FilterPlayerBulletDamage(
                 Mathf.RoundToInt(bulletDamage * chargeDameMultiplier),
@@ -67,15 +85,13 @@ namespace InGame
         /// <param name="playerCooldown"></param>
         /// <param name="baseSkillCooldown"></param>
         /// <returns></returns>
-        public static float GetSkillCooldown(int skillId, float playerCooldown, float baseSkillCooldown)
+        public static float GetSkillCooldown(int skillId, float baseSkillCooldown)
         {
             return LevelTemporaryUtility.FilterSkillCooldown(Mathf.Max(0f,
                 (baseSkillCooldown - BonusInfo.skillBonus.skillCooldownPlus) * (1 - BonusInfo.skillBonus
                                                                                  .skillCooldownMultiply)
                                                                              * Mathf.Clamp(
-                                                                                 1 - (playerCooldown +
-                                                                                     BonusInfo.cooldownPlus) *
-                                                                                 (1f + BonusInfo.cooldownMultiplier),
+                                                                                 1 - BasePLayerCooldownWithBonus,
                                                                                  0f, 1f)), BonusInfo);
         }
 
@@ -139,10 +155,13 @@ namespace InGame
             var max = 0f;
             var resultMD = 0f;
             var resultMCT = 0f;
+            var tempMCT = 0f;
             var temp = 0f;
             if (BonusInfo.chargeBulletBonus?.maxDameChargeTimeMinus > 0)
             {
-                temp = (baseChargeMaxDameMultiplier + BonusInfo.chargeBulletBonus.maxDameMultiplier) / (baseChargeMaxTime - BonusInfo.chargeBulletBonus.maxDameChargeTimeMinus) / (1f - BonusInfo.chargeBulletBonus.maxDameChargeTimeMinusMul);
+                tempMCT = (baseChargeMaxTime - BonusInfo.chargeBulletBonus.maxDameChargeTimeMinus) * (1f - BonusInfo.chargeBulletBonus.maxDameChargeTimeMinusMul);
+                if (tempMCT <= 0) tempMCT = 1f;
+                temp = (baseChargeMaxDameMultiplier + BonusInfo.chargeBulletBonus.maxDameMultiplier) / tempMCT;
                 if (temp > max)
                 {
                     max = temp;
@@ -153,34 +172,40 @@ namespace InGame
 
             if (BonusInfo.chargeSizeBonus?.maxDameChargeTimeMinus > 0)
             {
-                temp = (baseChargeMaxDameMultiplier + BonusInfo.chargeSizeBonus.maxDameMultiplier) / (baseChargeMaxTime - BonusInfo.chargeSizeBonus.maxDameChargeTimeMinus) / (1f - BonusInfo.chargeSizeBonus.maxDameChargeTimeMinusMul);
+                tempMCT = (baseChargeMaxTime - BonusInfo.chargeSizeBonus.maxDameChargeTimeMinus) * (1f - BonusInfo.chargeSizeBonus.maxDameChargeTimeMinusMul);
+                if (tempMCT <= 0) tempMCT = 1f;
+                temp = (baseChargeMaxDameMultiplier + BonusInfo.chargeSizeBonus.maxDameMultiplier) / tempMCT;
                 if (temp > max)
                 {
                     max = temp;
                     resultMD = BonusInfo.chargeSizeBonus.maxDameMultiplier;
-                    resultMCT = (baseChargeMaxTime - BonusInfo.chargeSizeBonus.maxDameChargeTimeMinus) * (1f - BonusInfo.chargeSizeBonus.maxDameChargeTimeMinusMul);
+                    resultMCT = tempMCT;
                 }
             }
 
             if (BonusInfo.chargeRangeBonus?.maxDameChargeTimeMinus > 0)
             {
-                temp = (baseChargeMaxDameMultiplier + BonusInfo.chargeRangeBonus.maxDameMultiplier) / (baseChargeMaxTime - BonusInfo.chargeRangeBonus.maxDameChargeTimeMinus) / (1f - BonusInfo.chargeRangeBonus.maxDameChargeTimeMinusMul);
+                tempMCT = (baseChargeMaxTime - BonusInfo.chargeRangeBonus.maxDameChargeTimeMinus) * (1f - BonusInfo.chargeRangeBonus.maxDameChargeTimeMinusMul);
+                if (tempMCT <= 0) tempMCT = 1f;
+                temp = (baseChargeMaxDameMultiplier + BonusInfo.chargeRangeBonus.maxDameMultiplier) / tempMCT;
                 if (temp > max)
                 {
                     max = temp;
                     resultMD = BonusInfo.chargeRangeBonus.maxDameMultiplier;
-                    resultMCT = (baseChargeMaxTime - BonusInfo.chargeRangeBonus.maxDameChargeTimeMinus) * (1f - BonusInfo.chargeRangeBonus.maxDameChargeTimeMinusMul);
+                    resultMCT = tempMCT;
                 }
             }
 
             if (BonusInfo.chargeDameBonus?.maxDameChargeTimeMinus > 0)
             {
-                temp = (baseChargeMaxDameMultiplier + BonusInfo.chargeDameBonus.maxDameMultiplier) / (baseChargeMaxTime - BonusInfo.chargeDameBonus.maxDameChargeTimeMinus) / (1f - BonusInfo.chargeDameBonus.maxDameChargeTimeMinusMul);
+                tempMCT = (baseChargeMaxTime - BonusInfo.chargeDameBonus.maxDameChargeTimeMinus) * (1f - BonusInfo.chargeDameBonus.maxDameChargeTimeMinusMul);
+                if (tempMCT <= 0) tempMCT = 1f;
+                temp = (baseChargeMaxDameMultiplier + BonusInfo.chargeDameBonus.maxDameMultiplier) / tempMCT;
                 if (temp > max)
                 {
                     max = temp;
                     resultMD = BonusInfo.chargeDameBonus.maxDameMultiplier;
-                    resultMCT = (baseChargeMaxTime - BonusInfo.chargeDameBonus.maxDameChargeTimeMinus) * (1f - BonusInfo.chargeDameBonus.maxDameChargeTimeMinusMul);
+                    resultMCT = tempMCT;
                 }
             }
 
@@ -192,48 +217,57 @@ namespace InGame
             var max = 0f;
             var resultMD = 0f;
             var resultMCT = 0f;
+            var tempMCT = 0f;
             var temp = 0f;
             if (BonusInfo.chargeBulletBonus?.maxSizeChargeTimeMinus > 0)
             {
-                temp = (baseChargeSize + BonusInfo.chargeBulletBonus.maxSizeMultiplier) / (baseChargeSizeTime - BonusInfo.chargeBulletBonus.maxSizeChargeTimeMinus) / (1f - BonusInfo.chargeBulletBonus.maxSizeChargeTimeMinusMul);
+                tempMCT = (baseChargeSizeTime - BonusInfo.chargeBulletBonus.maxSizeChargeTimeMinus) * (1f - BonusInfo.chargeBulletBonus.maxSizeChargeTimeMinusMul);
+                if (tempMCT <= 0) tempMCT = 1f;
+                temp = (baseChargeSize + BonusInfo.chargeBulletBonus.maxSizeMultiplier) / tempMCT;
                 if (temp > max)
                 {
                     max = temp;
                     resultMD = BonusInfo.chargeBulletBonus.maxSizeMultiplier;
-                    resultMCT = (baseChargeSizeTime - BonusInfo.chargeBulletBonus.maxSizeChargeTimeMinus) * (1f - BonusInfo.chargeBulletBonus.maxSizeChargeTimeMinusMul);
+                    resultMCT = tempMCT;
                 }
             }
 
             if (BonusInfo.chargeRangeBonus?.maxSizeChargeTimeMinus > 0)
             {
-                temp = (baseChargeSize + BonusInfo.chargeRangeBonus.maxSizeMultiplier) / (baseChargeSizeTime - BonusInfo.chargeRangeBonus.maxSizeChargeTimeMinus) / (1f - BonusInfo.chargeRangeBonus.maxSizeChargeTimeMinusMul);
+                tempMCT = (baseChargeSizeTime - BonusInfo.chargeRangeBonus.maxSizeChargeTimeMinus) * (1f - BonusInfo.chargeRangeBonus.maxSizeChargeTimeMinusMul);
+                if (tempMCT <= 0) tempMCT = 1f;
+                temp = (baseChargeSize + BonusInfo.chargeRangeBonus.maxSizeMultiplier) / tempMCT;
                 if (temp > max)
                 {
                     max = temp;
                     resultMD = BonusInfo.chargeRangeBonus.maxSizeMultiplier;
-                    resultMCT = (baseChargeSizeTime - BonusInfo.chargeRangeBonus.maxSizeChargeTimeMinus) * (1f - BonusInfo.chargeRangeBonus.maxSizeChargeTimeMinusMul);
+                    resultMCT = tempMCT;
                 }
             }
 
             if (BonusInfo.chargeDameBonus?.maxSizeChargeTimeMinus > 0)
             {
-                temp = (baseChargeSize + BonusInfo.chargeDameBonus.maxSizeMultiplier) / (baseChargeSizeTime - BonusInfo.chargeDameBonus.maxSizeChargeTimeMinus) / (1f - BonusInfo.chargeDameBonus.maxSizeChargeTimeMinusMul);
+                tempMCT = (baseChargeSizeTime - BonusInfo.chargeDameBonus.maxSizeChargeTimeMinus) * (1f - BonusInfo.chargeDameBonus.maxSizeChargeTimeMinusMul);
+                if (tempMCT <= 0) tempMCT = 1f;
+                temp = (baseChargeSize + BonusInfo.chargeDameBonus.maxSizeMultiplier) / tempMCT;
                 if (temp > max)
                 {
                     max = temp;
                     resultMD = BonusInfo.chargeDameBonus.maxSizeMultiplier;
-                    resultMCT = (baseChargeSizeTime - BonusInfo.chargeDameBonus.maxSizeChargeTimeMinus) * (1f - BonusInfo.chargeDameBonus.maxSizeChargeTimeMinusMul);
+                    resultMCT = tempMCT;
                 }
             }
             
             if (BonusInfo.chargeSizeBonus?.maxDameChargeTimeMinus > 0)
             {
-                temp = (baseChargeSize + BonusInfo.chargeSizeBonus.maxSizeMultiplier) / (baseChargeSizeTime - BonusInfo.chargeSizeBonus.maxSizeChargeTimeMinus) / (1f - BonusInfo.chargeSizeBonus.maxSizeChargeTimeMinusMul);
+                tempMCT = (baseChargeSizeTime - BonusInfo.chargeSizeBonus.maxSizeChargeTimeMinus) * (1f - BonusInfo.chargeSizeBonus.maxSizeChargeTimeMinusMul);
+                if (tempMCT <= 0) tempMCT = 1f;
+                temp = (baseChargeSize + BonusInfo.chargeSizeBonus.maxSizeMultiplier) / tempMCT;
                 if (temp > max)
                 {
                     max = temp;
                     resultMD = BonusInfo.chargeSizeBonus.maxSizeMultiplier;
-                    resultMCT = (baseChargeSizeTime - BonusInfo.chargeSizeBonus.maxSizeChargeTimeMinus) * (1f - BonusInfo.chargeSizeBonus.maxSizeChargeTimeMinusMul);
+                    resultMCT = tempMCT;
                 }
             }
 
@@ -281,48 +315,57 @@ namespace InGame
             var max = 0f;
             var resultMR = 0f;
             var resultMRT = 0f;
+            var tempMCT = 0f;
             var temp = 0f;
             if (BonusInfo.chargeBulletBonus?.maxRangeChargeTimeMinus > 0)
             {
-                temp = (baseChargeRange + BonusInfo.chargeBulletBonus.maxRangeMultiplier) / (baseChargeRangeTime - BonusInfo.chargeBulletBonus.maxRangeChargeTimeMinus) / (1f - BonusInfo.chargeBulletBonus.maxRangeChargeTimeMinusMul);
+                tempMCT = (baseChargeRangeTime - BonusInfo.chargeBulletBonus.maxRangeChargeTimeMinus) * (1f - BonusInfo.chargeBulletBonus.maxRangeChargeTimeMinusMul);
+                if (tempMCT <= 0) tempMCT = 1f;
+                temp = (baseChargeRange + BonusInfo.chargeBulletBonus.maxRangeMultiplier) / tempMCT;
                 if (temp > max)
                 {
                     max = temp;
                     resultMR = BonusInfo.chargeBulletBonus.maxRangeMultiplier;
-                    resultMRT = (baseChargeRangeTime - BonusInfo.chargeBulletBonus.maxRangeChargeTimeMinus) * (1f - BonusInfo.chargeBulletBonus.maxRangeChargeTimeMinusMul);
+                    resultMRT = tempMCT;
                 }
             }
 
             if (BonusInfo.chargeRangeBonus?.maxRangeChargeTimeMinus > 0)
             {
-                temp = (baseChargeRange + BonusInfo.chargeRangeBonus.maxRangeMultiplier) / (baseChargeRangeTime - BonusInfo.chargeRangeBonus.maxRangeChargeTimeMinus) / (1f - BonusInfo.chargeRangeBonus.maxRangeChargeTimeMinusMul);
+                tempMCT = (baseChargeRangeTime - BonusInfo.chargeRangeBonus.maxRangeChargeTimeMinus) * (1f - BonusInfo.chargeRangeBonus.maxRangeChargeTimeMinusMul);
+                if (tempMCT <= 0) tempMCT = 1f;
+                temp = (baseChargeRange + BonusInfo.chargeRangeBonus.maxRangeMultiplier) / tempMCT;
                 if (temp > max)
                 {
                     max = temp;
                     resultMR = BonusInfo.chargeRangeBonus.maxRangeMultiplier;
-                    resultMRT = (baseChargeRangeTime - BonusInfo.chargeRangeBonus.maxRangeChargeTimeMinus) * (1f - BonusInfo.chargeRangeBonus.maxRangeChargeTimeMinusMul);
+                    resultMRT = tempMCT;
                 }
             }
 
             if (BonusInfo.chargeDameBonus?.maxRangeChargeTimeMinus > 0)
             {
-                temp = (baseChargeRange + BonusInfo.chargeDameBonus.maxRangeMultiplier) / (baseChargeRangeTime - BonusInfo.chargeDameBonus.maxRangeChargeTimeMinus) / (1f - BonusInfo.chargeDameBonus.maxRangeChargeTimeMinusMul);
+                tempMCT = (baseChargeRangeTime - BonusInfo.chargeDameBonus.maxRangeChargeTimeMinus) * (1f - BonusInfo.chargeDameBonus.maxRangeChargeTimeMinusMul);
+                if (tempMCT <= 0) tempMCT = 1f;
+                temp = (baseChargeRange + BonusInfo.chargeDameBonus.maxRangeMultiplier) / tempMCT;
                 if (temp > max)
                 {
                     max = temp;
                     resultMR = BonusInfo.chargeDameBonus.maxRangeMultiplier;
-                    resultMRT = (baseChargeRangeTime - BonusInfo.chargeDameBonus.maxRangeChargeTimeMinus) * (1f - BonusInfo.chargeDameBonus.maxRangeChargeTimeMinusMul);
+                    resultMRT = tempMCT;
                 }
             }
             
             if (BonusInfo.chargeSizeBonus?.maxRangeChargeTimeMinus > 0)
             {
-                temp = (baseChargeRange + BonusInfo.chargeSizeBonus.maxRangeMultiplier) / (baseChargeRangeTime - BonusInfo.chargeSizeBonus.maxRangeChargeTimeMinus) / (1f - BonusInfo.chargeSizeBonus.maxRangeChargeTimeMinusMul);
+                tempMCT = (baseChargeRangeTime - BonusInfo.chargeSizeBonus.maxRangeChargeTimeMinus) * (1f - BonusInfo.chargeSizeBonus.maxRangeChargeTimeMinusMul);
+                if (tempMCT <= 0) tempMCT = 1f;
+                temp = (baseChargeRange + BonusInfo.chargeSizeBonus.maxRangeMultiplier) / tempMCT;
                 if (temp > max)
                 {
                     max = temp;
                     resultMR = BonusInfo.chargeSizeBonus.maxRangeMultiplier;
-                    resultMRT = (baseChargeRangeTime - BonusInfo.chargeSizeBonus.maxRangeChargeTimeMinus) * (1f - BonusInfo.chargeSizeBonus.maxRangeChargeTimeMinusMul);
+                    resultMRT = tempMCT;
                 }
             }
 
@@ -335,10 +378,10 @@ namespace InGame
 
         public static float GetPassiveCooldown(PassiveType passiveType, float baseCooldown)
         {
-            if (BonusInfo.passiveBonusCooldownMapByType == null) return baseCooldown;
+            if (BonusInfo.passiveBonusCooldownMapByType == null) return Mathf.Max(baseCooldown, 0f);
             if (BonusInfo.passiveBonusCooldownMapByType.TryGetValue(passiveType, out var bonus))
-                return Mathf.Max(baseCooldown - bonus, 0f);
-            return baseCooldown;
+                return Mathf.Max((baseCooldown - bonus) * (1f - BasePLayerCooldownWithBonus), 0f);
+            return Mathf.Max(baseCooldown, 0f);
         }
 
         public static float GetPassiveChance(PassiveType passiveType, float baseChance)
@@ -361,7 +404,7 @@ namespace InGame
         {
             if (BonusInfo.passiveBonusValueMapByType == null) return baseValue;
             if (BonusInfo.passiveBonusValueMapByType.TryGetValue(passiveType, out var bonus))
-                return baseValue + bonus;
+                return baseValue + BasePlayerDamageWithBonus + bonus;
             return baseValue;
         }
 
@@ -379,12 +422,12 @@ namespace InGame
 
         public static float GetTeleCooldown(float baseCooldown)
         {
-            return baseCooldown - BonusInfo.moveCooldownPlus;
+            return Mathf.Max((baseCooldown - BonusInfo.moveCooldownPlus) * (1f - BasePLayerCooldownWithBonus), 0f);
         }
         
         public static float GetDashCooldown(float baseCooldown)
         {
-            return baseCooldown - BonusInfo.dashCooldownPlus;
+            return Mathf.Max((baseCooldown - BonusInfo.dashCooldownPlus) * (1f - BasePLayerCooldownWithBonus), 0f);
         }
 
         public static float GetDashSize(float baseSize)
@@ -394,12 +437,12 @@ namespace InGame
 
         public static int GetDashDamage(int baseDamage)
         {
-            return (int)((1f + BonusInfo.dashDamageMultiplier) * (baseDamage + BonusInfo.dashDamagePlus));
+            return (int)((1f + BonusInfo.dashDamageMultiplier) * (baseDamage + BonusInfo.dashDamagePlus + BasePlayerDamageWithBonus));
         }
 
         public static float GetFlashCooldown(float baseCooldown)
         {
-            return baseCooldown - BonusInfo.flashCooldownPlus;
+            return Mathf.Max((baseCooldown - BonusInfo.flashCooldownPlus) * (1f - BasePLayerCooldownWithBonus), 0f);
         }
 
         public static float GetFlashSize(float baseSize)
@@ -409,7 +452,7 @@ namespace InGame
 
         public static int GetFlashDamage(int baseDamage)
         {
-            return (int)((1f + BonusInfo.flashDamageMultiplier) * (baseDamage + BonusInfo.flashDamagePlus));
+            return (int)((1f + BonusInfo.flashDamageMultiplier) * (baseDamage + BonusInfo.flashDamagePlus + BasePlayerDamageWithBonus));
         }
 
         #endregion
@@ -428,12 +471,12 @@ namespace InGame
 
         public static int GetTowerCounterDamage(int baseDamage)
         {
-            return baseDamage + BonusInfo.towerCounterDamagePlus;
+            return baseDamage + BonusInfo.towerCounterDamagePlus + BasePlayerDamageWithBonus;
         }
 
         public static float GetTowerCounterCooldown(float baseCooldown)
         {
-            return Mathf.Max(baseCooldown - BonusInfo.towerCounterCooldownPlus, 0f);
+            return Mathf.Max((baseCooldown - BonusInfo.towerCounterCooldownPlus) * (1f - BasePLayerCooldownWithBonus), 0f);
         }
 
         public static int GetTowerAutoRegen(int maxHp)

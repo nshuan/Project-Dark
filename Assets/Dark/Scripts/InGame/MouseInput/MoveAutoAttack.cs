@@ -44,7 +44,6 @@ namespace InGame
             InputManager = manager;
             Cooldown = LevelUtility.GetSkillCooldown(
                 InputManager.CurrentSkillConfig.skillId,
-                InputManager.PlayerStats.cooldown,
                 InputManager.CurrentSkillConfig.cooldown);
             ActivateDuration = 1f;
         }
@@ -56,7 +55,6 @@ namespace InGame
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(
                 InputManager.CurrentSkillConfig.skillId,
-                InputManager.PlayerStats.damage,
                 InputManager.CurrentSkillConfig.damePerBullet,
                 InputManager.PlayerStats.criticalDamage,
                 1f);
@@ -101,6 +99,7 @@ namespace InGame
             cdCounter = Cooldown;
             
             // Do cursor effect
+            cursor.UpdateScale(1f);
             cursor.UpdateBulletAdd(false);
             cursor.UpdateCooldown(false, 0f);
             DOTween.Complete(this);

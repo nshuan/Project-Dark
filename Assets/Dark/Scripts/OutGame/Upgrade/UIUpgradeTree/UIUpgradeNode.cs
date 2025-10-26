@@ -55,7 +55,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             if (data == null || data.level == 0) // Not activated yet
             {
                 // Always available or all pre-required nodes are activated
-                if (config.preRequire == null || config.preRequire.Length == 0 || config.preRequire.All((preRequire) => UpgradeManager.Instance.GetData(preRequire.nodeId) != null && UpgradeManager.Instance.GetData(preRequire.nodeId).level > 0))
+                if (config.preRequire == null || config.preRequire.Length == 0 || config.preRequire.Any((preRequire) => UpgradeManager.Instance.GetData(preRequire.nodeId) != null && UpgradeManager.Instance.GetData(preRequire.nodeId).level > 0))
                 {
                     txtNodeLevel.SetText($"0/{config.MaxLevel}");
                     txtNodeLevel.transform.parent.gameObject.SetActive(true);
@@ -70,7 +70,10 @@ namespace Dark.Scripts.OutGame.Upgrade
 
                     foreach (var lineInfo in preRequireLines)
                     {
-                        lineInfo.line.UpdateLineState(UIUpgradeNodeState.Available);
+                        lineInfo.line.UpdateLineState(
+                            UpgradeManager.Instance.GetData(lineInfo.preRequireId) != null && UpgradeManager.Instance.GetData(lineInfo.preRequireId).level > 0
+                            ? UIUpgradeNodeState.Available
+                            : UIUpgradeNodeState.Locked);
                     }
                 }
                 else
@@ -86,7 +89,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     foreach (var lineInfo in preRequireLines)
                     {
                         lineInfo.line.UpdateLineState(
-                            UpgradeManager.Instance.GetData(lineInfo.preRequireId) == null
+                            UpgradeManager.Instance.GetData(lineInfo.preRequireId) == null || UpgradeManager.Instance.GetData(lineInfo.preRequireId).level == 0
                             ? UIUpgradeNodeState.Locked
                             : UIUpgradeNodeState.Available);
                     }
@@ -123,7 +126,10 @@ namespace Dark.Scripts.OutGame.Upgrade
                 
                 foreach (var lineInfo in preRequireLines)
                 {
-                    lineInfo.line.UpdateLineState(UIUpgradeNodeState.Activated);
+                    lineInfo.line.UpdateLineState(
+                        UpgradeManager.Instance.GetData(lineInfo.preRequireId) == null || UpgradeManager.Instance.GetData(lineInfo.preRequireId).level == 0
+                        ? UIUpgradeNodeState.Locked
+                        : UIUpgradeNodeState.Activated);
                 }
             }
             
@@ -141,7 +147,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             {
                 // treeRef.SelectNode(this);
                 if (config.preRequire != null && config.preRequire.Select((node) => node.nodeId)
-                        .Any((id) =>
+                        .All((id) =>
                             UpgradeManager.Instance.GetData(id) == null ||
                             UpgradeManager.Instance.GetData(id).level == 0))
                 {

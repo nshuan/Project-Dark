@@ -69,7 +69,6 @@ namespace InGame
             ChargeController = chargeController;
             Cooldown = LevelUtility.GetSkillCooldown(
                 InputManager.CurrentSkillConfig.skillId,
-                InputManager.PlayerStats.cooldown,
                 InputManager.CurrentSkillConfig.cooldown);
 
             var skillBonusInfo = LevelUtility.BonusInfo.skillBonus;
@@ -102,7 +101,6 @@ namespace InGame
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(
                 InputManager.CurrentSkillConfig.skillId,
-                InputManager.PlayerStats.damage,
                 InputManager.CurrentSkillConfig.damePerBullet,
                 InputManager.PlayerStats.criticalDamage,
                 canChargeDame && dameChargeTime > 0 ? 1 + Mathf.Max(dameChargeTime / maxDameChargeTime * maxDameMultiplierAdd, 0f) : 1f);
@@ -193,6 +191,7 @@ namespace InGame
                     Vector2.right), false);
             
             // Do cursor effect
+            cursor.UpdateScale(1f);
             cursor.UpdateBulletAdd(false);
             cursor.UpdateCooldown(false, 0f);
             DOTween.Complete(this);
@@ -246,7 +245,8 @@ namespace InGame
             bulletAddTimer = bulletAddInterval;
             
             // damage
-            var maxDame = LevelUtility.GetChargeDameMax(InputManager.CurrentSkillConfig.chargeDameMax,
+            var maxDame = LevelUtility.GetChargeDameMax(
+                InputManager.CurrentSkillConfig.chargeDameMax,
                 InputManager.CurrentSkillConfig.chargeDameTime);
             maxDameMultiplierAdd = maxDame.Item1;
             maxDameChargeTime = maxDame.Item2;
@@ -304,6 +304,7 @@ namespace InGame
                             ChargeController.AddBullet(InputManager.PlayerVisual.transform.position,
                                 worldMousePosition - InputManager.PlayerVisual.transform.position);
                             bulletAddTimer = bulletAddInterval;
+                            cursor.UpdateScale(1f);
                             cursor.UpdateBulletAdd(true, bulletAdd);
                             cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f).SetEase(Ease.InQuad)
                                 .OnComplete(() => cursor.UpdateCooldown(true, 0f));
@@ -312,6 +313,7 @@ namespace InGame
                         {
                             if (!isChargeBulletMax)
                             {
+                                cursor.UpdateScale(1f);
                                 cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f).SetEase(Ease.InQuad);
                                 isChargeBulletMax = true;
                             }
