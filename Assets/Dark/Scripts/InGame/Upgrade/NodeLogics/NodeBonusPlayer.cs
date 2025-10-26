@@ -48,9 +48,8 @@ namespace InGame.Upgrade
                     if (isMultiply) return (value[level] * 100).ToString();
                     else return value[level].ToString();
                 case BonusPlayerType.CriticalRate:
-                    return (value[level] * 100).ToString();
                 case BonusPlayerType.CriticalDame:
-                    break;
+                    return (value[level] * 100).ToString();
             }
             return value[level].ToString();
         }
