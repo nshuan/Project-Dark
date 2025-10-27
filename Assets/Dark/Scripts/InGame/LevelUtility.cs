@@ -153,8 +153,8 @@ namespace InGame
         public static (float, float) GetChargeDameMax(float baseChargeMaxDameMultiplier, float baseChargeMaxTime)
         {
             var max = 0f;
-            var resultMD = 0f;
-            var resultMCT = 0f;
+            var bonusMD = 0f;
+            var resultMCT = baseChargeMaxTime;
             var tempMCT = 0f;
             var temp = 0f;
             if (BonusInfo.chargeBulletBonus?.maxDameChargeTimeMinus > 0)
@@ -165,7 +165,7 @@ namespace InGame
                 if (temp > max)
                 {
                     max = temp;
-                    resultMD = BonusInfo.chargeBulletBonus.maxDameMultiplier;
+                    bonusMD = BonusInfo.chargeBulletBonus.maxDameMultiplier;
                     resultMCT = (baseChargeMaxTime - BonusInfo.chargeBulletBonus.maxDameChargeTimeMinus) * (1f - BonusInfo.chargeBulletBonus.maxDameChargeTimeMinusMul);
                 }
             }
@@ -178,7 +178,7 @@ namespace InGame
                 if (temp > max)
                 {
                     max = temp;
-                    resultMD = BonusInfo.chargeSizeBonus.maxDameMultiplier;
+                    bonusMD = BonusInfo.chargeSizeBonus.maxDameMultiplier;
                     resultMCT = tempMCT;
                 }
             }
@@ -191,7 +191,7 @@ namespace InGame
                 if (temp > max)
                 {
                     max = temp;
-                    resultMD = BonusInfo.chargeRangeBonus.maxDameMultiplier;
+                    bonusMD = BonusInfo.chargeRangeBonus.maxDameMultiplier;
                     resultMCT = tempMCT;
                 }
             }
@@ -204,19 +204,19 @@ namespace InGame
                 if (temp > max)
                 {
                     max = temp;
-                    resultMD = BonusInfo.chargeDameBonus.maxDameMultiplier;
+                    bonusMD = BonusInfo.chargeDameBonus.maxDameMultiplier;
                     resultMCT = tempMCT;
                 }
             }
 
-            return (baseChargeMaxDameMultiplier + resultMD, resultMCT);
+            return (baseChargeMaxDameMultiplier + bonusMD, resultMCT);
         }
 
         public static (float, float) GetChargeSizeMax(float baseChargeSize, float baseChargeSizeTime)
         {
             var max = 0f;
-            var resultMD = 0f;
-            var resultMCT = 0f;
+            var bonusMD = 0f;
+            var resultMCT = baseChargeSizeTime;
             var tempMCT = 0f;
             var temp = 0f;
             if (BonusInfo.chargeBulletBonus?.maxSizeChargeTimeMinus > 0)
@@ -227,7 +227,7 @@ namespace InGame
                 if (temp > max)
                 {
                     max = temp;
-                    resultMD = BonusInfo.chargeBulletBonus.maxSizeMultiplier;
+                    bonusMD = BonusInfo.chargeBulletBonus.maxSizeMultiplier;
                     resultMCT = tempMCT;
                 }
             }
@@ -240,7 +240,7 @@ namespace InGame
                 if (temp > max)
                 {
                     max = temp;
-                    resultMD = BonusInfo.chargeRangeBonus.maxSizeMultiplier;
+                    bonusMD = BonusInfo.chargeRangeBonus.maxSizeMultiplier;
                     resultMCT = tempMCT;
                 }
             }
@@ -253,7 +253,7 @@ namespace InGame
                 if (temp > max)
                 {
                     max = temp;
-                    resultMD = BonusInfo.chargeDameBonus.maxSizeMultiplier;
+                    bonusMD = BonusInfo.chargeDameBonus.maxSizeMultiplier;
                     resultMCT = tempMCT;
                 }
             }
@@ -266,55 +266,55 @@ namespace InGame
                 if (temp > max)
                 {
                     max = temp;
-                    resultMD = BonusInfo.chargeSizeBonus.maxSizeMultiplier;
+                    bonusMD = BonusInfo.chargeSizeBonus.maxSizeMultiplier;
                     resultMCT = tempMCT;
                 }
             }
 
-            return (baseChargeSize + resultMD, resultMCT);
+            return (baseChargeSize + bonusMD, resultMCT);
         }
         
         public static (int, float) GetChargeBulletMax(int baseChargeBullet, float baseChargeBulletInterval)
         {
             var max = 0;
-            var resultBullet = 0;
-            var resultInterval = 0f;
+            var bulletAdd = 0;
+            var resultInterval = baseChargeBulletInterval;
             if (BonusInfo.chargeBulletBonus?.maxBulletAdd > max)
             {
                 max = BonusInfo.chargeBulletBonus.maxBulletAdd;
-                resultBullet = BonusInfo.chargeBulletBonus.maxBulletAdd;
+                bulletAdd = BonusInfo.chargeBulletBonus.maxBulletAdd;
                 resultInterval = (baseChargeBulletInterval - BonusInfo.chargeBulletBonus.bulletAddIntervalMinus) * (1f - BonusInfo.chargeBulletBonus.bulletAddIntervalMinusMul);
             }
 
             if (BonusInfo.chargeDameBonus?.maxBulletAdd > max)
             {
                 max = BonusInfo.chargeDameBonus.maxBulletAdd;
-                resultBullet = BonusInfo.chargeDameBonus.maxBulletAdd;
+                bulletAdd = BonusInfo.chargeDameBonus.maxBulletAdd;
                 resultInterval = (baseChargeBulletInterval - BonusInfo.chargeDameBonus.bulletAddIntervalMinus) * (1f - BonusInfo.chargeDameBonus.bulletAddIntervalMinusMul);
             }
 
             if (BonusInfo.chargeRangeBonus?.maxBulletAdd > max)
             {
                 max = BonusInfo.chargeRangeBonus.maxBulletAdd;
-                resultBullet = BonusInfo.chargeRangeBonus.maxBulletAdd;
+                bulletAdd = BonusInfo.chargeRangeBonus.maxBulletAdd;
                 resultInterval = (baseChargeBulletInterval - BonusInfo.chargeRangeBonus.bulletAddIntervalMinus) * (1f - BonusInfo.chargeRangeBonus.bulletAddIntervalMinusMul);
             }
             
             if (BonusInfo.chargeSizeBonus?.maxBulletAdd > max)
             {
                 max = BonusInfo.chargeSizeBonus.maxBulletAdd;
-                resultBullet = BonusInfo.chargeSizeBonus.maxBulletAdd;
+                bulletAdd = BonusInfo.chargeSizeBonus.maxBulletAdd;
                 resultInterval = (baseChargeBulletInterval - BonusInfo.chargeSizeBonus.bulletAddIntervalMinus) * (1f - BonusInfo.chargeSizeBonus.bulletAddIntervalMinusMul);
             }
 
-            return (baseChargeBullet + resultBullet, resultInterval);
+            return (baseChargeBullet + bulletAdd, resultInterval);
         }
         
         public static (float, float) GetChargeRangeMax(float baseChargeRange, float baseChargeRangeTime)
         {
             var max = 0f;
-            var resultMR = 0f;
-            var resultMRT = 0f;
+            var bonusMR = 0f;
+            var resultMRT = baseChargeRangeTime;
             var tempMCT = 0f;
             var temp = 0f;
             if (BonusInfo.chargeBulletBonus?.maxRangeChargeTimeMinus > 0)
@@ -325,7 +325,7 @@ namespace InGame
                 if (temp > max)
                 {
                     max = temp;
-                    resultMR = BonusInfo.chargeBulletBonus.maxRangeMultiplier;
+                    bonusMR = BonusInfo.chargeBulletBonus.maxRangeMultiplier;
                     resultMRT = tempMCT;
                 }
             }
@@ -338,7 +338,7 @@ namespace InGame
                 if (temp > max)
                 {
                     max = temp;
-                    resultMR = BonusInfo.chargeRangeBonus.maxRangeMultiplier;
+                    bonusMR = BonusInfo.chargeRangeBonus.maxRangeMultiplier;
                     resultMRT = tempMCT;
                 }
             }
@@ -351,7 +351,7 @@ namespace InGame
                 if (temp > max)
                 {
                     max = temp;
-                    resultMR = BonusInfo.chargeDameBonus.maxRangeMultiplier;
+                    bonusMR = BonusInfo.chargeDameBonus.maxRangeMultiplier;
                     resultMRT = tempMCT;
                 }
             }
@@ -364,12 +364,12 @@ namespace InGame
                 if (temp > max)
                 {
                     max = temp;
-                    resultMR = BonusInfo.chargeSizeBonus.maxRangeMultiplier;
+                    bonusMR = BonusInfo.chargeSizeBonus.maxRangeMultiplier;
                     resultMRT = tempMCT;
                 }
             }
 
-            return (baseChargeRange + resultMR, resultMRT);
+            return (baseChargeRange + bonusMR, resultMRT);
         }
         
         #endregion
