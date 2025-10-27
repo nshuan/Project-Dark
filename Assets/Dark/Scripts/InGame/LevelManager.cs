@@ -97,6 +97,8 @@ namespace InGame
             Level = level;
             UpgradeManager.Instance.ActivateTree(ref bonusInfo);
             LevelUtility.BonusInfo = bonusInfo;
+            LevelUtility.BasePlayerDamage = playerStats.damage;
+            LevelUtility.BasePlayerCooldown = playerStats.cooldown;
             EnemyManager.Instance.Initialize();
             winLoseManager = new WinLoseManager();
             IsEndLevel = false;
@@ -170,7 +172,7 @@ namespace InGame
             while (currentWaveIndex < waves.Length)
             {
                 var currentWave = waves[currentWaveIndex];
-                currentWave.SetupWave(gatePrefab, Towers, Level.levelExpRatio, Level.levelDarkRatio, OnWaveForceStop);
+                currentWave.SetupWave(gatePrefab, Towers, Level.levelExpRatio, Level.levelDarkRatio, Level.levelDarkUnitValue, OnWaveForceStop);
                 OnWaveStart?.Invoke(currentWaveIndex, currentWave.timeToEnd);
                 if (currentWave.IsBossWave) OnBossWaveStart?.Invoke();
                 currentWaveIndex += 1;
