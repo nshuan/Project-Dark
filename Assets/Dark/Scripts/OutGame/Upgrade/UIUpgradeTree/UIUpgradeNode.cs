@@ -34,6 +34,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] protected AudioComponent sfxUnlockSuccess;
         [SerializeField] protected AudioComponent sfxUnlockFailure;
         [SerializeField] protected TextMeshProUGUI txtNodeLevel;
+        [SerializeField] protected GameObject txtNodeMaxLevel;
         public float lineAnchorOffsetRadius;
 
         protected virtual void OnEnable()
@@ -98,23 +99,18 @@ namespace Dark.Scripts.OutGame.Upgrade
             else // Activated
             {
                 txtNodeLevel.SetText($"{data.level}/{config.MaxLevel}");
+                txtNodeMaxLevel.gameObject.SetActive(data.level == config.MaxLevel);
                 txtNodeLevel.transform.parent.gameObject.SetActive(true);
                 if (config.preRequire == null || config.preRequire.Length == 0)
                     txtNodeLevel.transform.parent.gameObject.SetActive(false);
                 imgAvailable.SetActive(true);
                 imgLock.SetActive(false);
-                vfxActivate?.Play();
                 imgActivatedGlow.SetActive(data.level < config.MaxLevel);
                 if (data.level >= config.MaxLevel)
                 {
                     imgActivatedMaxGlow.SetActive(true);
                     rectActivatedMaxOutline.gameObject.SetActive(true);
                     imgBorder.gameObject.SetActive(false);
-                    DOTween.Kill(rectActivatedMaxOutline);
-                    DOTween.Sequence(rectActivatedMaxOutline)
-                        .Append(rectActivatedMaxOutline.DOLocalRotate(new Vector3(0f, 0f, 180f), 0.4f).SetRelative())
-                        .Join(rectActivatedMaxOutline.DOScale(1.2f, 0.4f).SetEase(Ease.OutQuad))
-                        .Append(rectActivatedMaxOutline.DOScale(1f, 0.2f).SetEase(Ease.InQuad));
                 }
                 else
                 {
@@ -122,7 +118,6 @@ namespace Dark.Scripts.OutGame.Upgrade
                     rectActivatedMaxOutline.gameObject.SetActive(false);
                     imgBorder.gameObject.SetActive(true);
                 }
-                
                 
                 foreach (var lineInfo in preRequireLines)
                 {
@@ -162,6 +157,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     UIUpgradeNodeInfoPreview.Instance.Setup(config, true);
                     UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.rectTransform.sizeDelta.x / 2, 0f), true, () => hoverField.interactable = true);
                     UpdateUI();
+                    vfxActivate?.Play();
                     DoUpgrade().Play();
                     treeRef.UpdateChildren(config.nodeId);
                     sfxUnlockSuccess?.Play();
@@ -177,6 +173,16 @@ namespace Dark.Scripts.OutGame.Upgrade
         private Tween DoUpgrade()
         {
             DOTween.Complete(this);
+            
+            if (UpgradeManager.Instance.GetData(config.nodeId).level >= config.MaxLevel)
+            {
+                DOTween.Kill(rectActivatedMaxOutline);
+                DOTween.Sequence(rectActivatedMaxOutline)
+                    .Append(rectActivatedMaxOutline.DOLocalRotate(new Vector3(0f, 0f, 180f), 0.4f).SetRelative())
+                    .Join(rectActivatedMaxOutline.DOScale(1.2f, 0.4f).SetEase(Ease.OutQuad))
+                    .Append(rectActivatedMaxOutline.DOScale(1f, 0.2f).SetEase(Ease.InQuad));
+            }
+
             return DOTween.Sequence(this)
                 .Append(imgBorder.DOLocalRotate(new Vector3(0f, 0f, 180f), 0.4f).SetRelative())
                 .Join(imgBorder.DOScale(1.2f, 0.4f).SetEase(Ease.OutQuad))
