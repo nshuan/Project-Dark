@@ -51,43 +51,18 @@ namespace Economic.UI
             if (selectMethod == 1)
             {
                 if (RandomUtil.Range(0f, 1f) <= enemy.DarkRatio && enemy.Dark > 0)
-                    EItemDropManager.Instance.DropOne(WealthType.Vestige, enemy.Dark, enemy.transform.position);
+                    EItemDropManager.Instance.Drop(WealthType.Vestige, enemy.DarkUnitValue, enemy.Dark, enemy.transform.position);
                 if (enemy.BossPoint > 0)
                     EItemDropManager.Instance.DropOne(WealthType.Sigils, enemy.BossPoint, enemy.transform.position);
             }
-            
-            // TH2: Giống 1, nhưng rớt 1 item cho 1 đơn vị resource
-            if (selectMethod == 2)
-            {
-                if (RandomUtil.Range(0f, 1f) <= enemy.DarkRatio && enemy.Dark > 0)
-                {
-                    for (var i = 0; i < enemy.Dark; i++)
-                    {
-                        EItemDropManager.Instance.DropOne(WealthType.Vestige, 1, enemy.transform.position);                        
-                    }
-                }
 
-                if (enemy.BossPoint > 0)
-                {
-                    EItemDropManager.Instance.DropOne(WealthType.Sigils, enemy.BossPoint, enemy.transform.position, true);
-                }
-            }
-            
             // TH3: Collect bằng cách di chuột qua item, cần tick vào enableCollectorMouse ở trong InputInGame
             if (selectMethod == 3)
             {
                 if (RandomUtil.Range(0f, 1f) <= enemy.DarkRatio && enemy.Dark > 0)
-                {
-                    for (var i = 0; i < enemy.Dark; i++)
-                    {
-                        EItemDropManager.Instance.DropOne(WealthType.Vestige, 1, enemy.transform.position, true);                        
-                    }
-                }
-
+                    EItemDropManager.Instance.Drop(WealthType.Vestige, enemy.DarkUnitValue, enemy.Dark, enemy.transform.position, true);
                 if (enemy.BossPoint > 0)
-                {
                     EItemDropManager.Instance.DropOne(WealthType.Sigils, enemy.BossPoint, enemy.transform.position, true);
-                }
             }
         }
 

@@ -71,5 +71,13 @@ namespace Economic.InGame.DropItems
                 item.Drop(position);
             });
         }
+
+        public void Drop(WealthType kind, int quantity, int amount, Vector3 position, bool canCollectByMouse = false)
+        {
+            for (var i = 0; i < amount; i++)
+            {
+                DropOne(kind, quantity, position, canCollectByMouse);
+            }
+        }
     }
 }

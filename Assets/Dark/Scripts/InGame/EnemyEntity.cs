@@ -29,6 +29,7 @@ namespace InGame
         private int CurrentDamage { get; set; }
         public int Exp { get; private set; }
         public int Dark { get; private set; }
+        public int DarkUnitValue { get; private set; }
         public float DarkRatio { get; private set; }
         public int BossPoint { get; private set; }
 
@@ -65,7 +66,7 @@ namespace InGame
             boundaryManager = MapBoundaryManager.Instance;
         }
 
-        public void Init(EnemyBehaviour eConfig, TowerEntity target, float hpMultiplier, float dmgMultiplier, float levelExpRatio, float levelDarkRatio)
+        public void Init(EnemyBehaviour eConfig, TowerEntity target, float hpMultiplier, float dmgMultiplier, float levelExpRatio, float levelDarkRatio, int levelDarkUnitValue)
         {
             config = eConfig;
             
@@ -89,6 +90,7 @@ namespace InGame
             Exp = Mathf.RoundToInt(config.exp * levelExpRatio);
             Dark = Mathf.RoundToInt(config.dark * levelDarkRatio);
             DarkRatio = LevelUtility.GetDropRate(config.darkRatio);
+            DarkUnitValue = levelDarkUnitValue;
             BossPoint = config.bossPoint;
             
             State = EnemyState.Spawn;

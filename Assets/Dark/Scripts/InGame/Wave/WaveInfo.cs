@@ -25,7 +25,7 @@ namespace InGame
         public bool WaveEndedCompletely { get; set; }
         private int currentGateIndex = 0;
         
-        public void SetupWave(GateEntity gatePrefab, TowerEntity[] towers, float levelExpRatio, float levelDarkRatio, Action<int, WaveEndReason> onWaveForceEnded)
+        public void SetupWave(GateEntity gatePrefab, TowerEntity[] towers, float levelExpRatio, float levelDarkRatio, int levelDarkUnitValue, Action<int, WaveEndReason> onWaveForceEnded)
         {
             if (isRandomWaveConfig)
                 waveConfig = randomWaveConfigs[Random.Range(0, randomWaveConfigs.Length)];
@@ -35,7 +35,7 @@ namespace InGame
             {
                 var gateCfg = waveConfig.gateConfigs[i];
                 Gates[i] = Object.Instantiate(gatePrefab, gateCfg.position, quaternion.identity, null);
-                Gates[i].Initialize(gateCfg, gateCfg.targetBaseIndex.Select((index) => towers[index]).ToArray(), scaleHp, scaleDmg, levelExpRatio, levelDarkRatio);
+                Gates[i].Initialize(gateCfg, gateCfg.targetBaseIndex.Select((index) => towers[index]).ToArray(), scaleHp, scaleDmg, levelExpRatio, levelDarkRatio, levelDarkUnitValue);
             }
             
             Gates.Sort((gate1, gate2) => gate1.config.startTime.CompareTo(gate2.config.startTime));

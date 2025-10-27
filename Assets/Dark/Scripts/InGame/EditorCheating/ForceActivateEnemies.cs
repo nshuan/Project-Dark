@@ -44,7 +44,7 @@ namespace InGame.EditorCheating
                             }
                         }
                         
-                        enemy.Init(config, towers[targetTowerIndex], 1f, 1f, 1f,1f);
+                        enemy.Init(config, towers[targetTowerIndex], 1f, 1f, 1f,1f, 1);
                         enemy.Activate();
                     }
                 }
