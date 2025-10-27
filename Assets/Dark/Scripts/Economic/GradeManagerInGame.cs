@@ -15,6 +15,13 @@ namespace Economic
             currentGrade = WealthManager.Instance.Grade;
             
             WealthManager.Instance.OnExpChanged += OnExpChanged;
+            WealthManager.Instance.OnUpGrade += OnUpgrade;
+        }
+
+        private void OnDestroy()
+        {
+            WealthManager.Instance.OnExpChanged -= OnExpChanged;
+            WealthManager.Instance.OnUpGrade -= OnUpgrade;
         }
 
         private void OnExpChanged(int before, int after)
@@ -23,8 +30,12 @@ namespace Economic
             
             // Next grade requirement = GradeRequirement[currentGrade]
             if (after < GradeRequirement[currentGrade]) return;
-            currentGrade += 1;
             WealthManager.Instance.UpGrade();
+        }
+
+        private void OnUpgrade(int newGrade)
+        {
+            currentGrade = newGrade;
         }
     }
 }

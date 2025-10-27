@@ -27,7 +27,7 @@ namespace Economic
         public int GetRequirement(int grade)
         {
             if (grade <= 0) return 0;
-            return grade > RequireMapByTarget.Count ? int.MaxValue : RequireMapByTarget[grade];
+            return grade >= RequireMapByTarget.Count ? int.MaxValue : RequireMapByTarget[grade];
         }
 
         public void GetAllRequirement()

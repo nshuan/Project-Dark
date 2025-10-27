@@ -13,6 +13,7 @@ namespace Economic.UI
         private int grade;
         private int expNeededToLevelUp;
         private int currentExpProgress;
+        private int totalExpLastGrade;
         
         private void Start()
         {
@@ -31,8 +32,9 @@ namespace Economic.UI
         private void OnUpGrade(int newGrade)
         {
             grade = newGrade;
-            currentExpProgress = WealthManager.Instance.Exp % (expNeededToLevelUp == 0 ? 1 : expNeededToLevelUp);
-            expNeededToLevelUp = GradeConfig.Instance.GetRequirement(grade + 1);
+            currentExpProgress = WealthManager.Instance.Exp;
+            expNeededToLevelUp = GradeConfig.Instance.GetRequirement(grade);
+            totalExpLastGrade = GradeConfig.Instance.GetRequirement(grade - 1);
             UpdateUIGrade();
             UpdateUIExp();
         }
@@ -51,7 +53,7 @@ namespace Economic.UI
         private void UpdateUIExp()
         {
             DOTween.Kill(this);
-            fillExp.DOFillAmount((float)currentExpProgress / expNeededToLevelUp, 0.5f).SetTarget(this);
+            fillExp.DOFillAmount((float)(currentExpProgress - totalExpLastGrade) / (expNeededToLevelUp - totalExpLastGrade), 0.5f).SetTarget(this);
         }
     }
 }
