@@ -99,7 +99,7 @@ namespace InGame
             cdCounter = Cooldown;
             
             // Do cursor effect
-            cursor.UpdateScale(1f);
+            cursor.UpdateScale(0f);
             cursor.UpdateBulletAdd(false);
             cursor.UpdateCooldown(false, 0f);
             DOTween.Complete(this);

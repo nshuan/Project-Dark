@@ -191,7 +191,7 @@ namespace InGame
                     Vector2.right), false);
             
             // Do cursor effect
-            cursor.UpdateScale(1f);
+            cursor.UpdateScale(0f);
             cursor.UpdateBulletAdd(false);
             cursor.UpdateCooldown(false, 0f);
             DOTween.Complete(this);
@@ -304,7 +304,7 @@ namespace InGame
                             ChargeController.AddBullet(InputManager.PlayerVisual.transform.position,
                                 worldMousePosition - InputManager.PlayerVisual.transform.position);
                             bulletAddTimer = bulletAddInterval;
-                            cursor.UpdateScale(1f);
+                            cursor.UpdateScale(0f);
                             cursor.UpdateBulletAdd(true, bulletAdd);
                             cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f).SetEase(Ease.InQuad)
                                 .OnComplete(() => cursor.UpdateCooldown(true, 0f));
@@ -313,7 +313,7 @@ namespace InGame
                         {
                             if (!isChargeBulletMax)
                             {
-                                cursor.UpdateScale(1f);
+                                cursor.UpdateScale(0f);
                                 cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f).SetEase(Ease.InQuad);
                                 isChargeBulletMax = true;
                             }
