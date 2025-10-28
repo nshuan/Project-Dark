@@ -251,7 +251,8 @@ namespace InGame
                 }
 
                 animController.PlayHit();
-                invisibleTimer = config.invisibleDuration;
+                // invisibleTimer = config.invisibleDuration;
+                invisibleTimer = 0f;
                 State = EnemyState.Invisible;
             }
         }

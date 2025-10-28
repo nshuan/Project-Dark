@@ -95,6 +95,7 @@ namespace InGame
             currentHit = 0;
             DamageType = damageType;
             
+            collider.Init();
             collider.UpdateLastPosition(transform.position);
         }
 

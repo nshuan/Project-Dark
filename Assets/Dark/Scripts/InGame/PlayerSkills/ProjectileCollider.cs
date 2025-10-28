@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace InGame
@@ -28,6 +30,8 @@ namespace InGame
         private Vector2 lastPosition;
         private Vector2 direction;
         private RaycastHit2D[] hits = new RaycastHit2D[10];
+        private List<Transform> allHitEnemiesInCurrentShot;
+        private int totalHitCountInCurrentShot;
         
         // private void OnTriggerEnter2D(Collider2D other)
         // {
@@ -54,6 +58,17 @@ namespace InGame
             capsuleCollider = GetComponent<CapsuleCollider2D>();
         }
 
+        public void Init()
+        {
+            // Lưu lại ref đến những enemy đã va chạm, mỗi con chỉ dính dame 1 lần đối với 1 lần bắn
+            allHitEnemiesInCurrentShot ??= new List<Transform>();
+            for (var i = 0; i < allHitEnemiesInCurrentShot.Count; i++)
+            {
+                allHitEnemiesInCurrentShot[i] = null;
+            }
+            totalHitCountInCurrentShot = 0;
+        }
+        
         private void FixedUpdate()
         {
             if (!Projectile) return;
@@ -65,11 +80,18 @@ namespace InGame
             var hitCount = Physics2D.CircleCastNonAlloc(lastPosition, capsuleCollider.size.y, direction, hits, direction.magnitude, hitLayer);
             if (hitCount > 0)
             {
-                // Chỉ check hit 1 object đầu tiên va chạm
-                for (var i = 0; i < 1; i++)
+                // Chỉ check hit 1 object đầu tiên va chạm, nếu là enemy thì trước đấy phải chưa va chạm lần nào
+                for (var i = 0; i < hitCount; i++)
                 {
+                    if (allHitEnemiesInCurrentShot.Any((hit) => ReferenceEquals(hit, hits[i].transform))) continue;
                     if (hits[i].transform.TryGetComponent<EnemyEntity>(out hitEnemy))
                     {
+                        if (totalHitCountInCurrentShot < allHitEnemiesInCurrentShot.Count)
+                            allHitEnemiesInCurrentShot[totalHitCountInCurrentShot] = hits[i].transform;
+                        else
+                            allHitEnemiesInCurrentShot.Add(hits[i].transform);
+                        totalHitCountInCurrentShot += 1;
+                        
                         Projectile.ProjectileHit(hitEnemy);
                         DebugUtility.Log($"Hit enemy {hitEnemy.name}");
                     }
