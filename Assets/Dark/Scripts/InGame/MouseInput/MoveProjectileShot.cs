@@ -24,31 +24,30 @@ namespace InGame
         #region Charge
 
         private bool canChargeBullet;
-        private bool isChargingBullet;
-        private int bulletAdd;
-        private int maxBulletAdd;
-        private float bulletAddInterval;
-        private float bulletAddTimer;
-        private bool isChargeBulletMax;
+        private int bulletChargeAdded;
+        private float bulletPerStep;
+        private int bulletChargeMaxStep;
 
         private bool canChargeDame;
-        private bool isChargingDame;
-        private float maxDameMultiplierAdd;
-        private float maxDameChargeTime;
-        private float dameChargeTime;
+        private float dameChargeAdded;
+        private float damePerStep;
+        private int dameChargeMaxStep;
 
         private bool canChargeSize;
-        private bool isChargingSize;
-        private float maxSizeMultiplierAdd;
-        private float maxSizeChargeTime;
-        private float sizeChargeTime;
+        private float sizeChargeAdded;
+        private float sizePerStep;
+        private int sizeChargeMaxStep;
 
         private bool canChargeRange;
-        private bool isChargingRange;
-        private float maxRangeMultiplierAdd;
-        private float maxRangeChargeTime;
-        private float rangeChargeTime;
+        private float rangeChargeAdded;
+        private float rangePerStep;
+        private int rangeChargeMaxStep;
 
+        private bool isCharging;
+        private float chargeTimer;
+        private float chargeStepTime;
+        private int chargeStep;
+        private int chargeMaxStep;
         #endregion
 
         public MoveProjectileShot()
@@ -92,18 +91,18 @@ namespace InGame
             
             CanShoot = false;
             
-            var isCharge = (canChargeBullet && bulletAdd > 0) || (canChargeDame && dameChargeTime > 0) ||
-                           (canChargeSize && sizeChargeTime > 0) || (canChargeRange && rangeChargeTime > 0);
+            var isCharge = (canChargeBullet && bulletChargeAdded > 0) || (canChargeDame && dameChargeAdded > 0) ||
+                           (canChargeSize && sizeChargeAdded > 0) || (canChargeRange && rangeChargeAdded > 0);
             
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(
-                canChargeDame && dameChargeTime > 0 ? 1 + Mathf.Max(dameChargeTime / maxDameChargeTime * maxDameMultiplierAdd, 0f) : 1f);
+                canChargeDame && dameChargeAdded > 0 ? 1 + dameChargeAdded : 1f);
             var critRate = LevelUtility.GetCriticalRate();
-            var bulletNum = LevelUtility.GetNumberOfBullets(bulletAdd);
+            var bulletNum = LevelUtility.GetNumberOfBullets(bulletChargeAdded);
             var skillSize = LevelUtility.GetSkillSize(
-                canChargeSize && sizeChargeTime > 0 ? 1 + Mathf.Min(sizeChargeTime / maxSizeChargeTime, 1f) * maxSizeMultiplierAdd : 1f);
+                canChargeSize && sizeChargeAdded > 0 ? 1 + sizeChargeAdded : 1f);
             var skillRange = LevelUtility.GetSkillRange(
-                canChargeRange && rangeChargeTime > 0 ? 1 + Mathf.Min(rangeChargeTime / maxRangeChargeTime, 1f) * maxRangeMultiplierAdd : 1f,
+                canChargeRange && rangeChargeAdded > 0 ? 1 + rangeChargeAdded : 1f,
                 tempMousePos - LevelManager.Instance.CurrentTower.GetBaseCenter());
             var maxHit = 1 + LevelUtility.BonusInfo.skillBonus.bulletMaxHitPlus;
             var stagger = LevelUtility.GetBulletStagger();
@@ -182,7 +181,7 @@ namespace InGame
             
             // Do cursor effect
             cursor.UpdateScale(0f);
-            cursor.UpdateBulletAdd(false);
+            cursor.UpdateChargeUnitAdd(false);
             cursor.UpdateCooldown(false, 0f);
             DOTween.Complete(this);
             var seq = DOTween.Sequence(this);
@@ -198,63 +197,48 @@ namespace InGame
         public void OnHoldStarted()
         {
             if (!CanShoot) return;
-            if (isChargingBullet
-                || isChargingDame
-                || isChargingSize
-                || isChargingRange) return; 
+            if (isCharging) return; 
             
             ResetChargeVariable();
+
+            if (canChargeBullet && bulletChargeMaxStep > 0) isCharging = true;
+            else if (canChargeDame && dameChargeMaxStep > 0) isCharging = true;
+            else if (canChargeSize && sizeChargeMaxStep > 0) isCharging = true;
+            else if (canChargeRange && rangeChargeMaxStep > 0) isCharging = true;
             
-            if (canChargeBullet && LevelUtility.CurrentSkill.chargeBulletMaxAdd > 0)
-                isChargingBullet = true;
-            if (canChargeDame && maxDameMultiplierAdd > 0) isChargingDame = true;
-            if (canChargeSize && maxSizeMultiplierAdd > 0) isChargingSize = true;
-            if (canChargeRange && maxRangeMultiplierAdd > 0) isChargingRange = true;
-            
-            if (isChargingBullet || isChargingDame || isChargingSize || isChargingRange)
+            if (isCharging)
                 InputManager.PlayerVisual.PlayCharge();
         }
 
         public void OnHoldReleased()
         {
-            isChargingBullet = false;
-            isChargeBulletMax = false;
-            isChargingDame = false;
-            isChargingSize = false;
-            isChargingRange = false;
+            isCharging = false;
         }
 
         public void ResetChargeVariable()
         {
-            // bullet number
-            bulletAdd = 0;
-            var maxBullet = LevelUtility.GetChargeBulletMax(LevelUtility.CurrentSkill.chargeBulletMaxAdd,
-                LevelUtility.CurrentSkill.chargeBulletInterval);
-            maxBulletAdd = maxBullet.Item1;
-            bulletAddInterval = maxBullet.Item2;
-            bulletAddTimer = bulletAddInterval;
+            chargeStepTime = LevelUtility.GetChargeStepTime();
             
-            // damage
-            var maxDame = LevelUtility.GetChargeDameMax(
-                LevelUtility.CurrentSkill.chargeDameMax,
-                LevelUtility.CurrentSkill.chargeDameTime);
-            maxDameMultiplierAdd = maxDame.Item1;
-            maxDameChargeTime = maxDame.Item2;
-            dameChargeTime = -1f;
+            bulletChargeAdded = 0;
+            bulletPerStep = LevelUtility.GetChargeBulletPerStep();
+            bulletChargeMaxStep = (int)(LevelUtility.GetChargeBulletMaxTime() / chargeStepTime);
+
+            dameChargeAdded = 0f;
+            damePerStep = LevelUtility.GetChargeDamePerStep();
+            dameChargeMaxStep = (int)(LevelUtility.GetChargeDameMaxTime() / chargeStepTime);
+
+            sizeChargeAdded = 0f;
+            sizePerStep = LevelUtility.GetChargeSizePerStep();
+            sizeChargeMaxStep = (int)(LevelUtility.GetChargeSizeMaxTime() / chargeStepTime);
             
-            // Size
-            var maxSize = LevelUtility.GetChargeSizeMax(LevelUtility.CurrentSkill.chargeSizeMax,
-                LevelUtility.CurrentSkill.chargeSizeTime);
-            maxSizeMultiplierAdd = maxSize.Item1;
-            maxSizeChargeTime = maxSize.Item2;
-            sizeChargeTime = 0f;
-            
-            // Range
-            var maxRange = LevelUtility.GetChargeRangeMax(LevelUtility.CurrentSkill.chargeRangeMax,
-                LevelUtility.CurrentSkill.chargeRangeTime);
-            maxRangeMultiplierAdd = maxRange.Item1;
-            maxRangeChargeTime = maxRange.Item2;
-            rangeChargeTime = 0f;
+            rangeChargeAdded = 0f;
+            rangePerStep = LevelUtility.GetChargeRangePerStep();
+            rangeChargeMaxStep = (int)(LevelUtility.GetChargeRangeMaxTime() / chargeStepTime);
+
+            isCharging = false;
+            chargeStep = 0;
+            chargeTimer = 0f;
+            chargeMaxStep = Mathf.Max(bulletChargeMaxStep, dameChargeMaxStep, sizeChargeMaxStep, rangeChargeMaxStep);
         }
 
         public bool CanMove => true;
@@ -277,75 +261,60 @@ namespace InGame
             }
             else
             {
-                if (canChargeBullet)
+                if (isCharging && chargeMaxStep > 0 && chargeStep < chargeMaxStep)
                 {
-                    // Charge bullets
-                    if (isChargingBullet)
+                    if (chargeTimer < chargeStepTime)
                     {
-                        if (bulletAddTimer > 0)
-                        {
-                            bulletAddTimer -= Time.deltaTime;
-                            // Update UI
-                            cursor.UpdateCooldown(true, 1 - Mathf.Clamp(bulletAddTimer / bulletAddInterval, 0f, 1f));
-                        }
-                        else if (bulletAdd < maxBulletAdd)
-                        {
-                            bulletAdd += 1;
-                            ChargeController.AddBullet(InputManager.PlayerVisual.transform.position,
-                                worldMousePosition - InputManager.PlayerVisual.transform.position);
-                            bulletAddTimer = bulletAddInterval;
-                            cursor.UpdateScale(0f);
-                            cursor.UpdateBulletAdd(true, bulletAdd);
-                            cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f).SetEase(Ease.InQuad)
-                                .OnComplete(() => cursor.UpdateCooldown(true, 0f));
-                        }
-                        else if (bulletAdd == maxBulletAdd)
-                        {
-                            if (!isChargeBulletMax)
-                            {
-                                cursor.UpdateScale(0f);
-                                cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f).SetEase(Ease.InQuad);
-                                isChargeBulletMax = true;
-                            }
-                            cursor.UpdateMax();
-                        }
+                        chargeTimer += Time.deltaTime;
+                        cursor.UpdateCooldown(true, 1 - Mathf.Clamp(chargeTimer / chargeStepTime, 0f, 1f));
                     }
                     else
                     {
-                        // Update UI
-                        cursor.UpdateBulletAdd(false);
+                        chargeTimer -= chargeStepTime;
+                        chargeStep += 1;
+                        
+                        cursor.UpdateScale(0f);
+                        cursor.UpdateChargeUnitAdd(true, chargeStep);
+                        cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f).SetEase(Ease.InQuad)
+                            .OnComplete(() => cursor.UpdateCooldown(true, 0f));
+
+                        if (chargeStep >= chargeMaxStep)
+                        {
+                            cursor.UpdateMax();
+                        }
+                        
+                        if (bulletChargeMaxStep > 0)
+                        {
+                            bulletChargeAdded = (int)(bulletPerStep * Math.Min(chargeStep, bulletChargeMaxStep));
+                            for (int i = 0; i < bulletChargeAdded - ChargeController.TotalBulletAdded; i++)
+                            {
+                                ChargeController.AddBullet(InputManager.PlayerVisual.transform.position,
+                                    worldMousePosition - InputManager.PlayerVisual.transform.position);
+                            }
+                        }
+
+                        if (dameChargeMaxStep > 0)
+                        {
+                            dameChargeAdded = damePerStep * Math.Min(chargeStep, dameChargeMaxStep);
+                        }
+
+                        if (sizeChargeMaxStep > 0)
+                        {
+                            sizeChargeAdded = sizePerStep * Math.Min(chargeStep, sizeChargeMaxStep);
+                            ChargeController.AddSize(LevelUtility.GetSkillSize(
+                                sizeChargeMaxStep > 0 ? 1 + sizeChargeAdded : 1f));
+                        }
+
+                        if (rangeChargeMaxStep > 0)
+                        {
+                            rangeChargeAdded = rangePerStep * Math.Min(chargeStep, rangeChargeMaxStep);
+                            InputManager.PlayerVisual.UpdateShotRadius(
+                                LevelManager.Instance.CurrentTower.GetBaseCenter(),
+                                LevelUtility.GetSkillRange(
+                                    canChargeRange && rangeChargeAdded > 0 ? 1 + rangeChargeAdded : 1f,
+                                    Vector2.right));
+                        }
                     }
-                }
-                
-                // Charge dame
-                if (canChargeDame && isChargingDame)
-                {
-                    dameChargeTime += Time.deltaTime;
-                }
-                
-                // Charge size
-                if (canChargeSize && isChargingSize)
-                {
-                    sizeChargeTime += Time.deltaTime;
-                    var size = LevelUtility.GetSkillSize(
-                        maxSizeMultiplierAdd > 0
-                            ? 1 + Mathf.Min(sizeChargeTime / maxSizeChargeTime, 1f) * maxSizeMultiplierAdd
-                            : 1f);
-                    ChargeController.AddSize(size);
-                    cursor.UpdateScale(Mathf.Min(sizeChargeTime / maxSizeChargeTime, 1f));
-                }
-                
-                // Charge range
-                if (canChargeRange && isChargingRange)
-                {
-                    rangeChargeTime += Time.deltaTime;
-                    
-                    // Update shot radius
-                    InputManager.PlayerVisual.UpdateShotRadius(
-                        LevelManager.Instance.CurrentTower.GetBaseCenter(),
-                        LevelUtility.GetSkillRange(
-                            canChargeRange && rangeChargeTime > 0 ? 1 + Mathf.Min(rangeChargeTime / maxRangeChargeTime, 1f) * maxRangeMultiplierAdd : 1f,
-                            Vector2.right));
                 }
             }
             

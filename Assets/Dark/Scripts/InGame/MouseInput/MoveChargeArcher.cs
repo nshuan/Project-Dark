@@ -32,6 +32,7 @@ namespace InGame
             p.gameObject.SetActive(true);
             projectiles.Add(p);
             spawnCoroutines.Add(StartCoroutine(IESpawnProjectile(p, aimDirection.normalized)));
+            TotalBulletAdded += 1;
         }
 
         public override void AddSize(float size)
@@ -52,6 +53,7 @@ namespace InGame
 
             projectiles = new List<ProjectileEntity>();
             spawnCoroutines = new List<Coroutine>();
+            TotalBulletAdded = 0;
         }
 
         private IEnumerator IESpawnProjectile(ProjectileEntity projectile, Vector2 direction)

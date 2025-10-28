@@ -139,6 +139,51 @@ namespace InGame
 
         #region Charge
 
+        public static float GetChargeStepTime()
+        {
+            return CurrentSkill.chargeStepTime;
+        }
+
+        public static float GetChargeBulletPerStep()
+        {
+            return CurrentSkill.chargeBulletStep;
+        }
+
+        public static float GetChargeBulletMaxTime()
+        {
+            return CurrentSkill.chargeBulletTime;
+        }
+        
+        public static float GetChargeDamePerStep()
+        {
+            return CurrentSkill.chargeDameStep;
+        }
+
+        public static float GetChargeDameMaxTime()
+        {
+            return CurrentSkill.chargeDameTime;
+        }
+        
+        public static float GetChargeSizePerStep()
+        {
+            return CurrentSkill.chargeSizeStep;
+        }
+
+        public static float GetChargeSizeMaxTime()
+        {
+            return CurrentSkill.chargeSizeTime;
+        }
+        
+        public static float GetChargeRangePerStep()
+        {
+            return CurrentSkill.chargeRangeStep;
+        }
+
+        public static float GetChargeRangeMaxTime()
+        {
+            return CurrentSkill.chargeRangeTime;
+        }
+        
         /// <summary>
         /// Get the MaxDameMultiplier of the max MaxDameMultiplierAdd / MaxDameChargeTime
         /// 4 loại charge đều sẽ bonus vào damage, lấy bonus từ loọi charge mà MaxDameMultiplierAdd / MaxDameChargeTime lớn nhất

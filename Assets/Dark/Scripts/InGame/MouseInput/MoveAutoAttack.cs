@@ -90,7 +90,7 @@ namespace InGame
             
             // Do cursor effect
             cursor.UpdateScale(0f);
-            cursor.UpdateBulletAdd(false);
+            cursor.UpdateChargeUnitAdd(false);
             cursor.UpdateCooldown(false, 0f);
             DOTween.Complete(this);
             var seq = DOTween.Sequence(this);

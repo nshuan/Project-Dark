@@ -17,14 +17,15 @@ namespace InGame
         public float cooldown = 0.5f;  // time between shots
         public float range = 5f; // Max damage range, also max distance from player to mouse aimìng position
         public float size; // size of the aiming field
-        public float chargeDameMax = -1;
-        public float chargeDameTime = -1;
-        public float chargeSizeMax = -1;
-        public float chargeSizeTime = -1;
-        public float chargeRangeMax = -1;
-        public float chargeRangeTime = -1;
-        public float chargeBulletInterval = -1;
-        public int chargeBulletMaxAdd = -1;
+        public float chargeDameStep = 0;
+        public float chargeDameTime = 0;
+        public float chargeSizeStep = 0;
+        public float chargeSizeTime = 0;
+        public float chargeRangeStep = 0;
+        public float chargeRangeTime = 0;
+        public float chargeBulletStep = 0;
+        public float chargeBulletTime = 0;
+        public float chargeStepTime = 1f;
         public float speedScale = 1f; // Scale speed of bullets
         public float stagger; // Push enemy away when projectile hit
 

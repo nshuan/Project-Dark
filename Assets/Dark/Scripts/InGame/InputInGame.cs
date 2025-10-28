@@ -239,8 +239,8 @@ namespace InGame
                 
                 if (!IsMousePressing)
                 {
-                    mouseInput?.ResetChargeVariable();
                     mouseInput?.OnMouseClick();
+                    mouseInput?.ResetChargeVariable();
                     return;
                 }
                 
