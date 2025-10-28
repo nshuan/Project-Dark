@@ -67,9 +67,7 @@ namespace InGame
         {
             InputManager = manager;
             ChargeController = chargeController;
-            Cooldown = LevelUtility.GetSkillCooldown(
-                InputManager.CurrentSkillConfig.skillId,
-                InputManager.CurrentSkillConfig.cooldown);
+            Cooldown = LevelUtility.GetSkillCooldown();
 
             var skillBonusInfo = LevelUtility.BonusInfo.skillBonus;
             canChargeBullet = skillBonusInfo.unlockedChargeBullet;
@@ -77,14 +75,13 @@ namespace InGame
             canChargeSize = skillBonusInfo.unlockedChargeSize;
             canChargeRange = skillBonusInfo.unlockedChargeRange;
             
-            ChargeController.SetProjectile(InputManager.CurrentSkillConfig.projectiles[PlayerProjectileType.ChargeBullet]);
+            ChargeController.SetProjectile(LevelUtility.CurrentSkill.projectiles[PlayerProjectileType.ChargeBullet]);
             ChargeController.Cam = Cam;
             
             // Setup shot radius
             InputManager.PlayerVisual.UpdateShotRadius(
                 LevelManager.Instance.CurrentTower.GetBaseCenter(),
-                LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId, 
-                    InputManager.CurrentSkillConfig.range, 
+                LevelUtility.GetSkillRange(
                     1f,
                     Vector2.right));
         }
@@ -100,22 +97,16 @@ namespace InGame
             
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(
-                InputManager.CurrentSkillConfig.skillId,
-                InputManager.CurrentSkillConfig.damePerBullet,
-                InputManager.PlayerStats.criticalDamage,
                 canChargeDame && dameChargeTime > 0 ? 1 + Mathf.Max(dameChargeTime / maxDameChargeTime * maxDameMultiplierAdd, 0f) : 1f);
-            var critRate = LevelUtility.GetCriticalRate(InputManager.PlayerStats.criticalRate);
-            var bulletNum = LevelUtility.GetNumberOfBullets(InputManager.CurrentSkillConfig.skillId, InputManager.CurrentSkillConfig.numberOfBullets, bulletAdd);
-            var skillSize = LevelUtility.GetSkillSize(InputManager.CurrentSkillConfig.skillId,
-                InputManager.CurrentSkillConfig.size,
+            var critRate = LevelUtility.GetCriticalRate();
+            var bulletNum = LevelUtility.GetNumberOfBullets(bulletAdd);
+            var skillSize = LevelUtility.GetSkillSize(
                 canChargeSize && sizeChargeTime > 0 ? 1 + Mathf.Min(sizeChargeTime / maxSizeChargeTime, 1f) * maxSizeMultiplierAdd : 1f);
-            var skillRange = LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId,
-                InputManager.CurrentSkillConfig.range,
+            var skillRange = LevelUtility.GetSkillRange(
                 canChargeRange && rangeChargeTime > 0 ? 1 + Mathf.Min(rangeChargeTime / maxRangeChargeTime, 1f) * maxRangeMultiplierAdd : 1f,
                 tempMousePos - LevelManager.Instance.CurrentTower.GetBaseCenter());
             var maxHit = 1 + LevelUtility.BonusInfo.skillBonus.bulletMaxHitPlus;
-            var stagger = LevelUtility.GetBulletStagger(InputManager.CurrentSkillConfig.skillId,
-                InputManager.CurrentSkillConfig.stagger);
+            var stagger = LevelUtility.GetBulletStagger();
 
             InputManager.BlockTeleport = true;
             var delayShot = 0f;
@@ -132,8 +123,8 @@ namespace InGame
             {
                 InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(skillRange);
                 
-                InputManager.CurrentSkillConfig.Shoot(
-                    InputManager.CurrentSkillConfig.projectiles[PlayerProjectileType.Normal],
+                LevelUtility.CurrentSkill.Shoot(
+                    LevelUtility.CurrentSkill.projectiles[PlayerProjectileType.Normal],
                     InputManager.ProjectileSpawnPos.position,
                     LevelManager.Instance.CurrentTower.GetBaseCenter(),
                     tempMousePos,
@@ -157,11 +148,11 @@ namespace InGame
                             direction.normalized, 
                             skillRange,
                             skillSize, 
-                            InputManager.CurrentSkillConfig.speedScale,
+                            LevelUtility.CurrentSkill.speedScale,
                             damage,
                             criticalDamage, 
                             critRate, 
-                            InputManager.CurrentSkillConfig.stagger, 
+                            LevelUtility.CurrentSkill.stagger, 
                             true, 
                             maxHit, 
                             null, 
@@ -185,8 +176,7 @@ namespace InGame
             // Reset range
             InputManager.PlayerVisual.UpdateShotRadius(
                 LevelManager.Instance.CurrentTower.GetBaseCenter(),
-                LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId, 
-                    InputManager.CurrentSkillConfig.range, 
+                LevelUtility.GetSkillRange(
                     1f,
                     Vector2.right), false);
             
@@ -215,7 +205,7 @@ namespace InGame
             
             ResetChargeVariable();
             
-            if (canChargeBullet && InputManager.CurrentSkillConfig.chargeBulletMaxAdd > 0)
+            if (canChargeBullet && LevelUtility.CurrentSkill.chargeBulletMaxAdd > 0)
                 isChargingBullet = true;
             if (canChargeDame && maxDameMultiplierAdd > 0) isChargingDame = true;
             if (canChargeSize && maxSizeMultiplierAdd > 0) isChargingSize = true;
@@ -238,30 +228,30 @@ namespace InGame
         {
             // bullet number
             bulletAdd = 0;
-            var maxBullet = LevelUtility.GetChargeBulletMax(InputManager.CurrentSkillConfig.chargeBulletMaxAdd,
-                InputManager.CurrentSkillConfig.chargeBulletInterval);
+            var maxBullet = LevelUtility.GetChargeBulletMax(LevelUtility.CurrentSkill.chargeBulletMaxAdd,
+                LevelUtility.CurrentSkill.chargeBulletInterval);
             maxBulletAdd = maxBullet.Item1;
             bulletAddInterval = maxBullet.Item2;
             bulletAddTimer = bulletAddInterval;
             
             // damage
             var maxDame = LevelUtility.GetChargeDameMax(
-                InputManager.CurrentSkillConfig.chargeDameMax,
-                InputManager.CurrentSkillConfig.chargeDameTime);
+                LevelUtility.CurrentSkill.chargeDameMax,
+                LevelUtility.CurrentSkill.chargeDameTime);
             maxDameMultiplierAdd = maxDame.Item1;
             maxDameChargeTime = maxDame.Item2;
             dameChargeTime = -1f;
             
             // Size
-            var maxSize = LevelUtility.GetChargeSizeMax(InputManager.CurrentSkillConfig.chargeSizeMax,
-                InputManager.CurrentSkillConfig.chargeSizeTime);
+            var maxSize = LevelUtility.GetChargeSizeMax(LevelUtility.CurrentSkill.chargeSizeMax,
+                LevelUtility.CurrentSkill.chargeSizeTime);
             maxSizeMultiplierAdd = maxSize.Item1;
             maxSizeChargeTime = maxSize.Item2;
             sizeChargeTime = 0f;
             
             // Range
-            var maxRange = LevelUtility.GetChargeRangeMax(InputManager.CurrentSkillConfig.chargeRangeMax,
-                InputManager.CurrentSkillConfig.chargeRangeTime);
+            var maxRange = LevelUtility.GetChargeRangeMax(LevelUtility.CurrentSkill.chargeRangeMax,
+                LevelUtility.CurrentSkill.chargeRangeTime);
             maxRangeMultiplierAdd = maxRange.Item1;
             maxRangeChargeTime = maxRange.Item2;
             rangeChargeTime = 0f;
@@ -337,8 +327,7 @@ namespace InGame
                 if (canChargeSize && isChargingSize)
                 {
                     sizeChargeTime += Time.deltaTime;
-                    var size = LevelUtility.GetSkillSize(InputManager.CurrentSkillConfig.skillId,
-                        InputManager.CurrentSkillConfig.size,
+                    var size = LevelUtility.GetSkillSize(
                         maxSizeMultiplierAdd > 0
                             ? 1 + Mathf.Min(sizeChargeTime / maxSizeChargeTime, 1f) * maxSizeMultiplierAdd
                             : 1f);
@@ -354,8 +343,7 @@ namespace InGame
                     // Update shot radius
                     InputManager.PlayerVisual.UpdateShotRadius(
                         LevelManager.Instance.CurrentTower.GetBaseCenter(),
-                        LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId, 
-                            InputManager.CurrentSkillConfig.range, 
+                        LevelUtility.GetSkillRange(
                             canChargeRange && rangeChargeTime > 0 ? 1 + Mathf.Min(rangeChargeTime / maxRangeChargeTime, 1f) * maxRangeMultiplierAdd : 1f,
                             Vector2.right));
                 }

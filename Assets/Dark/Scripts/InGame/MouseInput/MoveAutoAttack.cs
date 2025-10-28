@@ -42,9 +42,7 @@ namespace InGame
             cursor.SetAuto(false);
 
             InputManager = manager;
-            Cooldown = LevelUtility.GetSkillCooldown(
-                InputManager.CurrentSkillConfig.skillId,
-                InputManager.CurrentSkillConfig.cooldown);
+            Cooldown = LevelUtility.GetSkillCooldown();
             ActivateDuration = 1f;
         }
         
@@ -53,31 +51,23 @@ namespace InGame
             if (!CanShoot) return;
             
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
-            var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(
-                InputManager.CurrentSkillConfig.skillId,
-                InputManager.CurrentSkillConfig.damePerBullet,
-                InputManager.PlayerStats.criticalDamage,
-                1f);
-            var critRate = LevelUtility.GetCriticalRate(InputManager.PlayerStats.criticalRate);
-            var bulletNum = LevelUtility.GetNumberOfBullets(InputManager.CurrentSkillConfig.skillId, InputManager.CurrentSkillConfig.numberOfBullets, 0);
-            var skillSize = LevelUtility.GetSkillSize(InputManager.CurrentSkillConfig.skillId,
-                InputManager.CurrentSkillConfig.size,
-                1f);
-            var skillRange = LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId,
-                InputManager.CurrentSkillConfig.range,
+            var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(1f);
+            var critRate = LevelUtility.GetCriticalRate();
+            var bulletNum = LevelUtility.GetNumberOfBullets( 0);
+            var skillSize = LevelUtility.GetSkillSize(1f);
+            var skillRange = LevelUtility.GetSkillRange(
                 1f,
                 tempMousePos - LevelManager.Instance.CurrentTower.GetBaseCenter());
             var maxHit = 1 + LevelUtility.BonusInfo.skillBonus.bulletMaxHitPlus;
-            var stagger = LevelUtility.GetBulletStagger(InputManager.CurrentSkillConfig.skillId,
-                InputManager.CurrentSkillConfig.stagger);
+            var stagger = LevelUtility.GetBulletStagger();
             
             var delayShot = InputManager.PlayerVisual.PlayShoot(worldMousePosition);
             InputManager.DelayCall(delayShot, () =>
             {
                 InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(skillRange);
                 
-                InputManager.CurrentSkillConfig.Shoot(
-                    InputManager.CurrentSkillConfig.projectiles[PlayerProjectileType.Normal],
+                LevelUtility.CurrentSkill.Shoot(
+                    LevelUtility.CurrentSkill.projectiles[PlayerProjectileType.Normal],
                     InputManager.ProjectileSpawnPos.position,
                     LevelManager.Instance.CurrentTower.GetBaseCenter(),
                     tempMousePos,

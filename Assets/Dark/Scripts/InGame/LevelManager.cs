@@ -34,12 +34,8 @@ namespace InGame
                 return towers[currentTowerIndex];
             }
         }
-        
-        private PlayerSkillConfig skillConfig;
-        public PlayerSkillConfig SkillConfig => skillConfig;
    
         public LevelConfig Level { get; private set; }
-        public PlayerStats PlayerStats => playerStats;
         private bool IsEndLevel { get; set; }
         
         public PlayerCharacter Player { get; set; }
@@ -95,21 +91,21 @@ namespace InGame
         public void LoadLevel(LevelConfig level)
         {
             Level = level;
+            
             UpgradeManager.Instance.ActivateTree(ref bonusInfo);
             LevelUtility.BonusInfo = bonusInfo;
-            LevelUtility.BasePlayerDamage = playerStats.damage;
-            LevelUtility.BasePlayerCooldown = playerStats.cooldown;
+            LevelUtility.PlayerStats = playerStats;
+            LevelUtility.CurrentSkill = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
+            
             EnemyManager.Instance.Initialize();
             winLoseManager = new WinLoseManager();
             IsEndLevel = false;
             
             InitTowers();
             TeleportTower(0);
-
-            skillConfig = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
             
             if (Player != null) Destroy(Player.gameObject);
-            Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)skillConfig.skillId);
+            Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)LevelUtility.CurrentSkill.skillId);
             Player.transform.position = CurrentTower.transform.position + CurrentTower.GetTowerHeight();
             
             // Start waves
@@ -209,7 +205,7 @@ namespace InGame
         {
             for (var i = 0; i < towers.Length; i++)
             {
-                towers[i].Initialize(i, LevelUtility.GetTowerHp(playerStats.hp));
+                towers[i].Initialize(i, LevelUtility.GetTowerHp());
                 towers[i].OnDestroyed += OnTowerDestroyed;
             }
         }

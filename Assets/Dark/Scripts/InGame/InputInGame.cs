@@ -16,8 +16,6 @@ namespace InGame
 		[SerializeField] private CanvasGroup motionBlur;
         public float holdThreshold = 0.5f;
         public PlayerCharacter PlayerVisual { get; set; }
-        public PlayerStats PlayerStats { get; set; }
-        public PlayerSkillConfig CurrentSkillConfig { get; set; }
         public Transform ProjectileSpawnPos => PlayerVisual.transform;
         private List<MoveTowersConfig> availableTeleConfigs;
         private bool BlockAllInput { get; set; }
@@ -56,7 +54,6 @@ namespace InGame
             LevelManager.Instance.OnLevelLoaded += (level) =>
             {
                 PlayerVisual = LevelManager.Instance.Player;
-                PlayerStats = LevelManager.Instance.PlayerStats;
                 
                 availableTeleConfigs = new List<MoveTowersConfig>();
                 if (LevelUtility.BonusInfo.unlockedMoveToTower == null || LevelUtility.BonusInfo.unlockedMoveToTower.Count == 0)
@@ -73,17 +70,16 @@ namespace InGame
                 BlockAllInput = false;
                 
                 // Setup skill config and mouse input
-                CurrentSkillConfig = LevelManager.Instance.SkillConfig;
-                CursorRangeRadius = CurrentSkillConfig.range;
+                CursorRangeRadius = LevelUtility.CurrentSkill.range;
             
                 if (mouseInput != null)
                 {
                     mouseInput.Dispose();
                     mouseInput = null;
                 }
-                cursor ??= ShotCursorManager.Instance.GetPrefab(CurrentSkillConfig.shootLogic.cursorType, canvas.transform);
+                cursor ??= ShotCursorManager.Instance.GetPrefab(LevelUtility.CurrentSkill.shootLogic.cursorType, canvas.transform);
                 cursor.gameObject.SetActive(true);
-                mouseInput = ShotCursorManager.Instance.GetCursorMoveLogic(CurrentSkillConfig.shootLogic.cursorType, cam, cursor);
+                mouseInput = ShotCursorManager.Instance.GetCursorMoveLogic(LevelUtility.CurrentSkill.shootLogic.cursorType, cam, cursor);
                 mouseInput.Initialize(this, chargeControllerArcher);
                 mouseInput.ResetChargeVariable();
 

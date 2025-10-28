@@ -6,15 +6,15 @@ namespace InGame
     public class LevelUtility
     {
         public static UpgradeBonusInfo BonusInfo { get; set; } = new UpgradeBonusInfo();
-        public static int BasePlayerDamage { get; set; }
-        public static float BasePlayerCooldown { get; set; }
+        public static PlayerStats PlayerStats { get; set; }
+        public static PlayerSkillConfig CurrentSkill { get; set; }
 
         public static int BasePlayerDamageWithBonus
         {
             get
             {
-                if (BonusInfo == null) return BasePlayerDamage;
-                return (int)((BasePlayerDamage + BonusInfo.damePlus) * (1f + BonusInfo.dameMultiply));
+                if (BonusInfo == null) return PlayerStats.damage;
+                return (int)((PlayerStats.damage + BonusInfo.damePlus) * (1f + BonusInfo.dameMultiply));
             }
         }
 
@@ -22,8 +22,8 @@ namespace InGame
         {
             get
             {
-                if (BonusInfo == null) return BasePlayerCooldown;
-                return (BasePlayerCooldown + BonusInfo.cooldownPlus) * (1f + BonusInfo.cooldownMultiplier);
+                if (BonusInfo == null) return PlayerStats.cooldown;
+                return (PlayerStats.cooldown + BonusInfo.cooldownPlus) * (1f + BonusInfo.cooldownMultiplier);
             }
         }
 
@@ -41,14 +41,10 @@ namespace InGame
         /// <param name="criticalDameMultiplier"></param>
         /// <param name="chargeDameMultiplier"></param>
         /// <returns></returns>
-        public static (int, int) GetPlayerBulletDamage(
-            int skillId,
-            int skillDamage, 
-            float criticalDameMultiplier, 
-            float chargeDameMultiplier)
+        public static (int, int) GetPlayerBulletDamage(float chargeDameMultiplier)
         {
-            var bulletDamage = Mathf.RoundToInt((BasePlayerDamageWithBonus + skillDamage + BonusInfo.skillBonus.skillDamePlus) * (1 + BonusInfo.skillBonus.skillDameMultiply));
-            criticalDameMultiplier = criticalDameMultiplier + BonusInfo.criticalDame;
+            var bulletDamage = Mathf.RoundToInt((BasePlayerDamageWithBonus + CurrentSkill.damePerBullet + BonusInfo.skillBonus.skillDamePlus) * (1 + BonusInfo.skillBonus.skillDameMultiply));
+            var criticalDameMultiplier = PlayerStats.criticalDamage + BonusInfo.criticalDame;
             return LevelTemporaryUtility.FilterPlayerBulletDamage(
                 Mathf.RoundToInt(bulletDamage * chargeDameMultiplier),
                 Mathf.RoundToInt(bulletDamage * criticalDameMultiplier * chargeDameMultiplier), 
@@ -60,9 +56,9 @@ namespace InGame
         /// </summary>
         /// <param name="baseCriticalRate"></param>
         /// <returns></returns>
-        public static float GetCriticalRate(float baseCriticalRate)
+        public static float GetCriticalRate()
         {
-            return baseCriticalRate + BonusInfo.criticalRatePlus;
+            return PlayerStats.criticalRate + BonusInfo.criticalRatePlus;
         }
 
         /// <summary>
@@ -72,9 +68,9 @@ namespace InGame
         /// <param name="baseBulletNum"></param>
         /// <param name="chargeBulletNum"></param>
         /// <returns></returns>
-        public static int GetNumberOfBullets(int skillId, int baseBulletNum, int chargeBulletNum)
+        public static int GetNumberOfBullets(int chargeBulletNum)
         {
-            return baseBulletNum + BonusInfo.skillBonus.bulletPlus + chargeBulletNum;
+            return CurrentSkill.numberOfBullets + BonusInfo.skillBonus.bulletPlus + chargeBulletNum;
         }
 
         /// <summary>
@@ -85,10 +81,10 @@ namespace InGame
         /// <param name="playerCooldown"></param>
         /// <param name="baseSkillCooldown"></param>
         /// <returns></returns>
-        public static float GetSkillCooldown(int skillId, float baseSkillCooldown)
+        public static float GetSkillCooldown()
         {
             return LevelTemporaryUtility.FilterSkillCooldown(Mathf.Max(0f,
-                (baseSkillCooldown - BonusInfo.skillBonus.skillCooldownPlus) * (1 - BonusInfo.skillBonus
+                (CurrentSkill.cooldown - BonusInfo.skillBonus.skillCooldownPlus) * (1 - BonusInfo.skillBonus
                                                                                  .skillCooldownMultiply)
                                                                              * Mathf.Clamp(
                                                                                  1 - BasePLayerCooldownWithBonus,
@@ -101,7 +97,7 @@ namespace InGame
         /// <param name="baseRange"></param>
         /// <param name="chargeRange"></param>
         /// <returns></returns>
-        public static float GetSkillRange(int skillId, float baseRange, float chargeRange, Vector2 direction)
+        public static float GetSkillRange(float chargeRange, Vector2 direction)
         {
             // Calculate the ratio: true_range / skill_range
             var magnitude = direction.magnitude;
@@ -112,7 +108,7 @@ namespace InGame
                         / Mathf.Sqrt(Mathf.Pow(GameConst.IsoRatio * Mathf.Cos(angle), 2) +
                                      Mathf.Pow(Mathf.Sin(angle), 2));
             
-            return baseRange * (1 + BonusInfo.skillBonus.skillRangeMultiply) * chargeRange * ratio;
+            return CurrentSkill.range * (1 + BonusInfo.skillBonus.skillRangeMultiply) * chargeRange * ratio;
         }
 
         /// <summary>
@@ -121,9 +117,9 @@ namespace InGame
         /// <param name="baseSize"></param>
         /// <param name="chargeSize"></param>
         /// <returns></returns>
-        public static float GetSkillSize(int skillId, float baseSize, float chargeSize)
+        public static float GetSkillSize(float chargeSize)
         {
-            return baseSize * (1 + BonusInfo.skillBonus.skillSizeMultiply) * chargeSize;
+            return CurrentSkill.size * (1 + BonusInfo.skillBonus.skillSizeMultiply) * chargeSize;
         }
 
         /// <summary>
@@ -131,9 +127,9 @@ namespace InGame
         /// </summary>
         /// <param name="baseStagger"></param>
         /// <returns></returns>
-        public static float GetBulletStagger(int skillId, float baseStagger)
+        public static float GetBulletStagger()
         {
-            return baseStagger * (1 + BonusInfo.skillBonus.staggerMultiply);
+            return CurrentSkill.stagger * (1 + BonusInfo.skillBonus.staggerMultiply);
         }
 
         public static float GetDropRate(float baseDropRate)
@@ -464,9 +460,9 @@ namespace InGame
         /// </summary>
         /// <param name="baseHealth"></param>
         /// <returns></returns>
-        public static int GetTowerHp(int baseHp)
+        public static int GetTowerHp()
         {
-            return (int)((1f + BonusInfo.hpMultiply) * (baseHp + BonusInfo.hpPlus));
+            return (int)((1f + BonusInfo.hpMultiply) * (PlayerStats.hp + BonusInfo.hpPlus));
         }
 
         public static int GetTowerCounterDamage(int baseDamage)

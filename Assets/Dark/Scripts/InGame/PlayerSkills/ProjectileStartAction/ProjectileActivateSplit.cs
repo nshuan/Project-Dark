@@ -50,6 +50,9 @@ namespace InGame
             for (var i = 1; i <= calculatedAmount / 2; i++)
             {
                 var pDir = (Vector2)(Quaternion.Euler(0f, 0f, i * angle / calculatedAmount) * direction);
+                var pRange = LevelUtility.GetSkillRange(
+                    1f,
+                    pDir);
                 p = ProjectilePool.Instance.Get(projectile, null, false);
                 spawnPos.x = parentProjectile.transform.position.x;
                 spawnPos.y = parentProjectile.transform.position.y;
@@ -58,7 +61,7 @@ namespace InGame
                 p.Init(
                     spawnPos, 
                     pDir, 
-                    parentProjectile.maxDistance, 
+                    pRange, 
                     parentProjectile.Size, 
                     parentProjectile.SpeedScale, 
                     parentProjectile.Damage, 
@@ -74,6 +77,9 @@ namespace InGame
                 p.Activate(0f);
             
                 pDir = Quaternion.Euler(0f, 0f, - i * angle / calculatedAmount) * direction;
+                pRange = LevelUtility.GetSkillRange(
+                    1f,
+                    pDir);
                 p = ProjectilePool.Instance.Get(projectile, null, false);
                 spawnPos.x = parentProjectile.transform.position.x;
                 spawnPos.y = parentProjectile.transform.position.y;
@@ -82,7 +88,7 @@ namespace InGame
                 p.Init(
                     spawnPos, 
                     pDir, 
-                    parentProjectile.maxDistance, 
+                    pRange, 
                     parentProjectile.Size, 
                     parentProjectile.SpeedScale, 
                     parentProjectile.Damage, 

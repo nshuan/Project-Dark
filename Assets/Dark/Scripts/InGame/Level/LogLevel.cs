@@ -32,9 +32,9 @@ namespace InGame
         {
             txtLevel.SetText($"Level: {level.name}");
 
-            var skillConfig = LevelManager.Instance.SkillConfig;
+            var skillConfig = LevelUtility.CurrentSkill;
             txtSkill.SetText($"Skill: {skillConfig.name}");
-            txtBulletDamage.SetText($"Base dmg per bullet: {LevelManager.Instance.PlayerStats.damage + skillConfig.damePerBullet}");
+            txtBulletDamage.SetText($"Base dmg per bullet: {LevelUtility.PlayerStats.damage + skillConfig.damePerBullet}");
             txtSkillCooldown.SetText($"Skill cooldown: {skillConfig.cooldown}");
             txtAttackRange.SetText($"Attack range: {skillConfig.range}");
         }
