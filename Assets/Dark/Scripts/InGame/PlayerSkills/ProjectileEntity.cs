@@ -174,10 +174,13 @@ namespace InGame
             hit.HitDirectionX = direction.x;
             hit.HitDirectionY = direction.y;
             hit.Damage(critical ? CriticalDamage : Damage, transform.position, Stagger, critical ? InGame.DamageType.NormalCritical : InGame.DamageType.Normal);
-            if (DamageType == ProjectileType.PlayerProjectile)
-                PassiveEffectManager.Instance.TriggerEffect(IsCharge ? PassiveTriggerType.DameByChargeAttack : PassiveTriggerType.DameByNormalAttack, hit);
-            else if (DamageType == ProjectileType.TowerProjectile)
-                PassiveEffectManager.Instance.TriggerEffect(PassiveTriggerType.TowerTakeDame, hit);
+            if (!hit.IsDestroyed)
+            {
+                if (DamageType == ProjectileType.PlayerProjectile)
+                    PassiveEffectManager.Instance.TriggerEffect(IsCharge ? PassiveTriggerType.DameByChargeAttack : PassiveTriggerType.DameByNormalAttack, hit);
+                else if (DamageType == ProjectileType.TowerProjectile)
+                    PassiveEffectManager.Instance.TriggerEffect(PassiveTriggerType.TowerTakeDame, hit);
+            }
                     
             DebugUtility.Log("hit");
             if (critical)

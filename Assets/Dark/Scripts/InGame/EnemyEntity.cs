@@ -274,6 +274,7 @@ namespace InGame
             OnDead?.Invoke();
             OnDead = null;
             boidAgent.IsActive = false;
+            if (coroutineBurn != null) StopCoroutine(coroutineBurn);
             callbackBurnComplete?.Invoke();
             callbackBurnComplete = null;
             StartCoroutine(IEDie(
@@ -294,10 +295,17 @@ namespace InGame
 
         public Transform TargetTransform => transform;
         private Action callbackBurnComplete;
+        private Coroutine coroutineBurn;
         public void Burn(float duration, float delayEachBurn, int damage, Action callbackComplete)
         {
+            if (IsDestroyed)
+            {
+                callbackComplete?.Invoke();
+                return;
+            }
             callbackBurnComplete = callbackComplete;
-            StartCoroutine(IEBurn(duration, delayEachBurn, damage));
+            if (coroutineBurn != null) StopCoroutine(coroutineBurn);
+            coroutineBurn = StartCoroutine(IEBurn(duration, delayEachBurn, damage));
         }
 
         private IEnumerator IEBurn(float duration, float delayEachBurn, int damage)
