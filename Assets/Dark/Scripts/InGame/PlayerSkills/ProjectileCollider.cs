@@ -94,6 +94,7 @@ namespace InGame
                         
                         Projectile.ProjectileHit(hitEnemy);
                         DebugUtility.Log($"Hit enemy {hitEnemy.name}");
+                        break;
                     }
                     
                     if (hits[i].transform.CompareTag("Tower"))
@@ -101,13 +102,14 @@ namespace InGame
                         if (hits[i].transform.TryGetComponent<TowerEntity>(out var towerEntity))
                         {
                             if (towerEntity.Id != LevelManager.Instance.CurrentTower.Id) Projectile.ProjectileHit(null);    
+                            break;
                         }
                     }
                     
                     if (hits[i].transform.CompareTag("InGameBoundary"))
                     {
                         Projectile.BlockSpawnDeadBody = true;
-                        continue;
+                        break;
                     }
                 }
             }

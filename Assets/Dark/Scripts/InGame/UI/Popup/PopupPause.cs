@@ -46,7 +46,7 @@ namespace InGame.UI
             btnBackToTree.onClick.RemoveAllListeners();
             btnBackToTree.onClick.AddListener(() =>
             {
-                PauseGame.Instance.onPause -= OnPauseGame;
+                PauseGame.Instance.onPause = null;
                 PauseGame.Instance.Resume();
                 Loading.Instance.QuickLoadScene(SceneConstants.SceneUpgrade);
             });
