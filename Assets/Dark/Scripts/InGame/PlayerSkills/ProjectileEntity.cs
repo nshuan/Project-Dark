@@ -152,7 +152,6 @@ namespace InGame
         {
             if (!hit)
             {
-                DebugUtility.Log("null");
                 collider.CanTrigger = false;
                 BlockDestroy = false;
                 BlockSpawnDeadBody = false;
