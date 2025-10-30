@@ -39,7 +39,7 @@ namespace InGame
         private int currentHit;
         protected bool activated = false;
         protected float lifeTime = 0f;
-        protected Vector3 nextPositionToMove = Vector3.zero;
+        protected Vector3 moveDirection = Vector3.zero;
         protected ProjectileCollider.ProjectileHitStatus hitStatus;
 
         protected RaycastHit2D[] hits = new RaycastHit2D[1];
@@ -139,30 +139,30 @@ namespace InGame
                 ProjectileHit(null);
             }
 
-            nextPositionToMove.x = transform.position.x + Speed * Time.deltaTime * direction.x;
-            nextPositionToMove.y = transform.position.y + Speed * Time.deltaTime * direction.y;
-            nextPositionToMove.z = 0f;
-            hitStatus = collider.CheckCollision(ref nextPositionToMove, ref hitEnemyInfo);
+            moveDirection.x = Speed * Time.deltaTime * direction.x;
+            moveDirection.y = Speed * Time.deltaTime * direction.y;
+            moveDirection.z = 0f;
+            hitStatus = collider.CheckCollision(ref moveDirection, ref hitEnemyInfo);
             if (hitStatus == ProjectileCollider.ProjectileHitStatus.Enemy)
             {
                 DebugUtility.Log($"Hit enemy {hitEnemyInfo.hitEnemy}");
                 // Nếu trúng con quái này xong là destroy đạn thì ko di chuyển viên đạn nữa, set vị trí vào chỗ con quái luôn
                 if (currentHit + 1 >= MaxHit)
-                    transform.position = hitEnemyInfo.hitEnemy.transform.position;
-                else
-                    transform.position = nextPositionToMove;
-                
-                ProjectileHit(hitEnemyInfo.hitEnemy);
-                if (!hitEnemyInfo.hitEnemy.IsDestroyed)
                 {
+                    transform.position = hitEnemyInfo.hitEnemy.transform.position;
+                    
                     var deadProjectile = ProjectileDeadPool.Instance.Get(direction);
                     deadProjectile.position = hitEnemyInfo.hitEnemy.transform.position + new Vector3(Random.Range(-0.2f, 0.2f), Random.Range(0f, 0.2f), 0f);
                     deadProjectile.SetParent(hitEnemyInfo.hitEnemy.transform);
                 }
+                else
+                    transform.position += moveDirection;
+                
+                ProjectileHit(hitEnemyInfo.hitEnemy);
             }
             else
             {
-                transform.position = nextPositionToMove;
+                transform.position += moveDirection;
             }
                 
             lifeTime += Time.deltaTime;

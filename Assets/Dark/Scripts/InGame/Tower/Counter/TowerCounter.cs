@@ -7,25 +7,25 @@ namespace InGame
 {
     public class TowerCounter : MonoBehaviour
     {
-        [SerializeField] private TowerEntity tower;
-        [SerializeField] private NodeTowerCounter.CounterType counterType;
-        [SerializeField] private ProjectileEntity projectilePrefab;
-        [SerializeField] private GameObject vfxActivateCounter;
-        [SerializeField] private float vfxActivateCounterDuration;
+        [SerializeField] protected TowerEntity tower;
+        [SerializeField] protected NodeTowerCounter.CounterType counterType;
+        [SerializeField] protected ProjectileEntity projectilePrefab;
+        [SerializeField] protected GameObject vfxActivateCounter;
+        [SerializeField] protected float vfxActivateCounterDuration;
         
-        private bool counterCooldown;
+        protected bool counterCooldown;
 
         [Space] [Header("Config")] 
         public bool canCounter;
         public int baseDamage;
         public float baseCooldown;
 
-        private int Damage => LevelUtility.GetTowerCounterDamage(baseDamage);
-        private float Cooldown => LevelUtility.GetTowerCounterCooldown(counterType, baseCooldown);
+        protected int Damage => LevelUtility.GetTowerCounterDamage(baseDamage);
+        protected float Cooldown => LevelUtility.GetTowerCounterCooldown(counterType, baseCooldown);
         
-        private static event Action<Vector2> OnOneTowerHit;
+        protected static event Action<Vector2> OnOneTowerHit;
         
-        private Vector2 counterDirection = Vector2.zero;
+        protected Vector2 counterDirection = Vector2.zero;
         
         private void Awake()
         {
@@ -44,8 +44,8 @@ namespace InGame
 
         private void OnUpgradeBonusActivated(UpgradeBonusInfo bonusInfo)
         {
-            canCounter = bonusInfo.unlockedTowerCounter != null && bonusInfo.unlockedTowerCounter.ContainsKey(counterType) && bonusInfo.unlockedTowerCounter[counterType];
-            // canCounter = true;
+            // canCounter = bonusInfo.unlockedTowerCounter != null && bonusInfo.unlockedTowerCounter.ContainsKey(counterType) && bonusInfo.unlockedTowerCounter[counterType];
+            canCounter = true;
         }
 
         private void OnTowerHit(Vector2 attackerPos)
@@ -76,7 +76,7 @@ namespace InGame
             canCounter = false;
         }
         
-        private IEnumerator IECounter(float cooldown)
+        protected virtual IEnumerator IECounter(float cooldown)
         {
             counterCooldown = true;
             vfxActivateCounter.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(counterDirection.y, counterDirection.x) * Mathf.Rad2Deg);
@@ -88,7 +88,7 @@ namespace InGame
             counterCooldown = false;
         }
         
-        public void Counter(Vector2 towerAttackPos, Vector2 direction, int damage, float speedScale)
+        public virtual void Counter(Vector2 towerAttackPos, Vector2 direction, int damage, float speedScale)
         {
             var projectile = ProjectilePool.Instance.Get(projectilePrefab, null, false);
             projectile.transform.position = towerAttackPos;

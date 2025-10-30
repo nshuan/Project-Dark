@@ -523,6 +523,11 @@ namespace InGame
             return Mathf.Max((baseCooldown - bonus) * (1f - BasePLayerCooldownWithBonus), 0f);
         }
 
+        public static float GetTowerCounterRange(NodeTowerCounter.CounterType counterType, float baseRange)
+        {
+            return baseRange;
+        }
+        
         public static int GetTowerAutoRegen(int maxHp)
         {
             return (int)(BonusInfo.toleranceRegenPercentPerSecond);

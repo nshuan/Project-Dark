@@ -25,7 +25,7 @@ namespace InGame.Upgrade
         public enum CounterType
         {
             Pierce,
-            Area
+            Slash
         }
     }
 }

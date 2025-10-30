@@ -28,7 +28,6 @@ namespace InGame
         
         private CapsuleCollider2D capsuleCollider;
         private Vector2 lastPosition;
-        private Vector2 direction;
         private RaycastHit2D[] hits = new RaycastHit2D[10];
         private List<Transform> allHitEnemiesInCurrentShot;
         private int totalHitCountInCurrentShot;
@@ -69,13 +68,11 @@ namespace InGame
             totalHitCountInCurrentShot = 0;
         }
         
-        public ProjectileHitStatus CheckCollision(ref Vector3 targetPosition, ref HitEnemyInfo hitEnemyInfo)
+        public ProjectileHitStatus CheckCollision(ref Vector3 direction, ref HitEnemyInfo hitEnemyInfo)
         {
             if (!Projectile) return ProjectileHitStatus.None;
             if (!CanTrigger) return ProjectileHitStatus.None;
-            
-            direction.x = targetPosition.x - lastPosition.x;
-            direction.y = targetPosition.y - lastPosition.y;
+
             // Lấy y làm radius nếu ảnh viên đạn trong prefab nằm ngang
             var hitCount = Physics2D.CircleCastNonAlloc(lastPosition, capsuleCollider.size.y, direction, hits, direction.magnitude, hitLayer);
             if (hitCount > 0)
