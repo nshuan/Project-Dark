@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace InGame
 {
@@ -69,13 +70,13 @@ namespace InGame
             totalHitCountInCurrentShot = 0;
         }
         
-        private void FixedUpdate()
+        public ProjectileHitStatus CheckCollision(ref Vector3 targetPosition)
         {
-            if (!Projectile) return;
-            if (!CanTrigger) return;
+            if (!Projectile) return ProjectileHitStatus.None;
+            if (!CanTrigger) return ProjectileHitStatus.None;
             
-            direction.x = projectile.transform.position.x - lastPosition.x;
-            direction.y = projectile.transform.position.y - lastPosition.y;
+            direction.x = targetPosition.x - lastPosition.x;
+            direction.y = targetPosition.y - lastPosition.y;
             // Lấy y làm radius nếu ảnh viên đạn trong prefab nằm ngang
             var hitCount = Physics2D.CircleCastNonAlloc(lastPosition, capsuleCollider.size.y, direction, hits, direction.magnitude, hitLayer);
             if (hitCount > 0)
@@ -92,16 +93,27 @@ namespace InGame
                             allHitEnemiesInCurrentShot.Add(hits[i].transform);
                         totalHitCountInCurrentShot += 1;
                         
-                        Projectile.ProjectileHit(hitEnemy);
                         DebugUtility.Log($"Hit enemy {hitEnemy.name}");
-                        break;
+                        Projectile.transform.position = hitEnemy.transform.position;
+                        Projectile.ProjectileHit(hitEnemy);
+                        if (!hitEnemy.IsDestroyed)
+                        {
+                            var deadProjectile = ProjectileDeadPool.Instance.Get(direction);
+                            deadProjectile.position = hitEnemy.transform.position + new Vector3(Random.Range(-0.2f, 0.2f), Random.Range(0f, 0.2f), 0f);
+                            deadProjectile.SetParent(hitEnemy.transform);
+                        }
+                        return ProjectileHitStatus.Enemy;
                     }
                     
                     if (hits[i].transform.CompareTag("Tower"))
                     {
                         if (hits[i].transform.TryGetComponent<TowerEntity>(out var towerEntity))
                         {
-                            if (towerEntity.Id != LevelManager.Instance.CurrentTower.Id) Projectile.ProjectileHit(null);    
+                            if (towerEntity.Id != LevelManager.Instance.CurrentTower.Id)
+                            {
+                                Projectile.ProjectileHit(null);
+                                return ProjectileHitStatus.Tower;
+                            }    
                             break;
                         }
                     }
@@ -109,12 +121,14 @@ namespace InGame
                     if (hits[i].transform.CompareTag("InGameBoundary"))
                     {
                         Projectile.BlockSpawnDeadBody = true;
-                        break;
+                        return ProjectileHitStatus.Boundary;
                     }
                 }
             }
             lastPosition.x = projectile.transform.position.x;
             lastPosition.y = projectile.transform.position.y;
+
+            return ProjectileHitStatus.None;
         }
         
         public void UpdateLastPosition(Vector2 position)
@@ -139,6 +153,14 @@ namespace InGame
                     }
                 }
             }
+        }
+
+        public enum ProjectileHitStatus
+        {
+            None,
+            Enemy,
+            Tower,
+            Boundary
         }
     }
 }

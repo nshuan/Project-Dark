@@ -39,6 +39,8 @@ namespace InGame
         private int currentHit;
         protected bool activated = false;
         protected float lifeTime = 0f;
+        protected Vector3 nextPositionToMove = Vector3.zero;
+        protected ProjectileCollider.ProjectileHitStatus hitStatus;
 
         protected RaycastHit2D[] hits = new RaycastHit2D[1];
 
@@ -94,7 +96,8 @@ namespace InGame
             MaxHit = maxHit;
             currentHit = 0;
             DamageType = damageType;
-            
+
+            hitStatus = ProjectileCollider.ProjectileHitStatus.None;
             collider.Init();
             collider.UpdateLastPosition(transform.position);
         }
@@ -133,7 +136,14 @@ namespace InGame
                     ProjectileDeadPool.Instance.Get(direction).position = transform.position;
                 ProjectileHit(null);
             }
-            transform.position += (Vector3)(Speed * Time.deltaTime * direction);
+
+            nextPositionToMove.x = transform.position.x + Speed * Time.deltaTime * direction.x;
+            nextPositionToMove.y = transform.position.y + Speed * Time.deltaTime * direction.y;
+            nextPositionToMove.z = 0f;
+            hitStatus = collider.CheckCollision(ref nextPositionToMove);
+            if (hitStatus == ProjectileCollider.ProjectileHitStatus.None)
+                transform.position = nextPositionToMove;
+                
             lifeTime += Time.deltaTime;
             if (lifeTime > MaxLifeTime)
             {
@@ -167,6 +177,8 @@ namespace InGame
                 DebugUtility.Log("Invisible");
                 return;
             }
+            
+            // Set lại vị trí viên đạn vào vị trí enemy (tránh việc đạn bay nhanh quá nhìn giống như không chạm vào enemy)
             
             // Check critical hit
             var critical = Random.Range(0f, 1f) <= CriticalRate;
