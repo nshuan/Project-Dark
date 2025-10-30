@@ -27,7 +27,6 @@ namespace InGame
         public bool CanTrigger { get; set; }
         
         private CapsuleCollider2D capsuleCollider;
-        private EnemyEntity hitEnemy;
         private Vector2 lastPosition;
         private Vector2 direction;
         private RaycastHit2D[] hits = new RaycastHit2D[10];
@@ -70,7 +69,7 @@ namespace InGame
             totalHitCountInCurrentShot = 0;
         }
         
-        public ProjectileHitStatus CheckCollision(ref Vector3 targetPosition)
+        public ProjectileHitStatus CheckCollision(ref Vector3 targetPosition, ref HitEnemyInfo hitEnemyInfo)
         {
             if (!Projectile) return ProjectileHitStatus.None;
             if (!CanTrigger) return ProjectileHitStatus.None;
@@ -85,7 +84,7 @@ namespace InGame
                 for (var i = 0; i < hitCount; i++)
                 {
                     if (allHitEnemiesInCurrentShot.Any((hit) => ReferenceEquals(hit, hits[i].transform))) continue;
-                    if (hits[i].transform.TryGetComponent<EnemyEntity>(out hitEnemy))
+                    if (hits[i].transform.TryGetComponent<EnemyEntity>(out hitEnemyInfo.hitEnemy))
                     {
                         if (totalHitCountInCurrentShot < allHitEnemiesInCurrentShot.Count)
                             allHitEnemiesInCurrentShot[totalHitCountInCurrentShot] = hits[i].transform;
@@ -93,15 +92,6 @@ namespace InGame
                             allHitEnemiesInCurrentShot.Add(hits[i].transform);
                         totalHitCountInCurrentShot += 1;
                         
-                        DebugUtility.Log($"Hit enemy {hitEnemy.name}");
-                        Projectile.transform.position = hitEnemy.transform.position;
-                        Projectile.ProjectileHit(hitEnemy);
-                        if (!hitEnemy.IsDestroyed)
-                        {
-                            var deadProjectile = ProjectileDeadPool.Instance.Get(direction);
-                            deadProjectile.position = hitEnemy.transform.position + new Vector3(Random.Range(-0.2f, 0.2f), Random.Range(0f, 0.2f), 0f);
-                            deadProjectile.SetParent(hitEnemy.transform);
-                        }
                         return ProjectileHitStatus.Enemy;
                     }
                     
@@ -140,19 +130,19 @@ namespace InGame
         public void CheckHitEnemiesOnInit(float radius = 1f)
         {
             // Lấy y làm radius nếu ảnh viên đạn trong prefab nằm ngang
-            var hitCount = Physics2D.CircleCastNonAlloc(projectile.transform.position, radius, direction, hits, 0f, hitLayer);
-            if (hitCount > 0)
-            {
-                // Chỉ check hit 1 object đầu tiên va chạm
-                for (var i = 0; i < 1; i++)
-                {
-                    if (hits[i].transform.TryGetComponent<EnemyEntity>(out hitEnemy))
-                    {
-                        Projectile.ProjectileHit(hitEnemy);
-                        DebugUtility.Log($"Hit enemy {hitEnemy.name}");
-                    }
-                }
-            }
+            // var hitCount = Physics2D.CircleCastNonAlloc(projectile.transform.position, radius, direction, hits, 0f, hitLayer);
+            // if (hitCount > 0)
+            // {
+            //     // Chỉ check hit 1 object đầu tiên va chạm
+            //     for (var i = 0; i < 1; i++)
+            //     {
+            //         if (hits[i].transform.TryGetComponent<EnemyEntity>(out hitEnemy))
+            //         {
+            //             Projectile.ProjectileHit(hitEnemy);
+            //             DebugUtility.Log($"Hit enemy {hitEnemy.name}");
+            //         }
+            //     }
+            // }
         }
 
         public enum ProjectileHitStatus
@@ -161,6 +151,11 @@ namespace InGame
             Enemy,
             Tower,
             Boundary
+        }
+        
+        public struct HitEnemyInfo
+        {
+            public EnemyEntity hitEnemy;
         }
     }
 }

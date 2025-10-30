@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using InGame;
 using InGame.Upgrade;
+using UnityEngine;
 
 namespace Dark.Tools.GoogleSheetTool
 {
@@ -33,9 +35,15 @@ namespace Dark.Tools.GoogleSheetTool
     {
         public INodeActivateLogic Generate(string subType, List<string> value, bool isMul)
         {
+            if (!int.TryParse(subType, out var counterType) || counterType < 0 || counterType >= Enum.GetValues(typeof(NodeTowerCounter.CounterType)).Length)
+            {
+                Debug.LogError($"Invalid sub-type string: {subType}");
+                return null;
+            }
+            
             return new NodeTowerCounter()
             {
-                
+                counterType = (NodeTowerCounter.CounterType)counterType,
             };
         }
     }

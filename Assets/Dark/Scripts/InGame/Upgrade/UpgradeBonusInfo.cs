@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using InGame.Upgrade;
 using Sirenix.Serialization;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -62,11 +63,11 @@ namespace InGame
         
         #region Tower
 
-        public bool unlockedTowerCounter;
+        public Dictionary<NodeTowerCounter.CounterType, bool> unlockedTowerCounter;
         public float toleranceRegenPercentPerSecond = 0;
         public float toleranceRegenPercentWhenKill = 0;
-        public float towerCounterCooldownPlus = 0f;
-        public int towerCounterDamagePlus = 0;  
+        public Dictionary<NodeTowerCounter.CounterType, float> towerCounterCooldownPlus;
+        public float towerCounterDamagePlus = 0;  
 
         #endregion
         
@@ -95,6 +96,8 @@ namespace InGame
         {
             skillBonus = new UpgradeBonusSkillInfo();
             passiveMapByTriggerType = new Dictionary<PassiveTriggerType, List<PassiveType>>();
+            unlockedTowerCounter = new Dictionary<NodeTowerCounter.CounterType, bool>();
+            towerCounterCooldownPlus = new Dictionary<NodeTowerCounter.CounterType, float>();
         }
     }
 

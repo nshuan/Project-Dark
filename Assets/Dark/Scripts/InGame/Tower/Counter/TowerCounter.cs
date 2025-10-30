@@ -8,17 +8,20 @@ namespace InGame
     public class TowerCounter : MonoBehaviour
     {
         [SerializeField] private TowerEntity tower;
+        [SerializeField] private NodeTowerCounter.CounterType counterType;
         [SerializeField] private ProjectileEntity projectilePrefab;
+        [SerializeField] private GameObject vfxActivateCounter;
+        [SerializeField] private float vfxActivateCounterDuration;
         
-        [SerializeField] private bool canCounter;
         private bool counterCooldown;
 
         [Space] [Header("Config")] 
+        public bool canCounter;
         public int baseDamage;
         public float baseCooldown;
 
         private int Damage => LevelUtility.GetTowerCounterDamage(baseDamage);
-        private float Cooldown => LevelUtility.GetTowerCounterCooldown(baseCooldown);
+        private float Cooldown => LevelUtility.GetTowerCounterCooldown(counterType, baseCooldown);
         
         private static event Action<Vector2> OnOneTowerHit;
         
@@ -41,7 +44,8 @@ namespace InGame
 
         private void OnUpgradeBonusActivated(UpgradeBonusInfo bonusInfo)
         {
-            canCounter = bonusInfo.unlockedTowerCounter;
+            canCounter = bonusInfo.unlockedTowerCounter != null && bonusInfo.unlockedTowerCounter.ContainsKey(counterType) && bonusInfo.unlockedTowerCounter[counterType];
+            // canCounter = true;
         }
 
         private void OnTowerHit(Vector2 attackerPos)
@@ -63,8 +67,7 @@ namespace InGame
             counterDirection.x = attackerPos.x - transform.position.x;
             counterDirection.y = attackerPos.y - transform.position.y;
             
-            Counter(transform.position, counterDirection, Damage, 1f);
-            StartCoroutine(IECounterCooldown(Cooldown));
+            StartCoroutine(IECounter(Cooldown));
         }
 
         private void OnLose()
@@ -73,10 +76,15 @@ namespace InGame
             canCounter = false;
         }
         
-        private IEnumerator IECounterCooldown(float cooldown)
+        private IEnumerator IECounter(float cooldown)
         {
             counterCooldown = true;
-            yield return new WaitForSeconds(cooldown);
+            vfxActivateCounter.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(counterDirection.y, counterDirection.x) * Mathf.Rad2Deg);
+            vfxActivateCounter.SetActive(true);
+            Counter(transform.position, counterDirection, Damage, 1f);
+            yield return new WaitForSeconds(vfxActivateCounterDuration);
+            vfxActivateCounter.SetActive(false);
+            yield return new WaitForSeconds(cooldown - vfxActivateCounterDuration);
             counterCooldown = false;
         }
         

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Data;
 using InGame.UI.InGameToast;
 using InGame.Upgrade;
@@ -31,7 +32,7 @@ namespace InGame.UI.CombatSkills
         {
             UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
             
-            if (bonusInfo.unlockedTowerCounter)
+            if (bonusInfo.unlockedTowerCounter != null && bonusInfo.unlockedTowerCounter.Any((pair) => pair.Value))
             {
                 available = true;
                 callbackShowSkill?.Invoke();

@@ -43,7 +43,8 @@ namespace InGame
         protected ProjectileCollider.ProjectileHitStatus hitStatus;
 
         protected RaycastHit2D[] hits = new RaycastHit2D[1];
-
+        protected ProjectileCollider.HitEnemyInfo hitEnemyInfo;
+        
         #region Actions
 
         public Action OnHit;
@@ -98,6 +99,7 @@ namespace InGame
             DamageType = damageType;
 
             hitStatus = ProjectileCollider.ProjectileHitStatus.None;
+            hitEnemyInfo = new ProjectileCollider.HitEnemyInfo();
             collider.Init();
             collider.UpdateLastPosition(transform.position);
         }
@@ -140,9 +142,28 @@ namespace InGame
             nextPositionToMove.x = transform.position.x + Speed * Time.deltaTime * direction.x;
             nextPositionToMove.y = transform.position.y + Speed * Time.deltaTime * direction.y;
             nextPositionToMove.z = 0f;
-            hitStatus = collider.CheckCollision(ref nextPositionToMove);
-            if (hitStatus == ProjectileCollider.ProjectileHitStatus.None)
+            hitStatus = collider.CheckCollision(ref nextPositionToMove, ref hitEnemyInfo);
+            if (hitStatus == ProjectileCollider.ProjectileHitStatus.Enemy)
+            {
+                DebugUtility.Log($"Hit enemy {hitEnemyInfo.hitEnemy}");
+                // Nếu trúng con quái này xong là destroy đạn thì ko di chuyển viên đạn nữa, set vị trí vào chỗ con quái luôn
+                if (currentHit + 1 >= MaxHit)
+                    transform.position = hitEnemyInfo.hitEnemy.transform.position;
+                else
+                    transform.position = nextPositionToMove;
+                
+                ProjectileHit(hitEnemyInfo.hitEnemy);
+                if (!hitEnemyInfo.hitEnemy.IsDestroyed)
+                {
+                    var deadProjectile = ProjectileDeadPool.Instance.Get(direction);
+                    deadProjectile.position = hitEnemyInfo.hitEnemy.transform.position + new Vector3(Random.Range(-0.2f, 0.2f), Random.Range(0f, 0.2f), 0f);
+                    deadProjectile.SetParent(hitEnemyInfo.hitEnemy.transform);
+                }
+            }
+            else
+            {
                 transform.position = nextPositionToMove;
+            }
                 
             lifeTime += Time.deltaTime;
             if (lifeTime > MaxLifeTime)

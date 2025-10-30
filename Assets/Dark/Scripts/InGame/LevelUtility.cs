@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using InGame.Upgrade;
 using UnityEngine;
 
 namespace InGame
@@ -512,12 +514,13 @@ namespace InGame
 
         public static int GetTowerCounterDamage(int baseDamage)
         {
-            return baseDamage + BonusInfo.towerCounterDamagePlus + BasePlayerDamageWithBonus;
+            return (int)((BasePlayerDamageWithBonus + baseDamage) * (1f +BonusInfo.towerCounterDamagePlus));
         }
 
-        public static float GetTowerCounterCooldown(float baseCooldown)
+        public static float GetTowerCounterCooldown(NodeTowerCounter.CounterType counterType, float baseCooldown)
         {
-            return Mathf.Max((baseCooldown - BonusInfo.towerCounterCooldownPlus) * (1f - BasePLayerCooldownWithBonus), 0f);
+            var bonus = BonusInfo.towerCounterCooldownPlus.GetValueOrDefault(counterType, 0f);
+            return Mathf.Max((baseCooldown - bonus) * (1f - BasePLayerCooldownWithBonus), 0f);
         }
 
         public static int GetTowerAutoRegen(int maxHp)
