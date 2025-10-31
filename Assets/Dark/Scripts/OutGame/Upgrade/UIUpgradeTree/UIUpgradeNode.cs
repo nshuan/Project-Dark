@@ -102,36 +102,59 @@ namespace Dark.Scripts.OutGame.Upgrade
             }
             else // Activated
             {
-                if (config.hideLevelInNode)
+                if (preRequires is { Count: > 0 } && preRequires.All((preRequire) =>
+                        UpgradeManager.Instance.GetData(preRequire.preRequireId) == null ||
+                        UpgradeManager.Instance.GetData(preRequire.preRequireId).level == 0))
+                {
                     txtNodeLevel.transform.parent.gameObject.SetActive(false);
-                else
-                {
-                    txtNodeLevel.SetText($"{data.level}/{config.MaxLevel}");
-                    txtNodeMaxLevel.gameObject.SetActive(data.level == config.MaxLevel);
-                    txtNodeLevel.transform.parent.gameObject.SetActive(true);
-                }
-                imgAvailable.SetActive(true);
-                imgLock.SetActive(false);
-                imgActivatedGlow.SetActive(data.level < config.MaxLevel);
-                if (data.level >= config.MaxLevel)
-                {
-                    imgActivatedMaxGlow.SetActive(true);
-                    rectActivatedMaxOutline.gameObject.SetActive(true);
-                    imgBorder.gameObject.SetActive(false);
-                }
-                else
-                {
+                    imgAvailable.SetActive(false);
+                    imgLock.SetActive(true);
+                    imgActivatedGlow.SetActive(false);
                     imgActivatedMaxGlow.SetActive(false);
                     rectActivatedMaxOutline.gameObject.SetActive(false);
                     imgBorder.gameObject.SetActive(true);
+                    
+                    foreach (var lineInfo in preRequires)
+                    {
+                        lineInfo.line.UpdateLineState(
+                            UpgradeManager.Instance.GetData(lineInfo.preRequireId) == null || UpgradeManager.Instance.GetData(lineInfo.preRequireId).level == 0
+                                ? UIUpgradeNodeState.Locked
+                                : UIUpgradeNodeState.Available);
+                    }
                 }
-                
-                foreach (var lineInfo in preRequires)
+                else
                 {
-                    lineInfo.line.UpdateLineState(
-                        UpgradeManager.Instance.GetData(lineInfo.preRequireId) == null || UpgradeManager.Instance.GetData(lineInfo.preRequireId).level == 0
-                        ? UIUpgradeNodeState.Locked
-                        : UIUpgradeNodeState.Activated);
+                    if (config.hideLevelInNode)
+                        txtNodeLevel.transform.parent.gameObject.SetActive(false);
+                    else
+                    {
+                        txtNodeLevel.SetText($"{data.level}/{config.MaxLevel}");
+                        txtNodeMaxLevel.gameObject.SetActive(data.level == config.MaxLevel);
+                        txtNodeLevel.transform.parent.gameObject.SetActive(true);
+                    }
+                    imgAvailable.SetActive(true);
+                    imgLock.SetActive(false);
+                    imgActivatedGlow.SetActive(data.level < config.MaxLevel);
+                    if (data.level >= config.MaxLevel)
+                    {
+                        imgActivatedMaxGlow.SetActive(true);
+                        rectActivatedMaxOutline.gameObject.SetActive(true);
+                        imgBorder.gameObject.SetActive(false);
+                    }
+                    else
+                    {
+                        imgActivatedMaxGlow.SetActive(false);
+                        rectActivatedMaxOutline.gameObject.SetActive(false);
+                        imgBorder.gameObject.SetActive(true);
+                    }
+                    
+                    foreach (var lineInfo in preRequires)
+                    {
+                        lineInfo.line.UpdateLineState(
+                            UpgradeManager.Instance.GetData(lineInfo.preRequireId) == null || UpgradeManager.Instance.GetData(lineInfo.preRequireId).level == 0
+                            ? UIUpgradeNodeState.Locked
+                            : UIUpgradeNodeState.Activated);
+                    }
                 }
             }
             
@@ -163,10 +186,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                 {
                     UIUpgradeNodeInfoPreview.Instance.Setup(config, true);
                     UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.rectTransform.sizeDelta.x / 2, 0f), true, () => hoverField.interactable = true);
-                    UpdateUI();
-                    vfxActivate?.Play();
-                    DoUpgrade().Play();
-                    treeRef.UpdateChildren(config.nodeId);
+                    treeRef.UpgradeAllNodesWithId(config.nodeId);
                     sfxUnlockSuccess?.Play();
                 }
                 else
@@ -175,6 +195,19 @@ namespace Dark.Scripts.OutGame.Upgrade
                     sfxUnlockFailure?.Play();
                 }
             };
+        }
+
+        public void Upgrade()
+        {
+            UpdateUI();
+            // Node chua du dieu kien unlock thi bo qua
+            if (preRequires is { Count: > 0 } && preRequires.All((preRequire) =>
+                    UpgradeManager.Instance.GetData(preRequire.preRequireId) == null ||
+                    UpgradeManager.Instance.GetData(preRequire.preRequireId).level == 0))
+                return;
+            vfxActivate?.Play();
+            DoUpgrade().Play();
+            treeRef.UpdateChildren(config.nodeId);
         }
 
         private Tween DoUpgrade()

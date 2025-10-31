@@ -14,16 +14,11 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private Transform lineParent;
         [SerializeField] private Transform linePrefab;
 
-        [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, UIUpgradeNode> nodesMap;
+        [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, List<UIUpgradeNode>> nodesMap; // Luu cac node co cung id
         [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, List<UIUpgradeNode>> nodeChildrenMap;
 
         [Space] [Header("UI")] 
         [SerializeField] private Button btnDeselectAll;
-        
-        public UIUpgradeNode GetNodeById(int id)
-        {
-            return nodesMap.GetValueOrDefault(id);
-        }
 
         public void UpdateChildren(int id)
         {
@@ -32,6 +27,17 @@ namespace Dark.Scripts.OutGame.Upgrade
                 foreach (var childNode in children)
                 {
                     childNode.UpdateUI();
+                }
+            }
+        }
+
+        public void UpgradeAllNodesWithId(int id)
+        {
+            if (nodesMap.TryGetValue(id, out var nodes))
+            {
+                foreach (var node in nodes)
+                {
+                    node.Upgrade();
                 }
             }
         }
@@ -62,38 +68,34 @@ namespace Dark.Scripts.OutGame.Upgrade
             {
                 DestroyImmediate(child);
             }
-            
-            nodesMap = new Dictionary<int, UIUpgradeNode>();
+
+            nodesMap = new Dictionary<int, List<UIUpgradeNode>>();
             nodeChildrenMap = new Dictionary<int, List<UIUpgradeNode>>();
             var nodes = GetComponentsInChildren<UIUpgradeNode>();
             foreach (var node in nodes)
             {
-                nodesMap.TryAdd(node.config.nodeId, node);
                 node.treeRef = this;
                 if (node.config.nodeSprite && node.config.nodeSpriteLock)
                     node.SetVisual(node.config.nodeSprite, node.config.nodeSpriteLock);
-            }
 
+                nodesMap.TryAdd(node.config.nodeId, new List<UIUpgradeNode>());
+                if (!nodesMap[node.config.nodeId].Contains(node))
+                    nodesMap[node.config.nodeId].Add(node);
+            }
+            
             foreach (var node in nodes)
             {
-                node.preRequires = new List<UIUpgradePreRequireInfo>();
-                
-                if (node.config.preRequire == null || node.config.preRequire.Length == 0) continue;
-                foreach (var preRequireConfig in node.config.preRequire)
+                if (node.preRequires == null || node.preRequires.Count == 0) continue;
+                foreach (var preRequire in node.preRequires)
                 {
-                    var preRequireNode = GetNodeById(preRequireConfig.nodeId);
-                    if (!preRequireNode) continue;
-                    node.preRequires.Add(new UIUpgradePreRequireInfo()
-                    {
-                        preRequireId = preRequireConfig.nodeId,
-                        node = preRequireNode,
-                        line = ShowPreRequiredLine(node.transform.position, node.lineAnchorOffsetRadius, preRequireNode.transform.position, preRequireNode.lineAnchorOffsetRadius)
-                    });
+                    if (!preRequire.node) continue;
+                    preRequire.line = ShowPreRequiredLine(node.transform.position, node.lineAnchorOffsetRadius,
+                        preRequire.node.transform.position, preRequire.node.lineAnchorOffsetRadius);
                     
                     // Add child map
-                    nodeChildrenMap.TryAdd(preRequireConfig.nodeId, new List<UIUpgradeNode>());
-                    if (!nodeChildrenMap[preRequireConfig.nodeId].Contains(node))
-                        nodeChildrenMap[preRequireConfig.nodeId].Add(node);
+                    nodeChildrenMap.TryAdd(preRequire.preRequireId, new List<UIUpgradeNode>());
+                    if (!nodeChildrenMap[preRequire.preRequireId].Contains(node))
+                        nodeChildrenMap[preRequire.preRequireId].Add(node);
                 }
                 
                 EditorUtility.SetDirty(node);

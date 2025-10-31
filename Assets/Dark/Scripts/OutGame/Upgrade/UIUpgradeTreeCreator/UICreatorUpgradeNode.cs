@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using InGame.Upgrade;
 using UnityEngine;
@@ -8,6 +9,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
     {
         public UICreatorManager manager;
         public UpgradeNodeConfig config;
+        public Guid guid;
 
         [Space] [Header("UI")] 
         [SerializeField] private UICreatorUpgradeNodeHover hoverField;
@@ -22,7 +24,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             hoverField.rectTransform = (RectTransform)transform;
             hoverField.onDrag = () =>
             {
-                manager.UpdateLine(config.nodeId);
+                manager.UpdateLine(guid);
             };
             hoverField.onClick = () =>
             {

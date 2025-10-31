@@ -27,8 +27,9 @@ namespace Dark.Tools.GoogleSheetTool
                 return null;
             }
             
-            return new NodeUnlockPassiveAllTriggerType()
+            return new NodeUnlockPassive()
             {
+                triggerType = PassiveTriggerType.DameByNormalAttack,
                 passiveType = (PassiveType)passiveIndex,
             };
         }
@@ -56,8 +57,9 @@ namespace Dark.Tools.GoogleSheetTool
                 return null;
             }
 
-            return new NodeUnlockPassiveAllTriggerType()
+            return new NodeUnlockPassive()
             {
+                triggerType = PassiveTriggerType.DameByChargeAttack,
                 passiveType = (PassiveType)passiveIndex,
             };
         }
@@ -85,8 +87,9 @@ namespace Dark.Tools.GoogleSheetTool
                 return null;
             }
 
-            return new NodeUnlockPassiveAllTriggerType()
+            return new NodeUnlockPassive()
             {
+                triggerType = PassiveTriggerType.DameByMoveSKill,
                 passiveType = (PassiveType)passiveIndex,
             };
         }
@@ -114,8 +117,9 @@ namespace Dark.Tools.GoogleSheetTool
                 return null;
             }
 
-            return new NodeUnlockPassiveAllTriggerType()
+            return new NodeUnlockPassive()
             {
+                triggerType = PassiveTriggerType.TowerTakeDame,
                 passiveType = (PassiveType)passiveIndex,
             };
         }
