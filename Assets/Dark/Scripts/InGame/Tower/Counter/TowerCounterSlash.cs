@@ -60,6 +60,7 @@ namespace InGame
         
         private void OnDrawGizmos()
         {
+            if (!showGizmos) return;
             if (radius <= 0f) return;
 
             float halfAngle = damageAngle * 0.5f;
