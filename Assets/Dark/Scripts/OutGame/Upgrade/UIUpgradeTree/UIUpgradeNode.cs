@@ -8,6 +8,7 @@ using InGame.Upgrade;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Dark.Scripts.OutGame.Upgrade
@@ -16,7 +17,7 @@ namespace Dark.Scripts.OutGame.Upgrade
     {
         public UIUpgradeTree treeRef;
         public UpgradeNodeConfig config;
-        public List<UIUpgradeLineInfo> preRequireLines;
+        public List<UIUpgradePreRequireInfo> preRequires;
         
         [Space]
         [Header("UI")]
@@ -56,12 +57,15 @@ namespace Dark.Scripts.OutGame.Upgrade
             if (data == null || data.level == 0) // Not activated yet
             {
                 // Always available or all pre-required nodes are activated
-                if (config.preRequire == null || config.preRequire.Length == 0 || config.preRequire.Any((preRequire) => UpgradeManager.Instance.GetData(preRequire.nodeId) != null && UpgradeManager.Instance.GetData(preRequire.nodeId).level > 0))
+                if (preRequires == null || preRequires.Count == 0 || preRequires.Any((preRequire) => UpgradeManager.Instance.GetData(preRequire.preRequireId) != null && UpgradeManager.Instance.GetData(preRequire.preRequireId).level > 0))
                 {
-                    txtNodeLevel.SetText($"0/{config.MaxLevel}");
-                    txtNodeLevel.transform.parent.gameObject.SetActive(true);
-                    if (config.preRequire == null || config.preRequire.Length == 0)
+                    if (config.hideLevelInNode)
                         txtNodeLevel.transform.parent.gameObject.SetActive(false);
+                    else
+                    {
+                        txtNodeLevel.SetText($"0/{config.MaxLevel}");
+                        txtNodeLevel.transform.parent.gameObject.SetActive(true);
+                    }
                     imgAvailable.SetActive(true);
                     imgLock.SetActive(false);
                     imgActivatedGlow.SetActive(false);
@@ -69,7 +73,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     rectActivatedMaxOutline.gameObject.SetActive(false);
                     imgBorder.gameObject.SetActive(true);
 
-                    foreach (var lineInfo in preRequireLines)
+                    foreach (var lineInfo in preRequires)
                     {
                         lineInfo.line.UpdateLineState(
                             UpgradeManager.Instance.GetData(lineInfo.preRequireId) != null && UpgradeManager.Instance.GetData(lineInfo.preRequireId).level > 0
@@ -87,7 +91,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     rectActivatedMaxOutline.gameObject.SetActive(false);
                     imgBorder.gameObject.SetActive(true);
                     
-                    foreach (var lineInfo in preRequireLines)
+                    foreach (var lineInfo in preRequires)
                     {
                         lineInfo.line.UpdateLineState(
                             UpgradeManager.Instance.GetData(lineInfo.preRequireId) == null || UpgradeManager.Instance.GetData(lineInfo.preRequireId).level == 0
@@ -98,11 +102,14 @@ namespace Dark.Scripts.OutGame.Upgrade
             }
             else // Activated
             {
-                txtNodeLevel.SetText($"{data.level}/{config.MaxLevel}");
-                txtNodeMaxLevel.gameObject.SetActive(data.level == config.MaxLevel);
-                txtNodeLevel.transform.parent.gameObject.SetActive(true);
-                if (config.preRequire == null || config.preRequire.Length == 0)
+                if (config.hideLevelInNode)
                     txtNodeLevel.transform.parent.gameObject.SetActive(false);
+                else
+                {
+                    txtNodeLevel.SetText($"{data.level}/{config.MaxLevel}");
+                    txtNodeMaxLevel.gameObject.SetActive(data.level == config.MaxLevel);
+                    txtNodeLevel.transform.parent.gameObject.SetActive(true);
+                }
                 imgAvailable.SetActive(true);
                 imgLock.SetActive(false);
                 imgActivatedGlow.SetActive(data.level < config.MaxLevel);
@@ -119,7 +126,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     imgBorder.gameObject.SetActive(true);
                 }
                 
-                foreach (var lineInfo in preRequireLines)
+                foreach (var lineInfo in preRequires)
                 {
                     lineInfo.line.UpdateLineState(
                         UpgradeManager.Instance.GetData(lineInfo.preRequireId) == null || UpgradeManager.Instance.GetData(lineInfo.preRequireId).level == 0
@@ -141,7 +148,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             hoverField.onPointerClick = () =>
             {
                 // treeRef.SelectNode(this);
-                if (config.preRequire != null && config.preRequire.Select((node) => node.nodeId)
+                if (preRequires != null && preRequires.Select((node) => node.preRequireId)
                         .All((id) =>
                             UpgradeManager.Instance.GetData(id) == null ||
                             UpgradeManager.Instance.GetData(id).level == 0))
@@ -212,9 +219,10 @@ namespace Dark.Scripts.OutGame.Upgrade
     }
 
     [Serializable]
-    public class UIUpgradeLineInfo
+    public class UIUpgradePreRequireInfo
     {
         public int preRequireId;
+        public UIUpgradeNode node;
         public UIUpgradeLine line;
     }
 

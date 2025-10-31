@@ -12,6 +12,7 @@ namespace InGame.Upgrade
     {
         public int nodeId;
         public string nodeName; // Name to display
+        public bool hideLevelInNode;
         public UpgradeNodeConfig[] preRequire;
         public string description; // Description to display
         public UpgradeNodeCostInfo[] costInfo; 

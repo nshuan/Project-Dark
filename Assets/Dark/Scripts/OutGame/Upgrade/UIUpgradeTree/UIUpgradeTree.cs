@@ -76,16 +76,17 @@ namespace Dark.Scripts.OutGame.Upgrade
 
             foreach (var node in nodes)
             {
-                node.preRequireLines = new List<UIUpgradeLineInfo>();
+                node.preRequires = new List<UIUpgradePreRequireInfo>();
                 
                 if (node.config.preRequire == null || node.config.preRequire.Length == 0) continue;
                 foreach (var preRequireConfig in node.config.preRequire)
                 {
                     var preRequireNode = GetNodeById(preRequireConfig.nodeId);
                     if (!preRequireNode) continue;
-                    node.preRequireLines.Add(new UIUpgradeLineInfo()
+                    node.preRequires.Add(new UIUpgradePreRequireInfo()
                     {
                         preRequireId = preRequireConfig.nodeId,
+                        node = preRequireNode,
                         line = ShowPreRequiredLine(node.transform.position, node.lineAnchorOffsetRadius, preRequireNode.transform.position, preRequireNode.lineAnchorOffsetRadius)
                     });
                     
