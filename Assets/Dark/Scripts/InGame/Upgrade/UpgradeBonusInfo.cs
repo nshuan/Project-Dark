@@ -124,10 +124,10 @@ namespace InGame
         public float staggerMultiply = 0f;
 
         [Space] 
-        public bool unlockedChargeDame;
-        public bool unlockedChargeBullet;
-        public bool unlockedChargeSize;
-        public bool unlockedChargeRange;
+        public bool unlockedNormalDame; // Id = 1
+        public bool unlockedNormalAtkSpe; // Id = 2
+        public bool unlockedChargeSize; // Id = 1
+        public bool unlockedChargeBullet; // Id = 2
         [NonSerialized, OdinSerialize] 
         public List<IProjectileHit> projectileHitActions = new List<IProjectileHit>();
         [NonSerialized, OdinSerialize] 

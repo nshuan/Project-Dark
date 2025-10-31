@@ -23,7 +23,7 @@ namespace InGame
         protected int Damage => LevelUtility.GetTowerCounterDamage(baseDamage);
         protected float Cooldown => LevelUtility.GetTowerCounterCooldown(counterType, baseCooldown);
         
-        protected static event Action<Vector2> OnOneTowerHit;
+        protected static event Action<NodeTowerCounter.CounterType, Vector2> OnOneTowerHit;
         
         protected Vector2 counterDirection = Vector2.zero;
         
@@ -52,8 +52,8 @@ namespace InGame
         {
             if (!canCounter) return;
             if (counterCooldown) return;
-            OnOneTowerHit?.Invoke(attackerPos);
-            CombatActions.OnTowerCounter?.Invoke(Cooldown);
+            OnOneTowerHit?.Invoke(counterType, attackerPos);
+            CombatActions.OnTowerCounter?.Invoke(counterType, Cooldown);
         }
 
         private void OnTowerDestroyed(TowerEntity destroyedTower)
@@ -62,8 +62,9 @@ namespace InGame
             OnOneTowerHit -= OnCounter;
         }
 
-        private void OnCounter(Vector2 attackerPos)
+        private void OnCounter(NodeTowerCounter.CounterType counterType, Vector2 attackerPos)
         {
+            if (counterType != this.counterType) return;
             counterDirection.x = attackerPos.x - transform.position.x;
             counterDirection.y = attackerPos.y - transform.position.y;
             

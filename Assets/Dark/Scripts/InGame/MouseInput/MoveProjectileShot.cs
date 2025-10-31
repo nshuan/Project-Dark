@@ -70,9 +70,9 @@ namespace InGame
 
             var skillBonusInfo = LevelUtility.BonusInfo.skillBonus;
             canChargeBullet = skillBonusInfo.unlockedChargeBullet;
-            canChargeDame = skillBonusInfo.unlockedChargeDame;
             canChargeSize = skillBonusInfo.unlockedChargeSize;
-            canChargeRange = skillBonusInfo.unlockedChargeRange;
+            canChargeDame = canChargeSize || canChargeBullet;
+            canChargeRange = canChargeSize || canChargeBullet;
             
             ChargeController.SetProjectile(LevelUtility.CurrentSkill.projectiles[PlayerProjectileType.ChargeBullet]);
             ChargeController.Cam = Cam;

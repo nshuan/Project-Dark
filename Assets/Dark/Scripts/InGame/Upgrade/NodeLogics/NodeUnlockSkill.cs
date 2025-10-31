@@ -13,17 +13,17 @@ namespace InGame.Upgrade
         {
             switch (unlockType)
             {
-                case BonusUnlockSkillType.ChargeDamage:
-                    bonusInfo.skillBonus.unlockedChargeDame = true;
+                case BonusUnlockSkillType.NormalDamage:
+                    bonusInfo.skillBonus.unlockedNormalDame = true;
                     break;  
+                case BonusUnlockSkillType.NormalAtkSpe:
+                    bonusInfo.skillBonus.unlockedNormalAtkSpe = true;
+                    break;
                 case BonusUnlockSkillType.ChargeBullet:
                     bonusInfo.skillBonus.unlockedChargeBullet = true;
                     break;
                 case BonusUnlockSkillType.ChargeSize:
                     bonusInfo.skillBonus.unlockedChargeSize = true;
-                    break;
-                case BonusUnlockSkillType.ChargeRange:
-                    bonusInfo.skillBonus.unlockedChargeRange = true;
                     break;
                 case BonusUnlockSkillType.MoveFlash:
                     bonusInfo.unlockedMoveToTower ??= new List<int>();
@@ -45,10 +45,10 @@ namespace InGame.Upgrade
 
         public enum BonusUnlockSkillType
         {
-            ChargeDamage,
+            NormalDamage,
+            NormalAtkSpe,
             ChargeBullet,
             ChargeSize,
-            ChargeRange,
             MoveFlash,
             MoveDash
         }
