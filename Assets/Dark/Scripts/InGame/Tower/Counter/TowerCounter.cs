@@ -44,8 +44,8 @@ namespace InGame
 
         private void OnUpgradeBonusActivated(UpgradeBonusInfo bonusInfo)
         {
-            // canCounter = bonusInfo.unlockedTowerCounter != null && bonusInfo.unlockedTowerCounter.ContainsKey(counterType) && bonusInfo.unlockedTowerCounter[counterType];
-            canCounter = true;
+            canCounter = bonusInfo.unlockedTowerCounter != null && bonusInfo.unlockedTowerCounter.ContainsKey(counterType) && bonusInfo.unlockedTowerCounter[counterType];
+            // canCounter = true;
         }
 
         private void OnTowerHit(Vector2 attackerPos)
