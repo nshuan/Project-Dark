@@ -15,20 +15,14 @@ namespace InGame.Upgrade
 
 		    switch (bonusType)
 		    {
-			    case BonusType.MaxTime:
+			    case BonusType.StepTime:
 				    if (isMul)
 				    {
-					    bonusInfo.chargeDameBonus.maxDameChargeTimeMinusMul += value[level - 1];
-					    bonusInfo.chargeBulletBonus.maxDameChargeTimeMinusMul += value[level - 1];
-					    bonusInfo.chargeSizeBonus.maxDameChargeTimeMinusMul += value[level - 1];
-					    bonusInfo.chargeRangeBonus.maxDameChargeTimeMinusMul += value[level - 1];
+					    bonusInfo.chargeBonus.stepTimeMul += value[level - 1];
 				    }
 				    else
 				    {
-					    bonusInfo.chargeDameBonus.maxDameChargeTimeMinus += value[level - 1];
-					    bonusInfo.chargeBulletBonus.maxDameChargeTimeMinus += value[level - 1];
-					    bonusInfo.chargeSizeBonus.maxDameChargeTimeMinus += value[level - 1];
-					    bonusInfo.chargeRangeBonus.maxDameChargeTimeMinus += value[level - 1];
+					    bonusInfo.chargeBonus.stepTime += value[level - 1];
 				    }
 				    break;
 		    }
@@ -55,7 +49,7 @@ namespace InGame.Upgrade
 
 	    public enum BonusType
 		{
-			MaxTime
+			StepTime
 		}
     }
 }

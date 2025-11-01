@@ -12,15 +12,17 @@ namespace InGame
     {
         [SerializeField] private ProjectileEntity projectile;
 
-        public int bulletAmount = 8;
+        public int bulletAmount = 5;
         public float blossomSize = 3f;
         
         public void DoAction(ProjectileEntity parentProjectile, Vector2 position)
         {
-            var dir = Random.insideUnitCircle.normalized;
-            var angle = 360f / bulletAmount;
+            var amount = LevelUtility.GetChargeSizeExplodeBullet(bulletAmount);
             
-            for (var i = 0; i < bulletAmount; i++)
+            var dir = Random.insideUnitCircle.normalized;
+            var angle = 360f / amount;
+            
+            for (var i = 0; i < amount; i++)
             {
                 var pDir = (Vector2)(Quaternion.Euler(0f, 0f, angle * i) * dir);
                 var p = ProjectilePool.Instance.Get(projectile, null, false);

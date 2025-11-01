@@ -54,6 +54,7 @@ namespace InGame
         
         public UpgradeBonusSkillInfo skillBonus = new UpgradeBonusSkillInfo();
         
+        public UpgradeBonusChargeInfo chargeBonus = new UpgradeBonusChargeInfo();
         public UpgradeBonusChargeInfo chargeDameBonus = new UpgradeBonusChargeInfo();
         public UpgradeBonusChargeInfo chargeBulletBonus = new UpgradeBonusChargeInfo();
         public UpgradeBonusChargeInfo chargeSizeBonus = new UpgradeBonusChargeInfo();
@@ -151,21 +152,23 @@ namespace InGame
     [Serializable]
     public class UpgradeBonusChargeInfo
     {
-        public float maxDameMultiplier;
-        public float maxDameChargeTimeMinus;
-        public float maxDameChargeTimeMinusMul;
+        public float stepTime;
+        public float stepTimeMul;
+        
+        public float damePerStep;
+        public float dameMaxTime;
 
-        public int maxBulletAdd;
-        public float bulletAddIntervalMinus;
-        public float bulletAddIntervalMinusMul;
-
-        public float maxSizeMultiplier;
-        public float maxSizeChargeTimeMinus;
-        public float maxSizeChargeTimeMinusMul;
-
-        public float maxRangeMultiplier;
-        public float maxRangeChargeTimeMinus;
-        public float maxRangeChargeTimeMinusMul;
+        public float sizePerStep;
+        public float sizeMaxTime;
+        
+        public float rangePerStep;
+        public float rangeMaxTime;
+        
+        public float bulletPerStep;
+        public int bulletMaxAdd;
+        
+        // Exclusive
+        public int maxBulletExplodeChargeSize;
     }
 
     [Serializable]
