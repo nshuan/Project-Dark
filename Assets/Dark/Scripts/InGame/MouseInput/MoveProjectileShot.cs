@@ -66,7 +66,7 @@ namespace InGame
         {
             InputManager = manager;
             ChargeController = chargeController;
-            Cooldown = LevelUtility.GetSkillCooldown();
+            Cooldown = LevelUtility.GetSkillCooldown(false);
 
             var skillBonusInfo = LevelUtility.BonusInfo.skillBonus;
             canChargeBullet = skillBonusInfo.unlockedChargeBullet;
@@ -169,6 +169,7 @@ namespace InGame
             else
                 CombatActions.OnAttackNormal?.Invoke(Cooldown);
             
+            Cooldown = LevelUtility.GetSkillCooldown(isCharge);
             cdCounter = Cooldown;
             cdCounter += delayShot;
 

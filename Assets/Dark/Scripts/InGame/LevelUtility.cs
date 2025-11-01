@@ -83,10 +83,11 @@ namespace InGame
         /// <param name="playerCooldown"></param>
         /// <param name="baseSkillCooldown"></param>
         /// <returns></returns>
-        public static float GetSkillCooldown()
+        public static float GetSkillCooldown(bool isCharge)
         {
+            var baseCooldown = isCharge ? CurrentSkill.chargeCooldown : CurrentSkill.cooldown;
             return LevelTemporaryUtility.FilterSkillCooldown(Mathf.Max(0f,
-                (CurrentSkill.cooldown - BonusInfo.skillBonus.skillCooldownPlus) * (1 - BonusInfo.skillBonus
+                (baseCooldown - BonusInfo.skillBonus.skillCooldownPlus) * (1 - BonusInfo.skillBonus
                                                                                  .skillCooldownMultiply)
                                                                              * Mathf.Clamp(
                                                                                  1 - BasePLayerCooldownWithBonus,

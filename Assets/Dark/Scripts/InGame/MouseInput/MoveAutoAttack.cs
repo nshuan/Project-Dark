@@ -42,7 +42,7 @@ namespace InGame
             cursor.SetAuto(false);
 
             InputManager = manager;
-            Cooldown = LevelUtility.GetSkillCooldown();
+            Cooldown = LevelUtility.GetSkillCooldown(false);
             ActivateDuration = 1f;
         }
         

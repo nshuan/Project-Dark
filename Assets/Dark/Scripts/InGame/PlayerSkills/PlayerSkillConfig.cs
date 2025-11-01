@@ -17,6 +17,7 @@ namespace InGame
         public float cooldown = 0.5f;  // time between shots
         public float range = 5f; // Max damage range, also max distance from player to mouse aimìng position
         public float size; // size of the aiming field
+        public float chargeCooldown = 0.5f;
         public float chargeDameStep = 0;
         public float chargeDameTime = 0;
         public float chargeSizeStep = 0;
