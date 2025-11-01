@@ -77,7 +77,7 @@ namespace InGame.UI.CombatSkills
         private void SetSkillSprite(Image skillImage, int skillId)
         {
             if (skillId is 1 or 2) skillImage.sprite = iconSkills[skillId];
-            skillImage.sprite = iconSkills[0];
+            else skillImage.sprite = iconSkills[0];
         }
     }
 }
