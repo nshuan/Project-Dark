@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace InGame.Upgrade
 {
@@ -27,22 +28,16 @@ namespace InGame.Upgrade
         public string GetDisplayValue(int level)
         {
             if (level < 0) return "??";
-            
-            var total = 0f;
-            for (int i = 0; i <= level; i++)
-            {
-                if (i >= value.Length) break;
-                total += value[i];
-            }
-            
+            if (level >= value.Length) level = value.Length - 1;
+
             switch (bonusType)
             {
                 case BonusType.AutoRegenerate:
-                    return total.ToString();
+                    return value[level].ToString(CultureInfo.InvariantCulture);
                 case BonusType.OnEnemyDied:
-                    return (total * 100).ToString();
+                    return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
             }
-            return total.ToString();
+            return value[level].ToString(CultureInfo.InvariantCulture);
         }
 
         public int MaxLevel => value.Length;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace InGame.Upgrade
@@ -34,15 +35,9 @@ namespace InGame.Upgrade
         public string GetDisplayValue(int level)
         {
             if (level < 0) return "??";
+            if (level >= value.Length) level = value.Length - 1;
             
-            var total = 0f;
-            for (int i = 0; i <= level; i++)
-            {
-                if (i >= value.Length) break;
-                total += value[i];
-            }
-            
-            return total.ToString();
+            return value[level].ToString(CultureInfo.InvariantCulture);
         }
 
         public int MaxLevel => value.Length;

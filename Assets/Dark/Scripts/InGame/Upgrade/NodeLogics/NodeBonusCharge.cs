@@ -31,18 +31,12 @@ namespace InGame.Upgrade
 	    public string GetDisplayValue(int level)
 	    {
 		    if (level < 0) return "??";
-
-		    var total = 0f;
-		    for (int i = 0; i <= level; i++)
-		    {
-				if (i >= value.Length) break;
-				total += value[i];
-		    }
+		    if (level >= value.Length) level = value.Length - 1;
 
 		    if (isMul)
-			    return (total * 100).ToString();
+			    return (value[level] * 100).ToString();
 		    
-		    return total.ToString();
+		    return value[level].ToString();
 	    }
 
 	    public int MaxLevel => value.Length;

@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace InGame.Upgrade
 {
@@ -18,13 +19,7 @@ namespace InGame.Upgrade
         public string GetDisplayValue(int level)
         {
             if (level < 0) return "??";
-            
-            var total = 0f;
-            for (int i = 0; i <= level; i++)
-            {
-                if (i >= value.Length) break;
-                total += value[i];
-            }
+            if (level >= value.Length) level = value.Length - 1;
             
             switch (bonusType)
             {
@@ -32,15 +27,15 @@ namespace InGame.Upgrade
                 case BonusSkillType.Cooldown:
                 case BonusSkillType.Size:
                 case BonusSkillType.Range:
-                    if (isMultiply) return (total * 100).ToString();
-                    else return total.ToString();
+                    if (isMultiply) return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
+                    else return value[level].ToString(CultureInfo.InvariantCulture);
                 case BonusSkillType.Stagger:
-                    return (total * 100).ToString();
+                    return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
                 case BonusSkillType.BulletNum:
                 case BonusSkillType.BulletMaxHit:
                     break;
             }
-            return total.ToString();
+            return value[level].ToString(CultureInfo.InvariantCulture);
         }
 
         public int MaxLevel => value.Length;
