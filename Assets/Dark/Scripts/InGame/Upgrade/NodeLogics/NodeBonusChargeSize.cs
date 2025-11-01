@@ -44,13 +44,20 @@ namespace InGame.Upgrade
         public string GetDisplayValue(int level)
         {
             if (level < 0) return "??";
-            if (level >= value.Length) level = value.Length - 1;
+            
+            var total = 0f;
+            for (int i = 0; i <= level; i++)
+            {
+                if (i >= value.Length) break;
+                total += value[i];
+            }
+            
             switch (bonusType)
             {
                 case NodeBonusChargeBullet.BonusType.MaxDame:
                 case NodeBonusChargeBullet.BonusType.MaxSize:
                 case NodeBonusChargeBullet.BonusType.MaxRange:
-                    return (value[level] * 100).ToString();
+                    return (total * 100).ToString();
                 case NodeBonusChargeBullet.BonusType.MaxDameTime:
                 case NodeBonusChargeBullet.BonusType.MaxSizeTime:
                 case NodeBonusChargeBullet.BonusType.MaxRangeTime:
@@ -58,7 +65,7 @@ namespace InGame.Upgrade
                 case NodeBonusChargeBullet.BonusType.BulletAddInterval:
                     break;
             }
-            return value[level].ToString();
+            return total.ToString();
         }
 
         public int MaxLevel => value.Length;

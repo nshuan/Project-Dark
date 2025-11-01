@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Sirenix.Serialization;
 using UnityEngine;
@@ -46,7 +47,7 @@ namespace InGame.Upgrade
         {
             if (level < 0) return "??";
             if (level >= actions.Count) level = actions.Count - 1;
-            return actions[level].GetValue().ToString();
+            return actions[level].GetValue().ToString(CultureInfo.InvariantCulture);
         }
 
         public int MaxLevel => 1;

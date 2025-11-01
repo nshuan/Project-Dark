@@ -27,15 +27,22 @@ namespace InGame.Upgrade
         public string GetDisplayValue(int level)
         {
             if (level < 0) return "??";
-            if (level >= value.Length) level = value.Length - 1;
+            
+            var total = 0f;
+            for (int i = 0; i <= level; i++)
+            {
+                if (i >= value.Length) break;
+                total += value[i];
+            }
+            
             switch (bonusType)
             {
                 case BonusType.AutoRegenerate:
-                    return value[level].ToString();
+                    return total.ToString();
                 case BonusType.OnEnemyDied:
-                    return (value[level] * 100).ToString();
+                    return (total * 100).ToString();
             }
-            return value[level].ToString();
+            return total.ToString();
         }
 
         public int MaxLevel => value.Length;
