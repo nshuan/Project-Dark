@@ -23,7 +23,7 @@ namespace InGame.Upgrade
                     bonusInfo.flashSizePlus += value[level - 1];
                     break;
                 case BonusType.Damage:
-                    if (isMultiply) bonusInfo.flashDamageMultiplier += (int)value[level - 1];
+                    if (isMultiply) bonusInfo.flashDamageMultiplier += value[level - 1];
                     else bonusInfo.flashDamagePlus += (int)value[level - 1];
                     break;
             }
@@ -33,7 +33,9 @@ namespace InGame.Upgrade
         {
             if (level < 0) return "??";
             if (level >= value.Length) level = value.Length - 1;
-            
+
+            if (bonusType == BonusType.Damage && isMultiply)
+                return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
             return value[level].ToString(CultureInfo.InvariantCulture);
         }
 
