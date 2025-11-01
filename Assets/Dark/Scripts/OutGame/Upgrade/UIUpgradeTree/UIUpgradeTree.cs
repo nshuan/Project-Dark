@@ -75,9 +75,6 @@ namespace Dark.Scripts.OutGame.Upgrade
             foreach (var node in nodes)
             {
                 node.treeRef = this;
-                if (node.config.nodeSprite && node.config.nodeSpriteLock)
-                    node.SetVisual(node.config.nodeSprite, node.config.nodeSpriteLock);
-
                 nodesMap.TryAdd(node.config.nodeId, new List<UIUpgradeNode>());
                 if (!nodesMap[node.config.nodeId].Contains(node))
                     nodesMap[node.config.nodeId].Add(node);

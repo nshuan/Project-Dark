@@ -43,14 +43,6 @@ namespace Dark.Scripts.OutGame.Upgrade
             UpdateUI();
         }
 
-        public void SetVisual(Sprite sprite, Sprite lockSprite)
-        {
-            nodeVisual.sprite = sprite;
-            nodeLockVisual.sprite = lockSprite;
-            nodeVisual.SetNativeSize();
-            nodeLockVisual.SetNativeSize();
-        }
-        
         public virtual void UpdateUI()
         {
             var data = UpgradeManager.Instance.GetData(config.nodeId);

@@ -13,17 +13,10 @@ namespace InGame.Upgrade
         public int nodeId;
         public string nodeName; // Name to display
         public bool hideLevelInNode;
-        public UpgradeNodeConfig[] preRequire;
         public string description; // Description to display
         public UpgradeNodeCostInfo[] costInfo; 
         [NonSerialized, OdinSerialize] public INodeActivateLogic[] nodeLogic;
-        [Space] [Header("Visual")] 
-        public Sprite nodeSprite;
-        public Sprite nodeSpriteLock;
         
-        public UpgradeNodeState State { get; set; }
-        public bool Activated { get; set; }
-
         public int MaxLevel
         {
             get
@@ -45,32 +38,11 @@ namespace InGame.Upgrade
                 }   
             }
         }
-
-#if UNITY_EDITOR
-        
-        private void OnValidate()
-        {
-            if (preRequire.Contains(this))
-            {
-                var tempRequire = preRequire.ToList();
-                tempRequire.Remove(this);
-                preRequire = tempRequire.ToArray();
-            }
-        }
-
-#endif
     }
 
     [Serializable]
     public class UpgradeNodeCostInfo
     {
         public WealthType costType; // Type of resource needed to unlock this node
-    }
-
-    public enum UpgradeNodeState
-    {
-        Locked,
-        CanUnlock,
-        Unlocked
     }
 }
