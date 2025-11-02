@@ -164,12 +164,13 @@ namespace InGame
                 InputManager.BlockTeleport = false;
             });
 
+            Cooldown = LevelUtility.GetSkillCooldown(isCharge);
+            
             if (isCharge)
                 CombatActions.OnAttackCharge?.Invoke(Cooldown);
             else
                 CombatActions.OnAttackNormal?.Invoke(Cooldown);
             
-            Cooldown = LevelUtility.GetSkillCooldown(isCharge);
             cdCounter = Cooldown;
             cdCounter += delayShot;
 
