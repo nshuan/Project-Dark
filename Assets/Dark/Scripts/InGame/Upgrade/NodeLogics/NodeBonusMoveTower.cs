@@ -17,7 +17,8 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case BonusMoveTowerType.Cooldown:
-                    bonusInfo.moveCooldownPlus += (int)value[level - 1];
+                    if (isMultiply) bonusInfo.moveCooldownMultiplier += value[level - 1];
+                    else bonusInfo.moveCooldownPlus += value[level - 1];
                     break;
             }
         }
@@ -30,7 +31,8 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case BonusMoveTowerType.Cooldown:
-                    break;
+                    if (isMultiply) return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
+                    return value[level].ToString(CultureInfo.InvariantCulture);
                 case BonusMoveTowerType.CastTime:
                     return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
             }

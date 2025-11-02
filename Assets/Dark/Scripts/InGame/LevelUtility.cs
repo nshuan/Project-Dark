@@ -200,7 +200,7 @@ namespace InGame
         {
             if (BonusInfo.passiveBonusCooldownMapByType == null) return Mathf.Max(baseCooldown, 0f);
             if (BonusInfo.passiveBonusCooldownMapByType.TryGetValue(passiveType, out var bonus))
-                return Mathf.Max((baseCooldown - bonus) * (1f - BasePLayerCooldownWithBonus), 0f);
+                return Mathf.Max(baseCooldown * (1f - bonus) * (1f - BasePLayerCooldownWithBonus), 0f);
             return Mathf.Max(baseCooldown, 0f);
         }
 
@@ -208,15 +208,15 @@ namespace InGame
         {
             if (BonusInfo.passiveBonusChanceMapByType == null) return baseChance;
             if (BonusInfo.passiveBonusChanceMapByType.TryGetValue(passiveType, out var bonus))
-                return Mathf.Min(baseChance + bonus, 1f);
+                return Mathf.Min(baseChance * (1f + bonus), 1f);
             return baseChance;
         }
-
+        
         public static float GetPassiveSize(PassiveType passiveType, float baseSize)
         {
             if (BonusInfo.passiveBonusSizeMapByType == null) return baseSize;
             if (BonusInfo.passiveBonusSizeMapByType.TryGetValue(passiveType, out var bonus))
-                return baseSize + bonus;
+                return baseSize * (1f + bonus);
             return baseSize;
         }
 
@@ -224,7 +224,7 @@ namespace InGame
         {
             if (BonusInfo.passiveBonusValueMapByType == null) return baseValue;
             if (BonusInfo.passiveBonusValueMapByType.TryGetValue(passiveType, out var bonus))
-                return baseValue + BasePlayerDamageWithBonus + bonus;
+                return (baseValue + BasePlayerDamageWithBonus) * (1f + bonus);
             return baseValue;
         }
 
@@ -232,7 +232,7 @@ namespace InGame
         {
             if (BonusInfo.passiveBonusStaggerMapByType == null) return baseStagger;
             if (BonusInfo.passiveBonusStaggerMapByType.TryGetValue(passiveType, out var bonus))
-                return baseStagger + bonus;
+                return baseStagger * (1f + bonus);
             return baseStagger;
         }
 
@@ -242,7 +242,7 @@ namespace InGame
 
         public static float GetTeleCooldown(float baseCooldown)
         {
-            return Mathf.Max((baseCooldown - BonusInfo.moveCooldownPlus) * (1f - BasePLayerCooldownWithBonus), 0f);
+            return Mathf.Max((baseCooldown - BonusInfo.moveCooldownPlus) * (1f - BonusInfo.moveCooldownMultiplier) * (1f - BasePLayerCooldownWithBonus), 0f);
         }
         
         public static float GetDashCooldown(float baseCooldown)

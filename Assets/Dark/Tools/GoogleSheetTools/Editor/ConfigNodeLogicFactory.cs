@@ -150,6 +150,7 @@ namespace Dark.Tools.GoogleSheetTool
         TempBonusCriticalRateDuration,
         TempBonusCriticalDamageDuration,
         UnlockNormalAtkSpe,
-        UnlockNormalDame
+        UnlockNormalDame,
+        BonusPassiveChance
     }
 }

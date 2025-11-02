@@ -14,6 +14,7 @@ namespace InGame
 
         public List<int> unlockedMoveToTower; // 1 for Flash and 2 for Dash
         public float moveCooldownPlus = 0f;
+        public float moveCooldownMultiplier = 0f;
         
         public float dashCooldownPlus = 0f;
         public float dashCooldownMultiplier = 0f;
@@ -80,11 +81,11 @@ namespace InGame
 
         [Space] 
         [NonSerialized, OdinSerialize] public Dictionary<PassiveTriggerType, List<PassiveType>> passiveMapByTriggerType;
-        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusSizeMapByType;
-        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusValueMapByType;
-        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusCooldownMapByType;
-        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusChanceMapByType;
-        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusStaggerMapByType;
+        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusSizeMapByType; // Bonus %
+        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusValueMapByType; // Bonus %
+        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusCooldownMapByType; // Bonus %
+        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusChanceMapByType; // Bonus %
+        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusStaggerMapByType; // Bonus %
 
         #endregion
 
@@ -179,6 +180,11 @@ namespace InGame
     public class UpgradeBonusTempInfo
     {
         public float bonusValue;
-        public float bonusDuration;
+
+        public float bonusDuration
+        {
+            get => 4f;
+            set { }
+        } // Tạm thời fix cứng
     }
 }

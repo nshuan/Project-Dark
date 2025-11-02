@@ -27,23 +27,25 @@ namespace InGame
         private int orderCount;
         private IDamageable hitTarget;
         private CameraShake cameraShakeEffect;
-
+        private int maxHitWithBonus;
+        
         public override void Initialize()
         {
-            hitOrder = new Transform[maxHit];
-            lineRenderer.Initialize(maxHit);
+            hitOrder = new Transform[20];
+            lineRenderer.Initialize(20);
             cameraShakeEffect = new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera };
         }
 
         public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool)
         {
-            lineRenderer.ResetLine(maxHit, null, 0);
+            maxHitWithBonus = (int)size;
+            lineRenderer.ResetLine(maxHitWithBonus, null, 0);
             transform.position = Vector3.zero;
             this.Position = target.Position;
             this.Stagger = stagger;
             gameObject.SetActive(true);
 
-            var count = Physics2D.CircleCastNonAlloc(Position, size, Vector2.zero, hits, 0f, targetLayer);
+            var count = Physics2D.CircleCastNonAlloc(Position, 3f, Vector2.zero, hits, 0f, targetLayer);
             for (var i = 0; i < count; i++)
             {
                 unorderedHits[i] = hits[i].transform;
@@ -52,7 +54,7 @@ namespace InGame
             anchorForOrdering.x = target.Position.x;
             anchorForOrdering.y = target.Position.y;
             orderCount = 0;
-            while (orderCount < maxHit && orderCount < count)
+            while (orderCount < maxHitWithBonus && orderCount < count)
             {
                 for (var i = 0; i < count; i++)
                 {
@@ -74,11 +76,11 @@ namespace InGame
                 orderCount += 1;
             }
             
-            lineRenderer.ResetLine(maxHit, hitOrder, orderCount);
+            lineRenderer.ResetLine(maxHitWithBonus, hitOrder, orderCount);
 
             StartCoroutine(IELightningRay(value, () =>
             {
-                lineRenderer.ResetLine(maxHit, null, 0);
+                lineRenderer.ResetLine(maxHitWithBonus, null, 0);
                 pool.Release(this, effectId);
             }));
             vfxImpact.position = Position;

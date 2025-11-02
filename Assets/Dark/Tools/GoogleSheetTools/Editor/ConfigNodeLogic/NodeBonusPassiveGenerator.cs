@@ -32,7 +32,6 @@ namespace Dark.Tools.GoogleSheetTool
                     bonusType = NodeBonusPassive.BonusType.Damage,
                     passiveType = (PassiveType)passiveIndex,
                     value = bonusValue,
-                    isMultiply = isMul
                 };
             }
             catch (Exception e)
@@ -66,12 +65,44 @@ namespace Dark.Tools.GoogleSheetTool
                     bonusType = NodeBonusPassive.BonusType.Size,
                     passiveType = (PassiveType)passiveIndex,
                     value = bonusValue,
-                    isMultiply = isMul
                 };
             }
             catch (Exception e)
             {
                 throw new Exception($"Invalid BonusPassiveSize value string: {value[0]}");
+            }
+        }
+    }
+    
+    [ConfigNodeLogicType(LogicType.BonusPassiveChance)]
+    public class NodeBonusPassiveChanceGenerator : INodeLogicGenerator
+    {
+        public INodeActivateLogic Generate(string subType, List<string> value, bool isMul)
+        {
+            if (value == null || value.Count == 0)
+            {
+                return null;
+            }
+
+            if (!int.TryParse(subType, out var passiveIndex))
+            {
+                Debug.LogError($"Invalid sub-type string: {subType}");
+                return null;
+            }
+            
+            try
+            {
+                var bonusValue = value[0].Split(',').Select((str) => float.Parse(str, CultureInfo.InvariantCulture)).ToArray();
+                return new NodeBonusPassive()
+                {
+                    bonusType = NodeBonusPassive.BonusType.Chance,
+                    passiveType = (PassiveType)passiveIndex,
+                    value = bonusValue,
+                };
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Invalid BonusPassiveChance value string: {value[0]}");
             }
         }
     }

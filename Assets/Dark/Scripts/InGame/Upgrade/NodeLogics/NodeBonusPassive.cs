@@ -11,7 +11,6 @@ namespace InGame.Upgrade
         public BonusType bonusType;
         public PassiveType passiveType;
         public float[] value;
-        public bool isMultiply;
         
         public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)
         {
@@ -29,6 +28,11 @@ namespace InGame.Upgrade
                     bonusInfo.passiveBonusSizeMapByType.TryAdd(passiveType, 0);
                     bonusInfo.passiveBonusSizeMapByType[passiveType] += value[level - 1];
                     break;
+                case BonusType.Chance:
+                    bonusInfo.passiveBonusChanceMapByType ??= new Dictionary<PassiveType, float>();
+                    bonusInfo.passiveBonusChanceMapByType.TryAdd(passiveType, 0);
+                    bonusInfo.passiveBonusChanceMapByType.TryAdd(passiveType, 0);
+                    break;
             }
         }
 
@@ -37,7 +41,7 @@ namespace InGame.Upgrade
             if (level < 0) return "??";
             if (level >= value.Length) level = value.Length - 1;
             
-            return value[level].ToString(CultureInfo.InvariantCulture);
+            return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
         }
 
         public int MaxLevel => value.Length;
@@ -45,7 +49,8 @@ namespace InGame.Upgrade
         public enum BonusType
         {
             Damage,
-            Size
+            Size,
+            Chance
         }
     }
 }
