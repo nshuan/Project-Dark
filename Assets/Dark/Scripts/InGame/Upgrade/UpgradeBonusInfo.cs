@@ -16,12 +16,16 @@ namespace InGame
         public float moveCooldownPlus = 0f;
         
         public float dashCooldownPlus = 0f;
+        public float dashCooldownMultiplier = 0f;
         public float dashSizePlus = 0f;
+        public float dashSizeMultiplier = 0f;
         public int dashDamagePlus = 0;
         public float dashDamageMultiplier = 0f;
         
         public float flashCooldownPlus = 0f;
+        public float flashCooldownMultiplier = 0f;
         public float flashSizePlus = 0f;
+        public float flashSizeMultiplier = 0f;
         public int flashDamagePlus = 0;
         public float flashDamageMultiplier = 0f;
 

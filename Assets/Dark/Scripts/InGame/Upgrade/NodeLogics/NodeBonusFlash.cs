@@ -17,10 +17,12 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case BonusType.Cooldown:
-                    bonusInfo.flashCooldownPlus += value[level - 1];
+                    if (isMultiply) bonusInfo.flashCooldownMultiplier += value[level - 1];
+                    else bonusInfo.flashCooldownPlus += value[level - 1];
                     break;
                 case BonusType.Size:
-                    bonusInfo.flashSizePlus += value[level - 1];
+                    if (isMultiply) bonusInfo.flashSizeMultiplier += value[level - 1];
+                    else bonusInfo.flashSizePlus += value[level - 1];
                     break;
                 case BonusType.Damage:
                     if (isMultiply) bonusInfo.flashDamageMultiplier += value[level - 1];
@@ -34,7 +36,7 @@ namespace InGame.Upgrade
             if (level < 0) return "??";
             if (level >= value.Length) level = value.Length - 1;
 
-            if (bonusType == BonusType.Damage && isMultiply)
+            if (isMultiply)
                 return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
             return value[level].ToString(CultureInfo.InvariantCulture);
         }

@@ -247,12 +247,12 @@ namespace InGame
         
         public static float GetDashCooldown(float baseCooldown)
         {
-            return Mathf.Max((baseCooldown - BonusInfo.dashCooldownPlus) * (1f - BasePLayerCooldownWithBonus), 0f);
+            return Mathf.Max((baseCooldown - BonusInfo.dashCooldownPlus) * (1f - BonusInfo.dashCooldownMultiplier) * (1f - BasePLayerCooldownWithBonus), 0f);
         }
 
         public static float GetDashSize(float baseSize)
         {
-            return baseSize + BonusInfo.dashSizePlus;
+            return (1f + BonusInfo.dashSizeMultiplier) * (baseSize + BonusInfo.dashSizePlus);
         }
 
         public static int GetDashDamage(int baseDamage)
@@ -262,12 +262,12 @@ namespace InGame
 
         public static float GetFlashCooldown(float baseCooldown)
         {
-            return Mathf.Max((baseCooldown - BonusInfo.flashCooldownPlus) * (1f - BasePLayerCooldownWithBonus), 0f);
+            return Mathf.Max((baseCooldown - BonusInfo.flashCooldownPlus) * (1f - BonusInfo.flashCooldownMultiplier) * (1f - BasePLayerCooldownWithBonus), 0f);
         }
 
         public static float GetFlashSize(float baseSize)
         {
-            return baseSize + BonusInfo.flashSizePlus;
+            return (1f + BonusInfo.flashSizeMultiplier) * (baseSize + BonusInfo.flashSizePlus);
         }
 
         public static int GetFlashDamage(int baseDamage)
