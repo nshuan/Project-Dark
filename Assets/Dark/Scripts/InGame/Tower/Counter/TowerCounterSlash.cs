@@ -7,12 +7,9 @@ namespace InGame
 {
     public class TowerCounterSlash : TowerCounter
     {
-        public float baseRange;
-        public float damageAngle = 75f;
-
         [SerializeField] private LayerMask hitLayer;
 
-        private float Range => LevelUtility.GetTowerCounterRange(counterType, baseRange);
+        private float Range => LevelUtility.GetTowerCounterRange(counterType, config.range);
 
         private RaycastHit2D[] hits = new RaycastHit2D[20];
         private EnemyEntity cacheEnemy;
@@ -22,7 +19,7 @@ namespace InGame
             var hitCount = Physics2D.CircleCastNonAlloc(transform.position, Range, direction, hits, 0f, hitLayer);
             if (hitCount > 0)
             {
-                var halfAngle = damageAngle / 2;
+                var halfAngle = config.size / 2;
                 for (var i = 0; i < hitCount; i++)
                 {
                     var dirTo = (hits[i].point - (Vector2)transform.position).normalized;
@@ -31,7 +28,7 @@ namespace InGame
                     {
                         if (hits[i].transform.TryGetComponent<EnemyEntity>(out cacheEnemy))
                         {
-                            cacheEnemy.Damage(Damage, transform.position, 0f, DamageType.Normal);
+                            cacheEnemy.Damage(Damage, transform.position, config.stagger, DamageType.Normal);
                         }
                     }
                 }
@@ -60,37 +57,37 @@ namespace InGame
         
         private void OnDrawGizmos()
         {
-            if (!showGizmos) return;
-            if (radius <= 0f) return;
-
-            float halfAngle = damageAngle * 0.5f;
-
-            // The "from" direction is rotationAngle - halfAngle
-            Vector3 fromDir = DirFromDeg(rotationAngle - halfAngle);
-
-            // Save old color
-            var oldColor = UnityEditor.Handles.color;
-
-            // Filled wedge
-            if (filled && damageAngle > 0f)
-            {
-                UnityEditor.Handles.color = new Color(fillColor.r, fillColor.g, fillColor.b, fillAlpha);
-                UnityEditor.Handles.DrawSolidArc(transform.position, Vector3.forward, fromDir, damageAngle, radius);
-            }
-
-            // Outline arc
-            UnityEditor.Handles.color = lineColor;
-            UnityEditor.Handles.DrawWireArc(transform.position, Vector3.forward, fromDir, damageAngle, radius);
-
-            // Radial edges
-            if (drawRadialEdges && damageAngle < 360f)
-            {
-                Vector3 toDir = DirFromDeg(rotationAngle + halfAngle);
-                UnityEditor.Handles.DrawLine(transform.position, transform.position + fromDir * radius);
-                UnityEditor.Handles.DrawLine(transform.position, transform.position + toDir * radius);
-            }
-
-            UnityEditor.Handles.color = oldColor;
+            // if (!showGizmos) return;
+            // if (radius <= 0f) return;
+            //
+            // float halfAngle = damageAngle * 0.5f;
+            //
+            // // The "from" direction is rotationAngle - halfAngle
+            // Vector3 fromDir = DirFromDeg(rotationAngle - halfAngle);
+            //
+            // // Save old color
+            // var oldColor = UnityEditor.Handles.color;
+            //
+            // // Filled wedge
+            // if (filled && damageAngle > 0f)
+            // {
+            //     UnityEditor.Handles.color = new Color(fillColor.r, fillColor.g, fillColor.b, fillAlpha);
+            //     UnityEditor.Handles.DrawSolidArc(transform.position, Vector3.forward, fromDir, damageAngle, radius);
+            // }
+            //
+            // // Outline arc
+            // UnityEditor.Handles.color = lineColor;
+            // UnityEditor.Handles.DrawWireArc(transform.position, Vector3.forward, fromDir, damageAngle, radius);
+            //
+            // // Radial edges
+            // if (drawRadialEdges && damageAngle < 360f)
+            // {
+            //     Vector3 toDir = DirFromDeg(rotationAngle + halfAngle);
+            //     UnityEditor.Handles.DrawLine(transform.position, transform.position + fromDir * radius);
+            //     UnityEditor.Handles.DrawLine(transform.position, transform.position + toDir * radius);
+            // }
+            //
+            // UnityEditor.Handles.color = oldColor;
         }
 
         private static Vector3 DirFromDeg(float deg)

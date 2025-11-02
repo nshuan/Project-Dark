@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using InGame.CounterConfig;
 using InGame.Upgrade;
 using UnityEngine;
 
@@ -12,16 +13,16 @@ namespace InGame
         [SerializeField] protected ProjectileEntity projectilePrefab;
         [SerializeField] protected GameObject vfxActivateCounter;
         [SerializeField] protected float vfxActivateCounterDuration;
+        [SerializeField] protected float bulletSpeedScale = 2f;
         
         protected bool counterCooldown;
 
         [Space] [Header("Config")] 
         public bool canCounter;
-        public int baseDamage;
-        public float baseCooldown;
+        protected TowerCounterConfig config;
 
-        protected int Damage => LevelUtility.GetTowerCounterDamage(baseDamage);
-        protected float Cooldown => LevelUtility.GetTowerCounterCooldown(counterType, baseCooldown);
+        protected int Damage => LevelUtility.GetTowerCounterDamage(config.damage);
+        protected float Cooldown => LevelUtility.GetTowerCounterCooldown(counterType, config.cooldown);
         
         protected static event Action<NodeTowerCounter.CounterType, Vector2> OnOneTowerHit;
         
@@ -34,6 +35,8 @@ namespace InGame
             tower.OnHitAttackerPos += OnTowerHit;
             OnOneTowerHit += OnCounter;
             tower.OnDestroyed += OnTowerDestroyed;
+
+            config = TowerCounterManifest.Get(counterType);
         }
 
         private void OnDestroy()
@@ -82,7 +85,7 @@ namespace InGame
             counterCooldown = true;
             vfxActivateCounter.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(counterDirection.y, counterDirection.x) * Mathf.Rad2Deg);
             vfxActivateCounter.SetActive(true);
-            Counter(transform.position, counterDirection, Damage, 1f);
+            Counter(transform.position, counterDirection, Damage, bulletSpeedScale);
             yield return new WaitForSeconds(vfxActivateCounterDuration);
             vfxActivateCounter.SetActive(false);
             yield return new WaitForSeconds(cooldown - vfxActivateCounterDuration);
@@ -94,7 +97,7 @@ namespace InGame
             var projectile = ProjectilePool.Instance.Get(projectilePrefab, null, false);
             projectile.transform.position = towerAttackPos;
             projectile.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
-            projectile.Init(towerAttackPos, direction.normalized, 20, 5, speedScale, damage, damage, 0f, 0f, false, 10, null, null, ProjectileType.TowerProjectile);
+            projectile.Init(towerAttackPos, direction.normalized, 20, 5, speedScale, damage, damage, 0f, config.stagger, false, 10, null, null, ProjectileType.TowerProjectile);
             projectile.BlockDestroy = true;
             projectile.Activate(0f);
         }

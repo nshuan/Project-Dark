@@ -284,7 +284,7 @@ namespace InGame
                             cursor.UpdateMax();
                         }
                         
-                        if (bulletChargeMaxStep > 0)
+                        if (canChargeBullet && bulletChargeMaxStep > 0)
                         {
                             bulletChargeAdded = (int)(bulletPerStep * Math.Min(chargeStep, bulletChargeMaxStep));
                             for (int i = 0; i < bulletChargeAdded - ChargeController.TotalBulletAdded; i++)
@@ -294,19 +294,19 @@ namespace InGame
                             }
                         }
 
-                        if (dameChargeMaxStep > 0)
+                        if (canChargeDame && dameChargeMaxStep > 0)
                         {
                             dameChargeAdded = damePerStep * Math.Min(chargeStep, dameChargeMaxStep);
                         }
 
-                        if (sizeChargeMaxStep > 0)
+                        if (canChargeSize && sizeChargeMaxStep > 0)
                         {
                             sizeChargeAdded = sizePerStep * Math.Min(chargeStep, sizeChargeMaxStep);
                             ChargeController.AddSize(LevelUtility.GetSkillSize(
                                 sizeChargeMaxStep > 0 ? 1 + sizeChargeAdded : 1f));
                         }
 
-                        if (rangeChargeMaxStep > 0)
+                        if (canChargeRange && rangeChargeMaxStep > 0)
                         {
                             rangeChargeAdded = rangePerStep * Math.Min(chargeStep, rangeChargeMaxStep);
                             InputManager.PlayerVisual.UpdateShotRadius(

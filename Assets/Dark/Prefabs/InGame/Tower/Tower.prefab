@@ -135,16 +135,18 @@ MonoBehaviour:
   projectilePrefab: {fileID: 0}
   vfxActivateCounter: {fileID: 6099608268454393858}
   vfxActivateCounterDuration: 1.5
+  bulletSpeedScale: 2
   canCounter: 0
   baseDamage: 0
   baseCooldown: 1.7
+  stagger: 1
   baseRange: 5
-  damageAngle: 75
+  damageAngle: 100
   hitLayer:
     serializedVersion: 2
     m_Bits: 8
   showGizmos: 0
-  radius: 5.39
+  radius: 3.5
   rotationAngle: 0
   filled: 1
   fillAlpha: 0.122
@@ -706,9 +708,11 @@ MonoBehaviour:
   projectilePrefab: {fileID: 5473205546241724817, guid: 3550838fe892456488676ad0ad2b01a9, type: 3}
   vfxActivateCounter: {fileID: 6343287202614458571}
   vfxActivateCounterDuration: 1
+  bulletSpeedScale: 2
   canCounter: 0
   baseDamage: 0
   baseCooldown: 2
+  stagger: 0.7
 --- !u!1 &4590216449570193756
 GameObject:
   m_ObjectHideFlags: 0
@@ -1560,6 +1564,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -38.84
       objectReference: {fileID: 0}
+    - target: {fileID: 3405513093600687500, guid: 3cce6a55bf75b3e438936fa40b99a107, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4636281535692675277, guid: 3cce6a55bf75b3e438936fa40b99a107, type: 3}
       propertyPath: m_Name
       value: FX_Ingame_Tower_Vowpiece
@@ -1585,6 +1593,18 @@ PrefabInstance:
     - target: {fileID: 827318128758843834, guid: 417fa70fa550a82499d8e30a933e2d49, type: 3}
       propertyPath: m_Name
       value: FX_Ingame_Tower_Slash
+      objectReference: {fileID: 0}
+    - target: {fileID: 8807019013366415862, guid: 417fa70fa550a82499d8e30a933e2d49, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 8807019013366415862, guid: 417fa70fa550a82499d8e30a933e2d49, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 8807019013366415862, guid: 417fa70fa550a82499d8e30a933e2d49, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.65
       objectReference: {fileID: 0}
     - target: {fileID: 8807019013366415862, guid: 417fa70fa550a82499d8e30a933e2d49, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1625,6 +1645,10 @@ PrefabInstance:
     - target: {fileID: 8807019013366415862, guid: 417fa70fa550a82499d8e30a933e2d49, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 8807019013366415862, guid: 417fa70fa550a82499d8e30a933e2d49, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -10,7 +10,7 @@ namespace InGame
     [Serializable]
     public class ProjectileHitBlossom : IProjectileHit
     {
-        [SerializeField] private ProjectileEntity projectile;
+        public ProjectileEntity projectile;
 
         public int bulletAmount = 5;
         public float blossomSize = 3f;
