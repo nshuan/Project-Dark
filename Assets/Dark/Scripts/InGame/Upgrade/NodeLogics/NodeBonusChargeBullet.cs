@@ -12,7 +12,7 @@ namespace InGame.Upgrade
 	    {
 		    if (level <= 0 || level > value.Length) return;
 		    
-		    bonusInfo.chargeBonus.bulletMaxAdd += (int)value[level - 1];
+		    bonusInfo.chargeBonus.bulletMaxStep += (int)value[level - 1];
 	    }
 
 	    public string GetDisplayValue(int level)

@@ -19,13 +19,13 @@ namespace InGame
         public float size; // size of the aiming field
         public float chargeCooldown = 0.5f;
         public float chargeDameStep = 0;
-        public float chargeDameTime = 0;
+        public int chargeDameMaxStep = 0;
         public float chargeSizeStep = 0;
-        public float chargeSizeTime = 0;
+        public int chargeSizeMaxStep = 0;
         public float chargeRangeStep = 0;
-        public float chargeRangeTime = 0;
+        public int chargeRangeMaxStep = 0;
         public float chargeBulletStep = 0;
-        public float chargeBulletTime = 0;
+        public int chargeBulletMaxStep = 0;
         public float chargeStepTime = 1f;
         public float speedScale = 1f; // Scale speed of bullets
         public float stagger; // Push enemy away when projectile hit

@@ -153,9 +153,9 @@ namespace InGame
             return CurrentSkill.chargeBulletStep + BonusInfo.chargeBonus.bulletPerStep;
         }
 
-        public static float GetChargeBulletMaxTime()
+        public static int GetChargeBulletMaxStep()
         {
-            return CurrentSkill.chargeBulletTime + BonusInfo.chargeBonus.bulletMaxAdd / GetChargeBulletPerStep() * GetChargeStepTime();
+            return CurrentSkill.chargeBulletMaxStep + BonusInfo.chargeBonus.bulletMaxStep;
         }
         
         public static float GetChargeDamePerStep()
@@ -163,9 +163,9 @@ namespace InGame
             return CurrentSkill.chargeDameStep + BonusInfo.chargeBonus.damePerStep;
         }
 
-        public static float GetChargeDameMaxTime()
+        public static int GetChargeDameMaxStep()
         {
-            return CurrentSkill.chargeDameTime + BonusInfo.chargeBonus.dameMaxTime;
+            return CurrentSkill.chargeDameMaxStep + BonusInfo.chargeBonus.dameMaxStep;
         }
         
         public static float GetChargeSizePerStep()
@@ -173,9 +173,9 @@ namespace InGame
             return CurrentSkill.chargeSizeStep + BonusInfo.chargeBonus.sizePerStep;
         }
 
-        public static float GetChargeSizeMaxTime()
+        public static int GetChargeSizeMaxStep()
         {
-            return CurrentSkill.chargeSizeTime + BonusInfo.chargeBonus.sizeMaxTime;
+            return CurrentSkill.chargeSizeMaxStep + BonusInfo.chargeBonus.sizeMaxStep;
         }
         
         public static float GetChargeRangePerStep()
@@ -183,9 +183,9 @@ namespace InGame
             return CurrentSkill.chargeRangeStep + BonusInfo.chargeBonus.rangePerStep;
         }
 
-        public static float GetChargeRangeMaxTime()
+        public static int GetChargeRangeMaxStep()
         {
-            return CurrentSkill.chargeRangeTime + BonusInfo.chargeBonus.rangeMaxTime;
+            return CurrentSkill.chargeRangeMaxStep + BonusInfo.chargeBonus.rangeMaxStep;
         }
 
         public static int GetChargeSizeExplodeBullet(int baseBullet)

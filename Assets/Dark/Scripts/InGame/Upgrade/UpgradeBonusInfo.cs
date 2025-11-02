@@ -156,16 +156,16 @@ namespace InGame
         public float stepTimeMul;
         
         public float damePerStep;
-        public float dameMaxTime;
+        public int dameMaxStep;
 
         public float sizePerStep;
-        public float sizeMaxTime;
+        public int sizeMaxStep;
         
         public float rangePerStep;
-        public float rangeMaxTime;
+        public int rangeMaxStep;
         
         public float bulletPerStep;
-        public int bulletMaxAdd;
+        public int bulletMaxStep;
         
         // Exclusive
         public int maxBulletExplodeChargeSize;

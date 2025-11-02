@@ -222,19 +222,19 @@ namespace InGame
             
             bulletChargeAdded = 0;
             bulletPerStep = LevelUtility.GetChargeBulletPerStep();
-            bulletChargeMaxStep = (int)(LevelUtility.GetChargeBulletMaxTime() / chargeStepTime);
+            bulletChargeMaxStep = LevelUtility.GetChargeBulletMaxStep();
 
             dameChargeAdded = 0f;
             damePerStep = LevelUtility.GetChargeDamePerStep();
-            dameChargeMaxStep = (int)(LevelUtility.GetChargeDameMaxTime() / chargeStepTime);
+            dameChargeMaxStep = LevelUtility.GetChargeDameMaxStep();
 
             sizeChargeAdded = 0f;
             sizePerStep = LevelUtility.GetChargeSizePerStep();
-            sizeChargeMaxStep = (int)(LevelUtility.GetChargeSizeMaxTime() / chargeStepTime);
+            sizeChargeMaxStep = LevelUtility.GetChargeSizeMaxStep();
             
             rangeChargeAdded = 0f;
             rangePerStep = LevelUtility.GetChargeRangePerStep();
-            rangeChargeMaxStep = (int)(LevelUtility.GetChargeRangeMaxTime() / chargeStepTime);
+            rangeChargeMaxStep = LevelUtility.GetChargeRangeMaxStep();
 
             isCharging = false;
             chargeStep = 0;
