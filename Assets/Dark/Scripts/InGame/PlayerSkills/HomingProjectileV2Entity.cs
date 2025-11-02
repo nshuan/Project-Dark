@@ -78,8 +78,24 @@ namespace InGame
 
             if (activated)
             {
-                transform.position += (Vector3)(Speed * (lifeTime < timeToReachMaxSpeed ? speedCurve.Evaluate(lifeTime / timeToReachMaxSpeed) : 1f) 
-                                                      * Time.deltaTime * direction);
+                moveDirection = Speed * (lifeTime < timeToReachMaxSpeed ? speedCurve.Evaluate(lifeTime / timeToReachMaxSpeed) : 1f) 
+                                                * Time.deltaTime * direction;
+                hitStatus = collider.CheckCollision(ref moveDirection, ref hitEnemyInfo);
+                if (hitStatus == ProjectileCollider.ProjectileHitStatus.Enemy)
+                {
+                    DebugUtility.Log($"Homing Hit enemy {hitEnemyInfo.hitEnemy}");
+                    // Nếu trúng con quái này xong là destroy đạn thì ko di chuyển viên đạn nữa, set vị trí vào chỗ con quái luôn
+                    if (currentHit + 1 >= MaxHit)
+                        transform.position = hitEnemyInfo.hitEnemy.transform.position;
+                    else
+                        transform.position += moveDirection;
+                
+                    ProjectileHit(hitEnemyInfo.hitEnemy);
+                }
+                else
+                {
+                    transform.position += moveDirection;
+                }
             }
             
             lifeTime += Time.deltaTime;

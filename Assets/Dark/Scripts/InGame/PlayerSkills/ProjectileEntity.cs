@@ -36,7 +36,7 @@ namespace InGame
         
         public Transform TargetTransform => transform;
 
-        private int currentHit;
+        protected int currentHit;
         protected bool activated = false;
         protected float lifeTime = 0f;
         protected Vector3 moveDirection = Vector3.zero;

@@ -29,6 +29,7 @@ namespace InGame
                         if (hits[i].transform.TryGetComponent<EnemyEntity>(out cacheEnemy))
                         {
                             cacheEnemy.Damage(Damage, transform.position, config.stagger, DamageType.Normal);
+                            PassiveEffectManager.Instance.TriggerEffect(PassiveTriggerType.TowerTakeDame, cacheEnemy);
                         }
                     }
                 }
