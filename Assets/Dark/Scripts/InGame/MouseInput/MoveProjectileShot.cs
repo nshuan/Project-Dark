@@ -17,9 +17,12 @@ namespace InGame
         protected Vector3 worldMousePosition;
         
         public MoveChargeController ChargeController { get; set; }
-        public bool CanShoot { get; set; }
-        protected float Cooldown { get; set; }
-        protected float cdCounter;
+        public bool CanShootNormal { get; set; }
+        public bool CanShootCharge { get; set; }
+        protected float CooldownNormal { get; set; }
+        protected float CooldownCharge { get; set; }
+        protected float cdCounterNormal;
+        protected float cdCounterCharge;
 
         #region Charge
 
@@ -66,7 +69,8 @@ namespace InGame
         {
             InputManager = manager;
             ChargeController = chargeController;
-            Cooldown = LevelUtility.GetSkillCooldown(false);
+            CooldownNormal = LevelUtility.GetSkillCooldown(false);
+            CooldownCharge = LevelUtility.GetSkillCooldown(true);
 
             var skillBonusInfo = LevelUtility.BonusInfo.skillBonus;
             canChargeBullet = skillBonusInfo.unlockedChargeBullet;
@@ -87,12 +91,14 @@ namespace InGame
         
         public virtual void OnMouseClick()
         {
-            if (!CanShoot) return;
-            
-            CanShoot = false;
-            
             var isCharge = (canChargeBullet && bulletChargeAdded > 0) || (canChargeDame && dameChargeAdded > 0) ||
                            (canChargeSize && sizeChargeAdded > 0) || (canChargeRange && rangeChargeAdded > 0);
+            
+            if (!isCharge && !CanShootNormal) return;
+            if (isCharge && !CanShootCharge) return;
+
+            if (isCharge) CanShootCharge = false;
+            else CanShootNormal = false;
             
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(
@@ -164,15 +170,22 @@ namespace InGame
                 InputManager.BlockTeleport = false;
             });
 
-            Cooldown = LevelUtility.GetSkillCooldown(isCharge);
-            
+            CooldownNormal = LevelUtility.GetSkillCooldown(false);
+            CooldownCharge = LevelUtility.GetSkillCooldown(true);
+
             if (isCharge)
-                CombatActions.OnAttackCharge?.Invoke(Cooldown);
+            {
+                CombatActions.OnAttackCharge?.Invoke(CooldownCharge);
+                cdCounterCharge = CooldownCharge;
+                cdCounterCharge += delayShot;
+            }
             else
-                CombatActions.OnAttackNormal?.Invoke(Cooldown);
+            {
+                CombatActions.OnAttackNormal?.Invoke(CooldownNormal);
+                cdCounterNormal = CooldownNormal;
+                cdCounterNormal += delayShot;
+            }
             
-            cdCounter = Cooldown;
-            cdCounter += delayShot;
 
             // Reset range
             InputManager.PlayerVisual.UpdateShotRadius(
@@ -198,7 +211,7 @@ namespace InGame
 
         public void OnHoldStarted()
         {
-            if (!CanShoot) return;
+            if (!CanShootCharge) return;
             if (isCharging) return; 
             
             ResetChargeVariable();
@@ -255,11 +268,18 @@ namespace InGame
             InputManager.PlayerVisual.SetDirection(worldMousePosition);
             
             // Cooldown if player can not shoot
-            if (!CanShoot)
+            if (!CanShootNormal)
             {
-                cdCounter -= Time.deltaTime;
-                if (cdCounter <= 0)
-                    CanShoot = true;
+                cdCounterNormal -= Time.deltaTime;
+                if (cdCounterNormal <= 0)
+                    CanShootNormal = true;
+            }
+            
+            if (!CanShootCharge)
+            {
+                cdCounterCharge -= Time.deltaTime;
+                if (cdCounterCharge <= 0)
+                    CanShootCharge = true;
             }
             else
             {
