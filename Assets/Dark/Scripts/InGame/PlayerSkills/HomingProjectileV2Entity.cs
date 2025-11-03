@@ -38,7 +38,7 @@ namespace InGame
             
             homingController = GetComponent<TargetedProjectile>();
             if (targetToChase)
-                homingController.InitializeProjectile(targetToChase.transform.position, Speed, 0.3f);
+                homingController.InitializeProjectile(targetToChase.transform.position, Speed, 0.1f);
             else
                 homingController.InitializeProjectile(startPos + direction.normalized * maxDistance, Speed, 0.1f);
             homingController.InitializeAnimationCurve(ProjectileCurveManifest.GetRandomTrajectoryCurve(),
@@ -97,7 +97,7 @@ namespace InGame
                     moveDirection = homingController.GetProjectileNextPosition(lastTargetPosition) - transform.position;
                     transform.rotation = homingController.GetProjectileNextRotation();
                     hitStatus = collider.CheckCollision(ref moveDirection, ref hitEnemyInfo);
-                    if (hitStatus == ProjectileCollider.ProjectileHitStatus.Enemy)
+                    if (hitStatus == ProjectileCollider.ProjectileHitStatus.Enemy && ReferenceEquals(hitEnemyInfo.hitEnemy.transform, targetToChase))
                     {
                         DebugUtility.Log($"Homing Hit enemy {hitEnemyInfo.hitEnemy}");
                         // Nếu trúng con quái này xong là destroy đạn thì ko di chuyển viên đạn nữa, set vị trí vào chỗ con quái luôn
