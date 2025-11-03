@@ -144,9 +144,11 @@ namespace InGame
                     isCharge,
                     LevelUtility.BonusInfo.skillBonus.GetProjectileActivateActions(isCharge),
                     LevelUtility.BonusInfo.skillBonus.GetProjectileHitActions(isCharge));
-                
+
                 if (isCharge)
-                    ChargeController.Attack((projectile, direction) =>
+                {
+                    InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(skillRange);
+                    ChargeController.Attack((projectile, direction, delay) =>
                     {
                         projectile.Init(
                             projectile.transform.position, 
@@ -164,8 +166,9 @@ namespace InGame
                             LevelUtility.BonusInfo.skillBonus.GetProjectileHitActions(true),
                             ProjectileType.PlayerProjectile);
                         
-                        projectile.Activate(0f);
+                        projectile.Activate(delay);
                     });
+                }
 
                 InputManager.BlockTeleport = false;
             });

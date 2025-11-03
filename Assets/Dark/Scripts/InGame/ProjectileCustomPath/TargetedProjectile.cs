@@ -23,11 +23,6 @@ namespace InGame.ProjectileCustomPath
         private Vector2 nextPositionNormalized = new Vector2();
         private Vector2 nextPositionCorrection = new Vector2();
         private Vector2 nextTrajectoryPosition = new Vector2();
-        
-        private void Start()
-        {
-            trajectoryStartPoint = transform.position;
-        }
 
         // private void Update()
         // {
@@ -113,6 +108,7 @@ namespace InGame.ProjectileCustomPath
 
         public void InitializeProjectile(Vector3 targetPosition, float maxMoveSpeed, float trajectoryMaxHeight)
         {
+            trajectoryStartPoint = transform.position;
             this.maxMoveSpeed = maxMoveSpeed;
             
             var xDistanceToTarget = targetPosition.x - transform.position.x;

@@ -38,9 +38,9 @@ namespace InGame
             
             homingController = GetComponent<TargetedProjectile>();
             if (targetToChase)
-                homingController.InitializeProjectile(targetToChase.transform.position, Speed, 0.1f);
+                homingController.InitializeProjectile(targetToChase.transform.position, Speed, 0.15f);
             else
-                homingController.InitializeProjectile(startPos + direction.normalized * maxDistance, Speed, 0.1f);
+                homingController.InitializeProjectile(RangeCenter + this.direction.normalized * this.maxDistance, Speed, 0.15f);
             homingController.InitializeAnimationCurve(ProjectileCurveManifest.GetRandomTrajectoryCurve(),
                 ProjectileCurveManifest.GetAxisCorrectionCurve(0), ProjectileCurveManifest.GetProjectileSpeedCurve(0));
         }
@@ -100,15 +100,28 @@ namespace InGame
                     if (hitStatus == ProjectileCollider.ProjectileHitStatus.Enemy && ReferenceEquals(hitEnemyInfo.hitEnemy.transform, targetToChase))
                     {
                         DebugUtility.Log($"Homing Hit enemy {hitEnemyInfo.hitEnemy}");
-                        // Nếu trúng con quái này xong là destroy đạn thì ko di chuyển viên đạn nữa, set vị trí vào chỗ con quái luôn
-                        if (currentHit + 1 >= MaxHit)
-                            transform.position = hitEnemyInfo.hitEnemy.transform.position;
-                        else
-                            transform.position += moveDirection;
+                        transform.position = hitEnemyInfo.hitEnemy.transform.position;
                     
                         ProjectileHit(hitEnemyInfo.hitEnemy);
                     }
                     else
+                    {
+                        transform.position += moveDirection;
+                    }
+                }
+                else
+                {
+                    moveDirection = homingController.GetProjectileNextPosition(RangeCenter + this.direction.normalized * this.maxDistance) - transform.position;
+                    transform.rotation = homingController.GetProjectileNextRotation();
+                    // hitStatus = collider.CheckCollision(ref moveDirection, ref hitEnemyInfo);
+                    // if (hitStatus == ProjectileCollider.ProjectileHitStatus.Enemy)
+                    // {
+                    //     DebugUtility.Log($"Homing Hit enemy {hitEnemyInfo.hitEnemy}");
+                    //     transform.position = hitEnemyInfo.hitEnemy.transform.position;
+                    //
+                    //     ProjectileHit(hitEnemyInfo.hitEnemy);
+                    // }
+                    // else
                     {
                         transform.position += moveDirection;
                     }
