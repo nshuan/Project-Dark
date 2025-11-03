@@ -105,10 +105,10 @@ namespace Dark.Tools.GoogleSheetTool
         UnlockDash,
         UnlockFlash,
         UnlockCounter,
-        UnlockAttackPassive, // Unlock cho tất cả triggerType
-        UnlockChargePassive, // Unlock cho tất cả triggerType
-        UnlockMovePassive, // Unlock cho tất cả triggerType
-        UnlockCounterPassive, // Unlock cho tất cả triggerType
+        UnlockAttackPassive, 
+        UnlockChargePassive, 
+        UnlockMovePassive, 
+        UnlockCounterPassive,
         UnlockChargeSize,
         UnlockChargeBullet,
         BonusDropRate,
@@ -149,6 +149,8 @@ namespace Dark.Tools.GoogleSheetTool
         TempBonusDamageDuration,
         TempBonusCriticalRateDuration,
         TempBonusCriticalDamageDuration,
-        UnlockNormalBulletSplit
+        UnlockNormalAtkSpe,
+        UnlockNormalDame,
+        BonusPassiveChance
     }
 }

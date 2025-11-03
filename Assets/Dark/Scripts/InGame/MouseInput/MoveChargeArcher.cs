@@ -43,12 +43,12 @@ namespace InGame
             }
         }
 
-        public override void Attack(Action<ProjectileEntity, Vector2> actionSetupProjectile)
+        public override void Attack(Action<ProjectileEntity, Vector2, float> actionSetupProjectile)
         {
             for (var i = 0; i < projectiles.Count; i++)
             {
                 StopCoroutine(spawnCoroutines[i]);
-                actionSetupProjectile?.Invoke(projectiles[i], Cam.ScreenToWorldPoint(Input.mousePosition) - projectiles[i].transform.position);
+                actionSetupProjectile?.Invoke(projectiles[i], Cam.ScreenToWorldPoint(Input.mousePosition) - projectiles[i].transform.position, i * 0.15f);
             }
 
             projectiles = new List<ProjectileEntity>();

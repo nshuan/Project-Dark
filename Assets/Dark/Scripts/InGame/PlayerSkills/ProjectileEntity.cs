@@ -36,12 +36,15 @@ namespace InGame
         
         public Transform TargetTransform => transform;
 
-        private int currentHit;
+        protected int currentHit;
         protected bool activated = false;
         protected float lifeTime = 0f;
+        protected Vector3 moveDirection = Vector3.zero;
+        protected ProjectileCollider.ProjectileHitStatus hitStatus;
 
         protected RaycastHit2D[] hits = new RaycastHit2D[1];
-
+        protected ProjectileCollider.HitEnemyInfo hitEnemyInfo;
+        
         #region Actions
 
         public Action OnHit;
@@ -94,7 +97,9 @@ namespace InGame
             MaxHit = maxHit;
             currentHit = 0;
             DamageType = damageType;
-            
+
+            hitStatus = ProjectileCollider.ProjectileHitStatus.None;
+            hitEnemyInfo = new ProjectileCollider.HitEnemyInfo();
             collider.Init();
             collider.UpdateLastPosition(transform.position);
         }
@@ -133,7 +138,33 @@ namespace InGame
                     ProjectileDeadPool.Instance.Get(direction).position = transform.position;
                 ProjectileHit(null);
             }
-            transform.position += (Vector3)(Speed * Time.deltaTime * direction);
+
+            moveDirection.x = Speed * Time.deltaTime * direction.x;
+            moveDirection.y = Speed * Time.deltaTime * direction.y;
+            moveDirection.z = 0f;
+            hitStatus = collider.CheckCollision(ref moveDirection, ref hitEnemyInfo);
+            if (hitStatus == ProjectileCollider.ProjectileHitStatus.Enemy)
+            {
+                DebugUtility.Log($"Hit enemy {hitEnemyInfo.hitEnemy}");
+                // Nếu trúng con quái này xong là destroy đạn thì ko di chuyển viên đạn nữa, set vị trí vào chỗ con quái luôn
+                if (currentHit + 1 >= MaxHit)
+                {
+                    transform.position = hitEnemyInfo.hitEnemy.transform.position;
+                    
+                    var deadProjectile = ProjectileDeadPool.Instance.Get(direction);
+                    deadProjectile.position = hitEnemyInfo.hitEnemy.transform.position + new Vector3(Random.Range(-0.2f, 0.2f), Random.Range(0f, 0.2f), 0f);
+                    deadProjectile.SetParent(hitEnemyInfo.hitEnemy.transform);
+                }
+                else
+                    transform.position += moveDirection;
+                
+                ProjectileHit(hitEnemyInfo.hitEnemy);
+            }
+            else
+            {
+                transform.position += moveDirection;
+            }
+                
             lifeTime += Time.deltaTime;
             if (lifeTime > MaxLifeTime)
             {
@@ -152,14 +183,23 @@ namespace InGame
         {
             if (!hit)
             {
-                DebugUtility.Log("null");
                 collider.CanTrigger = false;
                 BlockDestroy = false;
                 BlockSpawnDeadBody = false;
                 OnHit = null;
                 lifeTime = 0f;
                 activated = false;
+                
+                if (HitActions != null)
+                {
+                    foreach (var action in HitActions)
+                    {
+                        action.DoAction(this, transform.position);
+                    }
+                }
+                
                 ProjectilePool.Instance.Release(this);
+                
                 return;
             }
 
@@ -168,6 +208,8 @@ namespace InGame
                 DebugUtility.Log("Invisible");
                 return;
             }
+            
+            // Set lại vị trí viên đạn vào vị trí enemy (tránh việc đạn bay nhanh quá nhìn giống như không chạm vào enemy)
             
             // Check critical hit
             var critical = Random.Range(0f, 1f) <= CriticalRate;

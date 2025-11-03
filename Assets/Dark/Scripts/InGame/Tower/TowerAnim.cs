@@ -44,6 +44,11 @@ namespace InGame
 
         private void Awake()
         {
+            GetOutlineMat();
+        }
+
+        private void GetOutlineMat()
+        {
             // Get the first original material
             var baseMat = skeleton.CustomMaterialOverride.Count > 0
                 ? skeleton.CustomMaterialOverride.Keys.First()
@@ -56,9 +61,11 @@ namespace InGame
             skeleton.CustomMaterialOverride.Clear();
             skeleton.CustomMaterialOverride.Add(baseMat, outlineMaterial);
         }
-
+        
         public void SetActiveOutline(bool active)
         {
+            if (!outlineMaterial) GetOutlineMat();
+            
             if (active)
                 outlineMaterial.SetFloat("_OutlineWidth", 2f);
             else 

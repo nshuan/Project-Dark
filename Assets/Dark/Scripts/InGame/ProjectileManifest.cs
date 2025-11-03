@@ -25,7 +25,7 @@ namespace InGame
 
         public static ProjectileEntity Get(int id)
         {
-            var instance = Resources.Load<ProjectileManifest>(FilePath);
+            var instance = Resources.Load<ProjectileManifest>(Path);
             if (instance.prefabsMap == null || instance.prefabsMap.Count == 0) return null;
             var result = instance.prefabsMap.GetValueOrDefault(id);
             Resources.UnloadAsset(instance);

@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace InGame.Upgrade
 {
@@ -38,7 +39,7 @@ namespace InGame.Upgrade
             if (level < 0) return "??";
             if (level >= value.Length) level = value.Length - 1;
             
-            return (value[level] * 100).ToString();
+            return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
         }
 
         public int MaxLevel => value.Length;

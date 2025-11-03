@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEditor;
@@ -44,13 +45,14 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             }
     
             string json = File.ReadAllText(truePath);
-            TreeDataStruct treeData = JsonUtility.FromJson<TreeDataStruct>(json);
+            TreeDataStruct treeData = JsonConvert.DeserializeObject<TreeDataStruct>(json);
             if (treeData == null || treeData.nodes == null)
             {
                 Debug.LogError("Invalid JSON data.");
                 return;
             }
-    
+
+            var uiNodeMap = new Dictionary<Guid, UIUpgradeNode>();
             var root = Instantiate(treePrefab.gameObject, canvas.transform);
     
             foreach (var node in treeData.nodes)
@@ -71,6 +73,28 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 go.transform.SetParent(root.transform.Find("Nodes"));
                 go.transform.localPosition = node.position;
                 go.GetComponent<UIUpgradeNode>().config = configLoader.GetNodeConfig(node.id);
+                uiNodeMap.TryAdd(node.guid, go.GetComponent<UIUpgradeNode>());
+            }
+            
+            // Set prerequire node by guid
+            foreach (var node in treeData.nodes)
+            {
+                if (!uiNodeMap.ContainsKey(node.guid)) continue;
+                var preRequireInfo = new List<UIUpgradePreRequireInfo>();
+                if (node.preRequired != null)
+                {
+                    foreach (var preGuid in node.preRequired)
+                    {
+                        if (uiNodeMap.ContainsKey(preGuid)) preRequireInfo.Add(new UIUpgradePreRequireInfo()
+                        {
+                            preRequireId = uiNodeMap[preGuid].config.nodeId,
+                            node = uiNodeMap[preGuid]
+                        });
+                    }
+                }
+
+                uiNodeMap[node.guid].preRequires = preRequireInfo;
+                EditorUtility.SetDirty(uiNodeMap[node.guid]);
             }
             
             root.GetComponent<UIUpgradeTree>().ValidateNodes();

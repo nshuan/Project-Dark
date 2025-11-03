@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace InGame.Upgrade
 {
@@ -16,14 +17,16 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case BonusType.Cooldown:
-                    bonusInfo.dashCooldownPlus += value[level - 1];
+                    if (isMultiply) bonusInfo.dashCooldownMultiplier += value[level - 1];
+                    else bonusInfo.dashCooldownPlus += value[level - 1];
                     break;
                 case BonusType.Size:
-                    bonusInfo.dashSizePlus += value[level - 1];
+                    if (isMultiply) bonusInfo.dashSizeMultiplier += value[level - 1];
+                    else bonusInfo.dashSizePlus += value[level - 1];
                     break;
                 case BonusType.Damage:
-                    if (isMultiply) bonusInfo.dashDamageMultiplier += (int)value[level - 1];
-                    bonusInfo.dashDamagePlus += (int)value[level - 1];
+                    if (isMultiply) bonusInfo.dashDamageMultiplier += value[level - 1];
+                    else bonusInfo.dashDamagePlus += (int)value[level - 1];
                     break;
             }
         }
@@ -32,7 +35,10 @@ namespace InGame.Upgrade
         {
             if (level < 0) return "??";
             if (level >= value.Length) level = value.Length - 1;
-            return value[level].ToString();
+            
+            if (isMultiply)
+                return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
+            return value[level].ToString(CultureInfo.InvariantCulture);
         }
 
         public int MaxLevel => value.Length;

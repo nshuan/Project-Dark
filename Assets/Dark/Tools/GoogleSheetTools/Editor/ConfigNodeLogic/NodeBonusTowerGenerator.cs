@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using InGame.Upgrade;
+using UnityEngine;
 
 namespace Dark.Tools.GoogleSheetTool
 {
@@ -70,11 +71,18 @@ namespace Dark.Tools.GoogleSheetTool
                 return null;
             }
 
+            if (!int.TryParse(subType, out var counterType) || counterType < 0 || counterType >= Enum.GetValues(typeof(NodeTowerCounter.CounterType)).Length)
+            {
+                Debug.LogError($"Invalid sub-type string: {subType}");
+                return null;
+            }
+            
             try
             {
                 var bonusValue = value[0].Split(',').Select((str) => float.Parse(str, CultureInfo.InvariantCulture)).ToArray();
                 return new NodeTowerCounterBonus()
                 {
+                    counterType = (NodeTowerCounter.CounterType)counterType,
                     bonusType = NodeTowerCounterBonus.BonusType.Cooldown,
                     value = bonusValue,
                     isMultiply = isMul

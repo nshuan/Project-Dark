@@ -25,9 +25,23 @@ namespace InGame.UI.CombatSkills
         [SerializeField] private float passiveYLocalOnShow = 0f;
         [SerializeField] private float passiveYLocalOnHide = 32f;
         
+        [Space] [Header("2nd skill")] 
+        [SerializeField] protected GameObject secondSkill;
+        [SerializeField] protected Image imgFillCooldown2nd;
+        [SerializeField] private UIParticle vfx2ndCooldownComplete;
+        [SerializeField] protected Transform groupPassiveAndArrow;
+        [SerializeField] protected float groupPassiveOneSkillX = 0f;
+        [SerializeField] protected float groupPassiveTwoSkillX = 0f;
+        
+        [Space] [Header("Skill icon")] 
+        [SerializeField] protected Image imgIconBaseSkill1;
+        [SerializeField] protected Image imgIconBaseSkill2;
+        [SerializeField] protected Sprite[] iconSkills;
+        
         protected virtual void Awake()
         {
             imgFillCooldown.fillAmount = 1f;
+            imgFillCooldown2nd.fillAmount = 1f;
             SetupPassive();
         }
 
@@ -35,25 +49,31 @@ namespace InGame.UI.CombatSkills
         
         protected virtual void OnSkillUsed(float cooldown)
         {
-            StartCoroutine(IECooldown(cooldown));
+            StartCoroutine(IECooldown(imgFillCooldown, groupIcon, vfxCooldownComplete, cooldown));
+        }
+
+        protected virtual void On2ndSkillUsed(float cooldown)
+        {
+            StartCoroutine(IECooldown(imgFillCooldown2nd, secondSkill.transform, vfx2ndCooldownComplete, cooldown));
         }
         
-        private IEnumerator IECooldown(float cooldown)
+        private IEnumerator IECooldown(Image imgCooldown, Transform icon, UIParticle vfx, float cooldown)
         {
-            imgFillCooldown.gameObject.SetActive(true);
+            imgCooldown.gameObject.SetActive(true);
             
             var cooldownTimer = cooldown;
             
             while (cooldownTimer > 0)
             {
                 cooldownTimer -= Time.deltaTime;
-                imgFillCooldown.fillAmount = 1 - cooldownTimer / cooldown;
+                imgCooldown.fillAmount = 1 - cooldownTimer / cooldown;
                 yield return null;
             }
 
             ShowToast();
-            groupIcon.DOPunchScale(0.1f * Vector3.one, 0.2f);
-            vfxCooldownComplete.Play();
+            icon.localScale = Vector3.one;
+            icon.DOPunchScale(0.1f * Vector3.one, 0.2f);
+            vfx.Play();
         }
 
         private bool isShowPassive = true;

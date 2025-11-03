@@ -18,6 +18,7 @@ MonoBehaviour:
     ReferencedUnityObjects:
     - {fileID: 6844351392576462872, guid: 5bf387a4936339542a95d194cf62d737, type: 3}
     - {fileID: 6844351392576462872, guid: 3de001d91ec8b174eaa2d43aaf531f9d, type: 3}
+    - {fileID: 3089119576911016187, guid: 5dc57c4d2b4d1d54590f3187cc2cb06e, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -112,13 +113,15 @@ MonoBehaviour:
   cooldown: 1.5
   range: 5.5
   size: 1
-  chargeDameMax: 5
-  chargeDameTime: 5
-  chargeSizeMax: 2
-  chargeSizeTime: 5
-  chargeRangeMax: 2
-  chargeRangeTime: 5
-  chargeBulletInterval: 0.5
-  chargeBulletMaxAdd: 5
+  chargeCooldown: 10
+  chargeDameStep: 0.2
+  chargeDameTime: 3
+  chargeSizeStep: 0.05
+  chargeSizeTime: 3
+  chargeRangeStep: 0.1
+  chargeRangeTime: 3
+  chargeBulletStep: 1
+  chargeBulletTime: 3
+  chargeStepTime: 0.6
   speedScale: 6
   stagger: 0.5

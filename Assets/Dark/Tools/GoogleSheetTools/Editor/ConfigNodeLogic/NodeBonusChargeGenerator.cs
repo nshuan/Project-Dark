@@ -18,18 +18,11 @@ namespace Dark.Tools.GoogleSheetTool
                 return null;
             }
 
-            if (!int.TryParse(subType, out var bonusTypeIndex))
-            {
-                Debug.LogError($"Invalid sub-type string: {subType}");
-                return null;
-            }
-
             try
             {
                 var bonusValue = value[0].Split(',').Select((str) => float.Parse(str, CultureInfo.InvariantCulture)).ToArray();
                 return new NodeBonusChargeSize()
                 {
-                    bonusType = (NodeBonusChargeBullet.BonusType)bonusTypeIndex,
                     value = bonusValue,
                 };
             }
@@ -50,18 +43,11 @@ namespace Dark.Tools.GoogleSheetTool
                 return null;
             }
 
-            if (!int.TryParse(subType, out var bonusTypeIndex))
-            {
-                Debug.LogError($"Invalid sub-type string: {subType}");
-                return null;
-            }
-
             try
             {
                 var bonusValue = value[0].Split(',').Select((str) => float.Parse(str, CultureInfo.InvariantCulture)).ToArray();
                 return new NodeBonusChargeBullet()
                 {
-                    bonusType = (NodeBonusChargeBullet.BonusType)bonusTypeIndex,
                     value = bonusValue,
                 };
             }
@@ -87,7 +73,7 @@ namespace Dark.Tools.GoogleSheetTool
                 var bonusValue = value[0].Split(',').Select((str) => float.Parse(str, CultureInfo.InvariantCulture)).ToArray();
                 return new NodeBonusCharge()
                 {
-                    bonusType = NodeBonusCharge.BonusType.MaxTime,
+                    bonusType = NodeBonusCharge.BonusType.StepTime,
                     value = bonusValue,
                     isMul = isMul
                 };

@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace InGame.Upgrade
 {
@@ -40,18 +41,19 @@ namespace InGame.Upgrade
         {
             if (level < 0) return "??";
             if (level >= value.Length) level = value.Length - 1;
+            
             switch (bonusType)
             {
                 case BonusPlayerType.Health:
                 case BonusPlayerType.Damage:
                 case BonusPlayerType.Cooldown:
-                    if (isMultiply) return (value[level] * 100).ToString();
-                    else return value[level].ToString();
+                    if (isMultiply) return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
+                    else return value[level].ToString(CultureInfo.InvariantCulture);
                 case BonusPlayerType.CriticalRate:
                 case BonusPlayerType.CriticalDame:
-                    return (value[level] * 100).ToString();
+                    return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
             }
-            return value[level].ToString();
+            return value[level].ToString(CultureInfo.InvariantCulture);
         }
 
         public int MaxLevel => value.Length;

@@ -9,7 +9,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         {
             UpdateUI();
             
-            if (config.preRequire == null || config.preRequire.Length == 0)
+            if (preRequires == null || preRequires.Count == 0)
             {
                 UpgradeManager.Instance.UpgradeNode(config.nodeId);
                 UpdateUI();

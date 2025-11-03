@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace InGame.Upgrade
 {
@@ -19,21 +20,22 @@ namespace InGame.Upgrade
         {
             if (level < 0) return "??";
             if (level >= value.Length) level = value.Length - 1;
+            
             switch (bonusType)
             {
                 case BonusSkillType.Damage:
                 case BonusSkillType.Cooldown:
                 case BonusSkillType.Size:
                 case BonusSkillType.Range:
-                    if (isMultiply) return (value[level] * 100).ToString();
-                    else return value[level].ToString();
+                    if (isMultiply) return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
+                    else return value[level].ToString(CultureInfo.InvariantCulture);
                 case BonusSkillType.Stagger:
-                    return (value[level] * 100).ToString();
+                    return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
                 case BonusSkillType.BulletNum:
                 case BonusSkillType.BulletMaxHit:
                     break;
             }
-            return value[level].ToString();
+            return value[level].ToString(CultureInfo.InvariantCulture);
         }
 
         public int MaxLevel => value.Length;

@@ -12,7 +12,7 @@ namespace InGame
 
         public void CheckWin(LevelManager levelManager)
         {
-            if (levelManager.Level.waveInfo.All((wave) => wave.WaveEndedCompletely))
+            if (levelManager.Level.waveInfo[^1].WaveEndedCompletely)
                 levelManager.WinLevel();
         }
     }
