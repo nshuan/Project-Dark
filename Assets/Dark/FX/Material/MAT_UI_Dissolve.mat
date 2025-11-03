@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: MAT_UI_Dissolve
-  m_Shader: {fileID: 4800000, guid: 83390e21fc975294aa12ba7039103cdd, type: 3}
+  m_Shader: {fileID: 4800000, guid: 04133219a4fa05a41ba8518cea9ac9dd, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -41,9 +41,14 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - Disolve_Value: 0.9716797
-    - Seed: -3.12
+    - Disolve_Seed: -8
+    - Disolve_Value: 0.26
+    - Pixel_Size: 16
+    - Seed: -8
     - _CanvasGroupCompatible: 1
+    - _ColorHSV_Brightness: 1
+    - _ColorHSV_Hue: 180
+    - _ColorHSV_Saturation: 1
     - _ColorMask: 15
     - _Cutoff: 0.263
     - _DissolveAmount: 1
@@ -53,10 +58,15 @@ Material:
     - _OutlineReferenceTexWidth: 1024
     - _OutlineSmoothness: 1
     - _OutlineWidth: 3
+    - _ShinyFX_Intensity_1: 1
+    - _ShinyFX_Pos_1: 0
+    - _ShinyFX_Size_1: -0.1
+    - _ShinyFX_Smooth_1: 0.25
+    - _ShinyFX_Speed_1: 1
     - _Size: 3.74
     - _Speed: 0.372
     - _SpriteFade: 1
-    - _SrcFactor: 5
+    - _SrcFactor: 1
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
@@ -67,7 +77,7 @@ Material:
     - _Use8Neighbourhood: 1
     - _UseUIAlphaClip: 1
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0, g: 0.56467104, b: 1, a: 1}
     - _DissolveColor: {r: 1, g: 0.6878892, b: 0, a: 1}
     - _OutlineColor: {r: 1, g: 1, b: 0, a: 1}
   m_BuildTextureStacks: []
