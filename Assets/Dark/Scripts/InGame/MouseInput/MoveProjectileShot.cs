@@ -129,7 +129,7 @@ namespace InGame
                 InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(skillRange);
                 
                 LevelUtility.CurrentSkill.Shoot(
-                    LevelUtility.CurrentSkill.projectiles[PlayerProjectileType.Normal],
+                    LevelUtility.CurrentSkill.projectiles[(isCharge && canChargeSize) ? PlayerProjectileType.ChargeSize : PlayerProjectileType.Normal],
                     InputManager.ProjectileSpawnPos.position,
                     LevelManager.Instance.CurrentTower.GetBaseCenter(),
                     tempMousePos,

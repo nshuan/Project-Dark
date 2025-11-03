@@ -189,7 +189,17 @@ namespace InGame
                 OnHit = null;
                 lifeTime = 0f;
                 activated = false;
+                
+                if (HitActions != null)
+                {
+                    foreach (var action in HitActions)
+                    {
+                        action.DoAction(this, transform.position);
+                    }
+                }
+                
                 ProjectilePool.Instance.Release(this);
+                
                 return;
             }
 
