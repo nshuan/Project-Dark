@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1569795731929869319}
   - component: {fileID: 6844351392576462872}
   - component: {fileID: 7452188291282449498}
+  - component: {fileID: 1617453716725495981}
   m_Layer: 0
   m_Name: HomingProjectile
   m_TagString: Untagged
@@ -48,40 +49,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collider: {fileID: 4792537653954810546}
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 8
   baseDamageRange: 0.051
-  baseSpeed: 20
+  baseSpeed: 2
   maxDistance: 0
   activateTime: 0
   activateSpeed: 8
   rotateSpeed: 300
-  speedCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  timeToReachMaxSpeed: 1
 --- !u!96 &7452188291282449498
 TrailRenderer:
   serializedVersion: 3
@@ -195,6 +168,18 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
+--- !u!114 &1617453716725495981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302550039386543899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b83d5f2e73b4265bb13d8bb11eabc27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &740352311717142611
 GameObject:
   m_ObjectHideFlags: 0

@@ -42,7 +42,7 @@ namespace InGame
 
         #region Upgrade
 
-        [ReadOnly, NonSerialized, OdinSerialize] private UpgradeBonusInfo bonusInfo;
+        [ReadOnly, NonSerialized, OdinSerialize] private UpgradeBonusInfo bonusInfo = new UpgradeBonusInfo();
         
         #endregion
         
