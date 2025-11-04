@@ -12,6 +12,7 @@ namespace InGame
 
         [SerializeField] protected ProjectileCollider collider;
         [SerializeField] private float baseDamageRange = 0.1f;
+        public bool forceHideDeadObject;
         
         [Space] [Header("Bullet config")]
         [SerializeField] private float baseSpeed = 5f;
@@ -147,7 +148,7 @@ namespace InGame
             {
                 DebugUtility.Log($"Hit enemy {hitEnemyInfo.hitEnemy}");
                 // Nếu trúng con quái này xong là destroy đạn thì ko di chuyển viên đạn nữa, set vị trí vào chỗ con quái luôn
-                if (currentHit + 1 >= MaxHit)
+                if (!forceHideDeadObject && currentHit + 1 >= MaxHit)
                 {
                     transform.position = hitEnemyInfo.hitEnemy.transform.position;
                     
