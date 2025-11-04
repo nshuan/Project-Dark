@@ -149,14 +149,11 @@ namespace InGame
                 {
                     InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(skillRange);
                     
-                    for (var i = 0; i < bulletChargeAdded; i++)
+                    ChargeController.Attack((projectile, direction, delay) =>
                     {
-                        var p = ProjectilePool.Instance.Get(LevelUtility.CurrentSkill.projectiles[PlayerProjectileType.ChargeBullet], null, false);
-                        p.transform.position = InputManager.PlayerVisual.transform.position;
-                        p.transform.localScale = Vector3.one;
-                        p.Init(
-                            LevelManager.Instance.CurrentTower.GetBaseCenter(), 
-                            (tempMousePos - p.transform.position).normalized, 
+                        projectile.Init(
+                            projectile.transform.position, 
+                            direction.normalized, 
                             skillRange,
                             skillSize, 
                             LevelUtility.CurrentSkill.speedScale,
@@ -170,28 +167,8 @@ namespace InGame
                             LevelUtility.BonusInfo.skillBonus.GetProjectileHitActions(true),
                             ProjectileType.PlayerProjectile);
                         
-                        p.Activate(0.2f + 0.15f * i);
-                    }
-                    // ChargeController.Attack((projectile, direction, delay) =>
-                    // {
-                    //     projectile.Init(
-                    //         projectile.transform.position, 
-                    //         direction.normalized, 
-                    //         skillRange,
-                    //         skillSize, 
-                    //         LevelUtility.CurrentSkill.speedScale,
-                    //         damage,
-                    //         criticalDamage, 
-                    //         critRate, 
-                    //         LevelUtility.CurrentSkill.stagger, 
-                    //         true, 
-                    //         maxHit, 
-                    //         null, 
-                    //         LevelUtility.BonusInfo.skillBonus.GetProjectileHitActions(true),
-                    //         ProjectileType.PlayerProjectile);
-                    //     
-                    //     projectile.Activate(delay);
-                    // });
+                        projectile.Activate(delay);
+                    });
                 }
 
                 InputManager.BlockTeleport = false;
@@ -335,11 +312,11 @@ namespace InGame
                         if (canChargeBullet && bulletChargeMaxStep > 0)
                         {
                             bulletChargeAdded = (int)(bulletPerStep * Math.Min(chargeStep, bulletChargeMaxStep));
-                            // for (int i = 0; i < bulletChargeAdded - ChargeController.TotalBulletAdded; i++)
-                            // {
-                            //     ChargeController.AddBullet(InputManager.PlayerVisual.transform.position,
-                            //         worldMousePosition - InputManager.PlayerVisual.transform.position);
-                            // }
+                            for (int i = 0; i < bulletChargeAdded - ChargeController.TotalBulletAdded; i++)
+                            {
+                                ChargeController.AddBullet(InputManager.PlayerVisual.transform.position,
+                                    worldMousePosition - InputManager.PlayerVisual.transform.position);
+                            }
                         }
 
                         if (canChargeDame && dameChargeMaxStep > 0)
