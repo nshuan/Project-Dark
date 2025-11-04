@@ -32,6 +32,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] protected GameObject imgAvailable;
         [SerializeField] protected GameObject imgLock;
         [SerializeField] protected UIParticle vfxActivate;
+        [SerializeField] protected UIParticle vfxActivateMax;
         [SerializeField] protected AudioComponent sfxUnlockSuccess;
         [SerializeField] protected AudioComponent sfxUnlockFailure;
         [SerializeField] protected TextMeshProUGUI txtNodeLevel;
@@ -197,7 +198,6 @@ namespace Dark.Scripts.OutGame.Upgrade
                     UpgradeManager.Instance.GetData(preRequire.preRequireId) == null ||
                     UpgradeManager.Instance.GetData(preRequire.preRequireId).level == 0))
                 return;
-            vfxActivate?.Play();
             DoUpgrade().Play();
             treeRef.UpdateChildren(config.nodeId);
         }
@@ -209,12 +209,14 @@ namespace Dark.Scripts.OutGame.Upgrade
             if (UpgradeManager.Instance.GetData(config.nodeId).level >= config.MaxLevel)
             {
                 DOTween.Kill(rectActivatedMaxOutline);
-                DOTween.Sequence(rectActivatedMaxOutline)
+                vfxActivateMax.Play();
+                return DOTween.Sequence(rectActivatedMaxOutline)
                     .Append(rectActivatedMaxOutline.DOLocalRotate(new Vector3(0f, 0f, 180f), 0.4f).SetRelative())
                     .Join(rectActivatedMaxOutline.DOScale(1.2f, 0.4f).SetEase(Ease.OutQuad))
                     .Append(rectActivatedMaxOutline.DOScale(1f, 0.2f).SetEase(Ease.InQuad));
             }
 
+            vfxActivate?.Play();
             return DOTween.Sequence(this)
                 .Append(imgBorder.DOLocalRotate(new Vector3(0f, 0f, 180f), 0.4f).SetRelative())
                 .Join(imgBorder.DOScale(1.2f, 0.4f).SetEase(Ease.OutQuad))
