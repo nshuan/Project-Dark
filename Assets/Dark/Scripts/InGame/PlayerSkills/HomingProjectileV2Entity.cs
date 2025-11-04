@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using InGame.ProjectileCustomPath;
@@ -20,15 +21,15 @@ namespace InGame
         private Vector3 lastTargetPosition;
         private bool canRotate = false;
         private bool blockHit;
-        
+
         public override void Init(Vector2 startPos, Vector2 direction, float maxDistance, float size, float speedScale, int damage,
             int criticalDamage, float criticalRate, float stagger, bool isCharge, int maxHit, List<IProjectileActivate> activateActions, List<IProjectileHit> hitActions, ProjectileType damageType)
         {
             base.Init(startPos, direction, maxDistance, size, speedScale, damage, criticalDamage, criticalRate, stagger, isCharge, maxHit, activateActions, hitActions, damageType);
 
+            transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
             canRotate = false;
             blockHit = true;
-            transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
             
             if (WeaponSupporter.EnemyTargetingIndex < WeaponSupporter.EnemiesCountInRange)
             {
@@ -40,7 +41,7 @@ namespace InGame
             if (targetToChase)
                 homingController.InitializeProjectile(targetToChase.transform.position, Speed, 0.15f);
             else
-                homingController.InitializeProjectile(RangeCenter + this.direction.normalized * this.maxDistance, Speed, 0.15f);
+                homingController.InitializeProjectile(RangeCenter + this.direction * this.maxDistance, Speed, 0.15f);
             homingController.InitializeAnimationCurve(ProjectileCurveManifest.GetRandomTrajectoryCurve(),
                 ProjectileCurveManifest.GetAxisCorrectionCurve(0), ProjectileCurveManifest.GetProjectileSpeedCurve(0));
         }
@@ -48,6 +49,11 @@ namespace InGame
         protected override IEnumerator IEActivate(float delay)
         {
             yield return new WaitForSeconds(delay);
+
+            var activateVfx = ProjectileVfxActivatePool.Instance.Get(transform, true);
+            activateVfx.transform.localPosition = Vector3.zero;
+            activateVfx.transform.localRotation = Quaternion.identity;
+            activateVfx.Activate();
 
             canRotate = true;
             activated = true;
@@ -139,6 +145,7 @@ namespace InGame
         {
             if (blockHit) return;
             targetToChase = null;
+            currentHit = MaxHit;
             base.ProjectileHit(hit);
         }
     }

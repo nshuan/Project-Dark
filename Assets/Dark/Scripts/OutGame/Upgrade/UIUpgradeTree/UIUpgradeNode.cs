@@ -31,13 +31,17 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] protected Transform rectActivatedMaxOutline;
         [SerializeField] protected GameObject imgAvailable;
         [SerializeField] protected GameObject imgLock;
+        [SerializeField] protected UIParticle vfxUnlock;
         [SerializeField] protected UIParticle vfxActivate;
+        [SerializeField] protected UIParticle vfxActivateMax;
         [SerializeField] protected AudioComponent sfxUnlockSuccess;
         [SerializeField] protected AudioComponent sfxUnlockFailure;
         [SerializeField] protected TextMeshProUGUI txtNodeLevel;
         [SerializeField] protected GameObject txtNodeMaxLevel;
         public float lineAnchorOffsetRadius;
 
+        private UIUpgradeNodeState currentState = UIUpgradeNodeState.Activated;
+        
         protected virtual void OnEnable()
         {
             UpdateUI();
@@ -51,6 +55,13 @@ namespace Dark.Scripts.OutGame.Upgrade
                 // Always available or all pre-required nodes are activated
                 if (preRequires == null || preRequires.Count == 0 || preRequires.Any((preRequire) => UpgradeManager.Instance.GetData(preRequire.preRequireId) != null && UpgradeManager.Instance.GetData(preRequire.preRequireId).level > 0))
                 {
+                    // Case available, if currentState = Locked => has just been unlocked
+                    if (currentState == UIUpgradeNodeState.Locked)
+                    {
+                        currentState = UIUpgradeNodeState.Available;
+                        vfxUnlock.Play();
+                    }
+                    
                     if (config.hideLevelInNode)
                         txtNodeLevel.transform.parent.gameObject.SetActive(false);
                     else
@@ -65,16 +76,21 @@ namespace Dark.Scripts.OutGame.Upgrade
                     rectActivatedMaxOutline.gameObject.SetActive(false);
                     imgBorder.gameObject.SetActive(true);
 
-                    foreach (var lineInfo in preRequires)
+                    if (preRequires != null)
                     {
-                        lineInfo.line.UpdateLineState(
-                            UpgradeManager.Instance.GetData(lineInfo.preRequireId) != null && UpgradeManager.Instance.GetData(lineInfo.preRequireId).level > 0
-                            ? UIUpgradeNodeState.Available
-                            : UIUpgradeNodeState.Locked);
+                        foreach (var lineInfo in preRequires)
+                        {
+                            lineInfo.line.UpdateLineState(
+                                UpgradeManager.Instance.GetData(lineInfo.preRequireId) != null && UpgradeManager.Instance.GetData(lineInfo.preRequireId).level > 0
+                                ? UIUpgradeNodeState.Available
+                                : UIUpgradeNodeState.Locked);
+                        }
                     }
                 }
                 else
                 {
+                    // Locked
+                    currentState = UIUpgradeNodeState.Locked;
                     txtNodeLevel.transform.parent.gameObject.SetActive(false);
                     imgAvailable.SetActive(false);
                     imgLock.SetActive(true);
@@ -92,12 +108,14 @@ namespace Dark.Scripts.OutGame.Upgrade
                     }
                 }
             }
-            else // Activated
+            else 
             {
+                // Locked
                 if (preRequires is { Count: > 0 } && preRequires.All((preRequire) =>
                         UpgradeManager.Instance.GetData(preRequire.preRequireId) == null ||
                         UpgradeManager.Instance.GetData(preRequire.preRequireId).level == 0))
                 {
+                    currentState = UIUpgradeNodeState.Locked;
                     txtNodeLevel.transform.parent.gameObject.SetActive(false);
                     imgAvailable.SetActive(false);
                     imgLock.SetActive(true);
@@ -116,6 +134,9 @@ namespace Dark.Scripts.OutGame.Upgrade
                 }
                 else
                 {
+                    // Activated
+                    currentState = UIUpgradeNodeState.Activated;
+                    
                     if (config.hideLevelInNode)
                         txtNodeLevel.transform.parent.gameObject.SetActive(false);
                     else
@@ -197,7 +218,6 @@ namespace Dark.Scripts.OutGame.Upgrade
                     UpgradeManager.Instance.GetData(preRequire.preRequireId) == null ||
                     UpgradeManager.Instance.GetData(preRequire.preRequireId).level == 0))
                 return;
-            vfxActivate?.Play();
             DoUpgrade().Play();
             treeRef.UpdateChildren(config.nodeId);
         }
@@ -209,12 +229,14 @@ namespace Dark.Scripts.OutGame.Upgrade
             if (UpgradeManager.Instance.GetData(config.nodeId).level >= config.MaxLevel)
             {
                 DOTween.Kill(rectActivatedMaxOutline);
-                DOTween.Sequence(rectActivatedMaxOutline)
+                vfxActivateMax.Play();
+                return DOTween.Sequence(rectActivatedMaxOutline)
                     .Append(rectActivatedMaxOutline.DOLocalRotate(new Vector3(0f, 0f, 180f), 0.4f).SetRelative())
                     .Join(rectActivatedMaxOutline.DOScale(1.2f, 0.4f).SetEase(Ease.OutQuad))
                     .Append(rectActivatedMaxOutline.DOScale(1f, 0.2f).SetEase(Ease.InQuad));
             }
 
+            vfxActivate?.Play();
             return DOTween.Sequence(this)
                 .Append(imgBorder.DOLocalRotate(new Vector3(0f, 0f, 180f), 0.4f).SetRelative())
                 .Join(imgBorder.DOScale(1.2f, 0.4f).SetEase(Ease.OutQuad))

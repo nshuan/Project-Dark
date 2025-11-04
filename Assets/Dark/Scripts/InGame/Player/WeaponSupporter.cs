@@ -1,3 +1,4 @@
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace InGame
@@ -15,6 +16,7 @@ namespace InGame
         {
             EnemiesCountInRange = Physics2D.CircleCastNonAlloc(transform.position, radius, Vector2.zero, enemiesInRange,
                 0f, enemyLayer);
+            enemiesInRange.Sort((x, y) => x.distance.CompareTo(y.distance));
             EnemyTargetingIndex = 0;
         }
     }

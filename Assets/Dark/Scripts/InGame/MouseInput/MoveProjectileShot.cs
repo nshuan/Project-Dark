@@ -148,6 +148,7 @@ namespace InGame
                 if (isCharge)
                 {
                     InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(skillRange);
+                    
                     ChargeController.Attack((projectile, direction, delay) =>
                     {
                         projectile.Init(

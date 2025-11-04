@@ -31,7 +31,7 @@ namespace InGame
             p.RangeCenter = spawnPos;
             p.gameObject.SetActive(true);
             projectiles.Add(p);
-            spawnCoroutines.Add(StartCoroutine(IESpawnProjectile(p, aimDirection.normalized)));
+            spawnCoroutines.Add(StartCoroutine(IESpawnProjectile(TotalBulletAdded, p, aimDirection.normalized)));
             TotalBulletAdded += 1;
         }
 
@@ -56,7 +56,7 @@ namespace InGame
             TotalBulletAdded = 0;
         }
 
-        private IEnumerator IESpawnProjectile(ProjectileEntity projectile, Vector2 direction)
+        private IEnumerator IESpawnProjectile(int index, ProjectileEntity projectile, Vector2 direction)
         {
             var spawnDirection = Quaternion.Euler(0f, 0f, Random.Range(-45f, 45f)) * direction * Random.Range(0.5f, 0.6f);
             var timer = 0f;

@@ -225,35 +225,33 @@ namespace InGame
             
             
             OnHit?.Invoke(damage, dmgType);
+            if (stagger - config.staggerResist > 0)
+            {
+                var mag = Mathf.Sqrt(HitDirectionX * HitDirectionX + HitDirectionY * HitDirectionY);
+                if (mag == 0)
+                {
+                    staggerTargetPos.x = transform.position.x;
+                    staggerTargetPos.y = transform.position.y;
+                }
+                else
+                {
+                    staggerTargetPos.x = (stagger - config.staggerResist) * HitDirectionX / mag + transform.position.x;
+                    staggerTargetPos.y = (stagger - config.staggerResist) * HitDirectionY / mag + transform.position.y;
+                }
+                    
+                staggerDuration = Mathf.Abs(stagger - config.staggerResist) / config.staggerVelocity;
+                freezeDuration = staggerDuration;
+            }
+
+            animController.PlayHit();
+            // invisibleTimer = config.invisibleDuration;
+            invisibleTimer = 0f;
+            State = EnemyState.Invisible;
+            
             if (CurrentHealth <= 0)
             {
                 OnDie();
                 sfxHit.Play();
-            }
-            else
-            {
-                if (stagger - config.staggerResist > 0)
-                {
-                    var mag = Mathf.Sqrt(HitDirectionX * HitDirectionX + HitDirectionY * HitDirectionY);
-                    if (mag == 0)
-                    {
-                        staggerTargetPos.x = transform.position.x;
-                        staggerTargetPos.y = transform.position.y;
-                    }
-                    else
-                    {
-                        staggerTargetPos.x = (stagger - config.staggerResist) * HitDirectionX / mag + transform.position.x;
-                        staggerTargetPos.y = (stagger - config.staggerResist) * HitDirectionY / mag + transform.position.y;
-                    }
-                    
-                    staggerDuration = Mathf.Abs(stagger - config.staggerResist) / config.staggerVelocity;
-                    freezeDuration = staggerDuration;
-                }
-
-                animController.PlayHit();
-                // invisibleTimer = config.invisibleDuration;
-                invisibleTimer = 0f;
-                State = EnemyState.Invisible;
             }
         }
 
@@ -284,6 +282,8 @@ namespace InGame
 
         private IEnumerator IEDie(float delayAnim, float delayRelease)
         {
+            // Đợi chạy xong anim hit rồi mới chạy anim die
+            yield return new WaitForSeconds(0.3f);
             shadow.SetActive(false);    
             yield return new WaitForSeconds(delayAnim);
             yield return new WaitForSeconds(delayRelease);

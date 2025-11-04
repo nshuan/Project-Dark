@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Core;
+using Dark.Scripts.Utils;
 using UnityEngine;
 
 namespace InGame
@@ -35,20 +36,23 @@ namespace InGame
             return obj;
         }
 
-        public void Release(ProjectileEntity obj)
+        public void Release(ProjectileEntity obj, float delay)
         {
-            var type = obj.GetType();
-            obj.transform.SetParent(transform);
-            obj.gameObject.SetActive(false);
-
-            if (!queueDict.TryGetValue(type, out var pool))
+            this.DelayCall(delay, () =>
             {
-                pool = new Queue<ProjectileEntity>();
-                queueDict[type] = pool;
-            }
-            
-            if (pool.Contains(obj)) return;
-            pool.Enqueue(obj);
+                var type = obj.GetType();
+                obj.transform.SetParent(transform);
+                obj.gameObject.SetActive(false);
+
+                if (!queueDict.TryGetValue(type, out var pool))
+                {
+                    pool = new Queue<ProjectileEntity>();
+                    queueDict[type] = pool;
+                }
+
+                if (pool.Contains(obj)) return;
+                pool.Enqueue(obj);
+            });
         }
     }
 }

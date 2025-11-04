@@ -33,7 +33,7 @@ namespace InGame
                     pDir.normalized, 
                     blossomSize, 
                     parentProjectile.Size, 
-                    1.3f, 
+                    LevelUtility.CurrentSkill.speedScale, 
                     parentProjectile.Damage, 
                     parentProjectile.CriticalDamage, 
                     parentProjectile.CriticalRate,

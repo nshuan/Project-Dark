@@ -83,6 +83,7 @@ namespace InGame
                     if (allHitEnemiesInCurrentShot.Any((hit) => ReferenceEquals(hit, hits[i].transform))) continue;
                     if (hits[i].transform.TryGetComponent<EnemyEntity>(out hitEnemyInfo.hitEnemy))
                     {
+                        hitEnemyInfo.hit = hits[i];
                         if (totalHitCountInCurrentShot < allHitEnemiesInCurrentShot.Count)
                             allHitEnemiesInCurrentShot[totalHitCountInCurrentShot] = hits[i].transform;
                         else
@@ -153,6 +154,7 @@ namespace InGame
         public struct HitEnemyInfo
         {
             public EnemyEntity hitEnemy;
+            public RaycastHit2D hit;
         }
     }
 }
