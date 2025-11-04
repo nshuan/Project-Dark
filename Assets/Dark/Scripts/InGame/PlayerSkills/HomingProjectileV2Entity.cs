@@ -145,6 +145,7 @@ namespace InGame
         {
             if (blockHit) return;
             targetToChase = null;
+            currentHit = MaxHit;
             base.ProjectileHit(hit);
         }
     }
