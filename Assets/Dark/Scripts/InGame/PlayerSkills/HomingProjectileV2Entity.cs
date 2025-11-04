@@ -40,7 +40,7 @@ namespace InGame
             if (targetToChase)
                 homingController.InitializeProjectile(targetToChase.transform.position, Speed, 0.15f);
             else
-                homingController.InitializeProjectile(RangeCenter + this.direction.normalized * this.maxDistance, Speed, 0.15f);
+                homingController.InitializeProjectile(RangeCenter + this.direction * this.maxDistance, Speed, 0.15f);
             homingController.InitializeAnimationCurve(ProjectileCurveManifest.GetRandomTrajectoryCurve(),
                 ProjectileCurveManifest.GetAxisCorrectionCurve(0), ProjectileCurveManifest.GetProjectileSpeedCurve(0));
         }

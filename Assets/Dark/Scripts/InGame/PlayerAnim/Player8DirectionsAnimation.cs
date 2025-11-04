@@ -4,6 +4,7 @@ using Dark.Scripts.FrameByFrameAnimation;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace InGame
 {
@@ -95,6 +96,8 @@ namespace InGame
             currentFrame = 0;
             spriteRenderer.sprite = CurrentAnim.data.frames[0];
             timer = 0f;
+            chargeFxLower?.gameObject.SetActive(false);
+            chargeFxUpper?.gameObject.SetActive(false);
         }
         
         public void PlaySpecialAttack()
@@ -123,14 +126,14 @@ namespace InGame
                         var showChargeLower = directionInfo[currentDirection].showChargeFxLower;
                         if (showChargeLower && chargeFxLower)
                         {
-                            chargeFxLower.localPosition = directionInfo[currentDirection].chargeFxPosition;
+                            chargeFxLower.localPosition = directionInfo[currentDirection].chargeFxLocalPosition;
                             if (currentFrame >= CurrentAnim.data.frames.Length - 1)
                                 chargeFxLower.gameObject.SetActive(true);
                             chargeFxUpper?.gameObject.SetActive(false);
                         }
                         else if (!showChargeLower && chargeFxUpper)
                         {
-                            chargeFxUpper.localPosition = directionInfo[currentDirection].chargeFxPosition;
+                            chargeFxUpper.localPosition = directionInfo[currentDirection].chargeFxLocalPosition;
                             if (currentFrame >= CurrentAnim.data.frames.Length - 1)
                                 chargeFxUpper.gameObject.SetActive(true);
                             chargeFxLower?.gameObject.SetActive(false);
@@ -191,7 +194,7 @@ namespace InGame
             public PlayerSpritesAnimationInfo specialAttackAnim;
             public PlayerSpritesAnimationInfo chargeAnim;
             public PlayerSpritesAnimationInfo chargeAttackAnim;
-            public Vector2 chargeFxPosition;
+            public Vector2 chargeFxLocalPosition;
             public bool showChargeFxLower;
         }
     }
