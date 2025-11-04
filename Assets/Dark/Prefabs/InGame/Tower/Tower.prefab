@@ -137,11 +137,6 @@ MonoBehaviour:
   vfxActivateCounterDuration: 1.5
   bulletSpeedScale: 2
   canCounter: 0
-  baseDamage: 0
-  baseCooldown: 1.7
-  stagger: 1
-  baseRange: 5
-  damageAngle: 100
   hitLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -710,9 +705,6 @@ MonoBehaviour:
   vfxActivateCounterDuration: 1
   bulletSpeedScale: 2
   canCounter: 0
-  baseDamage: 0
-  baseCooldown: 2
-  stagger: 0.7
 --- !u!1 &4590216449570193756
 GameObject:
   m_ObjectHideFlags: 0
@@ -1190,7 +1182,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2526228411468458188}
+  - {fileID: 1562603257141922601}
   m_Father: {fileID: 5438448218624149503}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6510341728723444220
@@ -1524,62 +1516,66 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8706778465479924651}
     m_Modifications:
-    - target: {fileID: 3405513093600687500, guid: 3cce6a55bf75b3e438936fa40b99a107, type: 3}
+    - target: {fileID: 261947805701567024, guid: 8f47077cad47cc44c8643da8e9a649f8, type: 3}
+      propertyPath: m_Name
+      value: FX_Ingame_Tower_CounterStart
+      objectReference: {fileID: 0}
+    - target: {fileID: 261947805701567024, guid: 8f47077cad47cc44c8643da8e9a649f8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1865435983097435753, guid: 8f47077cad47cc44c8643da8e9a649f8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3405513093600687500, guid: 3cce6a55bf75b3e438936fa40b99a107, type: 3}
+    - target: {fileID: 1865435983097435753, guid: 8f47077cad47cc44c8643da8e9a649f8, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3405513093600687500, guid: 3cce6a55bf75b3e438936fa40b99a107, type: 3}
+    - target: {fileID: 1865435983097435753, guid: 8f47077cad47cc44c8643da8e9a649f8, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3405513093600687500, guid: 3cce6a55bf75b3e438936fa40b99a107, type: 3}
+    - target: {fileID: 1865435983097435753, guid: 8f47077cad47cc44c8643da8e9a649f8, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.9431067
       objectReference: {fileID: 0}
-    - target: {fileID: 3405513093600687500, guid: 3cce6a55bf75b3e438936fa40b99a107, type: 3}
+    - target: {fileID: 1865435983097435753, guid: 8f47077cad47cc44c8643da8e9a649f8, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3405513093600687500, guid: 3cce6a55bf75b3e438936fa40b99a107, type: 3}
+    - target: {fileID: 1865435983097435753, guid: 8f47077cad47cc44c8643da8e9a649f8, type: 3}
       propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3405513093600687500, guid: 3cce6a55bf75b3e438936fa40b99a107, type: 3}
+    - target: {fileID: 1865435983097435753, guid: 8f47077cad47cc44c8643da8e9a649f8, type: 3}
       propertyPath: m_LocalRotation.z
       value: -0.33249032
       objectReference: {fileID: 0}
-    - target: {fileID: 3405513093600687500, guid: 3cce6a55bf75b3e438936fa40b99a107, type: 3}
+    - target: {fileID: 1865435983097435753, guid: 8f47077cad47cc44c8643da8e9a649f8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3405513093600687500, guid: 3cce6a55bf75b3e438936fa40b99a107, type: 3}
+    - target: {fileID: 1865435983097435753, guid: 8f47077cad47cc44c8643da8e9a649f8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3405513093600687500, guid: 3cce6a55bf75b3e438936fa40b99a107, type: 3}
+    - target: {fileID: 1865435983097435753, guid: 8f47077cad47cc44c8643da8e9a649f8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -38.84
       objectReference: {fileID: 0}
-    - target: {fileID: 3405513093600687500, guid: 3cce6a55bf75b3e438936fa40b99a107, type: 3}
+    - target: {fileID: 1865435983097435753, guid: 8f47077cad47cc44c8643da8e9a649f8, type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4636281535692675277, guid: 3cce6a55bf75b3e438936fa40b99a107, type: 3}
-      propertyPath: m_Name
-      value: FX_Ingame_Tower_Vowpiece
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 3cce6a55bf75b3e438936fa40b99a107, type: 3}
---- !u!4 &2526228411468458188 stripped
+  m_SourcePrefab: {fileID: 100100000, guid: 8f47077cad47cc44c8643da8e9a649f8, type: 3}
+--- !u!4 &1562603257141922601 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 3405513093600687500, guid: 3cce6a55bf75b3e438936fa40b99a107, type: 3}
+  m_CorrespondingSourceObject: {fileID: 1865435983097435753, guid: 8f47077cad47cc44c8643da8e9a649f8, type: 3}
   m_PrefabInstance: {fileID: 886126410451721536}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4803450287396633782
