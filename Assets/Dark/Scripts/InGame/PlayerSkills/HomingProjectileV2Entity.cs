@@ -53,7 +53,7 @@ namespace InGame
             var activateVfx = ProjectileVfxActivatePool.Instance.Get(transform, true);
             activateVfx.transform.localPosition = Vector3.zero;
             activateVfx.transform.localRotation = Quaternion.identity;
-            activateVfx.Activate();
+            activateVfx.Activate((vfx) => ProjectileVfxActivatePool.Instance.Release(vfx));
 
             canRotate = true;
             activated = true;

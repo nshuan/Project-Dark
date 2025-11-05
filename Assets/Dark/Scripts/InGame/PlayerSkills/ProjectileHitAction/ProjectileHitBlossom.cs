@@ -15,7 +15,7 @@ namespace InGame
         public int bulletAmount = 5;
         public float blossomSize = 3f;
         
-        public void DoAction(ProjectileEntity parentProjectile, Vector2 position)
+        public void DoAction(ProjectileEntity parentProjectile, Vector2 position, Action<ProjectileEntity> callbackLateInit)
         {
             var amount = LevelUtility.GetChargeSizeExplodeBullet(bulletAmount);
             
@@ -43,7 +43,10 @@ namespace InGame
                     null, 
                     null, 
                     ProjectileType.PlayerProjectile);
-                p.Activate(0f);
+                
+                callbackLateInit?.Invoke(p);
+                
+                p.Activate(0);
             }
         }
     }

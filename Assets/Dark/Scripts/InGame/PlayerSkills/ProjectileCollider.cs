@@ -143,6 +143,16 @@ namespace InGame
             // }
         }
 
+        public void IgnoreEnemy(EnemyEntity enemy)
+        {
+            allHitEnemiesInCurrentShot ??= new List<Transform>();
+            if (totalHitCountInCurrentShot < allHitEnemiesInCurrentShot.Count)
+                allHitEnemiesInCurrentShot[totalHitCountInCurrentShot] = enemy.transform;
+            else
+                allHitEnemiesInCurrentShot.Add(enemy.transform);
+            totalHitCountInCurrentShot += 1;
+        }
+
         public enum ProjectileHitStatus
         {
             None,

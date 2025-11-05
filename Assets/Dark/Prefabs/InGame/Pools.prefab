@@ -76,6 +76,7 @@ Transform:
   m_Children:
   - {fileID: 8759744043467519409}
   - {fileID: 4939867613912762587}
+  - {fileID: 582626914520596758}
   m_Father: {fileID: 6229537238230664456}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3117915318253899634
@@ -134,7 +135,7 @@ GameObject:
   - component: {fileID: 4939867613912762587}
   - component: {fileID: 5075047742100313193}
   m_Layer: 0
-  m_Name: ProjectileVfxActivatePool
+  m_Name: ProjectileHomingVfxActivatePool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -433,6 +434,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prefab: {fileID: 6208888116731386985, guid: ac5a73b76f1030e4d9bb085652a9fbc7, type: 3}
+--- !u!1 &7954861340481110092
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 582626914520596758}
+  - component: {fileID: 4680679354069740128}
+  m_Layer: 0
+  m_Name: ProjectileBlossomVfxHitPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &582626914520596758
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7954861340481110092}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3303252248017155100}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4680679354069740128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7954861340481110092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c89810caf8c64efbbed4050460ef9fd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefab: {fileID: 3090693579445851596, guid: 6ab07714e2d074f41bcafcf1a00dacec, type: 3}
 --- !u!1 &8927533525640233036
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace InGame
 {
-    public class ProjectileVfxActivatePool : Pool<ProjectileVfxActivate, ProjectileVfxActivatePool>
+    public class ProjectileVfxActivatePool : Pool<ProjectileVfxAutoHide, ProjectileVfxActivatePool>
     {
         
     }

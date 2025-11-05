@@ -10,15 +10,12 @@ namespace InGame
     {
         protected const float MaxLifeTime = 10f;
 
-        [SerializeField] protected ProjectileCollider collider;
+        public ProjectileCollider collider;
         [SerializeField] private float baseDamageRange = 0.1f;
         public bool forceHideDeadObject;
         
         [Space] [Header("Bullet config")]
         [SerializeField] private float baseSpeed = 5f;
-        
-        [Space] [Header("Vfx")]
-        [SerializeField] private GameObject vfxHit;
         
         protected Vector2 direction;
         public Vector2 RangeCenter { get; set; }
@@ -61,16 +58,12 @@ namespace InGame
         private void Awake()
         {
             collider.Projectile = this;
-            hasVfxHit = vfxHit != null;
         }
 
         private void OnDisable()
         {
             activated = false;
             StopAllCoroutines();
-            
-            if (hasVfxHit)
-                vfxHit.SetActive(false);
         }
 
         public virtual void Init(
@@ -201,16 +194,8 @@ namespace InGame
                 lifeTime = 0f;
                 activated = false;
                 
-                if (hasVfxHit)
-                    vfxHit.SetActive(true);
-                
-                if (HitActions != null)
-                {
-                    foreach (var action in HitActions)
-                    {
-                        action.DoAction(this, transform.position);
-                    }
-                }
+                PlayVfxHit();
+                PlayHitActions(hit);
 
                 ProjectilePool.Instance.Release(this, hasVfxHit ? 1f : 0f);
                 
@@ -242,14 +227,8 @@ namespace InGame
             if (critical)
                 DebugUtility.LogWarning($"Projectile {name} deals critical damage {CriticalDamage} to {hit.name}!!");
 
-            if (hasVfxHit) vfxHit.SetActive(true);
-            if (HitActions != null)
-            {
-                foreach (var action in HitActions)
-                {
-                    action.DoAction(this, transform.position);
-                }
-            }
+            PlayVfxHit();
+            PlayHitActions(hit);
                     
             OnHit?.Invoke();
             currentHit += 1;
@@ -264,6 +243,22 @@ namespace InGame
                 activated = false;
                 
                 ProjectilePool.Instance.Release(this, hasVfxHit ? 1f : 0f);
+            }
+        }
+
+        protected virtual void PlayVfxHit()
+        {
+            
+        }
+
+        protected virtual void PlayHitActions(EnemyEntity hit)
+        {
+            if (HitActions != null)
+            {
+                foreach (var action in HitActions)
+                {
+                    action.DoAction(this, transform.position, null);
+                }
             }
         }
 
