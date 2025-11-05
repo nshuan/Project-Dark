@@ -72,7 +72,7 @@ namespace InGame
         protected override void Update()
         {
             if (!activated && !canRotate) return;
-            if (Vector2.Distance(transform.position, RangeCenter) > maxDistance)
+            if (Vector2.Distance(transform.position, RangeCenter) > LevelUtility.GetRelativeRange(maxDistance, (Vector2)transform.position - RangeCenter))
             {
                 if (!BlockSpawnDeadBody)
                     ProjectileDeadPool.Instance.Get(direction).position = transform.position;

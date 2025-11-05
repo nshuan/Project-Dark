@@ -114,6 +114,18 @@ namespace InGame
             return CurrentSkill.range * (1 + BonusInfo.skillBonus.skillRangeMultiply) * chargeRange * ratio;
         }
 
+        public static float GetRelativeRange(float maxRange, Vector2 direction)
+        {
+            var magnitude = direction.magnitude;
+            direction.x = Mathf.Abs(direction.x) / magnitude;
+            direction.y = Mathf.Abs(direction.y) / magnitude;
+            var angle = Mathf.Atan2(direction.y, direction.x);
+            var ratio = GameConst.IsoRatio
+                        / Mathf.Sqrt(Mathf.Pow(GameConst.IsoRatio * Mathf.Cos(angle), 2) +
+                                     Mathf.Pow(Mathf.Sin(angle), 2));
+            return maxRange * ratio;
+        }
+        
         /// <summary>
         /// Skill_Size = Size * [1 + Total (Skill_Size_Multiple) ] * [ 1 + ( Charge_Size_Max / Charge_Size_Time ) * Charge_Time ]
         /// </summary>

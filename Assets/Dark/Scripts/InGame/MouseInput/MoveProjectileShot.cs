@@ -126,8 +126,6 @@ namespace InGame
             }
             InputManager.DelayCall(delayShot, () =>
             {
-                InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(skillRange);
-                
                 LevelUtility.CurrentSkill.Shoot(
                     LevelUtility.CurrentSkill.projectiles[(isCharge && canChargeSize) ? PlayerProjectileType.ChargeSize : PlayerProjectileType.Normal],
                     InputManager.ProjectileSpawnPos.position,
@@ -147,14 +145,17 @@ namespace InGame
 
                 if (isCharge)
                 {
-                    InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(skillRange);
+                    var chargeRange = LevelUtility.GetSkillRange(
+                        canChargeRange && rangeChargeAdded > 0 ? 1 + rangeChargeAdded : 1f,
+                        Vector2.right);
+                    InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(chargeRange);
                     
                     ChargeController.Attack((projectile, direction, delay) =>
                     {
                         projectile.Init(
                             LevelManager.Instance.CurrentTower.GetBaseCenter(), 
                             direction.normalized, 
-                            skillRange,
+                            chargeRange,
                             skillSize, 
                             LevelUtility.CurrentSkill.speedScale,
                             damage,
