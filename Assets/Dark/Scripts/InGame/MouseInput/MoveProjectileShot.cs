@@ -152,7 +152,7 @@ namespace InGame
                     ChargeController.Attack((projectile, direction, delay) =>
                     {
                         projectile.Init(
-                            projectile.transform.position, 
+                            LevelManager.Instance.CurrentTower.GetBaseCenter(), 
                             direction.normalized, 
                             skillRange,
                             skillSize, 

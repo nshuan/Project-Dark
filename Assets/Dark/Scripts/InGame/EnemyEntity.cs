@@ -142,10 +142,10 @@ namespace InGame
                 // transform.position = Vector2.MoveTowards(transform.position, (Vector2)transform.position + staggerDirection, 5f * Time.deltaTime);
                 transform.position = Vector2.Lerp(transform.position, staggerTargetPos, staggerDuration);
             }
-            // else if (freezeDuration > 0)
-            // {
-            //     freezeDuration -= Time.deltaTime;
-            // }
+            else if (freezeDuration > 0)
+            {
+                freezeDuration -= Time.deltaTime;
+            }
             else
             {
                 if (boundaryManager.ContainPoint(transform.position))
@@ -223,7 +223,6 @@ namespace InGame
             
             CurrentHealth -= damage;
             
-            
             OnHit?.Invoke(damage, dmgType);
             if (stagger - config.staggerResist > 0)
             {
@@ -240,7 +239,7 @@ namespace InGame
                 }
                     
                 staggerDuration = Mathf.Abs(stagger - config.staggerResist) / config.staggerVelocity;
-                freezeDuration = staggerDuration;
+                freezeDuration = Mathf.Clamp(0.3f, 0.6f, 0.6f * (stagger - config.staggerResist));
             }
 
             animController.PlayHit();

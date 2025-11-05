@@ -230,7 +230,7 @@ namespace InGame
             hit.HitDirectionX = direction.x;
             hit.HitDirectionY = direction.y;
             hit.Damage(critical ? CriticalDamage : Damage, transform.position, Stagger, critical ? InGame.DamageType.NormalCritical : InGame.DamageType.Normal);
-            if (!hit.IsDestroyed)
+            // if (!hit.IsDestroyed)
             {
                 if (DamageType == ProjectileType.PlayerProjectile)
                     PassiveEffectManager.Instance.TriggerEffect(IsCharge ? PassiveTriggerType.DameByChargeAttack : PassiveTriggerType.DameByNormalAttack, hit);
