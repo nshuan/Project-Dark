@@ -105,7 +105,6 @@ namespace InGame
             hitStatus = ProjectileCollider.ProjectileHitStatus.None;
             hitEnemyInfo = new ProjectileCollider.HitEnemyInfo();
             collider.Init();
-            collider.UpdateLastPosition(transform.position);
         }
 
         public void Activate(float delay)
@@ -262,7 +261,7 @@ namespace InGame
             }
         }
 
-        private void OnDrawGizmos()
+        protected virtual void OnDrawGizmos()
         {
             Gizmos.DrawWireSphere(transform.position, baseDamageRange);
         }

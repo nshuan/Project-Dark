@@ -148,5 +148,12 @@ namespace InGame
             currentHit = MaxHit;
             base.ProjectileHit(hit);
         }
+        
+        protected override void OnDrawGizmos()
+        {
+            base.OnDrawGizmos();
+            if (targetToChase != null)
+                Gizmos.DrawLine(transform.position, targetToChase.position);
+        }
     }
 }
