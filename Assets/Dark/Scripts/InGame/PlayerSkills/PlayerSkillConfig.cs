@@ -72,7 +72,6 @@ namespace InGame
         Normal,
         ChargeBullet,
         ChargeSize,
-        NormalDame,
-        NormalAttackSpeed
+        ChargeBulletSize
     }
 }

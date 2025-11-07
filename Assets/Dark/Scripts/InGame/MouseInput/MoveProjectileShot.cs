@@ -124,24 +124,41 @@ namespace InGame
             {
                 delayShot = InputManager.PlayerVisual.PlayShoot(worldMousePosition);
             }
+            
             InputManager.DelayCall(delayShot, () =>
             {
-                LevelUtility.CurrentSkill.Shoot(
-                    LevelUtility.CurrentSkill.projectiles[(isCharge && canChargeSize) ? PlayerProjectileType.ChargeSize : PlayerProjectileType.Normal],
-                    InputManager.ProjectileSpawnPos.position,
-                    LevelManager.Instance.CurrentTower.GetBaseCenter(),
-                    tempMousePos,
-                    damage,
-                    isCharge ? 1 : bulletNum,
-                    skillSize,
-                    skillRange,
-                    criticalDamage,
-                    critRate,
-                    stagger,
-                    maxHit,
-                    isCharge,
-                    LevelUtility.BonusInfo.skillBonus.GetProjectileActivateActions(isCharge),
-                    LevelUtility.BonusInfo.skillBonus.GetProjectileHitActions(isCharge));
+                var isChargeBullet = canChargeBullet && bulletChargeAdded > 0;
+                var isChargeSize = canChargeSize && sizeChargeAdded > 0;
+
+                var projectileType = PlayerProjectileType.Normal;
+                if (isChargeBullet)
+                {
+                    projectileType = isChargeSize ? PlayerProjectileType.ChargeBulletSize : PlayerProjectileType.ChargeBullet;
+                }
+                else
+                {
+                    if (isChargeSize) projectileType = PlayerProjectileType.ChargeSize;
+                }
+
+                if (!isChargeBullet || isChargeSize)
+                {
+                    LevelUtility.CurrentSkill.Shoot(
+                        LevelUtility.CurrentSkill.projectiles[projectileType],
+                        InputManager.ProjectileSpawnPos.position,
+                        LevelManager.Instance.CurrentTower.GetBaseCenter(),
+                        tempMousePos,
+                        damage,
+                        isCharge ? 1 : bulletNum,
+                        skillSize,
+                        skillRange,
+                        criticalDamage,
+                        critRate,
+                        stagger,
+                        maxHit,
+                        isCharge,
+                        LevelUtility.BonusInfo.skillBonus.GetProjectileActivateActions(isCharge),
+                        LevelUtility.BonusInfo.skillBonus.GetProjectileHitActions(isCharge));
+                }
 
                 if (isCharge)
                 {
