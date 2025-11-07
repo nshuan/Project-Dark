@@ -225,9 +225,12 @@ namespace InGame
             else if (canChargeDame && dameChargeMaxStep > 0) isCharging = true;
             else if (canChargeSize && sizeChargeMaxStep > 0) isCharging = true;
             else if (canChargeRange && rangeChargeMaxStep > 0) isCharging = true;
-            
+
             if (isCharging)
+            {
+                InputManager.PlayerVisual.UpdateChargeScale(1f);
                 InputManager.PlayerVisual.PlayCharge();
+            }
         }
 
         public void OnHoldReleased()
@@ -330,6 +333,7 @@ namespace InGame
                             sizeChargeAdded = sizePerStep * Math.Min(chargeStep, sizeChargeMaxStep);
                             ChargeController.AddSize(LevelUtility.GetSkillSize(
                                 sizeChargeMaxStep > 0 ? 1 + sizeChargeAdded : 1f));
+                            InputManager.PlayerVisual.UpdateChargeScale(1f + Math.Min(chargeStep, sizeChargeMaxStep) * 0.15f);
                         }
 
                         if (canChargeRange && rangeChargeMaxStep > 0)

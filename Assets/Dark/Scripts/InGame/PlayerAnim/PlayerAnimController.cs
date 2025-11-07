@@ -32,6 +32,11 @@ namespace InGame
             return spritesAnim.PlayCharge();
         }
 
+        public void UpdateChargeScale(float scale)
+        {
+            spritesAnim.UpdateChargeFxScale(scale);
+        }
+
         public void EndChargeAndShoot()
         {
             spritesAnim.EndChargeAndShoot();

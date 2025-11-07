@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using InGame.ChargeConfig;
 using InGame.Upgrade;
 using UnityEngine;
 
@@ -10,7 +11,8 @@ namespace InGame
         public static UpgradeBonusInfo BonusInfo { get; set; } = new UpgradeBonusInfo();
         public static PlayerStats PlayerStats { get; set; }
         public static PlayerSkillConfig CurrentSkill { get; set; }
-
+        public static Dictionary<ChargeType, PlayerChargeConfig> ChargeConfigMap { get; set; }
+        
         public static int BasePlayerDamageWithBonus
         {
             get
@@ -167,7 +169,7 @@ namespace InGame
 
         public static int GetChargeBulletMaxStep()
         {
-            return CurrentSkill.chargeBulletMaxStep + BonusInfo.chargeBonus.bulletMaxStep;
+            return (int)ChargeConfigMap[ChargeType.Bullet].value + BonusInfo.chargeBonus.bulletMaxStep;
         }
         
         public static float GetChargeDamePerStep()

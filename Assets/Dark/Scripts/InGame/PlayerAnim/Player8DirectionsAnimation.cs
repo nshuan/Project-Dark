@@ -190,6 +190,12 @@ namespace InGame
             chargeFxLower = fxLower;
             chargeFxUpper = fxUpper;
         }
+
+        public void UpdateChargeFxScale(float scale)
+        {
+            chargeFxLower.transform.localScale = scale * Vector3.one;
+            chargeFxUpper.transform.localScale = scale * Vector3.one;
+        }
         
         [Serializable]
         public class DirectionInfo

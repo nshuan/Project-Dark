@@ -4,6 +4,7 @@ namespace Dark.Tools.GoogleSheetTool
     public enum GoogleSheetTabs
     {
         Enemy = 0, // "Enemy"
+        ChargeConfig = 1436798968, // "ChargeConfig"
         SkillConfig = 69138666, // "SkillConfig"
         PassiveConfig = 545721731, // "PassiveConfig"
         MoveConfig = 545988098, // "MoveConfig"
