@@ -9,7 +9,7 @@ namespace InGame
     [RequireComponent(typeof(CapsuleCollider2D))]
     public class ProjectileCollider : MonoBehaviour
     {
-        [SerializeField] private LayerMask hitLayer;
+        public LayerMask hitLayer;
         
         private ProjectileEntity projectile;
 
