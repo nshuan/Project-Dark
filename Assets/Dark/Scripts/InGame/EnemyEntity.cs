@@ -19,7 +19,7 @@ namespace InGame
         private MapBoundaryManager boundaryManager;
         public Transform Target { get; set; }
         public TowerEntity TargetTower { get; set; }
-        private EnemyBehaviour config;
+        protected EnemyBehaviour config;
 
         [SerializeField] private AudioComponent sfxHit;
 
@@ -49,7 +49,7 @@ namespace InGame
         [SerializeField] private EnemyBoidAgent boidAgent;
         [SerializeField] private Transform uiHealth;
         public EnemyAnimController animController;
-        [SerializeField] private GameObject shadow;
+        [SerializeField] protected GameObject shadow;
         
         private bool inAttackRange;
         private Coroutine attackCoroutine;
@@ -268,26 +268,29 @@ namespace InGame
             
             collider2d.enabled = false;
             IsDestroyed = true;
-            OnDead?.Invoke();
-            OnDead = null;
             boidAgent.IsActive = false;
             if (coroutineBurn != null) StopCoroutine(coroutineBurn);
             callbackBurnComplete?.Invoke();
             callbackBurnComplete = null;
-            StartCoroutine(IEDie(
-                animController.PlayDie(), 0.5f
-                ));
+            CollectResource();
+            StartCoroutine(IEDie(.5f));
         }
 
-        private IEnumerator IEDie(float delayAnim, float delayRelease)
+        protected virtual IEnumerator IEDie(float delayRelease)
         {
             // Đợi chạy xong anim hit rồi mới chạy anim die
             yield return new WaitForSeconds(0.3f);
             shadow.SetActive(false);    
-            yield return new WaitForSeconds(delayAnim);
+            yield return new WaitForSeconds(animController.PlayDie());
+            OnDead?.Invoke();
+            OnDead = null;
             yield return new WaitForSeconds(delayRelease);
             EnemyPool.Instance.Release(this, config.enemyId);
-            
+        }
+
+        protected virtual void CollectResource()
+        {
+            CombatActions.OnCollectResource?.Invoke(this);
         }
 
         #region Effect 

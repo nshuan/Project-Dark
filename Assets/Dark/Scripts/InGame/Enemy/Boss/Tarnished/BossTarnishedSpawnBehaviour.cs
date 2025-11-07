@@ -19,7 +19,11 @@ namespace InGame.Boss
         {
             return DOTween.Sequence(enemy)
                 .Append(enemy.transform.DOMoveY(1.1f, 0.2f).SetEase(Ease.InQuad))
-                .AppendCallback(() => VisualEffectHelper.Instance.PlayEffect(cameraShake))
+                .AppendCallback(() =>
+                {
+                    enemy.animController.PlaySpawn();
+                    VisualEffectHelper.Instance.PlayEffect(cameraShake);
+                })
                 .AppendInterval(cameraShake.Duration);
         }
     }

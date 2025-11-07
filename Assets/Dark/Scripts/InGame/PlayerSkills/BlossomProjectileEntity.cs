@@ -23,7 +23,7 @@ namespace InGame
                 {
                     if (hits[i].transform)
                     {
-                        if (ReferenceEquals(hits[i].transform, hit.transform)) continue;
+                        if (hit && ReferenceEquals(hits[i].transform, hit.transform)) continue;
                         if (hits[i].transform.TryGetComponent<EnemyEntity>(out var hitEnemy))
                         {
                             hitEnemy.HitDirectionX = hitEnemy.transform.position.x - explodeCenter.x;
@@ -47,7 +47,7 @@ namespace InGame
                             {
                                 if (hits[i].transform)
                                 {
-                                    if (ReferenceEquals(hits[i].transform, hit.transform)) continue;
+                                    if (hit && ReferenceEquals(hits[i].transform, hit.transform)) continue;
                                     if (hits[i].transform.TryGetComponent<EnemyEntity>(out var hitEnemy))
                                     {
                                         p.collider.IgnoreEnemy(hitEnemy);

@@ -32,7 +32,7 @@ namespace InGame.UI
         private void OnWin()
         {
             UpdateUI();
-            ui.DoOpenFadeIn().OnComplete(() => onShowPopup?.Invoke());
+            ui.DoOpenFadeIn(0f).OnComplete(() => onShowPopup?.Invoke());
         }
 
         private void UpdateUI()

@@ -11,6 +11,7 @@ namespace InGame
         public static Action<NodeTowerCounter.CounterType, float> OnTowerCounter { get; set; }
         public static Action<PassiveTriggerType, PassiveType, float> OnEffectTriggered { get; set; }
         public static Action<EnemyEntity> OnOneEnemyDead { get; set; }
+        public static Action<EnemyEntity> OnCollectResource { get; set; }
 
         public static void Clear()
         {
