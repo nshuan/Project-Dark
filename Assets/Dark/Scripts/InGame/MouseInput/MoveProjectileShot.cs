@@ -165,7 +165,8 @@ namespace InGame
                     var chargeRange = LevelUtility.GetSkillRange(
                         canChargeRange && rangeChargeAdded > 0 ? 1 + rangeChargeAdded : 1f,
                         Vector2.right);
-                    InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(chargeRange);
+                    // Không check trong range charge nữa, check trên toàn map luôn
+                    InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(15f); 
                     
                     ChargeController.Attack((projectile, direction, delay) =>
                     {
