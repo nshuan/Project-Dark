@@ -279,7 +279,6 @@ namespace InGame
         protected virtual IEnumerator IEDie(float delayRelease)
         {
             // Đợi chạy xong anim hit rồi mới chạy anim die
-            yield return new WaitForSeconds(0.3f);
             shadow.SetActive(false);    
             yield return new WaitForSeconds(animController.PlayDie());
             OnDead?.Invoke();
