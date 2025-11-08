@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace InGame
@@ -10,6 +11,6 @@ namespace InGame
     /// </summary>
     public interface IProjectileHit
     {
-        void DoAction(ProjectileEntity parentProjectile, Vector2 position);
+        void DoAction(ProjectileEntity parentProjectile, Vector2 position, Action<ProjectileEntity> callbackLateInit);
     }
 }

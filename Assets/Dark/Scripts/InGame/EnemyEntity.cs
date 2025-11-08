@@ -19,7 +19,7 @@ namespace InGame
         private MapBoundaryManager boundaryManager;
         public Transform Target { get; set; }
         public TowerEntity TargetTower { get; set; }
-        private EnemyBehaviour config;
+        protected EnemyBehaviour config;
 
         [SerializeField] private AudioComponent sfxHit;
 
@@ -49,7 +49,7 @@ namespace InGame
         [SerializeField] private EnemyBoidAgent boidAgent;
         [SerializeField] private Transform uiHealth;
         public EnemyAnimController animController;
-        [SerializeField] private GameObject shadow;
+        [SerializeField] protected GameObject shadow;
         
         private bool inAttackRange;
         private Coroutine attackCoroutine;
@@ -142,10 +142,10 @@ namespace InGame
                 // transform.position = Vector2.MoveTowards(transform.position, (Vector2)transform.position + staggerDirection, 5f * Time.deltaTime);
                 transform.position = Vector2.Lerp(transform.position, staggerTargetPos, staggerDuration);
             }
-            // else if (freezeDuration > 0)
-            // {
-            //     freezeDuration -= Time.deltaTime;
-            // }
+            else if (freezeDuration > 0)
+            {
+                freezeDuration -= Time.deltaTime;
+            }
             else
             {
                 if (boundaryManager.ContainPoint(transform.position))
@@ -223,7 +223,6 @@ namespace InGame
             
             CurrentHealth -= damage;
             
-            
             OnHit?.Invoke(damage, dmgType);
             if (stagger - config.staggerResist > 0)
             {
@@ -240,7 +239,7 @@ namespace InGame
                 }
                     
                 staggerDuration = Mathf.Abs(stagger - config.staggerResist) / config.staggerVelocity;
-                freezeDuration = staggerDuration;
+                freezeDuration = Mathf.Clamp(0.3f, 0.6f, 0.6f * (stagger - config.staggerResist));
             }
 
             animController.PlayHit();
@@ -269,26 +268,28 @@ namespace InGame
             
             collider2d.enabled = false;
             IsDestroyed = true;
-            OnDead?.Invoke();
-            OnDead = null;
             boidAgent.IsActive = false;
             if (coroutineBurn != null) StopCoroutine(coroutineBurn);
             callbackBurnComplete?.Invoke();
             callbackBurnComplete = null;
-            StartCoroutine(IEDie(
-                animController.PlayDie(), 0.5f
-                ));
+            CollectResource();
+            StartCoroutine(IEDie(.5f));
         }
 
-        private IEnumerator IEDie(float delayAnim, float delayRelease)
+        protected virtual IEnumerator IEDie(float delayRelease)
         {
             // Đợi chạy xong anim hit rồi mới chạy anim die
-            yield return new WaitForSeconds(0.3f);
             shadow.SetActive(false);    
-            yield return new WaitForSeconds(delayAnim);
+            yield return new WaitForSeconds(animController.PlayDie());
+            OnDead?.Invoke();
+            OnDead = null;
             yield return new WaitForSeconds(delayRelease);
             EnemyPool.Instance.Release(this, config.enemyId);
-            
+        }
+
+        protected virtual void CollectResource()
+        {
+            CombatActions.OnCollectResource?.Invoke(this);
         }
 
         #region Effect 

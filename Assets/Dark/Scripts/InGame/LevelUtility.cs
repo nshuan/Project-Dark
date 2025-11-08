@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using InGame.ChargeConfig;
 using InGame.Upgrade;
 using UnityEngine;
 
@@ -10,7 +11,8 @@ namespace InGame
         public static UpgradeBonusInfo BonusInfo { get; set; } = new UpgradeBonusInfo();
         public static PlayerStats PlayerStats { get; set; }
         public static PlayerSkillConfig CurrentSkill { get; set; }
-
+        public static Dictionary<ChargeType, PlayerChargeConfig> ChargeConfigMap { get; set; }
+        
         public static int BasePlayerDamageWithBonus
         {
             get
@@ -114,6 +116,18 @@ namespace InGame
             return CurrentSkill.range * (1 + BonusInfo.skillBonus.skillRangeMultiply) * chargeRange * ratio;
         }
 
+        public static float GetRelativeRange(float maxRange, Vector2 direction)
+        {
+            var magnitude = direction.magnitude;
+            direction.x = Mathf.Abs(direction.x) / magnitude;
+            direction.y = Mathf.Abs(direction.y) / magnitude;
+            var angle = Mathf.Atan2(direction.y, direction.x);
+            var ratio = GameConst.IsoRatio
+                        / Mathf.Sqrt(Mathf.Pow(GameConst.IsoRatio * Mathf.Cos(angle), 2) +
+                                     Mathf.Pow(Mathf.Sin(angle), 2));
+            return maxRange * ratio;
+        }
+        
         /// <summary>
         /// Skill_Size = Size * [1 + Total (Skill_Size_Multiple) ] * [ 1 + ( Charge_Size_Max / Charge_Size_Time ) * Charge_Time ]
         /// </summary>
@@ -155,7 +169,7 @@ namespace InGame
 
         public static int GetChargeBulletMaxStep()
         {
-            return CurrentSkill.chargeBulletMaxStep + BonusInfo.chargeBonus.bulletMaxStep;
+            return (int)ChargeConfigMap[ChargeType.Bullet].value + BonusInfo.chargeBonus.bulletMaxStep;
         }
         
         public static float GetChargeDamePerStep()
@@ -198,10 +212,10 @@ namespace InGame
 
         public static float GetPassiveCooldown(PassiveType passiveType, float baseCooldown)
         {
-            if (BonusInfo.passiveBonusCooldownMapByType == null) return Mathf.Max(baseCooldown, 0f);
+            if (BonusInfo.passiveBonusCooldownMapByType == null) return Mathf.Max(baseCooldown * (1f - BasePLayerCooldownWithBonus), 0f);
             if (BonusInfo.passiveBonusCooldownMapByType.TryGetValue(passiveType, out var bonus))
                 return Mathf.Max(baseCooldown * (1f - bonus) * (1f - BasePLayerCooldownWithBonus), 0f);
-            return Mathf.Max(baseCooldown, 0f);
+            return Mathf.Max(baseCooldown * (1f - BasePLayerCooldownWithBonus), 0f);
         }
 
         public static float GetPassiveChance(PassiveType passiveType, float baseChance)
@@ -222,10 +236,10 @@ namespace InGame
 
         public static float GetPassiveValue(PassiveType passiveType, float baseValue)
         {
-            if (BonusInfo.passiveBonusValueMapByType == null) return baseValue;
+            if (BonusInfo.passiveBonusValueMapByType == null) return baseValue + BasePlayerDamageWithBonus;
             if (BonusInfo.passiveBonusValueMapByType.TryGetValue(passiveType, out var bonus))
                 return (baseValue + BasePlayerDamageWithBonus) * (1f + bonus);
-            return baseValue;
+            return baseValue + BasePlayerDamageWithBonus;
         }
 
         public static float GetPassiveStagger(PassiveType passiveType, float baseStagger)

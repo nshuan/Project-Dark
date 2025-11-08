@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Core;
 using Data;
 using Economic;
+using InGame.ChargeConfig;
 using InGame.ConfigManager;
 using InGame.Upgrade;
 using Sirenix.OdinInspector;
@@ -96,6 +98,11 @@ namespace InGame
             LevelUtility.BonusInfo = bonusInfo;
             LevelUtility.PlayerStats = playerStats;
             LevelUtility.CurrentSkill = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
+            LevelUtility.ChargeConfigMap = new Dictionary<ChargeType, PlayerChargeConfig>()
+            {
+                { ChargeType.Bullet, PlayerChargeManifest.Get(ChargeType.Bullet) },
+                { ChargeType.Size, PlayerChargeManifest.Get(ChargeType.Size) }
+            };
             
             EnemyManager.Instance.Initialize();
             winLoseManager = new WinLoseManager();

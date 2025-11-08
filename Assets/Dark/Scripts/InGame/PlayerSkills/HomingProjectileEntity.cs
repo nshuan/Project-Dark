@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace InGame
@@ -80,6 +81,13 @@ namespace InGame
         {
             targetToChase = null;
             base.ProjectileHit(hit);
+        }
+
+        protected override void OnDrawGizmos()
+        {
+            base.OnDrawGizmos();
+            if (targetToChase != null)
+                Gizmos.DrawLine(transform.position, targetToChase.position);
         }
     }
 }

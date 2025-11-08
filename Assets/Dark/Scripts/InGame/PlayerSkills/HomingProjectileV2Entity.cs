@@ -53,7 +53,7 @@ namespace InGame
             var activateVfx = ProjectileVfxActivatePool.Instance.Get(transform, true);
             activateVfx.transform.localPosition = Vector3.zero;
             activateVfx.transform.localRotation = Quaternion.identity;
-            activateVfx.Activate();
+            activateVfx.Activate((vfx) => ProjectileVfxActivatePool.Instance.Release(vfx));
 
             canRotate = true;
             activated = true;
@@ -72,7 +72,7 @@ namespace InGame
         protected override void Update()
         {
             if (!activated && !canRotate) return;
-            if (Vector2.Distance(transform.position, RangeCenter) > maxDistance)
+            if (Vector2.Distance(transform.position, RangeCenter) > LevelUtility.GetRelativeRange(maxDistance, (Vector2)transform.position - RangeCenter))
             {
                 if (!BlockSpawnDeadBody)
                     ProjectileDeadPool.Instance.Get(direction).position = transform.position;
@@ -147,6 +147,13 @@ namespace InGame
             targetToChase = null;
             currentHit = MaxHit;
             base.ProjectileHit(hit);
+        }
+        
+        protected override void OnDrawGizmos()
+        {
+            base.OnDrawGizmos();
+            if (targetToChase != null)
+                Gizmos.DrawLine(transform.position, targetToChase.position);
         }
     }
 }

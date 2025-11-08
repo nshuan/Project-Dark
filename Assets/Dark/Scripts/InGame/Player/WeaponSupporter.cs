@@ -1,3 +1,6 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using Sirenix.Utilities;
 using UnityEngine;
 
@@ -16,7 +19,11 @@ namespace InGame
         {
             EnemiesCountInRange = Physics2D.CircleCastNonAlloc(transform.position, radius, Vector2.zero, enemiesInRange,
                 0f, enemyLayer);
-            enemiesInRange.Sort((x, y) => x.distance.CompareTo(y.distance));
+            Array.Sort(enemiesInRange, 0, EnemiesCountInRange,
+                Comparer<RaycastHit2D>.Create((x, y) =>
+                    Vector2.Distance(x.point, transform.position)
+                        .CompareTo(Vector2.Distance(y.point, transform.position))));
+            // enemiesInRange.Sort((x, y) => x.distance.CompareTo(y.distance));
             EnemyTargetingIndex = 0;
         }
     }

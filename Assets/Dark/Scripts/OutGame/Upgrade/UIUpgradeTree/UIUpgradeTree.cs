@@ -82,13 +82,14 @@ namespace Dark.Scripts.OutGame.Upgrade
             
             foreach (var node in nodes)
             {
+                node.name = $"{node.config.nodeId}_{node.config.nodeName}";
                 if (node.preRequires == null || node.preRequires.Count == 0) continue;
                 foreach (var preRequire in node.preRequires)
                 {
                     if (!preRequire.node) continue;
                     preRequire.line = ShowPreRequiredLine(node.transform.position, node.lineAnchorOffsetRadius,
                         preRequire.node.transform.position, preRequire.node.lineAnchorOffsetRadius);
-                    
+                    preRequire.line.name = $"Line_{node.config.nodeId}_{preRequire.node.config.nodeId}";
                     // Add child map
                     nodeChildrenMap.TryAdd(preRequire.preRequireId, new List<UIUpgradeNode>());
                     if (!nodeChildrenMap[preRequire.preRequireId].Contains(node))

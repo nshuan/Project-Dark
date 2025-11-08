@@ -9,25 +9,19 @@ namespace InGame
     [RequireComponent(typeof(CapsuleCollider2D))]
     public class ProjectileCollider : MonoBehaviour
     {
-        [SerializeField] private LayerMask hitLayer;
+        public LayerMask hitLayer;
         
         private ProjectileEntity projectile;
 
         public ProjectileEntity Projectile
         {
             get => projectile;
-            set
-            {
-                projectile = value;
-                if (projectile != null)
-                    lastPosition = projectile.transform.position;
-            }
+            set => projectile = value;
         }
 
         public bool CanTrigger { get; set; }
         
         private CapsuleCollider2D capsuleCollider;
-        private Vector2 lastPosition;
         private RaycastHit2D[] hits = new RaycastHit2D[10];
         private List<Transform> allHitEnemiesInCurrentShot;
         private int totalHitCountInCurrentShot;
@@ -74,7 +68,7 @@ namespace InGame
             if (!CanTrigger) return ProjectileHitStatus.None;
 
             // Lấy y làm radius nếu ảnh viên đạn trong prefab nằm ngang
-            var hitCount = Physics2D.CircleCastNonAlloc(lastPosition, capsuleCollider.size.y, direction, hits, direction.magnitude, hitLayer);
+            var hitCount = Physics2D.CircleCastNonAlloc(transform.position, capsuleCollider.size.y, direction, hits, direction.magnitude, hitLayer);
             if (hitCount > 0)
             {
                 // Chỉ check hit 1 object đầu tiên va chạm, nếu là enemy thì trước đấy phải chưa va chạm lần nào
@@ -113,18 +107,10 @@ namespace InGame
                     }
                 }
             }
-            lastPosition.x = projectile.transform.position.x;
-            lastPosition.y = projectile.transform.position.y;
 
             return ProjectileHitStatus.None;
         }
         
-        public void UpdateLastPosition(Vector2 position)
-        {
-            lastPosition.x = position.x;
-            lastPosition.y = position.y;
-        }
-
         public void CheckHitEnemiesOnInit(float radius = 1f)
         {
             // Lấy y làm radius nếu ảnh viên đạn trong prefab nằm ngang
@@ -141,6 +127,16 @@ namespace InGame
             //         }
             //     }
             // }
+        }
+
+        public void IgnoreEnemy(EnemyEntity enemy)
+        {
+            allHitEnemiesInCurrentShot ??= new List<Transform>();
+            if (totalHitCountInCurrentShot < allHitEnemiesInCurrentShot.Count)
+                allHitEnemiesInCurrentShot[totalHitCountInCurrentShot] = enemy.transform;
+            else
+                allHitEnemiesInCurrentShot.Add(enemy.transform);
+            totalHitCountInCurrentShot += 1;
         }
 
         public enum ProjectileHitStatus

@@ -38,6 +38,11 @@ namespace InGame
             animController.PlayCharge();
         }
 
+        public void UpdateChargeScale(float scale)
+        {
+            animController.UpdateChargeScale(scale);
+        }
+
         public void EndChargeAndShoot()
         {
             animController.EndChargeAndShoot();
