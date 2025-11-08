@@ -212,10 +212,10 @@ namespace InGame
 
         public static float GetPassiveCooldown(PassiveType passiveType, float baseCooldown)
         {
-            if (BonusInfo.passiveBonusCooldownMapByType == null) return Mathf.Max(baseCooldown, 0f);
+            if (BonusInfo.passiveBonusCooldownMapByType == null) return Mathf.Max(baseCooldown * (1f - BasePLayerCooldownWithBonus), 0f);
             if (BonusInfo.passiveBonusCooldownMapByType.TryGetValue(passiveType, out var bonus))
                 return Mathf.Max(baseCooldown * (1f - bonus) * (1f - BasePLayerCooldownWithBonus), 0f);
-            return Mathf.Max(baseCooldown, 0f);
+            return Mathf.Max(baseCooldown * (1f - BasePLayerCooldownWithBonus), 0f);
         }
 
         public static float GetPassiveChance(PassiveType passiveType, float baseChance)
@@ -236,10 +236,10 @@ namespace InGame
 
         public static float GetPassiveValue(PassiveType passiveType, float baseValue)
         {
-            if (BonusInfo.passiveBonusValueMapByType == null) return baseValue;
+            if (BonusInfo.passiveBonusValueMapByType == null) return baseValue + BasePlayerDamageWithBonus;
             if (BonusInfo.passiveBonusValueMapByType.TryGetValue(passiveType, out var bonus))
                 return (baseValue + BasePlayerDamageWithBonus) * (1f + bonus);
-            return baseValue;
+            return baseValue + BasePlayerDamageWithBonus;
         }
 
         public static float GetPassiveStagger(PassiveType passiveType, float baseStagger)
