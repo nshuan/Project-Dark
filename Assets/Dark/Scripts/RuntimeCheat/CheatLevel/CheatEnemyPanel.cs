@@ -20,7 +20,7 @@ namespace Dark.Scripts.RuntimeCheat.CheatLevel
         [SerializeField] private Button btnDropEnemy;
         
         [Header("Enemy Behaviours")]
-        [SerializeField] private List<EnemyBehaviour> enemyBehaviours = new List<EnemyBehaviour>();
+        public List<EnemyBehaviour> enemyBehaviours = new List<EnemyBehaviour>();
         
         private List<Button> createdButtons = new List<Button>();
         private bool isPanelOpen = false;

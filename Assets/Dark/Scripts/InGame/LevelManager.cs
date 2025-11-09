@@ -23,7 +23,7 @@ namespace InGame
         public MoveTowersConfig dashConfig;
 
         [SerializeField] private PlayerSpawner playerSpawner;
-        [SerializeField] private GateEntity gatePrefab;
+        public GateEntity gatePrefab;
         
         [SerializeField] private TowerEntity[] towers;
         public TowerEntity[] Towers => towers;
