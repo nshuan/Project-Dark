@@ -58,7 +58,7 @@ namespace InGame
 
         private IEnumerator IESpawnProjectile(int index, ProjectileEntity projectile, Vector2 direction)
         {
-            var spawnDirection = Quaternion.Euler(0f, 0f, Random.Range(-45f, 45f)) * direction * Random.Range(0.5f, 0.6f);
+            var spawnDirection = Quaternion.Euler(0f, 0f, RandomUtil.Range(-45f, 45f)) * direction * RandomUtil.Range(0.5f, 0.6f);
             var timer = 0f;
             while (timer < spawnMaxDuration)
             {

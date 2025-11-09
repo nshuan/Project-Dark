@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Core;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI.Extensions;
@@ -42,7 +43,7 @@ namespace Dark.Scripts.Audio
             src.pitch = pitch < -9f ? src.pitch : pitch;
             if (pitch < -9f)
             {
-                src.pitch = enableRandomPitch ? Random.Range(randomPitchMin, randomPitchMax) : src.pitch;
+                src.pitch = enableRandomPitch ? RandomUtil.Range(randomPitchMin, randomPitchMax) : src.pitch;
             }
             else
             {

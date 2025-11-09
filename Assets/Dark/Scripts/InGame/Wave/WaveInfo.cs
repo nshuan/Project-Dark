@@ -28,7 +28,7 @@ namespace InGame
         public void SetupWave(GateEntity gatePrefab, TowerEntity[] towers, float levelExpRatio, float levelDarkRatio, int levelDarkUnitValue, Action<int, WaveEndReason> onWaveForceEnded)
         {
             if (isRandomWaveConfig)
-                waveConfig = randomWaveConfigs[Random.Range(0, randomWaveConfigs.Length)];
+                waveConfig = randomWaveConfigs[RandomUtil.Range(0, randomWaveConfigs.Length)];
             DebugUtility.LogError($"Setup wave {waveConfig.name}");
             Gates = new GateEntity[waveConfig.gateConfigs.Count];
             for (var i = 0; i < waveConfig.gateConfigs.Count; i++)

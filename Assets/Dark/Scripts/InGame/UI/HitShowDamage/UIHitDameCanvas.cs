@@ -26,7 +26,7 @@ namespace InGame.UI.HitShowDamage
         {
             var indexScale = damage / damageGap;
             txtDamage.color = dmgType == DamageType.NormalCritical ? criticalColor : Color.white;
-            txtDamage.transform.position = cam.WorldToScreenPoint(worldPos) + new Vector3(Random.Range(-30f, 30f), 0f, 0f);
+            txtDamage.transform.position = cam.WorldToScreenPoint(worldPos) + new Vector3(RandomUtil.Range(-30f, 30f), 0f, 0f);
             txtDamage.transform.localScale = scaleInfos[Math.Clamp(indexScale, 0, scaleInfos.Count - 1)] * Vector3.one;
             txtDamage.SetText(damage.ToString());
             txtDamage.gameObject.SetActive(true);

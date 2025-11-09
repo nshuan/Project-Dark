@@ -22,7 +22,7 @@ namespace Dark.Scripts.Common.Lore
         {
             var instance = Resources.Load<LoreManifest>(Path);
             if (instance.loreMap == null || instance.loreMap.Count == 0) return new LoreInfo();
-            var result = instance.loreMap.Values.ToArray()[Random.Range(0, instance.loreMap.Count)];
+            var result = instance.loreMap.Values.ToArray()[RandomUtil.Range(0, instance.loreMap.Count)];
             Resources.UnloadAsset(instance);
             return result;
         }

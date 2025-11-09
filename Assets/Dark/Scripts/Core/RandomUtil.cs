@@ -1,13 +1,16 @@
 using System;
 
-namespace Core
+public static class RandomUtil
 {
-    public static class RandomUtil
+    public static float Range(float minInclusive, float maxExclusive)
     {
-        public static float Range(float minInclusive, float maxExclusive)
-        {
-            var random = new Random();
-            return (float)random.NextDouble() * (maxExclusive - minInclusive) + minInclusive;
-        }
+        var random = new Random();
+        return (float)random.NextDouble() * (maxExclusive - minInclusive) + minInclusive;
+    }
+
+    public static int Range(int minInclusive, int maxExclusive)
+    {
+        var random = new Random();
+        return random.Next(minInclusive, maxExclusive);
     }
 }

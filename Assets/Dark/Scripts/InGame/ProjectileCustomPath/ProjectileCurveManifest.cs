@@ -20,7 +20,7 @@ namespace InGame.ProjectileCustomPath
         {
             var instance = Resources.Load<ProjectileCurveManifest>(Path);
             if (instance.trajectoryCurvesMap == null || instance.trajectoryCurvesMap.Count == 0) return null;
-            var result = instance.trajectoryCurvesMap.Values.ToArray()[Random.Range(0, instance.trajectoryCurvesMap.Count)];
+            var result = instance.trajectoryCurvesMap.Values.ToArray()[RandomUtil.Range(0, instance.trajectoryCurvesMap.Count)];
             Resources.UnloadAsset(instance);
             return result;
         }

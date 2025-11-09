@@ -78,7 +78,7 @@ namespace InGame
             
             var myPos = transform.position;
             var targetPos = Target.position;
-            attackPosition = ((Quaternion.Euler(0f, 0f, Random.Range(-75f, 75f)) *
+            attackPosition = ((Quaternion.Euler(0f, 0f, RandomUtil.Range(-75f, 75f)) *
                                (Vector2)(myPos - targetPos).normalized) * (0.9f * config.attackRange)
                               + targetPos);
             animController.transform.localScale =

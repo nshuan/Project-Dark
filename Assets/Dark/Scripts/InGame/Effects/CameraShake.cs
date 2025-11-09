@@ -19,8 +19,8 @@ namespace InGame.Effects
 
             while (elapsed < Duration)
             {
-                float offsetX = Random.Range(-1f, 1f) * Magnitude;
-                float offsetY = Random.Range(-1f, 1f) * Magnitude;
+                float offsetX = RandomUtil.Range(-1f, 1f) * Magnitude;
+                float offsetY = RandomUtil.Range(-1f, 1f) * Magnitude;
 
                 Cam.transform.localPosition = originalPos + new Vector3(offsetX, offsetY, 0f);
 

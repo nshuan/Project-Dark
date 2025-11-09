@@ -27,7 +27,7 @@ namespace InGame.EditorCheating
                 {
                     if (enemy.name.Contains(config.name))
                     {
-                        int targetTowerIndex = Random.Range(0, towers.Length);
+                        int targetTowerIndex = RandomUtil.Range(0, towers.Length);
                         if (!enableRandomTower)
                         {
                             var nearestDistance = Vector2.Distance(towers[targetTowerIndex].transform.position,

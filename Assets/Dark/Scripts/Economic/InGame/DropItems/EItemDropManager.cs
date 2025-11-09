@@ -35,7 +35,7 @@ namespace Economic.InGame.DropItems
             var minDelay = 0f;
             foreach (var item in listItemThisWave)
             {
-                delay = Random.Range(0f, 1f);
+                delay = RandomUtil.Range(0f, 1f);
                 if (delay > maxDelay) maxDelay = delay;
                 if (delay < minDelay) minDelay = delay;
                 item.Collect(LevelManager.Instance.Player.transform, delay);

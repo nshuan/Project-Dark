@@ -18,7 +18,7 @@ namespace InGame
         {
             var instance = Resources.Load<ProjectileManifest>(Path);
             if (instance.prefabsMap == null || instance.prefabsMap.Count == 0) return null;
-            var result = instance.prefabsMap.Values.ToArray()[Random.Range(0, instance.prefabsMap.Count)];
+            var result = instance.prefabsMap.Values.ToArray()[RandomUtil.Range(0, instance.prefabsMap.Count)];
             Resources.UnloadAsset(instance);
             return result;
         }
