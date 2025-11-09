@@ -31,5 +31,40 @@ namespace InGame
                     vfxBgBoss.SetActive(true);
                 });
         }
+
+        public void ForceChangeBg(bool isBoss, bool ignoreTimeScale = false)
+        {
+            DOTween.Kill(this);
+            
+            if (isBoss)
+            {
+                matBgBoss.SetFloat(MatDisolveValue, 1f);
+                vfxBgBoss.SetActive(false);
+                groupBgBoss.SetActive(true);
+                groupBgNormal.SetActive(true);
+                var seq = DOTween.Sequence(this);
+                if (ignoreTimeScale) seq.SetUpdate(true);
+                seq.Append(DOTween.To(() => 1f, (x) => matBgBoss.SetFloat(MatDisolveValue, x), 0f, 2f))
+                    .AppendCallback(() =>
+                    {
+                        groupBgNormal.SetActive(false);
+                        vfxBgBoss.SetActive(true);
+                    });
+            }
+            else
+            {
+                matBgBoss.SetFloat(MatDisolveValue, 0f);
+                vfxBgBoss.SetActive(false);
+                groupBgBoss.SetActive(true);
+                groupBgNormal.SetActive(true);
+                var seq = DOTween.Sequence(this);
+                if (ignoreTimeScale) seq.SetUpdate(true);
+                seq.Append(DOTween.To(() => 0f, (x) => matBgBoss.SetFloat(MatDisolveValue, x), 1f, 2f))
+                    .AppendCallback(() =>
+                    {
+                        groupBgBoss.SetActive(false);
+                    });
+            }
+        }
     }
 }
