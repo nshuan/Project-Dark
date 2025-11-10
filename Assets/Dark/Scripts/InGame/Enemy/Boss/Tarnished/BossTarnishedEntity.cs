@@ -9,9 +9,8 @@ namespace InGame.Boss
         protected override IEnumerator IEDie(float delayRelease)
         {
             // Đợi chạy xong anim hit rồi mới chạy anim die
-            yield return new WaitForSeconds(0.3f);
             animController.PlayIdle();
-            InGameCameraController.Instance.ZoomToPosition(transform.position);  
+            InGameCameraController.Instance.ZoomToPosition(transform.position + new Vector3(0, 1, 0));  
             yield return new WaitForSeconds(0.8f);
             Time.timeScale = 0.5f;
             yield return new WaitForSeconds(animController.PlayDie());
