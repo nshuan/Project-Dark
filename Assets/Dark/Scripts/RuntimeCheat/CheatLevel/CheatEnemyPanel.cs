@@ -242,7 +242,8 @@ namespace Dark.Scripts.RuntimeCheat.CheatLevel
         protected virtual void OnEnemyButtonClickedCustom(EnemyBehaviour enemyBehaviour, int enemyId)
         {
             // This method is intentionally empty - user should override or modify this
-            newEnemy = Instantiate(enemyBehaviour.enemyPrefab, null);
+            var newEnemy = Instantiate(enemyBehaviour.enemyPrefab, null);
+            this.newEnemy = newEnemy;
             
             btnDropEnemy.gameObject.SetActive(true);
             btnDropEnemy.onClick.RemoveAllListeners();
