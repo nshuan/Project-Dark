@@ -105,7 +105,13 @@ namespace InGame
                     line.SetPositions(Array.Empty<Vector3>());
                 }
             }
-            
+            else
+            {
+                foreach (var line in lineRenderers)
+                {
+                    line.SetPositions(Array.Empty<Vector3>());
+                }
+            }
         }
         
         public void ActiveAnchor(int index, bool active)

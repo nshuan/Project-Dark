@@ -29,11 +29,18 @@ namespace InGame
         private CameraShake cameraShakeEffect;
         private int maxHitWithBonus;
         private EnemyEntity tempEnemy;
-        
+
+        private void OnDisable()
+        {
+            lineRenderer.gameObject.SetActive(false);
+        }
+
         public override void Initialize()
         {
             hitOrder = new LightningBall[20];
+            lineRenderer.gameObject.SetActive(false);
             lineRenderer.Initialize(20);
+            lineRenderer.ResetLine(maxHitWithBonus, null, 0);
             cameraShakeEffect = new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera };
         }
 
@@ -107,6 +114,8 @@ namespace InGame
 
         private IEnumerator IELightningRay(float damage, Action actionComplete)
         {
+            lineRenderer.gameObject.SetActive(true);
+            
             for (var i = 0; i < orderCount; i++)
             {
                 lineRenderer.ActiveAnchor(i, true);
