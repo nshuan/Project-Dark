@@ -9,6 +9,7 @@ namespace InGame
         float PercentageHpLeft { get; }
         Vector2 Position => TargetTransform.position;
         void Burn(float duration, float delayEachBurn, int damage, Action callbackComplete);
+        Transform BurnVfxParent { get; }
         void Kill();
     }
 }

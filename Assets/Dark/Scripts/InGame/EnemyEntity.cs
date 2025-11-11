@@ -15,6 +15,7 @@ namespace InGame
     public class EnemyEntity : MonoBehaviour, IDamageable, IEffectTarget
     {
         [SerializeField] private Collider2D collider2d;
+        [SerializeField] private Transform burnVfxParent;
 
         private MapBoundaryManager boundaryManager;
         public Transform Target { get; set; }
@@ -308,6 +309,8 @@ namespace InGame
             if (coroutineBurn != null) StopCoroutine(coroutineBurn);
             coroutineBurn = StartCoroutine(IEBurn(duration, delayEachBurn, damage));
         }
+
+        public Transform BurnVfxParent => burnVfxParent;
 
         private IEnumerator IEBurn(float duration, float delayEachBurn, int damage)
         {

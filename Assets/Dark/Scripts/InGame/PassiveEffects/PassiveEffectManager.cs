@@ -83,6 +83,17 @@ namespace InGame
                 }
             }
         }
+        
+        public void ForceTriggerEffect(PassiveTriggerType triggerType, PassiveType passiveType, IEffectTarget target)
+        {
+            var passiveConfig = effectConfigsMap[triggerType][passiveType];
+            pool.Get(passiveConfig.passivePrefab, passiveConfig.passiveId, null, false)
+                .TriggerEffect(passiveConfig.passiveId, target, 
+                    LevelUtility.GetPassiveSize(passiveConfig.logicType, passiveConfig.size), 
+                    LevelUtility.GetPassiveValue(passiveConfig.logicType, passiveConfig.value), 
+                    LevelUtility.GetPassiveStagger(passiveConfig.logicType, passiveConfig.stagger), 
+                    pool);
+        }
 
         private IEnumerator IECooldown(float cooldown, Action completeCallback)
         {

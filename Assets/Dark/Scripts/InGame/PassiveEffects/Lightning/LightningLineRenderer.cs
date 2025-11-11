@@ -69,11 +69,6 @@ namespace InGame
             {
                 line.SetPositions(targetPositions);
             }
-
-            for (var i = startLineIndex; i <= endLineIndex; i++)
-            {
-                targets[i].Activate();
-            }
         }
 
         public void ResetLine(int maxAnchor, LightningBall[] target, int targetValidCount)

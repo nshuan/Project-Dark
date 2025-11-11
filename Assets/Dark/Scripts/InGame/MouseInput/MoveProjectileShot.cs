@@ -254,6 +254,7 @@ namespace InGame
         public void OnHoldReleased()
         {
             isCharging = false;
+            InputManager.PlayerVisual.EndChargeAndShoot();
         }
 
         public void ResetChargeVariable()

@@ -33,6 +33,11 @@ namespace Dark.Scripts.RuntimeCheat.CheatLevel
             PauseGame.Instance.onPause += OnPause;
         }
 
+        private void OnDestroy()
+        {
+            PauseGame.Instance.onPause -= OnPause;
+        }
+
         private void OnPause(bool isPaused)
         {
             if (isPaused)
