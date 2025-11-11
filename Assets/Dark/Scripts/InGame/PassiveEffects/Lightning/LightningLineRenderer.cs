@@ -11,9 +11,8 @@ namespace InGame
         private Vector3 hidePos = new Vector3(99999, 99999, 99999);
         private Vector3 collapsePos = new Vector3();
         private int targetCount;
-        private Transform[] targets;
+        private LightningBall[] targets;
         private Vector3[] targetPositions;
-        private Transform[] lightningBalls;
         private int startLineIndex;
         private int endLineIndex;
         
@@ -24,9 +23,8 @@ namespace InGame
                 line.positionCount = maxAnchor;
             }
             
-            targets = new Transform[maxAnchor];
+            targets = new LightningBall[maxAnchor];
             targetPositions = new Vector3[maxAnchor];
-            lightningBalls = new Transform[maxAnchor];
             for (var i = 0; i < maxAnchor; i++)
             {
                 targetPositions[i] = new Vector3();
@@ -37,15 +35,15 @@ namespace InGame
         {
             if (targets == null) return;
             if (targetPositions == null) return;
+            if (startLineIndex == 0 && endLineIndex == 0) return;
             
             // Fill in positions from targets
             // Collapse the rest to the last valid point
             for (var i = startLineIndex; i <= endLineIndex; i++)
             {
-                targetPositions[i].x = targets[i].position.x;
-                targetPositions[i].y = targets[i].position.y;
-                targetPositions[i].z = targets[i].position.z;
-                lightningBalls[i].gameObject.SetActive(true);
+                targetPositions[i].x = targets[i].transform.position.x;
+                targetPositions[i].y = targets[i].transform.position.y;
+                targetPositions[i].z = targets[i].transform.position.z;
             }
             for (int i = 0; i < startLineIndex; i++)
             {
@@ -71,24 +69,23 @@ namespace InGame
             {
                 line.SetPositions(targetPositions);
             }
-            
-            for (var i = 0; i < lightningBalls.Length; i++)
+
+            for (var i = startLineIndex; i <= endLineIndex; i++)
             {
-                if (!lightningBalls[i]) break;
-                
-                if (i < startLineIndex || i > endLineIndex)
-                {
-                    lightningBalls[i].gameObject.SetActive(false);
-                    continue;
-                }
-                
-                lightningBalls[i].position = targetPositions[i];
-                lightningBalls[i].gameObject.SetActive(true);
+                targets[i].Activate();
             }
         }
 
-        public void ResetLine(int maxAnchor, Transform[] target, int targetValidCount)
+        public void ResetLine(int maxAnchor, LightningBall[] target, int targetValidCount)
         {
+            if (targets != null)
+            {
+                foreach (var t in targets)
+                {
+                    if (t) LightningBallPool.Instance.Release(t);
+                }
+            }
+            
             targetCount = targetValidCount;
             startLineIndex = 0;
             endLineIndex = 0;
@@ -98,20 +95,17 @@ namespace InGame
                 for (var i = 0; i < targetCount; i++)
                 {
                     targets[i] = target[i];
-                    targetPositions[i].x = target[i].position.x;
-                    targetPositions[i].y = target[i].position.y;
-                    targetPositions[i].z = target[i].position.z;
-                    lightningBalls[i] ??= LightningBallPool.Instance.Get(transform.parent, false).transform;
+                    targetPositions[i].x = target[i].transform.position.x;
+                    targetPositions[i].y = target[i].transform.position.y;
+                    targetPositions[i].z = target[i].transform.position.z;
+                }
+                
+                foreach (var line in lineRenderers)
+                {
+                    line.SetPositions(Array.Empty<Vector3>());
                 }
             }
             
-            foreach (var line in lineRenderers)
-            {
-                for (var i = 0; i < maxAnchor; i++)
-                {
-                    line.SetPosition(i, hidePos);
-                }
-            }
         }
         
         public void ActiveAnchor(int index, bool active)
