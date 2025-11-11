@@ -22,9 +22,14 @@ namespace InGame
             transform.position = Target.position;
         }
 
-        public void Activate()
+        public void ShowVfx()
         {
             vfxLightningBall.SetActive(true);
+        }
+
+        public void HideVfx()
+        {
+            vfxLightningBall.SetActive(false);
         }
     }
 }

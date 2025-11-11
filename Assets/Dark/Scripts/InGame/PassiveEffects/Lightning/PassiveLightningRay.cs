@@ -13,11 +13,14 @@ namespace InGame
         [SerializeField] private int maxHit = 5;
         [SerializeField] private float delayEachHit = 0.05f;
         [SerializeField] private float durationEachHit = 0.13f;
+        [SerializeField] private float durationImpact = 1.2f;
         [SerializeField] private AudioComponent sfx;
         
         private Vector2 Position { get; set; }
         private float Stagger { get; set; }
         private RaycastHit2D[] hits = new RaycastHit2D[50];
+        private EnemyEntity[] unorderedEnemies = new EnemyEntity[50];
+        private EnemyEntity[] enemyOrder;
         private LightningBall[] unorderedHits = new LightningBall[50];
         private LightningBall[] hitOrder;
         private Vector2 anchorForOrdering;
@@ -38,6 +41,7 @@ namespace InGame
         public override void Initialize()
         {
             hitOrder = new LightningBall[20];
+            enemyOrder = new EnemyEntity[20];
             lineRenderer.gameObject.SetActive(false);
             lineRenderer.Initialize(20);
             lineRenderer.ResetLine(maxHitWithBonus, null, 0);
@@ -58,6 +62,7 @@ namespace InGame
             lightningBall.transform.position = Position;
             lightningBall.Target = target.TargetTransform;
             unorderedHits[0] = lightningBall;
+            unorderedEnemies[0] = target.TargetTransform.GetComponent<EnemyEntity>();
             var unorderedHitIndex = 1;
             for (var i = 0; i < count; i++)
             {
@@ -67,6 +72,7 @@ namespace InGame
                     lightningBall.transform.position = tempEnemy.transform.position;
                     lightningBall.Target = tempEnemy.transform;
                     unorderedHits[unorderedHitIndex] = lightningBall;
+                    unorderedEnemies[unorderedHitIndex] = tempEnemy;
                     unorderedHitIndex += 1;
                 }
             }
@@ -89,7 +95,14 @@ namespace InGame
                 }
 
                 hitOrder[orderCount] = unorderedHits[tempClosestHitIndex];
+                enemyOrder[orderCount] = unorderedEnemies[tempClosestHitIndex];
                 unorderedHits[tempClosestHitIndex] = null;
+                unorderedEnemies[tempClosestHitIndex] = null;
+                var a = orderCount;
+                enemyOrder[orderCount].OnDead += () =>
+                {
+                    lineRenderer.ActiveAnchor(a, false);
+                };
                 
                 anchorForOrdering.x = hitOrder[orderCount].transform.position.x;
                 anchorForOrdering.y = hitOrder[orderCount].transform.position.y;
@@ -101,13 +114,12 @@ namespace InGame
 
             StartCoroutine(IELightningRay(value, () =>
             {
-                lineRenderer.ResetLine(maxHitWithBonus, null, 0);
-                pool.Release(this, effectId);
+                StartCoroutine(IEDelayRelease(2f, () => pool.Release(this, effectId)));
             }));
             vfxImpact.position = Position;
             vfxImpact.gameObject.SetActive(true);
             sfx.Play();
-            StartCoroutine(IEDelayHideVfxImpact(durationEachHit));
+            StartCoroutine(IEDelayHideVfxImpact(durationImpact));
             cameraShakeEffect.Duration = Mathf.Max(orderCount * delayEachHit, durationEachHit);
             VisualEffectHelper.Instance.PlayEffect(cameraShakeEffect);
         }
@@ -119,7 +131,9 @@ namespace InGame
             for (var i = 0; i < orderCount; i++)
             {
                 lineRenderer.ActiveAnchor(i, true);
+                hitOrder[i].ShowVfx();
                 StartCoroutine(IEDelayHideAnchor(i, durationEachHit));
+                StartCoroutine(IEDelayHideVfxMiniImpact(hitOrder[i], durationImpact));
                 if (hitOrder[i].TryGetComponent(out hitTarget))
                 {
                     if (i == 0)
@@ -139,7 +153,7 @@ namespace InGame
                 yield return new WaitForSeconds(delayEachHit);
             }
             
-            yield return new WaitForSeconds(1f);
+            // yield return new WaitForSeconds(1f);
             actionComplete?.Invoke();
         }
 
@@ -153,6 +167,19 @@ namespace InGame
         {
             yield return new WaitForSeconds(delay);
             vfxImpact.gameObject.SetActive(false);
+        }
+
+        private IEnumerator IEDelayHideVfxMiniImpact(LightningBall ball, float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            ball.HideVfx();
+        }
+
+        private IEnumerator IEDelayRelease(float delay, Action actionDelay)
+        {
+            yield return new WaitForSeconds(delay);
+            lineRenderer.ResetLine(maxHitWithBonus, null, 0);
+            actionDelay?.Invoke();
         }
     }
 }
