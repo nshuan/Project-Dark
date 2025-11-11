@@ -18,8 +18,8 @@ namespace InGame
         private Vector2 Position { get; set; }
         private float Stagger { get; set; }
         private RaycastHit2D[] hits = new RaycastHit2D[50];
-        private Transform[] unorderedHits = new Transform[50];
-        private Transform[] hitOrder;
+        private LightningBall[] unorderedHits = new LightningBall[50];
+        private LightningBall[] hitOrder;
         private Vector2 anchorForOrdering;
         private int tempClosestHitIndex;
         private float tempMinDistance = 100f;
@@ -28,11 +28,19 @@ namespace InGame
         private IDamageable hitTarget;
         private CameraShake cameraShakeEffect;
         private int maxHitWithBonus;
-        
+        private EnemyEntity tempEnemy;
+
+        private void OnDisable()
+        {
+            lineRenderer.gameObject.SetActive(false);
+        }
+
         public override void Initialize()
         {
-            hitOrder = new Transform[20];
+            hitOrder = new LightningBall[20];
+            lineRenderer.gameObject.SetActive(false);
             lineRenderer.Initialize(20);
+            lineRenderer.ResetLine(maxHitWithBonus, null, 0);
             cameraShakeEffect = new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera };
         }
 
@@ -46,11 +54,24 @@ namespace InGame
             gameObject.SetActive(true);
 
             var count = Physics2D.CircleCastNonAlloc(Position, 3f, Vector2.zero, hits, 0f, targetLayer);
+            var lightningBall = LightningBallPool.Instance.Get(null, true);
+            lightningBall.transform.position = Position;
+            lightningBall.Target = target.TargetTransform;
+            unorderedHits[0] = lightningBall;
+            var unorderedHitIndex = 1;
             for (var i = 0; i < count; i++)
             {
-                unorderedHits[i] = hits[i].transform;
+                if (hits[i].transform.TryGetComponent(out tempEnemy) && !ReferenceEquals(tempEnemy.transform, target.TargetTransform) && tempEnemy.IsDestroyed == false)
+                {
+                    lightningBall = LightningBallPool.Instance.Get(null, true);
+                    lightningBall.transform.position = tempEnemy.transform.position;
+                    lightningBall.Target = tempEnemy.transform;
+                    unorderedHits[unorderedHitIndex] = lightningBall;
+                    unorderedHitIndex += 1;
+                }
             }
 
+            count = unorderedHitIndex;
             anchorForOrdering.x = target.Position.x;
             anchorForOrdering.y = target.Position.y;
             orderCount = 0;
@@ -59,7 +80,7 @@ namespace InGame
                 for (var i = 0; i < count; i++)
                 {
                     if (!unorderedHits[i]) continue;
-                    tempDistance = Vector2.Distance(unorderedHits[i].position, anchorForOrdering);
+                    tempDistance = Vector2.Distance(unorderedHits[i].transform.position, anchorForOrdering);
                     if (tempDistance < tempMinDistance)
                     {
                         tempClosestHitIndex = i;
@@ -70,8 +91,8 @@ namespace InGame
                 hitOrder[orderCount] = unorderedHits[tempClosestHitIndex];
                 unorderedHits[tempClosestHitIndex] = null;
                 
-                anchorForOrdering.x = hitOrder[orderCount].position.x;
-                anchorForOrdering.y = hitOrder[orderCount].position.y;
+                anchorForOrdering.x = hitOrder[orderCount].transform.position.x;
+                anchorForOrdering.y = hitOrder[orderCount].transform.position.y;
                 tempMinDistance = 100f;
                 orderCount += 1;
             }
@@ -93,6 +114,8 @@ namespace InGame
 
         private IEnumerator IELightningRay(float damage, Action actionComplete)
         {
+            lineRenderer.gameObject.SetActive(true);
+            
             for (var i = 0; i < orderCount; i++)
             {
                 lineRenderer.ActiveAnchor(i, true);
@@ -107,9 +130,9 @@ namespace InGame
                     }
                     else
                     {
-                        hitTarget.HitDirectionX = hitOrder[i].position.x - hitOrder[i - 1].position.x;
-                        hitTarget.HitDirectionY = hitOrder[i].position.y - hitOrder[i - 1].position.y;
-                        hitTarget.Damage((int)damage, hitOrder[i - 1].position, Stagger, DamageType.Normal);
+                        hitTarget.HitDirectionX = hitOrder[i].transform.position.x - hitOrder[i - 1].transform.position.x;
+                        hitTarget.HitDirectionY = hitOrder[i].transform.position.y - hitOrder[i - 1].transform.position.y;
+                        hitTarget.Damage((int)damage, hitOrder[i - 1].transform.position, Stagger, DamageType.Normal);
                     }
                 }
 

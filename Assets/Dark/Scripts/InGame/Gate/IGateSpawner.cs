@@ -19,10 +19,10 @@ namespace InGame
             var enemy = EnemyPool.Instance.Get(enemyPrefab, enemyId, null, false);
             TowerEntity target = null;
             
-            target = targetTower[Random.Range(0, targetTower.Length)];
+            target = targetTower[RandomUtil.Range(0, targetTower.Length)];
             enemy.transform.position =
                 (Vector3)gatePosition + 
-                (Quaternion.Euler(0f, 0f, Random.Range(-45f, 45f)) * (target.transform.position - (Vector3)gatePosition).normalized)
+                (Quaternion.Euler(0f, 0f, RandomUtil.Range(-45f, 45f)) * (target.transform.position - (Vector3)gatePosition).normalized)
                 * radius;
             
             return new [] { (enemy, target) };
@@ -40,24 +40,24 @@ namespace InGame
             var targets = new TowerEntity[3];
 
             enemies[0] = EnemyPool.Instance.Get(enemyPrefab, enemyId,null, false);
-            targets[0] = targetTower[Random.Range(0, targetTower.Length)];
+            targets[0] = targetTower[RandomUtil.Range(0, targetTower.Length)];
             enemies[0].transform.position =
                 (Vector3)gatePosition + 
-                (Quaternion.Euler(0f, 0f, Random.Range(-45f, 45f)) * (targets[0].transform.position - (Vector3)gatePosition).normalized)
+                (Quaternion.Euler(0f, 0f, RandomUtil.Range(-45f, 45f)) * (targets[0].transform.position - (Vector3)gatePosition).normalized)
                 * radius;
 
             enemies[1] = EnemyPool.Instance.Get(enemyPrefab, enemyId, null, false);
-            targets[1] = targetTower[Random.Range(0, targetTower.Length)];
+            targets[1] = targetTower[RandomUtil.Range(0, targetTower.Length)];
             enemies[1].transform.position =
                 (Vector3)gatePosition + 
-                (Quaternion.Euler(0f, 0f, Random.Range(-45f, 45f)) * (targets[1].transform.position - (Vector3)gatePosition).normalized)
+                (Quaternion.Euler(0f, 0f, RandomUtil.Range(-45f, 45f)) * (targets[1].transform.position - (Vector3)gatePosition).normalized)
                 * radius;
             
             enemies[2] = EnemyPool.Instance.Get(enemyPrefab, enemyId, null, false);
-            targets[2] = targetTower[Random.Range(0, targetTower.Length)];
+            targets[2] = targetTower[RandomUtil.Range(0, targetTower.Length)];
             enemies[2].transform.position =
                 (Vector3)gatePosition + 
-                (Quaternion.Euler(0f, 0f, Random.Range(-45f, 45f)) * (targets[2].transform.position - (Vector3)gatePosition).normalized)
+                (Quaternion.Euler(0f, 0f, RandomUtil.Range(-45f, 45f)) * (targets[2].transform.position - (Vector3)gatePosition).normalized)
                 * radius;
             
             return new []

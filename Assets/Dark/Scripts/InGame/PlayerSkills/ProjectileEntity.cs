@@ -210,7 +210,7 @@ namespace InGame
             // Set lại vị trí viên đạn vào vị trí enemy (tránh việc đạn bay nhanh quá nhìn giống như không chạm vào enemy)
             
             // Check critical hit
-            var critical = Random.Range(0f, 1f) <= CriticalRate;
+            var critical = RandomUtil.Range(0f, 1f) <= CriticalRate;
             hit.HitDirectionX = direction.x;
             hit.HitDirectionY = direction.y;
             hit.Damage(critical ? CriticalDamage : Damage, transform.position, Stagger, critical ? InGame.DamageType.NormalCritical : InGame.DamageType.Normal);

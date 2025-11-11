@@ -19,7 +19,7 @@ namespace InGame.ChargeConfig
         {
             var instance = Resources.Load<PlayerChargeManifest>(Path);
             if (instance.configMap == null || instance.configMap.Count == 0) return null;
-            var result = instance.configMap.Values.ToArray()[Random.Range(0, instance.configMap.Count)];
+            var result = instance.configMap.Values.ToArray()[RandomUtil.Range(0, instance.configMap.Count)];
             Resources.UnloadAsset(instance);
             return result;
         }

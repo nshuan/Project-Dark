@@ -128,6 +128,8 @@ namespace InGame
                 {
                     if (teleMouseInput.CanMove)
                     {
+                        ResetMousePressing();
+                        
                         IsMousePressingStarted = false;
                         IsMousePressing = false;
                         mouseInput.ResetChargeVariable();
@@ -294,10 +296,40 @@ namespace InGame
                 .Play();
         }
 
+        private void ResetMousePressing()
+        {
+            // Reset biên lưu nút chuột đang nhấn
+            if (pressingButton == PointerEventData.InputButton.Left)
+            {
+                pressingButton = PointerEventData.InputButton.Middle;
+                    
+                IsMousePressingStarted = false;
+                    
+                if (!IsMousePressing)
+                {
+                    mouseInput?.OnMouseClick();
+                    mouseInput?.ResetChargeVariable();
+                    return;
+                }
+                    
+                IsMousePressing = false;
+                    
+                mouseInput?.OnHoldReleased();
+                mouseInput?.OnMouseClick();
+            }
+            else if (pressingButton == PointerEventData.InputButton.Right)
+            {
+                // Release chuột auto attack, reset biến lưu chuột đang nhấn
+                mouseAutoAttack.OnHoldReleased();
+                pressingButton = PointerEventData.InputButton.Middle;
+            }
+        }
+
         #region Pause Game
 
         public void OnPause(bool isPaused)
         {
+            ResetMousePressing();
             BlockAllInput = isPaused;
             cursor?.gameObject.SetActive(!isPaused);
         }

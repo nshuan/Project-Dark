@@ -35,7 +35,7 @@ namespace InGame
                         targetLayer);
                     if (count > 0)
                     {
-                        if (hits[Random.Range(0, count)].transform.TryGetComponent(out triggerredEnemy))
+                        if (hits[RandomUtil.Range(0, count)].transform.TryGetComponent(out triggerredEnemy))
                         {
                             VfxThunderPool.Instance.GetAndRelease(null, triggerredEnemy.transform.position, 0f, 1f);
                             if (triggerredEnemy.PercentageHpLeft < value)

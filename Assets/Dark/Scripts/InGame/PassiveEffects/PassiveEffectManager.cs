@@ -66,7 +66,7 @@ namespace InGame
                 if (cooldownEffectMap[triggerType][effectConfig.logicType]) continue;
                 
                 // Calculate chance
-                if (Random.Range(0f, 1f) <= LevelUtility.GetPassiveChance(effectConfig.logicType, effectConfig.chance))
+                if (RandomUtil.Range(0f, 1f) <= LevelUtility.GetPassiveChance(effectConfig.logicType, effectConfig.chance))
                 {
                     pool.Get(effectConfig.passivePrefab, effectConfig.passiveId, null, false)
                         .TriggerEffect(effectConfig.passiveId, target, 

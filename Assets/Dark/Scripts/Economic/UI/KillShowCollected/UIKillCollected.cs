@@ -24,7 +24,7 @@ namespace Economic.UI.KillShowCollected
         private IEnumerator IEShowCollected(WealthType kind, int value,TextMeshProUGUI txtValue,  Vector3 worldPos)
         {
             txtValue.color = textColor;
-            txtValue.transform.position = cam.WorldToScreenPoint(worldPos) + new Vector3(Random.Range(-30f, 30f), 40f, 0f);
+            txtValue.transform.position = cam.WorldToScreenPoint(worldPos) + new Vector3(RandomUtil.Range(-30f, 30f), 40f, 0f);
             txtValue.SetText($"+{value}");
             txtValue.gameObject.SetActive(true);
             var endPos = txtValue.transform.position + new Vector3(0, 50f, 0f);

@@ -20,7 +20,7 @@ namespace Dark.Scripts.RuntimeCheat.CheatLevel
         [SerializeField] private Button btnDropEnemy;
         
         [Header("Enemy Behaviours")]
-        [SerializeField] private List<EnemyBehaviour> enemyBehaviours = new List<EnemyBehaviour>();
+        public List<EnemyBehaviour> enemyBehaviours = new List<EnemyBehaviour>();
         
         private List<Button> createdButtons = new List<Button>();
         private bool isPanelOpen = false;
@@ -242,7 +242,8 @@ namespace Dark.Scripts.RuntimeCheat.CheatLevel
         protected virtual void OnEnemyButtonClickedCustom(EnemyBehaviour enemyBehaviour, int enemyId)
         {
             // This method is intentionally empty - user should override or modify this
-            newEnemy = Instantiate(enemyBehaviour.enemyPrefab, null);
+            var newEnemy = Instantiate(enemyBehaviour.enemyPrefab, null);
+            this.newEnemy = newEnemy;
             
             btnDropEnemy.gameObject.SetActive(true);
             btnDropEnemy.onClick.RemoveAllListeners();

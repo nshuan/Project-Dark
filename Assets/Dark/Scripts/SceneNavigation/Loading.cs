@@ -44,7 +44,7 @@ namespace Dark.Scripts.SceneNavigation
             }
             else
             {
-                DoClose(Random.Range(minDuration, maxDuration), 0.3f,0.5f)
+                DoClose(RandomUtil.Range(minDuration, maxDuration), 0.3f,0.5f)
                     .OnComplete(() =>
                     {
                         onLoadingComplete?.Invoke();
