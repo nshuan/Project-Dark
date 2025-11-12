@@ -242,7 +242,7 @@ namespace Dark.Scripts.RuntimeCheat.CheatLevel
         protected virtual void OnEnemyButtonClickedCustom(EnemyBehaviour enemyBehaviour, int enemyId)
         {
             // This method is intentionally empty - user should override or modify this
-            var newEnemy = Instantiate(enemyBehaviour.enemyPrefab, null);
+            var newEnemy =  EnemyPool.Instance.Get(enemyBehaviour.enemyPrefab, enemyId, null, false);
             this.newEnemy = newEnemy;
             
             btnDropEnemy.gameObject.SetActive(true);
@@ -279,10 +279,6 @@ namespace Dark.Scripts.RuntimeCheat.CheatLevel
                         1);
                     
                     newEnemy.Activate();
-                    newEnemy.OnDead += () =>
-                    {
-                        Destroy(newEnemy.gameObject);
-                    };
                 }
 
                 newEnemy = null;
