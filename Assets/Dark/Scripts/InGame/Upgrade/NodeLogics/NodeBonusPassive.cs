@@ -40,6 +40,12 @@ namespace InGame.Upgrade
         {
             if (level < 0) return "??";
             if (level >= value.Length) level = value.Length - 1;
+
+            if (passiveType == PassiveType.Lightning && bonusType == BonusType.Size)
+                return value[level].ToString(CultureInfo.InvariantCulture);
+            
+            if (passiveType == PassiveType.Burning && bonusType == BonusType.Size) 
+                return value[level].ToString(CultureInfo.InvariantCulture);
             
             return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
         }
