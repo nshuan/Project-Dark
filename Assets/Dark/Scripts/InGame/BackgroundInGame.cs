@@ -1,15 +1,17 @@
 using System;
+using Core;
 using DG.Tweening;
 using UnityEngine;
 
 namespace InGame
 {
-    public class BackgroundInGame : MonoBehaviour
+    public class BackgroundInGame : MonoSingleton<BackgroundInGame>
     {
         private static readonly int MatDisolveValue = Shader.PropertyToID("Disolve_Value");
         
         [SerializeField] private GameObject groupBgNormal;
         [SerializeField] private GameObject groupBgBoss;
+        [SerializeField] private GameObject groupBgBlack;
         [SerializeField] private GameObject vfxBgBoss;
         [SerializeField] private Material matBgBoss;
 
@@ -64,6 +66,16 @@ namespace InGame
                     {
                         groupBgBoss.SetActive(false);
                     });
+            }
+        }
+
+        public void SetActiveBlackBg(bool active)
+        {
+            groupBgBlack.SetActive(active);
+            if (active)
+            {
+                groupBgNormal.SetActive(false);
+                groupBgBoss.SetActive(false);
             }
         }
     }

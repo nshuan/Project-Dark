@@ -1,5 +1,6 @@
 using System.Collections;
 using InGame.CameraController;
+using InGame.UI;
 using UnityEngine;
 
 namespace InGame.Boss
@@ -8,6 +9,10 @@ namespace InGame.Boss
     {
         protected override IEnumerator IEDie(float delayRelease)
         {
+            // Làm đen hết màn hình, tắt UI
+            BackgroundInGame.Instance.SetActiveBlackBg(true);
+            CanvasInGame.Instance.HideUI();
+            
             // Đợi chạy xong anim hit rồi mới chạy anim die
             animController.PlayIdle();
             InGameCameraController.Instance.ZoomToPosition(transform.position + new Vector3(0, 1, 0));  
