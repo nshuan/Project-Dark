@@ -38,8 +38,8 @@ namespace InGame
 
         public void Initialize(InputInGame manager, MoveChargeController chargeController)
         {
-            CanShoot = false;
-            cursor.SetAuto(false);
+            CanShoot = GameConst.DefaultAutoAttack;
+            cursor.SetAuto(GameConst.DefaultAutoAttack);
 
             InputManager = manager;
             Cooldown = LevelUtility.GetSkillCooldown(false);
