@@ -98,7 +98,7 @@ namespace InGame
             LevelExpRatio = levelExpRatio;
             LevelDarkRatio = levelDarkRatio;
             LevelDarkUnitValue = levelDarkUnitValue;
-            TotalSpawnTurn = cfg.duration >= 0 ? (int)(cfg.duration / cfg.intervalLoop) : -1;
+            TotalSpawnTurn = cfg.duration >= 0 ? (int)(cfg.duration / cfg.intervalLoop) + 1 : -1;
             currentSpawnTurn = 0;
             AliveEnemyCount = 0;
             IsActive = false;
