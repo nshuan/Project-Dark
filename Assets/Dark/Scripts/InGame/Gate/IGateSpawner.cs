@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace InGame
@@ -66,6 +67,34 @@ namespace InGame
                 (enemies[1], targets[1]),
                 (enemies[2], targets[2])
             }; 
+        }
+    }
+    
+    [Serializable]
+    public class GateSpawnMultiple : IGateSpawner
+    {
+        [Range(1, 10)] public int amount = 1;
+        [Range(1f, 2f)] public float maxRadius = 1.8f;
+        
+        public (EnemyEntity, TowerEntity)[] Spawn(Vector2 gatePosition, int enemyId, EnemyEntity enemyPrefab, TowerEntity[] targetTower)
+        {
+            var enemies = new EnemyEntity[amount];
+            var targets = new TowerEntity[amount];
+            var result = new (EnemyEntity, TowerEntity)[amount];
+
+            for (var i = 0; i < amount; i++)
+            {
+                enemies[i] = EnemyPool.Instance.Get(enemyPrefab, enemyId,null, false);
+                targets[i] = targetTower[RandomUtil.Range(0, targetTower.Length)];
+                enemies[i].transform.position =
+                    (Vector3)gatePosition +
+                    (Quaternion.Euler(0f, 0f, RandomUtil.Range(-60f, 60f)) *
+                     (targets[i].transform.position - (Vector3)gatePosition).normalized)
+                    * RandomUtil.Range(maxRadius - 0.3f, maxRadius);
+                result[i] = (enemies[i], targets[i]);
+            }
+            
+            return result;
         }
     }
 }
