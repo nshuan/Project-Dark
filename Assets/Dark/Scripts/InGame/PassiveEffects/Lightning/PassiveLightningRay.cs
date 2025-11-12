@@ -8,7 +8,8 @@ namespace InGame
 {
     public class PassiveLightningRay : MonoPassiveEntity
     {
-        [SerializeField] private LightningLineRenderer lineRenderer;
+        // [SerializeField] private LightningLineRenderer lineRenderer;
+        [SerializeField] private LightningLineRendererV2 lineRenderer;
         [SerializeField] private Transform vfxImpact;
         [SerializeField] private int maxHit = 5;
         [SerializeField] private float delayEachHit = 0.05f;
@@ -43,15 +44,15 @@ namespace InGame
             hitOrder = new LightningBall[20];
             enemyOrder = new EnemyEntity[20];
             lineRenderer.gameObject.SetActive(false);
-            lineRenderer.Initialize(20);
-            lineRenderer.ResetLine(maxHitWithBonus, null, 0);
+            lineRenderer.Initialize();
+            lineRenderer.ResetLine(null);
             cameraShakeEffect = new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera };
         }
 
         public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool)
         {
             maxHitWithBonus = (int)size;
-            lineRenderer.ResetLine(maxHitWithBonus, null, 0);
+            lineRenderer.ResetLine(null);
             transform.position = Vector3.zero;
             this.Position = target.Position;
             this.Stagger = stagger;
@@ -110,7 +111,7 @@ namespace InGame
                 orderCount += 1;
             }
             
-            lineRenderer.ResetLine(maxHitWithBonus, hitOrder, orderCount);
+            lineRenderer.ResetLine(hitOrder);
 
             StartCoroutine(IELightningRay(value, () =>
             {
@@ -178,7 +179,7 @@ namespace InGame
         private IEnumerator IEDelayRelease(float delay, Action actionDelay)
         {
             yield return new WaitForSeconds(delay);
-            lineRenderer.ResetLine(maxHitWithBonus, null, 0);
+            lineRenderer.ResetLine(null);
             actionDelay?.Invoke();
         }
     }
