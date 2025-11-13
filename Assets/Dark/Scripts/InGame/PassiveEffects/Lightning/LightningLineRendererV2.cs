@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -9,7 +10,8 @@ namespace InGame
         [SerializeField] private Transform vfxParent;
         [SerializeField] private LineRenderer[] lineRenderers;
 
-        private LightningBall[] targets;
+        private List<Transform> targets;
+        private int targetCount;
         
         public void Initialize()
         {
@@ -21,6 +23,7 @@ namespace InGame
 
         private void Update()
         {
+            if (targetCount == 0) return;
             if (targets == null) return;
 
             var activeAnchor = targets.Count((t) => t && t.gameObject.activeInHierarchy);
@@ -30,7 +33,7 @@ namespace InGame
             }
 
             var linePositionIndex = 0;
-            for (var i = 0; i < targets.Length; i++)
+            for (var i = 0; i < targetCount; i++)
             {
                 if (!targets[i] || !targets[i].gameObject.activeInHierarchy) continue;
                 foreach (var line in lineRenderers)
@@ -42,39 +45,21 @@ namespace InGame
             }
         }
 
-        public void ResetLine(LightningBall[] target)
+        public void ResetLine(Transform[] target)
         {
-            if (targets != null)
+            targets ??= new List<Transform>();
+            for (var i = 0; i < target.Length; i++)
             {
-                foreach (var t in targets)
-                {
-                    if (t) LightningBallPool.Instance.Release(t);
-                }
+                if (i < targets.Count) targets[i] = target[i];
+                else targets.Add(target[i]);
             }
-            
-            targets = target;
-            if (targets != null)
-            {
-                foreach (var t in targets)
-                {
-                    if (t) t.gameObject.SetActive(false);
-                }
-            }
+            targetCount = target.Length;
             
             foreach (var line in lineRenderers)
             {
                 line.positionCount = 0;
                 line.SetPositions(Array.Empty<Vector3>());
             }
-        }
-        
-        public void ActiveAnchor(int index, bool active)
-        {
-            if (targets == null) return;
-            if (index >= targets.Length) return;
-            if (index <= 0) return;
-
-            targets[index].gameObject.SetActive(active);
         }
         
         private void OnValidate()
