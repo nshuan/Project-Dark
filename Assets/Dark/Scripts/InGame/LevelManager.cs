@@ -242,6 +242,14 @@ namespace InGame
         }
         #endregion
 
+#if UNITY_EDITOR
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.K)) WinLevel();
+            else if (Input.GetKeyDown(KeyCode.L)) LoseLevel();
+        }
+#endif
+
         public LevelConfig testLevel;
         [Button]
         public void TestLoadLevel()
