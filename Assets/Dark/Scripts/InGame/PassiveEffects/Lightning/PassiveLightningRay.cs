@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using System.Linq;
 using Dark.Scripts.Audio;
+using Dark.Scripts.Utils;
 using InGame.Effects;
 using UnityEngine;
 
@@ -8,7 +10,8 @@ namespace InGame
 {
     public class PassiveLightningRay : MonoPassiveEntity
     {
-        [SerializeField] private LightningLineRenderer lineRenderer;
+        // [SerializeField] private LightningLineRenderer lineRenderer;
+        [SerializeField] private LightningLineRendererV2 lineRenderer;
         [SerializeField] private Transform vfxImpact;
         [SerializeField] private int maxHit = 5;
         [SerializeField] private float delayEachHit = 0.05f;
@@ -43,15 +46,15 @@ namespace InGame
             hitOrder = new LightningBall[20];
             enemyOrder = new EnemyEntity[20];
             lineRenderer.gameObject.SetActive(false);
-            lineRenderer.Initialize(20);
-            lineRenderer.ResetLine(maxHitWithBonus, null, 0);
+            lineRenderer.Initialize();
+            lineRenderer.ResetLine(Array.Empty<Transform>());
             cameraShakeEffect = new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera };
         }
 
         public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool)
         {
             maxHitWithBonus = (int)size;
-            lineRenderer.ResetLine(maxHitWithBonus, null, 0);
+            lineRenderer.ResetLine(Array.Empty<Transform>());
             transform.position = Vector3.zero;
             this.Position = target.Position;
             this.Stagger = stagger;
@@ -101,7 +104,7 @@ namespace InGame
                 var a = orderCount;
                 enemyOrder[orderCount].OnDead += () =>
                 {
-                    lineRenderer.ActiveAnchor(a, false);
+                    hitOrder[a].gameObject.SetActive(false);
                 };
                 
                 anchorForOrdering.x = hitOrder[orderCount].transform.position.x;
@@ -110,16 +113,24 @@ namespace InGame
                 orderCount += 1;
             }
             
-            lineRenderer.ResetLine(maxHitWithBonus, hitOrder, orderCount);
+            lineRenderer.ResetLine(hitOrder.Where((hit) => hit).Select((hit) => hit.lightningAnchor).ToArray());
 
             StartCoroutine(IELightningRay(value, () =>
             {
-                StartCoroutine(IEDelayRelease(2f, () => pool.Release(this, effectId)));
+                this.DelayCall(2f, () =>
+                {
+                    lineRenderer.ResetLine(Array.Empty<Transform>());
+                    foreach (var hit in hitOrder)
+                    {
+                        if (hit) LightningBallPool.Instance.Release(hit);
+                    }
+                    pool.Release(this, effectId);
+                });
             }));
             vfxImpact.position = Position;
             vfxImpact.gameObject.SetActive(true);
             sfx.Play();
-            StartCoroutine(IEDelayHideVfxImpact(durationImpact));
+            this.DelayCall(durationImpact, () => vfxImpact.gameObject.SetActive(false));
             cameraShakeEffect.Duration = Mathf.Max(orderCount * delayEachHit, durationEachHit);
             VisualEffectHelper.Instance.PlayEffect(cameraShakeEffect);
         }
@@ -130,11 +141,19 @@ namespace InGame
             
             for (var i = 0; i < orderCount; i++)
             {
-                lineRenderer.ActiveAnchor(i, true);
-                hitOrder[i].ShowVfx();
-                StartCoroutine(IEDelayHideAnchor(i, durationEachHit));
-                StartCoroutine(IEDelayHideVfxMiniImpact(hitOrder[i], durationImpact));
-                if (hitOrder[i].TryGetComponent(out hitTarget))
+                var hit = hitOrder[i];
+                hit.lightningAnchor.gameObject.SetActive(true);
+                hit.gameObject.SetActive(true);
+                hit.ShowVfx();
+                this.DelayCall(durationEachHit, () =>
+                {
+                    hit.lightningAnchor.gameObject.SetActive(false);
+                });
+                this.DelayCall(durationImpact, () =>
+                {
+                    hit.HideVfx();
+                });
+                if (enemyOrder[i].TryGetComponent(out hitTarget))
                 {
                     if (i == 0)
                     {
@@ -144,9 +163,9 @@ namespace InGame
                     }
                     else
                     {
-                        hitTarget.HitDirectionX = hitOrder[i].transform.position.x - hitOrder[i - 1].transform.position.x;
-                        hitTarget.HitDirectionY = hitOrder[i].transform.position.y - hitOrder[i - 1].transform.position.y;
-                        hitTarget.Damage((int)damage, hitOrder[i - 1].transform.position, Stagger, DamageType.Normal);
+                        hitTarget.HitDirectionX = enemyOrder[i].transform.position.x - enemyOrder[i - 1].transform.position.x;
+                        hitTarget.HitDirectionY = enemyOrder[i].transform.position.y - enemyOrder[i - 1].transform.position.y;
+                        hitTarget.Damage((int)damage, enemyOrder[i - 1].transform.position, Stagger, DamageType.Normal);
                     }
                 }
 
@@ -155,31 +174,6 @@ namespace InGame
             
             // yield return new WaitForSeconds(1f);
             actionComplete?.Invoke();
-        }
-
-        private IEnumerator IEDelayHideAnchor(int index, float delay)
-        {
-            yield return new WaitForSeconds(delay);
-            lineRenderer.ActiveAnchor(index, false);
-        }
-
-        private IEnumerator IEDelayHideVfxImpact(float delay)
-        {
-            yield return new WaitForSeconds(delay);
-            vfxImpact.gameObject.SetActive(false);
-        }
-
-        private IEnumerator IEDelayHideVfxMiniImpact(LightningBall ball, float delay)
-        {
-            yield return new WaitForSeconds(delay);
-            ball.HideVfx();
-        }
-
-        private IEnumerator IEDelayRelease(float delay, Action actionDelay)
-        {
-            yield return new WaitForSeconds(delay);
-            lineRenderer.ResetLine(maxHitWithBonus, null, 0);
-            actionDelay?.Invoke();
         }
     }
 }

@@ -6,6 +6,7 @@ namespace InGame
 {
     public class LightningBall : MonoBehaviour
     {
+        public Transform lightningAnchor;
         public GameObject vfxLightningBall;
         public Transform Target { get; set; }
 

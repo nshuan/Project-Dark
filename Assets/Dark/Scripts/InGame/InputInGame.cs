@@ -36,7 +36,6 @@ namespace InGame
 
         [Space, Header("Move Towers")] 
         private KeyCode activateTeleKey = KeyCode.LeftShift;
-        private bool teleKeyPressed;
 
         #endregion
 
@@ -67,6 +66,7 @@ namespace InGame
                     }
                 }
                 teleMouseInput = new MoveToTower(cam, PlayerVisual, availableTeleConfigs[0], availableTeleConfigs.Count > 1 ? availableTeleConfigs[1] : null, LevelManager.Instance.Towers, LevelManager.Instance.CurrentTower.Id, this.TryDelayCall);
+                teleMouseInput.OnActivated();
                 BlockAllInput = false;
                 
                 // Setup skill config and mouse input
@@ -109,7 +109,6 @@ namespace InGame
             BlockAllInput = true;
             IsMousePressing = false;
             IsMousePressingStarted = false;
-            teleKeyPressed = false;
 
             ResetMotionBlur();
             ResetTimeScale();
@@ -124,34 +123,34 @@ namespace InGame
 
             if (!BlockTeleport)
             {
-                if (Input.GetKey(activateTeleKey))
-                {
-                    if (teleMouseInput.CanMove)
-                    {
-                        ResetMousePressing();
-                        
-                        IsMousePressingStarted = false;
-                        IsMousePressing = false;
-                        mouseInput.ResetChargeVariable();
-                        mouseInput.OnHoldReleased();
-                        teleKeyPressed = true;
-                        
-                        teleMouseInput.OnActivated();
-                    
-                        DOTween.Kill(motionBlur);
-                        DOTween.Sequence(motionBlur).AppendCallback(() =>
-                            {
-                                foreach (var tower in LevelManager.Instance.Towers)
-                                {
-                                    tower.OnMotionBlur();
-                                }
-                                PlayerVisual.OnMotionBlur();
-                            
-                                motionBlur.gameObject.SetActive(true);
-                            }).Append(motionBlur.DOFade(1f, 0.16f))
-                            .OnComplete(FreezeTimeScale);
-                    }
-                }
+                // if (Input.GetKey(activateTeleKey))
+                // {
+                //     if (teleMouseInput.CanMove)
+                //     {
+                //         ResetMousePressing();
+                //         
+                //         IsMousePressingStarted = false;
+                //         IsMousePressing = false;
+                //         mouseInput.ResetChargeVariable();
+                //         mouseInput.OnHoldReleased();
+                //         teleKeyPressed = true;
+                //         
+                //         teleMouseInput.OnActivated();
+                //     
+                //         DOTween.Kill(motionBlur);
+                //         DOTween.Sequence(motionBlur).AppendCallback(() =>
+                //             {
+                //                 foreach (var tower in LevelManager.Instance.Towers)
+                //                 {
+                //                     tower.OnMotionBlur();
+                //                 }
+                //                 PlayerVisual.OnMotionBlur();
+                //             
+                //                 motionBlur.gameObject.SetActive(true);
+                //             }).Append(motionBlur.DOFade(1f, 0.16f))
+                //             .OnComplete(FreezeTimeScale);
+                //     }
+                // }
             }
             
             if (IsMousePressingStarted)
@@ -164,6 +163,7 @@ namespace InGame
                 {
                     IsMousePressingStarted = false;
                     IsMousePressing = true;
+                    if (mouseInput.CanCharge) mouseAutoAttack?.OnHoldStarted();
                     mouseInput?.OnHoldStarted();
                 }
             }
@@ -194,26 +194,11 @@ namespace InGame
             
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                // Nếu đang giữ chuột phải thì release luôn
-                if (pressingButton == PointerEventData.InputButton.Right)
-                    mouseAutoAttack.OnHoldReleased();
-                
                 pressingButton = PointerEventData.InputButton.Left;
                 
-                if (teleKeyPressed) return;
-                
-                // Reset luôn auto attack, nếu ang press tele key thì thôi
-                mouseAutoAttack.ResetChargeVariable();
-                   
                 holdDelayTime = 0f;
                 IsMousePressing = false;
                 IsMousePressingStarted = true;
-            }
-            else if (eventData.button == PointerEventData.InputButton.Right)
-            {
-                if (teleKeyPressed) return;
-                pressingButton = PointerEventData.InputButton.Right;
-                mouseAutoAttack.OnHoldStarted();
             }
         }
 
@@ -226,16 +211,9 @@ namespace InGame
                 if (pressingButton == PointerEventData.InputButton.Left)
                     pressingButton = PointerEventData.InputButton.Middle;
                 
-                if (teleKeyPressed)
-                {
-                    teleKeyPressed = false;
-                    if (!BlockTeleport)
-                        teleMouseInput?.OnMouseClick(false);
-                    teleMouseInput?.OnDeactivated();
-                    ResetMotionBlur();
-                    ResetTimeScale();
-                    return;
-                }
+                if (!BlockTeleport)
+                    teleMouseInput?.OnMouseClick(false);
+                teleMouseInput?.OnDeactivated();
                 
                 IsMousePressingStarted = false;
                 
@@ -248,25 +226,9 @@ namespace InGame
                 
                 IsMousePressing = false;
                 
+                mouseAutoAttack?.OnHoldReleased();
                 mouseInput?.OnHoldReleased();
                 mouseInput?.OnMouseClick();
-            }
-            else if (eventData.button == PointerEventData.InputButton.Right)
-            {
-                // Release chuột auto attack, reset biến lưu chuột đang nhấn
-                mouseAutoAttack.OnHoldReleased();
-                if (pressingButton == PointerEventData.InputButton.Right)
-                    pressingButton = PointerEventData.InputButton.Middle;
-                
-                if (teleKeyPressed)
-                {
-                    teleKeyPressed = false;
-                    if (!BlockTeleport)
-                        teleMouseInput?.OnMouseClick(true);
-                    teleMouseInput?.OnDeactivated();
-                    ResetMotionBlur();
-                    ResetTimeScale();
-                }
             }
         }
 
@@ -304,6 +266,7 @@ namespace InGame
                 pressingButton = PointerEventData.InputButton.Middle;
                     
                 IsMousePressingStarted = false;
+                mouseAutoAttack?.OnHoldReleased();
                     
                 if (!IsMousePressing)
                 {
@@ -316,12 +279,6 @@ namespace InGame
                     
                 mouseInput?.OnHoldReleased();
                 mouseInput?.OnMouseClick();
-            }
-            else if (pressingButton == PointerEventData.InputButton.Right)
-            {
-                // Release chuột auto attack, reset biến lưu chuột đang nhấn
-                mouseAutoAttack.OnHoldReleased();
-                pressingButton = PointerEventData.InputButton.Middle;
             }
         }
 

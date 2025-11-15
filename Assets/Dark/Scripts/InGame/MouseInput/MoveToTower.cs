@@ -38,7 +38,7 @@ namespace InGame
             CurrentTowerIndex = currentTowerIndex;
             DelayCallFunction = delayCallFunction;
             actionTowerChanged = OnTowerChanged;
-            CanMove = false;
+            CanMove = true;
             CanCountdown = true;
             
             // bỏ cơ chế move bằng chuột phải, thay bằng cơ chế kết hợp 2 loại move
@@ -121,7 +121,6 @@ namespace InGame
         public void OnDeactivated()
         {
             if (Towers == null) return;
-            IsActivate = false;
             foreach (var tower in Towers)
             {
                 tower.Hover(false);

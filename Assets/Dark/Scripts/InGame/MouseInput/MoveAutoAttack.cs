@@ -22,8 +22,6 @@ namespace InGame
         protected float ActivateDuration { get; set; } = 1f;
         protected float cdCounter;
 
-        private bool isActivating;
-
         public MoveAutoAttack()
         {
 
@@ -105,45 +103,34 @@ namespace InGame
 
         public void OnHoldStarted()
         {
-            if (CanShoot) return;
-            isActivating = true;
-            cdCounter = ActivateDuration;
+            CanShoot = false;
+            cursor.SetAuto(false);
         }
 
         public void OnHoldReleased()
         {
-            if (CanShoot) return;
-            isActivating = false;
+            CanShoot = true;
+            cdCounter = Cooldown;
+            cursor.SetAuto(true);
             cursor.UpdateCooldown(false, 0f);
         }
 
         public void ResetChargeVariable()
         {
-            CanShoot = false;
-            isActivating = false;
-            cursor.SetAuto(false);
+            CanShoot = GameConst.DefaultAutoAttack;
+            cursor.SetAuto(GameConst.DefaultAutoAttack);
         }
+
+        public bool CanCharge => false;
 
         public bool CanMove => true;
 
         public virtual void OnUpdate()
         {
-            if (!CanShoot && !isActivating) return;
+            if (cdCounter >= 0) cdCounter -= Time.deltaTime;
             
-            if (isActivating)
-            {
-                cdCounter -= Time.deltaTime;
-                cursor.UpdateCooldown(true, 1 - Mathf.Clamp(cdCounter / ActivateDuration, 0f, 1f));
-                if (cdCounter <= 0f)
-                {
-                    isActivating = false;
-                    CanShoot = true;
-                    cursor.SetAuto(true);
-                }
-                
-                return;
-            }
-            
+            if (!CanShoot) return;
+
             worldMousePosition = Cam.ScreenToWorldPoint(Input.mousePosition);
             
             mousePosition = Input.mousePosition;
@@ -151,7 +138,6 @@ namespace InGame
             cursorRect.position = mousePosition;    
             InputManager.PlayerVisual.SetDirection(worldMousePosition);
             
-            cdCounter -= Time.deltaTime;
             cursor.UpdateCooldown(true, 1 - Mathf.Clamp(cdCounter / Cooldown, 0f, 1f));
             if (cdCounter <= 0)
                 OnMouseClick();

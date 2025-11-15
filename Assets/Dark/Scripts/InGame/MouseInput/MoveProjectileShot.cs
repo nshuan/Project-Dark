@@ -283,6 +283,13 @@ namespace InGame
             chargeMaxStep = Mathf.Max(bulletChargeMaxStep, dameChargeMaxStep, sizeChargeMaxStep, rangeChargeMaxStep);
         }
 
+        public bool CanCharge => CanShootCharge && !isCharging && (
+            (canChargeBullet && bulletChargeMaxStep > 0) ||
+            (canChargeDame && dameChargeMaxStep > 0) ||
+            (canChargeRange && rangeChargeMaxStep > 0) || 
+            canChargeSize && sizeChargeMaxStep > 0
+            );
+
         public bool CanMove => true;
 
         public virtual void OnUpdate()
@@ -299,7 +306,7 @@ namespace InGame
             {
                 cdCounterNormal -= Time.deltaTime;
                 if (cdCounterNormal <= 0)
-                    CanShootNormal = true;
+                    CanShootNormal = !GameConst.DefaultAutoAttack;
             }
             
             if (!CanShootCharge)

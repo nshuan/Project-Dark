@@ -97,11 +97,12 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 8
-  lineRenderer: {fileID: 297389787069757981}
+  lineRenderer: {fileID: 876244617311622092}
   vfxImpact: {fileID: 302614200547383495}
   maxHit: 10
   delayEachHit: 0.05
   durationEachHit: 0.5
+  durationImpact: 1.2
   sfx: {fileID: 6595596682462850404}
 --- !u!1001 &189190386932319294
 PrefabInstance:
@@ -206,6 +207,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3424014786373244801, guid: d181dee1a462b714f97e5723c6d42744, type: 3}
       insertIndex: -1
       addedObject: {fileID: 297389787069757981}
+    - targetCorrespondingSourceObject: {fileID: 3424014786373244801, guid: d181dee1a462b714f97e5723c6d42744, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 876244617311622092}
   m_SourcePrefab: {fileID: 100100000, guid: d181dee1a462b714f97e5723c6d42744, type: 3}
 --- !u!120 &1091398994704276981 stripped
 LineRenderer:
@@ -229,9 +233,25 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3252910549674185663}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c2599a45a73646f9ab30f38511d7c76e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vfxParent: {fileID: 7253566144675463002}
+  lineRenderers:
+  - {fileID: 1196558210618858229}
+  - {fileID: 1091398994704276981}
+--- !u!114 &876244617311622092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3252910549674185663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9483f7959d184062a154625795b2b830, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   vfxParent: {fileID: 7253566144675463002}
