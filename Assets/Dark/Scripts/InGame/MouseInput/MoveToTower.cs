@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -63,14 +64,14 @@ namespace InGame
             {
                 CanMove = false;
                 CanCountdown = false;
-
+                var tempSelectingTower = selectingTower;
                 Action callbackComplete = () =>
                 {
                     LevelManager.Instance.TeleportTower(selectingTower);
                     Cooldown = GetCooldown(ShortConfig);
                     cdCounter = Cooldown;
                     CanCountdown = true;
-                    CurrentTowerIndex = selectingTower;
+                    CurrentTowerIndex = tempSelectingTower;
                     CombatActions.OnMoveTower?.Invoke(Cooldown);
                 };
                 
@@ -108,6 +109,7 @@ namespace InGame
                 {
                     tower.Hover(false);
                 }
+                PlaySlowMotion(false);
             }
         }
 
@@ -143,6 +145,7 @@ namespace InGame
                             hoveringCenter = tower.transform.position;
                             selectingTower = tower.Id;
                             tower.Hover(true);
+                            PlaySlowMotion(true);
                             break;
                         }
                     }
@@ -154,6 +157,7 @@ namespace InGame
                     {
                         hovering = false;
                         Towers[selectingTower].Hover(false);
+                        PlaySlowMotion(false);
                         selectingTower = -1;
                     }
                 }
@@ -198,6 +202,23 @@ namespace InGame
             if (config.moveLogic is MoveDashToTower) damage = LevelUtility.GetDashDamage(config.damage);
             else if (config.moveLogic is MoveFlashToTower) damage = LevelUtility.GetFlashDamage(config.damage);
             return damage;
+        }
+
+        private void PlaySlowMotion(bool slow)
+        {
+            DOTween.Kill(this);
+            var seq = DOTween.Sequence(this);
+
+            if (slow)
+            {
+                seq.Append(DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 0.1f, 0.8f).SetEase(Ease.InQuad));
+            }
+            else
+            {
+                seq.Append(DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1f, 0.2f).SetEase(Ease.OutQuad));
+            }
+
+            seq.Play();
         }
     }
 }
