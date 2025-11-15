@@ -23,6 +23,7 @@ namespace InGame.UI
 
         private void OnPauseGame(bool isPaused)
         {
+            if (IgnorePause) return;
             if (isPaused)
             {
                 UpdateUI();
@@ -55,5 +56,7 @@ namespace InGame.UI
                 PauseGame.Instance.Resume();
             });
         }
+        
+        public static bool IgnorePause { get; set; }
     }
 }
