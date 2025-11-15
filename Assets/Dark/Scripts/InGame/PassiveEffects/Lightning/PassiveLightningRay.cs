@@ -153,7 +153,7 @@ namespace InGame
                 {
                     hit.HideVfx();
                 });
-                if (hitOrder[i].TryGetComponent(out hitTarget))
+                if (enemyOrder[i].TryGetComponent(out hitTarget))
                 {
                     if (i == 0)
                     {
@@ -163,9 +163,9 @@ namespace InGame
                     }
                     else
                     {
-                        hitTarget.HitDirectionX = hitOrder[i].transform.position.x - hitOrder[i - 1].transform.position.x;
-                        hitTarget.HitDirectionY = hitOrder[i].transform.position.y - hitOrder[i - 1].transform.position.y;
-                        hitTarget.Damage((int)damage, hitOrder[i - 1].transform.position, Stagger, DamageType.Normal);
+                        hitTarget.HitDirectionX = enemyOrder[i].transform.position.x - enemyOrder[i - 1].transform.position.x;
+                        hitTarget.HitDirectionY = enemyOrder[i].transform.position.y - enemyOrder[i - 1].transform.position.y;
+                        hitTarget.Damage((int)damage, enemyOrder[i - 1].transform.position, Stagger, DamageType.Normal);
                     }
                 }
 
