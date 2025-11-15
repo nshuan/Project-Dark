@@ -114,6 +114,7 @@ namespace InGame
         public void Hover(bool hovering)
         {
             hover.SetActive(hovering);
+            towerVisualUILayer.gameObject.SetActive(hovering);
             towerVisualUILayer.SetActiveOutline(hovering);
         }
         
