@@ -109,6 +109,7 @@ namespace InGame
             IsEndLevel = false;
             
             InitTowers();
+            currentTowerIndex = -1;
             TeleportTower(0);
             
             if (Player != null) Destroy(Player.gameObject);
