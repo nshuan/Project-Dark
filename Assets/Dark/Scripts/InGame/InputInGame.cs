@@ -28,7 +28,6 @@ namespace InGame
         private IMoveTowerMouseInput teleMouseInput;
         private IMoveMouseInput collectorMouseInput;
         private IMouseInput mouseAutoAttack;
-        public bool enableCollectorMouse;
         private MonoCursor cursor;
         private PointerEventData.InputButton pressingButton = PointerEventData.InputButton.Middle;
 
@@ -90,9 +89,6 @@ namespace InGame
                 }
                 mouseAutoAttack = new MoveAutoAttack(cam, cursor);
                 mouseAutoAttack.Initialize(this, null);
-                
-                if (enableCollectorMouse)
-                    collectorMouseInput = new MoveCollectResource(cam, PlayerVisual.transform);
                 
                 LevelManager.Instance.OnWin += OnLevelCompleted;
                 LevelManager.Instance.OnLose += OnLevelCompleted;
@@ -176,7 +172,6 @@ namespace InGame
             mouseInput?.OnUpdate();
             mouseAutoAttack?.OnUpdate();
             teleMouseInput?.OnUpdate();
-            if (enableCollectorMouse) collectorMouseInput?.OnUpdate();
         }
 
         private void OnDrawGizmos()

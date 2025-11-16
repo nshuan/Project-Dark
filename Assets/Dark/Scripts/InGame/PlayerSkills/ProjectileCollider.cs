@@ -86,6 +86,16 @@ namespace InGame
                         
                         return ProjectileHitStatus.Enemy;
                     }
+
+                    if (hits[i].transform.CompareTag("Collectible"))
+                    {
+                        if (hits[i].transform.TryGetComponent<IDamageable>(out var damageable))
+                        {
+                            Projectile.ProjectileHit(null);
+                            damageable.Damage(0, Projectile.transform.position, 0f, DamageType.Normal);
+                            return ProjectileHitStatus.None;
+                        }
+                    }
                     
                     if (hits[i].transform.CompareTag("Tower"))
                     {

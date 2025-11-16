@@ -15,7 +15,7 @@ namespace Economic.UI
         
         private void Awake()
         {
-            LevelManager.Instance.onWaveEnded += OnWaveEnded;
+            // LevelManager.Instance.onWaveEnded += OnWaveEnded;
             LevelManager.Instance.OnLevelLoaded += OnLevelLoaded;
             LevelManager.Instance.OnWin += OnLevelCompleted;
             LevelManager.Instance.OnLose += OnLevelCompleted;
@@ -77,8 +77,8 @@ namespace Economic.UI
         {
             // TH1: Rớt item ra end wave thì tự động collect hết
             // TH2: Giống 1, nhưng rớt 1 item cho 1 đơn vị resource
-            if (selectMethod == 1 ||  selectMethod == 2)
-                EItemDropManager.Instance.CollectAll();
+            // if (selectMethod == 1 ||  selectMethod == 2)
+            //     EItemDropManager.Instance.CollectAll();
         }
     }
 }

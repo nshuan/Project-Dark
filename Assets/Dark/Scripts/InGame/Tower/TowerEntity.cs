@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Dark.Scripts.Audio;
+using Economic.InGame;
 using InGame.Effects;
 using InGame.UI;
 using UnityEngine;
@@ -18,6 +19,7 @@ namespace InGame
         [SerializeField] private TowerAutoRegenerate autoRegenerate;
         [SerializeField] private TowerRegenerateOnKill regenerateOnKill;
         [SerializeField] private AudioComponent sfxHit;
+        [SerializeField] private EItemDropCollector itemCollectorEntity;
 
         private int currentState;
         public int CurrentState => currentState;
@@ -31,6 +33,7 @@ namespace InGame
         public Action<int> OnRegenerate { get; set; }
         public Action<Vector2> OnHitAttackerPos { get; set; }
         public Action<TowerEntity> OnDestroyed;
+        private bool isSelecting;
         
         public void Initialize(int id, int hp)
         {
@@ -45,15 +48,27 @@ namespace InGame
             towerAnim.SetActiveOutline(false);
             autoRegenerate.Initialize(this, LevelUtility.GetTowerAutoRegen(MaxHp));
             regenerateOnKill.Initialize(this, LevelUtility.GetTowerRegenOnKill(MaxHp));
+
+            CombatActions.OnSpawnNewItemCollector += OnSpawnNewItemCollector;
         }
 
+        private void OnSpawnNewItemCollector()
+        {
+            if (isSelecting)
+                itemCollectorEntity.Spawn();
+        }
+        
         public void EnterTower()
         {
+            isSelecting = true;
+            itemCollectorEntity.Spawn();
             selected.SetActive(true);
         }
 
         public void LeaveTower()
         {
+            isSelecting = false;
+            itemCollectorEntity.TryHide();
             selected.SetActive(false);
         }
 

@@ -16,6 +16,8 @@ namespace Economic.InGame.DropItems
 
         [SerializeField] private Vector3 vfxPositionOffset = new Vector3(-0.11f, -0.45f, 0f); 
         
+        public EItemDropCollector CollectTarget { get; set; }
+        
         private List<EItemDrop> listItemThisWave;
         private ParticleSystem vfxClaimOnPlayer;
         
@@ -26,7 +28,7 @@ namespace Economic.InGame.DropItems
             listItemThisWave = new List<EItemDrop>();
         }
         
-        public void CollectAll()
+        public void CollectAll(EItemDropCollector target)
         {
             if (listItemThisWave.Count == 0) return;
 
@@ -38,7 +40,7 @@ namespace Economic.InGame.DropItems
                 delay = RandomUtil.Range(0f, 1f);
                 if (delay > maxDelay) maxDelay = delay;
                 if (delay < minDelay) minDelay = delay;
-                item.Collect(LevelManager.Instance.Player.transform, delay);
+                item.Collect(target, delay);
             }
             
             this.DelayCall(minDelay + collectDuration, () =>
@@ -61,8 +63,6 @@ namespace Economic.InGame.DropItems
             {
                 item.Quantity = quantity;
                 item.transform.position = position;
-                item.CanCollectByMouse = canCollectByMouse;
-                item.CollectDuration = collectDuration;
                 item.vfxPositionOffset.x = vfxPositionOffset.x;
                 item.vfxPositionOffset.y = vfxPositionOffset.y;
                 item.vfxPositionOffset.z = vfxPositionOffset.z;
