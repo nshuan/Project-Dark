@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using InGame;
 using InGame.Pause;
+using InGame.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -74,7 +75,8 @@ namespace Dark.Scripts.RuntimeCheat.CheatLevel
             if (panel != null)
             {
                 panel.SetActive(true);
-                
+
+                PopupConfirmReturn.IgnorePause = true;
                 PauseGame.Instance.Pause();
             }
         }
@@ -85,7 +87,8 @@ namespace Dark.Scripts.RuntimeCheat.CheatLevel
             if (panel != null)
             {
                 panel.SetActive(false);
-                
+
+                PopupConfirmReturn.IgnorePause = false;
                 PauseGame.Instance.Resume();
             }
         }
@@ -242,8 +245,7 @@ namespace Dark.Scripts.RuntimeCheat.CheatLevel
         protected virtual void OnEnemyButtonClickedCustom(EnemyBehaviour enemyBehaviour, int enemyId)
         {
             // This method is intentionally empty - user should override or modify this
-            var newEnemy =  EnemyPool.Instance.Get(enemyBehaviour.enemyPrefab, enemyId, null, false);
-            this.newEnemy = newEnemy;
+            this.newEnemy =  EnemyPool.Instance.Get(enemyBehaviour.enemyPrefab, enemyId, null);
             
             btnDropEnemy.gameObject.SetActive(true);
             btnDropEnemy.onClick.RemoveAllListeners();
