@@ -66,14 +66,14 @@ namespace InGame
             {
                 CanMove = false;
                 CanCountdown = false;
-                var tempSelectingTower = selectingTower;
+                
+                var tempCurrentTower = CurrentTowerIndex;
+                LevelManager.Instance.TeleportTower(selectingTower);
                 Action callbackComplete = () =>
                 {
-                    LevelManager.Instance.TeleportTower(selectingTower);
                     Cooldown = GetCooldown(ShortConfig);
                     cdCounter = Cooldown;
                     CanCountdown = true;
-                    CurrentTowerIndex = tempSelectingTower;
                     CombatActions.OnMoveTower?.Invoke(Cooldown);
                 };
                 
@@ -86,7 +86,7 @@ namespace InGame
                 {
                     Character.StartCoroutine(ShortConfig.moveLogic.IEMove(
                         Character, 
-                        Towers[CurrentTowerIndex], 
+                        Towers[tempCurrentTower], 
                         Towers[selectingTower],
                         callbackComplete
                     ));
@@ -101,7 +101,7 @@ namespace InGame
                     
                     Character.StartCoroutine(ShortConfig.MoveFuseLogic.IEMove(
                         Character, 
-                        Towers[CurrentTowerIndex], 
+                        Towers[tempCurrentTower], 
                         Towers[selectingTower],
                         callbackComplete
                     ));

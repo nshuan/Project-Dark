@@ -32,7 +32,7 @@ namespace InGame
         {
             get
             {
-                currentTowerIndex = Math.Clamp(currentTowerIndex, 0, towers.Length);
+                currentTowerIndex = Math.Clamp(currentTowerIndex, 0, towers.Length - 1);
                 return towers[currentTowerIndex];
             }
         }
