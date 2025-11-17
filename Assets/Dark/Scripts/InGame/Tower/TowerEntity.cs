@@ -4,7 +4,9 @@ using Dark.Scripts.Audio;
 using Economic.InGame;
 using InGame.Effects;
 using InGame.UI;
+using Spine.Unity;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace InGame
@@ -13,13 +15,19 @@ namespace InGame
     {
         [SerializeField] private Vector3[] standOffset;
         [SerializeField] private TowerAnim towerAnim;
+        [SerializeField] private MeshRenderer towerMesh;
         // [SerializeField] private TowerAnim towerVisualUILayer;
         [SerializeField] private Sprite[] spriteStates;
         [SerializeField] private float[] thresholdState = new[] { 0f, 0.3f, 0.7f };
         [SerializeField] private TowerAutoRegenerate autoRegenerate;
         [SerializeField] private TowerRegenerateOnKill regenerateOnKill;
         [SerializeField] private AudioComponent sfxHit;
-        [SerializeField] private EItemDropCollector itemCollectorEntity;
+
+        [Header("Config")]
+        [SerializeField] private string normalSortingLayerName;
+        [SerializeField] private int normalSortingOrder;
+        [SerializeField] private string hoverSortingLayerName;
+        [SerializeField] private int hoverSortingOrder;
 
         private int currentState;
         public int CurrentState => currentState;
@@ -48,27 +56,17 @@ namespace InGame
             towerAnim.SetActiveOutline(false);
             autoRegenerate.Initialize(this, LevelUtility.GetTowerAutoRegen(MaxHp));
             regenerateOnKill.Initialize(this, LevelUtility.GetTowerRegenOnKill(MaxHp));
-
-            CombatActions.OnSpawnNewItemCollector += OnSpawnNewItemCollector;
-        }
-
-        private void OnSpawnNewItemCollector()
-        {
-            if (isSelecting)
-                itemCollectorEntity.Spawn();
         }
         
         public void EnterTower()
         {
             isSelecting = true;
-            itemCollectorEntity.Spawn();
             selected.SetActive(true);
         }
 
         public void LeaveTower()
         {
             isSelecting = false;
-            itemCollectorEntity.TryHide();
             selected.SetActive(false);
         }
 
@@ -126,6 +124,17 @@ namespace InGame
         [SerializeField] private GameObject hover;
         public void Hover(bool hovering)
         {
+            if (hovering)
+            {
+                towerMesh.sortingLayerName = hoverSortingLayerName;
+                towerMesh.sortingOrder = hoverSortingOrder;
+            }
+            else
+            {
+                towerMesh.sortingLayerName = normalSortingLayerName;
+                towerMesh.sortingOrder = normalSortingOrder;
+            }
+            
             hover.SetActive(hovering);
             towerAnim.SetActiveOutline(hovering);
         }

@@ -12,7 +12,7 @@ namespace Economic.InGame.DropItems
     public class EItemDrop : MonoBehaviour, ICollectible
     {
         private const float FlySpeed = 15f;
-
+        
         [SerializeField] private TargetedProjectile targetLogic;
         [SerializeField] private GameObject vfxClaim;
         [SerializeField] private GameObject visual;
@@ -21,52 +21,28 @@ namespace Economic.InGame.DropItems
         public WealthType kind;
         public int Quantity { get; set; }
         [NonSerialized] public Vector3 vfxPositionOffset;
-
-        private void OnLevelCompleted()
-        {
-            ResetAction();
-            Collect(EItemDropManager.Instance.CollectTarget, 0f);
-        }
-
-        private void OnResourceCollectorDamaged(EItemDropCollector target)
-        {
-            ResetAction();
-            Collect(target, 0f);
-        }
         
         public void Drop(Vector2 position)
         {
             visual.gameObject.SetActive(true);
             var targetPos = position + Random.insideUnitCircle.normalized * 0.6f;
             transform.DOJump(targetPos, 0.2f, 1, 0.5f).SetTarget(this);
-
-            CombatActions.OnResourceCollectorDamaged += OnResourceCollectorDamaged;
-            LevelManager.Instance.OnWin += OnLevelCompleted;
-            LevelManager.Instance.OnLose += OnLevelCompleted;
-        }
-
-        private void ResetAction()
-        {
-            CombatActions.OnResourceCollectorDamaged -= OnResourceCollectorDamaged;
-            LevelManager.Instance.OnWin -= OnLevelCompleted;
-            LevelManager.Instance.OnLose -= OnLevelCompleted;
         }
         
-        public void Collect(EItemDropCollector target, float delay)
+        public void Collect(Transform target, float delay)
         {
             Collect(target);
         }
 
         private bool isCollecting;
-        private EItemDropCollector target;
-        public void Collect(EItemDropCollector target)
+        private Transform target;
+        public void Collect(Transform target)
         {
             this.target = target;
             targetLogic.InitializeProjectile(target.transform.position, FlySpeed, 0.15f);
             targetLogic.InitializeAnimationCurve(ProjectileCurveManifest.GetRandomTrajectoryCurve(),
                 ProjectileCurveManifest.GetAxisCorrectionCurve(0), ProjectileCurveManifest.GetProjectileSpeedCurve(0));
-
-            target.RegisterItem(this);
+            
             isCollecting = true;
         }
 
@@ -85,8 +61,6 @@ namespace Economic.InGame.DropItems
                 this.DelayCall(1f, () =>
                 {
                     vfxClaim.SetActive(false);
-                    target.CollectItem();
-                    ResetAction();
                     EItemDropPool.Instance.Release(this);
                 });
                 return;

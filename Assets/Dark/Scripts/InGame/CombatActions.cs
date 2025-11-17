@@ -15,7 +15,6 @@ namespace InGame
         public static Action<EnemyEntity> OnOneEnemyDead { get; set; }
         public static Action<EnemyEntity> OnCollectResource { get; set; }
         public static Action<EItemDropCollector> OnResourceCollectorDamaged { get; set; }
-        public static Action OnSpawnNewItemCollector { get; set; }
 
         public static void Clear()
         {
