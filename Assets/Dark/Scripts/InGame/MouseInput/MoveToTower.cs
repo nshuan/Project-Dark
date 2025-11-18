@@ -146,8 +146,15 @@ namespace InGame
                             hovering = true;
                             hoveringCenter = tower.transform.position;
                             selectingTower = tower.Id;
-                            tower.Hover(true);
-                            PlaySlowMotion(true);
+                            if (CanMove)
+                            {
+                                tower.Hover(true, true);
+                                PlaySlowMotion(true);
+                            }
+                            else
+                            {
+                                tower.Hover(true, false);
+                            }
                             break;
                         }
                     }

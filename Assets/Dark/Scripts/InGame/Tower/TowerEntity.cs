@@ -122,9 +122,9 @@ namespace InGame
         
         [SerializeField] private GameObject selected;
         [SerializeField] private GameObject hover;
-        public void Hover(bool hovering)
+        public void Hover(bool hovering, bool showUILayerOnHovering = true)
         {
-            if (hovering)
+            if (hovering && showUILayerOnHovering)
             {
                 towerMesh.sortingLayerName = hoverSortingLayerName;
                 towerMesh.sortingOrder = hoverSortingOrder;

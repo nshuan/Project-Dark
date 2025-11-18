@@ -50,8 +50,8 @@ namespace Economic.InGame
         {
             DOTween.Kill(this);
             return DOTween.Sequence(this)
-                .Append(visual.DOScale(0f, 0.3f).SetEase(Ease.InQuad))
-                .Join(shadow.DOScale(0f, 0.3f).SetEase(Ease.InQuad))
+                .Append(visual.DOScale(0f, 0.5f).SetEase(Ease.OutBack))
+                .Join(shadow.DOScale(0f, 0.5f).SetEase(Ease.OutBack))
                 .AppendCallback(() =>
                 {
                     visual.gameObject.SetActive(false);
