@@ -40,6 +40,7 @@ namespace InGame
 
         public float PercentageHpLeft => CurrentHealth / MaxHealth * 100f;
         public Action<int, DamageType> OnHit { get; set; }
+        public Action OnStartDead { get; set; }
         public Action OnDead { get; set; }
         public EnemyState State { get; set; }
         public int UniqueId { get; set; }
@@ -283,6 +284,8 @@ namespace InGame
         {
             // Đợi chạy xong anim hit rồi mới chạy anim die
             shadow.SetActive(false);    
+            OnStartDead?.Invoke();
+            OnStartDead = null;
             yield return new WaitForSeconds(animController.PlayDie());
             OnDead?.Invoke();
             OnDead = null;
