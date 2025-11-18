@@ -19,7 +19,7 @@ namespace InGame
         
         public override void Initialize()
         {
-            cameraShakeEffect = new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera, Duration = 0.5f, Magnitude = 0.2f};
+            cameraShakeEffect = new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera, Duration = 0.4f, Magnitude = 0.1f};
             hits = new RaycastHit2D[10];
         }
         

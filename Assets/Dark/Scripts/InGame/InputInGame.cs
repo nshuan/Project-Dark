@@ -28,7 +28,6 @@ namespace InGame
         private IMoveTowerMouseInput teleMouseInput;
         private IMoveMouseInput collectorMouseInput;
         private IMouseInput mouseAutoAttack;
-        public bool enableCollectorMouse;
         private MonoCursor cursor;
         private PointerEventData.InputButton pressingButton = PointerEventData.InputButton.Middle;
 
@@ -65,7 +64,7 @@ namespace InGame
                         else if (moveId == 2) availableTeleConfigs.Add(LevelManager.Instance.dashConfig);
                     }
                 }
-                teleMouseInput = new MoveToTower(cam, PlayerVisual, availableTeleConfigs[0], availableTeleConfigs.Count > 1 ? availableTeleConfigs[1] : null, LevelManager.Instance.Towers, LevelManager.Instance.CurrentTower.Id, this.TryDelayCall);
+                teleMouseInput = new MoveToTower(cam, this, PlayerVisual, availableTeleConfigs[0], availableTeleConfigs.Count > 1 ? availableTeleConfigs[1] : null, LevelManager.Instance.Towers, LevelManager.Instance.CurrentTower.Id, this.TryDelayCall);
                 teleMouseInput.OnActivated();
                 BlockAllInput = false;
                 
@@ -90,9 +89,6 @@ namespace InGame
                 }
                 mouseAutoAttack = new MoveAutoAttack(cam, cursor);
                 mouseAutoAttack.Initialize(this, null);
-                
-                if (enableCollectorMouse)
-                    collectorMouseInput = new MoveCollectResource(cam, PlayerVisual.transform);
                 
                 LevelManager.Instance.OnWin += OnLevelCompleted;
                 LevelManager.Instance.OnLose += OnLevelCompleted;
@@ -176,7 +172,6 @@ namespace InGame
             mouseInput?.OnUpdate();
             mouseAutoAttack?.OnUpdate();
             teleMouseInput?.OnUpdate();
-            if (enableCollectorMouse) collectorMouseInput?.OnUpdate();
         }
 
         private void OnDrawGizmos()
@@ -242,7 +237,23 @@ namespace InGame
             Time.timeScale = 1f;
         }
 
-        private void ResetMotionBlur()
+        public void ActiveMotionBlur()
+        {
+            DOTween.Kill(motionBlur);
+            DOTween.Sequence(motionBlur).AppendCallback(() =>
+                {
+                    foreach (var tower in LevelManager.Instance.Towers)
+                    {
+                        tower.OnMotionBlur();
+                    }
+                    PlayerVisual.OnMotionBlur();
+                            
+                    motionBlur.gameObject.SetActive(true);
+                }).Append(motionBlur.DOFade(1f, 0.32f))
+                .OnComplete(FreezeTimeScale);    
+        }
+        
+        public void ResetMotionBlur()
         {
             DOTween.Kill(motionBlur);
             DOTween.Sequence(motionBlur).Append(motionBlur.DOFade(0f, 0.16f))

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -154,9 +155,14 @@ namespace InGame
                 {
                     transform.position = hitEnemyInfo.hitEnemy.transform.position;
                     
-                    var deadProjectile = ProjectileDeadPool.Instance.Get(direction);
-                    deadProjectile.position = (Vector3)hitEnemyInfo.hit.point + moveDirection.normalized * 0.2f;
+                    var deadProjectile = ProjectileDeadOnEnemyPool.Instance.Get(direction);
+                    deadProjectile.position = hitEnemyInfo.hit.point;
                     deadProjectile.SetParent(hitEnemyInfo.hitEnemy.transform);
+                    hitEnemyInfo.hitEnemy.body.SetupProjectileHit(deadProjectile.transform, direction);
+                    hitEnemyInfo.hitEnemy.OnDead += () =>
+                    {
+                        deadProjectile.gameObject.SetActive(false);
+                    };
                 }
                 else
                     transform.position += moveDirection;

@@ -16,29 +16,45 @@ namespace Economic.InGame.DropItems
 
         [SerializeField] private Vector3 vfxPositionOffset = new Vector3(-0.11f, -0.45f, 0f); 
         
-        private List<EItemDrop> listItemThisWave;
+        private ECollectorData collectedData;
+        
+        private List<EItemDrop> listItemToCollect;
         private ParticleSystem vfxClaimOnPlayer;
         
         protected override void Awake()
         {
             base.Awake();
             
-            listItemThisWave = new List<EItemDrop>();
+            listItemToCollect = new List<EItemDrop>();
+            collectedData = new ECollectorData();
         }
         
-        public void CollectAll()
+        public void CollectAll(Transform target)
         {
-            if (listItemThisWave.Count == 0) return;
-
+            if (listItemToCollect.Count == 0) return;
+            
             var delay = 0f;
             var maxDelay = 0f;
             var minDelay = 0f;
-            foreach (var item in listItemThisWave)
+            foreach (var item in listItemToCollect)
             {
+                switch (item.kind)
+                {
+                    case WealthType.Vestige:
+                        collectedData.vestige += item.Quantity;
+                        break;
+                    case WealthType.Echoes:
+                        collectedData.echoes += item.Quantity;
+                        break;
+                    case WealthType.Sigils:
+                        collectedData.sigils += item.Quantity;
+                        break;
+                }
+                
                 delay = RandomUtil.Range(0f, 1f);
                 if (delay > maxDelay) maxDelay = delay;
                 if (delay < minDelay) minDelay = delay;
-                item.Collect(LevelManager.Instance.Player.transform, delay);
+                item.Collect(target, delay);
             }
             
             this.DelayCall(minDelay + collectDuration, () =>
@@ -52,32 +68,50 @@ namespace Economic.InGame.DropItems
                 vfxClaimOnPlayer.Play();
             });
             
-            listItemThisWave.Clear();
+            collectedData.Claim();
+            
+            listItemToCollect.Clear();
         }
         
-        public void DropOne(WealthType kind, int quantity, Vector3 position, bool canCollectByMouse = false)
+        public void DropOne(WealthType kind, int quantity, Vector3 position)
         {
             EItemDropPool.Instance.Get(kind, (item) =>
             {
                 item.Quantity = quantity;
                 item.transform.position = position;
-                item.CanCollectByMouse = canCollectByMouse;
-                item.CollectDuration = collectDuration;
                 item.vfxPositionOffset.x = vfxPositionOffset.x;
                 item.vfxPositionOffset.y = vfxPositionOffset.y;
                 item.vfxPositionOffset.z = vfxPositionOffset.z;
-                listItemThisWave.Add(item);
+                listItemToCollect.Add(item);
                 item.gameObject.SetActive(true);
                 item.Drop(position);
             });
         }
 
-        public void Drop(WealthType kind, int quantity, int amount, Vector3 position, bool canCollectByMouse = false)
+        public void Drop(WealthType kind, int quantity, int amount, Vector3 position)
         {
             for (var i = 0; i < amount; i++)
             {
-                DropOne(kind, quantity, position, canCollectByMouse);
+                DropOne(kind, quantity, position);
             }
+        }
+    }
+    
+    public class ECollectorData
+    {
+        public int vestige;
+        public int sigils;
+        public int echoes;
+
+        public void Claim()
+        {
+            if (vestige > 0)  WealthManager.Instance.AddDark(vestige);
+            if (sigils > 0)  WealthManager.Instance.AddBossPoint(sigils);
+            if (echoes > 0)  WealthManager.Instance.AddLevelPoint(echoes);
+
+            vestige = 0;
+            sigils = 0;
+            echoes = 0;
         }
     }
 }

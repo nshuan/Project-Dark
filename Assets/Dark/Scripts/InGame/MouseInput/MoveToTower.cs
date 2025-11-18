@@ -9,7 +9,8 @@ namespace InGame
     public class MoveToTower : IMoveTowerMouseInput
     {
         private const float HoverRadius = 2f;
-        
+
+        public InputInGame InputController { get; set; }
         private PlayerCharacter Character { get; set; }
         private MoveTowersConfig ShortConfig { get; set; }
         private MoveTowersConfig LongConfig { get; set; }
@@ -31,9 +32,10 @@ namespace InGame
         private Action<TowerEntity> actionTowerChanged;
         private int selectingTower = -1;
 
-        public MoveToTower(Camera cam, PlayerCharacter player, MoveTowersConfig shortConfig, MoveTowersConfig longConfig, TowerEntity[] towers, int currentTowerIndex, Func<float, Action, bool> delayCallFunction)
+        public MoveToTower(Camera cam, InputInGame inputController, PlayerCharacter player, MoveTowersConfig shortConfig, MoveTowersConfig longConfig, TowerEntity[] towers, int currentTowerIndex, Func<float, Action, bool> delayCallFunction)
         {
             Cam = cam;
+            InputController = inputController;
             Character = player;
             Towers = towers;
             CurrentTowerIndex = currentTowerIndex;
@@ -64,14 +66,14 @@ namespace InGame
             {
                 CanMove = false;
                 CanCountdown = false;
-                var tempSelectingTower = selectingTower;
+                
+                var tempCurrentTower = CurrentTowerIndex;
+                LevelManager.Instance.TeleportTower(selectingTower);
                 Action callbackComplete = () =>
                 {
-                    LevelManager.Instance.TeleportTower(selectingTower);
                     Cooldown = GetCooldown(ShortConfig);
                     cdCounter = Cooldown;
                     CanCountdown = true;
-                    CurrentTowerIndex = tempSelectingTower;
                     CombatActions.OnMoveTower?.Invoke(Cooldown);
                 };
                 
@@ -84,7 +86,7 @@ namespace InGame
                 {
                     Character.StartCoroutine(ShortConfig.moveLogic.IEMove(
                         Character, 
-                        Towers[CurrentTowerIndex], 
+                        Towers[tempCurrentTower], 
                         Towers[selectingTower],
                         callbackComplete
                     ));
@@ -99,7 +101,7 @@ namespace InGame
                     
                     Character.StartCoroutine(ShortConfig.MoveFuseLogic.IEMove(
                         Character, 
-                        Towers[CurrentTowerIndex], 
+                        Towers[tempCurrentTower], 
                         Towers[selectingTower],
                         callbackComplete
                     ));
@@ -144,8 +146,15 @@ namespace InGame
                             hovering = true;
                             hoveringCenter = tower.transform.position;
                             selectingTower = tower.Id;
-                            tower.Hover(true);
-                            PlaySlowMotion(true);
+                            if (CanMove)
+                            {
+                                tower.Hover(true, true);
+                                PlaySlowMotion(true);
+                            }
+                            else
+                            {
+                                tower.Hover(true, false);
+                            }
                             break;
                         }
                     }
@@ -212,10 +221,12 @@ namespace InGame
             if (slow)
             {
                 seq.Append(DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 0.1f, 0.8f).SetEase(Ease.InQuad));
+                InputController.ActiveMotionBlur();
             }
             else
             {
                 seq.Append(DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1f, 0.2f).SetEase(Ease.OutQuad));
+                InputController.ResetMotionBlur();
             }
 
             seq.Play();

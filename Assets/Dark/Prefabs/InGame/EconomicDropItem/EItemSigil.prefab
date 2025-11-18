@@ -57,7 +57,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8878898953844404854}
   - component: {fileID: 1475500146204445689}
-  - component: {fileID: 5409937945122285894}
+  - component: {fileID: 5627161489184377559}
   m_Layer: 0
   m_Name: EItemSigil
   m_TagString: Collectible
@@ -95,45 +95,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0bf5a6b8dca40debd2c9df5b2d1f8e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetLogic: {fileID: 5627161489184377559}
   vfxClaim: {fileID: 3565376113205855755}
   visual: {fileID: 4350023303770841330}
   sfx: {fileID: 1643722027136170322}
   kind: 2
---- !u!58 &5409937945122285894
-CircleCollider2D:
+--- !u!114 &5627161489184377559
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3362547422226500229}
   m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.2
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b83d5f2e73b4265bb13d8bb11eabc27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4350023303770841330
 GameObject:
   m_ObjectHideFlags: 0

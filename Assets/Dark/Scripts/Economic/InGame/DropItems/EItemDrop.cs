@@ -1,7 +1,9 @@
 using System;
 using Dark.Scripts.Audio;
+using Dark.Scripts.Utils;
 using DG.Tweening;
 using InGame;
+using InGame.ProjectileCustomPath;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -9,13 +11,12 @@ namespace Economic.InGame.DropItems
 {
     public class EItemDrop : MonoBehaviour, ICollectible
     {
-        private const float FlySpeed = 10f;
+        private const float FlySpeed = 15f;
         
+        [SerializeField] private TargetedProjectile targetLogic;
         [SerializeField] private GameObject vfxClaim;
         [SerializeField] private GameObject visual;
         [SerializeField] private AudioComponent sfx;
-        
-        public float CollectDuration { get; set; }
         
         public WealthType kind;
         public int Quantity { get; set; }
@@ -27,53 +28,51 @@ namespace Economic.InGame.DropItems
             var targetPos = position + Random.insideUnitCircle.normalized * 0.6f;
             transform.DOJump(targetPos, 0.2f, 1, 0.5f).SetTarget(this);
         }
-
-        public bool CanCollectByMouse { get; set; }
+        
         public void Collect(Transform target, float delay)
         {
-            CanCollectByMouse = false;
-            if (Quantity > 0)
-            {
-                switch (kind)
-                {
-                    case WealthType.Vestige:
-                        WealthManager.Instance.AddDark(Quantity);
-                        break;
-                    case WealthType.Echoes:
-                        WealthManager.Instance.AddLevelPoint(Quantity);
-                        break;
-                    case WealthType.Sigils:
-                        WealthManager.Instance.AddBossPoint(Quantity);
-                        break;
-                }
-            }
-            
-            Collect(target, delay, () =>
-            {
-                EItemDropPool.Instance.Release(this);
-            });
+            Collect(target);
         }
 
-        public void Collect(Transform target, float delay, Action onCollected)
+        private bool isCollecting;
+        private Transform target;
+        public void Collect(Transform target)
         {
-            DOTween.Kill(this);
-            var seq = DOTween.Sequence(this).SetDelay(delay)
-                .Append(transform.DOMove(target.position, CollectDuration).SetEase(Ease.InQuad))
-                .AppendCallback(() =>
-                {
-                    visual.gameObject.SetActive(false);
-                    vfxClaim.transform.position = target.position + vfxPositionOffset;
-                    vfxClaim.SetActive(CanCollectByMouse);
-                    sfx.Play();
-                });
-            if (CanCollectByMouse)
-                seq.AppendInterval(1f);
+            this.target = target;
+            targetLogic.InitializeProjectile(target.transform.position, FlySpeed, 0.15f);
+            targetLogic.InitializeAnimationCurve(ProjectileCurveManifest.GetRandomTrajectoryCurve(),
+                ProjectileCurveManifest.GetAxisCorrectionCurve(0), ProjectileCurveManifest.GetProjectileSpeedCurve(0));
+            
+            isCollecting = true;
+        }
 
-            seq.OnComplete(() =>
+        private Vector2 nextPosition;
+        private void Update()
+        {
+            if (!isCollecting) return;
+
+            if (Vector2.Distance(transform.position, target.transform.position) < 0.1f)
             {
-                vfxClaim.SetActive(false);
-                onCollected?.Invoke();
-            });
+                visual.gameObject.SetActive(false);
+                vfxClaim.transform.position = target.transform.position + vfxPositionOffset;
+                vfxClaim.SetActive(true);
+                sfx.Play();
+                isCollecting = false;
+                this.DelayCall(1f, () =>
+                {
+                    vfxClaim.SetActive(false);
+                    EItemDropPool.Instance.Release(this);
+                });
+                return;
+            }
+            
+            nextPosition = targetLogic.GetProjectileNextPosition(target.transform.position);
+            if ((target.transform.position.x - transform.position.x) * (target.transform.position.x - nextPosition.x) < 0f) 
+                transform.position = target.transform.position;
+            else if ((target.transform.position.y - transform.position.y) * (target.transform.position.y - nextPosition.y) < 0f)
+                transform.position = target.transform.position;
+            else
+                transform.position = nextPosition;
         }
     }
 }

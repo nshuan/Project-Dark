@@ -32,7 +32,7 @@ namespace InGame
         {
             get
             {
-                currentTowerIndex = Math.Clamp(currentTowerIndex, 0, towers.Length);
+                currentTowerIndex = Math.Clamp(currentTowerIndex, 0, towers.Length - 1);
                 return towers[currentTowerIndex];
             }
         }
@@ -109,6 +109,7 @@ namespace InGame
             IsEndLevel = false;
             
             InitTowers();
+            currentTowerIndex = -1;
             TeleportTower(0);
             
             if (Player != null) Destroy(Player.gameObject);

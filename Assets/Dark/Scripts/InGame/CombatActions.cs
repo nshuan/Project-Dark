@@ -1,5 +1,7 @@
 using System;
+using Economic.InGame;
 using InGame.Upgrade;
+using UnityEngine;
 
 namespace InGame
 {
@@ -12,6 +14,7 @@ namespace InGame
         public static Action<PassiveTriggerType, PassiveType, float> OnEffectTriggered { get; set; }
         public static Action<EnemyEntity> OnOneEnemyDead { get; set; }
         public static Action<EnemyEntity> OnCollectResource { get; set; }
+        public static Action<EItemDropCollector> OnResourceCollectorDamaged { get; set; }
 
         public static void Clear()
         {
@@ -21,6 +24,7 @@ namespace InGame
             OnTowerCounter = null;
             OnEffectTriggered = null;
             OnOneEnemyDead = null;
+            OnResourceCollectorDamaged = null;
         }
     }
 }

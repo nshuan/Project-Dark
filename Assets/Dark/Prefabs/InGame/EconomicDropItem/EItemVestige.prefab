@@ -57,7 +57,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8878898953844404854}
   - component: {fileID: 1475500146204445689}
-  - component: {fileID: 3372183826394419275}
+  - component: {fileID: 5301703387300119936}
   m_Layer: 0
   m_Name: EItemVestige
   m_TagString: Collectible
@@ -95,45 +95,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0bf5a6b8dca40debd2c9df5b2d1f8e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetLogic: {fileID: 5301703387300119936}
   vfxClaim: {fileID: 3565376113205855755}
   visual: {fileID: 4350023303770841330}
   sfx: {fileID: 2721829043061295964}
   kind: 0
---- !u!58 &3372183826394419275
-CircleCollider2D:
+--- !u!114 &5301703387300119936
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3362547422226500229}
   m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.2
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b83d5f2e73b4265bb13d8bb11eabc27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4350023303770841330
 GameObject:
   m_ObjectHideFlags: 0
@@ -309,7 +287,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7130204761393579553, guid: 292877c73a6346242a27cb3e05b05b69, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7534320817193288483, guid: 292877c73a6346242a27cb3e05b05b69, type: 3}
       propertyPath: playOnAwake

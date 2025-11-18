@@ -1,9 +1,12 @@
 using System;
 using System.Collections;
 using Dark.Scripts.Audio;
+using Economic.InGame;
 using InGame.Effects;
 using InGame.UI;
+using Spine.Unity;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace InGame
@@ -12,12 +15,19 @@ namespace InGame
     {
         [SerializeField] private Vector3[] standOffset;
         [SerializeField] private TowerAnim towerAnim;
+        [SerializeField] private MeshRenderer towerMesh;
         // [SerializeField] private TowerAnim towerVisualUILayer;
         [SerializeField] private Sprite[] spriteStates;
         [SerializeField] private float[] thresholdState = new[] { 0f, 0.3f, 0.7f };
         [SerializeField] private TowerAutoRegenerate autoRegenerate;
         [SerializeField] private TowerRegenerateOnKill regenerateOnKill;
         [SerializeField] private AudioComponent sfxHit;
+
+        [Header("Config")]
+        [SerializeField] private string normalSortingLayerName;
+        [SerializeField] private int normalSortingOrder;
+        [SerializeField] private string hoverSortingLayerName;
+        [SerializeField] private int hoverSortingOrder;
 
         private int currentState;
         public int CurrentState => currentState;
@@ -31,6 +41,7 @@ namespace InGame
         public Action<int> OnRegenerate { get; set; }
         public Action<Vector2> OnHitAttackerPos { get; set; }
         public Action<TowerEntity> OnDestroyed;
+        private bool isSelecting;
         
         public void Initialize(int id, int hp)
         {
@@ -46,14 +57,16 @@ namespace InGame
             autoRegenerate.Initialize(this, LevelUtility.GetTowerAutoRegen(MaxHp));
             regenerateOnKill.Initialize(this, LevelUtility.GetTowerRegenOnKill(MaxHp));
         }
-
+        
         public void EnterTower()
         {
+            isSelecting = true;
             selected.SetActive(true);
         }
 
         public void LeaveTower()
         {
+            isSelecting = false;
             selected.SetActive(false);
         }
 
@@ -109,8 +122,19 @@ namespace InGame
         
         [SerializeField] private GameObject selected;
         [SerializeField] private GameObject hover;
-        public void Hover(bool hovering)
+        public void Hover(bool hovering, bool showUILayerOnHovering = true)
         {
+            if (hovering && showUILayerOnHovering)
+            {
+                towerMesh.sortingLayerName = hoverSortingLayerName;
+                towerMesh.sortingOrder = hoverSortingOrder;
+            }
+            else
+            {
+                towerMesh.sortingLayerName = normalSortingLayerName;
+                towerMesh.sortingOrder = normalSortingOrder;
+            }
+            
             hover.SetActive(hovering);
             towerAnim.SetActiveOutline(hovering);
         }
