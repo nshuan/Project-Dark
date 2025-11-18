@@ -4,6 +4,7 @@ using Dark.Scripts.Audio;
 using DG.Tweening;
 using Economic;
 using InGame.EnemyEffect;
+using InGame.EnemyVisualBody;
 using InGame.MapBoundary;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -16,6 +17,7 @@ namespace InGame
     {
         [SerializeField] private Collider2D collider2d;
         [SerializeField] private Transform burnVfxParent;
+        public EnemyBody body;
 
         private MapBoundaryManager boundaryManager;
         public Transform Target { get; set; }
