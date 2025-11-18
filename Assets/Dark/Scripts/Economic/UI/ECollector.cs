@@ -20,7 +20,7 @@ namespace Economic.UI
             LevelManager.Instance.OnLevelLoaded += OnLevelLoaded;
             LevelManager.Instance.OnWin += OnLevelCompleted;
             LevelManager.Instance.OnLose += OnLevelCompleted;
-            LevelManager.Instance.onWaveEnded += OnWaveEnded;
+            // LevelManager.Instance.onWaveEnded += OnWaveEnded;
         }
 
         private void OnLevelCompleted()
@@ -61,9 +61,9 @@ namespace Economic.UI
             EItemDropManager.Instance.CollectAll(player.transform);
         }
 
-        private void OnWaveEnded(int wave, WaveEndReason reason)
-        {
-            EItemDropManager.Instance.CollectAll(player.transform);
-        }
+        // private void OnWaveEnded(int wave, WaveEndReason reason)
+        // {
+        //     EItemDropManager.Instance.CollectAll(player.transform);
+        // }
     }
 }
