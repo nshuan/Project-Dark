@@ -154,7 +154,7 @@ namespace InGame
                 {
                     transform.position = hitEnemyInfo.hitEnemy.transform.position;
                     
-                    var deadProjectile = ProjectileDeadPool.Instance.Get(direction);
+                    var deadProjectile = ProjectileDeadOnEnemyPool.Instance.Get(direction);
                     deadProjectile.position = (Vector3)hitEnemyInfo.hit.point + moveDirection.normalized * 0.2f;
                     deadProjectile.SetParent(hitEnemyInfo.hitEnemy.transform);
                 }
