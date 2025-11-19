@@ -189,6 +189,7 @@ Transform:
   - {fileID: 6388689559540784956}
   - {fileID: 1934759634443765471}
   - {fileID: 4886972568409485129}
+  - {fileID: 146960521626612154}
   - {fileID: 1903735068486522707}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1555,6 +1556,55 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &9060958729327827985
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 146960521626612154}
+  - component: {fileID: 723368590950418555}
+  m_Layer: 0
+  m_Name: TowerCooldown
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &146960521626612154
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9060958729327827985}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8530071844556550049}
+  - {fileID: 1915745357353423244}
+  m_Father: {fileID: 8540445364392104723}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &723368590950418555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9060958729327827985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a1d02e00a4e4a8c9f22c02234176f2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tower: {fileID: 1868382969554725214}
+  cooldownRing: {fileID: 1996824622331216885}
+  vfxCooldownComplete: {fileID: 2457922246008346385}
 --- !u!1001 &379145523696576611
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1710,6 +1760,97 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 1865435983097435753, guid: 8f47077cad47cc44c8643da8e9a649f8, type: 3}
   m_PrefabInstance: {fileID: 886126410451721536}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1898245141396082100
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 146960521626612154}
+    m_Modifications:
+    - target: {fileID: 54592567825783864, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.013999939
+      objectReference: {fileID: 0}
+    - target: {fileID: 54592567825783864, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.073
+      objectReference: {fileID: 0}
+    - target: {fileID: 54592567825783864, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 54592567825783864, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 54592567825783864, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 54592567825783864, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 54592567825783864, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 54592567825783864, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 54592567825783864, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 54592567825783864, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 904754771136874526, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
+      propertyPath: m_SortingLayer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 904754771136874526, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 279785053
+      objectReference: {fileID: 0}
+    - target: {fileID: 4397250485676609752, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
+      propertyPath: m_Name
+      value: FX_Ingame_Tower_Cooldown_Done
+      objectReference: {fileID: 0}
+    - target: {fileID: 7539867138247319091, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
+      propertyPath: m_SortingLayer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7539867138247319091, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 279785053
+      objectReference: {fileID: 0}
+    - target: {fileID: 7796229813565563445, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
+      propertyPath: m_SortingLayer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7796229813565563445, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 279785053
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
+--- !u!4 &1915745357353423244 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 54592567825783864, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
+  m_PrefabInstance: {fileID: 1898245141396082100}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &2457922246008346385 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 4056512517816310437, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
+  m_PrefabInstance: {fileID: 1898245141396082100}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4776873538666643279
 PrefabInstance:
@@ -1924,6 +2065,73 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 1865435983097435753, guid: 8f47077cad47cc44c8643da8e9a649f8, type: 3}
   m_PrefabInstance: {fileID: 6001957365109637347}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &6217959958974972681
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 146960521626612154}
+    m_Modifications:
+    - target: {fileID: 967982760867526908, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+      propertyPath: m_Name
+      value: FX_Ingame_Tower_Cooldown_Idle
+      objectReference: {fileID: 0}
+    - target: {fileID: 2317742501942062248, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.013999939
+      objectReference: {fileID: 0}
+    - target: {fileID: 2317742501942062248, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.073
+      objectReference: {fileID: 0}
+    - target: {fileID: 2317742501942062248, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2317742501942062248, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2317742501942062248, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2317742501942062248, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2317742501942062248, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2317742501942062248, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2317742501942062248, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2317742501942062248, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+--- !u!212 &1996824622331216885 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 5619512435527385340, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+  m_PrefabInstance: {fileID: 6217959958974972681}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8530071844556550049 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2317742501942062248, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+  m_PrefabInstance: {fileID: 6217959958974972681}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6259328962521617808
 PrefabInstance:
