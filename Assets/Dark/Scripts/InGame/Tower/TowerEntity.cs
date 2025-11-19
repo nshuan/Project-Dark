@@ -15,7 +15,9 @@ namespace InGame
     {
         [SerializeField] private Vector3[] standOffset;
         [SerializeField] private TowerAnim towerAnim;
+        [SerializeField] private TowerAnim towerBaseAnim;
         [SerializeField] private MeshRenderer towerMesh;
+        [SerializeField] private MeshRenderer towerBaseMesh;
         // [SerializeField] private TowerAnim towerVisualUILayer;
         [SerializeField] private Sprite[] spriteStates;
         [SerializeField] private float[] thresholdState = new[] { 0f, 0.3f, 0.7f };
@@ -53,7 +55,9 @@ namespace InGame
             OnDestroyed = null;
             currentState = 3; // 3 trạng thái máu và 1 trạng thái vỡ
             towerAnim.PlayIdle(currentState);
+            towerBaseAnim.PlayIdle(currentState);
             towerAnim.SetActiveOutline(false);
+            towerBaseAnim.SetActiveOutline(false);
             autoRegenerate.Initialize(this, LevelUtility.GetTowerAutoRegen(MaxHp));
             regenerateOnKill.Initialize(this, LevelUtility.GetTowerRegenOnKill(MaxHp));
         }
@@ -93,6 +97,7 @@ namespace InGame
                 {
                     currentState -= 1;
                     towerAnim.TransitionToIdle(currentState, true);
+                    towerBaseAnim.TransitionToIdle(currentState, true);
                 }
                 
                 if (currentState == 1) UIWarningManager.Instance.WarnOnce(false);
@@ -103,6 +108,7 @@ namespace InGame
             // Do damage effect
             sfxHit.Play();
             towerAnim.PlayHit();
+            towerBaseAnim.PlayHit();
         }
 
         public void Regenerate(int value)
@@ -117,26 +123,41 @@ namespace InGame
             {
                 currentState += 1;
                 towerAnim.TransitionToIdle(currentState, false);
+                towerBaseAnim.TransitionToIdle(currentState, false);
             }
         }
         
         [SerializeField] private GameObject selected;
-        [SerializeField] private GameObject hover;
+        // [SerializeField] private GameObject hover;
         public void Hover(bool hovering, bool showUILayerOnHovering = true)
         {
             if (hovering && showUILayerOnHovering)
             {
                 towerMesh.sortingLayerName = hoverSortingLayerName;
                 towerMesh.sortingOrder = hoverSortingOrder;
+                towerBaseMesh.sortingLayerName = hoverSortingLayerName;
+                towerBaseMesh.sortingOrder = hoverSortingOrder - 1;
             }
             else
             {
                 towerMesh.sortingLayerName = normalSortingLayerName;
                 towerMesh.sortingOrder = normalSortingOrder;
+                towerBaseMesh.sortingLayerName = normalSortingLayerName;
+                towerBaseMesh.sortingOrder = -5000;
             }
-            
-            hover.SetActive(hovering);
+
+            if (hovering)
+            {
+                towerAnim.PlayHover(currentState);
+                towerBaseAnim.PlayHover(currentState);
+            }
+            else
+            {
+                towerAnim.PlayIdle(currentState);
+                towerBaseAnim.PlayIdle(currentState);
+            }
             towerAnim.SetActiveOutline(hovering);
+            towerBaseAnim.SetActiveOutline(hovering);
         }
         
         public void OnMotionBlur()
