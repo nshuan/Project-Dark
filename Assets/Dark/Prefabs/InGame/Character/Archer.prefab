@@ -751,6 +751,7 @@ GameObject:
   - component: {fileID: 991730414259543318}
   - component: {fileID: 4840953670590113780}
   - component: {fileID: 1323475459574291995}
+  - component: {fileID: 3578840786690568247}
   m_Layer: 8
   m_Name: ItemCollector
   m_TagString: Collectible
@@ -767,7 +768,7 @@ Transform:
   m_GameObject: {fileID: 4698822690632892241}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.2, y: 1.61, z: 0}
+  m_LocalPosition: {x: -0.04, y: 1.61, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -829,6 +830,28 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.72
+--- !u!114 &3578840786690568247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4698822690632892241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54768dbd2d051454284e5961bafdaf84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  width: 1.2
+  height: 0.70044
+  orbitSpeed: 0.4
+  centerOffset: {x: 0, y: 0, z: 0}
+  ellipseAxisX: {x: 1, y: 0, z: 0}
+  ellipseAxisY: {x: 0, y: 1, z: 0}
+  useLocalSpace: 1
+  showGizmos: 1
+  gizmoColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  gizmoSegments: 64
 --- !u!1 &5041014607757893428
 GameObject:
   m_ObjectHideFlags: 0
