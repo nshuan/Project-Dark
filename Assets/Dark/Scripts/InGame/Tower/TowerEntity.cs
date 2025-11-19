@@ -30,6 +30,8 @@ namespace InGame
         [SerializeField] private int normalSortingOrder;
         [SerializeField] private string hoverSortingLayerName;
         [SerializeField] private int hoverSortingOrder;
+        [SerializeField] private string normalBaseSortingLayerName;
+        [SerializeField] private int normalBaseSortingOrder;
 
         private int currentState;
         public int CurrentState => currentState;
@@ -142,8 +144,8 @@ namespace InGame
             {
                 towerMesh.sortingLayerName = normalSortingLayerName;
                 towerMesh.sortingOrder = normalSortingOrder;
-                towerBaseMesh.sortingLayerName = normalSortingLayerName;
-                towerBaseMesh.sortingOrder = -5000;
+                towerBaseMesh.sortingLayerName = normalBaseSortingLayerName;
+                towerBaseMesh.sortingOrder = normalBaseSortingOrder;
             }
 
             if (hovering)
