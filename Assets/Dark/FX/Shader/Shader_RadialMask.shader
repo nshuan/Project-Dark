@@ -4,7 +4,7 @@ Properties
 {
 [PerRendererData] _MainTex("Sprite Texture", 2D) = "white" {}
 _RadialCenter("_RadialCenter", Vector) = (0.5, 0.5, 0, 0)
-_RadialProgress("_RadialProgress", Range(0, 1)) = 0.0
+_RadialProgress("_RadialProgress", Range(-360, 0)) = 0
 _RadialFeather("_RadialFeather", Range(0, 0.5)) = 0.05
 _RadialOffsetAngle("_RadialOffsetAngle", Range(-180, 180)) = -90
 _SpriteFade("SpriteFade", Range(0, 1)) = 1.0
@@ -23,7 +23,7 @@ SubShader
 {
 
 Tags {"Queue" = "Transparent" "IgnoreProjector" = "true" "RenderType" = "Transparent" "PreviewType"="Plane" "CanUseSpriteAtlas"="True" }
-ZWrite Off Blend One One Cull Off
+ZWrite Off Blend SrcAlpha OneMinusSrcAlpha Cull Off
 
 // required for UI.Mask
 Stencil
@@ -79,10 +79,8 @@ float4 frag (v2f i) : COLOR
     float2 uv = i.uv;
     fixed4 col = tex2D(_MainTex, uv);
 
-    // Nếu có tint/color khác thì xử lý trước ở đây...
-
     // ==============================
-    // RADIAL WIPE (KIỂU ĐỒNG HỒ)
+    // RADIAL WIPE (KIỂU ĐỒNG HỒ NGƯỢC)
     // ==============================
 
     // tâm radial theo UV
@@ -91,13 +89,10 @@ float4 frag (v2f i) : COLOR
     // vector từ tâm đến pixel
     float2 dir = uv - center;
 
-    // nếu muốn giới hạn trong bán kính, có thể dùng length(dir), nhưng
-    // radial wipe kiểu đồng hồ thường chỉ dùng theo góc.
-
-    // atan2 trả về góc [-PI, PI]
+    // góc [-PI, PI]
     float angle = atan2(dir.y, dir.x); 
 
-    // offset góc (deg -> rad). Mặc định -90° để bắt đầu từ trên (12h)
+    // offset góc (deg -> rad), ví dụ -90 để bắt đầu từ đỉnh (12h)
     float offsetRad = radians(_RadialOffsetAngle);
     angle += offsetRad;
 
@@ -108,27 +103,30 @@ float4 frag (v2f i) : COLOR
     // chuẩn hóa về [0,1]: 0..1 tương ứng 0..360°
     float angle01 = angle / TWO_PI;
 
-    // _RadialProgress: 0..1 = 0..360°
-    float prog = saturate(_RadialProgress);
+    // ĐẢO CHIỀU XOAY: dùng 1 - angle01 để quay ngược
+    angle01 = 1.0 - angle01;
 
-    // Nếu Feather = 0 thì dùng step đơn giản:
-    // float mask = step(angle01, prog);
+    // _RadialProgress: 0..-360 → chuyển thành 0..1 theo độ lớn
+    // 0   -> 0.0  (không fill)
+    // -180 -> 0.5 (nửa vòng)
+    // -360 -> 1.0 (full vòng)
+    float prog = saturate(-_RadialProgress / 360.0);
 
-    // Thêm feather mượt: từ (prog - feather) -> prog
-    float feather = max(_RadialFeather, 1e-5); // tránh chia 0
+    // feather tránh mép cứng
+    float feather = max(_RadialFeather, 1e-5);
 
-    // t = 1 khi angle01 << prog - feather
-    // t = 0 khi angle01 >> prog
+    // angle01 < prog - feather → mask ~ 1
+    // angle01 > prog           → mask ~ 0
     float t = (prog - angle01) / feather;
     float radialMask = saturate(t);
 
     // áp dụng mask vào alpha
     col.a *= radialMask;
 
-    // áp dụng fade tổng thể nếu shader có:
+    // nếu có fade tổng: 
     col.a *= _SpriteFade;
 
-    return col;
+    return col * i.color;
 }
 
 ENDCG
