@@ -105,6 +105,8 @@ namespace InGame
             BlockAllInput = true;
             IsMousePressing = false;
             IsMousePressingStarted = false;
+            
+            teleMouseInput.Deactivate();
 
             ResetMotionBlur();
             ResetTimeScale();

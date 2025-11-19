@@ -11,5 +11,6 @@ namespace InGame
     {
         bool CanMove { get; }
         void OnUpdate();
+        void Deactivate();
     }
 }

@@ -24,7 +24,7 @@ namespace InGame.EnemyVisualBody
                 }
             }
             
-            if ((projectile.position.x - nearestSpot.transform.position.x) * (direction.x) < 0) direction = -direction;
+            if ((projectile.position.x - nearestSpot.transform.position.x) * (-direction.x) < 0) direction = -direction;
             var targetPosition = projectile.position + (Vector3)direction.normalized * Mathf.Sqrt(
                 Mathf.Pow((nearestSpot.transform.position - projectile.transform.position).magnitude, 2) - Mathf.Pow(minDistance, 2));
             if (minDistance > nearestSpot.range)
@@ -58,6 +58,10 @@ namespace InGame.EnemyVisualBody
         private void Refresh()
         {
             hitSpots = GetComponentsInChildren<EnemyBodyHitSpot>().ToList();
+            for (var i = 0; i < hitSpots.Count; i++)
+            {
+                hitSpots[i].gameObject.name = $"HitSpot_{i}";
+            }
         }
         
         [SerializeField] private bool showGizmos;

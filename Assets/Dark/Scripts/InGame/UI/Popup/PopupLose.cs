@@ -59,7 +59,7 @@ namespace InGame.UI
                 btnBackToTree.interactable = false;
                 Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame, () =>
                 {
-                    LevelManager.Instance.LoadLevel(1);
+                    LevelManager.Instance.LoadLevel(LevelManager.Instance.Level);
                 });
             });
         }

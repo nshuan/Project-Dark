@@ -10,7 +10,7 @@ namespace Dark.Scripts.Cursor
     {
         private void Start()
         {
-            if (SceneManager.GetActiveScene().name != "BaseLevel") return;
+            if (SceneManager.GetActiveScene().name != "BaseLevel" && SceneManager.GetActiveScene().name != "CheatLevel") return;
 
             PauseGame.Instance.onPause += OnPause;
             PopupWin.onShowPopup += OnShowPopupEndGame;

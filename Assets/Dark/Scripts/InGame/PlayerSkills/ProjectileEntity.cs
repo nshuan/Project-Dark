@@ -159,7 +159,7 @@ namespace InGame
                     deadProjectile.position = hitEnemyInfo.hit.point;
                     deadProjectile.SetParent(hitEnemyInfo.hitEnemy.transform);
                     hitEnemyInfo.hitEnemy.body.SetupProjectileHit(deadProjectile.transform, direction);
-                    hitEnemyInfo.hitEnemy.OnDead += () =>
+                    hitEnemyInfo.hitEnemy.OnStartDead += () =>
                     {
                         deadProjectile.gameObject.SetActive(false);
                     };

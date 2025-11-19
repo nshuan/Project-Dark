@@ -36,10 +36,16 @@ namespace InGame
         
         [SpineAnimationName(nameof(skeleton))]
         [SerializeField] private string animHealTo70;
+
+        [SpineAnimationName(nameof(skeleton))]
+        [SerializeField] private string animHover100;
         
         [SpineAnimationName(nameof(skeleton))]
-        [SerializeField] private string animHealTo30;
-
+        [SerializeField] private string animHover70;
+        
+        [SpineAnimationName(nameof(skeleton))]
+        [SerializeField] private string animHover30;
+        
         private Material outlineMaterial;
 
         private void Awake()
@@ -139,7 +145,7 @@ namespace InGame
                     break;
                 case 1:
                     if (forward) PlayBreakTo30();
-                    else PlayHealTo30();
+                    else PlayIdle30();
                     break;
                 default:
                     if (forward) PlayBreakTo0();
@@ -188,16 +194,59 @@ namespace InGame
             skeleton.AnimationState.AddAnimation(0, animIdle70, true, 0f);
         }
 
-        public void PlayHealTo30()
+        #endregion
+
+        #region Hover
+
+        public void PlayHover(int state)
+        {
+            switch (state)
+            {
+                case 3:
+                    PlayHover100();
+                    break;
+                case 2:
+                    PlayHover70();
+                    break;
+                case 1:
+                    PlayHover30();
+                    break;
+                default:
+                    PlayHover0();
+                    break;
+            }
+        }
+        
+        public void PlayHover100()
         {
             if (!skeleton || skeleton.AnimationState == null) return;
             skeleton.Initialize(false);
-            skeleton.AnimationState.SetAnimation(0, animHealTo30, false);
-            skeleton.AnimationState.AddAnimation(0, animIdle30, true, 0f);
+            skeleton.AnimationState.SetAnimation(0, animHover100, true);
+        }
+
+        public void PlayHover70()
+        {
+            if (!skeleton || skeleton.AnimationState == null) return;
+            skeleton.Initialize(false);
+            skeleton.AnimationState.SetAnimation(0, animHover70, true);
+        }
+
+        public void PlayHover30()
+        {
+            if (!skeleton || skeleton.AnimationState == null) return;
+            skeleton.Initialize(false);
+            skeleton.AnimationState.SetAnimation(0, animHover30, true);
+        }
+
+        public void PlayHover0()
+        {
+            if (!skeleton || skeleton.AnimationState == null) return;
+            skeleton.Initialize(false);
+            skeleton.AnimationState.SetAnimation(0, animIdle0, true);
         }
 
         #endregion
-
+        
         public void PlayHit()
         {
             

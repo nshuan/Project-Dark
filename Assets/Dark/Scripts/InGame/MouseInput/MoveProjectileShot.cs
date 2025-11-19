@@ -82,7 +82,7 @@ namespace InGame
             ChargeController.Cam = Cam;
             
             // Setup shot radius
-            InputManager.PlayerVisual.UpdateShotRadius(
+            InputManager.PlayerVisual.ShowShotRadius(
                 LevelManager.Instance.CurrentTower.GetBaseCenter(),
                 LevelUtility.GetSkillRange(
                     1f,
@@ -212,7 +212,6 @@ namespace InGame
 
             // Reset range
             InputManager.PlayerVisual.UpdateShotRadius(
-                LevelManager.Instance.CurrentTower.GetBaseCenter(),
                 LevelUtility.GetSkillRange(
                     1f,
                     Vector2.right), false);
@@ -366,7 +365,6 @@ namespace InGame
                         {
                             rangeChargeAdded = rangePerStep * Math.Min(chargeStep, rangeChargeMaxStep);
                             InputManager.PlayerVisual.UpdateShotRadius(
-                                LevelManager.Instance.CurrentTower.GetBaseCenter(),
                                 LevelUtility.GetSkillRange(
                                     canChargeRange && rangeChargeAdded > 0 ? 1 + rangeChargeAdded : 1f,
                                     Vector2.right));
@@ -395,6 +393,11 @@ namespace InGame
             // Draw the ray in Scene view
             Debug.DrawLine(ray.origin, rayEnd, Color.green);
 #endif
+        }
+
+        public void Deactivate()
+        {
+            
         }
 
         public virtual void OnDrawGizmos()
