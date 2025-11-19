@@ -18,38 +18,36 @@ namespace InGame.ProjectileCustomPath
         
         public static AnimationCurve GetRandomTrajectoryCurve()
         {
-            var instance = Resources.Load<ProjectileCurveManifest>(Path);
-            if (instance.trajectoryCurvesMap == null || instance.trajectoryCurvesMap.Count == 0) return null;
-            var result = instance.trajectoryCurvesMap.Values.ToArray()[RandomUtil.Range(0, instance.trajectoryCurvesMap.Count)];
-            Resources.UnloadAsset(instance);
-            return result;
+            if (Instance.trajectoryCurvesMap == null || Instance.trajectoryCurvesMap.Count == 0) return null;
+            return Instance.trajectoryCurvesMap.Values.ToArray()[RandomUtil.Range(0, instance.trajectoryCurvesMap.Count)];
         }
 
         public static AnimationCurve GetTrajectoryCurve(int id)
         {
-            var instance = Resources.Load<ProjectileCurveManifest>(Path);
-            if (instance.trajectoryCurvesMap == null || instance.trajectoryCurvesMap.Count == 0) return null;
-            var result = instance.trajectoryCurvesMap.GetValueOrDefault(id);
-            Resources.UnloadAsset(instance);
-            return result;
+            if (Instance.trajectoryCurvesMap == null || Instance.trajectoryCurvesMap.Count == 0) return null;
+            return Instance.trajectoryCurvesMap.GetValueOrDefault(id);
         }
 
         public static AnimationCurve GetAxisCorrectionCurve(int id)
         {
-            var instance = Resources.Load<ProjectileCurveManifest>(Path);
-            if (instance.axisCorrectionCurveMap == null || instance.axisCorrectionCurveMap.Count == 0) return null;
-            var result = instance.axisCorrectionCurveMap.GetValueOrDefault(id);
-            Resources.UnloadAsset(instance);
-            return result;
+            if (Instance.axisCorrectionCurveMap == null || Instance.axisCorrectionCurveMap.Count == 0) return null;
+            return Instance.axisCorrectionCurveMap.GetValueOrDefault(id);
         }
 
         public static AnimationCurve GetProjectileSpeedCurve(int id)
         {
-            var instance = Resources.Load<ProjectileCurveManifest>(Path);
-            if (instance.projectileSpeedCurveMap == null || instance.projectileSpeedCurveMap.Count == 0) return null;
-            var result = instance.projectileSpeedCurveMap.GetValueOrDefault(id);
-            Resources.UnloadAsset(instance);
-            return result;
+            if (Instance.projectileSpeedCurveMap == null || Instance.projectileSpeedCurveMap.Count == 0) return null;
+            return Instance.projectileSpeedCurveMap.GetValueOrDefault(id);
+        }
+
+        private static ProjectileCurveManifest instance;
+        public static ProjectileCurveManifest Instance
+        {
+            get
+            {
+                if (!instance) instance = Resources.Load<ProjectileCurveManifest>(Path);
+                return instance;
+            }
         }
         
 #if UNITY_EDITOR

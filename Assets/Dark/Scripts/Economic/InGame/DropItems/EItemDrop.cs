@@ -11,7 +11,7 @@ namespace Economic.InGame.DropItems
 {
     public class EItemDrop : MonoBehaviour, ICollectible
     {
-        private const float FlySpeed = 15f;
+        private const float FlySpeed = 22f;
         
         [SerializeField] private TargetedProjectile targetLogic;
         [SerializeField] private GameObject vfxClaim;
@@ -41,7 +41,7 @@ namespace Economic.InGame.DropItems
             this.target = target;
             targetLogic.InitializeProjectile(target.transform.position, FlySpeed, 0.15f);
             targetLogic.InitializeAnimationCurve(ProjectileCurveManifest.GetRandomTrajectoryCurve(),
-                ProjectileCurveManifest.GetAxisCorrectionCurve(0), ProjectileCurveManifest.GetProjectileSpeedCurve(0));
+                ProjectileCurveManifest.GetAxisCorrectionCurve(0), ProjectileCurveManifest.GetProjectileSpeedCurve(1));
             
             isCollecting = true;
         }
