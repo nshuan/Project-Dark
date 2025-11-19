@@ -143,6 +143,11 @@ namespace InGame
                 OnMouseClick();
         }
 
+        public void Deactivate()
+        {
+            
+        }
+
         public virtual void OnDrawGizmos()
         {
             

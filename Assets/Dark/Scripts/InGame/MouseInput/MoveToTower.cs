@@ -189,6 +189,11 @@ namespace InGame
             }
         }
 
+        public void Deactivate()
+        {
+            DOTween.Kill(this);
+        }
+
         private void OnTowerChanged(TowerEntity tower)
         {
             CurrentTowerIndex = tower.Id;

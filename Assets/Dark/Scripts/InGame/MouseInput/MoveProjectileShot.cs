@@ -395,6 +395,11 @@ namespace InGame
 #endif
         }
 
+        public void Deactivate()
+        {
+            
+        }
+
         public virtual void OnDrawGizmos()
         {
             
