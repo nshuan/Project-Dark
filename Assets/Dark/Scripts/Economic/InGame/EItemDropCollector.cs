@@ -17,6 +17,10 @@ namespace Economic.InGame
         [SerializeField] private ParticleSystem vfxBreak;
         [SerializeField] private ParticleSystem vfxSpawn;
 
+        [Header("Echoes")] 
+        [SerializeField] private Transform visualEchoes;
+        [SerializeField] private Transform shadowEchoes;
+        
         [Header("Config")]
         [SerializeField] private float delayRespawn = 2f;
         [SerializeField] private float heightFromPlayer = 2f;
@@ -31,8 +35,17 @@ namespace Economic.InGame
         {
             visual.gameObject.SetActive(false);
             shadow.gameObject.SetActive(false);
+            visualEchoes.gameObject.SetActive(false);
+            shadowEchoes.gameObject.SetActive(false);
             LevelManager.Instance.OnLevelLoaded += OnLevelLoaded;
             CombatActions.OnMoveTower += OnMoveTower;
+            WealthManager.Instance.OnUpGrade += OnCharacterLevelUp;
+        }
+
+        private void OnDestroy()
+        {
+            CombatActions.OnMoveTower -= OnMoveTower;
+            WealthManager.Instance.OnUpGrade -= OnCharacterLevelUp;
         }
 
         private void OnLevelLoaded(LevelConfig level)
@@ -64,7 +77,23 @@ namespace Economic.InGame
                 });
             });
         }
-
+        
+        private void OnCharacterLevelUp(int obj)
+        {
+            activated = false;
+            DoShowEchoes().OnComplete(() =>
+            {
+                transform.position = player.position + new Vector3(0f, heightFromPlayer, 0f);
+                orbitMovement.ResetOrbit();
+                orbitMovement.StartOrbit();
+                DoSpawn().SetDelay(delayRespawn).OnComplete(() =>
+                {
+                    activated = true;
+                    collider.enabled = true;
+                });
+            });
+        }
+        
         public void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
         {
             if (!activated) return;
@@ -103,6 +132,30 @@ namespace Economic.InGame
                 {
                     visual.gameObject.SetActive(false);
                     shadow.gameObject.SetActive(false);
+                });
+        }
+
+        private Tween DoShowEchoes()
+        {
+            DOTween.Kill(this, true);
+            return DOTween.Sequence(this)
+                .Append(transform.DOScale(1.1f, 0.2f).SetEase(Ease.OutQuad))
+                .AppendCallback(() =>
+                {
+                    visual.gameObject.SetActive(false);
+                    shadowEchoes.gameObject.SetActive(false);
+                    visualEchoes.gameObject.SetActive(true);
+                    shadowEchoes.gameObject.SetActive(true);
+                    vfxSpawn.Play(true);
+                })
+                .Append(transform.DOScale(1f, 0.2f).SetEase(Ease.InQuad))
+                .AppendInterval(1f)
+                .Append(visualEchoes.DOScale(0f, 0.5f).SetEase(Ease.OutBack))
+                .Join(shadowEchoes.DOScale(0f, 0.5f).SetEase(Ease.OutBack))
+                .AppendCallback(() =>
+                {
+                    visualEchoes.gameObject.SetActive(false);
+                    shadowEchoes.gameObject.SetActive(false);
                 });
         }
 
