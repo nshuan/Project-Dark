@@ -71,11 +71,17 @@ namespace InGame
                 LevelManager.Instance.TeleportTower(selectingTower);
                 Action callbackComplete = () =>
                 {
+                    Character.ShowShotRadius(LevelManager.Instance.CurrentTower.GetBaseCenter(),
+                        LevelUtility.GetSkillRange(
+                            1f,
+                            Vector2.right));
                     Cooldown = GetCooldown(ShortConfig);
                     cdCounter = Cooldown;
                     CanCountdown = true;
                     CombatActions.OnMoveTower?.Invoke(Cooldown);
                 };
+                
+                Character.HideShotRadius();
                 
                 ShortConfig.moveLogic.SetStats(
                     GetDamage(ShortConfig),
