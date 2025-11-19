@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Economic.InGame
@@ -17,6 +19,9 @@ namespace Economic.InGame
         [Header("Space Settings")]
         [SerializeField] private bool useLocalSpace = true;
 
+        [Header("Initial Transition")]
+        [SerializeField] private float transitionDuration = 1f; // if < 0, no transition, just pick a random angle and start orbiting
+
         [Header("Gizmos")]
         [SerializeField] private bool showGizmos = true;
         [SerializeField] private Color gizmoColor = Color.yellow;
@@ -24,20 +29,86 @@ namespace Economic.InGame
 
         private Vector3 _basePosition;
         private float _angle;
+        private bool _isTransitioning = false;
+        private bool _activated = false;
 
-        private void Awake()
+        // private void Awake()
+        // {
+        //     CacheBasePosition();
+        //     _angle = 0f;
+        // }
+        //
+        // private void OnEnable()
+        // {
+        //     CacheBasePosition();
+        //     StartInitialTransition();
+        // }
+
+        private void OnDestroy()
         {
-            CacheBasePosition();
-            _angle = 0f;
+            _activated = false;
         }
 
-        private void OnEnable()
+        private void StartInitialTransition()
         {
-            CacheBasePosition();
+            if (transitionDuration <= 0f)
+            {
+                // No transition, just pick a random angle and start orbiting
+                _angle = RandomUtil.Range(0f, Mathf.PI * 2f);
+                _isTransitioning = false;
+                return;
+            }
+
+            // Store the starting position
+            Vector3 startPosition = useLocalSpace ? transform.localPosition : transform.position;
+            
+            // Calculate the target position on the orbit
+            var target = GetRandomPositionOnOrbit();
+
+            // Start the transition coroutine
+            StartCoroutine(TransitionToOrbitPosition(startPosition, target.Item2, target.Item1));
+        }
+
+        private IEnumerator TransitionToOrbitPosition(Vector3 startPosition, Vector3 targetPosition, float targetAngle)
+        {
+            _isTransitioning = true;
+            float elapsedTime = 0f;
+
+            while (elapsedTime < transitionDuration)
+            {
+                elapsedTime += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsedTime / transitionDuration);
+                
+                // Use smooth interpolation
+                t = t * t * (3f - 2f * t); // Smoothstep
+
+                Vector3 currentPosition = Vector3.Lerp(startPosition, targetPosition, t);
+
+                if (useLocalSpace)
+                    transform.localPosition = currentPosition;
+                else
+                    transform.position = currentPosition;
+
+                yield return null;
+            }
+
+            // Ensure we're exactly at the target position
+            if (useLocalSpace)
+                transform.localPosition = targetPosition;
+            else
+                transform.position = targetPosition;
+
+            // Set the angle to start orbiting from the target position
+            _angle = targetAngle;
+            _isTransitioning = false;
         }
 
         private void Update()
         {
+            if (!_activated) return;
+            if (_isTransitioning)
+                return;
+
             _angle += Time.deltaTime * orbitSpeed;
 
             var axisX = ellipseAxisX.sqrMagnitude < Mathf.Epsilon ? Vector3.right : ellipseAxisX.normalized;
@@ -54,6 +125,9 @@ namespace Economic.InGame
 
         private void OnDisable()
         {
+            StopAllCoroutines();
+            _isTransitioning = false;
+            
             if (useLocalSpace)
                 transform.localPosition = _basePosition + centerOffset;
             else
@@ -63,14 +137,48 @@ namespace Economic.InGame
 
         public void ResetOrbit()
         {
+            StopAllCoroutines();
+            _isTransitioning = false;
             CacheBasePosition();
             _angle = 0f;
+            _activated = false;
+        }
+
+        public void StartOrbit()
+        {
+            StartInitialTransition();
+            _activated = true;
         }
 
         private void CacheBasePosition()
         {
             _basePosition = useLocalSpace ? transform.localPosition : transform.position;
         }
+
+        // Be careful that the value will ignore useLocalSpace and do not auto handle all cases
+        public void OverrideBasePosition(Vector3 newBasePosition)
+        {
+            _basePosition = newBasePosition;
+        }
+
+        /// <summary>
+        /// Return (target angle, target position)
+        /// </summary>
+        /// <returns></returns>
+        public (float, Vector3) GetRandomPositionOnOrbit()
+        {
+            // Pick a random angle for the target orbit position
+            float targetAngle = RandomUtil.Range(0f, Mathf.PI * 2f);
+
+            // Calculate the target position on the orbit
+            var axisX = ellipseAxisX.sqrMagnitude < Mathf.Epsilon ? Vector3.right : ellipseAxisX.normalized;
+            var axisY = ellipseAxisY.sqrMagnitude < Mathf.Epsilon ? Vector3.forward : ellipseAxisY.normalized;
+            var targetOffset = axisX * (Mathf.Cos(targetAngle) * width) +
+                               axisY * (Mathf.Sin(targetAngle) * height);
+            return (targetAngle, _basePosition + centerOffset + targetOffset);
+        }
+        
+        #region Gizmos
 
         private void OnDrawGizmosSelected()
         {
@@ -140,6 +248,8 @@ namespace Economic.InGame
             Gizmos.color = gizmoColor * 0.5f;
             Gizmos.DrawWireSphere(center, 0.1f);
         }
+
+        #endregion
     }
 }
 

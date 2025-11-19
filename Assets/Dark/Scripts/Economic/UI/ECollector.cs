@@ -58,7 +58,7 @@ namespace Economic.UI
 
         private void OnCollectEntityDamaged(EItemDropCollector collector)
         {
-            EItemDropManager.Instance.CollectAll(player.transform);
+            EItemDropManager.Instance.CollectAll(collector.transform);
         }
 
         // private void OnWaveEnded(int wave, WaveEndReason reason)
