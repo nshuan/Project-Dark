@@ -71,9 +71,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1938037939
-  m_SortingLayer: -2
-  m_SortingOrder: -110
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: -10010
   m_Sprite: {fileID: 21300000, guid: 6190ea6fe8b079b4191ded34181f8648, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -231,8 +231,8 @@ MonoBehaviour:
   normalSortingOrder: 55
   hoverSortingLayerName: UILower
   hoverSortingOrder: 10
-  normalBaseSortingLayerName: Bg
-  normalBaseSortingOrder: -100
+  normalBaseSortingLayerName: Default
+  normalBaseSortingOrder: -10000
   selected: {fileID: 655408977626516025}
 --- !u!1 &2667333023014640605
 GameObject:
@@ -314,9 +314,9 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1938037939
-  m_SortingLayer: -2
-  m_SortingOrder: -100
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: -10000
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &4788269725942012404
 MonoBehaviour:
@@ -2096,9 +2096,33 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 146960521626612154}
     m_Modifications:
+    - target: {fileID: 282124645504808996, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 282124645504808996, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+      propertyPath: m_SortingOrder
+      value: -9001
+      objectReference: {fileID: 0}
+    - target: {fileID: 282124645504808996, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 967982760867526908, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
       propertyPath: m_Name
       value: FX_Ingame_Tower_Cooldown_Idle
+      objectReference: {fileID: 0}
+    - target: {fileID: 2260171705277393051, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2260171705277393051, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+      propertyPath: m_SortingOrder
+      value: -9002
+      objectReference: {fileID: 0}
+    - target: {fileID: 2260171705277393051, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2317742501942062248, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
       propertyPath: m_LocalScale.x
@@ -2155,6 +2179,18 @@ PrefabInstance:
     - target: {fileID: 2317742501942062248, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619512435527385340, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619512435527385340, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+      propertyPath: m_SortingOrder
+      value: -9000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619512435527385340, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
