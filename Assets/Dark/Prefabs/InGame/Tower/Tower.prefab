@@ -1605,6 +1605,12 @@ MonoBehaviour:
   tower: {fileID: 1868382969554725214}
   cooldownRing: {fileID: 1996824622331216885}
   vfxCooldownComplete: {fileID: 2457922246008346385}
+  vfxSelected: {fileID: 4451143533698579918}
+  cdRingSprites:
+  - {fileID: 1996824622331216885}
+  - {fileID: 5266713008108530578}
+  cdRingParticles:
+  - {fileID: 5995936615993243139}
 --- !u!1001 &379145523696576611
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1770,8 +1776,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 146960521626612154}
     m_Modifications:
     - target: {fileID: 54592567825783864, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.925
+      objectReference: {fileID: 0}
+    - target: {fileID: 54592567825783864, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.63722223
+      objectReference: {fileID: 0}
+    - target: {fileID: 54592567825783864, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.925
+      objectReference: {fileID: 0}
+    - target: {fileID: 54592567825783864, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.013999939
+      value: -0.004000187
       objectReference: {fileID: 0}
     - target: {fileID: 54592567825783864, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1808,6 +1826,10 @@ PrefabInstance:
     - target: {fileID: 54592567825783864, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 54592567825783864, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 904754771136874526, guid: ea2d78b3f12863940a1844762f9b53e5, type: 3}
       propertyPath: m_SortingLayer
@@ -2079,8 +2101,20 @@ PrefabInstance:
       value: FX_Ingame_Tower_Cooldown_Idle
       objectReference: {fileID: 0}
     - target: {fileID: 2317742501942062248, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.37
+      objectReference: {fileID: 0}
+    - target: {fileID: 2317742501942062248, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.2548889
+      objectReference: {fileID: 0}
+    - target: {fileID: 2317742501942062248, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.37
+      objectReference: {fileID: 0}
+    - target: {fileID: 2317742501942062248, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.013999939
+      value: -0.004
       objectReference: {fileID: 0}
     - target: {fileID: 2317742501942062248, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2118,6 +2152,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2317742501942062248, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2126,6 +2164,16 @@ PrefabInstance:
 --- !u!212 &1996824622331216885 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 5619512435527385340, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+  m_PrefabInstance: {fileID: 6217959958974972681}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &5266713008108530578 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 2260171705277393051, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
+  m_PrefabInstance: {fileID: 6217959958974972681}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &5995936615993243139 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 396168568997590282, guid: b7fdcd6d6f8602d43b5e3c52e4e34f83, type: 3}
   m_PrefabInstance: {fileID: 6217959958974972681}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &8530071844556550049 stripped
@@ -2276,6 +2324,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
+--- !u!1 &4451143533698579918 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6994314466156648143, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
+  m_PrefabInstance: {fileID: 6689367750034713345}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7506562413650236908 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3817295707181563629, guid: 90ce229710723c1408ba59af53a579bf, type: 3}
