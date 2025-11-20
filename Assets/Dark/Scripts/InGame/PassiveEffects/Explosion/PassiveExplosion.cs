@@ -10,8 +10,8 @@ namespace InGame
     {
         [SerializeField] private Transform vfx;
         [SerializeField] private float vfxDuration = 1f;
-        
-        private Vector2 Position { get; set; }
+
+        private Vector3 Position;
         private float Stagger { get; set; }
         private RaycastHit2D[] hits = new RaycastHit2D[50];
         private IDamageable hitTarget;
@@ -25,9 +25,10 @@ namespace InGame
 
         public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool)
         {
-            transform.position = target.Position;
-            vfx.localScale = Vector3.one * size;
             this.Position = target.Position;
+            Position.z = Position.y * Mathf.Tan(Mathf.Abs(VfxExplosionPlane.Angle)) * (-1);
+            transform.position = Position;
+            vfx.localScale = Vector3.one * size;
             this.Stagger = stagger;
             gameObject.SetActive(true);
 
