@@ -17,6 +17,7 @@ namespace Economic.InGame.DropItems
         [SerializeField] private Vector3 vfxPositionOffset = new Vector3(-0.11f, -0.45f, 0f); 
         
         private ECollectorData collectedData;
+        public ECollectorData CollectedData => collectedData;
         
         private List<EItemDrop> listItemToCollect;
         private ParticleSystem vfxClaimOnPlayer;
@@ -41,13 +42,13 @@ namespace Economic.InGame.DropItems
                 switch (item.kind)
                 {
                     case WealthType.Vestige:
-                        collectedData.vestige += item.Quantity;
+                        collectedData.AddVestige(item.Quantity);
                         break;
                     case WealthType.Echoes:
-                        collectedData.echoes += item.Quantity;
+                        collectedData.AddEchoes(item.Quantity);
                         break;
                     case WealthType.Sigils:
-                        collectedData.sigils += item.Quantity;
+                        collectedData.AddSigils(item.Quantity);
                         break;
                 }
                 
@@ -99,19 +100,40 @@ namespace Economic.InGame.DropItems
     
     public class ECollectorData
     {
-        public int vestige;
-        public int sigils;
-        public int echoes;
+        public int TotalCollectedVestige { get; private set; }
+        public int TotalCollectedEchoes { get; private set; }
+        public int TotalCollectedSigils { get; private set; }
+        public int Vestige { get; private set; }
+        public int Sigils { get; private set; }
+        public int Echoes { get; private set; }
 
         public void Claim()
         {
-            if (vestige > 0)  WealthManager.Instance.AddDark(vestige);
-            if (sigils > 0)  WealthManager.Instance.AddBossPoint(sigils);
-            if (echoes > 0)  WealthManager.Instance.AddLevelPoint(echoes);
+            if (Vestige > 0)  WealthManager.Instance.AddDark(Vestige);
+            if (Sigils > 0)  WealthManager.Instance.AddBossPoint(Sigils);
+            if (Echoes > 0)  WealthManager.Instance.AddLevelPoint(Echoes);
 
-            vestige = 0;
-            sigils = 0;
-            echoes = 0;
+            Vestige = 0;
+            Sigils = 0;
+            Echoes = 0;
+        }
+
+        public void AddVestige(int amount)
+        {
+            Vestige += amount;
+            TotalCollectedVestige += amount;
+        }
+
+        public void AddEchoes(int amount)
+        {
+            Echoes += amount;
+            TotalCollectedEchoes += amount;
+        }
+
+        public void AddSigils(int amount)
+        {
+            Sigils += amount;
+            TotalCollectedSigils += amount;
         }
     }
 }

@@ -1,11 +1,12 @@
 using System;
 using Dark.Scripts.CoreUI;
 using Dark.Scripts.SceneNavigation;
+using Data;
 using DG.Tweening;
-using Economic;
 using InGame.UI.EndingLevel;
+using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace InGame.UI
@@ -23,7 +24,13 @@ namespace InGame.UI
         [SerializeField] private UITowerDestroyedVersion1 uiEndingLevel;
 
         public static event Action onShowPopup;
-        
+
+        private void Awake()
+        {
+            matSymbol = new Material(imgSymbol.material);
+            imgSymbol.material = matSymbol;
+        }
+
         private void Start()
         {
             LevelManager.Instance.OnLose += OnLose;
@@ -38,11 +45,17 @@ namespace InGame.UI
         {
             UpdateUI();
             uiEndingLevel.Play();
-            ui.DoOpenFadeIn().SetDelay(delayShowPopup).OnComplete(() => onShowPopup?.Invoke());
+            ui.DoOpenFadeIn().SetDelay(delayShowPopup).OnComplete(() =>
+            {
+                onShowPopup?.Invoke();
+                DoShowUIPopup();
+            });
         }
 
         private void UpdateUI()
         {
+            ResetPopupUI();
+            
             btnBackToTree.onClick.RemoveAllListeners();
             btnBackToTree.onClick.AddListener(() =>
             {
@@ -59,9 +72,95 @@ namespace InGame.UI
                 btnBackToTree.interactable = false;
                 Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame, () =>
                 {
-                    LevelManager.Instance.LoadLevel(LevelManager.Instance.Level);
+                    LevelManager.Instance.LoadLevel(PlayerDataManager.Instance.Data.level + 1);
                 });
             });
+        }
+
+        [Space] [Header("UI Tween")] 
+        private static readonly int MatDisolveValue = Shader.PropertyToID("Disolve_Value");
+        
+        [SerializeField] private Image imgSymbol;
+        [SerializeField] private Image imgTitle;
+        [SerializeField] private Image imgTitleBg;
+        [SerializeField] private TextMeshProUGUI txtDescription;
+        [SerializeField] private TextMeshProUGUI txtTitleResourceCollected;
+        [SerializeField] private CanvasGroup groupResourceCollected;
+        [SerializeField] private CanvasGroup groupTimePlayed;
+        [SerializeField] private Transform rectLine;
+        [SerializeField] private CanvasGroup groupBtnBackToTree;
+        [SerializeField] private CanvasGroup groupBtnReplay;
+
+        private Material matSymbol;
+
+        private void ResetPopupUI()
+        {
+            matSymbol.SetFloat(MatDisolveValue, 1f);
+            imgTitle.SetAlpha(0f);
+            imgTitleBg.SetAlpha(0f);
+            txtDescription.SetAlpha(0f);
+            txtTitleResourceCollected.SetAlpha(0f);
+            groupResourceCollected.alpha = 0f;
+            groupTimePlayed.alpha = 0f;
+            rectLine.localScale = new Vector3(0f, 1f, 1f);
+            groupBtnBackToTree.alpha = 0f;
+            groupBtnReplay.alpha = 0f;
+        }
+        
+        private Tween DoShowUIPopup()
+        {
+            DOTween.Kill(ui);
+            var seq = DOTween.Sequence(ui);
+
+            seq.AppendCallback(ResetPopupUI)
+                .Append(DOTween.To(() => 1f, (x) => matSymbol.SetFloat(MatDisolveValue, x), 0f, 1f))
+                .AppendCallback((() =>
+                {
+                    imgTitleBg.DOFade(1f, 0.3f);
+                    imgTitle.DOFade(1f, 0.7f).SetDelay(0.1f);
+                }))
+                .AppendInterval(0.3f)
+                .AppendCallback(() =>
+                {
+                    txtDescription.transform.localPosition += new Vector3(0f, 10f, 0f);
+                    txtDescription.transform.DOLocalMoveY(-10f, 0.5f).SetRelative(true);
+                    txtDescription.DOFade(1f, 0.5f);
+                })
+                .AppendInterval(1f)
+                .AppendCallback(() =>
+                {
+                    txtTitleResourceCollected.transform.localPosition += new Vector3(0f, 10f, 0f);
+                    txtTitleResourceCollected.transform.DOLocalMoveY(-10f, 0.5f).SetRelative(true);
+                    txtTitleResourceCollected.DOFade(1f, 0.5f);
+                    
+                    groupResourceCollected.transform.localPosition += new Vector3(0f, 10f, 0f);
+                    groupResourceCollected.transform.DOLocalMoveY(-10f, 0.5f).SetRelative(true).SetDelay(0.2f);
+                    groupResourceCollected.DOFade(1f, 0.5f).SetDelay(0.2f);
+                    
+                    groupTimePlayed.transform.localPosition += new Vector3(0f, 10f, 0f);
+                    groupTimePlayed.transform.DOLocalMoveY(-10f, 0.5f).SetRelative(true).SetDelay(0.4f);
+                    groupTimePlayed.DOFade(1f, 0.5f).SetDelay(0.4f);
+                })
+                .AppendInterval(1f)
+                .Append(rectLine.DOScaleX(1f, 0.3f))
+                .AppendCallback(() =>
+                {
+                    groupBtnBackToTree.transform.localPosition += new Vector3(0f, 10f, 0f);
+                    groupBtnBackToTree.transform.DOLocalMoveY(-10f, 0.5f).SetRelative(true);
+                    groupBtnBackToTree.DOFade(1f, 0.5f);
+                    
+                    groupBtnReplay.transform.localPosition += new Vector3(0f, 10f, 0f);
+                    groupBtnReplay.transform.DOLocalMoveY(-10f, 0.5f).SetRelative(true);
+                    groupBtnReplay.DOFade(1f, 0.5f);
+                });
+            
+            return seq;
+        }
+
+        [Button]
+        private void TestPlay()
+        {
+            DoShowUIPopup();
         }
     }
 }
