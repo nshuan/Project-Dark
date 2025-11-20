@@ -31,6 +31,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3335844950552041163}
+  - {fileID: 2791986926523572338}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3134462521366388888
@@ -55,6 +56,9 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes:
     - Name: config
+      Entry: 6
+      Data: 
+    - Name: onActivated
       Entry: 6
       Data: 
   orbYCurve:
@@ -82,6 +86,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   orbSpawnDuration: 1
+  obstacle: {fileID: 7756152939152209005}
   target:
   - {fileID: 0}
   visual: {fileID: 2664195306680629247}
@@ -124,6 +129,52 @@ Transform:
   - {fileID: 6075948919131170677}
   m_Father: {fileID: 2574830626712820912}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &9202847942830000272
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2791986926523572338}
+  - component: {fileID: 7756152939152209005}
+  m_Layer: 0
+  m_Name: BoidObstacle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &2791986926523572338
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9202847942830000272}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2574830626712820912}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7756152939152209005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9202847942830000272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7d3a8f4d24af4948b5bb3d798214bac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleRadius: 0.8
+  avoidanceStrength: 0.5
 --- !u!1001 &1086727381564788537
 PrefabInstance:
   m_ObjectHideFlags: 0

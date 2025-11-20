@@ -14,6 +14,7 @@ namespace InGame
     {
         [SerializeField] private AnimationCurve orbYCurve;
         [SerializeField] private float orbSpawnDuration;
+        [SerializeField] private EnemyBoidObstacle obstacle;
         
         [ReadOnly] public TowerEntity[] target;
         private float WaveHpMultiplier { get; set; }
@@ -51,6 +52,7 @@ namespace InGame
         public void Activate()
         {
             IsActive = true;
+            obstacle.gameObject.SetActive(true);
             delayCoroutine = StartCoroutine(IEStartSpawn(config.startTime));
         }
 
@@ -69,6 +71,7 @@ namespace InGame
             }
 
             IsActive = false;
+            obstacle.gameObject.SetActive(false);
             this.DelayCall(vfxCloseTotalDuration, () => gameObject.SetActive(false));
         }
         
@@ -87,6 +90,7 @@ namespace InGame
             }
 
             IsActive = false;
+            obstacle.gameObject.SetActive(false);
         }
         
         public void Initialize(GateConfig cfg, TowerEntity[] targetBase, float waveHpMultiplier, float waveDmgMultiplier, float levelExpRatio, float levelDarkRatio, int levelDarkUnitValue)

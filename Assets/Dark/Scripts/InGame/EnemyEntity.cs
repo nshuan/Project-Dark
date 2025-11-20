@@ -50,7 +50,7 @@ namespace InGame
         private Vector2 staggerTargetPos;
 
         [Space, Header("Visual")] 
-        [SerializeField] private EnemyBoidAgent boidAgent;
+        [SerializeField] private EnemyBoidAgentWithObstacles boidAgent;
         [SerializeField] private Transform uiHealth;
         public EnemyAnimController animController;
         [SerializeField] protected GameObject shadow;

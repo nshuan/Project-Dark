@@ -11,7 +11,8 @@ namespace InGame
         protected override void Awake()
         {
             base.Awake();
-        
+            gameObject.name = "Enemy Boid Manager";
+            
             grid = new EnemySpatialGrid(100, 100, 5);
             LevelManager.Instance.OnLevelLoaded += (level) =>
             {

@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &946882247128492016
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4667279865502068525}
+  m_Layer: 3
+  m_Name: Vfxburn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4667279865502068525
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 946882247128492016}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.19, y: 0.99, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 541454038136209678}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2026576607495002774
 GameObject:
   m_ObjectHideFlags: 0
@@ -10,8 +41,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2189210148331816725}
   - component: {fileID: 2405272052621527813}
-  - component: {fileID: 708390462539577957}
   - component: {fileID: 1367309541428699416}
+  - component: {fileID: 7383520355259516268}
   m_Layer: 3
   m_Name: Enemy_BossDemo
   m_TagString: Untagged
@@ -88,25 +119,6 @@ PolygonCollider2D:
       - {x: 0.6718451, y: -0.6890942}
       - {x: 0.2081238, y: 0.025830626}
   m_UseDelaunayMesh: 0
---- !u!114 &708390462539577957
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2026576607495002774}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe84e76b1ffa40869eab561e5f017094, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  separationRadius: 0
-  alignmentRadius: 0
-  cohesionRadius: 0
-  separationWeight: 0
-  alignmentWeight: 0
-  cohesionWeight: 0
-  boidCooldown: 0.5
 --- !u!114 &1367309541428699416
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -120,16 +132,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collider2d: {fileID: 2405272052621527813}
-  burnVfxParent: {fileID: 0}
+  burnVfxParent: {fileID: 4667279865502068525}
   body: {fileID: 536348229780131438}
   sfxHit: {fileID: 613187087040676546}
-  boidAgent: {fileID: 708390462539577957}
+  boidAgent: {fileID: 7383520355259516268}
   uiHealth: {fileID: 2775015567938810026}
   animController: {fileID: 2498714227618212496}
   shadow: {fileID: 3947532968561510528}
   visual: {fileID: 2164173735719195637}
   materialNormal: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   materialElite: {fileID: 2100000, guid: f311ef86e4e83944d8d8b830fc9ff5c2, type: 2}
+--- !u!114 &7383520355259516268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2026576607495002774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e6c37eb32ab8bf41b6741b5cae7fb53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  separationRadius: 0
+  alignmentRadius: 0
+  cohesionRadius: 0
+  separationWeight: 0
+  alignmentWeight: 0
+  cohesionWeight: 0
+  obstacleDetectionRadius: 0
+  obstacleAvoidanceWeight: 0
+  boidCooldown: 0.5
 --- !u!1 &2248101911073704317
 GameObject:
   m_ObjectHideFlags: 0
@@ -599,6 +632,7 @@ Transform:
   - {fileID: 4764234842553233016}
   - {fileID: 2775015567938810026}
   - {fileID: 5060583096935142398}
+  - {fileID: 4667279865502068525}
   m_Father: {fileID: 2189210148331816725}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6579039246270841003

@@ -269,7 +269,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2026576607495002774}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe84e76b1ffa40869eab561e5f017094, type: 3}
+  m_Script: {fileID: 11500000, guid: 1e6c37eb32ab8bf41b6741b5cae7fb53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   separationRadius: 0.6
@@ -278,7 +278,9 @@ MonoBehaviour:
   separationWeight: 1.5
   alignmentWeight: 1
   cohesionWeight: 1
-  boidCooldown: 0.5
+  obstacleDetectionRadius: 0.6
+  obstacleAvoidanceWeight: 1
+  boidCooldownStep: 2
 --- !u!1 &3285169992567912852
 GameObject:
   m_ObjectHideFlags: 0

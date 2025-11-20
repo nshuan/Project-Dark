@@ -5,11 +5,11 @@ namespace InGame
 {
     public class EnemySpatialGridGizmos : MonoBehaviour
     {
-        private EnemySpatialGrid grid;
+        private EnemySpatialGridWithObstacles grid;
         
         private void Start()
         {
-            grid = EnemyBoidManager.Instance.grid;
+            grid = EnemyBoidManagerWithObstacles.Instance.grid;
         }
 
         void OnDrawGizmos()

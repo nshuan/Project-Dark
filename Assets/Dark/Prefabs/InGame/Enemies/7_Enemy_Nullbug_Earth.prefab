@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 2189210148331816725}
   - component: {fileID: 3140594308172958890}
   - component: {fileID: 8131059031516112919}
-  - component: {fileID: 8462679166867049497}
+  - component: {fileID: 8872790398773853291}
   m_Layer: 3
   m_Name: 7_Enemy_Nullbug_Earth
   m_TagString: Untagged
@@ -143,7 +143,7 @@ MonoBehaviour:
   burnVfxParent: {fileID: 4663626392486702958}
   body: {fileID: 4159870155834280980}
   sfxHit: {fileID: 6168683139409922614}
-  boidAgent: {fileID: 8462679166867049497}
+  boidAgent: {fileID: 8872790398773853291}
   uiHealth: {fileID: 2775015567938810026}
   animController: {fileID: 6657011251685399174}
   shadow: {fileID: 6146576754246497612}
@@ -185,7 +185,7 @@ CapsuleCollider2D:
   m_Offset: {x: -0.10551809, y: 0.12}
   m_Size: {x: 0.7654056, y: 0.4319058}
   m_Direction: 1
---- !u!114 &8462679166867049497
+--- !u!114 &8872790398773853291
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -194,7 +194,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2026576607495002774}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe84e76b1ffa40869eab561e5f017094, type: 3}
+  m_Script: {fileID: 11500000, guid: 1e6c37eb32ab8bf41b6741b5cae7fb53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   separationRadius: 0.5
@@ -203,7 +203,9 @@ MonoBehaviour:
   separationWeight: 1.5
   alignmentWeight: 1
   cohesionWeight: 1
-  boidCooldown: 0.5
+  obstacleDetectionRadius: 0.6
+  obstacleAvoidanceWeight: 1
+  boidCooldownStep: 2
 --- !u!1 &3136929603299288387
 GameObject:
   m_ObjectHideFlags: 0

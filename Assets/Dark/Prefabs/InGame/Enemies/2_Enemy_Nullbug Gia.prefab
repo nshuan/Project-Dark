@@ -145,7 +145,7 @@ GameObject:
   - component: {fileID: 2189210148331816725}
   - component: {fileID: 3140594308172958890}
   - component: {fileID: 5182120916084546678}
-  - component: {fileID: 708390462539577957}
+  - component: {fileID: 3541871851252734945}
   m_Layer: 3
   m_Name: 2_Enemy_Nullbug Gia
   m_TagString: Untagged
@@ -187,7 +187,7 @@ MonoBehaviour:
   burnVfxParent: {fileID: 8299110769271586406}
   body: {fileID: 8454891118587046500}
   sfxHit: {fileID: 9139653417033023692}
-  boidAgent: {fileID: 708390462539577957}
+  boidAgent: {fileID: 3541871851252734945}
   uiHealth: {fileID: 2775015567938810026}
   animController: {fileID: 2498714227618212496}
   shadow: {fileID: 2936629769422763699}
@@ -229,7 +229,7 @@ CapsuleCollider2D:
   m_Offset: {x: -0.09007269, y: 0.3338122}
   m_Size: {x: 0.7, y: 1.01}
   m_Direction: 0
---- !u!114 &708390462539577957
+--- !u!114 &3541871851252734945
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -238,7 +238,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2026576607495002774}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe84e76b1ffa40869eab561e5f017094, type: 3}
+  m_Script: {fileID: 11500000, guid: 1e6c37eb32ab8bf41b6741b5cae7fb53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   separationRadius: 0.6
@@ -247,7 +247,9 @@ MonoBehaviour:
   separationWeight: 1.5
   alignmentWeight: 1
   cohesionWeight: 1
-  boidCooldown: 0.5
+  obstacleDetectionRadius: 0.8
+  obstacleAvoidanceWeight: 1
+  boidCooldownStep: 2
 --- !u!1 &3285169992567912852
 GameObject:
   m_ObjectHideFlags: 0
