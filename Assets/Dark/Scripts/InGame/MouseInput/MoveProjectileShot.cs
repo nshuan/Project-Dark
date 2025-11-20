@@ -109,7 +109,7 @@ namespace InGame
                 canChargeSize && sizeChargeAdded > 0 ? 1 + sizeChargeAdded : 1f);
             var skillRange = LevelUtility.GetSkillRange(
                 canChargeRange && rangeChargeAdded > 0 ? 1 + rangeChargeAdded : 1f,
-                tempMousePos - LevelManager.Instance.CurrentTower.GetBaseCenter());
+                Vector2.right);
             var maxHit = 1 + LevelUtility.BonusInfo.skillBonus.bulletMaxHitPlus;
             var stagger = LevelUtility.GetBulletStagger();
 

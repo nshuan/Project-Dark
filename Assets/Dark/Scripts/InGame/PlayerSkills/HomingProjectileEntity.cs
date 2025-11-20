@@ -18,10 +18,10 @@ namespace InGame
         private Transform targetToChase;
         private bool canChase = false;
 
-        public override void Init(Vector2 startPos, Vector2 direction, float maxDistance, float size, float speedScale, int damage,
+        public override void Init(Vector2 startPos, Vector2 direction, float range, float size, float speedScale, int damage,
             int criticalDamage, float criticalRate, float stagger, bool isCharge, int maxHit, List<IProjectileActivate> activateActions, List<IProjectileHit> hitActions, ProjectileType damageType)
         {
-            base.Init(startPos, direction, maxDistance, size, speedScale, damage, criticalDamage, criticalRate, stagger, isCharge, maxHit, activateActions, hitActions, damageType);
+            base.Init(startPos, direction, range, size, speedScale, damage, criticalDamage, criticalRate, stagger, isCharge, maxHit, activateActions, hitActions, damageType);
 
             if (WeaponSupporter.EnemyTargetingIndex < WeaponSupporter.EnemiesCountInRange)
             {
@@ -43,10 +43,15 @@ namespace InGame
         protected override void Update()
         {
             if (!activated) return;
-            if (Vector2.Distance(transform.position, RangeCenter) > maxDistance)
+            if (Vector2.Distance(transform.position, RangeCenter) > LevelUtility.GetRelativeRange(Range, transform.position - RangeCenter))
             {
-                ProjectileDeadPool.Instance.Get(direction).position = transform.position;
+                if (!BlockSpawnDeadBody)
+                {
+                    // ProjectileDeadPool.Instance.Get(direction).position = transform.position;
+                    ProjectileDeadPool.Instance.Get(direction).position = BoundPosition;
+                }
                 ProjectileHit(null);
+                return;
             }
             
             // Change direction slowly to target

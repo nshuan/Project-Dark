@@ -127,6 +127,40 @@ namespace InGame
                                      Mathf.Pow(Mathf.Sin(angle), 2));
             return maxRange * ratio;
         }
+
+        public static float GetTrueRange(float relativeRange, Vector2 direction)
+        {
+            var magnitude = direction.magnitude;
+            direction.x = Mathf.Abs(direction.x) / magnitude;
+            direction.y = Mathf.Abs(direction.y) / magnitude;
+            var angle = Mathf.Atan2(direction.y, direction.x);
+            var ratio = GameConst.IsoRatio
+                        / Mathf.Sqrt(Mathf.Pow(GameConst.IsoRatio * Mathf.Cos(angle), 2) +
+                                     Mathf.Pow(Mathf.Sin(angle), 2));
+            if (ratio == 0f) ratio = 0.0001f;
+            return relativeRange / ratio;
+        }
+
+        public static Vector2 GetIntersectionInRangeBound(Vector2 rangeCenter, float trueRange, Vector2 vectorOrigin,
+            Vector2 vectorDirection)
+        {
+            vectorOrigin = vectorOrigin - rangeCenter;
+            var a = trueRange;
+            var b = trueRange * GameConst.IsoRatio;
+            var A = a * a * vectorDirection.y * vectorDirection.y + b * b * vectorDirection.x * vectorDirection.x;
+            var B = 2 * (a * a * vectorDirection.y * vectorOrigin.y + b * b * vectorDirection.x * vectorOrigin.x);
+            var C = a * a * vectorOrigin.y * vectorOrigin.y + b * b * vectorOrigin.x * vectorOrigin.x - a * a * b * b;
+            var delta = B * B - 4 * A * C;
+            
+            // delta < 0 => no intersection => return vectorOrigin + vectorDirection
+            if (delta < 0) return vectorOrigin + rangeCenter + vectorDirection;
+            else
+            {
+                var t = (-B + Mathf.Sqrt(delta)) / (2 * A);
+                if (t < 0) t = (-B - Mathf.Sqrt(delta)) / (2 * A);
+                return vectorOrigin + rangeCenter + vectorDirection * t;
+            }
+        }
         
         /// <summary>
         /// Skill_Size = Size * [1 + Total (Skill_Size_Multiple) ] * [ 1 + ( Charge_Size_Max / Charge_Size_Time ) * Charge_Time ]

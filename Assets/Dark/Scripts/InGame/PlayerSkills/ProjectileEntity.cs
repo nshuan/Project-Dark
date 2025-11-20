@@ -19,8 +19,13 @@ namespace InGame
         [SerializeField] private float baseSpeed = 5f;
         
         protected Vector2 direction;
-        public Vector2 RangeCenter { get; set; }
-        public float maxDistance;
+        public Vector3 SpawnPosition { get; set; }
+        protected Vector3 BoundPosition { get; set; }
+        public float Range { get; set; }
+        public float TrueRange { get; set; }
+        public Vector3 RangeCenter { get; set; }
+        protected float maxDistanceFromSpawnPosition;
+        protected float maxDistanceFromRangeCenter;
         public int Damage { get; set; }
         public float Size { get; set; }
         public float SpeedScale { get; set; }
@@ -70,7 +75,7 @@ namespace InGame
         public virtual void Init(
             Vector2 rangeCenter,
             Vector2 direction,
-            float maxDistance,
+            float range,
             float size,
             float speedScale,
             int damage,
@@ -83,13 +88,19 @@ namespace InGame
             List<IProjectileHit> hitActions,
             ProjectileType damageType)
         {
+            SpawnPosition = transform.position;
+            Range = range;
+            
             Size = size;
             transform.localScale = size * Vector3.one;
             SpeedScale = speedScale;
             Speed = baseSpeed * speedScale;
             this.RangeCenter = rangeCenter;
             this.direction = direction;
-            this.maxDistance = maxDistance;
+            BoundPosition =
+                LevelUtility.GetIntersectionInRangeBound(RangeCenter, range, SpawnPosition, direction);
+            maxDistanceFromSpawnPosition = (BoundPosition - SpawnPosition).magnitude;
+            maxDistanceFromRangeCenter = (BoundPosition - RangeCenter).magnitude;
             lifeTime = 0f;
             Damage = damage;
             DamageHitBoundRadius = baseDamageRange * size;
@@ -102,7 +113,7 @@ namespace InGame
             MaxHit = maxHit;
             currentHit = 0;
             DamageType = damageType;
-
+            
             hitStatus = ProjectileCollider.ProjectileHitStatus.None;
             hitEnemyInfo = new ProjectileCollider.HitEnemyInfo();
             collider.Init();
@@ -136,11 +147,15 @@ namespace InGame
         protected virtual void Update()
         {
             if (!activated) return;
-            if (Vector2.Distance(transform.position, RangeCenter) > maxDistance)
+            if (Vector2.Distance(transform.position, SpawnPosition) > maxDistanceFromSpawnPosition)
             {
                 if (!BlockSpawnDeadBody)
-                    ProjectileDeadPool.Instance.Get(direction).position = transform.position;
+                {
+                    // ProjectileDeadPool.Instance.Get(direction).position = transform.position;
+                    ProjectileDeadPool.Instance.Get(direction).position = BoundPosition;
+                }
                 ProjectileHit(null);
+                return;
             }
 
             moveDirection.x = Speed * Time.deltaTime * direction.x;
@@ -165,13 +180,39 @@ namespace InGame
                     };
                 }
                 else
-                    transform.position += moveDirection;
+                {
+                    if (Vector2.Distance(transform.position + moveDirection, SpawnPosition) > maxDistanceFromSpawnPosition)
+                    {
+                        if (!BlockSpawnDeadBody)
+                        {
+                            // ProjectileDeadPool.Instance.Get(direction).position = transform.position;
+                            ProjectileDeadPool.Instance.Get(direction).position = BoundPosition;
+                        }
+                        ProjectileHit(null);
+                    }
+                    else
+                    {
+                        transform.position += moveDirection;
+                    }
+                }
                 
                 ProjectileHit(hitEnemyInfo.hitEnemy);
             }
             else
             {
-                transform.position += moveDirection;
+                if (Vector2.Distance(transform.position + moveDirection, SpawnPosition) > maxDistanceFromSpawnPosition)
+                {
+                    if (!BlockSpawnDeadBody)
+                    {
+                        // ProjectileDeadPool.Instance.Get(direction).position = transform.position;
+                        ProjectileDeadPool.Instance.Get(direction).position = BoundPosition;
+                    }
+                    ProjectileHit(null);
+                }
+                else
+                {
+                    transform.position += moveDirection;
+                }
             }
                 
             lifeTime += Time.deltaTime;

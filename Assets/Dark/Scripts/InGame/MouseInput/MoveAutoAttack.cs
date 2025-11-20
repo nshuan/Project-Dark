@@ -55,7 +55,7 @@ namespace InGame
             var skillSize = LevelUtility.GetSkillSize(1f);
             var skillRange = LevelUtility.GetSkillRange(
                 1f,
-                tempMousePos - LevelManager.Instance.CurrentTower.GetBaseCenter());
+                Vector2.right);
             var maxHit = 1 + LevelUtility.BonusInfo.skillBonus.bulletMaxHitPlus;
             var stagger = LevelUtility.GetBulletStagger();
             
