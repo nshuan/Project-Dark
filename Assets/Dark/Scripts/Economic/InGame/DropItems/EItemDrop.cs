@@ -27,10 +27,12 @@ namespace Economic.InGame.DropItems
         {
             visual.gameObject.SetActive(true);
             var targetPos = position + Random.insideUnitCircle * 0.8f;
+            var dropJumps = RandomUtil.Range(1, 4);
+            var dropDuration = Mathf.Max(dropJumps * 0.2f, 0.36f);
             shadow.SetParent(null);
-            transform.DOJump(targetPos, 0.2f, RandomUtil.Range(1, 4), 0.5f).SetTarget(this)
+            transform.DOJump(targetPos, 0.16f, dropJumps, dropDuration).SetTarget(this)
                 .OnComplete(() => shadow.SetParent(transform));
-            shadow.DOMove((Vector3)targetPos - transform.position + shadow.position, 0.5f);
+            shadow.DOMove((Vector3)targetPos - transform.position + shadow.position, dropDuration);
         }
         
         public void Collect(Transform target, float delay)
