@@ -19,18 +19,18 @@ namespace InGame.UI.CombatSkills
         {
             callbackShowSkill = callbackShow;
             callbackHideSkill = callbackHide;
+            UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
             UpgradeManager.Instance.OnActivated += OnUpgradeBonusActivated;
         }
 
         private void OnDestroy()
         {
             CombatActions.OnAttackCharge -= OnSkillUsed;
+            UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
         }
         
         private void OnUpgradeBonusActivated(UpgradeBonusInfo bonusInfo)
         {
-            UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
-
             var showIcon = false;
             
             if (bonusInfo.skillBonus.unlockedChargeSize && bonusInfo.skillBonus.unlockedChargeBullet)

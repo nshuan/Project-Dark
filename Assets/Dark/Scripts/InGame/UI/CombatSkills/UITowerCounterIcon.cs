@@ -21,18 +21,18 @@ namespace InGame.UI.CombatSkills
         {
             callbackShowSkill = callbackShow;
             callbackHideSkill = callbackHide;
+            UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
             UpgradeManager.Instance.OnActivated += OnUpgradeBonusActivated;
         }
 
         private void OnDestroy()
         {
+            UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
             CombatActions.OnTowerCounter -= OnTowerCounter;
         }
 
         private void OnUpgradeBonusActivated(UpgradeBonusInfo bonusInfo)
         {
-            UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
-
             if (bonusInfo.unlockedTowerCounter == null)
             {
                 available = false;

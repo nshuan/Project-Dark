@@ -18,19 +18,19 @@ namespace InGame.UI.CombatSkills
 
         private void OnDestroy()
         {
+            UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
             CombatActions.OnAttackNormal -= OnSkillUsed;
         }
 
         public override void CheckShowSkill(Action callbackShow, Action callbackHide)
         {
             callbackShow?.Invoke();
+            UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
             UpgradeManager.Instance.OnActivated += OnUpgradeBonusActivated;
         }
         
         private void OnUpgradeBonusActivated(UpgradeBonusInfo bonusInfo)
         {
-            UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
-            
             if (bonusInfo.skillBonus.unlockedNormalDame && bonusInfo.skillBonus.unlockedNormalAtkSpe)
             {
                 SetSkillSprite(imgIconBaseSkill1, 1);
