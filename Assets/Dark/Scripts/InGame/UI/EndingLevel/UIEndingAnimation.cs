@@ -22,6 +22,7 @@ namespace InGame.UI.EndingLevel
         {
             cam = Camera.main;
             mainSkeletonHolderOriginalScale = mainSkeletonHolder.localScale;
+            mainSkeleton.UnscaledTime = true;
         }
 
         public void Play()
@@ -46,9 +47,9 @@ namespace InGame.UI.EndingLevel
             }
             
             DOTween.Kill(this);
-            DOTween.Sequence(this)
+            DOTween.Sequence(this).SetUpdate(true)
                 .Append(groupEffect.DOFade(1f, 0.1f))
-                .Append(mainSkeletonHolder.DOScale(0.5f, 0.5f).SetRelative(true))
+                .Append(mainSkeletonHolder.DOScale(0.25f, 0.5f).SetRelative(true))
                 .Join(mainSkeletonHolder.DOLocalMove(Vector3.zero, 0.5f))
                 .AppendCallback(() =>
                 {
@@ -56,7 +57,7 @@ namespace InGame.UI.EndingLevel
                     var trackEntry = mainSkeleton.AnimationState.GetCurrent(0);
                     if (trackEntry != null)
                     {
-                        trackEntry.TimeScale = 1f; // Resume/play the animation
+                        trackEntry.TimeScale = 1f; // Resume the animation
                     }
                 });
         }

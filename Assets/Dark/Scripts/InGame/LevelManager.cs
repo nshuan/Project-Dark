@@ -83,6 +83,8 @@ namespace InGame
             ClearAction();
         }
 
+        #region Core
+        
         public void LoadLevel(int level)
         {
             var levelConfig = LevelManifest.Instance.GetLevel(level);
@@ -122,11 +124,14 @@ namespace InGame
             waveCoroutine = StartCoroutine(IEWave(level.waveInfo));
             
             OnLevelLoaded?.Invoke(level);
+            StartTimer();
         }
 
         public void WinLevel()
         {
             if (IsEndLevel) return;
+            
+            StopTimer();
             
             WealthManager.Instance.Save();
             PlayerDataManager.Instance.CompleteLevel();
@@ -140,6 +145,8 @@ namespace InGame
         public void LoseLevel()
         {
             if (IsEndLevel) return;
+            
+            StopTimer();
             
             if (waveCoroutine != null) StopCoroutine(waveCoroutine);
             
@@ -162,6 +169,8 @@ namespace InGame
             
             CombatActions.Clear();
         }
+        
+        #endregion
         
         #region Waves
 
@@ -243,6 +252,37 @@ namespace InGame
         }
         #endregion
 
+        #region Timer
+
+        // Calculate time played
+
+        private Coroutine coroutineTimer;
+        private float timePlayedInSec;
+        public TimeSpan TimePlayed => TimeSpan.FromSeconds(timePlayedInSec);
+        
+        private void StartTimer()
+        {
+            if (coroutineTimer != null) StopCoroutine(coroutineTimer);
+            timePlayedInSec = 0f;
+            coroutineTimer = StartCoroutine(IELevelTimer());
+        }
+
+        private void StopTimer()
+        {
+            if (coroutineTimer != null) StopCoroutine(coroutineTimer);
+        }
+
+        private IEnumerator IELevelTimer()
+        {
+            while (!IsEndLevel)
+            {
+                // Should ignore timeScale
+                timePlayedInSec += Time.unscaledDeltaTime;
+                yield return null;
+            }
+        }
+        
+        #endregion
 #if UNITY_EDITOR
         private void Update()
         {

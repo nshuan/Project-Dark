@@ -2653,6 +2653,7 @@ GameObject:
   - component: {fileID: 2488447315773211403}
   - component: {fileID: 16429841647788040}
   - component: {fileID: 6140077786530320265}
+  - component: {fileID: 3127135124575652024}
   m_Layer: 5
   m_Name: groupTimePlayed
   m_TagString: Untagged
@@ -2701,6 +2702,19 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &3127135124575652024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4539837302082856683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bd718e0dd3a4cf0aea86970656f2778, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  txtTimePlayed: {fileID: 4821994258339831551}
 --- !u!1 &4618241136246311745
 GameObject:
   m_ObjectHideFlags: 0
@@ -5221,7 +5235,7 @@ MonoBehaviour:
       calculateTangents: 0
       immutableTriangles: 1
   updateTiming: 1
-  unscaledTime: 0
+  unscaledTime: 1
 --- !u!1001 &8309762976704437390
 PrefabInstance:
   m_ObjectHideFlags: 0
