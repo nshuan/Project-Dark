@@ -14,6 +14,7 @@ namespace InGame.UI.EndingLevel
         [SerializeField] private SkeletonGraphic mainSkeleton;
         [SpineGraphicName(nameof(mainSkeleton))]
         [SerializeField] private string animationName;
+        [SerializeField] private ParticleSystem vfxExplode;
 
         private Camera cam;
         private Vector3 mainSkeletonHolderOriginalScale;
@@ -49,8 +50,8 @@ namespace InGame.UI.EndingLevel
             DOTween.Kill(this);
             DOTween.Sequence(this).SetUpdate(true)
                 .Append(groupEffect.DOFade(1f, 0.1f))
-                .Append(mainSkeletonHolder.DOScale(0.25f, 0.5f).SetRelative(true))
-                .Join(mainSkeletonHolder.DOLocalMove(Vector3.zero, 0.5f))
+                // .Append(mainSkeletonHolder.DOScale(0.25f, 0.5f).SetRelative(true))
+                // .Join(mainSkeletonHolder.DOLocalMove(Vector3.zero, 0.5f))
                 .AppendCallback(() =>
                 {
                     // Start playing the animation
@@ -59,6 +60,8 @@ namespace InGame.UI.EndingLevel
                     {
                         trackEntry.TimeScale = 1f; // Resume the animation
                     }
+                    
+                    vfxExplode.Play(true);
                 });
         }
     }

@@ -92,6 +92,11 @@ namespace InGame.UI
         [SerializeField] private CanvasGroup groupBtnBackToTree;
         [SerializeField] private CanvasGroup groupBtnReplay;
 
+        [Header("UI Tween Config")] 
+        [SerializeField] private float durationTitle = 2f;
+        [SerializeField] private float delayBeforeResourceGroup = 1f;
+        [SerializeField] private float durationItemResourceGroup = 0.3f;
+
         private Material matSymbol;
 
         private void ResetPopupUI()
@@ -118,41 +123,38 @@ namespace InGame.UI
                 .AppendCallback((() =>
                 {
                     imgTitleBg.DOFade(1f, 0.3f).SetUpdate(true);
-                    imgTitle.DOFade(1f, 0.7f).SetUpdate(true).SetEase(Ease.OutQuad).SetDelay(0.1f);
-                }))
-                .AppendInterval(0.3f)
-                .AppendCallback(() =>
-                {
+                    imgTitle.DOFade(1f, durationTitle).SetUpdate(true).SetDelay(0.1f);
+                    
                     txtDescription.transform.localPosition += new Vector3(0f, 10f, 0f);
-                    txtDescription.transform.DOLocalMoveY(-10f, 0.5f).SetUpdate(true).SetRelative(true);
-                    txtDescription.DOFade(1f, 0.5f).SetUpdate(true);
-                })
-                .AppendInterval(0.8f)
+                    txtDescription.transform.DOLocalMoveY(-10f, 0.5f).SetUpdate(true).SetDelay(0.5f).SetRelative(true);
+                    txtDescription.DOFade(1f, 0.5f).SetUpdate(true).SetDelay(0.5f);
+                }))
+                .AppendInterval(delayBeforeResourceGroup)
                 .AppendCallback(() =>
                 {
                     txtTitleResourceCollected.transform.localPosition += new Vector3(0f, 10f, 0f);
-                    txtTitleResourceCollected.transform.DOLocalMoveY(-10f, 0.5f).SetUpdate(true).SetRelative(true);
-                    txtTitleResourceCollected.DOFade(1f, 0.5f).SetUpdate(true);
+                    txtTitleResourceCollected.transform.DOLocalMoveY(-10f, durationItemResourceGroup).SetUpdate(true).SetRelative(true);
+                    txtTitleResourceCollected.DOFade(1f, durationItemResourceGroup).SetUpdate(true);
                     
                     groupResourceCollected.transform.localPosition += new Vector3(0f, 10f, 0f);
-                    groupResourceCollected.transform.DOLocalMoveY(-10f, 0.5f).SetUpdate(true).SetRelative(true).SetDelay(0.2f);
-                    groupResourceCollected.DOFade(1f, 0.5f).SetUpdate(true).SetDelay(0.2f);
+                    groupResourceCollected.transform.DOLocalMoveY(-10f, durationItemResourceGroup).SetUpdate(true).SetRelative(true).SetDelay(0.2f);
+                    groupResourceCollected.DOFade(1f, durationItemResourceGroup).SetUpdate(true).SetDelay(0.2f);
                     
                     groupTimePlayed.transform.localPosition += new Vector3(0f, 10f, 0f);
-                    groupTimePlayed.transform.DOLocalMoveY(-10f, 0.5f).SetUpdate(true).SetRelative(true).SetDelay(0.4f);
-                    groupTimePlayed.DOFade(1f, 0.5f).SetUpdate(true).SetDelay(0.4f);
+                    groupTimePlayed.transform.DOLocalMoveY(-10f, durationItemResourceGroup).SetUpdate(true).SetRelative(true).SetDelay(0.4f);
+                    groupTimePlayed.DOFade(1f, durationItemResourceGroup).SetUpdate(true).SetDelay(0.4f);
                 })
-                .AppendInterval(1f)
-                .Append(rectLine.DOScaleX(1f, 0.3f))
+                .AppendInterval(durationItemResourceGroup + 0.4f)
+                .Append(rectLine.DOScaleX(1f, 0.2f))
                 .AppendCallback(() =>
                 {
                     groupBtnBackToTree.transform.localPosition += new Vector3(0f, 10f, 0f);
-                    groupBtnBackToTree.transform.DOLocalMoveY(-10f, 0.5f).SetUpdate(true).SetRelative(true);
-                    groupBtnBackToTree.DOFade(1f, 0.5f).SetUpdate(true);
+                    groupBtnBackToTree.transform.DOLocalMoveY(-10f, durationItemResourceGroup).SetUpdate(true).SetRelative(true);
+                    groupBtnBackToTree.DOFade(1f, durationItemResourceGroup).SetUpdate(true);
                     
                     groupBtnReplay.transform.localPosition += new Vector3(0f, 10f, 0f);
-                    groupBtnReplay.transform.DOLocalMoveY(-10f, 0.5f).SetUpdate(true).SetRelative(true);
-                    groupBtnReplay.DOFade(1f, 0.5f).SetUpdate(true);
+                    groupBtnReplay.transform.DOLocalMoveY(-10f, durationItemResourceGroup).SetUpdate(true).SetRelative(true);
+                    groupBtnReplay.DOFade(1f, durationItemResourceGroup).SetUpdate(true);
                 });
             
             return seq;
