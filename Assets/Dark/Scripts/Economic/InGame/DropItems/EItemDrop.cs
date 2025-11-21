@@ -17,6 +17,7 @@ namespace Economic.InGame.DropItems
         [SerializeField] private GameObject vfxClaim;
         [SerializeField] private GameObject visual;
         [SerializeField] private AudioComponent sfx;
+        [SerializeField] private Transform shadow;
         
         public WealthType kind;
         public int Quantity { get; set; }
@@ -25,8 +26,11 @@ namespace Economic.InGame.DropItems
         public void Drop(Vector2 position)
         {
             visual.gameObject.SetActive(true);
-            var targetPos = position + Random.insideUnitCircle.normalized * 0.6f;
-            transform.DOJump(targetPos, 0.2f, 1, 0.5f).SetTarget(this);
+            var targetPos = position + Random.insideUnitCircle * 0.8f;
+            shadow.SetParent(null);
+            transform.DOJump(targetPos, 0.2f, RandomUtil.Range(1, 4), 0.5f).SetTarget(this)
+                .OnComplete(() => shadow.SetParent(transform));
+            shadow.DOMove((Vector3)targetPos - transform.position + shadow.position, 0.5f);
         }
         
         public void Collect(Transform target, float delay)
@@ -44,6 +48,8 @@ namespace Economic.InGame.DropItems
                 ProjectileCurveManifest.GetAxisCorrectionCurve(0), ProjectileCurveManifest.GetProjectileSpeedCurve(1));
             
             isCollecting = true;
+
+            shadow.DOScale(0f, 0.2f);
         }
 
         private Vector2 nextPosition;
