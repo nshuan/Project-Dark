@@ -36,6 +36,12 @@ namespace InGame
             UpgradeManager.Instance.OnActivated += OnBonusActivated;
         }
 
+        protected override void OnDestroy()
+        {
+            UpgradeManager.Instance.OnActivated -= OnBonusActivated;
+            base.OnDestroy();
+        }
+
         private void OnBonusActivated(UpgradeBonusInfo bonusInfo)
         {
             possibleEffectMap = new Dictionary<PassiveTriggerType, List<PassiveType>>()

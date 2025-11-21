@@ -19,18 +19,18 @@ namespace InGame.UI.CombatSkills
         {
             callbackShowSkill = callbackShow;
             callbackHideSkill = callbackHide;
+            UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
             UpgradeManager.Instance.OnActivated += OnUpgradeBonusActivated;
         }
 
         private void OnDestroy()
         {
+            UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
             CombatActions.OnMoveTower -= OnSkillUsed;
         }
 
         private void OnUpgradeBonusActivated(UpgradeBonusInfo bonusInfo)
         {
-            UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
-
             if (bonusInfo.unlockedMoveToTower is { Count: 2 })
             {
                 SetSkillSprite(imgIconBaseSkill1, bonusInfo.unlockedMoveToTower[0]);

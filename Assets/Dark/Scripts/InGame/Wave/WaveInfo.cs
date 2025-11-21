@@ -47,7 +47,7 @@ namespace InGame
 
         public void ActivateWave()
         {
-            DebugUtility.LogError($"Activate wave {waveIndex}");
+            DebugUtility.LogError($"Activate wave {waveIndex + 1}");
 
             for (var i = 0; i < Gates.Length; i++)
             {
@@ -64,7 +64,7 @@ namespace InGame
             ActivateWave();
             
             yield return new WaitForSeconds(timeToEnd);
-            DebugUtility.LogError($"Wave {waveIndex}: End duration");
+            DebugUtility.LogError($"Wave {waveIndex + 1}: End duration");
             CheckStopAllGate();
         }
         

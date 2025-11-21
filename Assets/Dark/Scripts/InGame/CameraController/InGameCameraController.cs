@@ -20,6 +20,8 @@ namespace InGame.CameraController
         [Header("Easing")]
         [SerializeField] private Ease zoomInEase = Ease.OutQuad;
         [SerializeField] private Ease zoomOutEase = Ease.InQuad;
+
+        private Camera[] subCameras;
         
         // Private fields
         private float originalOrthoSize;
@@ -39,6 +41,8 @@ namespace InGame.CameraController
                 originalOrthoSize = targetCamera.orthographicSize;
                 originalPosition = targetCamera.transform.position;
             }
+
+            subCameras = targetCamera.GetComponentsInChildren<Camera>();
         }
         
         /// <summary>
@@ -130,6 +134,9 @@ namespace InGame.CameraController
             }
             
             targetCamera.orthographicSize = originalOrthoSize;
+            foreach (var subCam in subCameras)
+                subCam.orthographicSize = originalOrthoSize;
+            
             targetCamera.transform.position = originalPosition;
             isZooming = false;
         }
@@ -174,6 +181,8 @@ namespace InGame.CameraController
             
             // Zoom in phase
             currentZoomSequence.Append(targetCamera.DOOrthoSize(zoomSize, duration).SetEase(zoomInEase));
+            foreach (var subCam in subCameras)
+                currentZoomSequence.Join(subCam.DOOrthoSize(zoomSize, duration).SetEase(zoomOutEase));
             currentZoomSequence.Join(targetCamera.transform.DOMove(targetPosition, duration).SetEase(zoomInEase));
             
             // Hold at zoomed state
@@ -184,6 +193,8 @@ namespace InGame.CameraController
             
             // Zoom out phase (reset)
             currentZoomSequence.Append(targetCamera.DOOrthoSize(originalOrthoSize, resetTime).SetEase(zoomOutEase));
+            foreach (var subCam in subCameras)
+                currentZoomSequence.Join(subCam.DOOrthoSize(originalOrthoSize, resetTime).SetEase(zoomOutEase));
             currentZoomSequence.Join(targetCamera.transform.DOMove(originalPosition, resetTime).SetEase(zoomOutEase));
             
             // Wait for sequence to complete
@@ -216,6 +227,8 @@ namespace InGame.CameraController
             
             // Zoom in phase
             currentZoomSequence.Append(targetCamera.DOOrthoSize(zoomAmount, zoomDuration).SetEase(zoomInEase));
+            foreach (var subCam in subCameras)
+                currentZoomSequence.Join(subCam.DOOrthoSize(zoomAmount, zoomDuration).SetEase(zoomOutEase));
             currentZoomSequence.Join(targetCamera.transform.DOMove(targetPosition, zoomDuration).SetEase(zoomInEase));
             
             // Hold at zoomed state
@@ -226,6 +239,8 @@ namespace InGame.CameraController
             
             // Zoom out phase (reset)
             currentZoomSequence.Append(targetCamera.DOOrthoSize(originalOrthoSize, resetDuration).SetEase(zoomOutEase));
+            foreach (var subCam in subCameras)
+                currentZoomSequence.Join(subCam.DOOrthoSize(originalOrthoSize, resetDuration).SetEase(zoomOutEase));
             currentZoomSequence.Join(targetCamera.transform.DOMove(originalPosition, resetDuration).SetEase(zoomOutEase));
             
             // Wait for sequence to complete
