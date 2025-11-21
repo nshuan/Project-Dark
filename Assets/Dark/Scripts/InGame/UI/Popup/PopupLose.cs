@@ -21,7 +21,7 @@ namespace InGame.UI
         [SerializeField] private Button btnReplay;
 
         [Space] [Header("Ending Level")] 
-        [SerializeField] private UITowerDestroyedVersion1 uiEndingLevel;
+        [SerializeField] private UIEndingAnimation uiEndingLevel;
 
         public static event Action onShowPopup;
 
@@ -41,6 +41,7 @@ namespace InGame.UI
             onShowPopup = null;
         }
 
+        [Button]
         private void OnLose()
         {
             UpdateUI();
@@ -117,7 +118,7 @@ namespace InGame.UI
                 .AppendCallback((() =>
                 {
                     imgTitleBg.DOFade(1f, 0.3f);
-                    imgTitle.DOFade(1f, 0.7f).SetDelay(0.1f);
+                    imgTitle.DOFade(1f, 0.7f).SetEase(Ease.OutQuad).SetDelay(0.1f);
                 }))
                 .AppendInterval(0.3f)
                 .AppendCallback(() =>
@@ -126,7 +127,7 @@ namespace InGame.UI
                     txtDescription.transform.DOLocalMoveY(-10f, 0.5f).SetRelative(true);
                     txtDescription.DOFade(1f, 0.5f);
                 })
-                .AppendInterval(1f)
+                .AppendInterval(0.8f)
                 .AppendCallback(() =>
                 {
                     txtTitleResourceCollected.transform.localPosition += new Vector3(0f, 10f, 0f);
