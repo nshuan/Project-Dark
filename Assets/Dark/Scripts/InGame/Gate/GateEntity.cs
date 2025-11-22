@@ -59,7 +59,6 @@ namespace InGame
         public void Deactivate()
         {
             LevelManager.Instance.OnWin -= Deactivate;
-            LevelManager.Instance.OnLose -= Deactivate;
             
             if (spawnCoroutine != null)
                 StopCoroutine(spawnCoroutine);
@@ -78,7 +77,6 @@ namespace InGame
         public void Deactivate(bool hideVisual)
         {
             LevelManager.Instance.OnWin -= Deactivate;
-            LevelManager.Instance.OnLose -= Deactivate;
             
             if (spawnCoroutine != null)
                 StopCoroutine(spawnCoroutine);
@@ -121,7 +119,7 @@ namespace InGame
             orbSpawnTimer = 0f;
             
             LevelManager.Instance.OnWin += Deactivate;
-            LevelManager.Instance.OnLose += Deactivate;
+            LevelManager.Instance.OnLose += OnLose;
         }
 
         private Coroutine delayCoroutine;
@@ -270,6 +268,12 @@ namespace InGame
                     visualCoroutine = StartCoroutine(IEVisual());
                 }
             }
+        }
+
+        private void OnLose()
+        {
+            Deactivate();
+            gameObject.SetActive(false);
         }
     }
 }

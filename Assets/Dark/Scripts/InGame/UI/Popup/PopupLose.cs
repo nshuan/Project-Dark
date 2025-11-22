@@ -45,7 +45,7 @@ namespace InGame.UI
         private void OnLose()
         {
             UpdateUI();
-            uiEndingLevel.Play();
+            // uiEndingLevel.Play();
             ui.DoOpenFadeIn().SetDelay(delayShowPopup).OnComplete(() =>
             {
                 onShowPopup?.Invoke();

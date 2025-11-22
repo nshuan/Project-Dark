@@ -1,4 +1,5 @@
 using System;
+using Coffee.UIExtensions;
 using Dark.Scripts.Utils.Skeleton;
 using DG.Tweening;
 using Sirenix.OdinInspector;
@@ -14,7 +15,7 @@ namespace InGame.UI.EndingLevel
         [SerializeField] private SkeletonGraphic mainSkeleton;
         [SpineGraphicName(nameof(mainSkeleton))]
         [SerializeField] private string animationName;
-        [SerializeField] private ParticleSystem vfxExplode;
+        [SerializeField] private UIParticle vfxExplode;
 
         private Camera cam;
         private Vector3 mainSkeletonHolderOriginalScale;
@@ -61,7 +62,7 @@ namespace InGame.UI.EndingLevel
                         trackEntry.TimeScale = 1f; // Resume the animation
                     }
                     
-                    vfxExplode.Play(true);
+                    vfxExplode.Play();
                 });
         }
     }

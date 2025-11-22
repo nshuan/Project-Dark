@@ -12,6 +12,7 @@ namespace InGame
         [SerializeField] private GameObject groupBgNormal;
         [SerializeField] private GameObject groupBgBoss;
         [SerializeField] private GameObject groupBgBlack;
+        [SerializeField] private GameObject groupBlackAll;
         [SerializeField] private GameObject vfxBgBoss;
         [SerializeField] private Material matBgBoss;
 
@@ -72,6 +73,16 @@ namespace InGame
         public void SetActiveBlackBg(bool active)
         {
             groupBgBlack.SetActive(active);
+            if (active)
+            {
+                groupBgNormal.SetActive(false);
+                groupBgBoss.SetActive(false);
+            }
+        }
+
+        public void SetActiveBlackAll(bool active)
+        {
+            groupBlackAll.SetActive(active);
             if (active)
             {
                 groupBgNormal.SetActive(false);
