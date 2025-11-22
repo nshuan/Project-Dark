@@ -14,6 +14,7 @@ namespace InGame.UI
     public class PopupWin : MonoBehaviour
     {
         [SerializeField] private UIPopup ui;
+        [SerializeField] private float delayShowPopup = 2f;
         
         [Space]
         [SerializeField] private Button btnBackToTree;
@@ -35,7 +36,7 @@ namespace InGame.UI
         private void OnWin()
         {
             UpdateUI();
-            ui.DoOpenFadeIn(0f).OnComplete(() =>
+            ui.DoOpenFadeIn(delayShowPopup).OnComplete(() =>
             {
                 onShowPopup?.Invoke();
                 DoShowUIPopup();

@@ -13,14 +13,8 @@ namespace InGame.Boss
             BackgroundInGame.Instance.SetActiveBlackBg(true);
             CanvasInGame.Instance.HideUI();
             
-            // Đợi chạy xong anim hit rồi mới chạy anim die
-            animController.PlayIdle();
-            InGameCameraController.Instance.ZoomToPosition(transform.position + new Vector3(0, 1, 0));  
-            yield return new WaitForSeconds(0.8f);
-            Time.timeScale = 0.5f;
-            yield return new WaitForSeconds(animController.PlayDie());
+            CombatActions.OnBossKilled?.Invoke(config, transform.position);
             CombatActions.OnCollectResource?.Invoke(this);
-            Time.timeScale = 1;
             OnDead?.Invoke();
             OnDead = null;
             yield return new WaitForSeconds(delayRelease);
