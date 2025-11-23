@@ -62,19 +62,19 @@ namespace InGame
                 inProgress = false;
                 ringMaterial.SetFloat(RadialProgress, 0f);
                 vfxCooldownComplete.Play(true);
-                vfxSelected.SetActive(true);
+                // vfxSelected.SetActive(true);
             }
         }
 
         private void OnMoveTower(float cooldown)
         {
-            if (tower.Id != LevelManager.Instance.CurrentTower.Id)
+            if (tower.Id == LevelManager.Instance.CurrentTower.Id)
             {
-                vfxSelected.SetActive(false);
+                // vfxSelected.SetActive(false);
                 return;
             }
             
-            vfxSelected.SetActive(false);
+            // vfxSelected.SetActive(false);
             ringMaterial.SetFloat(RadialProgress, 0f);
             this.cooldown = cooldown;
             cooldownCounter = cooldown;
