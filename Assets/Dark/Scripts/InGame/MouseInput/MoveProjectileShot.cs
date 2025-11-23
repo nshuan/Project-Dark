@@ -53,6 +53,8 @@ namespace InGame
         private int chargeMaxStep;
         #endregion
 
+        private bool hasSetupCharge;
+
         public MoveProjectileShot()
         {
 
@@ -233,7 +235,7 @@ namespace InGame
 
         public void OnHoldStarted()
         {
-            if (!CanShootCharge) return;
+            // if (!CanShootCharge) return;
             if (isCharging) return; 
             
             ResetChargeVariable();
@@ -245,8 +247,7 @@ namespace InGame
 
             if (isCharging)
             {
-                InputManager.PlayerVisual.UpdateChargeScale(1f);
-                InputManager.PlayerVisual.PlayCharge();
+                hasSetupCharge = false;
             }
         }
 
@@ -318,6 +319,16 @@ namespace InGame
             {
                 if (isCharging && chargeMaxStep > 0 && chargeStep < chargeMaxStep)
                 {
+                    if (hasSetupCharge == false)
+                    {
+                        hasSetupCharge = true;
+                        InputManager.MouseAutoAttack.OnHoldStarted();
+                        InputManager.PlayerVisual.UpdateChargeScale(1f);
+                        InputManager.PlayerVisual.PlayCharge();
+                        cursor.UpdateScale(0f);
+                        cursor.UpdateCooldown(false, 0f);
+                    }
+                    
                     if (chargeTimer < chargeStepTime)
                     {
                         chargeTimer += Time.deltaTime;

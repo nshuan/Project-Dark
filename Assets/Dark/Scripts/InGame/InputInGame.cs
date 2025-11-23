@@ -31,6 +31,8 @@ namespace InGame
         private MonoCursor cursor;
         private PointerEventData.InputButton pressingButton = PointerEventData.InputButton.Middle;
 
+        public IMouseInput MouseAutoAttack => mouseAutoAttack;
+        
         #region Move Towers
 
         [Space, Header("Move Towers")] 
@@ -161,7 +163,6 @@ namespace InGame
                 {
                     IsMousePressingStarted = false;
                     IsMousePressing = true;
-                    if (mouseInput.CanCharge) mouseAutoAttack?.OnHoldStarted();
                     mouseInput?.OnHoldStarted();
                 }
             }

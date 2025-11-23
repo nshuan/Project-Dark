@@ -109,10 +109,13 @@ namespace InGame
 
         public void OnHoldReleased()
         {
-            CanShoot = true;
-            cdCounter = Cooldown;
-            cursor.SetAuto(true);
-            cursor.UpdateCooldown(false, 0f);
+            if (!CanShoot)
+            {
+                CanShoot = true;
+                cdCounter = Cooldown;
+                cursor.SetAuto(true);
+                cursor.UpdateCooldown(false, 0f);
+            }
         }
 
         public void ResetChargeVariable()
