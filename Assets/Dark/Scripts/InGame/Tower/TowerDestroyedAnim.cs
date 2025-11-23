@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using Dark.Scripts.Utils;
 using Dark.Scripts.Utils.Skeleton;
+using DG.Tweening;
 using InGame.UI;
 using Spine;
 using Spine.Unity;
@@ -26,10 +28,10 @@ namespace InGame
 
         private void OnLose()
         {
-            Play();
+            StartCoroutine(IEPlay());
         }
 
-        public void Play()
+        public IEnumerator IEPlay()
         {
             BackgroundInGame.Instance.SetActiveBlackAll(true);
             CanvasInGame.Instance.HideUI();
@@ -55,6 +57,11 @@ namespace InGame
                     break;
                 }
             }
+
+            yield return DOTween.Sequence(mainSkeletonHolder)
+                .Append(mainSkeletonHolder.DOMove(new Vector3(0f, -1.5f, 0f), 0.5f).SetEase(Ease.OutQuad))
+                .Join(mainSkeletonHolder.DOScale(1.5f, 0.5f))
+                .WaitForCompletion();
             
             trackEntry = mainSkeleton.AnimationState.GetCurrent(0);
             if (trackEntry != null)
