@@ -18,6 +18,9 @@ namespace Economic.InGame.DropItems
         [SerializeField] private GameObject visual;
         [SerializeField] private AudioComponent sfx;
         [SerializeField] private Transform shadow;
+        [SerializeField] private float minDistanceToTower = 1.5f;
+        [SerializeField] private float dropSpanAngleToExcludeTower = 240f;
+        [SerializeField] private float dropRange = 0.8f;
         
         public WealthType kind;
         public int Quantity { get; set; }
@@ -26,7 +29,21 @@ namespace Economic.InGame.DropItems
         public void Drop(Vector2 position)
         {
             visual.gameObject.SetActive(true);
-            var targetPos = position + Random.insideUnitCircle * 0.8f;
+
+            var calculatedTargetPosition = false;
+            var targetPos = position;
+            foreach (var tower in LevelManager.Instance.Towers)
+            {
+                if (Vector2.Distance(tower.transform.position, position) < minDistanceToTower + dropRange)
+                {
+                    targetPos = position + RandomUtil.InsideUnitSpan(position - (Vector2)tower.transform.position, dropSpanAngleToExcludeTower);
+                    calculatedTargetPosition = true;
+                    break;
+                }
+            }
+            if (!calculatedTargetPosition)
+                targetPos = position + Random.insideUnitCircle * dropRange;
+            
             var dropJumps = RandomUtil.Range(1, 4);
             var dropDuration = Mathf.Max(dropJumps * 0.2f, 0.36f);
             shadow.SetParent(null);
