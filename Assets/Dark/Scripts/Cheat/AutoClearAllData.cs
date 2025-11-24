@@ -10,7 +10,7 @@ namespace Cheat
         private const int DataVersion = 1;
         private const string Key = "DataVersion";
 
-        private void Awake()
+        private void Start()
         {
             var cachedVersion = 0;
             if (DataHandler.Exist<int>(Key))

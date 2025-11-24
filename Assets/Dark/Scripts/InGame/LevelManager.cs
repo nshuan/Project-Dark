@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Core;
 using Data;
 using Economic;
+using InGame.ChargeConfig;
 using InGame.ConfigManager;
 using InGame.Upgrade;
 using Sirenix.OdinInspector;
@@ -21,7 +23,7 @@ namespace InGame
         public MoveTowersConfig dashConfig;
 
         [SerializeField] private PlayerSpawner playerSpawner;
-        [SerializeField] private GateEntity gatePrefab;
+        public GateEntity gatePrefab;
         
         [SerializeField] private TowerEntity[] towers;
         public TowerEntity[] Towers => towers;
@@ -30,23 +32,19 @@ namespace InGame
         {
             get
             {
-                currentTowerIndex = Math.Clamp(currentTowerIndex, 0, towers.Length);
+                currentTowerIndex = Math.Clamp(currentTowerIndex, 0, towers.Length - 1);
                 return towers[currentTowerIndex];
             }
         }
-        
-        private PlayerSkillConfig skillConfig;
-        public PlayerSkillConfig SkillConfig => skillConfig;
    
         public LevelConfig Level { get; private set; }
-        public PlayerStats PlayerStats => playerStats;
         private bool IsEndLevel { get; set; }
         
         public PlayerCharacter Player { get; set; }
 
         #region Upgrade
 
-        [ReadOnly, NonSerialized, OdinSerialize] private UpgradeBonusInfo bonusInfo;
+        [ReadOnly, NonSerialized, OdinSerialize] private UpgradeBonusInfo bonusInfo = new UpgradeBonusInfo();
         
         #endregion
         
@@ -85,6 +83,8 @@ namespace InGame
             ClearAction();
         }
 
+        #region Core
+        
         public void LoadLevel(int level)
         {
             var levelConfig = LevelManifest.Instance.GetLevel(level);
@@ -95,19 +95,27 @@ namespace InGame
         public void LoadLevel(LevelConfig level)
         {
             Level = level;
+            
             UpgradeManager.Instance.ActivateTree(ref bonusInfo);
             LevelUtility.BonusInfo = bonusInfo;
+            LevelUtility.PlayerStats = playerStats;
+            LevelUtility.CurrentSkill = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
+            LevelUtility.ChargeConfigMap = new Dictionary<ChargeType, PlayerChargeConfig>()
+            {
+                { ChargeType.Bullet, PlayerChargeManifest.Get(ChargeType.Bullet) },
+                { ChargeType.Size, PlayerChargeManifest.Get(ChargeType.Size) }
+            };
+            
             EnemyManager.Instance.Initialize();
             winLoseManager = new WinLoseManager();
             IsEndLevel = false;
             
             InitTowers();
+            currentTowerIndex = -1;
             TeleportTower(0);
-
-            skillConfig = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
             
             if (Player != null) Destroy(Player.gameObject);
-            Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)skillConfig.skillId);
+            Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)LevelUtility.CurrentSkill.skillId);
             Player.transform.position = CurrentTower.transform.position + CurrentTower.GetTowerHeight();
             
             // Start waves
@@ -116,11 +124,14 @@ namespace InGame
             waveCoroutine = StartCoroutine(IEWave(level.waveInfo));
             
             OnLevelLoaded?.Invoke(level);
+            StartTimer();
         }
 
         public void WinLevel()
         {
             if (IsEndLevel) return;
+            
+            StopTimer();
             
             WealthManager.Instance.Save();
             PlayerDataManager.Instance.CompleteLevel();
@@ -134,6 +145,8 @@ namespace InGame
         public void LoseLevel()
         {
             if (IsEndLevel) return;
+            
+            StopTimer();
             
             if (waveCoroutine != null) StopCoroutine(waveCoroutine);
             
@@ -153,7 +166,11 @@ namespace InGame
             OnWaveStart = null;
             OnBossWaveStart = null;
             onWaveEnded = null;
+            
+            CombatActions.Clear();
         }
+        
+        #endregion
         
         #region Waves
 
@@ -168,7 +185,7 @@ namespace InGame
             while (currentWaveIndex < waves.Length)
             {
                 var currentWave = waves[currentWaveIndex];
-                currentWave.SetupWave(gatePrefab, Towers, Level.levelExpRatio, Level.levelDarkRatio, OnWaveForceStop);
+                currentWave.SetupWave(gatePrefab, Towers, Level.levelExpRatio, Level.levelDarkRatio, Level.levelDarkUnitValue, OnWaveForceStop);
                 OnWaveStart?.Invoke(currentWaveIndex, currentWave.timeToEnd);
                 if (currentWave.IsBossWave) OnBossWaveStart?.Invoke();
                 currentWaveIndex += 1;
@@ -186,8 +203,8 @@ namespace InGame
             }
 
             // Nếu wave stop vì hết thời gian thì invoke hàm này
-            if (reason == WaveEndReason.EndTime)
-                onWaveEnded?.Invoke(currentWaveIndex - 1, reason);
+            // if (reason == WaveEndReason.EndTime)
+            onWaveEnded?.Invoke(currentWaveIndex - 1, reason);
             
             winLoseManager.CheckWin(this);
                 
@@ -205,7 +222,7 @@ namespace InGame
         {
             for (var i = 0; i < towers.Length; i++)
             {
-                towers[i].Initialize(i, LevelUtility.GetTowerHp(playerStats.hp));
+                towers[i].Initialize(i, LevelUtility.GetTowerHp());
                 towers[i].OnDestroyed += OnTowerDestroyed;
             }
         }
@@ -234,6 +251,45 @@ namespace InGame
             OnChangeTower?.Invoke(CurrentTower);
         }
         #endregion
+
+        #region Timer
+
+        // Calculate time played
+
+        private Coroutine coroutineTimer;
+        private float timePlayedInSec;
+        public TimeSpan TimePlayed => TimeSpan.FromSeconds(timePlayedInSec);
+        
+        private void StartTimer()
+        {
+            if (coroutineTimer != null) StopCoroutine(coroutineTimer);
+            timePlayedInSec = 0f;
+            coroutineTimer = StartCoroutine(IELevelTimer());
+        }
+
+        private void StopTimer()
+        {
+            if (coroutineTimer != null) StopCoroutine(coroutineTimer);
+        }
+
+        private IEnumerator IELevelTimer()
+        {
+            while (!IsEndLevel)
+            {
+                // Should ignore timeScale
+                timePlayedInSec += Time.unscaledDeltaTime;
+                yield return null;
+            }
+        }
+        
+        #endregion
+#if UNITY_EDITOR
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.K)) WinLevel();
+            else if (Input.GetKeyDown(KeyCode.L)) LoseLevel();
+        }
+#endif
 
         public LevelConfig testLevel;
         [Button]

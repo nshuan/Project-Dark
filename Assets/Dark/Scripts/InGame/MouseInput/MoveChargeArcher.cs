@@ -31,7 +31,8 @@ namespace InGame
             p.RangeCenter = spawnPos;
             p.gameObject.SetActive(true);
             projectiles.Add(p);
-            spawnCoroutines.Add(StartCoroutine(IESpawnProjectile(p, aimDirection.normalized)));
+            spawnCoroutines.Add(StartCoroutine(IESpawnProjectile(TotalBulletAdded, p, aimDirection.normalized)));
+            TotalBulletAdded += 1;
         }
 
         public override void AddSize(float size)
@@ -42,21 +43,22 @@ namespace InGame
             }
         }
 
-        public override void Attack(Action<ProjectileEntity, Vector2> actionSetupProjectile)
+        public override void Attack(Action<ProjectileEntity, Vector2, float> actionSetupProjectile)
         {
             for (var i = 0; i < projectiles.Count; i++)
             {
                 StopCoroutine(spawnCoroutines[i]);
-                actionSetupProjectile?.Invoke(projectiles[i], Cam.ScreenToWorldPoint(Input.mousePosition) - projectiles[i].transform.position);
+                actionSetupProjectile?.Invoke(projectiles[i], Cam.ScreenToWorldPoint(Input.mousePosition) - projectiles[i].transform.position, i * 0.15f);
             }
 
             projectiles = new List<ProjectileEntity>();
             spawnCoroutines = new List<Coroutine>();
+            TotalBulletAdded = 0;
         }
 
-        private IEnumerator IESpawnProjectile(ProjectileEntity projectile, Vector2 direction)
+        private IEnumerator IESpawnProjectile(int index, ProjectileEntity projectile, Vector2 direction)
         {
-            var spawnDirection = Quaternion.Euler(0f, 0f, Random.Range(-45f, 45f)) * direction * Random.Range(0.5f, 0.6f);
+            var spawnDirection = Quaternion.Euler(0f, 0f, RandomUtil.Range(-45f, 45f)) * direction * RandomUtil.Range(0.5f, 0.6f);
             var timer = 0f;
             while (timer < spawnMaxDuration)
             {

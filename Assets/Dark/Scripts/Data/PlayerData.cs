@@ -28,6 +28,8 @@ namespace Data
         {
             level = 0;
             grade = 1;
+            passedDay = 1;
+            timePlayedMilli = 0;
         }
         
     }

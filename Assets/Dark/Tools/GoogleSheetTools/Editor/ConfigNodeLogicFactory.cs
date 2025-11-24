@@ -105,9 +105,9 @@ namespace Dark.Tools.GoogleSheetTool
         UnlockDash,
         UnlockFlash,
         UnlockCounter,
-        UnlockAttackPassive,
-        UnlockChargePassive,
-        UnlockMovePassive,
+        UnlockAttackPassive, 
+        UnlockChargePassive, 
+        UnlockMovePassive, 
         UnlockCounterPassive,
         UnlockChargeSize,
         UnlockChargeBullet,
@@ -131,7 +131,7 @@ namespace Dark.Tools.GoogleSheetTool
         TempBonusDamage,
         TempBonusCriticalRate,
         TempBonusCriticalDamage,
-        BonusChargeTime,
+        BonusChargeTime, // Bonus for all type of charge
         BonusDashCooldown,
         BonusDashSize,
         BonusDashDamage,
@@ -144,6 +144,13 @@ namespace Dark.Tools.GoogleSheetTool
         BonusPassiveSize,
         BonusChargeSize,
         BonusChargeBullet,
-        BonusSkillAttackRange
+        BonusSkillAttackRange,
+        TempBonusAttackSpeedDuration,
+        TempBonusDamageDuration,
+        TempBonusCriticalRateDuration,
+        TempBonusCriticalDamageDuration,
+        UnlockNormalAtkSpe,
+        UnlockNormalDame,
+        BonusPassiveChance
     }
 }

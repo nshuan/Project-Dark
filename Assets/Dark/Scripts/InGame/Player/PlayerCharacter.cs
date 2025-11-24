@@ -21,7 +21,13 @@ namespace InGame
         [SerializeField] private Vector2 offset;
         
         private bool blockRotate;
-        
+
+        private void Awake()
+        {
+            shotRadius.SetParent(null);
+            shotRadius.localScale = Vector3.zero;
+        }
+
         // Return the duration to finish the 1st animation phase, when the skill is actually strike
         public float PlayShoot(Vector2 target)
         {
@@ -36,6 +42,11 @@ namespace InGame
         public void PlayCharge()
         {
             animController.PlayCharge();
+        }
+
+        public void UpdateChargeScale(float scale)
+        {
+            animController.UpdateChargeScale(scale);
         }
 
         public void EndChargeAndShoot()
@@ -166,19 +177,31 @@ namespace InGame
         #endregion
         
         [Space] [Header("Debug")] public Transform shotRadius;
-        public void UpdateShotRadius(Vector2 rangeCenter, float radius, bool immediatelly = true)
+        public void UpdateShotRadius(float radius, bool immediatelly = true)
         {
             if (immediatelly)
             {
-                shotRadius.position = rangeCenter;
                 shotRadius.localScale = new Vector3(radius, radius, radius);
             }
             else
             {
                 DOTween.Kill(shotRadius);
-                shotRadius.position = rangeCenter;
                 shotRadius.DOScale(radius, 0.3f).SetTarget(shotRadius).SetDelay(0.3f);
             }
+        }
+
+        public void HideShotRadius()
+        {
+            DOTween.Kill(shotRadius);
+            shotRadius.DOScale(0f, 0.2f).SetTarget(shotRadius).SetEase(Ease.InQuad);
+        }
+
+        public void ShowShotRadius(Vector2 position, float radius)
+        {
+            DOTween.Kill(shotRadius);
+            shotRadius.localScale = Vector3.zero;
+            shotRadius.position = position;
+            UpdateShotRadius(radius, false);
         }
     }
 }

@@ -40,6 +40,9 @@ public static class UIPopupUtility
         {
             targetCanvasGroup = target.gameObject.AddComponent<CanvasGroup>();
         }
+        
+        popup.groupBlockRaycast.alpha = 0f;
+        popup.groupBlockRaycast.gameObject.SetActive(true);
 
         DOTween.Kill(popup);
         return DOTween.Sequence(popup).SetUpdate(true)
@@ -49,8 +52,6 @@ public static class UIPopupUtility
                 targetCanvasGroup.alpha = 0.3f;
                 target.gameObject.SetActive(true);
                 popup.gameObject.SetActive(true);
-                popup.groupBlockRaycast.alpha = 0f;
-                popup.groupBlockRaycast.gameObject.SetActive(true);
             })
             .Append(targetCanvasGroup.DOFade(1f, 0.3f))
             .Join(popup.groupBlockRaycast.DOFade(1f, 0.3f));

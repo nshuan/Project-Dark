@@ -19,7 +19,7 @@ namespace InGame
         
         public override void Initialize()
         {
-            cameraShakeEffect = new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera, Duration = 0.5f, Magnitude = 0.2f};
+            cameraShakeEffect = new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera, Duration = 0.4f, Magnitude = 0.1f};
             hits = new RaycastHit2D[10];
         }
         
@@ -35,7 +35,7 @@ namespace InGame
                         targetLayer);
                     if (count > 0)
                     {
-                        if (hits[Random.Range(0, count)].transform.TryGetComponent(out triggerredEnemy))
+                        if (hits[RandomUtil.Range(0, count)].transform.TryGetComponent(out triggerredEnemy))
                         {
                             VfxThunderPool.Instance.GetAndRelease(null, triggerredEnemy.transform.position, 0f, 1f);
                             if (triggerredEnemy.PercentageHpLeft < value)
@@ -44,7 +44,7 @@ namespace InGame
                             }
                             else
                             {
-                                triggerredEnemy.Damage((int)(triggerredEnemy.MaxHealth * value), triggerredEnemy.transform.position, stagger);
+                                triggerredEnemy.Damage((int)(triggerredEnemy.MaxHealth * value), triggerredEnemy.transform.position, stagger, DamageType.Normal);
                             }
                             sfx.Play();
                         }
@@ -72,7 +72,7 @@ namespace InGame
                         }
                         else
                         {
-                            triggerredEnemy.Damage((int)(triggerredEnemy.MaxHealth * value / 100), triggerredEnemy.transform.position, stagger);
+                            triggerredEnemy.Damage((int)(triggerredEnemy.MaxHealth * value / 100), triggerredEnemy.transform.position, stagger, DamageType.Normal);
                         }
                         sfx.Play();
                     }

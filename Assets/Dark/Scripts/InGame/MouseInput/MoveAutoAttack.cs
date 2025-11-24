@@ -22,8 +22,6 @@ namespace InGame
         protected float ActivateDuration { get; set; } = 1f;
         protected float cdCounter;
 
-        private bool isActivating;
-
         public MoveAutoAttack()
         {
 
@@ -38,14 +36,11 @@ namespace InGame
 
         public void Initialize(InputInGame manager, MoveChargeController chargeController)
         {
-            CanShoot = false;
-            cursor.SetAuto(false);
+            CanShoot = GameConst.DefaultAutoAttack;
+            cursor.SetAuto(GameConst.DefaultAutoAttack);
 
             InputManager = manager;
-            Cooldown = LevelUtility.GetSkillCooldown(
-                InputManager.CurrentSkillConfig.skillId,
-                InputManager.PlayerStats.cooldown,
-                InputManager.CurrentSkillConfig.cooldown);
+            Cooldown = LevelUtility.GetSkillCooldown(false);
             ActivateDuration = 1f;
         }
         
@@ -54,33 +49,23 @@ namespace InGame
             if (!CanShoot) return;
             
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
-            var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(
-                InputManager.CurrentSkillConfig.skillId,
-                InputManager.PlayerStats.damage,
-                InputManager.CurrentSkillConfig.damePerBullet,
-                InputManager.PlayerStats.criticalDamage,
-                1f);
-            var critRate = LevelUtility.GetCriticalRate(InputManager.PlayerStats.criticalRate);
-            var bulletNum = LevelUtility.GetNumberOfBullets(InputManager.CurrentSkillConfig.skillId, InputManager.CurrentSkillConfig.numberOfBullets, 0);
-            var skillSize = LevelUtility.GetSkillSize(InputManager.CurrentSkillConfig.skillId,
-                InputManager.CurrentSkillConfig.size,
-                1f);
-            var skillRange = LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId,
-                InputManager.CurrentSkillConfig.range,
+            var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(1f);
+            var critRate = LevelUtility.GetCriticalRate();
+            var bulletNum = LevelUtility.GetNumberOfBullets( 0);
+            var skillSize = LevelUtility.GetSkillSize(1f);
+            var skillRange = LevelUtility.GetSkillRange(
                 1f,
-                tempMousePos - LevelManager.Instance.CurrentTower.GetBaseCenter());
+                Vector2.right);
             var maxHit = 1 + LevelUtility.BonusInfo.skillBonus.bulletMaxHitPlus;
-            var stagger = LevelUtility.GetBulletStagger(InputManager.CurrentSkillConfig.skillId,
-                InputManager.CurrentSkillConfig.stagger);
-
-            InputManager.BlockTeleport = true;
+            var stagger = LevelUtility.GetBulletStagger();
+            
             var delayShot = InputManager.PlayerVisual.PlayShoot(worldMousePosition);
             InputManager.DelayCall(delayShot, () =>
             {
                 InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(skillRange);
                 
-                InputManager.CurrentSkillConfig.Shoot(
-                    InputManager.CurrentSkillConfig.projectiles[PlayerProjectileType.Normal],
+                LevelUtility.CurrentSkill.Shoot(
+                    LevelUtility.CurrentSkill.projectiles[PlayerProjectileType.Normal],
                     InputManager.ProjectileSpawnPos.position,
                     LevelManager.Instance.CurrentTower.GetBaseCenter(),
                     tempMousePos,
@@ -95,8 +80,6 @@ namespace InGame
                     false,
                     LevelUtility.BonusInfo.skillBonus.GetProjectileActivateActions(false),
                     LevelUtility.BonusInfo.skillBonus.GetProjectileHitActions(false));
-                
-                InputManager.BlockTeleport = false;
             });
 
             CombatActions.OnAttackNormal?.Invoke(Cooldown);
@@ -104,7 +87,8 @@ namespace InGame
             cdCounter = Cooldown;
             
             // Do cursor effect
-            cursor.UpdateBulletAdd(false);
+            cursor.UpdateScale(0f);
+            cursor.UpdateChargeUnitAdd(false);
             cursor.UpdateCooldown(false, 0f);
             DOTween.Complete(this);
             var seq = DOTween.Sequence(this);
@@ -119,45 +103,37 @@ namespace InGame
 
         public void OnHoldStarted()
         {
-            if (CanShoot) return;
-            isActivating = true;
-            cdCounter = ActivateDuration;
+            CanShoot = false;
+            cursor.SetAuto(false);
         }
 
         public void OnHoldReleased()
         {
-            if (CanShoot) return;
-            isActivating = false;
-            cursor.UpdateCooldown(false, 0f);
+            if (!CanShoot)
+            {
+                CanShoot = true;
+                cdCounter = Cooldown;
+                cursor.SetAuto(true);
+                cursor.UpdateCooldown(false, 0f);
+            }
         }
 
         public void ResetChargeVariable()
         {
-            CanShoot = false;
-            isActivating = false;
-            cursor.SetAuto(false);
+            CanShoot = GameConst.DefaultAutoAttack;
+            cursor.SetAuto(GameConst.DefaultAutoAttack);
         }
+
+        public bool CanCharge => false;
 
         public bool CanMove => true;
 
         public virtual void OnUpdate()
         {
-            if (!CanShoot && !isActivating) return;
+            if (cdCounter >= 0) cdCounter -= Time.deltaTime;
             
-            if (isActivating)
-            {
-                cdCounter -= Time.deltaTime;
-                cursor.UpdateCooldown(true, 1 - Mathf.Clamp(cdCounter / ActivateDuration, 0f, 1f));
-                if (cdCounter <= 0f)
-                {
-                    isActivating = false;
-                    CanShoot = true;
-                    cursor.SetAuto(true);
-                }
-                
-                return;
-            }
-            
+            if (!CanShoot) return;
+
             worldMousePosition = Cam.ScreenToWorldPoint(Input.mousePosition);
             
             mousePosition = Input.mousePosition;
@@ -165,10 +141,14 @@ namespace InGame
             cursorRect.position = mousePosition;    
             InputManager.PlayerVisual.SetDirection(worldMousePosition);
             
-            cdCounter -= Time.deltaTime;
             cursor.UpdateCooldown(true, 1 - Mathf.Clamp(cdCounter / Cooldown, 0f, 1f));
             if (cdCounter <= 0)
                 OnMouseClick();
+        }
+
+        public void Deactivate()
+        {
+            
         }
 
         public virtual void OnDrawGizmos()

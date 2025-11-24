@@ -20,7 +20,7 @@ namespace InGame
             tower = targetTower;
             regenAmount = amount;
 
-            EnemyManager.Instance.OnOneEnemyDead += OnOneEnemyKilled;
+            CombatActions.OnOneEnemyDead += OnOneEnemyKilled;
         }
 
         private void OnOneEnemyKilled(EnemyEntity enemy)

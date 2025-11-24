@@ -15,7 +15,7 @@ namespace Dark.Scripts.Cursor
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (scene.name == "BaseLevel")
+            if (scene.name == "BaseLevel" || scene.name == "CheatLevel")
             {
                 SetCursorInGame();
             }

@@ -16,8 +16,6 @@ namespace InGame
 		[SerializeField] private CanvasGroup motionBlur;
         public float holdThreshold = 0.5f;
         public PlayerCharacter PlayerVisual { get; set; }
-        public PlayerStats PlayerStats { get; set; }
-        public PlayerSkillConfig CurrentSkillConfig { get; set; }
         public Transform ProjectileSpawnPos => PlayerVisual.transform;
         private List<MoveTowersConfig> availableTeleConfigs;
         private bool BlockAllInput { get; set; }
@@ -30,15 +28,15 @@ namespace InGame
         private IMoveTowerMouseInput teleMouseInput;
         private IMoveMouseInput collectorMouseInput;
         private IMouseInput mouseAutoAttack;
-        public bool enableCollectorMouse;
         private MonoCursor cursor;
         private PointerEventData.InputButton pressingButton = PointerEventData.InputButton.Middle;
 
+        public IMouseInput MouseAutoAttack => mouseAutoAttack;
+        
         #region Move Towers
 
         [Space, Header("Move Towers")] 
         private KeyCode activateTeleKey = KeyCode.LeftShift;
-        private bool teleKeyPressed;
 
         #endregion
 
@@ -56,7 +54,6 @@ namespace InGame
             LevelManager.Instance.OnLevelLoaded += (level) =>
             {
                 PlayerVisual = LevelManager.Instance.Player;
-                PlayerStats = LevelManager.Instance.PlayerStats;
                 
                 availableTeleConfigs = new List<MoveTowersConfig>();
                 if (LevelUtility.BonusInfo.unlockedMoveToTower == null || LevelUtility.BonusInfo.unlockedMoveToTower.Count == 0)
@@ -69,21 +66,21 @@ namespace InGame
                         else if (moveId == 2) availableTeleConfigs.Add(LevelManager.Instance.dashConfig);
                     }
                 }
-                teleMouseInput = new MoveToTower(cam, PlayerVisual, availableTeleConfigs[0], availableTeleConfigs.Count > 1 ? availableTeleConfigs[1] : null, LevelManager.Instance.Towers, LevelManager.Instance.CurrentTower.Id, this.TryDelayCall);
+                teleMouseInput = new MoveToTower(cam, this, PlayerVisual, availableTeleConfigs[0], availableTeleConfigs.Count > 1 ? availableTeleConfigs[1] : null, LevelManager.Instance.Towers, LevelManager.Instance.CurrentTower.Id, this.TryDelayCall);
+                teleMouseInput.OnActivated();
                 BlockAllInput = false;
                 
                 // Setup skill config and mouse input
-                CurrentSkillConfig = LevelManager.Instance.SkillConfig;
-                CursorRangeRadius = CurrentSkillConfig.range;
+                CursorRangeRadius = LevelUtility.CurrentSkill.range;
             
                 if (mouseInput != null)
                 {
                     mouseInput.Dispose();
                     mouseInput = null;
                 }
-                cursor ??= ShotCursorManager.Instance.GetPrefab(CurrentSkillConfig.shootLogic.cursorType, canvas.transform);
+                cursor ??= ShotCursorManager.Instance.GetPrefab(LevelUtility.CurrentSkill.shootLogic.cursorType, canvas.transform);
                 cursor.gameObject.SetActive(true);
-                mouseInput = ShotCursorManager.Instance.GetCursorMoveLogic(CurrentSkillConfig.shootLogic.cursorType, cam, cursor);
+                mouseInput = ShotCursorManager.Instance.GetCursorMoveLogic(LevelUtility.CurrentSkill.shootLogic.cursorType, cam, cursor);
                 mouseInput.Initialize(this, chargeControllerArcher);
                 mouseInput.ResetChargeVariable();
 
@@ -94,9 +91,6 @@ namespace InGame
                 }
                 mouseAutoAttack = new MoveAutoAttack(cam, cursor);
                 mouseAutoAttack.Initialize(this, null);
-                
-                if (enableCollectorMouse)
-                    collectorMouseInput = new MoveCollectResource(cam, PlayerVisual.transform);
                 
                 LevelManager.Instance.OnWin += OnLevelCompleted;
                 LevelManager.Instance.OnLose += OnLevelCompleted;
@@ -113,7 +107,8 @@ namespace InGame
             BlockAllInput = true;
             IsMousePressing = false;
             IsMousePressingStarted = false;
-            teleKeyPressed = false;
+            
+            teleMouseInput.Deactivate();
 
             ResetMotionBlur();
             ResetTimeScale();
@@ -128,32 +123,34 @@ namespace InGame
 
             if (!BlockTeleport)
             {
-                if (Input.GetKey(activateTeleKey))
-                {
-                    if (teleMouseInput.CanMove)
-                    {
-                        IsMousePressingStarted = false;
-                        IsMousePressing = false;
-                        mouseInput.ResetChargeVariable();
-                        mouseInput.OnHoldReleased();
-                        teleKeyPressed = true;
-                        
-                        teleMouseInput.OnActivated();
-                    
-                        DOTween.Kill(motionBlur);
-                        DOTween.Sequence(motionBlur).AppendCallback(() =>
-                            {
-                                foreach (var tower in LevelManager.Instance.Towers)
-                                {
-                                    tower.OnMotionBlur();
-                                }
-                                PlayerVisual.OnMotionBlur();
-                            
-                                motionBlur.gameObject.SetActive(true);
-                            }).Append(motionBlur.DOFade(1f, 0.16f))
-                            .OnComplete(FreezeTimeScale);
-                    }
-                }
+                // if (Input.GetKey(activateTeleKey))
+                // {
+                //     if (teleMouseInput.CanMove)
+                //     {
+                //         ResetMousePressing();
+                //         
+                //         IsMousePressingStarted = false;
+                //         IsMousePressing = false;
+                //         mouseInput.ResetChargeVariable();
+                //         mouseInput.OnHoldReleased();
+                //         teleKeyPressed = true;
+                //         
+                //         teleMouseInput.OnActivated();
+                //     
+                //         DOTween.Kill(motionBlur);
+                //         DOTween.Sequence(motionBlur).AppendCallback(() =>
+                //             {
+                //                 foreach (var tower in LevelManager.Instance.Towers)
+                //                 {
+                //                     tower.OnMotionBlur();
+                //                 }
+                //                 PlayerVisual.OnMotionBlur();
+                //             
+                //                 motionBlur.gameObject.SetActive(true);
+                //             }).Append(motionBlur.DOFade(1f, 0.16f))
+                //             .OnComplete(FreezeTimeScale);
+                //     }
+                // }
             }
             
             if (IsMousePressingStarted)
@@ -178,7 +175,6 @@ namespace InGame
             mouseInput?.OnUpdate();
             mouseAutoAttack?.OnUpdate();
             teleMouseInput?.OnUpdate();
-            if (enableCollectorMouse) collectorMouseInput?.OnUpdate();
         }
 
         private void OnDrawGizmos()
@@ -196,26 +192,11 @@ namespace InGame
             
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                // Nếu đang giữ chuột phải thì release luôn
-                if (pressingButton == PointerEventData.InputButton.Right)
-                    mouseAutoAttack.OnHoldReleased();
-                
                 pressingButton = PointerEventData.InputButton.Left;
                 
-                if (teleKeyPressed) return;
-                
-                // Reset luôn auto attack, nếu ang press tele key thì thôi
-                mouseAutoAttack.ResetChargeVariable();
-                   
                 holdDelayTime = 0f;
                 IsMousePressing = false;
                 IsMousePressingStarted = true;
-            }
-            else if (eventData.button == PointerEventData.InputButton.Right)
-            {
-                if (teleKeyPressed) return;
-                pressingButton = PointerEventData.InputButton.Right;
-                mouseAutoAttack.OnHoldStarted();
             }
         }
 
@@ -228,47 +209,24 @@ namespace InGame
                 if (pressingButton == PointerEventData.InputButton.Left)
                     pressingButton = PointerEventData.InputButton.Middle;
                 
-                if (teleKeyPressed)
-                {
-                    teleKeyPressed = false;
-                    if (!BlockTeleport)
-                        teleMouseInput?.OnMouseClick(false);
-                    teleMouseInput?.OnDeactivated();
-                    ResetMotionBlur();
-                    ResetTimeScale();
-                    return;
-                }
+                if (!BlockTeleport)
+                    teleMouseInput?.OnMouseClick(false);
+                teleMouseInput?.OnDeactivated();
                 
                 IsMousePressingStarted = false;
                 
                 if (!IsMousePressing)
                 {
-                    mouseInput?.ResetChargeVariable();
                     mouseInput?.OnMouseClick();
+                    mouseInput?.ResetChargeVariable();
                     return;
                 }
                 
                 IsMousePressing = false;
                 
+                mouseAutoAttack?.OnHoldReleased();
                 mouseInput?.OnHoldReleased();
                 mouseInput?.OnMouseClick();
-            }
-            else if (eventData.button == PointerEventData.InputButton.Right)
-            {
-                // Release chuột auto attack, reset biến lưu chuột đang nhấn
-                mouseAutoAttack.OnHoldReleased();
-                if (pressingButton == PointerEventData.InputButton.Right)
-                    pressingButton = PointerEventData.InputButton.Middle;
-                
-                if (teleKeyPressed)
-                {
-                    teleKeyPressed = false;
-                    if (!BlockTeleport)
-                        teleMouseInput?.OnMouseClick(true);
-                    teleMouseInput?.OnDeactivated();
-                    ResetMotionBlur();
-                    ResetTimeScale();
-                }
             }
         }
 
@@ -282,7 +240,23 @@ namespace InGame
             Time.timeScale = 1f;
         }
 
-        private void ResetMotionBlur()
+        public void ActiveMotionBlur()
+        {
+            DOTween.Kill(motionBlur);
+            DOTween.Sequence(motionBlur).AppendCallback(() =>
+                {
+                    foreach (var tower in LevelManager.Instance.Towers)
+                    {
+                        tower.OnMotionBlur();
+                    }
+                    PlayerVisual.OnMotionBlur();
+                            
+                    motionBlur.gameObject.SetActive(true);
+                }).Append(motionBlur.DOFade(1f, 0.32f))
+                .OnComplete(FreezeTimeScale);    
+        }
+        
+        public void ResetMotionBlur()
         {
             DOTween.Kill(motionBlur);
             DOTween.Sequence(motionBlur).Append(motionBlur.DOFade(0f, 0.16f))
@@ -298,10 +272,35 @@ namespace InGame
                 .Play();
         }
 
+        private void ResetMousePressing()
+        {
+            // Reset biên lưu nút chuột đang nhấn
+            if (pressingButton == PointerEventData.InputButton.Left)
+            {
+                pressingButton = PointerEventData.InputButton.Middle;
+                    
+                IsMousePressingStarted = false;
+                mouseAutoAttack?.OnHoldReleased();
+                    
+                if (!IsMousePressing)
+                {
+                    mouseInput?.OnMouseClick();
+                    mouseInput?.ResetChargeVariable();
+                    return;
+                }
+                    
+                IsMousePressing = false;
+                    
+                mouseInput?.OnHoldReleased();
+                mouseInput?.OnMouseClick();
+            }
+        }
+
         #region Pause Game
 
         public void OnPause(bool isPaused)
         {
+            ResetMousePressing();
             BlockAllInput = isPaused;
             cursor?.gameObject.SetActive(!isPaused);
         }

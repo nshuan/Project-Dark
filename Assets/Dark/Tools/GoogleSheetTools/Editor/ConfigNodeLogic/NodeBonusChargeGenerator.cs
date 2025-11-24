@@ -18,18 +18,11 @@ namespace Dark.Tools.GoogleSheetTool
                 return null;
             }
 
-            if (!int.TryParse(subType, out var bonusTypeIndex))
-            {
-                Debug.LogError($"Invalid sub-type string: {subType}");
-                return null;
-            }
-
             try
             {
                 var bonusValue = value[0].Split(',').Select((str) => float.Parse(str, CultureInfo.InvariantCulture)).ToArray();
                 return new NodeBonusChargeSize()
                 {
-                    bonusType = (NodeBonusChargeBullet.BonusType)bonusTypeIndex,
                     value = bonusValue,
                 };
             }
@@ -50,24 +43,44 @@ namespace Dark.Tools.GoogleSheetTool
                 return null;
             }
 
-            if (!int.TryParse(subType, out var bonusTypeIndex))
-            {
-                Debug.LogError($"Invalid sub-type string: {subType}");
-                return null;
-            }
-
             try
             {
                 var bonusValue = value[0].Split(',').Select((str) => float.Parse(str, CultureInfo.InvariantCulture)).ToArray();
                 return new NodeBonusChargeBullet()
                 {
-                    bonusType = (NodeBonusChargeBullet.BonusType)bonusTypeIndex,
                     value = bonusValue,
                 };
             }
             catch (Exception e)
             {
                 throw new Exception($"Invalid BonusChargeBullet value string: {value[0]}");
+            }
+        }
+    }
+    
+    [ConfigNodeLogicType(LogicType.BonusChargeTime)]
+    public class NodeBonusChargeTimeGenerator : INodeLogicGenerator
+    {
+        public INodeActivateLogic Generate(string subType, List<string> value, bool isMul)
+        {
+            if (value == null || value.Count == 0)
+            {
+                return null;
+            }
+
+            try
+            {
+                var bonusValue = value[0].Split(',').Select((str) => float.Parse(str, CultureInfo.InvariantCulture)).ToArray();
+                return new NodeBonusCharge()
+                {
+                    bonusType = NodeBonusCharge.BonusType.StepTime,
+                    value = bonusValue,
+                    isMul = isMul
+                };
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Invalid BonusChargeTime value string: {value[0]}");
             }
         }
     }

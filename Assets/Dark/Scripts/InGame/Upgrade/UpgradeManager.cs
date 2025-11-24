@@ -121,7 +121,7 @@ namespace InGame.Upgrade
 
             var nodeConfig = TreeConfig.GetNodeById(nodeId);
             
-            if (dataMapById[nodeId].level >= nodeConfig.levelNum) return false;
+            if (dataMapById[nodeId].level >= nodeConfig.MaxLevel) return false;
 
             var currentLevel = dataMapById[nodeId].level;
             var costInfo = nodeConfig.costInfo;

@@ -1,33 +1,30 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace InGame
 {
     [RequireComponent(typeof(CapsuleCollider2D))]
     public class ProjectileCollider : MonoBehaviour
     {
-        [SerializeField] private LayerMask hitLayer;
+        public LayerMask hitLayer;
         
         private ProjectileEntity projectile;
 
         public ProjectileEntity Projectile
         {
             get => projectile;
-            set
-            {
-                projectile = value;
-                if (projectile != null)
-                    lastPosition = projectile.transform.position;
-            }
+            set => projectile = value;
         }
 
         public bool CanTrigger { get; set; }
         
         private CapsuleCollider2D capsuleCollider;
-        private EnemyEntity hitEnemy;
-        private Vector2 lastPosition;
-        private Vector2 direction;
         private RaycastHit2D[] hits = new RaycastHit2D[10];
+        private List<Transform> allHitEnemiesInCurrentShot;
+        private int totalHitCountInCurrentShot;
         
         // private void OnTriggerEnter2D(Collider2D other)
         // {
@@ -54,67 +51,116 @@ namespace InGame
             capsuleCollider = GetComponent<CapsuleCollider2D>();
         }
 
-        private void FixedUpdate()
+        public void Init()
         {
-            if (!Projectile) return;
-            if (!CanTrigger) return;
-            
-            direction.x = projectile.transform.position.x - lastPosition.x;
-            direction.y = projectile.transform.position.y - lastPosition.y;
+            // Lưu lại ref đến những enemy đã va chạm, mỗi con chỉ dính dame 1 lần đối với 1 lần bắn
+            allHitEnemiesInCurrentShot ??= new List<Transform>();
+            for (var i = 0; i < allHitEnemiesInCurrentShot.Count; i++)
+            {
+                allHitEnemiesInCurrentShot[i] = null;
+            }
+            totalHitCountInCurrentShot = 0;
+        }
+        
+        public ProjectileHitStatus CheckCollision(ref Vector3 direction, ref HitEnemyInfo hitEnemyInfo)
+        {
+            if (!Projectile) return ProjectileHitStatus.None;
+            if (!CanTrigger) return ProjectileHitStatus.None;
+
             // Lấy y làm radius nếu ảnh viên đạn trong prefab nằm ngang
-            var hitCount = Physics2D.CircleCastNonAlloc(lastPosition, capsuleCollider.size.y, direction, hits, direction.magnitude, hitLayer);
+            var hitCount = Physics2D.CircleCastNonAlloc(transform.position, capsuleCollider.size.y, direction, hits, direction.magnitude, hitLayer);
             if (hitCount > 0)
             {
-                // Chỉ check hit 1 object đầu tiên va chạm
-                for (var i = 0; i < 1; i++)
+                // Chỉ check hit 1 object đầu tiên va chạm, nếu là enemy thì trước đấy phải chưa va chạm lần nào
+                for (var i = 0; i < hitCount; i++)
                 {
-                    if (hits[i].transform.TryGetComponent<EnemyEntity>(out hitEnemy))
+                    if (allHitEnemiesInCurrentShot.Any((hit) => ReferenceEquals(hit, hits[i].transform))) continue;
+                    if (hits[i].transform.TryGetComponent<EnemyEntity>(out hitEnemyInfo.hitEnemy))
                     {
-                        Projectile.ProjectileHit(hitEnemy);
-                        DebugUtility.Log($"Hit enemy {hitEnemy.name}");
+                        hitEnemyInfo.hit = hits[i];
+                        if (totalHitCountInCurrentShot < allHitEnemiesInCurrentShot.Count)
+                            allHitEnemiesInCurrentShot[totalHitCountInCurrentShot] = hits[i].transform;
+                        else
+                            allHitEnemiesInCurrentShot.Add(hits[i].transform);
+                        totalHitCountInCurrentShot += 1;
+                        
+                        return ProjectileHitStatus.Enemy;
+                    }
+
+                    if (hits[i].transform.CompareTag("Collectible"))
+                    {
+                        if (hits[i].transform.TryGetComponent<IDamageable>(out var damageable))
+                        {
+                            Projectile.ProjectileHit(null);
+                            damageable.Damage(0, Projectile.transform.position, 0f, DamageType.Normal);
+                            return ProjectileHitStatus.None;
+                        }
                     }
                     
                     if (hits[i].transform.CompareTag("Tower"))
                     {
                         if (hits[i].transform.TryGetComponent<TowerEntity>(out var towerEntity))
                         {
-                            if (towerEntity.Id != LevelManager.Instance.CurrentTower.Id) Projectile.ProjectileHit(null);    
+                            if (towerEntity.Id != LevelManager.Instance.CurrentTower.Id)
+                            {
+                                Projectile.ProjectileHit(null);
+                                return ProjectileHitStatus.Tower;
+                            }    
+                            break;
                         }
                     }
                     
                     if (hits[i].transform.CompareTag("InGameBoundary"))
                     {
                         Projectile.BlockSpawnDeadBody = true;
-                        continue;
+                        return ProjectileHitStatus.Boundary;
                     }
                 }
             }
-            lastPosition.x = projectile.transform.position.x;
-            lastPosition.y = projectile.transform.position.y;
+
+            return ProjectileHitStatus.None;
         }
         
-        public void UpdateLastPosition(Vector2 position)
-        {
-            lastPosition.x = position.x;
-            lastPosition.y = position.y;
-        }
-
         public void CheckHitEnemiesOnInit(float radius = 1f)
         {
             // Lấy y làm radius nếu ảnh viên đạn trong prefab nằm ngang
-            var hitCount = Physics2D.CircleCastNonAlloc(projectile.transform.position, radius, direction, hits, 0f, hitLayer);
-            if (hitCount > 0)
-            {
-                // Chỉ check hit 1 object đầu tiên va chạm
-                for (var i = 0; i < 1; i++)
-                {
-                    if (hits[i].transform.TryGetComponent<EnemyEntity>(out hitEnemy))
-                    {
-                        Projectile.ProjectileHit(hitEnemy);
-                        DebugUtility.Log($"Hit enemy {hitEnemy.name}");
-                    }
-                }
-            }
+            // var hitCount = Physics2D.CircleCastNonAlloc(projectile.transform.position, radius, direction, hits, 0f, hitLayer);
+            // if (hitCount > 0)
+            // {
+            //     // Chỉ check hit 1 object đầu tiên va chạm
+            //     for (var i = 0; i < 1; i++)
+            //     {
+            //         if (hits[i].transform.TryGetComponent<EnemyEntity>(out hitEnemy))
+            //         {
+            //             Projectile.ProjectileHit(hitEnemy);
+            //             DebugUtility.Log($"Hit enemy {hitEnemy.name}");
+            //         }
+            //     }
+            // }
+        }
+
+        public void IgnoreEnemy(EnemyEntity enemy)
+        {
+            allHitEnemiesInCurrentShot ??= new List<Transform>();
+            if (totalHitCountInCurrentShot < allHitEnemiesInCurrentShot.Count)
+                allHitEnemiesInCurrentShot[totalHitCountInCurrentShot] = enemy.transform;
+            else
+                allHitEnemiesInCurrentShot.Add(enemy.transform);
+            totalHitCountInCurrentShot += 1;
+        }
+
+        public enum ProjectileHitStatus
+        {
+            None,
+            Enemy,
+            Tower,
+            Boundary
+        }
+        
+        public struct HitEnemyInfo
+        {
+            public EnemyEntity hitEnemy;
+            public RaycastHit2D hit;
         }
     }
 }

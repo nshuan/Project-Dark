@@ -11,6 +11,7 @@ namespace InGame
         [ReadOnly] public int level;
         public float levelExpRatio = 1f;
         public float levelDarkRatio = 1f;
+        public int levelDarkUnitValue = 1;
         public WaveInfo[] waveInfo;
 
         private void OnValidate()

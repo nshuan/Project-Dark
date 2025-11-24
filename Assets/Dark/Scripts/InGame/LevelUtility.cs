@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using InGame.ChargeConfig;
+using InGame.Upgrade;
 using UnityEngine;
 
 namespace InGame
@@ -6,17 +9,28 @@ namespace InGame
     public class LevelUtility
     {
         public static UpgradeBonusInfo BonusInfo { get; set; } = new UpgradeBonusInfo();
+        public static PlayerStats PlayerStats { get; set; }
+        public static PlayerSkillConfig CurrentSkill { get; set; }
+        public static Dictionary<ChargeType, PlayerChargeConfig> ChargeConfigMap { get; set; }
         
-        /// <summary>
-        /// HP = [ Player_HP + Total (HP_Plus) ] * [ 1 + Total (HP_Multiple) ]
-        /// </summary>
-        /// <param name="baseHealth"></param>
-        /// <returns></returns>
-        public static int GetPlayerHealth(int baseHealth)
+        public static int BasePlayerDamageWithBonus
         {
-            return Mathf.RoundToInt((baseHealth + BonusInfo.hpPlus) * (1 + BonusInfo.hpMultiply));
+            get
+            {
+                if (BonusInfo == null) return PlayerStats.damage;
+                return (int)((PlayerStats.damage + BonusInfo.damePlus) * (1f + BonusInfo.dameMultiply));
+            }
         }
-        
+
+        public static float BasePLayerCooldownWithBonus
+        {
+            get
+            {
+                if (BonusInfo == null) return PlayerStats.cooldown;
+                return (PlayerStats.cooldown + BonusInfo.cooldownPlus) * (1f + BonusInfo.cooldownMultiplier);
+            }
+        }
+
         /// <summary>
         /// Player_Damage = [ Base_Damage + Total (Dame_Plus) ] * [1 + Total (Dame_Multiple) ]
         /// Bullet_Dame = [ Player_Damage + Dame_Per_Bullet + Total (Skill_Dame_Plus) ] * [ 1 + Total (Skill_Dame_Multiple) ]
@@ -31,20 +45,14 @@ namespace InGame
         /// <param name="criticalDameMultiplier"></param>
         /// <param name="chargeDameMultiplier"></param>
         /// <returns></returns>
-        public static (int, int) GetPlayerBulletDamage(
-            int skillId,
-            int playerDamage, 
-            int skillDamage, 
-            float criticalDameMultiplier, 
-            float chargeDameMultiplier)
+        public static (int, int) GetPlayerBulletDamage(float chargeDameMultiplier)
         {
-            playerDamage = Mathf.RoundToInt((playerDamage + BonusInfo.damePlus) * (1 + BonusInfo.dameMultiply));
-            var bulletDamage = Mathf.RoundToInt((playerDamage + skillDamage + BonusInfo.skillBonus.skillDamePlus) * (1 + BonusInfo.skillBonus.skillDameMultiply));
-            criticalDameMultiplier = criticalDameMultiplier + BonusInfo.criticalDame;
-            return (
-                Mathf.RoundToInt(bulletDamage * chargeDameMultiplier), 
-                Mathf.RoundToInt(bulletDamage * criticalDameMultiplier * chargeDameMultiplier)
-                );
+            var bulletDamage = Mathf.RoundToInt((BasePlayerDamageWithBonus + CurrentSkill.damePerBullet + BonusInfo.skillBonus.skillDamePlus) * (1 + BonusInfo.skillBonus.skillDameMultiply));
+            var criticalDameMultiplier = PlayerStats.criticalDamage + BonusInfo.criticalDame;
+            return LevelTemporaryUtility.FilterPlayerBulletDamage(
+                Mathf.RoundToInt(bulletDamage * chargeDameMultiplier),
+                Mathf.RoundToInt(bulletDamage * criticalDameMultiplier * chargeDameMultiplier), 
+                BonusInfo);
         }
 
         /// <summary>
@@ -52,9 +60,9 @@ namespace InGame
         /// </summary>
         /// <param name="baseCriticalRate"></param>
         /// <returns></returns>
-        public static float GetCriticalRate(float baseCriticalRate)
+        public static float GetCriticalRate()
         {
-            return baseCriticalRate + BonusInfo.criticalRatePlus;
+            return PlayerStats.criticalRate + BonusInfo.criticalRatePlus;
         }
 
         /// <summary>
@@ -64,9 +72,9 @@ namespace InGame
         /// <param name="baseBulletNum"></param>
         /// <param name="chargeBulletNum"></param>
         /// <returns></returns>
-        public static int GetNumberOfBullets(int skillId, int baseBulletNum, int chargeBulletNum)
+        public static int GetNumberOfBullets(int chargeBulletNum)
         {
-            return baseBulletNum + BonusInfo.skillBonus.bulletPlus + chargeBulletNum;
+            return CurrentSkill.numberOfBullets + BonusInfo.skillBonus.bulletPlus + chargeBulletNum;
         }
 
         /// <summary>
@@ -77,10 +85,15 @@ namespace InGame
         /// <param name="playerCooldown"></param>
         /// <param name="baseSkillCooldown"></param>
         /// <returns></returns>
-        public static float GetSkillCooldown(int skillId, float playerCooldown, float baseSkillCooldown)
+        public static float GetSkillCooldown(bool isCharge)
         {
-            return Mathf.Max(0f, (baseSkillCooldown - BonusInfo.skillBonus.skillCooldownPlus) * (1 - BonusInfo.skillBonus.skillCooldownMultiply) 
-                * Mathf.Clamp(1 - (playerCooldown + BonusInfo.cooldownPlus) * (1f + BonusInfo.cooldownMultiplier), 0f, 1f));
+            var baseCooldown = isCharge ? CurrentSkill.chargeCooldown : CurrentSkill.cooldown;
+            return LevelTemporaryUtility.FilterSkillCooldown(Mathf.Max(0f,
+                (baseCooldown - BonusInfo.skillBonus.skillCooldownPlus) * (1 - BonusInfo.skillBonus
+                                                                                 .skillCooldownMultiply)
+                                                                             * Mathf.Clamp(
+                                                                                 1 - BasePLayerCooldownWithBonus,
+                                                                                 0f, 1f)), BonusInfo);
         }
 
         /// <summary>
@@ -89,7 +102,7 @@ namespace InGame
         /// <param name="baseRange"></param>
         /// <param name="chargeRange"></param>
         /// <returns></returns>
-        public static float GetSkillRange(int skillId, float baseRange, float chargeRange, Vector2 direction)
+        public static float GetSkillRange(float chargeRange, Vector2 direction)
         {
             // Calculate the ratio: true_range / skill_range
             var magnitude = direction.magnitude;
@@ -100,18 +113,64 @@ namespace InGame
                         / Mathf.Sqrt(Mathf.Pow(GameConst.IsoRatio * Mathf.Cos(angle), 2) +
                                      Mathf.Pow(Mathf.Sin(angle), 2));
             
-            return baseRange * (1 + BonusInfo.skillBonus.skillRangeMultiply) * chargeRange * ratio;
+            return CurrentSkill.range * (1 + BonusInfo.skillBonus.skillRangeMultiply) * chargeRange * ratio;
         }
 
+        public static float GetRelativeRange(float maxRange, Vector2 direction)
+        {
+            var magnitude = direction.magnitude;
+            direction.x = Mathf.Abs(direction.x) / magnitude;
+            direction.y = Mathf.Abs(direction.y) / magnitude;
+            var angle = Mathf.Atan2(direction.y, direction.x);
+            var ratio = GameConst.IsoRatio
+                        / Mathf.Sqrt(Mathf.Pow(GameConst.IsoRatio * Mathf.Cos(angle), 2) +
+                                     Mathf.Pow(Mathf.Sin(angle), 2));
+            return maxRange * ratio;
+        }
+
+        public static float GetTrueRange(float relativeRange, Vector2 direction)
+        {
+            var magnitude = direction.magnitude;
+            direction.x = Mathf.Abs(direction.x) / magnitude;
+            direction.y = Mathf.Abs(direction.y) / magnitude;
+            var angle = Mathf.Atan2(direction.y, direction.x);
+            var ratio = GameConst.IsoRatio
+                        / Mathf.Sqrt(Mathf.Pow(GameConst.IsoRatio * Mathf.Cos(angle), 2) +
+                                     Mathf.Pow(Mathf.Sin(angle), 2));
+            if (ratio == 0f) ratio = 0.0001f;
+            return relativeRange / ratio;
+        }
+
+        public static Vector2 GetIntersectionInRangeBound(Vector2 rangeCenter, float trueRange, Vector2 vectorOrigin,
+            Vector2 vectorDirection)
+        {
+            vectorOrigin = vectorOrigin - rangeCenter;
+            var a = trueRange;
+            var b = trueRange * GameConst.IsoRatio;
+            var A = a * a * vectorDirection.y * vectorDirection.y + b * b * vectorDirection.x * vectorDirection.x;
+            var B = 2 * (a * a * vectorDirection.y * vectorOrigin.y + b * b * vectorDirection.x * vectorOrigin.x);
+            var C = a * a * vectorOrigin.y * vectorOrigin.y + b * b * vectorOrigin.x * vectorOrigin.x - a * a * b * b;
+            var delta = B * B - 4 * A * C;
+            
+            // delta < 0 => no intersection => return vectorOrigin + vectorDirection
+            if (delta < 0) return vectorOrigin + rangeCenter + vectorDirection;
+            else
+            {
+                var t = (-B + Mathf.Sqrt(delta)) / (2 * A);
+                if (t < 0) t = (-B - Mathf.Sqrt(delta)) / (2 * A);
+                return vectorOrigin + rangeCenter + vectorDirection * t;
+            }
+        }
+        
         /// <summary>
         /// Skill_Size = Size * [1 + Total (Skill_Size_Multiple) ] * [ 1 + ( Charge_Size_Max / Charge_Size_Time ) * Charge_Time ]
         /// </summary>
         /// <param name="baseSize"></param>
         /// <param name="chargeSize"></param>
         /// <returns></returns>
-        public static float GetSkillSize(int skillId, float baseSize, float chargeSize)
+        public static float GetSkillSize(float chargeSize)
         {
-            return baseSize * (1 + BonusInfo.skillBonus.skillSizeMultiply) * chargeSize;
+            return CurrentSkill.size * (1 + BonusInfo.skillBonus.skillSizeMultiply) * chargeSize;
         }
 
         /// <summary>
@@ -119,9 +178,9 @@ namespace InGame
         /// </summary>
         /// <param name="baseStagger"></param>
         /// <returns></returns>
-        public static float GetBulletStagger(int skillId, float baseStagger)
+        public static float GetBulletStagger()
         {
-            return baseStagger * (1 + BonusInfo.skillBonus.staggerMultiply);
+            return CurrentSkill.stagger * (1 + BonusInfo.skillBonus.staggerMultiply);
         }
 
         public static float GetDropRate(float baseDropRate)
@@ -131,248 +190,97 @@ namespace InGame
 
         #region Charge
 
-        /// <summary>
-        /// Get the MaxDameMultiplier of the max MaxDameMultiplierAdd / MaxDameChargeTime
-        /// </summary>
-        /// <param name="baseChargeMaxDameMultiplier"></param>
-        /// <param name="baseChargeMaxTime"></param>
-        /// <returns>(MaxDame, MaxChargeTime)</returns>
-        public static (float, float) GetChargeDameMax(float baseChargeMaxDameMultiplier, float baseChargeMaxTime)
+        // Should not be less than 0.1f, too small
+        public static float GetChargeStepTime()
         {
-            var max = 0f;
-            var resultMD = 0f;
-            var resultMCT = 0f;
-            var temp = 0f;
-            if (BonusInfo.chargeBulletBonus?.maxDameChargeTime > 0)
-            {
-                temp = BonusInfo.chargeBulletBonus.maxDameMultiplier / BonusInfo.chargeBulletBonus.maxDameChargeTime;
-                if (temp > max)
-                {
-                    max = temp;
-                    resultMD = BonusInfo.chargeBulletBonus.maxDameMultiplier;
-                    resultMCT = BonusInfo.chargeBulletBonus.maxDameChargeTime;
-                }
-            }
-
-            if (BonusInfo.chargeSizeBonus?.maxDameChargeTime > 0)
-            {
-                temp = BonusInfo.chargeSizeBonus.maxDameMultiplier / BonusInfo.chargeSizeBonus.maxDameChargeTime;
-                if (temp > max)
-                {
-                    max = temp;
-                    resultMD = BonusInfo.chargeSizeBonus.maxDameMultiplier;
-                    resultMCT = BonusInfo.chargeSizeBonus.maxDameChargeTime;
-                }
-            }
-
-            if (BonusInfo.chargeRangeBonus?.maxDameChargeTime > 0)
-            {
-                temp = BonusInfo.chargeRangeBonus.maxDameMultiplier / BonusInfo.chargeRangeBonus.maxDameChargeTime;
-                if (temp > max)
-                {
-                    max = temp;
-                    resultMD = BonusInfo.chargeRangeBonus.maxDameMultiplier;
-                    resultMCT = BonusInfo.chargeRangeBonus.maxDameChargeTime;
-                }
-            }
-
-            if (BonusInfo.chargeDameBonus?.maxDameChargeTime > 0)
-            {
-                temp = BonusInfo.chargeDameBonus.maxDameMultiplier / BonusInfo.chargeDameBonus.maxDameChargeTime;
-                if (temp > max)
-                {
-                    max = temp;
-                    resultMD = BonusInfo.chargeDameBonus.maxDameMultiplier;
-                    resultMCT = BonusInfo.chargeDameBonus.maxDameChargeTime;
-                }
-            }
-
-            return (baseChargeMaxDameMultiplier + resultMD, baseChargeMaxTime + resultMCT);
+            return Mathf.Max((CurrentSkill.chargeStepTime - BonusInfo.chargeBonus.stepTime) * (1f - Mathf.Clamp(BonusInfo.chargeBonus.stepTimeMul, 0f, 1f)), 0.1f);
         }
 
-        public static (float, float) GetChargeSizeMax(float baseChargeSize, float baseChargeSizeTime)
+        public static float GetChargeBulletPerStep()
         {
-            var max = 0f;
-            var resultMD = 0f;
-            var resultMCT = 0f;
-            var temp = 0f;
-            if (BonusInfo.chargeBulletBonus?.maxSizeChargeTime > 0)
-            {
-                temp = BonusInfo.chargeBulletBonus.maxSizeMultiplier / BonusInfo.chargeBulletBonus.maxSizeChargeTime;
-                if (temp > max)
-                {
-                    max = temp;
-                    resultMD = BonusInfo.chargeBulletBonus.maxSizeMultiplier;
-                    resultMCT = BonusInfo.chargeBulletBonus.maxSizeChargeTime;
-                }
-            }
+            return CurrentSkill.chargeBulletStep + BonusInfo.chargeBonus.bulletPerStep;
+        }
 
-            if (BonusInfo.chargeRangeBonus?.maxSizeChargeTime > 0)
-            {
-                temp = BonusInfo.chargeRangeBonus.maxSizeMultiplier / BonusInfo.chargeRangeBonus.maxSizeChargeTime;
-                if (temp > max)
-                {
-                    max = temp;
-                    resultMD = BonusInfo.chargeRangeBonus.maxSizeMultiplier;
-                    resultMCT = BonusInfo.chargeRangeBonus.maxSizeChargeTime;
-                }
-            }
-
-            if (BonusInfo.chargeDameBonus?.maxSizeChargeTime > 0)
-            {
-                temp = BonusInfo.chargeDameBonus.maxSizeMultiplier / BonusInfo.chargeDameBonus.maxSizeChargeTime;
-                if (temp > max)
-                {
-                    max = temp;
-                    resultMD = BonusInfo.chargeDameBonus.maxSizeMultiplier;
-                    resultMCT = BonusInfo.chargeDameBonus.maxSizeChargeTime;
-                }
-            }
-            
-            if (BonusInfo.chargeSizeBonus?.maxDameChargeTime > 0)
-            {
-                temp = BonusInfo.chargeSizeBonus.maxSizeMultiplier / BonusInfo.chargeSizeBonus.maxSizeChargeTime;
-                if (temp > max)
-                {
-                    max = temp;
-                    resultMD = BonusInfo.chargeSizeBonus.maxSizeMultiplier;
-                    resultMCT = BonusInfo.chargeSizeBonus.maxSizeChargeTime;
-                }
-            }
-
-            return (baseChargeSize + resultMD, baseChargeSizeTime + resultMCT);
+        public static int GetChargeBulletMaxStep()
+        {
+            return (int)ChargeConfigMap[ChargeType.Bullet].value + BonusInfo.chargeBonus.bulletMaxStep;
         }
         
-        public static (int, float) GetChargeBulletMax(int baseChargeBullet, float baseChargeBulletInterval)
+        public static float GetChargeDamePerStep()
         {
-            var max = 0;
-            var resultBullet = 0;
-            var resultInterval = 0f;
-            if (BonusInfo.chargeBulletBonus?.maxBulletAdd > max)
-            {
-                max = BonusInfo.chargeBulletBonus.maxBulletAdd;
-                resultBullet = BonusInfo.chargeBulletBonus.maxBulletAdd;
-                resultInterval = BonusInfo.chargeBulletBonus.bulletAddInterval;
-            }
+            return CurrentSkill.chargeDameStep + BonusInfo.chargeBonus.damePerStep;
+        }
 
-            if (BonusInfo.chargeDameBonus?.maxBulletAdd > max)
-            {
-                max = BonusInfo.chargeDameBonus.maxBulletAdd;
-                resultBullet = BonusInfo.chargeDameBonus.maxBulletAdd;
-                resultInterval = BonusInfo.chargeDameBonus.bulletAddInterval;
-            }
-
-            if (BonusInfo.chargeRangeBonus?.maxBulletAdd > max)
-            {
-                max = BonusInfo.chargeRangeBonus.maxBulletAdd;
-                resultBullet = BonusInfo.chargeRangeBonus.maxBulletAdd;
-                resultInterval = BonusInfo.chargeRangeBonus.bulletAddInterval;
-            }
-            
-            if (BonusInfo.chargeSizeBonus?.maxBulletAdd > max)
-            {
-                max = BonusInfo.chargeSizeBonus.maxBulletAdd;
-                resultBullet = BonusInfo.chargeSizeBonus.maxBulletAdd;
-                resultInterval = BonusInfo.chargeSizeBonus.bulletAddInterval;
-            }
-
-            return (baseChargeBullet + resultBullet, baseChargeBulletInterval + resultInterval);
+        public static int GetChargeDameMaxStep()
+        {
+            return CurrentSkill.chargeDameMaxStep + BonusInfo.chargeBonus.dameMaxStep;
         }
         
-        public static (float, float) GetChargeRangeMax(float baseChargeRange, float baseChargeRangeTime)
+        public static float GetChargeSizePerStep()
         {
-            var max = 0f;
-            var resultMR = 0f;
-            var resultMRT = 0f;
-            var temp = 0f;
-            if (BonusInfo.chargeBulletBonus?.maxRangeChargeTime > 0)
-            {
-                temp = BonusInfo.chargeBulletBonus.maxRangeMultiplier / BonusInfo.chargeBulletBonus.maxRangeChargeTime;
-                if (temp > max)
-                {
-                    max = temp;
-                    resultMR = BonusInfo.chargeBulletBonus.maxRangeMultiplier;
-                    resultMRT = BonusInfo.chargeBulletBonus.maxRangeChargeTime;
-                }
-            }
+            return CurrentSkill.chargeSizeStep + BonusInfo.chargeBonus.sizePerStep;
+        }
 
-            if (BonusInfo.chargeRangeBonus?.maxRangeChargeTime > 0)
-            {
-                temp = BonusInfo.chargeRangeBonus.maxRangeMultiplier / BonusInfo.chargeRangeBonus.maxRangeChargeTime;
-                if (temp > max)
-                {
-                    max = temp;
-                    resultMR = BonusInfo.chargeRangeBonus.maxRangeMultiplier;
-                    resultMRT = BonusInfo.chargeRangeBonus.maxRangeChargeTime;
-                }
-            }
-
-            if (BonusInfo.chargeDameBonus?.maxRangeChargeTime > 0)
-            {
-                temp = BonusInfo.chargeDameBonus.maxRangeMultiplier / BonusInfo.chargeDameBonus.maxRangeChargeTime;
-                if (temp > max)
-                {
-                    max = temp;
-                    resultMR = BonusInfo.chargeDameBonus.maxRangeMultiplier;
-                    resultMRT = BonusInfo.chargeDameBonus.maxRangeChargeTime;
-                }
-            }
-            
-            if (BonusInfo.chargeSizeBonus?.maxRangeChargeTime > 0)
-            {
-                temp = BonusInfo.chargeSizeBonus.maxRangeMultiplier / BonusInfo.chargeSizeBonus.maxRangeChargeTime;
-                if (temp > max)
-                {
-                    max = temp;
-                    resultMR = BonusInfo.chargeSizeBonus.maxRangeMultiplier;
-                    resultMRT = BonusInfo.chargeSizeBonus.maxRangeChargeTime;
-                }
-            }
-
-            return (baseChargeRange + resultMR, baseChargeRangeTime + resultMRT);
+        public static int GetChargeSizeMaxStep()
+        {
+            return CurrentSkill.chargeSizeMaxStep + BonusInfo.chargeBonus.sizeMaxStep;
         }
         
+        public static float GetChargeRangePerStep()
+        {
+            return CurrentSkill.chargeRangeStep + BonusInfo.chargeBonus.rangePerStep;
+        }
+
+        public static int GetChargeRangeMaxStep()
+        {
+            return CurrentSkill.chargeRangeMaxStep + BonusInfo.chargeBonus.rangeMaxStep;
+        }
+
+        public static int GetChargeSizeExplodeBullet(int baseBullet)
+        {
+            return baseBullet + BonusInfo.chargeBonus.maxBulletExplodeChargeSize;
+        }
         #endregion
         
         #region Passive
 
         public static float GetPassiveCooldown(PassiveType passiveType, float baseCooldown)
         {
-            if (BonusInfo.passiveBonusCooldownMapByType == null) return baseCooldown;
+            if (BonusInfo.passiveBonusCooldownMapByType == null) return Mathf.Max(baseCooldown * (1f - BasePLayerCooldownWithBonus), 0f);
             if (BonusInfo.passiveBonusCooldownMapByType.TryGetValue(passiveType, out var bonus))
-                return Mathf.Max(baseCooldown - bonus, 0f);
-            return baseCooldown;
+                return Mathf.Max(baseCooldown * (1f - bonus) * (1f - BasePLayerCooldownWithBonus), 0f);
+            return Mathf.Max(baseCooldown * (1f - BasePLayerCooldownWithBonus), 0f);
         }
 
         public static float GetPassiveChance(PassiveType passiveType, float baseChance)
         {
             if (BonusInfo.passiveBonusChanceMapByType == null) return baseChance;
             if (BonusInfo.passiveBonusChanceMapByType.TryGetValue(passiveType, out var bonus))
-                return Mathf.Min(baseChance + bonus, 1f);
+                return Mathf.Min(baseChance * (1f + bonus), 1f);
             return baseChance;
         }
-
+        
         public static float GetPassiveSize(PassiveType passiveType, float baseSize)
         {
             if (BonusInfo.passiveBonusSizeMapByType == null) return baseSize;
             if (BonusInfo.passiveBonusSizeMapByType.TryGetValue(passiveType, out var bonus))
-                return baseSize + bonus;
+                return baseSize * (1f + bonus);
             return baseSize;
         }
 
         public static float GetPassiveValue(PassiveType passiveType, float baseValue)
         {
-            if (BonusInfo.passiveBonusValueMapByType == null) return baseValue;
+            if (BonusInfo.passiveBonusValueMapByType == null) return baseValue + BasePlayerDamageWithBonus;
             if (BonusInfo.passiveBonusValueMapByType.TryGetValue(passiveType, out var bonus))
-                return baseValue + bonus;
-            return baseValue;
+                return (baseValue + BasePlayerDamageWithBonus) * (1f + bonus);
+            return baseValue + BasePlayerDamageWithBonus;
         }
 
         public static float GetPassiveStagger(PassiveType passiveType, float baseStagger)
         {
             if (BonusInfo.passiveBonusStaggerMapByType == null) return baseStagger;
             if (BonusInfo.passiveBonusStaggerMapByType.TryGetValue(passiveType, out var bonus))
-                return baseStagger + bonus;
+                return baseStagger * (1f + bonus);
             return baseStagger;
         }
 
@@ -382,58 +290,69 @@ namespace InGame
 
         public static float GetTeleCooldown(float baseCooldown)
         {
-            return baseCooldown - BonusInfo.moveCooldownPlus;
+            return Mathf.Max((baseCooldown - BonusInfo.moveCooldownPlus) * (1f - BonusInfo.moveCooldownMultiplier) * (1f - BasePLayerCooldownWithBonus), 0f);
         }
         
         public static float GetDashCooldown(float baseCooldown)
         {
-            return baseCooldown - BonusInfo.dashCooldownPlus;
+            return Mathf.Max((baseCooldown - BonusInfo.dashCooldownPlus) * (1f - BonusInfo.dashCooldownMultiplier) * (1f - BasePLayerCooldownWithBonus), 0f);
         }
 
         public static float GetDashSize(float baseSize)
         {
-            return baseSize + BonusInfo.dashSizePlus;
+            return (1f + BonusInfo.dashSizeMultiplier) * (baseSize + BonusInfo.dashSizePlus);
         }
 
         public static int GetDashDamage(int baseDamage)
         {
-            return (int)((1f + BonusInfo.dashDamageMultiplier) * (baseDamage + BonusInfo.dashDamagePlus));
+            return (int)((1f + BonusInfo.dashDamageMultiplier) * (baseDamage + BonusInfo.dashDamagePlus + BasePlayerDamageWithBonus));
         }
 
         public static float GetFlashCooldown(float baseCooldown)
         {
-            return baseCooldown - BonusInfo.flashCooldownPlus;
+            return Mathf.Max((baseCooldown - BonusInfo.flashCooldownPlus) * (1f - BonusInfo.flashCooldownMultiplier) * (1f - BasePLayerCooldownWithBonus), 0f);
         }
 
         public static float GetFlashSize(float baseSize)
         {
-            return baseSize + BonusInfo.flashSizePlus;
+            return (1f + BonusInfo.flashSizeMultiplier) * (baseSize + BonusInfo.flashSizePlus);
         }
 
         public static int GetFlashDamage(int baseDamage)
         {
-            return (int)((1f + BonusInfo.flashDamageMultiplier) * (baseDamage + BonusInfo.flashDamagePlus));
+            return (int)((1f + BonusInfo.flashDamageMultiplier) * (baseDamage + BonusInfo.flashDamagePlus + BasePlayerDamageWithBonus));
         }
 
         #endregion
 
         #region Tower
 
-        public static int GetTowerHp(int baseHp)
+        /// <summary>
+        /// HP = [ Player_HP + Total (HP_Plus) ] * [ 1 + Total (HP_Multiple) ]
+        /// </summary>
+        /// <param name="baseHealth"></param>
+        /// <returns></returns>
+        public static int GetTowerHp()
         {
-            return (int)((1f + BonusInfo.hpMultiply) * (baseHp + BonusInfo.hpPlus));
+            return (int)((1f + BonusInfo.hpMultiply) * (PlayerStats.hp + BonusInfo.hpPlus));
         }
 
         public static int GetTowerCounterDamage(int baseDamage)
         {
-            return baseDamage + BonusInfo.towerCounterDamagePlus;
+            return (int)((BasePlayerDamageWithBonus + baseDamage) * (1f +BonusInfo.towerCounterDamagePlus));
         }
 
-        public static float GetTowerCounterCooldown(float baseCooldown)
+        public static float GetTowerCounterCooldown(NodeTowerCounter.CounterType counterType, float baseCooldown)
         {
-            return Mathf.Max(baseCooldown - BonusInfo.towerCounterCooldownPlus, 0f);
+            var bonus = BonusInfo.towerCounterCooldownPlus.GetValueOrDefault(counterType, 0f);
+            return Mathf.Max((baseCooldown - bonus) * (1f - BasePLayerCooldownWithBonus), 0f);
         }
 
+        public static float GetTowerCounterRange(NodeTowerCounter.CounterType counterType, float baseRange)
+        {
+            return baseRange;
+        }
+        
         public static int GetTowerAutoRegen(int maxHp)
         {
             return (int)(BonusInfo.toleranceRegenPercentPerSecond);

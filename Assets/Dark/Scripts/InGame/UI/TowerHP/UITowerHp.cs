@@ -27,9 +27,14 @@ namespace InGame.UI
 
             if (tower)
             {
-                tower.OnHit += OnTowerHpChanged;
+                tower.OnHit += OnHit;
                 tower.OnRegenerate += OnTowerHpChanged;
             }
+        }
+        
+        private void OnHit(int damage, DamageType dmgType)
+        {
+            OnTowerHpChanged(damage);    
         }
 
         private void OnTowerHpChanged(int valueChanged)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Sirenix.Serialization;
 using UnityEngine;
@@ -14,31 +15,41 @@ namespace InGame.Upgrade
         
         public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)
         {
-            if (actions  == null) return;
+            if (actions == null) return;
+            if (level <= 0 || level > actions.Count) return;
+            
+            var action = actions[level - 1];
             
             if (isCharge)
             {
                 bonusInfo.skillBonus.projectileChargeActivateActions ??= new List<IProjectileActivate>();
-                foreach (var action in actions)
-                {
-                    if (bonusInfo.skillBonus.projectileChargeActivateActions.Any((a) => a.GetType() == action.GetType())) continue;
+                
+                var exist = bonusInfo.skillBonus.projectileChargeActivateActions.FirstOrDefault((a) =>
+                    a.GetType() == action.GetType());
+                if (exist == null)
                     bonusInfo.skillBonus.projectileChargeActivateActions.Add(action);
-                }
+                else
+                    exist.Combine(action);
             }
             else
             {
                 bonusInfo.skillBonus.projectileActivateActions ??= new List<IProjectileActivate>();
-                foreach (var action in actions)
-                {
-                    if (bonusInfo.skillBonus.projectileActivateActions.Any((a) => a.GetType() == action.GetType())) continue;
+                var exist = bonusInfo.skillBonus.projectileActivateActions.FirstOrDefault((a) =>
+                    a.GetType() == action.GetType());
+                if (exist == null)
                     bonusInfo.skillBonus.projectileActivateActions.Add(action);
-                }
+                else
+                    exist.Combine(action);
             }
         }
 
         public string GetDisplayValue(int level)
         {
-            return "";
+            if (level < 0) return "??";
+            if (level >= actions.Count) level = actions.Count - 1;
+            return actions[level].GetValue().ToString(CultureInfo.InvariantCulture);
         }
+
+        public int MaxLevel => 1;
     }
 }

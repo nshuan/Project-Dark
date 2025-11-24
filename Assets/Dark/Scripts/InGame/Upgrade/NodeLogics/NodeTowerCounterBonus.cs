@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace InGame.Upgrade
 {
     [Serializable]
     public class NodeTowerCounterBonus : INodeActivateLogic
     {
+        public NodeTowerCounter.CounterType counterType;
         public BonusType bonusType;
         public float[] value;
         public bool isMultiply;
@@ -16,10 +19,12 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case BonusType.Cooldown:
-                    bonusInfo.towerCounterCooldownPlus += (int)value[level - 1];
+                    bonusInfo.towerCounterCooldownPlus ??= new Dictionary<NodeTowerCounter.CounterType, float>();
+                    if (!bonusInfo.towerCounterCooldownPlus.TryAdd(counterType, 0f))
+                        bonusInfo.towerCounterCooldownPlus[counterType] += (int)value[level - 1];
                     break;
                 case BonusType.Damage:
-                    bonusInfo.towerCounterDamagePlus += (int)value[level - 1];
+                    bonusInfo.towerCounterDamagePlus += value[level - 1];
                     break;
             }
         }
@@ -28,8 +33,11 @@ namespace InGame.Upgrade
         {
             if (level < 0) return "??";
             if (level >= value.Length) level = value.Length - 1;
-            return value[level].ToString();
+
+            return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
         }
+
+        public int MaxLevel => value.Length;
 
         public enum BonusType
         {

@@ -9,7 +9,7 @@ namespace InGame
         {
             target.HitDirectionX = target.transform.position.x - enemyPosition.x;
             target.HitDirectionY = target.transform.position.y - enemyPosition.y;
-            target.Damage(damage, enemyPosition, 0f);
+            target.Damage(damage, enemyPosition, 0f, DamageType.Normal);
         }
     }
 }

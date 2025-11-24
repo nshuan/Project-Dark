@@ -25,17 +25,17 @@ namespace InGame
         public bool WaveEndedCompletely { get; set; }
         private int currentGateIndex = 0;
         
-        public void SetupWave(GateEntity gatePrefab, TowerEntity[] towers, float levelExpRatio, float levelDarkRatio, Action<int, WaveEndReason> onWaveForceEnded)
+        public void SetupWave(GateEntity gatePrefab, TowerEntity[] towers, float levelExpRatio, float levelDarkRatio, int levelDarkUnitValue, Action<int, WaveEndReason> onWaveForceEnded)
         {
             if (isRandomWaveConfig)
-                waveConfig = randomWaveConfigs[Random.Range(0, randomWaveConfigs.Length)];
+                waveConfig = randomWaveConfigs[RandomUtil.Range(0, randomWaveConfigs.Length)];
             DebugUtility.LogError($"Setup wave {waveConfig.name}");
             Gates = new GateEntity[waveConfig.gateConfigs.Count];
             for (var i = 0; i < waveConfig.gateConfigs.Count; i++)
             {
                 var gateCfg = waveConfig.gateConfigs[i];
                 Gates[i] = Object.Instantiate(gatePrefab, gateCfg.position, quaternion.identity, null);
-                Gates[i].Initialize(gateCfg, gateCfg.targetBaseIndex.Select((index) => towers[index]).ToArray(), scaleHp, scaleDmg, levelExpRatio, levelDarkRatio);
+                Gates[i].Initialize(gateCfg, gateCfg.targetBaseIndex.Select((index) => towers[index]).ToArray(), scaleHp, scaleDmg, levelExpRatio, levelDarkRatio, levelDarkUnitValue);
             }
             
             Gates.Sort((gate1, gate2) => gate1.config.startTime.CompareTo(gate2.config.startTime));
@@ -47,7 +47,7 @@ namespace InGame
 
         public void ActivateWave()
         {
-            DebugUtility.LogError($"Activate wave {waveIndex}");
+            DebugUtility.LogError($"Activate wave {waveIndex + 1}");
 
             for (var i = 0; i < Gates.Length; i++)
             {
@@ -64,7 +64,7 @@ namespace InGame
             ActivateWave();
             
             yield return new WaitForSeconds(timeToEnd);
-            DebugUtility.LogError($"Wave {waveIndex}: End duration");
+            DebugUtility.LogError($"Wave {waveIndex + 1}: End duration");
             CheckStopAllGate();
         }
         

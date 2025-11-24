@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Core;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -43,7 +44,7 @@ namespace Boids
                 var newAgent = Instantiate(
                     agentPrefab, 
                     Random.insideUnitCircle * startingCount * AgentDensity,
-                    Quaternion.Euler(Vector3.forward * Random.Range(0f, 360f)),
+                    Quaternion.Euler(Vector3.forward * RandomUtil.Range(0f, 360f)),
                     transform
                     );
                 newAgent.name = "Agent " + i;

@@ -4,6 +4,7 @@ using Dark.Scripts.FrameByFrameAnimation;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace InGame
 {
@@ -61,6 +62,9 @@ namespace InGame
             currentFrame = 0;
             spriteRenderer.sprite = CurrentAnim.data.frames[0];
             timer = 0f;
+            
+            chargeFxLower?.gameObject.SetActive(false);
+            chargeFxUpper?.gameObject.SetActive(false);
         }
 
         public (float, float) PlayAttack()
@@ -75,6 +79,10 @@ namespace InGame
             currentFrame = directionInfo[currentDirection].attackAnim.strikeFrameIndex;
             spriteRenderer.sprite = CurrentAnim.data.frames[currentFrame];
             timer = 0f;
+            
+            chargeFxLower?.gameObject.SetActive(false);
+            chargeFxUpper?.gameObject.SetActive(false);
+            
             return (CurrentAnim.frameRate, CurrentAnim.frameRate * (CurrentAnim.data.frames.Length - currentFrame));
         }
         
@@ -95,6 +103,8 @@ namespace InGame
             currentFrame = 0;
             spriteRenderer.sprite = CurrentAnim.data.frames[0];
             timer = 0f;
+            chargeFxLower?.gameObject.SetActive(false);
+            chargeFxUpper?.gameObject.SetActive(false);
         }
         
         public void PlaySpecialAttack()
@@ -103,6 +113,9 @@ namespace InGame
             currentFrame = 0;
             spriteRenderer.sprite = CurrentAnim.data.frames[0];
             timer = 0f;
+            
+            chargeFxLower?.gameObject.SetActive(false);
+            chargeFxUpper?.gameObject.SetActive(false);
         }
 
         public void UpdateRotation(Vector2 direction)
@@ -116,30 +129,25 @@ namespace InGame
                 {
                     currentDirection = newDirection;
                     CurrentAnim = charging ? directionInfo[currentDirection].chargeAnim : directionInfo[currentDirection].idleAnim;
-
-                    if (charging)
+                }
+                
+                if (charging)
+                {
+                    if (currentFrame < CurrentAnim.data.frames.Length) spriteRenderer.sprite = CurrentAnim.data.frames[currentFrame];
+                    var showChargeLower = directionInfo[currentDirection].showChargeFxLower;
+                    if (showChargeLower && chargeFxLower)
                     {
-                        if (currentFrame < CurrentAnim.data.frames.Length) spriteRenderer.sprite = CurrentAnim.data.frames[currentFrame];
-                        var showChargeLower = directionInfo[currentDirection].showChargeFxLower;
-                        if (showChargeLower && chargeFxLower)
-                        {
-                            chargeFxLower.localPosition = directionInfo[currentDirection].chargeFxPosition;
-                            if (currentFrame >= CurrentAnim.data.frames.Length - 1)
-                                chargeFxLower.gameObject.SetActive(true);
-                            chargeFxUpper?.gameObject.SetActive(false);
-                        }
-                        else if (!showChargeLower && chargeFxUpper)
-                        {
-                            chargeFxUpper.localPosition = directionInfo[currentDirection].chargeFxPosition;
-                            if (currentFrame >= CurrentAnim.data.frames.Length - 1)
-                                chargeFxUpper.gameObject.SetActive(true);
-                            chargeFxLower?.gameObject.SetActive(false);
-                        }
-                    }
-                    else
-                    {
-                        chargeFxLower?.gameObject.SetActive(false);
+                        chargeFxLower.localPosition = directionInfo[currentDirection].chargeFxLocalPosition;
+                        if (currentFrame >= CurrentAnim.data.frames.Length - 1)
+                            chargeFxLower.gameObject.SetActive(true);
                         chargeFxUpper?.gameObject.SetActive(false);
+                    }
+                    else if (!showChargeLower && chargeFxUpper)
+                    {
+                        chargeFxUpper.localPosition = directionInfo[currentDirection].chargeFxLocalPosition;
+                        if (currentFrame >= CurrentAnim.data.frames.Length - 1)
+                            chargeFxUpper.gameObject.SetActive(true);
+                        chargeFxLower?.gameObject.SetActive(false);
                     }
                 }
             }
@@ -182,6 +190,12 @@ namespace InGame
             chargeFxLower = fxLower;
             chargeFxUpper = fxUpper;
         }
+
+        public void UpdateChargeFxScale(float scale)
+        {
+            chargeFxLower.transform.localScale = scale * Vector3.one;
+            chargeFxUpper.transform.localScale = scale * Vector3.one;
+        }
         
         [Serializable]
         public class DirectionInfo
@@ -191,7 +205,7 @@ namespace InGame
             public PlayerSpritesAnimationInfo specialAttackAnim;
             public PlayerSpritesAnimationInfo chargeAnim;
             public PlayerSpritesAnimationInfo chargeAttackAnim;
-            public Vector2 chargeFxPosition;
+            public Vector2 chargeFxLocalPosition;
             public bool showChargeFxLower;
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -8,7 +9,8 @@ namespace InGame
     public class MoveToTower : IMoveTowerMouseInput
     {
         private const float HoverRadius = 2f;
-        
+
+        public InputInGame InputController { get; set; }
         private PlayerCharacter Character { get; set; }
         private MoveTowersConfig ShortConfig { get; set; }
         private MoveTowersConfig LongConfig { get; set; }
@@ -30,15 +32,16 @@ namespace InGame
         private Action<TowerEntity> actionTowerChanged;
         private int selectingTower = -1;
 
-        public MoveToTower(Camera cam, PlayerCharacter player, MoveTowersConfig shortConfig, MoveTowersConfig longConfig, TowerEntity[] towers, int currentTowerIndex, Func<float, Action, bool> delayCallFunction)
+        public MoveToTower(Camera cam, InputInGame inputController, PlayerCharacter player, MoveTowersConfig shortConfig, MoveTowersConfig longConfig, TowerEntity[] towers, int currentTowerIndex, Func<float, Action, bool> delayCallFunction)
         {
             Cam = cam;
+            InputController = inputController;
             Character = player;
             Towers = towers;
             CurrentTowerIndex = currentTowerIndex;
             DelayCallFunction = delayCallFunction;
             actionTowerChanged = OnTowerChanged;
-            CanMove = false;
+            CanMove = true;
             CanCountdown = true;
             
             // bỏ cơ chế move bằng chuột phải, thay bằng cơ chế kết hợp 2 loại move
@@ -63,16 +66,22 @@ namespace InGame
             {
                 CanMove = false;
                 CanCountdown = false;
-
+                
+                var tempCurrentTower = CurrentTowerIndex;
+                LevelManager.Instance.TeleportTower(selectingTower);
                 Action callbackComplete = () =>
                 {
-                    LevelManager.Instance.TeleportTower(selectingTower);
+                    Character.ShowShotRadius(LevelManager.Instance.CurrentTower.GetBaseCenter(),
+                        LevelUtility.GetSkillRange(
+                            1f,
+                            Vector2.right));
                     Cooldown = GetCooldown(ShortConfig);
                     cdCounter = Cooldown;
                     CanCountdown = true;
-                    CurrentTowerIndex = selectingTower;
                     CombatActions.OnMoveTower?.Invoke(Cooldown);
                 };
+                
+                Character.HideShotRadius();
                 
                 ShortConfig.moveLogic.SetStats(
                     GetDamage(ShortConfig),
@@ -83,7 +92,7 @@ namespace InGame
                 {
                     Character.StartCoroutine(ShortConfig.moveLogic.IEMove(
                         Character, 
-                        Towers[CurrentTowerIndex], 
+                        Towers[tempCurrentTower], 
                         Towers[selectingTower],
                         callbackComplete
                     ));
@@ -98,7 +107,7 @@ namespace InGame
                     
                     Character.StartCoroutine(ShortConfig.MoveFuseLogic.IEMove(
                         Character, 
-                        Towers[CurrentTowerIndex], 
+                        Towers[tempCurrentTower], 
                         Towers[selectingTower],
                         callbackComplete
                     ));
@@ -108,6 +117,7 @@ namespace InGame
                 {
                     tower.Hover(false);
                 }
+                PlaySlowMotion(false);
             }
         }
 
@@ -121,7 +131,6 @@ namespace InGame
         public void OnDeactivated()
         {
             if (Towers == null) return;
-            IsActivate = false;
             foreach (var tower in Towers)
             {
                 tower.Hover(false);
@@ -143,7 +152,15 @@ namespace InGame
                             hovering = true;
                             hoveringCenter = tower.transform.position;
                             selectingTower = tower.Id;
-                            tower.Hover(true);
+                            if (CanMove)
+                            {
+                                tower.Hover(true, true);
+                                PlaySlowMotion(true);
+                            }
+                            else
+                            {
+                                tower.Hover(true, false);
+                            }
                             break;
                         }
                     }
@@ -155,6 +172,7 @@ namespace InGame
                     {
                         hovering = false;
                         Towers[selectingTower].Hover(false);
+                        PlaySlowMotion(false);
                         selectingTower = -1;
                     }
                 }
@@ -169,6 +187,11 @@ namespace InGame
                         CanMove = true;
                 }
             }
+        }
+
+        public void Deactivate()
+        {
+            DOTween.Kill(this);
         }
 
         private void OnTowerChanged(TowerEntity tower)
@@ -199,6 +222,25 @@ namespace InGame
             if (config.moveLogic is MoveDashToTower) damage = LevelUtility.GetDashDamage(config.damage);
             else if (config.moveLogic is MoveFlashToTower) damage = LevelUtility.GetFlashDamage(config.damage);
             return damage;
+        }
+
+        private void PlaySlowMotion(bool slow)
+        {
+            DOTween.Kill(this);
+            var seq = DOTween.Sequence(this);
+
+            if (slow)
+            {
+                seq.Append(DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 0.1f, 0.8f).SetEase(Ease.InQuad));
+                InputController.ActiveMotionBlur();
+            }
+            else
+            {
+                seq.Append(DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1f, 0.2f).SetEase(Ease.OutQuad));
+                InputController.ResetMotionBlur();
+            }
+
+            seq.Play();
         }
     }
 }

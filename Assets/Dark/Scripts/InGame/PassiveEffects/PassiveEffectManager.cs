@@ -36,6 +36,12 @@ namespace InGame
             UpgradeManager.Instance.OnActivated += OnBonusActivated;
         }
 
+        protected override void OnDestroy()
+        {
+            UpgradeManager.Instance.OnActivated -= OnBonusActivated;
+            base.OnDestroy();
+        }
+
         private void OnBonusActivated(UpgradeBonusInfo bonusInfo)
         {
             possibleEffectMap = new Dictionary<PassiveTriggerType, List<PassiveType>>()
@@ -66,7 +72,7 @@ namespace InGame
                 if (cooldownEffectMap[triggerType][effectConfig.logicType]) continue;
                 
                 // Calculate chance
-                if (Random.Range(0f, 1f) <= LevelUtility.GetPassiveChance(effectConfig.logicType, effectConfig.chance))
+                if (RandomUtil.Range(0f, 1f) <= LevelUtility.GetPassiveChance(effectConfig.logicType, effectConfig.chance))
                 {
                     pool.Get(effectConfig.passivePrefab, effectConfig.passiveId, null, false)
                         .TriggerEffect(effectConfig.passiveId, target, 
@@ -82,6 +88,17 @@ namespace InGame
                     CombatActions.OnEffectTriggered?.Invoke(triggerType, effectConfig.logicType, cooldown);
                 }
             }
+        }
+        
+        public void ForceTriggerEffect(PassiveTriggerType triggerType, PassiveType passiveType, IEffectTarget target)
+        {
+            var passiveConfig = effectConfigsMap[triggerType][passiveType];
+            pool.Get(passiveConfig.passivePrefab, passiveConfig.passiveId, null, false)
+                .TriggerEffect(passiveConfig.passiveId, target, 
+                    LevelUtility.GetPassiveSize(passiveConfig.logicType, passiveConfig.size), 
+                    LevelUtility.GetPassiveValue(passiveConfig.logicType, passiveConfig.value), 
+                    LevelUtility.GetPassiveStagger(passiveConfig.logicType, passiveConfig.stagger), 
+                    pool);
         }
 
         private IEnumerator IECooldown(float cooldown, Action completeCallback)

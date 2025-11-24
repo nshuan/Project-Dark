@@ -16,5 +16,7 @@ namespace InGame.Upgrade
         {
             return bonusDescription;
         }
+
+        public int MaxLevel => 1;
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace InGame.Upgrade
 {
@@ -28,15 +29,18 @@ namespace InGame.Upgrade
         {
             if (level < 0) return "??";
             if (level >= value.Length) level = value.Length - 1;
+
             switch (bonusType)
             {
                 case BonusType.AutoRegenerate:
-                    return value[level].ToString();
+                    return value[level].ToString(CultureInfo.InvariantCulture);
                 case BonusType.OnEnemyDied:
-                    return (value[level] * 100).ToString();
+                    return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
             }
-            return value[level].ToString();
+            return value[level].ToString(CultureInfo.InvariantCulture);
         }
+
+        public int MaxLevel => value.Length;
 
         public enum BonusType
         {

@@ -4,6 +4,7 @@ using Dark.Scripts.Audio;
 using DG.Tweening;
 using Economic;
 using InGame.EnemyEffect;
+using InGame.EnemyVisualBody;
 using InGame.MapBoundary;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -15,11 +16,13 @@ namespace InGame
     public class EnemyEntity : MonoBehaviour, IDamageable, IEffectTarget
     {
         [SerializeField] private Collider2D collider2d;
+        [SerializeField] private Transform burnVfxParent;
+        public EnemyBody body;
 
         private MapBoundaryManager boundaryManager;
         public Transform Target { get; set; }
         public TowerEntity TargetTower { get; set; }
-        private EnemyBehaviour config;
+        protected EnemyBehaviour config;
 
         [SerializeField] private AudioComponent sfxHit;
 
@@ -29,13 +32,15 @@ namespace InGame
         private int CurrentDamage { get; set; }
         public int Exp { get; private set; }
         public int Dark { get; private set; }
+        public int DarkUnitValue { get; private set; }
         public float DarkRatio { get; private set; }
         public int BossPoint { get; private set; }
 
         #endregion
 
         public float PercentageHpLeft => CurrentHealth / MaxHealth * 100f;
-        public Action<int> OnHit { get; set; }
+        public Action<int, DamageType> OnHit { get; set; }
+        public Action OnStartDead { get; set; }
         public Action OnDead { get; set; }
         public EnemyState State { get; set; }
         public int UniqueId { get; set; }
@@ -45,10 +50,10 @@ namespace InGame
         private Vector2 staggerTargetPos;
 
         [Space, Header("Visual")] 
-        [SerializeField] private EnemyBoidAgent boidAgent;
+        [SerializeField] private EnemyBoidAgentWithObstacles boidAgent;
         [SerializeField] private Transform uiHealth;
         public EnemyAnimController animController;
-        [SerializeField] private GameObject shadow;
+        [SerializeField] protected GameObject shadow;
         
         private bool inAttackRange;
         private Coroutine attackCoroutine;
@@ -65,7 +70,7 @@ namespace InGame
             boundaryManager = MapBoundaryManager.Instance;
         }
 
-        public void Init(EnemyBehaviour eConfig, TowerEntity target, float hpMultiplier, float dmgMultiplier, float levelExpRatio, float levelDarkRatio)
+        public void Init(EnemyBehaviour eConfig, TowerEntity target, float hpMultiplier, float dmgMultiplier, float levelExpRatio, float levelDarkRatio, int levelDarkUnitValue)
         {
             config = eConfig;
             
@@ -77,7 +82,7 @@ namespace InGame
             
             var myPos = transform.position;
             var targetPos = Target.position;
-            attackPosition = ((Quaternion.Euler(0f, 0f, Random.Range(-75f, 75f)) *
+            attackPosition = ((Quaternion.Euler(0f, 0f, RandomUtil.Range(-75f, 75f)) *
                                (Vector2)(myPos - targetPos).normalized) * (0.9f * config.attackRange)
                               + targetPos);
             animController.transform.localScale =
@@ -89,6 +94,7 @@ namespace InGame
             Exp = Mathf.RoundToInt(config.exp * levelExpRatio);
             Dark = Mathf.RoundToInt(config.dark * levelDarkRatio);
             DarkRatio = LevelUtility.GetDropRate(config.darkRatio);
+            DarkUnitValue = levelDarkUnitValue;
             BossPoint = config.bossPoint;
             
             State = EnemyState.Spawn;
@@ -140,10 +146,10 @@ namespace InGame
                 // transform.position = Vector2.MoveTowards(transform.position, (Vector2)transform.position + staggerDirection, 5f * Time.deltaTime);
                 transform.position = Vector2.Lerp(transform.position, staggerTargetPos, staggerDuration);
             }
-            // else if (freezeDuration > 0)
-            // {
-            //     freezeDuration -= Time.deltaTime;
-            // }
+            else if (freezeDuration > 0)
+            {
+                freezeDuration -= Time.deltaTime;
+            }
             else
             {
                 if (boundaryManager.ContainPoint(transform.position))
@@ -214,43 +220,41 @@ namespace InGame
         public float HitDirectionX { get; set; }
         public float HitDirectionY { get; set; }
 
-        public void Damage(int damage, Vector2 dealerPosition, float stagger)
+        public void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
         {
             if (IsDestroyed) return;
             if (State == EnemyState.Invisible) return;
             
             CurrentHealth -= damage;
             
+            OnHit?.Invoke(damage, dmgType);
+            if (stagger - config.staggerResist > 0)
+            {
+                var mag = Mathf.Sqrt(HitDirectionX * HitDirectionX + HitDirectionY * HitDirectionY);
+                if (mag == 0)
+                {
+                    staggerTargetPos.x = transform.position.x;
+                    staggerTargetPos.y = transform.position.y;
+                }
+                else
+                {
+                    staggerTargetPos.x = (stagger - config.staggerResist) * HitDirectionX / mag + transform.position.x;
+                    staggerTargetPos.y = (stagger - config.staggerResist) * HitDirectionY / mag + transform.position.y;
+                }
+                    
+                staggerDuration = Mathf.Abs(stagger - config.staggerResist) / config.staggerVelocity;
+                freezeDuration = Mathf.Clamp(0.3f, 0.6f, 0.6f * (stagger - config.staggerResist));
+            }
+
+            animController.PlayHit();
+            // invisibleTimer = config.invisibleDuration;
+            invisibleTimer = 0f;
+            State = EnemyState.Invisible;
             
-            OnHit?.Invoke(damage);
             if (CurrentHealth <= 0)
             {
                 OnDie();
                 sfxHit.Play();
-            }
-            else
-            {
-                if (stagger - config.staggerResist > 0)
-                {
-                    var mag = Mathf.Sqrt(HitDirectionX * HitDirectionX + HitDirectionY * HitDirectionY);
-                    if (mag == 0)
-                    {
-                        staggerTargetPos.x = transform.position.x;
-                        staggerTargetPos.y = transform.position.y;
-                    }
-                    else
-                    {
-                        staggerTargetPos.x = (stagger - config.staggerResist) * HitDirectionX / mag + transform.position.x;
-                        staggerTargetPos.y = (stagger - config.staggerResist) * HitDirectionY / mag + transform.position.y;
-                    }
-                    
-                    staggerDuration = Mathf.Abs(stagger - config.staggerResist) / config.staggerVelocity;
-                    freezeDuration = staggerDuration;
-                }
-
-                animController.PlayHit();
-                invisibleTimer = config.invisibleDuration;
-                State = EnemyState.Invisible;
             }
         }
 
@@ -268,34 +272,50 @@ namespace InGame
             
             collider2d.enabled = false;
             IsDestroyed = true;
-            OnDead?.Invoke();
-            OnDead = null;
             boidAgent.IsActive = false;
+            if (coroutineBurn != null) StopCoroutine(coroutineBurn);
             callbackBurnComplete?.Invoke();
             callbackBurnComplete = null;
-            StartCoroutine(IEDie(
-                animController.PlayDie(), 0.5f
-                ));
+            CollectResource();
+            StartCoroutine(IEDie(.5f));
         }
 
-        private IEnumerator IEDie(float delayAnim, float delayRelease)
+        protected virtual IEnumerator IEDie(float delayRelease)
         {
+            // Đợi chạy xong anim hit rồi mới chạy anim die
             shadow.SetActive(false);    
-            yield return new WaitForSeconds(delayAnim);
+            OnStartDead?.Invoke();
+            OnStartDead = null;
+            yield return new WaitForSeconds(animController.PlayDie());
+            OnDead?.Invoke();
+            OnDead = null;
             yield return new WaitForSeconds(delayRelease);
             EnemyPool.Instance.Release(this, config.enemyId);
-            
+        }
+
+        protected virtual void CollectResource()
+        {
+            CombatActions.OnCollectResource?.Invoke(this);
         }
 
         #region Effect 
 
         public Transform TargetTransform => transform;
         private Action callbackBurnComplete;
+        private Coroutine coroutineBurn;
         public void Burn(float duration, float delayEachBurn, int damage, Action callbackComplete)
         {
+            if (IsDestroyed)
+            {
+                callbackComplete?.Invoke();
+                return;
+            }
             callbackBurnComplete = callbackComplete;
-            StartCoroutine(IEBurn(duration, delayEachBurn, damage));
+            if (coroutineBurn != null) StopCoroutine(coroutineBurn);
+            coroutineBurn = StartCoroutine(IEBurn(duration, delayEachBurn, damage));
         }
+
+        public Transform BurnVfxParent => burnVfxParent;
 
         private IEnumerator IEBurn(float duration, float delayEachBurn, int damage)
         {
@@ -306,7 +326,7 @@ namespace InGame
                 yield return new WaitForSeconds(delayEachBurn);
                 HitDirectionX = 0f;
                 HitDirectionY = 0f;
-                Damage(damage, transform.position, 0f);
+                Damage(damage, transform.position, 0f, DamageType.Normal);
                 totalBurn -= 1;
             }
             
@@ -318,7 +338,7 @@ namespace InGame
         {
             HitDirectionX = 0f;
             HitDirectionY = 0f;
-            Damage(CurrentHealth, transform.position, 0f);
+            Damage(CurrentHealth, transform.position, 0f, DamageType.Normal);
         }
         #endregion
 

@@ -1,3 +1,4 @@
+using Coffee.UIExtensions;
 using UnityEngine;
 
 namespace Dark.Scripts.OutGame.Upgrade
@@ -8,9 +9,16 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private GameObject lineLocked;
         [SerializeField] private GameObject lineActivated;
         [SerializeField] private GameObject lineGlow;
+        [SerializeField] private UIParticle vfxUnlock;
 
+        private UIUpgradeNodeState currentState = UIUpgradeNodeState.Activated;
+        
         public void UpdateLineState(UIUpgradeNodeState state)
         {
+            // if (currentState == UIUpgradeNodeState.Locked && state == UIUpgradeNodeState.Available)
+                // vfxUnlock.Play();
+            
+            currentState = state;
             lineAvailable.SetActive(state == UIUpgradeNodeState.Available);
             lineLocked.SetActive(state == UIUpgradeNodeState.Locked);
             lineActivated.SetActive(state == UIUpgradeNodeState.Activated);

@@ -9,11 +9,13 @@ namespace CustomAnimations
         [SerializeField] private Sprite[] frames;
         [SerializeField] private float frameRate = 0.1f;
         [SerializeField] private int loop = -1; // -1 = loop forever
+        [SerializeField] private bool autoPlay = true;
 
         private SpriteRenderer spriteRenderer;
         private int currentFrame;
         private float timer;
         private int loopCount;
+        private bool isPlaying;
 
         private void Awake()
         {
@@ -23,6 +25,7 @@ namespace CustomAnimations
         private void OnEnable()
         {
             loopCount = loop;
+            if (autoPlay) isPlaying = true;
         }
 
         private void OnDisable()
@@ -34,6 +37,7 @@ namespace CustomAnimations
 
         private void Update()
         {
+            if (!isPlaying) return;
             if (loopCount == 0) return;
             
             timer += Time.deltaTime;
@@ -52,6 +56,12 @@ namespace CustomAnimations
                 spriteRenderer.sprite = frames[currentFrame];
                 timer -= frameRate; // subtract instead of reset to avoid drift
             }
+        }
+
+        public float Play()
+        {
+            isPlaying = true;
+            return frameRate * frames.Length;
         }
     }
 

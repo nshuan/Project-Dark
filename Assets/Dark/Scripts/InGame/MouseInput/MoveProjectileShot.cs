@@ -17,39 +17,43 @@ namespace InGame
         protected Vector3 worldMousePosition;
         
         public MoveChargeController ChargeController { get; set; }
-        public bool CanShoot { get; set; }
-        protected float Cooldown { get; set; }
-        protected float cdCounter;
+        public bool CanShootNormal { get; set; }
+        public bool CanShootCharge { get; set; }
+        protected float CooldownNormal { get; set; }
+        protected float CooldownCharge { get; set; }
+        protected float cdCounterNormal;
+        protected float cdCounterCharge;
 
         #region Charge
 
         private bool canChargeBullet;
-        private bool isChargingBullet;
-        private int bulletAdd;
-        private int maxBulletAdd;
-        private float bulletAddInterval;
-        private float bulletAddTimer;
-        private bool isChargeBulletMax;
+        private int bulletChargeAdded;
+        private float bulletPerStep;
+        private int bulletChargeMaxStep;
 
         private bool canChargeDame;
-        private bool isChargingDame;
-        private float maxDameMultiplierAdd;
-        private float maxDameChargeTime;
-        private float dameChargeTime;
+        private float dameChargeAdded;
+        private float damePerStep;
+        private int dameChargeMaxStep;
 
         private bool canChargeSize;
-        private bool isChargingSize;
-        private float maxSizeMultiplierAdd;
-        private float maxSizeChargeTime;
-        private float sizeChargeTime;
+        private float sizeChargeAdded;
+        private float sizePerStep;
+        private int sizeChargeMaxStep;
 
         private bool canChargeRange;
-        private bool isChargingRange;
-        private float maxRangeMultiplierAdd;
-        private float maxRangeChargeTime;
-        private float rangeChargeTime;
+        private float rangeChargeAdded;
+        private float rangePerStep;
+        private int rangeChargeMaxStep;
 
+        private bool isCharging;
+        private float chargeTimer;
+        private float chargeStepTime;
+        private int chargeStep;
+        private int chargeMaxStep;
         #endregion
+
+        private bool hasSetupCharge;
 
         public MoveProjectileShot()
         {
@@ -67,57 +71,49 @@ namespace InGame
         {
             InputManager = manager;
             ChargeController = chargeController;
-            Cooldown = LevelUtility.GetSkillCooldown(
-                InputManager.CurrentSkillConfig.skillId,
-                InputManager.PlayerStats.cooldown,
-                InputManager.CurrentSkillConfig.cooldown);
+            CooldownNormal = LevelUtility.GetSkillCooldown(false);
+            CooldownCharge = LevelUtility.GetSkillCooldown(true);
 
             var skillBonusInfo = LevelUtility.BonusInfo.skillBonus;
             canChargeBullet = skillBonusInfo.unlockedChargeBullet;
-            canChargeDame = skillBonusInfo.unlockedChargeDame;
             canChargeSize = skillBonusInfo.unlockedChargeSize;
-            canChargeRange = skillBonusInfo.unlockedChargeRange;
+            canChargeDame = canChargeSize || canChargeBullet;
+            canChargeRange = canChargeSize || canChargeBullet;
             
-            ChargeController.SetProjectile(InputManager.CurrentSkillConfig.projectiles[PlayerProjectileType.ChargeBullet]);
+            ChargeController.SetProjectile(LevelUtility.CurrentSkill.projectiles[PlayerProjectileType.ChargeBullet]);
             ChargeController.Cam = Cam;
             
             // Setup shot radius
-            InputManager.PlayerVisual.UpdateShotRadius(
+            InputManager.PlayerVisual.ShowShotRadius(
                 LevelManager.Instance.CurrentTower.GetBaseCenter(),
-                LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId, 
-                    InputManager.CurrentSkillConfig.range, 
+                LevelUtility.GetSkillRange(
                     1f,
                     Vector2.right));
         }
         
         public virtual void OnMouseClick()
         {
-            if (!CanShoot) return;
+            var isCharge = (canChargeBullet && bulletChargeAdded > 0) || (canChargeDame && dameChargeAdded > 0) ||
+                           (canChargeSize && sizeChargeAdded > 0) || (canChargeRange && rangeChargeAdded > 0);
             
-            CanShoot = false;
-            
-            var isCharge = (canChargeBullet && bulletAdd > 0) || (canChargeDame && dameChargeTime > 0) ||
-                           (canChargeSize && sizeChargeTime > 0) || (canChargeRange && rangeChargeTime > 0);
+            if (!isCharge && !CanShootNormal) return;
+            if (isCharge && !CanShootCharge) return;
+
+            if (isCharge) CanShootCharge = false;
+            else CanShootNormal = false;
             
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(
-                InputManager.CurrentSkillConfig.skillId,
-                InputManager.PlayerStats.damage,
-                InputManager.CurrentSkillConfig.damePerBullet,
-                InputManager.PlayerStats.criticalDamage,
-                canChargeDame && dameChargeTime > 0 ? 1 + Mathf.Max(dameChargeTime / maxDameChargeTime * maxDameMultiplierAdd, 0f) : 1f);
-            var critRate = LevelUtility.GetCriticalRate(InputManager.PlayerStats.criticalRate);
-            var bulletNum = LevelUtility.GetNumberOfBullets(InputManager.CurrentSkillConfig.skillId, InputManager.CurrentSkillConfig.numberOfBullets, bulletAdd);
-            var skillSize = LevelUtility.GetSkillSize(InputManager.CurrentSkillConfig.skillId,
-                InputManager.CurrentSkillConfig.size,
-                canChargeSize && sizeChargeTime > 0 ? 1 + Mathf.Min(sizeChargeTime / maxSizeChargeTime, 1f) * maxSizeMultiplierAdd : 1f);
-            var skillRange = LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId,
-                InputManager.CurrentSkillConfig.range,
-                canChargeRange && rangeChargeTime > 0 ? 1 + Mathf.Min(rangeChargeTime / maxRangeChargeTime, 1f) * maxRangeMultiplierAdd : 1f,
-                tempMousePos - LevelManager.Instance.CurrentTower.GetBaseCenter());
+                canChargeDame && dameChargeAdded > 0 ? 1 + dameChargeAdded : 1f);
+            var critRate = LevelUtility.GetCriticalRate();
+            var bulletNum = LevelUtility.GetNumberOfBullets(bulletChargeAdded);
+            var skillSize = LevelUtility.GetSkillSize(
+                canChargeSize && sizeChargeAdded > 0 ? 1 + sizeChargeAdded : 1f);
+            var skillRange = LevelUtility.GetSkillRange(
+                canChargeRange && rangeChargeAdded > 0 ? 1 + rangeChargeAdded : 1f,
+                Vector2.right);
             var maxHit = 1 + LevelUtility.BonusInfo.skillBonus.bulletMaxHitPlus;
-            var stagger = LevelUtility.GetBulletStagger(InputManager.CurrentSkillConfig.skillId,
-                InputManager.CurrentSkillConfig.stagger);
+            var stagger = LevelUtility.GetBulletStagger();
 
             InputManager.BlockTeleport = true;
             var delayShot = 0f;
@@ -130,70 +126,101 @@ namespace InGame
             {
                 delayShot = InputManager.PlayerVisual.PlayShoot(worldMousePosition);
             }
+            
             InputManager.DelayCall(delayShot, () =>
             {
-                InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(skillRange);
-                
-                InputManager.CurrentSkillConfig.Shoot(
-                    InputManager.CurrentSkillConfig.projectiles[PlayerProjectileType.Normal],
-                    InputManager.ProjectileSpawnPos.position,
-                    LevelManager.Instance.CurrentTower.GetBaseCenter(),
-                    tempMousePos,
-                    damage,
-                    isCharge ? 1 : bulletNum,
-                    skillSize,
-                    skillRange,
-                    criticalDamage,
-                    critRate,
-                    stagger,
-                    maxHit,
-                    isCharge,
-                    LevelUtility.BonusInfo.skillBonus.GetProjectileActivateActions(isCharge),
-                    LevelUtility.BonusInfo.skillBonus.GetProjectileHitActions(isCharge));
-                
+                var isChargeBullet = canChargeBullet && bulletChargeAdded > 0;
+                var isChargeSize = canChargeSize && sizeChargeAdded > 0;
+
+                var projectileType = PlayerProjectileType.Normal;
+                if (isChargeBullet)
+                {
+                    projectileType = isChargeSize ? PlayerProjectileType.ChargeBulletSize : PlayerProjectileType.ChargeBullet;
+                }
+                else
+                {
+                    if (isChargeSize) projectileType = PlayerProjectileType.ChargeSize;
+                }
+
+                if (!isChargeBullet || isChargeSize)
+                {
+                    LevelUtility.CurrentSkill.Shoot(
+                        LevelUtility.CurrentSkill.projectiles[projectileType],
+                        InputManager.ProjectileSpawnPos.position,
+                        LevelManager.Instance.CurrentTower.GetBaseCenter(),
+                        tempMousePos,
+                        damage,
+                        isCharge ? 1 : bulletNum,
+                        skillSize,
+                        skillRange,
+                        criticalDamage,
+                        critRate,
+                        stagger,
+                        maxHit,
+                        isCharge,
+                        LevelUtility.BonusInfo.skillBonus.GetProjectileActivateActions(isCharge),
+                        LevelUtility.BonusInfo.skillBonus.GetProjectileHitActions(isCharge));
+                }
+
                 if (isCharge)
-                    ChargeController.Attack((projectile, direction) =>
+                {
+                    var chargeRange = LevelUtility.GetSkillRange(
+                        canChargeRange && rangeChargeAdded > 0 ? 1 + rangeChargeAdded : 1f,
+                        Vector2.right);
+                    // Không check trong range charge nữa, check trên toàn map luôn
+                    InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(15f); 
+                    
+                    ChargeController.Attack((projectile, direction, delay) =>
                     {
                         projectile.Init(
-                            projectile.transform.position, 
+                            LevelManager.Instance.CurrentTower.GetBaseCenter(), 
                             direction.normalized, 
-                            skillRange,
+                            chargeRange,
                             skillSize, 
-                            InputManager.CurrentSkillConfig.speedScale,
+                            LevelUtility.CurrentSkill.speedScale,
                             damage,
                             criticalDamage, 
                             critRate, 
-                            InputManager.CurrentSkillConfig.stagger, 
+                            LevelUtility.CurrentSkill.stagger, 
                             true, 
                             maxHit, 
                             null, 
                             LevelUtility.BonusInfo.skillBonus.GetProjectileHitActions(true),
                             ProjectileType.PlayerProjectile);
                         
-                        projectile.Activate(0f);
+                        projectile.Activate(delay);
                     });
+                }
 
                 InputManager.BlockTeleport = false;
             });
 
+            CooldownNormal = LevelUtility.GetSkillCooldown(false);
+            CooldownCharge = LevelUtility.GetSkillCooldown(true);
+
             if (isCharge)
-                CombatActions.OnAttackCharge?.Invoke(Cooldown);
+            {
+                CombatActions.OnAttackCharge?.Invoke(CooldownCharge);
+                cdCounterCharge = CooldownCharge;
+                cdCounterCharge += delayShot;
+            }
             else
-                CombatActions.OnAttackNormal?.Invoke(Cooldown);
+            {
+                CombatActions.OnAttackNormal?.Invoke(CooldownNormal);
+                cdCounterNormal = CooldownNormal;
+                cdCounterNormal += delayShot;
+            }
             
-            cdCounter = Cooldown;
-            cdCounter += delayShot;
 
             // Reset range
             InputManager.PlayerVisual.UpdateShotRadius(
-                LevelManager.Instance.CurrentTower.GetBaseCenter(),
-                LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId, 
-                    InputManager.CurrentSkillConfig.range, 
+                LevelUtility.GetSkillRange(
                     1f,
                     Vector2.right), false);
             
             // Do cursor effect
-            cursor.UpdateBulletAdd(false);
+            cursor.UpdateScale(0f);
+            cursor.UpdateChargeUnitAdd(false);
             cursor.UpdateCooldown(false, 0f);
             DOTween.Complete(this);
             var seq = DOTween.Sequence(this);
@@ -208,64 +235,60 @@ namespace InGame
 
         public void OnHoldStarted()
         {
-            if (!CanShoot) return;
-            if (isChargingBullet
-                || isChargingDame
-                || isChargingSize
-                || isChargingRange) return; 
+            // if (!CanShootCharge) return;
+            if (isCharging) return; 
             
             ResetChargeVariable();
-            
-            if (canChargeBullet && InputManager.CurrentSkillConfig.chargeBulletMaxAdd > 0)
-                isChargingBullet = true;
-            if (canChargeDame && maxDameMultiplierAdd > 0) isChargingDame = true;
-            if (canChargeSize && maxSizeMultiplierAdd > 0) isChargingSize = true;
-            if (canChargeRange && maxRangeMultiplierAdd > 0) isChargingRange = true;
-            
-            if (isChargingBullet || isChargingDame || isChargingSize || isChargingRange)
-                InputManager.PlayerVisual.PlayCharge();
+
+            if (canChargeBullet && bulletChargeMaxStep > 0) isCharging = true;
+            else if (canChargeDame && dameChargeMaxStep > 0) isCharging = true;
+            else if (canChargeSize && sizeChargeMaxStep > 0) isCharging = true;
+            else if (canChargeRange && rangeChargeMaxStep > 0) isCharging = true;
+
+            if (isCharging)
+            {
+                hasSetupCharge = false;
+            }
         }
 
         public void OnHoldReleased()
         {
-            isChargingBullet = false;
-            isChargeBulletMax = false;
-            isChargingDame = false;
-            isChargingSize = false;
-            isChargingRange = false;
+            isCharging = false;
+            InputManager.PlayerVisual.EndChargeAndShoot();
         }
 
         public void ResetChargeVariable()
         {
-            // bullet number
-            bulletAdd = 0;
-            var maxBullet = LevelUtility.GetChargeBulletMax(InputManager.CurrentSkillConfig.chargeBulletMaxAdd,
-                InputManager.CurrentSkillConfig.chargeBulletInterval);
-            maxBulletAdd = maxBullet.Item1;
-            bulletAddInterval = maxBullet.Item2;
-            bulletAddTimer = bulletAddInterval;
+            chargeStepTime = LevelUtility.GetChargeStepTime();
             
-            // damage
-            var maxDame = LevelUtility.GetChargeDameMax(InputManager.CurrentSkillConfig.chargeDameMax,
-                InputManager.CurrentSkillConfig.chargeDameTime);
-            maxDameMultiplierAdd = maxDame.Item1;
-            maxDameChargeTime = maxDame.Item2;
-            dameChargeTime = -1f;
+            bulletChargeAdded = 0;
+            bulletPerStep = LevelUtility.GetChargeBulletPerStep();
+            bulletChargeMaxStep = LevelUtility.GetChargeBulletMaxStep();
+
+            dameChargeAdded = 0f;
+            damePerStep = LevelUtility.GetChargeDamePerStep();
+            dameChargeMaxStep = LevelUtility.GetChargeDameMaxStep();
+
+            sizeChargeAdded = 0f;
+            sizePerStep = LevelUtility.GetChargeSizePerStep();
+            sizeChargeMaxStep = LevelUtility.GetChargeSizeMaxStep();
             
-            // Size
-            var maxSize = LevelUtility.GetChargeSizeMax(InputManager.CurrentSkillConfig.chargeSizeMax,
-                InputManager.CurrentSkillConfig.chargeSizeTime);
-            maxSizeMultiplierAdd = maxSize.Item1;
-            maxSizeChargeTime = maxSize.Item2;
-            sizeChargeTime = 0f;
-            
-            // Range
-            var maxRange = LevelUtility.GetChargeRangeMax(InputManager.CurrentSkillConfig.chargeRangeMax,
-                InputManager.CurrentSkillConfig.chargeRangeTime);
-            maxRangeMultiplierAdd = maxRange.Item1;
-            maxRangeChargeTime = maxRange.Item2;
-            rangeChargeTime = 0f;
+            rangeChargeAdded = 0f;
+            rangePerStep = LevelUtility.GetChargeRangePerStep();
+            rangeChargeMaxStep = LevelUtility.GetChargeRangeMaxStep();
+
+            isCharging = false;
+            chargeStep = 0;
+            chargeTimer = 0f;
+            chargeMaxStep = Mathf.Max(bulletChargeMaxStep, dameChargeMaxStep, sizeChargeMaxStep, rangeChargeMaxStep);
         }
+
+        public bool CanCharge => CanShootCharge && !isCharging && (
+            (canChargeBullet && bulletChargeMaxStep > 0) ||
+            (canChargeDame && dameChargeMaxStep > 0) ||
+            (canChargeRange && rangeChargeMaxStep > 0) || 
+            canChargeSize && sizeChargeMaxStep > 0
+            );
 
         public bool CanMove => true;
 
@@ -279,83 +302,85 @@ namespace InGame
             InputManager.PlayerVisual.SetDirection(worldMousePosition);
             
             // Cooldown if player can not shoot
-            if (!CanShoot)
+            if (!CanShootNormal)
             {
-                cdCounter -= Time.deltaTime;
-                if (cdCounter <= 0)
-                    CanShoot = true;
+                cdCounterNormal -= Time.deltaTime;
+                if (cdCounterNormal <= 0)
+                    CanShootNormal = !GameConst.DefaultAutoAttack;
+            }
+            
+            if (!CanShootCharge)
+            {
+                cdCounterCharge -= Time.deltaTime;
+                if (cdCounterCharge <= 0)
+                    CanShootCharge = true;
             }
             else
             {
-                if (canChargeBullet)
+                if (isCharging && chargeMaxStep > 0 && chargeStep < chargeMaxStep)
                 {
-                    // Charge bullets
-                    if (isChargingBullet)
+                    if (hasSetupCharge == false)
                     {
-                        if (bulletAddTimer > 0)
-                        {
-                            bulletAddTimer -= Time.deltaTime;
-                            // Update UI
-                            cursor.UpdateCooldown(true, 1 - Mathf.Clamp(bulletAddTimer / bulletAddInterval, 0f, 1f));
-                        }
-                        else if (bulletAdd < maxBulletAdd)
-                        {
-                            bulletAdd += 1;
-                            ChargeController.AddBullet(InputManager.PlayerVisual.transform.position,
-                                worldMousePosition - InputManager.PlayerVisual.transform.position);
-                            bulletAddTimer = bulletAddInterval;
-                            cursor.UpdateBulletAdd(true, bulletAdd);
-                            cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f).SetEase(Ease.InQuad)
-                                .OnComplete(() => cursor.UpdateCooldown(true, 0f));
-                        }
-                        else if (bulletAdd == maxBulletAdd)
-                        {
-                            if (!isChargeBulletMax)
-                            {
-                                cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f).SetEase(Ease.InQuad);
-                                isChargeBulletMax = true;
-                            }
-                            cursor.UpdateMax();
-                        }
+                        hasSetupCharge = true;
+                        InputManager.MouseAutoAttack.OnHoldStarted();
+                        InputManager.PlayerVisual.UpdateChargeScale(1f);
+                        InputManager.PlayerVisual.PlayCharge();
+                        cursor.UpdateScale(0f);
+                        cursor.UpdateCooldown(false, 0f);
+                    }
+                    
+                    if (chargeTimer < chargeStepTime)
+                    {
+                        chargeTimer += Time.deltaTime;
+                        cursor.UpdateCooldown(true, 1 - Mathf.Clamp(chargeTimer / chargeStepTime, 0f, 1f));
                     }
                     else
                     {
-                        // Update UI
-                        cursor.UpdateBulletAdd(false);
+                        chargeTimer -= chargeStepTime;
+                        chargeStep += 1;
+                        
+                        cursor.UpdateScale(0f);
+                        cursor.UpdateChargeUnitAdd(true, chargeStep);
+                        cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f).SetEase(Ease.InQuad)
+                            .OnComplete(() => cursor.UpdateCooldown(true, 0f));
+
+                        if (chargeStep >= chargeMaxStep)
+                        {
+                            cursor.UpdateMax();
+                        }
+                        
+                        if (canChargeBullet && bulletChargeMaxStep > 0)
+                        {
+                            bulletChargeAdded = (int)(bulletPerStep * Math.Min(chargeStep, bulletChargeMaxStep));
+                            for (int i = 0; i < bulletChargeAdded - ChargeController.TotalBulletAdded; i++)
+                            {
+                                ChargeController.AddBullet(InputManager.PlayerVisual.transform.position,
+                                    worldMousePosition - InputManager.PlayerVisual.transform.position);
+                            }
+                        }
+
+                        if (canChargeDame && dameChargeMaxStep > 0)
+                        {
+                            dameChargeAdded = damePerStep * Math.Min(chargeStep, dameChargeMaxStep);
+                        }
+
+                        if (canChargeSize && sizeChargeMaxStep > 0)
+                        {
+                            sizeChargeAdded = sizePerStep * Math.Min(chargeStep, sizeChargeMaxStep);
+                            ChargeController.AddSize(LevelUtility.GetSkillSize(
+                                sizeChargeMaxStep > 0 ? 1 + sizeChargeAdded : 1f));
+                            InputManager.PlayerVisual.UpdateChargeScale(1f + Math.Min(chargeStep, sizeChargeMaxStep) * 0.15f);
+                        }
+
+                        if (canChargeRange && rangeChargeMaxStep > 0)
+                        {
+                            rangeChargeAdded = rangePerStep * Math.Min(chargeStep, rangeChargeMaxStep);
+                            InputManager.PlayerVisual.UpdateShotRadius(
+                                LevelUtility.GetSkillRange(
+                                    canChargeRange && rangeChargeAdded > 0 ? 1 + rangeChargeAdded : 1f,
+                                    Vector2.right));
+                        }
                     }
-                }
-                
-                // Charge dame
-                if (canChargeDame && isChargingDame)
-                {
-                    dameChargeTime += Time.deltaTime;
-                }
-                
-                // Charge size
-                if (canChargeSize && isChargingSize)
-                {
-                    sizeChargeTime += Time.deltaTime;
-                    var size = LevelUtility.GetSkillSize(InputManager.CurrentSkillConfig.skillId,
-                        InputManager.CurrentSkillConfig.size,
-                        maxSizeMultiplierAdd > 0
-                            ? 1 + Mathf.Min(sizeChargeTime / maxSizeChargeTime, 1f) * maxSizeMultiplierAdd
-                            : 1f);
-                    ChargeController.AddSize(size);
-                    cursor.UpdateScale(Mathf.Min(sizeChargeTime / maxSizeChargeTime, 1f));
-                }
-                
-                // Charge range
-                if (canChargeRange && isChargingRange)
-                {
-                    rangeChargeTime += Time.deltaTime;
-                    
-                    // Update shot radius
-                    InputManager.PlayerVisual.UpdateShotRadius(
-                        LevelManager.Instance.CurrentTower.GetBaseCenter(),
-                        LevelUtility.GetSkillRange(InputManager.CurrentSkillConfig.skillId, 
-                            InputManager.CurrentSkillConfig.range, 
-                            canChargeRange && rangeChargeTime > 0 ? 1 + Mathf.Min(rangeChargeTime / maxRangeChargeTime, 1f) * maxRangeMultiplierAdd : 1f,
-                            Vector2.right));
                 }
             }
             
@@ -379,6 +404,11 @@ namespace InGame
             // Draw the ray in Scene view
             Debug.DrawLine(ray.origin, rayEnd, Color.green);
 #endif
+        }
+
+        public void Deactivate()
+        {
+            
         }
 
         public virtual void OnDrawGizmos()

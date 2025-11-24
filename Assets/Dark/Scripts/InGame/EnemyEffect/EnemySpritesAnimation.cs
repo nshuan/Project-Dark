@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using CustomAnimations;
 using UnityEngine;
 
 namespace InGame.EnemyEffect
@@ -11,12 +13,16 @@ namespace InGame.EnemyEffect
         [SerializeField] private EnemySpritesAnimationInfo hitAnim;
         [SerializeField] private EnemySpritesAnimationInfo dieAnim;
         [SerializeField] private EnemySpritesAnimationInfo spawnAnim;
+        [SerializeField] private SpritesAnimation spawnEffect;
+        [SerializeField] private SpriteRenderer spriteRenderer;
+		
         public bool isDefaultRun;
         
-        private SpriteRenderer spriteRenderer;
         private EnemySpritesAnimationInfo currentAnim;
         private int currentFrame;
         private float timer;
+        private bool isSpawningEffect = false;
+        private float spawningTimer;
 
         private void Awake()
         {
@@ -29,7 +35,15 @@ namespace InGame.EnemyEffect
             currentFrame = 0;
             spriteRenderer.sprite = currentAnim.frames[0];
             timer = 0;
-            return spawnAnim.frames.Length * spawnAnim.frameRate;
+            spawningTimer = 0f;
+            if (spawnEffect)
+            {
+                isSpawningEffect = true;
+                spriteRenderer.enabled = false;
+                spawnEffect.gameObject.SetActive(true);
+                spawningTimer = spawnEffect.Play();
+            }
+            return spawningTimer + spawnAnim.frames.Length * spawnAnim.frameRate;
         }
         
         public void PlayIdle()
@@ -75,6 +89,20 @@ namespace InGame.EnemyEffect
 
         private void Update()
         {
+            if (isSpawningEffect)
+            {
+                if (spawningTimer > 0)
+                {
+                    spawningTimer -= Time.deltaTime;
+                    return;
+                }
+                else
+                {
+                    isSpawningEffect = false;
+                    spriteRenderer.enabled = true;
+                    spawnEffect.gameObject.SetActive(false);
+                }
+            }
             if (currentAnim == null) return;
             timer += Time.deltaTime;
 

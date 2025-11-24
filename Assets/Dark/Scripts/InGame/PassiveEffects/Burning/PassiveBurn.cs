@@ -10,8 +10,9 @@ namespace InGame
 
         public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool)
         {
-            transform.position = target.TargetTransform.position;
-            transform.SetParent(target.TargetTransform);
+            transform.SetParent(target.BurnVfxParent);
+            transform.localScale = Vector3.one;
+            transform.localPosition = Vector3.zero;
             gameObject.SetActive(true);
             target.Burn(size, delayEachBurn, (int)value, () => pool.Release(this, effectId));
             sfx.Play();

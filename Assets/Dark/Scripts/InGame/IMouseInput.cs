@@ -9,6 +9,7 @@ namespace InGame
         void OnHoldStarted();
         void OnHoldReleased();
         void ResetChargeVariable();
+        bool CanCharge { get; }
         void OnDrawGizmos();
     }
 }

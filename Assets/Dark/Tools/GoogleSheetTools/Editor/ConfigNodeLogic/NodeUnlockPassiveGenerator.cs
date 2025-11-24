@@ -26,7 +26,7 @@ namespace Dark.Tools.GoogleSheetTool
                 Debug.LogError($"Invalid sub-type string: {subType}");
                 return null;
             }
-
+            
             return new NodeUnlockPassive()
             {
                 triggerType = PassiveTriggerType.DameByNormalAttack,

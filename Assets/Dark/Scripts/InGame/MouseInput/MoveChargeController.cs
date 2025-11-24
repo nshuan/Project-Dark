@@ -13,8 +13,9 @@ namespace InGame
             projectilePrefab = projectileEntity;    
         }
         
+        public int TotalBulletAdded { get; set; }
         public abstract void AddBullet(Vector2 spawnPos, Vector2 aimDirection);
         public abstract void AddSize(float size);
-        public abstract void Attack(Action<ProjectileEntity, Vector2> actionSetupProjectile);
+        public abstract void Attack(Action<ProjectileEntity, Vector2, float> actionSetupProjectile); // <Projectile, direction, delay>
     }
 }

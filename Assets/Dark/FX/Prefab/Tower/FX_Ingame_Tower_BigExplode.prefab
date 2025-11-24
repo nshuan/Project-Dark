@@ -223,7 +223,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.79721284, g: 0.23113209, b: 1, a: 1}
+      maxColor: {r: 0.23137254, g: 0.7716127, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -5119,7 +5119,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.57645905, g: 0.4481132, b: 1, a: 1}
+      maxColor: {r: 0.4470588, g: 0.69875073, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -14731,8 +14731,8 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.6
-      minScalar: 0.2
+      scalar: 2
+      minScalar: 1
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -14837,8 +14837,8 @@ ParticleSystem:
     startColor:
       serializedVersion: 2
       minMaxState: 2
-      minColor: {r: 0.23113209, g: 0.45681658, b: 1, a: 1}
-      maxColor: {r: 0, g: 0.8651767, b: 1, a: 1}
+      minColor: {r: 0, g: 0.0713323, b: 0.24528301, a: 1}
+      maxColor: {r: 0.13207549, g: 0.13207549, b: 0.13207549, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -14902,7 +14902,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 1
+      scalar: 0.4
       minScalar: 0.2
       maxCurve:
         serializedVersion: 2
@@ -15060,7 +15060,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startRotationX:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 0
       minScalar: 0
       maxCurve:
@@ -15113,7 +15113,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startRotationY:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 0
       minScalar: 0
       maxCurve:
@@ -15166,8 +15166,8 @@ ParticleSystem:
         m_RotationOrder: 4
     startRotation:
       serializedVersion: 2
-      minMaxState: 0
-      scalar: 0
+      minMaxState: 3
+      scalar: 6.283185
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -15225,9 +15225,9 @@ ParticleSystem:
     rotation3D: 0
     gravityModifier:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 5
-      minScalar: 0
+      minScalar: 8
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -15811,10 +15811,10 @@ ParticleSystem:
         m_RotationOrder: 4
     separateAxes: 0
   RotationModule:
-    enabled: 0
+    enabled: 1
     x:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 0
       minScalar: 0
       maxCurve:
@@ -15867,7 +15867,7 @@ ParticleSystem:
         m_RotationOrder: 4
     y:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 0
       minScalar: 0
       maxCurve:
@@ -15920,9 +15920,9 @@ ParticleSystem:
         m_RotationOrder: 4
     curve:
       serializedVersion: 2
-      minMaxState: 0
-      scalar: 0.7853982
-      minScalar: 0.7853982
+      minMaxState: 3
+      scalar: -1.5707963
+      minScalar: 1.5707963
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -16160,7 +16160,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: 21300000, guid: b0dde87d20acfe2428fa41ec91966212, type: 3}
+    - sprite: {fileID: 21300000, guid: c6f274b4bba0c0b46baff0a31993dcdb, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -18292,10 +18292,10 @@ ParticleSystem:
         m_NumAlphaKeys: 2
     range: {x: 0, y: 1}
   CollisionModule:
-    enabled: 0
+    enabled: 1
     serializedVersion: 4
-    type: 0
-    collisionMode: 0
+    type: 1
+    collisionMode: 1
     colliderForce: 0
     multiplyColliderForceByParticleSize: 0
     multiplyColliderForceByParticleSpeed: 0
@@ -18357,7 +18357,7 @@ ParticleSystem:
     m_Bounce:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 2
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -18607,7 +18607,7 @@ ParticleSystem:
         m_RotationOrder: 4
     maxLights: 20
   TrailModule:
-    enabled: 1
+    enabled: 0
     mode: 0
     ratio: 1
     lifetime:
@@ -19450,7 +19450,6 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d3e4d0cf971920e418bddfc6182b87f4, type: 2}
   - {fileID: 2100000, guid: 96fb429982d4df44bb62db448a888b5c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -19472,7 +19471,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -19484,7 +19483,7 @@ ParticleSystemRenderer:
   m_NormalDirection: 1
   m_ShadowBias: 0
   m_RenderAlignment: 0
-  m_Pivot: {x: 0, y: 0.48, z: 0}
+  m_Pivot: {x: 0, y: 0, z: 0}
   m_Flip: {x: 0, y: 0, z: 0}
   m_EnableGPUInstancing: 1
   m_ApplyActiveColorSpace: 1
@@ -25956,23 +25955,23 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: 1106787770, guid: 24f23da5733859944b6233b51853ad25, type: 3}
-    - sprite: {fileID: 203335547, guid: 24f23da5733859944b6233b51853ad25, type: 3}
-    - sprite: {fileID: -1462363648, guid: 24f23da5733859944b6233b51853ad25, type: 3}
-    - sprite: {fileID: 80880405, guid: 24f23da5733859944b6233b51853ad25, type: 3}
-    - sprite: {fileID: 1245876190, guid: 24f23da5733859944b6233b51853ad25, type: 3}
-    - sprite: {fileID: 1045512373, guid: 24f23da5733859944b6233b51853ad25, type: 3}
-    - sprite: {fileID: -103517430, guid: 24f23da5733859944b6233b51853ad25, type: 3}
-    - sprite: {fileID: -1695174918, guid: 24f23da5733859944b6233b51853ad25, type: 3}
-    - sprite: {fileID: 1080755985, guid: 24f23da5733859944b6233b51853ad25, type: 3}
-    - sprite: {fileID: -655770536, guid: 24f23da5733859944b6233b51853ad25, type: 3}
-    - sprite: {fileID: -645525882, guid: 24f23da5733859944b6233b51853ad25, type: 3}
-    - sprite: {fileID: -609503479, guid: 24f23da5733859944b6233b51853ad25, type: 3}
-    - sprite: {fileID: 1331709850, guid: 24f23da5733859944b6233b51853ad25, type: 3}
-    - sprite: {fileID: -297563450, guid: 24f23da5733859944b6233b51853ad25, type: 3}
-    - sprite: {fileID: 1419814635, guid: 24f23da5733859944b6233b51853ad25, type: 3}
-    - sprite: {fileID: 41009705, guid: 24f23da5733859944b6233b51853ad25, type: 3}
-    - sprite: {fileID: -1954193460, guid: 24f23da5733859944b6233b51853ad25, type: 3}
+    - sprite: {fileID: -340939301, guid: c3eadce594bd3d940b8072af18c37d2b, type: 3}
+    - sprite: {fileID: -1872093524, guid: c3eadce594bd3d940b8072af18c37d2b, type: 3}
+    - sprite: {fileID: -1946428704, guid: c3eadce594bd3d940b8072af18c37d2b, type: 3}
+    - sprite: {fileID: -253412218, guid: c3eadce594bd3d940b8072af18c37d2b, type: 3}
+    - sprite: {fileID: -353307042, guid: c3eadce594bd3d940b8072af18c37d2b, type: 3}
+    - sprite: {fileID: -117429138, guid: c3eadce594bd3d940b8072af18c37d2b, type: 3}
+    - sprite: {fileID: 1167576547, guid: c3eadce594bd3d940b8072af18c37d2b, type: 3}
+    - sprite: {fileID: 1744254076, guid: c3eadce594bd3d940b8072af18c37d2b, type: 3}
+    - sprite: {fileID: 603657453, guid: c3eadce594bd3d940b8072af18c37d2b, type: 3}
+    - sprite: {fileID: 1124240856, guid: c3eadce594bd3d940b8072af18c37d2b, type: 3}
+    - sprite: {fileID: 824444547, guid: c3eadce594bd3d940b8072af18c37d2b, type: 3}
+    - sprite: {fileID: -71563354, guid: c3eadce594bd3d940b8072af18c37d2b, type: 3}
+    - sprite: {fileID: 548532013, guid: c3eadce594bd3d940b8072af18c37d2b, type: 3}
+    - sprite: {fileID: -1042699522, guid: c3eadce594bd3d940b8072af18c37d2b, type: 3}
+    - sprite: {fileID: -247614335, guid: c3eadce594bd3d940b8072af18c37d2b, type: 3}
+    - sprite: {fileID: 1803886179, guid: c3eadce594bd3d940b8072af18c37d2b, type: 3}
+    - sprite: {fileID: 709207658, guid: c3eadce594bd3d940b8072af18c37d2b, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:

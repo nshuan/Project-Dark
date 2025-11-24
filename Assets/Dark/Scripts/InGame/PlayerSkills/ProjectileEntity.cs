@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -10,14 +11,21 @@ namespace InGame
     {
         protected const float MaxLifeTime = 10f;
 
-        [SerializeField] protected ProjectileCollider collider;
+        public ProjectileCollider collider;
         [SerializeField] private float baseDamageRange = 0.1f;
+        public bool forceHideDeadObject;
         
         [Space] [Header("Bullet config")]
         [SerializeField] private float baseSpeed = 5f;
+        
         protected Vector2 direction;
-        public Vector2 RangeCenter { get; set; }
-        public float maxDistance;
+        public Vector3 SpawnPosition { get; set; }
+        protected Vector3 BoundPosition { get; set; }
+        public float Range { get; set; }
+        public float TrueRange { get; set; }
+        public Vector3 RangeCenter { get; set; }
+        protected float maxDistanceFromSpawnPosition;
+        protected float maxDistanceFromRangeCenter;
         public int Damage { get; set; }
         public float Size { get; set; }
         public float SpeedScale { get; set; }
@@ -36,12 +44,17 @@ namespace InGame
         
         public Transform TargetTransform => transform;
 
-        private int currentHit;
+        protected int currentHit;
         protected bool activated = false;
         protected float lifeTime = 0f;
+        protected Vector3 moveDirection = Vector3.zero;
+        protected ProjectileCollider.ProjectileHitStatus hitStatus;
 
         protected RaycastHit2D[] hits = new RaycastHit2D[1];
+        protected ProjectileCollider.HitEnemyInfo hitEnemyInfo;
 
+        private bool hasVfxHit;
+        
         #region Actions
 
         public Action OnHit;
@@ -62,7 +75,7 @@ namespace InGame
         public virtual void Init(
             Vector2 rangeCenter,
             Vector2 direction,
-            float maxDistance,
+            float range,
             float size,
             float speedScale,
             int damage,
@@ -75,13 +88,19 @@ namespace InGame
             List<IProjectileHit> hitActions,
             ProjectileType damageType)
         {
+            SpawnPosition = transform.position;
+            Range = range;
+            
             Size = size;
             transform.localScale = size * Vector3.one;
             SpeedScale = speedScale;
             Speed = baseSpeed * speedScale;
             this.RangeCenter = rangeCenter;
             this.direction = direction;
-            this.maxDistance = maxDistance;
+            BoundPosition =
+                LevelUtility.GetIntersectionInRangeBound(RangeCenter, range, SpawnPosition, direction);
+            maxDistanceFromSpawnPosition = (BoundPosition - SpawnPosition).magnitude;
+            maxDistanceFromRangeCenter = (BoundPosition - RangeCenter).magnitude;
             lifeTime = 0f;
             Damage = damage;
             DamageHitBoundRadius = baseDamageRange * size;
@@ -95,7 +114,9 @@ namespace InGame
             currentHit = 0;
             DamageType = damageType;
             
-            collider.UpdateLastPosition(transform.position);
+            hitStatus = ProjectileCollider.ProjectileHitStatus.None;
+            hitEnemyInfo = new ProjectileCollider.HitEnemyInfo();
+            collider.Init();
         }
 
         public void Activate(float delay)
@@ -126,13 +147,74 @@ namespace InGame
         protected virtual void Update()
         {
             if (!activated) return;
-            if (Vector2.Distance(transform.position, RangeCenter) > maxDistance)
+            if (Vector2.Distance(transform.position, SpawnPosition) > maxDistanceFromSpawnPosition)
             {
                 if (!BlockSpawnDeadBody)
-                    ProjectileDeadPool.Instance.Get(direction).position = transform.position;
+                {
+                    // ProjectileDeadPool.Instance.Get(direction).position = transform.position;
+                    ProjectileDeadPool.Instance.Get(direction).position = BoundPosition;
+                }
                 ProjectileHit(null);
+                return;
             }
-            transform.position += (Vector3)(Speed * Time.deltaTime * direction);
+
+            moveDirection.x = Speed * Time.deltaTime * direction.x;
+            moveDirection.y = Speed * Time.deltaTime * direction.y;
+            moveDirection.z = 0f;
+            hitStatus = collider.CheckCollision(ref moveDirection, ref hitEnemyInfo);
+            if (hitStatus == ProjectileCollider.ProjectileHitStatus.Enemy)
+            {
+                DebugUtility.Log($"Hit enemy {hitEnemyInfo.hitEnemy}");
+                // Nếu trúng con quái này xong là destroy đạn thì ko di chuyển viên đạn nữa, set vị trí vào chỗ con quái luôn
+                if (!forceHideDeadObject && currentHit + 1 >= MaxHit)
+                {
+                    transform.position = hitEnemyInfo.hitEnemy.transform.position;
+                    
+                    var deadProjectile = ProjectileDeadOnEnemyPool.Instance.Get(direction);
+                    deadProjectile.position = hitEnemyInfo.hit.point;
+                    deadProjectile.SetParent(hitEnemyInfo.hitEnemy.transform);
+                    hitEnemyInfo.hitEnemy.body.SetupProjectileHit(deadProjectile.transform, direction);
+                    hitEnemyInfo.hitEnemy.OnStartDead += () =>
+                    {
+                        deadProjectile.gameObject.SetActive(false);
+                    };
+                }
+                else
+                {
+                    if (Vector2.Distance(transform.position + moveDirection, SpawnPosition) > maxDistanceFromSpawnPosition)
+                    {
+                        if (!BlockSpawnDeadBody)
+                        {
+                            // ProjectileDeadPool.Instance.Get(direction).position = transform.position;
+                            ProjectileDeadPool.Instance.Get(direction).position = BoundPosition;
+                        }
+                        ProjectileHit(null);
+                    }
+                    else
+                    {
+                        transform.position += moveDirection;
+                    }
+                }
+                
+                ProjectileHit(hitEnemyInfo.hitEnemy);
+            }
+            else
+            {
+                if (Vector2.Distance(transform.position + moveDirection, SpawnPosition) > maxDistanceFromSpawnPosition)
+                {
+                    if (!BlockSpawnDeadBody)
+                    {
+                        // ProjectileDeadPool.Instance.Get(direction).position = transform.position;
+                        ProjectileDeadPool.Instance.Get(direction).position = BoundPosition;
+                    }
+                    ProjectileHit(null);
+                }
+                else
+                {
+                    transform.position += moveDirection;
+                }
+            }
+                
             lifeTime += Time.deltaTime;
             if (lifeTime > MaxLifeTime)
             {
@@ -151,14 +233,18 @@ namespace InGame
         {
             if (!hit)
             {
-                DebugUtility.Log("null");
                 collider.CanTrigger = false;
                 BlockDestroy = false;
                 BlockSpawnDeadBody = false;
                 OnHit = null;
                 lifeTime = 0f;
                 activated = false;
-                ProjectilePool.Instance.Release(this);
+                
+                PlayVfxHit();
+                PlayHitActions(hit);
+
+                ProjectilePool.Instance.Release(this, hasVfxHit ? 1f : 0f);
+                
                 return;
             }
 
@@ -168,27 +254,27 @@ namespace InGame
                 return;
             }
             
+            // Set lại vị trí viên đạn vào vị trí enemy (tránh việc đạn bay nhanh quá nhìn giống như không chạm vào enemy)
+            
             // Check critical hit
-            var critical = Random.Range(0f, 1f) <= CriticalRate;
+            var critical = RandomUtil.Range(0f, 1f) <= CriticalRate;
             hit.HitDirectionX = direction.x;
             hit.HitDirectionY = direction.y;
-            hit.Damage(critical ? CriticalDamage : Damage, transform.position, Stagger);
-            if (DamageType == ProjectileType.PlayerProjectile)
-                PassiveEffectManager.Instance.TriggerEffect(IsCharge ? PassiveTriggerType.DameByChargeAttack : PassiveTriggerType.DameByNormalAttack, hit);
-            else if (DamageType == ProjectileType.TowerProjectile)
-                PassiveEffectManager.Instance.TriggerEffect(PassiveTriggerType.TowerTakeDame, hit);
+            hit.Damage(critical ? CriticalDamage : Damage, transform.position, Stagger, critical ? InGame.DamageType.NormalCritical : InGame.DamageType.Normal);
+            // if (!hit.IsDestroyed)
+            {
+                if (DamageType == ProjectileType.PlayerProjectile)
+                    PassiveEffectManager.Instance.TriggerEffect(IsCharge ? PassiveTriggerType.DameByChargeAttack : PassiveTriggerType.DameByNormalAttack, hit);
+                else if (DamageType == ProjectileType.TowerProjectile)
+                    PassiveEffectManager.Instance.TriggerEffect(PassiveTriggerType.TowerTakeDame, hit);
+            }
                     
             DebugUtility.Log("hit");
             if (critical)
                 DebugUtility.LogWarning($"Projectile {name} deals critical damage {CriticalDamage} to {hit.name}!!");
 
-            if (HitActions != null)
-            {
-                foreach (var action in HitActions)
-                {
-                    action.DoAction(this, transform.position);
-                }
-            }
+            PlayVfxHit();
+            PlayHitActions(hit);
                     
             OnHit?.Invoke();
             currentHit += 1;
@@ -201,11 +287,28 @@ namespace InGame
                 OnHit = null;
                 lifeTime = 0f;
                 activated = false;
-                ProjectilePool.Instance.Release(this);
+                
+                ProjectilePool.Instance.Release(this, hasVfxHit ? 1f : 0f);
             }
         }
 
-        private void OnDrawGizmos()
+        protected virtual void PlayVfxHit()
+        {
+            
+        }
+
+        protected virtual void PlayHitActions(EnemyEntity hit)
+        {
+            if (HitActions != null)
+            {
+                foreach (var action in HitActions)
+                {
+                    action.DoAction(this, transform.position, null);
+                }
+            }
+        }
+
+        protected virtual void OnDrawGizmos()
         {
             Gizmos.DrawWireSphere(transform.position, baseDamageRange);
         }

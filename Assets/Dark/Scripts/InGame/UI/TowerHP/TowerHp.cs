@@ -18,10 +18,15 @@ namespace InGame.UI
         
         private void Start()
         {
-            tower.OnHit += OnTowerHpChanged;
+            tower.OnHit += OnHit;
             tower.OnRegenerate += OnTowerHpChanged;
         }
 
+        private void OnHit(int damage, DamageType dmgType)
+        {
+            OnTowerHpChanged(damage);    
+        }
+        
         private void OnTowerHpChanged(int valueChanged)
         {
             tempHpScale.x = hpFill.transform.localScale.x;

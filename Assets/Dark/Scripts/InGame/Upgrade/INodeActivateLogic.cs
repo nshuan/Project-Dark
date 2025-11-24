@@ -4,5 +4,6 @@ namespace InGame.Upgrade
     {
         void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo);
         string GetDisplayValue(int level);
+        int MaxLevel { get; }
     }
 }

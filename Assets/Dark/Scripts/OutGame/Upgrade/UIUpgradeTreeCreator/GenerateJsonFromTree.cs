@@ -1,4 +1,5 @@
 using System.IO;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
@@ -8,7 +9,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         public void SaveJson(string treeName, TreeDataStruct treeData)
         {
             var path = Application.dataPath + "/Dark/JSON/" + treeName + ".json";
-            var json = JsonUtility.ToJson(treeData, true);
+            string json = JsonConvert.SerializeObject(treeData, Formatting.Indented);
             File.WriteAllText(path, json);
             Debug.Log("Saved to: " + path);
         }
@@ -17,7 +18,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         {
             var path = Application.dataPath + "/Dark/JSON/" + treeName + ".json";
             var json = File.ReadAllText(path);
-            return JsonUtility.FromJson<TreeDataStruct>(json);
+            return JsonConvert.DeserializeObject<TreeDataStruct>(json);
         }
 
         public bool Exist(string treeName)

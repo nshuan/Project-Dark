@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using InGame.Upgrade;
 using Sirenix.Serialization;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -13,14 +14,19 @@ namespace InGame
 
         public List<int> unlockedMoveToTower; // 1 for Flash and 2 for Dash
         public float moveCooldownPlus = 0f;
+        public float moveCooldownMultiplier = 0f;
         
         public float dashCooldownPlus = 0f;
+        public float dashCooldownMultiplier = 0f;
         public float dashSizePlus = 0f;
+        public float dashSizeMultiplier = 0f;
         public int dashDamagePlus = 0;
         public float dashDamageMultiplier = 0f;
         
         public float flashCooldownPlus = 0f;
+        public float flashCooldownMultiplier = 0f;
         public float flashSizePlus = 0f;
+        public float flashSizeMultiplier = 0f;
         public int flashDamagePlus = 0;
         public float flashDamageMultiplier = 0f;
 
@@ -53,6 +59,7 @@ namespace InGame
         
         public UpgradeBonusSkillInfo skillBonus = new UpgradeBonusSkillInfo();
         
+        public UpgradeBonusChargeInfo chargeBonus = new UpgradeBonusChargeInfo();
         public UpgradeBonusChargeInfo chargeDameBonus = new UpgradeBonusChargeInfo();
         public UpgradeBonusChargeInfo chargeBulletBonus = new UpgradeBonusChargeInfo();
         public UpgradeBonusChargeInfo chargeSizeBonus = new UpgradeBonusChargeInfo();
@@ -62,11 +69,11 @@ namespace InGame
         
         #region Tower
 
-        public bool unlockedTowerCounter;
+        public Dictionary<NodeTowerCounter.CounterType, bool> unlockedTowerCounter;
         public float toleranceRegenPercentPerSecond = 0;
         public float toleranceRegenPercentWhenKill = 0;
-        public float towerCounterCooldownPlus = 0f;
-        public int towerCounterDamagePlus = 0;  
+        public Dictionary<NodeTowerCounter.CounterType, float> towerCounterCooldownPlus;
+        public float towerCounterDamagePlus = 0;  
 
         #endregion
         
@@ -74,18 +81,34 @@ namespace InGame
 
         [Space] 
         [NonSerialized, OdinSerialize] public Dictionary<PassiveTriggerType, List<PassiveType>> passiveMapByTriggerType;
-        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusSizeMapByType;
-        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusValueMapByType;
-        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusCooldownMapByType;
-        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusChanceMapByType;
-        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusStaggerMapByType;
+        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusSizeMapByType; // Bonus %
+        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusValueMapByType; // Bonus %
+        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusCooldownMapByType; // Bonus %
+        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusChanceMapByType; // Bonus %
+        [NonSerialized, OdinSerialize] public Dictionary<PassiveType, float> passiveBonusStaggerMapByType; // Bonus %
 
         #endregion
 
+        #region Temporary
+
+        public UpgradeBonusTempInfo tempDamageBonusOnMove;
+        public UpgradeBonusTempInfo tempDamageBonusOnKill;
+        public UpgradeBonusTempInfo tempAtkSpeBonusOnMove;
+        public UpgradeBonusTempInfo tempAtkSpeBonusOnKill;
+
+        #endregion
+        
         public UpgradeBonusInfo()
         {
             skillBonus = new UpgradeBonusSkillInfo();
             passiveMapByTriggerType = new Dictionary<PassiveTriggerType, List<PassiveType>>();
+            unlockedTowerCounter = new Dictionary<NodeTowerCounter.CounterType, bool>();
+            towerCounterCooldownPlus = new Dictionary<NodeTowerCounter.CounterType, float>();
+            chargeBonus = new UpgradeBonusChargeInfo();
+            chargeDameBonus = new UpgradeBonusChargeInfo();
+            chargeBulletBonus = new UpgradeBonusChargeInfo();
+            chargeSizeBonus = new UpgradeBonusChargeInfo();
+            chargeRangeBonus = new UpgradeBonusChargeInfo();
         }
     }
 
@@ -112,10 +135,10 @@ namespace InGame
         public float staggerMultiply = 0f;
 
         [Space] 
-        public bool unlockedChargeDame;
-        public bool unlockedChargeBullet;
-        public bool unlockedChargeSize;
-        public bool unlockedChargeRange;
+        public bool unlockedNormalDame; // Id = 1
+        public bool unlockedNormalAtkSpe; // Id = 2
+        public bool unlockedChargeSize; // Id = 1
+        public bool unlockedChargeBullet; // Id = 2
         [NonSerialized, OdinSerialize] 
         public List<IProjectileHit> projectileHitActions = new List<IProjectileHit>();
         [NonSerialized, OdinSerialize] 
@@ -139,16 +162,34 @@ namespace InGame
     [Serializable]
     public class UpgradeBonusChargeInfo
     {
-        public float maxDameMultiplier;
-        public float maxDameChargeTime;
+        public float stepTime;
+        public float stepTimeMul;
+        
+        public float damePerStep;
+        public int dameMaxStep;
 
-        public int maxBulletAdd;
-        public float bulletAddInterval;
+        public float sizePerStep;
+        public int sizeMaxStep;
+        
+        public float rangePerStep;
+        public int rangeMaxStep;
+        
+        public float bulletPerStep;
+        public int bulletMaxStep;
+        
+        // Exclusive
+        public int maxBulletExplodeChargeSize;
+    }
 
-        public float maxSizeMultiplier;
-        public float maxSizeChargeTime;
+    [Serializable]
+    public class UpgradeBonusTempInfo
+    {
+        public float bonusValue;
 
-        public float maxRangeMultiplier;
-        public float maxRangeChargeTime;
+        public float bonusDuration
+        {
+            get => 4f;
+            set { }
+        } // Tạm thời fix cứng
     }
 }

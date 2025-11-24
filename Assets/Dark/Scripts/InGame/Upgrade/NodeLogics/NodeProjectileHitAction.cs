@@ -40,5 +40,7 @@ namespace InGame.Upgrade
         {
             return "";
         }
+
+        public int MaxLevel => 1;
     }
 }

@@ -1,9 +1,12 @@
 using System;
 using System.Collections;
 using Dark.Scripts.Audio;
+using Economic.InGame;
 using InGame.Effects;
 using InGame.UI;
+using Spine.Unity;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace InGame
@@ -11,28 +14,38 @@ namespace InGame
     public class TowerEntity : MonoBehaviour, IDamageable
     {
         [SerializeField] private Vector3[] standOffset;
-        [SerializeField] private SpriteRenderer towerVisual;
-        [SerializeField] private SpriteRenderer towerVisualUILayer;
-        [SerializeField] private SpriteRenderer towerOutline;
+        [SerializeField] private TowerAnim towerAnim;
+        [SerializeField] private TowerAnim towerBaseAnim;
+        [SerializeField] private MeshRenderer towerMesh;
+        [SerializeField] private MeshRenderer towerBaseMesh;
+        // [SerializeField] private TowerAnim towerVisualUILayer;
         [SerializeField] private Sprite[] spriteStates;
         [SerializeField] private float[] thresholdState = new[] { 0f, 0.3f, 0.7f };
         [SerializeField] private TowerAutoRegenerate autoRegenerate;
         [SerializeField] private TowerRegenerateOnKill regenerateOnKill;
         [SerializeField] private AudioComponent sfxHit;
 
+        [Header("Config")]
+        [SerializeField] private string normalSortingLayerName;
+        [SerializeField] private int normalSortingOrder;
+        [SerializeField] private string hoverSortingLayerName;
+        [SerializeField] private int hoverSortingOrder;
+        [SerializeField] private string normalBaseSortingLayerName;
+        [SerializeField] private int normalBaseSortingOrder;
+
         private int currentState;
+        public int CurrentState => currentState;
         
         public int Id { get; private set; }
         public int MaxHp { get; private set; }
         public int CurrentHp { get; private set; }
         public bool IsDestroyed { get; set; }
         
-        public Action<int> OnHit { get; set; }
+        public Action<int, DamageType> OnHit { get; set; }
         public Action<int> OnRegenerate { get; set; }
         public Action<Vector2> OnHitAttackerPos { get; set; }
         public Action<TowerEntity> OnDestroyed;
-        
-        private FlashColor damageEffect;
+        private bool isSelecting;
         
         public void Initialize(int id, int hp)
         {
@@ -42,41 +55,38 @@ namespace InGame
             IsDestroyed = false;
 
             OnDestroyed = null;
-            damageEffect = new FlashColor() 
-            {
-                SpriteRendererTarget = towerVisual,
-                FlashDuration = 0.1f,
-                Color = new Color(1f, 0.6f, 0.6f, 1f)
-            };
-            currentState = spriteStates.Length - 1;
-            towerVisual.sprite = spriteStates[currentState];
-            towerVisualUILayer.sprite = spriteStates[currentState];
-            towerOutline.sprite = spriteStates[currentState];
+            currentState = 3; // 3 trạng thái máu và 1 trạng thái vỡ
+            towerAnim.PlayIdle(currentState);
+            towerBaseAnim.PlayIdle(currentState);
+            towerAnim.SetActiveOutline(false);
+            towerBaseAnim.SetActiveOutline(false);
             autoRegenerate.Initialize(this, LevelUtility.GetTowerAutoRegen(MaxHp));
             regenerateOnKill.Initialize(this, LevelUtility.GetTowerRegenOnKill(MaxHp));
         }
-
+        
         public void EnterTower()
         {
+            isSelecting = true;
             selected.SetActive(true);
         }
 
         public void LeaveTower()
         {
+            isSelecting = false;
             selected.SetActive(false);
         }
 
         public float HitDirectionX { get; set; }
         public float HitDirectionY { get; set; }
 
-        public void Damage(int damage, Vector2 dealerPosition, float stagger)
+        public void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
         {
             if (IsDestroyed) return;
             
             stagger = 0;
             CurrentHp -= damage;
             
-            OnHit?.Invoke(damage);
+            OnHit?.Invoke(damage, dmgType);
             OnHitAttackerPos?.Invoke(dealerPosition);
             if (CurrentHp <= 0)
             {
@@ -88,19 +98,19 @@ namespace InGame
                 if ((float)CurrentHp / MaxHp < thresholdState[currentState])
                 {
                     currentState -= 1;
-                    towerVisual.sprite = spriteStates[currentState];
-                    towerVisualUILayer.sprite = spriteStates[currentState];
-                    towerOutline.sprite = spriteStates[currentState];
+                    towerAnim.TransitionToIdle(currentState, true);
+                    towerBaseAnim.TransitionToIdle(currentState, true);
                 }
                 
-                if (currentState == 0) UIWarningManager.Instance.WarnOnce(false);
+                if (currentState == 1) UIWarningManager.Instance.WarnOnce(false);
             }
             
             autoRegenerate.Activate();
             
             // Do damage effect
             sfxHit.Play();
-            VisualEffectHelper.Instance.PlayEffect(damageEffect);
+            towerAnim.PlayHit();
+            towerBaseAnim.PlayHit();
         }
 
         public void Regenerate(int value)
@@ -111,32 +121,57 @@ namespace InGame
             CurrentHp += value;
             OnRegenerate?.Invoke(value);
             
-            if (currentState < spriteStates.Length - 1 && (float)CurrentHp / MaxHp >= thresholdState[currentState + 1])
+            if (currentState < thresholdState.Length - 1 && (float)CurrentHp / MaxHp >= thresholdState[currentState + 1])
             {
                 currentState += 1;
-                towerVisual.sprite = spriteStates[currentState];
-                towerVisualUILayer.sprite = spriteStates[currentState];
-                towerOutline.sprite = spriteStates[currentState];
+                towerAnim.TransitionToIdle(currentState, false);
+                towerBaseAnim.TransitionToIdle(currentState, false);
             }
         }
         
         [SerializeField] private GameObject selected;
-        [SerializeField] private GameObject hover;
-        public void Hover(bool hovering)
+        // [SerializeField] private GameObject hover;
+        public void Hover(bool hovering, bool showUILayerOnHovering = true)
         {
-            hover.SetActive(hovering);
-            towerOutline.gameObject.SetActive(hovering);
+            if (hovering && showUILayerOnHovering)
+            {
+                towerMesh.sortingLayerName = hoverSortingLayerName;
+                towerMesh.sortingOrder = hoverSortingOrder;
+                towerBaseMesh.sortingLayerName = hoverSortingLayerName;
+                towerBaseMesh.sortingOrder = hoverSortingOrder - 1;
+            }
+            else
+            {
+                towerMesh.sortingLayerName = normalSortingLayerName;
+                towerMesh.sortingOrder = normalSortingOrder;
+                towerBaseMesh.sortingLayerName = normalBaseSortingLayerName;
+                towerBaseMesh.sortingOrder = normalBaseSortingOrder;
+            }
+
+            if (hovering)
+            {
+                towerAnim.PlayHover(currentState);
+                towerBaseAnim.PlayHover(currentState);
+            }
+            else
+            {
+                towerAnim.PlayIdle(currentState);
+                towerBaseAnim.PlayIdle(currentState);
+            }
+            towerAnim.SetActiveOutline(hovering);
+            towerBaseAnim.SetActiveOutline(hovering);
         }
         
         public void OnMotionBlur()
         {
-            towerVisualUILayer.gameObject.SetActive(true);
+            // towerVisualUILayer.PlayIdle(currentState);
+            // towerVisualUILayer.gameObject.SetActive(true);
         }
 
         public void OnEndMotionBlur()
         {
-            towerVisualUILayer.gameObject.SetActive(false);
-            towerOutline.gameObject.SetActive(false);
+            // towerVisualUILayer.gameObject.SetActive(false);
+            // towerVisualUILayer.SetActiveOutline(false);
         }
 
         /// <summary>
@@ -146,7 +181,7 @@ namespace InGame
         /// <returns></returns>
         public Vector3 GetBaseCenter()
         {
-            return towerVisual.transform.position;
+            return towerAnim.transform.position;
         }
 
         public Vector3 GetTowerHeight()

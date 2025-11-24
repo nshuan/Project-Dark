@@ -9,7 +9,7 @@ namespace Economic
     [CreateAssetMenu(menuName = "Economic/Grade Config", fileName = "GradeConfig")]
     public class GradeConfig : SerializedScriptableObject
     {
-        [NonSerialized, OdinSerialize] private int[] gradeRequireMap;
+        [NonSerialized, OdinSerialize] public List<int> gradeRequireMap;
 
         private List<int> requireMapByTarget;
 
@@ -27,13 +27,13 @@ namespace Economic
         public int GetRequirement(int grade)
         {
             if (grade <= 0) return 0;
-            return grade > RequireMapByTarget.Count ? int.MaxValue : RequireMapByTarget[grade];
+            return grade >= RequireMapByTarget.Count ? int.MaxValue : RequireMapByTarget[grade];
         }
 
         public void GetAllRequirement()
         {
             requireMapByTarget = new List<int>();
-            for (int i = 0; i < gradeRequireMap.Length; i++)
+            for (int i = 0; i < gradeRequireMap.Count; i++)
             {
                 if (i == 0) requireMapByTarget.Add(gradeRequireMap[i]);
                 else requireMapByTarget.Add(requireMapByTarget[i - 1] + gradeRequireMap[i]);
@@ -42,6 +42,7 @@ namespace Economic
         
         #region SINGLETON
 
+        public static string FilePath = "Assets/Dark/Resources/GradeConfig.asset";
         private static GradeConfig instance;
 
         public static GradeConfig Instance
