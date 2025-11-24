@@ -31,6 +31,7 @@ namespace Economic.InGame
         private float _angle;
         private bool _isTransitioning = false;
         private bool _activated = false;
+        private bool _isPaused = false;
 
         // private void Awake()
         // {
@@ -106,8 +107,8 @@ namespace Economic.InGame
         private void Update()
         {
             if (!_activated) return;
-            if (_isTransitioning)
-                return;
+            if (_isTransitioning) return;
+            if (_isPaused) return;
 
             _angle += Time.deltaTime * orbitSpeed;
 
@@ -148,6 +149,16 @@ namespace Economic.InGame
         {
             StartInitialTransition();
             _activated = true;
+        }
+
+        public void PauseOrbit()
+        {
+            _isPaused = true;
+        }
+
+        public void ResumeOrbit()
+        {
+            _isPaused = false;
         }
 
         private void CacheBasePosition()

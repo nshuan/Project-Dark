@@ -27,6 +27,8 @@ namespace Economic.InGame
 
         private Transform player;
         private bool activated = false;
+        private bool orbitMoving;
+        private float orbitTimer;
         
         public float HitDirectionX { get; set; }
         public float HitDirectionY { get; set; }
@@ -48,12 +50,34 @@ namespace Economic.InGame
             WealthManager.Instance.OnUpGrade -= OnCharacterLevelUp;
         }
 
+        private void Update()
+        {
+            if (!activated) return;
+            if (orbitTimer > 0) orbitTimer -= Time.deltaTime;
+            else
+            {
+                if (orbitMoving)
+                {
+                    orbitMovement.PauseOrbit();
+                    orbitTimer = RandomUtil.Range(2f, 4f);
+                    orbitMoving = false;
+                }
+                else
+                {
+                    orbitMovement.ResumeOrbit();
+                    orbitTimer = RandomUtil.Range(3f, 5f);
+                    orbitMoving = true;
+                }
+            }
+        }
+
         private void OnLevelLoaded(LevelConfig level)
         {
             player = LevelManager.Instance.Player.transform;
             transform.position = player.position + new Vector3(0f, heightFromPlayer, 0f);
             orbitMovement.ResetOrbit();
             orbitMovement.StartOrbit();
+            orbitMoving = false;
             DoSpawn().SetDelay(1f).OnComplete(() =>
             {
                 activated = true;
