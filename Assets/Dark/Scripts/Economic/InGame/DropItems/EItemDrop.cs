@@ -53,6 +53,21 @@ namespace Economic.InGame.DropItems
             shadow.DOMove((Vector3)targetPos - transform.position + shadow.position, dropDuration);
         }
         
+        public void Drop(Vector2 position, Vector2 direction, float span)
+        {
+            visual.gameObject.SetActive(true);
+            
+            var targetPos = position + RandomUtil.InsideUnitSpan(direction, span) * dropRange;
+            
+            var dropJumps = RandomUtil.Range(1, 4);
+            var dropDuration = Mathf.Max(dropJumps * 0.2f, 0.36f);
+            shadow.SetParent(null);
+            shadow.localScale = Vector3.one;
+            transform.DOJump(targetPos, 0.16f, dropJumps, dropDuration).SetTarget(this)
+                .OnComplete(() => shadow.SetParent(transform));
+            shadow.DOMove((Vector3)targetPos - transform.position + shadow.position, dropDuration);
+        }
+        
         public void Collect(Transform target, float delay)
         {
             Collect(target);
