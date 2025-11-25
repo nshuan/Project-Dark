@@ -154,6 +154,8 @@ namespace Economic.InGame
                     shadow.localScale = 0.2f * Vector3.one;
                     visual.gameObject.SetActive(true);
                     shadow.gameObject.SetActive(true);
+                    visualEchoes.gameObject.SetActive(false);
+                    shadowEchoes.gameObject.SetActive(false);
                     vfxSpawn.Play(true);
                 })
                 .Append(visual.DOScale(1f, 0.3f).SetEase(Ease.OutQuad))
@@ -170,6 +172,8 @@ namespace Economic.InGame
                 {
                     visual.gameObject.SetActive(false);
                     shadow.gameObject.SetActive(false);
+                    visualEchoes.gameObject.SetActive(false);
+                    shadowEchoes.gameObject.SetActive(false);
                 });
         }
 
@@ -181,7 +185,7 @@ namespace Economic.InGame
                 .AppendCallback(() =>
                 {
                     visual.gameObject.SetActive(false);
-                    shadowEchoes.gameObject.SetActive(false);
+                    shadow.gameObject.SetActive(false);
                     visualEchoes.gameObject.SetActive(true);
                     shadowEchoes.gameObject.SetActive(true);
                     vfxSpawn.Play(true);
