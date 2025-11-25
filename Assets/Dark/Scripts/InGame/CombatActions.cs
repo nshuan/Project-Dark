@@ -25,6 +25,8 @@ namespace InGame
             OnTowerCounter = null;
             OnEffectTriggered = null;
             OnOneEnemyDead = null;
+            OnBossKilled = null;
+            OnCollectResource = null;
             OnResourceCollectorDamaged = null;
         }
     }

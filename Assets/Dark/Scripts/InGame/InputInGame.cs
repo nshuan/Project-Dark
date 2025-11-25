@@ -110,6 +110,8 @@ namespace InGame
             
             teleMouseInput.Deactivate();
 
+            cursor.gameObject.SetActive(false);
+            
             ResetMotionBlur();
             ResetTimeScale();
         }

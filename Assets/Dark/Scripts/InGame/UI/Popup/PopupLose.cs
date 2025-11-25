@@ -19,9 +19,8 @@ namespace InGame.UI
         [Space]
         [SerializeField] private Button btnBackToTree;
         [SerializeField] private Button btnReplay;
-
-        [Space] [Header("Ending Level")] 
-        [SerializeField] private UIEndingAnimation uiEndingLevel;
+        
+        private IEndGameLoseAnimation endingLevel;
 
         public static event Action onShowPopup;
 
@@ -45,7 +44,11 @@ namespace InGame.UI
         private void OnLose()
         {
             UpdateUI();
-            // uiEndingLevel.Play();
+
+            delayShowPopup = 0f;
+            endingLevel = TowerDestroyedAnim.Instance;
+            if (endingLevel != null) delayShowPopup = endingLevel.Play();
+            
             ui.DoOpenFadeIn().SetDelay(delayShowPopup).OnComplete(() =>
             {
                 onShowPopup?.Invoke();
