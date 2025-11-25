@@ -6636,7 +6636,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b35be3d005a746728c79b5d358407a29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vfxTowerRegenerate: {fileID: 6806580430661345846}
+  vfxTowerRegenerate: {fileID: 5522022604870572529}
   vfxDuration: 4
 --- !u!1 &8258455137257381461
 GameObject:
@@ -7629,30 +7629,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: FX_Ingame_Tower_Regeneration
       objectReference: {fileID: 0}
-    - target: {fileID: 8596126102735591137, guid: d3d4618a6c1764a41b1649cf69216e18, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8596126102735591137, guid: d3d4618a6c1764a41b1649cf69216e18, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6806580430661345846}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d3d4618a6c1764a41b1649cf69216e18, type: 3}
---- !u!1 &2420132442245350257 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8596126102735591137, guid: d3d4618a6c1764a41b1649cf69216e18, type: 3}
+--- !u!114 &5522022604870572529 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1909439150597508193, guid: d3d4618a6c1764a41b1649cf69216e18, type: 3}
   m_PrefabInstance: {fileID: 6259328962521617808}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6806580430661345846
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2420132442245350257}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7e94c75fd7f48129c3ef1e06f1f3ff2, type: 3}
