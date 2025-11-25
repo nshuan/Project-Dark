@@ -1,8 +1,5 @@
-using System.Collections;
 using Dark.Scripts.Common;
 using Dark.Scripts.OutGame.SaveSlot;
-using Dark.Scripts.SceneNavigation;
-using Dark.Scripts.Utils;
 using UnityEngine;
 using UnityEngine.EventSystems;
 

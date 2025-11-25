@@ -56,6 +56,17 @@ namespace Dark.Scripts.Audio
         {
             sources[index].component.PlaySFX(volume, pitch, delay);
         }
+
+        public bool IsMuted => AudioListener.volume <= 0.0001f || AudioListener.pause; 
+        public void Mute()
+        {
+            AudioListener.volume = 0f;
+        }
+
+        public void Unmute()
+        {
+            AudioListener.volume = 1f;
+        }
         
         [Serializable]
         public class AudioSourceInfo
