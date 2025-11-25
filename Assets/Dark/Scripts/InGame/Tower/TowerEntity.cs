@@ -23,6 +23,7 @@ namespace InGame
         [SerializeField] private float[] thresholdState = new[] { 0f, 0.3f, 0.7f };
         [SerializeField] private TowerAutoRegenerate autoRegenerate;
         [SerializeField] private TowerRegenerateOnKill regenerateOnKill;
+        public Transform itemCollectorPosition;
         [SerializeField] private AudioComponent sfxHit;
 
         [Header("Config")]

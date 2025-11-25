@@ -40,12 +40,12 @@ namespace InGame
 
         private void Start()
         {
-            CombatActions.OnMoveTower += OnMoveTower;
+            CombatActions.OnMoveTowerComplete += OnMoveTower;
         }
 
         private void OnDestroy()
         {
-            CombatActions.OnMoveTower -= OnMoveTower;
+            CombatActions.OnMoveTowerComplete -= OnMoveTower;
         }
 
         private void Update()

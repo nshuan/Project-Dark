@@ -274,6 +274,7 @@ Transform:
   - {fileID: 1934759634443765471}
   - {fileID: 4886972568409485129}
   - {fileID: 146960521626612154}
+  - {fileID: 6118742615793322515}
   - {fileID: 1903735068486522707}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -310,6 +311,7 @@ MonoBehaviour:
   - 0.7
   autoRegenerate: {fileID: 7603125141272037379}
   regenerateOnKill: {fileID: 5926552855755970944}
+  itemCollectorPosition: {fileID: 6118742615793322515}
   sfxHit: {fileID: 3283040643563396951}
   normalSortingLayerName: Default
   normalSortingOrder: 55
@@ -6309,6 +6311,37 @@ MonoBehaviour:
   vfxInterval: 5
   vfxDuration: 4
   vfxDurationScale: 0.4
+--- !u!1 &6229637421301105514
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6118742615793322515}
+  m_Layer: 0
+  m_Name: OrbitCenterForItemCollector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6118742615793322515
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6229637421301105514}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 3.46, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8540445364392104723}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6293296468360316202
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Dark.Scripts.Utils;
 using DG.Tweening;
 using Economic.InGame.DropItems;
@@ -14,6 +15,7 @@ namespace Economic.InGame
         [SerializeField] private Transform visual;
         [SerializeField] private Transform shadow;
         [SerializeField] private EllipticalOrbit orbitMovement;
+        [SerializeField] private FloatingEffect floatingMovement;
         [SerializeField] private ParticleSystem vfxBreak;
         [SerializeField] private ParticleSystem vfxSpawn;
 
@@ -24,8 +26,8 @@ namespace Economic.InGame
         [Header("Config")]
         [SerializeField] private float delayRespawn = 2f;
         [SerializeField] private float heightFromPlayer = 2f;
-
-        private Transform player;
+        
+        private Transform[] orbitCenters; // Map by tower id
         private bool activated = false;
         private bool orbitMoving;
         private float orbitTimer;
@@ -40,13 +42,13 @@ namespace Economic.InGame
             visualEchoes.gameObject.SetActive(false);
             shadowEchoes.gameObject.SetActive(false);
             LevelManager.Instance.OnLevelLoaded += OnLevelLoaded;
-            CombatActions.OnMoveTower += OnMoveTower;
+            CombatActions.OnMoveTowerComplete += OnMoveTower;
             WealthManager.Instance.OnUpGrade += OnCharacterLevelUp;
         }
 
         private void OnDestroy()
         {
-            CombatActions.OnMoveTower -= OnMoveTower;
+            CombatActions.OnMoveTowerComplete -= OnMoveTower;
             WealthManager.Instance.OnUpGrade -= OnCharacterLevelUp;
         }
 
@@ -59,12 +61,14 @@ namespace Economic.InGame
                 if (orbitMoving)
                 {
                     orbitMovement.PauseOrbit();
+                    floatingMovement.ResumeFloat();
                     orbitTimer = RandomUtil.Range(2f, 4f);
                     orbitMoving = false;
                 }
                 else
                 {
                     orbitMovement.ResumeOrbit();
+                    floatingMovement.PauseFloat();
                     orbitTimer = RandomUtil.Range(3f, 5f);
                     orbitMoving = true;
                 }
@@ -73,11 +77,13 @@ namespace Economic.InGame
 
         private void OnLevelLoaded(LevelConfig level)
         {
-            player = LevelManager.Instance.Player.transform;
-            transform.position = player.position + new Vector3(0f, heightFromPlayer, 0f);
+            orbitCenters = LevelManager.Instance.Towers.Select((tower) => tower.itemCollectorPosition).ToArray();
+            transform.position = LevelManager.Instance.CurrentTower.itemCollectorPosition.position;
             orbitMovement.ResetOrbit();
             orbitMovement.StartOrbit();
-            orbitMoving = false;
+            orbitMovement.ResumeOrbit();
+            orbitMoving = true;
+            orbitTimer = 0f;
             DoSpawn().SetDelay(1f).OnComplete(() =>
             {
                 activated = true;
@@ -87,13 +93,17 @@ namespace Economic.InGame
 
         private void OnMoveTower(float cooldown)
         {
-            if (!player) return;
+            var id = LevelManager.Instance.CurrentTower.Id;
+            if (id < 0 || id >= orbitCenters.Length) return;
             activated = false;
             DoHide().OnComplete(() =>
             {
-                transform.position = player.position + new Vector3(0f, heightFromPlayer, 0f);
+                transform.position = orbitCenters[id].position;
                 orbitMovement.ResetOrbit();
                 orbitMovement.StartOrbit();
+                orbitMovement.ResumeOrbit();
+                orbitMoving = true;
+                orbitTimer = 0.001f;
                 DoSpawn().SetDelay(delayRespawn).OnComplete(() =>
                 {
                     activated = true;
@@ -107,9 +117,13 @@ namespace Economic.InGame
             activated = false;
             DoShowEchoes().OnComplete(() =>
             {
-                transform.position = player.position + new Vector3(0f, heightFromPlayer, 0f);
+                var id = LevelManager.Instance.CurrentTower.Id;
+                if (id >= 0 && id < orbitCenters.Length) transform.position = orbitCenters[id].position;
                 orbitMovement.ResetOrbit();
                 orbitMovement.StartOrbit();
+                orbitMovement.ResumeOrbit();
+                orbitMoving = true;
+                orbitTimer = 0f;
                 DoSpawn().SetDelay(delayRespawn).OnComplete(() =>
                 {
                     activated = true;

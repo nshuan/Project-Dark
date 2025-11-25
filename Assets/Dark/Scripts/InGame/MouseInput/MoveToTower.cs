@@ -78,7 +78,7 @@ namespace InGame
                     Cooldown = GetCooldown(ShortConfig);
                     cdCounter = Cooldown;
                     CanCountdown = true;
-                    CombatActions.OnMoveTower?.Invoke(Cooldown);
+                    CombatActions.OnMoveTowerComplete?.Invoke(Cooldown);
                 };
                 
                 Character.HideShotRadius();

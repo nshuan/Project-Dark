@@ -26,7 +26,7 @@ namespace InGame.UI.CombatSkills
         private void OnDestroy()
         {
             UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
-            CombatActions.OnMoveTower -= OnSkillUsed;
+            CombatActions.OnMoveTowerComplete -= OnSkillUsed;
         }
 
         private void OnUpgradeBonusActivated(UpgradeBonusInfo bonusInfo)
@@ -59,8 +59,8 @@ namespace InGame.UI.CombatSkills
             
             available = true;
             callbackShowSkill?.Invoke();
-            CombatActions.OnMoveTower -= OnSkillUsed;
-            CombatActions.OnMoveTower += OnSkillUsed;
+            CombatActions.OnMoveTowerComplete -= OnSkillUsed;
+            CombatActions.OnMoveTowerComplete += OnSkillUsed;
         }
         
         protected override void ShowToast()

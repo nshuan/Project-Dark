@@ -18,7 +18,7 @@ namespace InGame
         private void Awake()
         {
             CombatActions.OnOneEnemyDead += OnEnemyKilled;
-            CombatActions.OnMoveTower += OnMoveTower;
+            CombatActions.OnMoveTowerComplete += OnMoveTower;
         }
 
         private void OnEnemyKilled(EnemyEntity enemy)

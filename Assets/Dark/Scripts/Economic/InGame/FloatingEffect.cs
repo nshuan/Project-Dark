@@ -19,6 +19,7 @@ namespace Economic.InGame
         private Vector3 _startPosition;
         private Vector3 _basePosition;
         private float _time;
+        private bool _isPaused;
 
         private void Awake()
         {
@@ -29,6 +30,7 @@ namespace Economic.InGame
 
         private void Update()
         {
+            if (_isPaused) return;
             _time += Time.deltaTime;
             
             // Calculate floating position using sine wave
@@ -58,6 +60,16 @@ namespace Economic.InGame
             _startPosition = transform.localPosition;
             _basePosition = _startPosition + startOffset;
             _time = 0f;
+        }
+
+        public void PauseFloat()
+        {
+            _isPaused = true;
+        }
+
+        public void ResumeFloat()
+        {
+            _isPaused = false;
         }
     }
 }
