@@ -6637,7 +6637,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   vfxTowerRegenerate: {fileID: 5522022604870572529}
-  vfxDuration: 4
+  vfxDuration: 2
 --- !u!1 &8258455137257381461
 GameObject:
   m_ObjectHideFlags: 0
@@ -6870,6 +6870,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1934759634443765471}
     m_Modifications:
+    - target: {fileID: 453596628628413638, guid: d3d4618a6c1764a41b1649cf69216e18, type: 3}
+      propertyPath: looping
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2750045570434812719, guid: d3d4618a6c1764a41b1649cf69216e18, type: 3}
+      propertyPath: looping
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2880271474612967449, guid: d3d4618a6c1764a41b1649cf69216e18, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -6910,6 +6918,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5223242767166274995, guid: d3d4618a6c1764a41b1649cf69216e18, type: 3}
+      propertyPath: looping
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6266871392819212630, guid: d3d4618a6c1764a41b1649cf69216e18, type: 3}
+      propertyPath: looping
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8596126102735591137, guid: d3d4618a6c1764a41b1649cf69216e18, type: 3}
       propertyPath: m_Name
       value: FX_Ingame_Tower_Regeneration
@@ -6917,6 +6933,10 @@ PrefabInstance:
     - target: {fileID: 8596126102735591137, guid: d3d4618a6c1764a41b1649cf69216e18, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8802452422554135422, guid: d3d4618a6c1764a41b1649cf69216e18, type: 3}
+      propertyPath: looping
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7585,6 +7605,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4886972568409485129}
     m_Modifications:
+    - target: {fileID: 453596628628413638, guid: d3d4618a6c1764a41b1649cf69216e18, type: 3}
+      propertyPath: lengthInSec
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2750045570434812719, guid: d3d4618a6c1764a41b1649cf69216e18, type: 3}
+      propertyPath: lengthInSec
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 2880271474612967449, guid: d3d4618a6c1764a41b1649cf69216e18, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -7625,9 +7653,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3406214499674228883, guid: d3d4618a6c1764a41b1649cf69216e18, type: 3}
+      propertyPath: lengthInSec
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5223242767166274995, guid: d3d4618a6c1764a41b1649cf69216e18, type: 3}
+      propertyPath: lengthInSec
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6266871392819212630, guid: d3d4618a6c1764a41b1649cf69216e18, type: 3}
+      propertyPath: lengthInSec
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 8596126102735591137, guid: d3d4618a6c1764a41b1649cf69216e18, type: 3}
       propertyPath: m_Name
       value: FX_Ingame_Tower_Regeneration
+      objectReference: {fileID: 0}
+    - target: {fileID: 8596126102735591137, guid: d3d4618a6c1764a41b1649cf69216e18, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8802452422554135422, guid: d3d4618a6c1764a41b1649cf69216e18, type: 3}
+      propertyPath: lengthInSec
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9189167435750525335, guid: d3d4618a6c1764a41b1649cf69216e18, type: 3}
+      propertyPath: lengthInSec
+      value: 1.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

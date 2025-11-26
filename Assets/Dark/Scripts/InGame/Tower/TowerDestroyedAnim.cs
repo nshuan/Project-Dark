@@ -44,7 +44,7 @@ namespace InGame
             mainSkeleton.Initialize(false);
             var trackEntry = mainSkeleton.AnimationState.SetAnimation(0, animationName, false);
             trackEntry.TrackTime = 0f; // Set to first frame
-            trackEntry.TimeScale = 0f; // Pause the animation (don't play)
+            // trackEntry.TimeScale = 0f; // Pause the animation (don't play)
             mainSkeleton.AnimationState.Update(0f);
             mainSkeleton.Update(0f); // Render first frame
             
@@ -62,16 +62,8 @@ namespace InGame
                 .Join(mainSkeletonHolder.DOScale(1.5f, durationFocusTower))
                 .WaitForCompletion();
             
-            trackEntry = mainSkeleton.AnimationState.GetCurrent(0);
-            if (trackEntry != null)
-            {
-                trackEntry.TimeScale = 1f; // Resume the animation
-                vfxExplode.Play();
-
-                yield return new WaitForSeconds(durationDestroyTower);
-                trackEntry.TimeScale = 0f;
-            }
-                    
+            // trackEntry.TimeScale = 1f; // Resume the animation
+            vfxExplode.Play();
         }
 
         public float Play()

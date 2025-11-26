@@ -85,6 +85,7 @@ namespace InGame.UI
         private static readonly int MatDisolveValue = Shader.PropertyToID("Disolve_Value");
         
         [SerializeField] private Image imgSymbol;
+        [SerializeField] private Image imgSymbolShiny;
         [SerializeField] private Image imgTitle;
         [SerializeField] private Image imgTitleBg;
         [SerializeField] private TextMeshProUGUI txtDescription;
@@ -105,6 +106,7 @@ namespace InGame.UI
         private void ResetPopupUI()
         {
             matSymbol.SetFloat(MatDisolveValue, 1f);
+            imgSymbolShiny.gameObject.SetActive(false);
             imgTitle.SetAlpha(0f);
             imgTitleBg.SetAlpha(0f);
             txtDescription.SetAlpha(0f);
@@ -125,6 +127,7 @@ namespace InGame.UI
                 .Append(DOTween.To(() => 1f, (x) => matSymbol.SetFloat(MatDisolveValue, x), 0f, 1f))
                 .AppendCallback((() =>
                 {
+                    imgSymbolShiny.gameObject.SetActive(true);
                     imgTitleBg.DOFade(1f, 0.3f).SetUpdate(true);
                     imgTitle.DOFade(1f, durationTitle).SetUpdate(true).SetDelay(0.1f);
                     
