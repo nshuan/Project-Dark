@@ -18,14 +18,19 @@ namespace Economic.UI
         {
             CombatActions.OnResourceCollectorDamaged += OnCollectEntityDamaged;
             LevelManager.Instance.OnLevelLoaded += OnLevelLoaded;
-            LevelManager.Instance.OnWin += OnLevelCompleted;
-            LevelManager.Instance.OnLose += OnLevelCompleted;
+            LevelManager.Instance.OnWin += OnWin;
+            LevelManager.Instance.OnLose += OnLose;
             // LevelManager.Instance.onWaveEnded += OnWaveEnded;
         }
 
-        private void OnLevelCompleted()
+        private void OnWin()
         {
             EItemDropManager.Instance.CollectAll(player.transform);
+            CombatActions.OnCollectResource -= OnEnemyDead;
+        }
+        
+        private void OnLose()
+        {
             CombatActions.OnCollectResource -= OnEnemyDead;
         }
 
