@@ -211,14 +211,16 @@ namespace InGame
                 if (pressingButton == PointerEventData.InputButton.Left)
                     pressingButton = PointerEventData.InputButton.Middle;
                 
-                if (!BlockTeleport)
-                    teleMouseInput?.OnMouseClick(false);
-                teleMouseInput?.OnDeactivated();
-                
                 IsMousePressingStarted = false;
                 
                 if (!IsMousePressing)
                 {
+                    if (!BlockTeleport)
+                    {
+                        teleMouseInput?.OnMouseClick(false);
+                        teleMouseInput?.OnDeactivated();
+                    }
+                    
                     mouseInput?.OnMouseClick();
                     mouseInput?.ResetChargeVariable();
                     return;
