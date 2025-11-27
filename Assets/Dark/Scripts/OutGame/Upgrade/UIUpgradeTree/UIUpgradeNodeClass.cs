@@ -21,7 +21,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         {
             txtNodeLevel.transform.parent.gameObject.SetActive(false);
             imgAvailable.SetActive(true);
-            imgLock.SetActive(false);
+            imgLock.gameObject.SetActive(false);
             imgActivatedGlow.SetActive(false);
             imgBorder.gameObject.SetActive(true);
             imgActivatedMaxGlow.gameObject.SetActive(false);

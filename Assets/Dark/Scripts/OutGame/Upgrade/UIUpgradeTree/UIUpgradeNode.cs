@@ -30,7 +30,8 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] protected GameObject imgActivatedMaxGlow;
         [SerializeField] protected Transform rectActivatedMaxOutline;
         [SerializeField] protected GameObject imgAvailable;
-        [SerializeField] protected GameObject imgLock;
+        [SerializeField] protected Image imgLock;
+        [SerializeField] protected Image imgIconLock;
         [SerializeField] protected UIParticle vfxUnlock;
         [SerializeField] protected UIParticle vfxActivate;
         [SerializeField] protected UIParticle vfxActivateMax;
@@ -71,7 +72,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                         txtNodeLevel.transform.parent.gameObject.SetActive(true);
                     }
                     imgAvailable.SetActive(true);
-                    imgLock.SetActive(false);
+                    imgLock.gameObject.SetActive(false);
                     imgActivatedGlow.SetActive(false);
                     imgActivatedMaxGlow.SetActive(false);
                     rectActivatedMaxOutline.gameObject.SetActive(false);
@@ -94,7 +95,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     currentState = UIUpgradeNodeState.Locked;
                     txtNodeLevel.transform.parent.gameObject.SetActive(false);
                     imgAvailable.SetActive(false);
-                    imgLock.SetActive(true);
+                    imgLock.gameObject.SetActive(true);
                     imgActivatedGlow.SetActive(false);
                     imgActivatedMaxGlow.SetActive(false);
                     rectActivatedMaxOutline.gameObject.SetActive(false);
@@ -119,7 +120,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     currentState = UIUpgradeNodeState.Locked;
                     txtNodeLevel.transform.parent.gameObject.SetActive(false);
                     imgAvailable.SetActive(false);
-                    imgLock.SetActive(true);
+                    imgLock.gameObject.SetActive(true);
                     imgActivatedGlow.SetActive(false);
                     imgActivatedMaxGlow.SetActive(false);
                     rectActivatedMaxOutline.gameObject.SetActive(false);
@@ -147,7 +148,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                         txtNodeLevel.transform.parent.gameObject.SetActive(true);
                     }
                     imgAvailable.SetActive(true);
-                    imgLock.SetActive(false);
+                    imgLock.gameObject.SetActive(false);
                     imgActivatedGlow.SetActive(data.level < config.MaxLevel);
                     if (data.level >= config.MaxLevel)
                     {
@@ -234,11 +235,21 @@ namespace Dark.Scripts.OutGame.Upgrade
                     if (lineInfo.preRequireId != fromId) continue;
                     seq.AppendCallback(() =>
                         {
-                            DOVirtual.DelayedCall(lineInfo.line.activateDuration - 0.1f, () => vfxUnlock?.Play());
+                            DOVirtual.DelayedCall(lineInfo.line.activateDuration - 0.1f, () =>
+                            {
+                                imgAvailable.gameObject.SetActive(true);
+                                vfxUnlock?.Play();
+                            });
                         })
                         .Append(lineInfo.line.DoActivate());
                     break;
                 }
+
+                seq.Append(imgIconLock.transform.DOShakePosition(0.3f, new Vector3(0f, 1f, 0f), vibrato: 30, fadeOut: false,
+                    randomnessMode: ShakeRandomnessMode.Harmonic))
+                    .Append(imgIconLock.transform.DOLocalMoveY(-5f, 0.5f).SetEase(Ease.OutQuad).SetRelative())
+                    .Join(imgIconLock.DOFade(0f, 0.3f))
+                    .Join(imgLock.DOFade(0f, 0.3f));
             }
 
             return seq;
