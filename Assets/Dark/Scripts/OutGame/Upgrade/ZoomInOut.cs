@@ -13,6 +13,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         
         [Space]
         public RectTransform targetRect; // The UI element to zoom
+        public KeyCode keyHold = KeyCode.None;
         public float zoomSpeed = 0.1f;
         public float minScale = 0.5f;
         public float maxScale = 1.2f;
@@ -32,6 +33,8 @@ namespace Dark.Scripts.OutGame.Upgrade
         private void Start()
         {
             targetRect.localScale = Vector3.one * defaultScale;
+            if (keyHold == KeyCode.None)
+                activateKeyHolding = true;
         }
 
         private void Update()
@@ -40,10 +43,13 @@ namespace Dark.Scripts.OutGame.Upgrade
             // if (EventSystem.current && EventSystem.current.IsPointerOverGameObject() == false)
             //     return;
 
-            if (Input.GetKey(KeyCode.LeftControl))
-                activateKeyHolding = true;
-            if (Input.GetKeyUp(KeyCode.LeftControl))
-                activateKeyHolding = false;
+            if (keyHold != KeyCode.None)
+            {
+                if (Input.GetKey(keyHold))
+                    activateKeyHolding = true;
+                if (Input.GetKeyUp(keyHold))
+                    activateKeyHolding = false;
+            }
 
             if (activateKeyHolding == false) return;
             
