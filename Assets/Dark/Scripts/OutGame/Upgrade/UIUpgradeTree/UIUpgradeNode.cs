@@ -59,7 +59,8 @@ namespace Dark.Scripts.OutGame.Upgrade
                     if (currentState == UIUpgradeNodeState.Locked)
                     {
                         currentState = UIUpgradeNodeState.Available;
-                        vfxUnlock.Play();
+                        DoUnlockVfx(treeRef.LastUpgradeNodeId).OnComplete(UpdateUI);
+                        return;
                     }
                     
                     if (config.hideLevelInNode)
@@ -199,6 +200,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                 {
                     UIUpgradeNodeInfoPreview.Instance.Setup(config, true);
                     UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.rectTransform.sizeDelta.x / 2, 0f), true, () => hoverField.interactable = true);
+                    treeRef.LastUpgradeNodeId = config.nodeId;
                     treeRef.UpgradeAllNodesWithId(config.nodeId);
                     sfxUnlockSuccess?.Play();
                 }
@@ -222,6 +224,26 @@ namespace Dark.Scripts.OutGame.Upgrade
             treeRef.UpdateChildren(config.nodeId);
         }
 
+        public Tween DoUnlockVfx(int fromId)
+        {
+            var seq = DOTween.Sequence(this);
+            if (preRequires != null)
+            {
+                foreach (var lineInfo in preRequires)
+                {
+                    if (lineInfo.preRequireId != fromId) continue;
+                    seq.AppendCallback(() =>
+                        {
+                            DOVirtual.DelayedCall(lineInfo.line.activateDuration - 0.1f, () => vfxUnlock?.Play());
+                        })
+                        .Append(lineInfo.line.DoActivate());
+                    break;
+                }
+            }
+
+            return seq;
+        }
+        
         private Tween DoUpgrade()
         {
             DOTween.Complete(this);

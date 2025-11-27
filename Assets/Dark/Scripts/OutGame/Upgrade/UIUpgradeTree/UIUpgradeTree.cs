@@ -20,6 +20,8 @@ namespace Dark.Scripts.OutGame.Upgrade
         [Space] [Header("UI")] 
         [SerializeField] private Button btnDeselectAll;
 
+        public int LastUpgradeNodeId { get; set; } = -1;
+        
         public void UpdateChildren(int id)
         {
             if (nodeChildrenMap.TryGetValue(id, out var children))

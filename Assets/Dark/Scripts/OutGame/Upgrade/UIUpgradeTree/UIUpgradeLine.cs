@@ -1,5 +1,8 @@
 using Coffee.UIExtensions;
+using DG.Tweening;
+using Spine.Unity;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Dark.Scripts.OutGame.Upgrade
 {
@@ -8,8 +11,10 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private GameObject lineAvailable;
         [SerializeField] private GameObject lineLocked;
         [SerializeField] private GameObject lineActivated;
+        [SerializeField] private Image lineActivatedMask;
         [SerializeField] private GameObject lineGlow;
         [SerializeField] private UIParticle vfxUnlock;
+        public float activateDuration = 0.3f;
 
         private UIUpgradeNodeState currentState = UIUpgradeNodeState.Activated;
         
@@ -23,6 +28,23 @@ namespace Dark.Scripts.OutGame.Upgrade
             lineLocked.SetActive(state == UIUpgradeNodeState.Locked);
             lineActivated.SetActive(state == UIUpgradeNodeState.Activated);
             lineGlow.SetActive(state == UIUpgradeNodeState.Activated);
+        }
+        
+        public Tween DoActivate()
+        {
+            DOTween.Kill(this, true);
+            lineActivatedMask.gameObject.SetActive(false);
+            lineActivated.SetActive(true);
+            return DOTween.Sequence(this)
+                .AppendCallback(() =>
+                {
+                    lineActivatedMask.fillAmount = 0f;
+                    lineActivatedMask.gameObject.SetActive(true);
+                })
+                .Append(DOTween.To(() => 0f, x =>
+                {
+                    lineActivatedMask.fillAmount = x;
+                }, 1f, activateDuration).SetEase(Ease.OutQuad));
         }
     }
 }
