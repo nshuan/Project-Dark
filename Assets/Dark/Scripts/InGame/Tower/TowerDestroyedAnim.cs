@@ -16,11 +16,14 @@ namespace InGame
         [SerializeField] private SkeletonAnimation mainSkeleton;
         [SpineAnimationName(nameof(mainSkeleton))]
         [SerializeField] private string animationName;
+        [SpineAnimationName(nameof(mainSkeleton))] 
+        [SerializeField] private string animationReturnName;
         [SerializeField] private ParticleSystem vfxExplode;
         [SerializeField] private ParticleSystem vfxFlash;
         [SerializeField] private float delayShowFlash = 2f;
         [SerializeField] private float durationDestroyTower = 0.8f;
         [SerializeField] private float durationFocusTower = 0.5f;
+        [SerializeField] private float durationReturnAnim = 1.5f;
 
         public static IEndGameLoseAnimation Instance { get; private set; }
         
@@ -70,6 +73,17 @@ namespace InGame
         {
             StartCoroutine(IEPlay());
             return Mathf.Max(durationFocusTower + durationDestroyTower, 2f); // Thấy duration của vfx là 2s
+        }
+
+        public float PlayReturn()
+        {
+            mainSkeleton.Initialize(false);
+            var trackEntry = mainSkeleton.AnimationState.SetAnimation(0, animationReturnName, false);
+            trackEntry.TrackTime = 0f; // Set to first frame
+            mainSkeleton.AnimationState.Update(0f);
+            mainSkeleton.Update(0f); // Render first frame
+            this.DelayCall(durationReturnAnim, () => vfxFlash.Play(true));
+            return durationReturnAnim;
         }
     }
 }

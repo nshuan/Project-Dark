@@ -1,6 +1,7 @@
 using System;
 using Dark.Scripts.CoreUI;
 using Dark.Scripts.SceneNavigation;
+using Dark.Scripts.Utils;
 using Data;
 using DG.Tweening;
 using InGame.UI.EndingLevel;
@@ -14,6 +15,7 @@ namespace InGame.UI
     public class PopupLose : MonoBehaviour
     {
         [SerializeField] private UIPopup ui;
+        [SerializeField] private CanvasGroup popupLoseCanvasGroup;
         [SerializeField] private float delayShowPopup = 5f; // Do có vfx endgame khi trụ bị phá nên cần delay xong vfx mới show popup
         
         [Space]
@@ -64,8 +66,13 @@ namespace InGame.UI
             btnBackToTree.onClick.AddListener(() =>
             {
                 btnReplay.interactable = false;
-                btnBackToTree.interactable = false;
-                Loading.Instance.QuickLoadScene(SceneConstants.SceneUpgrade);
+                btnBackToTree.interactable = false;;
+                popupLoseCanvasGroup.DOFade(0f, 0.2f)
+                    .OnComplete(() =>
+                    {
+                        var returnDuration = endingLevel.PlayReturn();
+                        Loading.Instance.QuickLoadScene(SceneConstants.SceneUpgrade, null, returnDuration + 0.2f);
+                    });
             });
             
             // Todo reload level
