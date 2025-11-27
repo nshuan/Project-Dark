@@ -21,6 +21,8 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         private bool activateKeyHolding = false;
 
+        public static float CurrentScale;
+        
         private void Awake()
         {
             if (btnResetZoom)
@@ -33,6 +35,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         private void Start()
         {
             targetRect.localScale = Vector3.one * defaultScale;
+            CurrentScale = defaultScale;
             if (keyHold == KeyCode.None)
                 activateKeyHolding = true;
         }
@@ -62,6 +65,8 @@ namespace Dark.Scripts.OutGame.Upgrade
                 float currentScale = targetRect.localScale.x;
                 float newScale = Mathf.Clamp(currentScale + scroll * zoomSpeed, minScale, maxScale);
                 float scaleFactor = newScale / currentScale;
+
+                CurrentScale = newScale;
 
                 // Convert mouse position to local position in the targetRect
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(

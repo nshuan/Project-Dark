@@ -6,14 +6,16 @@ using Dark.Scripts.Utils.Camera;
 using DG.Tweening;
 using Economic;
 using InGame.Upgrade;
+using Sirenix.Serialization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Dark.Scripts.OutGame.Upgrade
 {
-    public class UIUpgradeNodeInfoPreview : MonoSingleton<UIUpgradeNodeInfoPreview>
+    public class UIUpgradeNodeInfoPreview : SerializedMonoSingleton<UIUpgradeNodeInfoPreview>
     {
+        [OdinSerialize, NonSerialized] private INodePreviewPositionLogic nodePreviewPositionLogic;
         [SerializeField] private Vector2 rectInfoFramePadding;
         [SerializeField] private RectTransform rectInfoFrame;
         [SerializeField] private RectTransform rectInfoFrameContent;
@@ -44,6 +46,8 @@ namespace Dark.Scripts.OutGame.Upgrade
         private UpgradeNodeConfig cacheConfig;
         private bool isVisible;
         private Vector2 mousePos = Vector2.zero;
+        private Vector2 cacheHoverNodePosition = new Vector2(0, 0);
+        private Vector2 cacheHoverNodePadding = new Vector2(0, 0);
 
         public void Setup(UpgradeNodeConfig config, bool forceUpdate)
         {
@@ -120,31 +124,21 @@ namespace Dark.Scripts.OutGame.Upgrade
 
             mousePos.x = Input.mousePosition.x;
             mousePos.y = Input.mousePosition.y;
-            // Check if the panel is outside the screen
-            var framePos = mousePos;
-            var framePivot = new Vector2(0f, 0.5f);
-            if (mousePos.x + rectInfoFrame.sizeDelta.x - rectInfoFramePadding.x > SafeScaler.ScreenWidth)
-            {
-                framePivot.x = 1f;
-            }
-            else
-            {
-                framePivot.x = 0f;
-            }
-
-            if (mousePos.y + rectInfoFrame.sizeDelta.y / 2 - rectInfoFramePadding.y > SafeScaler.ScreenHeight)
-                framePivot.y = 1f;
-            else if (mousePos.y - rectInfoFrame.sizeDelta.y / 2 + rectInfoFramePadding.y < 0)
-                framePivot.y = 0f;
-            else
-                framePivot.y = 1f;
-
-            rectInfoFrame.position = framePos;
-            rectInfoFrame.pivot = framePivot;
+            
+            nodePreviewPositionLogic.UpdatePosition(
+                ref mousePos,
+                ref cacheHoverNodePosition,
+                ref cacheHoverNodePadding,
+                ref rectInfoFramePadding,
+                ref rectInfoFrame);
         }
 
         public void Show(Vector2 position, Vector2 padding, bool forceShow, Action onShow)
         {
+            cacheHoverNodePosition.x = position.x;
+            cacheHoverNodePosition.y = position.y;
+            cacheHoverNodePadding.x = padding.x;
+            cacheHoverNodePadding.y = padding.y;
             if (CanAutoShowHide == false && forceShow == false) return;
             isVisible = true;
             DoShow().OnComplete(() => onShow?.Invoke());

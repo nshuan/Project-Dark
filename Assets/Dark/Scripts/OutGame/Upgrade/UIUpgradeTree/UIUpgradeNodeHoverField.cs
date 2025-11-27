@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 
 namespace Dark.Scripts.OutGame.Upgrade
 {
@@ -10,12 +11,12 @@ namespace Dark.Scripts.OutGame.Upgrade
         public Action onHoverExit;
         public Action onPointerClick;
         
-        public RectTransform rectTransform;
+        public RectTransform nodeRepresentableRect;
         public bool interactable;
 
         private void Awake()
         {
-            rectTransform = GetComponent<RectTransform>();
+            nodeRepresentableRect ??= GetComponent<RectTransform>();
         }
 
         public void OnPointerEnter(PointerEventData eventData)
