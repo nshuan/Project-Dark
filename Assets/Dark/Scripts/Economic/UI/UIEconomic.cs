@@ -1,11 +1,11 @@
 using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 
 namespace Economic.UI
 {
     public class UIEconomic : MonoBehaviour
     {
-        private Coroutine coroutineAnimatedUpdating;
         protected int current;
         protected int target;
         protected float updateInterval = 0.05f;
@@ -20,44 +20,62 @@ namespace Economic.UI
         {
             if (target == this.target) return;
             this.target = target;
-            
-            if (coroutineAnimatedUpdating == null)
+
+            DoAnimatedUpdating().OnComplete(() =>
             {
-                coroutineAnimatedUpdating = StartCoroutine(IEAnimatedUpdating());
-            }
+                current = this.target;
+                UpdateUI();
+            });
         }
 
-        private IEnumerator IEAnimatedUpdating()
+        private Tween DoAnimatedUpdating()
         {
+            DOTween.Kill(this);
+            var seq = DOTween.Sequence(this);
             var step = 1;
             if (current < target)
             {
                 if ((target - current) * updateInterval > maxUpdateDuration)
                     step = (int)((target - current) / maxUpdateDuration * updateInterval);
-                
-                while (current < target)
+
+                TweenCallback actionUpdate = () =>
                 {
                     current += step;
                     UpdateUI();
-                    yield return new WaitForSeconds(updateInterval);
+                };
+                
+                for (var i = 0; i < maxUpdateDuration / updateInterval; i++)
+                {
+                    seq.AppendCallback(actionUpdate)
+                        .AppendInterval(updateInterval);
                 }
+                
             }
             else if (current > target)
             {
                 if ((- target + current) * updateInterval > maxUpdateDuration)
                     step = (int)((- target + current) / maxUpdateDuration * updateInterval);
                 
-                while (current > target)
+                TweenCallback actionUpdate = () =>
                 {
                     current -= step;
                     UpdateUI();
-                    yield return new WaitForSeconds(updateInterval);
+                };
+                
+                for (var i = 0; i < maxUpdateDuration / updateInterval; i++)
+                {
+                    seq.AppendCallback(actionUpdate)
+                        .AppendInterval(updateInterval);
                 }
             }
 
-            current = target;
-            UpdateUI();
-            coroutineAnimatedUpdating = null;
+            seq.AppendCallback(() =>
+            {
+                current = target;
+                UpdateUI();
+            });
+
+            return seq;
         }
     }
 }

@@ -23,14 +23,14 @@ namespace Economic
             grade = WealthManager.Instance.Grade;
             exp = WealthManager.Instance.Exp;
             levelPoint = WealthManager.Instance.LevelPoint;
-            dark = WealthManager.Instance.Dark;
+            dark = WealthManager.Instance.Vestige;
             bossPoint = WealthManager.Instance.BossPoint;
             UpdateUI();
 
             WealthManager.Instance.OnUpGrade += OnUpGrade;
             WealthManager.Instance.OnExpChanged += OnExpChanged;
             WealthManager.Instance.OnLevelPointChanged += OnLevelPointChanged;
-            WealthManager.Instance.OnDarkChanged += OnDarkChanged;
+            WealthManager.Instance.OnVestigeChanged += OnDarkChanged;
             WealthManager.Instance.OnBossPointChanged += OnBossPointChanged;
         }
 

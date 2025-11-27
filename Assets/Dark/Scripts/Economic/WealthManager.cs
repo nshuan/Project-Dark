@@ -58,24 +58,24 @@ namespace Economic
 
         #endregion
 
-        #region Dark
+        #region Vestige
 
-        private int dark;
-        public int Dark => dark;
+        private int vestige;
+        public int Vestige => vestige;
 
-        public void AddDark(int value)
+        public void AddVestige(int value)
         {
-            dark += value;
+            vestige += value;
             Save();
-            OnDarkChanged?.Invoke(dark - value, dark);
+            OnVestigeChanged?.Invoke(vestige - value, vestige);
         }
 
-        public bool UseDark(int value)
+        public bool UseVestige(int value)
         {
-            if (value > dark) return false;
-            dark -= value;
+            if (value > vestige) return false;
+            vestige -= value;
             Save();
-            OnDarkChanged?.Invoke(dark + value, dark);
+            OnVestigeChanged?.Invoke(vestige + value, vestige);
             return true;
         }
 
@@ -109,7 +109,7 @@ namespace Economic
         public Action<int> OnUpGrade { get; set; } // <CurrentLevel>
         public Action<int, int> OnExpChanged { get; set; } // <BeforeChange, AfterChange>
         public Action<int, int> OnLevelPointChanged { get; set; }
-        public Action<int, int> OnDarkChanged { get; set; }
+        public Action<int, int> OnVestigeChanged { get; set; }
         public Action<int, int> OnBossPointChanged { get; set; }
         
         #endregion
@@ -125,7 +125,7 @@ namespace Economic
             grade = data.grade;
             exp = data.exp;
             levelPoint = data.levelPoint;
-            dark = data.dark;
+            vestige = data.dark;
             bossPoint = data.bossPoint;
         }
 
@@ -135,7 +135,7 @@ namespace Economic
             data.grade = grade;
             data.exp = exp;
             data.levelPoint = levelPoint;
-            data.dark = dark;
+            data.dark = vestige;
             data.bossPoint = bossPoint;
             
             PlayerDataManager.Instance.Save(data);
@@ -146,7 +146,7 @@ namespace Economic
             switch (type)
             {
                 case WealthType.Vestige:
-                    return Dark >= amount;
+                    return Vestige >= amount;
                 case WealthType.Echoes:
                     return LevelPoint >= amount;
                 case WealthType.Sigils:
@@ -161,7 +161,7 @@ namespace Economic
             switch (type)
             {
                 case WealthType.Vestige:
-                    UseDark(amount);
+                    UseVestige(amount);
                     break;
                 case WealthType.Echoes:
                     UseLevelPoint(amount);
