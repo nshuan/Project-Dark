@@ -32,19 +32,21 @@ namespace Economic.UI
         {
             DOTween.Kill(this);
             var seq = DOTween.Sequence(this);
-            var step = 1;
+            var stepSize = 1;
+            var step = (int)(maxUpdateDuration / updateInterval);
             if (current < target)
             {
                 if ((target - current) * updateInterval > maxUpdateDuration)
-                    step = (int)((target - current) / maxUpdateDuration * updateInterval);
+                    stepSize = (int)((target - current) / maxUpdateDuration * updateInterval);
+                else step = target - current;
 
                 TweenCallback actionUpdate = () =>
                 {
-                    current += step;
+                    current += stepSize;
                     UpdateUI();
                 };
                 
-                for (var i = 0; i < maxUpdateDuration / updateInterval; i++)
+                for (var i = 0; i < step; i++)
                 {
                     seq.AppendCallback(actionUpdate)
                         .AppendInterval(updateInterval);
@@ -53,16 +55,17 @@ namespace Economic.UI
             }
             else if (current > target)
             {
-                if ((- target + current) * updateInterval > maxUpdateDuration)
-                    step = (int)((- target + current) / maxUpdateDuration * updateInterval);
+                if ((-target + current) * updateInterval > maxUpdateDuration)
+                    stepSize = (int)((-target + current) / maxUpdateDuration * updateInterval);
+                else step = -target + current;
                 
                 TweenCallback actionUpdate = () =>
                 {
-                    current -= step;
+                    current -= stepSize;
                     UpdateUI();
                 };
                 
-                for (var i = 0; i < maxUpdateDuration / updateInterval; i++)
+                for (var i = 0; i < step; i++)
                 {
                     seq.AppendCallback(actionUpdate)
                         .AppendInterval(updateInterval);
