@@ -14,6 +14,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private Image lineActivatedMask;
         [SerializeField] private GameObject lineGlow;
         [SerializeField] private UIParticle vfxUnlock;
+        [SerializeField] private CanvasGroup groupLine;
         public float activateDuration = 0.3f;
 
         private UIUpgradeNodeState currentState = UIUpgradeNodeState.Activated;
@@ -45,6 +46,12 @@ namespace Dark.Scripts.OutGame.Upgrade
                 {
                     lineActivatedMask.fillAmount = x;
                 }, 1f, activateDuration).SetEase(Ease.OutQuad));
+        }
+
+        public Tween DoSpawn()
+        {
+            groupLine.alpha = 0f;
+            return groupLine.DOFade(1f, 0.1f);
         }
     }
 }

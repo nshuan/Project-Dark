@@ -22,6 +22,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [Space]
         [Header("UI")]
         [SerializeField] protected UIUpgradeNodeHoverField hoverField;
+        [SerializeField] protected UIUpgradeNodeSpawnAnimation spawnAnimation;
 
         [SerializeField] protected Image nodeVisual;
         [SerializeField] protected Image nodeLockVisual;
@@ -277,6 +278,11 @@ namespace Dark.Scripts.OutGame.Upgrade
                 .Append(imgBorder.DOLocalRotate(new Vector3(0f, 0f, 180f), 0.4f).SetRelative())
                 .Join(imgBorder.DOScale(1.2f, 0.4f).SetEase(Ease.OutQuad))
                 .Append(imgBorder.DOScale(1f, 0.2f).SetEase(Ease.InQuad));
+        }
+        
+        public Tween DoSpawn()
+        {
+            return spawnAnimation.SpawnLogic.DoSpawn();
         }
 
         private void OnDrawGizmos()

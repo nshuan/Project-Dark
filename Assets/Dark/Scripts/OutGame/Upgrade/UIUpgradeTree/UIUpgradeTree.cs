@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEditor;
@@ -51,6 +52,82 @@ namespace Dark.Scripts.OutGame.Upgrade
             {
                 UIUpgradeNodeInfoPreview.Instance.Hide(true);
             });
+        }
+
+        private void OnEnable()
+        {
+            // Do Spawn Animation
+            var nodesMapByLayer = new Dictionary<int, List<UIUpgradeNode>>();
+            var queueCheck = new Queue<UIUpgradeNode>();
+            var currentLayerNodes = new List<UIUpgradeNode>();
+            foreach (var pair in nodesMap)
+            {
+                if (pair.Value[0].preRequires == null || pair.Value[0].preRequires.Count == 0)
+                {
+                    foreach (var node in pair.Value)
+                    {
+                        currentLayerNodes.Add(node);
+                        queueCheck.Enqueue(node);
+                    }
+                }
+            }
+            
+            nodesMapByLayer[0] = new List<UIUpgradeNode>(currentLayerNodes);
+            currentLayerNodes.Clear();
+
+            var currentLayer = 1;
+            var currentLayerCount = queueCheck.Count;
+            while (queueCheck.Count > 0)
+            {
+                var node = queueCheck.Dequeue();
+                currentLayerNodes.Add(node);
+                currentLayerCount--;
+                if (nodeChildrenMap.TryGetValue(node.config.nodeId, out var children))
+                {
+                    foreach (var child in children)
+                    {
+                        if (!queueCheck.Contains(child))
+                            queueCheck.Enqueue(child);
+                    }
+                }
+                if (currentLayerCount == 0)
+                {
+                    nodesMapByLayer[currentLayer] = new List<UIUpgradeNode>(currentLayerNodes);
+                    currentLayer++;
+                    currentLayerCount = queueCheck.Count;
+                    currentLayerNodes.Clear(); 
+                }
+            }
+            
+            DOTween.Kill(this);
+            var seq = DOTween.Sequence(this);
+            var delayStep = 0.1f;
+            foreach (var pair in nodesMapByLayer)
+            {
+                foreach (var node in pair.Value)
+                {
+                    var stepSeq = DOTween.Sequence();
+                    if (node.preRequires is { Count: > 0 })
+                    {
+                        foreach (var preRequireInfo in node.preRequires)
+                        {
+                            stepSeq.Join(preRequireInfo.line.DoSpawn());
+                        }
+                    }
+
+                    stepSeq.Join(node.DoSpawn().SetDelay(0.05f));
+                    stepSeq.Pause();
+                    
+                    seq.AppendCallback(() =>
+                    {
+                        stepSeq.Play();
+                    });
+                }
+
+                seq.AppendInterval(delayStep);
+            }
+
+            seq.SetDelay(0.5f);
         }
 
 #if UNITY_EDITOR
