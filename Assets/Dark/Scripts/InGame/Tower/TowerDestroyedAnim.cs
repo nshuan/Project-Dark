@@ -16,11 +16,14 @@ namespace InGame
         [SerializeField] private SkeletonAnimation mainSkeleton;
         [SpineAnimationName(nameof(mainSkeleton))]
         [SerializeField] private string animationName;
+        [SpineAnimationName(nameof(mainSkeleton))] 
+        [SerializeField] private string animationReturnName;
         [SerializeField] private ParticleSystem vfxExplode;
         [SerializeField] private ParticleSystem vfxFlash;
         [SerializeField] private float delayShowFlash = 2f;
         [SerializeField] private float durationDestroyTower = 0.8f;
         [SerializeField] private float durationFocusTower = 0.5f;
+        [SerializeField] private float durationReturnAnim = 1.5f;
 
         public static IEndGameLoseAnimation Instance { get; private set; }
         
@@ -44,7 +47,7 @@ namespace InGame
             mainSkeleton.Initialize(false);
             var trackEntry = mainSkeleton.AnimationState.SetAnimation(0, animationName, false);
             trackEntry.TrackTime = 0f; // Set to first frame
-            trackEntry.TimeScale = 0f; // Pause the animation (don't play)
+            // trackEntry.TimeScale = 0f; // Pause the animation (don't play)
             mainSkeleton.AnimationState.Update(0f);
             mainSkeleton.Update(0f); // Render first frame
             
@@ -62,22 +65,25 @@ namespace InGame
                 .Join(mainSkeletonHolder.DOScale(1.5f, durationFocusTower))
                 .WaitForCompletion();
             
-            trackEntry = mainSkeleton.AnimationState.GetCurrent(0);
-            if (trackEntry != null)
-            {
-                trackEntry.TimeScale = 1f; // Resume the animation
-                vfxExplode.Play();
-
-                yield return new WaitForSeconds(durationDestroyTower);
-                trackEntry.TimeScale = 0f;
-            }
-                    
+            // trackEntry.TimeScale = 1f; // Resume the animation
+            vfxExplode.Play();
         }
 
         public float Play()
         {
             StartCoroutine(IEPlay());
             return Mathf.Max(durationFocusTower + durationDestroyTower, 2f); // Thấy duration của vfx là 2s
+        }
+
+        public float PlayReturn()
+        {
+            mainSkeleton.Initialize(false);
+            var trackEntry = mainSkeleton.AnimationState.SetAnimation(0, animationReturnName, false);
+            trackEntry.TrackTime = 0f; // Set to first frame
+            mainSkeleton.AnimationState.Update(0f);
+            mainSkeleton.Update(0f); // Render first frame
+            this.DelayCall(durationReturnAnim, () => vfxFlash.Play(true));
+            return durationReturnAnim;
         }
     }
 }

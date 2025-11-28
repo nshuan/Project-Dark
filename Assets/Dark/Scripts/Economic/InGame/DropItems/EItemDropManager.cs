@@ -109,7 +109,7 @@ namespace Economic.InGame.DropItems
 
         public void Claim()
         {
-            if (Vestige > 0)  WealthManager.Instance.AddDark(Vestige);
+            if (Vestige > 0)  WealthManager.Instance.AddVestige(Vestige);
             if (Sigils > 0)  WealthManager.Instance.AddBossPoint(Sigils);
             if (Echoes > 0)  WealthManager.Instance.AddLevelPoint(Echoes);
 

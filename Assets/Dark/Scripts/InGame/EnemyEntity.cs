@@ -173,6 +173,8 @@ namespace InGame
             {
                 inAttackRange = true;
                 animController.SetDefaultRun(false);
+                animController.transform.localScale =
+                    new Vector3(Mathf.Sign(Target.position.x - transform.position.x), 1f, 1f);
             }
             else
             {

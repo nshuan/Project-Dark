@@ -128,18 +128,18 @@ namespace InGame
 
         public bool CanMove => true;
 
-        public virtual void OnUpdate()
+        public virtual void OnUpdate(Vector2 worldMousePosition)
         {
             if (cdCounter >= 0) cdCounter -= Time.deltaTime;
             
             if (!CanShoot) return;
 
-            worldMousePosition = Cam.ScreenToWorldPoint(Input.mousePosition);
+            this.worldMousePosition.x = worldMousePosition.x;
+            this.worldMousePosition.y = worldMousePosition.y; 
             
             mousePosition = Input.mousePosition;
             mousePosition.z = 0; // Set z to 0 for 2D
             cursorRect.position = mousePosition;    
-            InputManager.PlayerVisual.SetDirection(worldMousePosition);
             
             cursor.UpdateCooldown(true, 1 - Mathf.Clamp(cdCounter / Cooldown, 0f, 1f));
             if (cdCounter <= 0)

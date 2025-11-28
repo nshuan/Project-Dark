@@ -22,6 +22,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [Space]
         [Header("UI")]
         [SerializeField] protected UIUpgradeNodeHoverField hoverField;
+        [SerializeField] protected UIUpgradeNodeSpawnAnimation spawnAnimation;
 
         [SerializeField] protected Image nodeVisual;
         [SerializeField] protected Image nodeLockVisual;
@@ -30,7 +31,8 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] protected GameObject imgActivatedMaxGlow;
         [SerializeField] protected Transform rectActivatedMaxOutline;
         [SerializeField] protected GameObject imgAvailable;
-        [SerializeField] protected GameObject imgLock;
+        [SerializeField] protected Image imgLock;
+        [SerializeField] protected Image imgIconLock;
         [SerializeField] protected UIParticle vfxUnlock;
         [SerializeField] protected UIParticle vfxActivate;
         [SerializeField] protected UIParticle vfxActivateMax;
@@ -59,7 +61,8 @@ namespace Dark.Scripts.OutGame.Upgrade
                     if (currentState == UIUpgradeNodeState.Locked)
                     {
                         currentState = UIUpgradeNodeState.Available;
-                        vfxUnlock.Play();
+                        DoUnlockVfx(treeRef.LastUpgradeNodeId).OnComplete(UpdateUI);
+                        return;
                     }
                     
                     if (config.hideLevelInNode)
@@ -70,7 +73,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                         txtNodeLevel.transform.parent.gameObject.SetActive(true);
                     }
                     imgAvailable.SetActive(true);
-                    imgLock.SetActive(false);
+                    imgLock.gameObject.SetActive(false);
                     imgActivatedGlow.SetActive(false);
                     imgActivatedMaxGlow.SetActive(false);
                     rectActivatedMaxOutline.gameObject.SetActive(false);
@@ -93,7 +96,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     currentState = UIUpgradeNodeState.Locked;
                     txtNodeLevel.transform.parent.gameObject.SetActive(false);
                     imgAvailable.SetActive(false);
-                    imgLock.SetActive(true);
+                    imgLock.gameObject.SetActive(true);
                     imgActivatedGlow.SetActive(false);
                     imgActivatedMaxGlow.SetActive(false);
                     rectActivatedMaxOutline.gameObject.SetActive(false);
@@ -118,7 +121,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     currentState = UIUpgradeNodeState.Locked;
                     txtNodeLevel.transform.parent.gameObject.SetActive(false);
                     imgAvailable.SetActive(false);
-                    imgLock.SetActive(true);
+                    imgLock.gameObject.SetActive(true);
                     imgActivatedGlow.SetActive(false);
                     imgActivatedMaxGlow.SetActive(false);
                     rectActivatedMaxOutline.gameObject.SetActive(false);
@@ -146,7 +149,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                         txtNodeLevel.transform.parent.gameObject.SetActive(true);
                     }
                     imgAvailable.SetActive(true);
-                    imgLock.SetActive(false);
+                    imgLock.gameObject.SetActive(false);
                     imgActivatedGlow.SetActive(data.level < config.MaxLevel);
                     if (data.level >= config.MaxLevel)
                     {
@@ -173,8 +176,11 @@ namespace Dark.Scripts.OutGame.Upgrade
             
             hoverField.onHover = () =>
             {
+                DOTween.Kill(transform);
+                transform.localRotation = Quaternion.identity;
+                transform.DOPunchRotation(new Vector3(0f, 0f, 10f), 0.3f, 20, 0.1f).SetTarget(transform);
                 UIUpgradeNodeInfoPreview.Instance.Setup(config, false);
-                UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.rectTransform.sizeDelta.x / 2, 0f), false, () => hoverField.interactable = true);
+                UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), false, () => hoverField.interactable = true);
             };
             hoverField.onHoverExit = () =>
             {
@@ -198,7 +204,8 @@ namespace Dark.Scripts.OutGame.Upgrade
                 if (success)
                 {
                     UIUpgradeNodeInfoPreview.Instance.Setup(config, true);
-                    UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.rectTransform.sizeDelta.x / 2, 0f), true, () => hoverField.interactable = true);
+                    UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true, () => hoverField.interactable = true);
+                    treeRef.LastUpgradeNodeId = config.nodeId;
                     treeRef.UpgradeAllNodesWithId(config.nodeId);
                     sfxUnlockSuccess?.Play();
                 }
@@ -222,6 +229,36 @@ namespace Dark.Scripts.OutGame.Upgrade
             treeRef.UpdateChildren(config.nodeId);
         }
 
+        public Tween DoUnlockVfx(int fromId)
+        {
+            var seq = DOTween.Sequence(this);
+            if (preRequires != null)
+            {
+                foreach (var lineInfo in preRequires)
+                {
+                    if (lineInfo.preRequireId != fromId) continue;
+                    seq.AppendCallback(() =>
+                        {
+                            DOVirtual.DelayedCall(lineInfo.line.activateDuration - 0.1f, () =>
+                            {
+                                imgAvailable.gameObject.SetActive(true);
+                                vfxUnlock?.Play();
+                            });
+                        })
+                        .Append(lineInfo.line.DoActivate());
+                    break;
+                }
+
+                seq.Append(imgIconLock.transform.DOShakePosition(0.3f, new Vector3(0f, 1f, 0f), vibrato: 30, fadeOut: false,
+                    randomnessMode: ShakeRandomnessMode.Harmonic))
+                    .Append(imgIconLock.transform.DOLocalMoveY(-5f, 0.5f).SetEase(Ease.OutQuad).SetRelative())
+                    .Join(imgIconLock.DOFade(0f, 0.3f))
+                    .Join(imgLock.DOFade(0f, 0.3f));
+            }
+
+            return seq;
+        }
+        
         private Tween DoUpgrade()
         {
             DOTween.Complete(this);
@@ -241,6 +278,11 @@ namespace Dark.Scripts.OutGame.Upgrade
                 .Append(imgBorder.DOLocalRotate(new Vector3(0f, 0f, 180f), 0.4f).SetRelative())
                 .Join(imgBorder.DOScale(1.2f, 0.4f).SetEase(Ease.OutQuad))
                 .Append(imgBorder.DOScale(1f, 0.2f).SetEase(Ease.InQuad));
+        }
+        
+        public Tween DoSpawn()
+        {
+            return spawnAnimation.SpawnLogic.DoSpawn();
         }
 
         private void OnDrawGizmos()

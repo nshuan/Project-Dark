@@ -25,7 +25,6 @@ namespace Economic.InGame
         
         [Header("Config")]
         [SerializeField] private float delayRespawn = 2f;
-        [SerializeField] private float heightFromPlayer = 2f;
         
         private Transform[] orbitCenters; // Map by tower id
         private bool activated = false;

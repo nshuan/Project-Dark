@@ -292,14 +292,14 @@ namespace InGame
 
         public bool CanMove => true;
 
-        public virtual void OnUpdate()
+        public virtual void OnUpdate(Vector2 worldMousePosition)
         {
-            worldMousePosition = Cam.ScreenToWorldPoint(Input.mousePosition);
+            this.worldMousePosition.x = worldMousePosition.x;
+            this.worldMousePosition.y = worldMousePosition.y;
             
             mousePosition = Input.mousePosition;
             mousePosition.z = 0; // Set z to 0 for 2D
             cursorRect.position = mousePosition;    
-            InputManager.PlayerVisual.SetDirection(worldMousePosition);
             
             // Cooldown if player can not shoot
             if (!CanShootNormal)
@@ -355,7 +355,7 @@ namespace InGame
                             for (int i = 0; i < bulletChargeAdded - ChargeController.TotalBulletAdded; i++)
                             {
                                 ChargeController.AddBullet(InputManager.PlayerVisual.transform.position,
-                                    worldMousePosition - InputManager.PlayerVisual.transform.position);
+                                    this.worldMousePosition - InputManager.PlayerVisual.transform.position);
                             }
                         }
 
