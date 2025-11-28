@@ -137,17 +137,18 @@ namespace InGame
             }
         }
 
-        public void OnUpdate()
+        public void OnUpdate(Vector2 worldMousePosition)
         {
             if (IsActivate)
             {
-                worldMousePosition = Cam.ScreenToWorldPoint(Input.mousePosition);
+                this.worldMousePosition.x = worldMousePosition.x;
+                this.worldMousePosition.y = worldMousePosition.y;
                 if (!hovering)
                 {
                     foreach (var tower in Towers)
                     {
                         if (tower.Id == CurrentTowerIndex) continue;
-                        if (Vector2.Distance(tower.transform.position, worldMousePosition) < HoverRadius)
+                        if (Vector2.Distance(tower.transform.position, this.worldMousePosition) < HoverRadius)
                         {
                             hovering = true;
                             hoveringCenter = tower.transform.position;
@@ -168,7 +169,7 @@ namespace InGame
 
                 if (hovering)
                 {
-                    if (Vector2.Distance(worldMousePosition, hoveringCenter) >= HoverRadius)
+                    if (Vector2.Distance(this.worldMousePosition, hoveringCenter) >= HoverRadius)
                     {
                         hovering = false;
                         Towers[selectingTower].Hover(false);

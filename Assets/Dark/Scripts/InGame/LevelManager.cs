@@ -50,6 +50,7 @@ namespace InGame
         
         #region Action
 
+        public Action OnInitPlayer { get; set; }
         public Action<LevelConfig> OnLevelLoaded { get; set; }
         public Action<TowerEntity> OnChangeTower { get; set; }
 
@@ -65,16 +66,19 @@ namespace InGame
         
         private WinLoseManager winLoseManager;
 
-#if UNITY_EDITOR
         [Space] public bool autoLoadLevel = true;
         public static bool isLoadFromInit;
         private IEnumerator Start()
         {
+            InitSkillTreeBonus();
+            InitPlayerAndTowers();
+            
             yield return new WaitForSeconds(2f);
+#if UNITY_EDITOR
             if (isLoadFromInit == false && autoLoadLevel && Level == null)
                 LoadLevel(testLevel);
-        }
 #endif
+        }
 
         protected override void OnDestroy()
         {
@@ -84,6 +88,30 @@ namespace InGame
         }
 
         #region Core
+
+        private void InitSkillTreeBonus()
+        {
+            UpgradeManager.Instance.ActivateTree(ref bonusInfo);
+            LevelUtility.BonusInfo = bonusInfo;
+            LevelUtility.PlayerStats = playerStats;
+            LevelUtility.CurrentSkill = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
+            LevelUtility.ChargeConfigMap = new Dictionary<ChargeType, PlayerChargeConfig>()
+            {
+                { ChargeType.Bullet, PlayerChargeManifest.Get(ChargeType.Bullet) },
+                { ChargeType.Size, PlayerChargeManifest.Get(ChargeType.Size) }
+            };
+        }
+        
+        private void InitPlayerAndTowers()
+        {
+            InitTowers();
+            currentTowerIndex = -1;
+            
+            if (Player != null) Destroy(Player.gameObject);
+            Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)LevelUtility.CurrentSkill.skillId);
+            Player.transform.position = towers[0].transform.position + towers[0].GetTowerHeight();
+            OnInitPlayer?.Invoke();
+        }
         
         public void LoadLevel(int level)
         {
@@ -96,27 +124,11 @@ namespace InGame
         {
             Level = level;
             
-            UpgradeManager.Instance.ActivateTree(ref bonusInfo);
-            LevelUtility.BonusInfo = bonusInfo;
-            LevelUtility.PlayerStats = playerStats;
-            LevelUtility.CurrentSkill = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
-            LevelUtility.ChargeConfigMap = new Dictionary<ChargeType, PlayerChargeConfig>()
-            {
-                { ChargeType.Bullet, PlayerChargeManifest.Get(ChargeType.Bullet) },
-                { ChargeType.Size, PlayerChargeManifest.Get(ChargeType.Size) }
-            };
-            
             EnemyManager.Instance.Initialize();
             winLoseManager = new WinLoseManager();
             IsEndLevel = false;
             
-            InitTowers();
-            currentTowerIndex = -1;
             TeleportTower(0);
-            
-            if (Player != null) Destroy(Player.gameObject);
-            Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)LevelUtility.CurrentSkill.skillId);
-            Player.transform.position = CurrentTower.transform.position + CurrentTower.GetTowerHeight();
             
             // Start waves
             currentWaveIndex = 0;
@@ -166,6 +178,7 @@ namespace InGame
             OnWaveStart = null;
             OnBossWaveStart = null;
             onWaveEnded = null;
+            OnInitPlayer = null;
             
             CombatActions.Clear();
         }

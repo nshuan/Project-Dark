@@ -30,6 +30,8 @@ namespace InGame
         private IMouseInput mouseAutoAttack;
         private MonoCursor cursor;
         private PointerEventData.InputButton pressingButton = PointerEventData.InputButton.Middle;
+        private bool playerInitialized;
+        private Vector2 worldMousePosition;
 
         public IMouseInput MouseAutoAttack => mouseAutoAttack;
         
@@ -49,10 +51,10 @@ namespace InGame
         private void Awake()
         {
             BlockAllInput = true;
-            
-            
-            LevelManager.Instance.OnLevelLoaded += (level) =>
+
+            LevelManager.Instance.OnInitPlayer += () =>
             {
+                playerInitialized = true;
                 PlayerVisual = LevelManager.Instance.Player;
                 
                 availableTeleConfigs = new List<MoveTowersConfig>();
@@ -66,30 +68,38 @@ namespace InGame
                         else if (moveId == 2) availableTeleConfigs.Add(LevelManager.Instance.dashConfig);
                     }
                 }
-                teleMouseInput = new MoveToTower(cam, this, PlayerVisual, availableTeleConfigs[0], availableTeleConfigs.Count > 1 ? availableTeleConfigs[1] : null, LevelManager.Instance.Towers, LevelManager.Instance.CurrentTower.Id, this.TryDelayCall);
-                teleMouseInput.OnActivated();
-                BlockAllInput = false;
                 
                 // Setup skill config and mouse input
                 CursorRangeRadius = LevelUtility.CurrentSkill.range;
-            
+                cursor ??= ShotCursorManager.Instance.GetPrefab(LevelUtility.CurrentSkill.shootLogic.cursorType, canvas.transform);
+                cursor.gameObject.SetActive(true);
+                
+                teleMouseInput = new MoveToTower(cam, this, PlayerVisual, availableTeleConfigs[0], availableTeleConfigs.Count > 1 ? availableTeleConfigs[1] : null, LevelManager.Instance.Towers, 0, this.TryDelayCall);
+                
                 if (mouseInput != null)
                 {
                     mouseInput.Dispose();
                     mouseInput = null;
                 }
-                cursor ??= ShotCursorManager.Instance.GetPrefab(LevelUtility.CurrentSkill.shootLogic.cursorType, canvas.transform);
-                cursor.gameObject.SetActive(true);
                 mouseInput = ShotCursorManager.Instance.GetCursorMoveLogic(LevelUtility.CurrentSkill.shootLogic.cursorType, cam, cursor);
-                mouseInput.Initialize(this, chargeControllerArcher);
-                mouseInput.ResetChargeVariable();
-
+                
                 if (mouseAutoAttack != null)
                 {
                     mouseAutoAttack.Dispose();
                     mouseAutoAttack = null;
                 }
                 mouseAutoAttack = new MoveAutoAttack(cam, cursor);
+            };
+            
+            LevelManager.Instance.OnLevelLoaded += (level) =>
+            { 
+                BlockAllInput = false;
+                
+                teleMouseInput.OnActivated();
+                
+                mouseInput.Initialize(this, chargeControllerArcher);
+                mouseInput.ResetChargeVariable();
+                
                 mouseAutoAttack.Initialize(this, null);
                 
                 LevelManager.Instance.OnWin += OnLevelCompleted;
@@ -172,11 +182,14 @@ namespace InGame
 
         private void LateUpdate()
         {
+            worldMousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
+            if (playerInitialized) PlayerVisual.SetDirection(worldMousePosition);
+            
             if (BlockAllInput) return;
             
-            mouseInput?.OnUpdate();
-            mouseAutoAttack?.OnUpdate();
-            teleMouseInput?.OnUpdate();
+            mouseInput?.OnUpdate(worldMousePosition);
+            mouseAutoAttack?.OnUpdate(worldMousePosition);
+            teleMouseInput?.OnUpdate(worldMousePosition);
         }
 
         private void OnDrawGizmos()
