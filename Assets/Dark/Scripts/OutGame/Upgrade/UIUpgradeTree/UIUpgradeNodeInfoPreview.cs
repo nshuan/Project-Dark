@@ -174,7 +174,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             DOTween.Kill(rectInfoFrame);
 
             return DOTween.Sequence(rectInfoFrame)
-                .Append(rectInfoFrame.DOScale(0f, 0.2f).SetEase(Ease.InBack))
+                .Append(rectInfoFrame.DOScale(0f, 0.2f).SetEase(Ease.OutQuad))
                 .AppendCallback(() =>
                 {
                     rectInfoFrame.gameObject.SetActive(false);

@@ -175,6 +175,9 @@ namespace Dark.Scripts.OutGame.Upgrade
             
             hoverField.onHover = () =>
             {
+                DOTween.Kill(transform);
+                transform.localRotation = Quaternion.identity;
+                transform.DOPunchRotation(new Vector3(0f, 0f, 10f), 0.3f, 20, 0.1f).SetTarget(transform);
                 UIUpgradeNodeInfoPreview.Instance.Setup(config, false);
                 UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), false, () => hoverField.interactable = true);
             };

@@ -40,7 +40,12 @@ namespace Dark.Scripts.OutGame.Upgrade
         public void OnPointerClick(PointerEventData eventData)
         {
             if (!interactable) return;
-            if (canShowIconHovering) imgIconHovering.transform.DOPunchScale(new Vector3(0.1f, 0.1f, 0.1f), 0.3f);
+            if (canShowIconHovering)
+            {
+                DOTween.Kill(imgIconHovering);
+                imgIconHovering.transform.localScale = Vector3.one;
+                imgIconHovering.transform.DOPunchScale(new Vector3(0.1f, 0.1f, 0.1f), 0.3f).SetTarget(imgIconHovering);
+            }
             onPointerClick?.Invoke();
         }
     }
