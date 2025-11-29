@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Dark.Scripts.SceneNavigation;
 using DG.Tweening;
+using InGame;
 using InGame.Upgrade;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -25,7 +26,6 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         [Space] [Header("Spawn")] 
         [SerializeField] private float nodeSpawnDelayStep = 0.1f;
-
         [SerializeField] private float firstNodeDelayStep = 0.5f;
 
         public int LastUpgradeNodeId { get; set; } = -1;
@@ -105,7 +105,10 @@ namespace Dark.Scripts.OutGame.Upgrade
                 {
                     foreach (var child in children)
                     {
-                        if (!queueCheck.Contains(child) && child.CurrentState != UIUpgradeNodeState.Locked)
+                        if (GameConst.HideLockedNode && child.CurrentState == UIUpgradeNodeState.Locked)
+                            continue;
+                        
+                        if (!queueCheck.Contains(child))
                         {
                             queueCheck.Enqueue(child);
                         }

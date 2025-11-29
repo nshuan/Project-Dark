@@ -7,5 +7,6 @@ namespace InGame
 
         public const bool DefaultAutoAttack = true; // Default enable auto-attack
         public const bool HideLockedNode = true; // Hide locked nodes in skill tree
+        public static bool HideLaserWaveOnSpawnTree = true; // Hide laser wave on tree spawn animation
     }
 }

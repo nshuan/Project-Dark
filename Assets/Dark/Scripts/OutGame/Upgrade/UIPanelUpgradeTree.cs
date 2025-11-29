@@ -4,6 +4,7 @@ using Coffee.UIExtensions;
 using Dark.Scripts.SceneNavigation;
 using Dark.Scripts.Utils;
 using DG.Tweening;
+using InGame;
 using UnityEngine;
 
 namespace Dark.Scripts.OutGame.Upgrade
@@ -29,7 +30,8 @@ namespace Dark.Scripts.OutGame.Upgrade
             treeZoom.SetZoom(1f);
             treeZoom.DoZoomTo(0.7f, Vector2.zero, 0.5f).SetDelay(delaySpawn + 0.3f);
             yield return new WaitForSeconds(delaySpawn);
-            // vfxSpawn.gameObject.SetActive(true);
+            if (!GameConst.HideLaserWaveOnSpawnTree)
+                vfxSpawn.gameObject.SetActive(true);
             yield return new WaitForSeconds(delaShowUI);
             yield return groupUIHiddenOnSpawn.DOFade(1f, 0.3f).SetEase(Ease.OutQuad).WaitForCompletion();
         }
