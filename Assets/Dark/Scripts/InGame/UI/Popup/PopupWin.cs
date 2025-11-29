@@ -1,4 +1,5 @@
 using System;
+using Dark.Scripts.Audio;
 using Dark.Scripts.CoreUI;
 using Dark.Scripts.SceneNavigation;
 using Data;
@@ -15,6 +16,7 @@ namespace InGame.UI
     {
         [SerializeField] private UIPopup ui;
         [SerializeField] private float delayShowPopup = 2f;
+        [SerializeField] private AudioComponent sfxWin;
         
         [Space]
         [SerializeField] private Button btnBackToTree;
@@ -103,6 +105,7 @@ namespace InGame.UI
             seq.AppendCallback(ResetPopupUI)
                 .AppendCallback((() =>
                 {
+                    sfxWin.Play();
                     imgTitleBg.DOFade(1f, 0.3f).SetUpdate(true);
                     imgTitle.DOFade(1f, durationTitle).SetUpdate(true).SetDelay(0.1f);
                     
