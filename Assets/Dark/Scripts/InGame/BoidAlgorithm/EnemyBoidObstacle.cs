@@ -26,7 +26,7 @@ namespace InGame
         private void OnDisable()
         {
             // Unregister this obstacle when disabled
-            if (EnemyBoidManagerWithObstacles.Instance != null)
+            if (EnemyBoidManagerWithObstacles.Initialized)
             {
                 EnemyBoidManagerWithObstacles.Instance.UnregisterObstacle(this);
             }

@@ -49,6 +49,11 @@ namespace InGame.Upgrade
             return "";
         }
 
+        public (string, string) GetBeforeAfterValue(int level)
+        {
+            return ("", "");
+        }
+
         public int MaxLevel => 1;
 
         public enum BonusUnlockSkillType

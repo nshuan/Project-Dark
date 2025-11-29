@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dark.Scripts.SceneNavigation;
 using DG.Tweening;
+using InGame;
+using InGame.Upgrade;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEditor;
@@ -21,15 +24,20 @@ namespace Dark.Scripts.OutGame.Upgrade
         [Space] [Header("UI")] 
         [SerializeField] private Button btnDeselectAll;
 
+        [Space] [Header("Spawn")] 
+        [SerializeField] private float nodeSpawnDelayStep = 0.1f;
+        [SerializeField] private float firstNodeDelayStep = 0.5f;
+
         public int LastUpgradeNodeId { get; set; } = -1;
         
-        public void UpdateChildren(int id)
+        public void UpdateChildren(int id, bool isUnlock)
         {
             if (nodeChildrenMap.TryGetValue(id, out var children))
             {
                 foreach (var childNode in children)
                 {
-                    childNode.UpdateUI();
+                    if (isUnlock) childNode.DoUnlockVfx(id).OnComplete(() => childNode.UpdateUI());
+                    else childNode.UpdateUI();
                 }
             }
         }
@@ -64,10 +72,21 @@ namespace Dark.Scripts.OutGame.Upgrade
             {
                 if (pair.Value[0].preRequires == null || pair.Value[0].preRequires.Count == 0)
                 {
+                    // Tự động upgrade luôn
+                    UpgradeManager.Instance.UpgradeNode(pair.Key);
+ 
                     foreach (var node in pair.Value)
                     {
+                        node.UpdateUI();
                         currentLayerNodes.Add(node);
                         queueCheck.Enqueue(node);
+                    }
+                }
+                else
+                {
+                    foreach (var node in pair.Value)
+                    {
+                        node.UpdateUI();
                     }
                 }
             }
@@ -86,8 +105,13 @@ namespace Dark.Scripts.OutGame.Upgrade
                 {
                     foreach (var child in children)
                     {
+                        if (GameConst.HideLockedNode && child.CurrentState == UIUpgradeNodeState.Locked)
+                            continue;
+                        
                         if (!queueCheck.Contains(child))
+                        {
                             queueCheck.Enqueue(child);
+                        }
                     }
                 }
                 if (currentLayerCount == 0)
@@ -101,7 +125,6 @@ namespace Dark.Scripts.OutGame.Upgrade
             
             DOTween.Kill(this);
             var seq = DOTween.Sequence(this);
-            var delayStep = 0.1f;
             foreach (var pair in nodesMapByLayer)
             {
                 foreach (var node in pair.Value)
@@ -124,10 +147,11 @@ namespace Dark.Scripts.OutGame.Upgrade
                     });
                 }
 
-                seq.AppendInterval(delayStep);
+                if (pair.Key == 0) seq.AppendInterval(firstNodeDelayStep);
+                else seq.AppendInterval(nodeSpawnDelayStep);
             }
 
-            seq.SetDelay(0.5f);
+            seq.SetDelay(Loading.Instance.CurrentTotalDurationAfterSceneLoaded);
         }
 
 #if UNITY_EDITOR

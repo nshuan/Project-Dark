@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Dark.Scripts.Audio;
 using Dark.Scripts.Utils;
 using DG.Tweening;
 using Economic.InGame.DropItems;
@@ -18,6 +19,7 @@ namespace Economic.InGame
         [SerializeField] private FloatingEffect floatingMovement;
         [SerializeField] private ParticleSystem vfxBreak;
         [SerializeField] private ParticleSystem vfxSpawn;
+        [SerializeField] private AudioComponent sfxCollect;
 
         [Header("Echoes")] 
         [SerializeField] private Transform visualEchoes;
@@ -137,6 +139,7 @@ namespace Economic.InGame
             collider.enabled = false;
             CombatActions.OnResourceCollectorDamaged?.Invoke(this);
             vfxBreak.Play(true);
+            sfxCollect.Play();
             DoHide().OnComplete(() =>
             {
                 DoSpawn().SetDelay(delayRespawn).OnComplete(() => collider.enabled = true);

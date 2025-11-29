@@ -1,4 +1,5 @@
 using System;
+using Dark.Scripts.Audio;
 using Dark.Scripts.CoreUI;
 using Dark.Scripts.SceneNavigation;
 using Dark.Scripts.Utils;
@@ -17,6 +18,7 @@ namespace InGame.UI
         [SerializeField] private UIPopup ui;
         [SerializeField] private CanvasGroup popupLoseCanvasGroup;
         [SerializeField] private float delayShowPopup = 5f; // Do có vfx endgame khi trụ bị phá nên cần delay xong vfx mới show popup
+        [SerializeField] private AudioComponent sfxLose;
         
         [Space]
         [SerializeField] private Button btnBackToTree;
@@ -130,7 +132,11 @@ namespace InGame.UI
             DOTween.Kill(ui);
             var seq = DOTween.Sequence(ui).SetUpdate(true);
 
-            seq.AppendCallback(ResetPopupUI)
+            seq.AppendCallback(() =>
+                {
+                    sfxLose.Play();
+                    ResetPopupUI();
+                })
                 .Append(DOTween.To(() => 1f, (x) => matSymbol.SetFloat(MatDisolveValue, x), 0f, 1f))
                 .AppendCallback((() =>
                 {
