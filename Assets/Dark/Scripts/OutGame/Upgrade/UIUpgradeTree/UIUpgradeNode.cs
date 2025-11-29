@@ -40,6 +40,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] protected UIParticle vfxActivateMax;
         [SerializeField] protected AudioComponent sfxUnlockSuccess;
         [SerializeField] protected AudioComponent sfxUnlockFailure;
+        [SerializeField] protected AudioComponent sfxHover;
         [SerializeField] protected TextMeshProUGUI txtNodeLevel;
         [SerializeField] protected GameObject txtNodeMaxLevel;
         public float lineAnchorOffsetRadius;
@@ -179,7 +180,10 @@ namespace Dark.Scripts.OutGame.Upgrade
             
             hoverField.onHover = () =>
             {
+                if (GameConst.HideLockedNode && CurrentState == UIUpgradeNodeState.Locked)
+                    return;
                 DOTween.Kill(transform);
+                sfxHover.Play();
                 transform.localRotation = Quaternion.identity;
                 transform.DOPunchRotation(new Vector3(0f, 0f, 10f), 0.3f, 20, 0.1f).SetTarget(transform);
                 UIUpgradeNodeInfoPreview.Instance.Setup(config, false);
@@ -187,11 +191,15 @@ namespace Dark.Scripts.OutGame.Upgrade
             };
             hoverField.onHoverExit = () =>
             {
+                if (GameConst.HideLockedNode && CurrentState == UIUpgradeNodeState.Locked)
+                    return;
                 hoverField.interactable = false;
                 UIUpgradeNodeInfoPreview.Instance.Hide(false);
             };
             hoverField.onPointerClick = () =>
             {
+                if (GameConst.HideLockedNode && CurrentState == UIUpgradeNodeState.Locked)
+                    return;
                 // treeRef.SelectNode(this);
                 if (preRequires != null && preRequires.Select((node) => node.preRequireId)
                         .All((id) =>

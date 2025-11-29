@@ -163,6 +163,24 @@ namespace Dark.Scripts.SceneNavigation
             
             yield return new WaitForEndOfFrame();
             Scene currentScene = SceneManager.GetActiveScene();
+
+            if (currentScene.name == sceneName)
+            {
+                // Load Blank scene additively
+                AsyncOperation loadBlankOp = SceneManager.LoadSceneAsync("Blank", LoadSceneMode.Additive);
+                yield return loadBlankOp;
+
+                // Set the new scene active
+                Scene loadedBlankScene = SceneManager.GetSceneByName("Blank");
+                SceneManager.SetActiveScene(loadedBlankScene);
+
+                // Unload previous scene
+                AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(currentScene);
+                yield return unloadOp;
+                
+                currentScene = SceneManager.GetActiveScene();
+            }
+            
             
             // Load additively
             AsyncOperation loadOp = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
@@ -173,8 +191,8 @@ namespace Dark.Scripts.SceneNavigation
             SceneManager.SetActiveScene(loadedScene);
 
             // Unload previous scene
-            AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(currentScene);
-            yield return unloadOp;
+            AsyncOperation unloadBlankOp = SceneManager.UnloadSceneAsync(currentScene);
+            yield return unloadBlankOp;
             
             yield return new WaitForEndOfFrame();
             OnSceneLoaded(loadedScene);
