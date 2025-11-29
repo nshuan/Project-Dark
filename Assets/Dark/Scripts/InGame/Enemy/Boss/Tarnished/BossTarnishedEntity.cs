@@ -7,7 +7,7 @@ namespace InGame.Boss
 {
     public class BossTarnishedEntity : EnemyEntity
     {
-        protected override IEnumerator IEDie(float delayRelease)
+        protected override IEnumerator IEDie(float delayRelease, EnemyDieReason reason)
         {
             // Làm đen hết màn hình, tắt UI
             BackgroundInGame.Instance.SetActiveBlackBg(true);
@@ -15,7 +15,7 @@ namespace InGame.Boss
             
             CombatActions.OnBossKilled?.Invoke(config, transform.position);
             CombatActions.OnCollectResource?.Invoke(this);
-            OnDead?.Invoke();
+            OnDead?.Invoke(reason);
             OnDead = null;
             yield return new WaitForSeconds(delayRelease);
             EnemyPool.Instance.Release(this, config.enemyId);

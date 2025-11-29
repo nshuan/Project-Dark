@@ -39,10 +39,10 @@ namespace InGame
             CurrentEnemyIndex += 1;
         }
 
-        public void OnEnemyDead(EnemyEntity enemy)
+        public void OnEnemyDead(EnemyEntity enemy, EnemyDieReason reason)
         {
             EnemiesAliveMap[enemy.UniqueId] = false;
-            CombatActions.OnOneEnemyDead?.Invoke(enemy);
+            CombatActions.OnOneEnemyDead?.Invoke(enemy, reason);
         }
 
         public int FilterEnemiesNonAlloc(Func<EnemyEntity, bool> filter, ref EnemyEntity[] enemies, bool aliveOnly = true)
@@ -64,5 +64,12 @@ namespace InGame
 
             return count;
         }
+    }
+
+    public enum EnemyDieReason
+    {
+        PlayerKill,
+        TowerKill,
+        Suicide
     }
 }

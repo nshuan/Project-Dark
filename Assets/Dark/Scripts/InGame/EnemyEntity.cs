@@ -41,7 +41,7 @@ namespace InGame
         public float PercentageHpLeft => CurrentHealth / MaxHealth * 100f;
         public Action<int, DamageType> OnHit { get; set; }
         public Action OnStartDead { get; set; }
-        public Action OnDead { get; set; }
+        public Action<EnemyDieReason> OnDead { get; set; }
         public EnemyState State { get; set; }
         public int UniqueId { get; set; }
         private Vector3 direction = new Vector3();
@@ -215,8 +215,8 @@ namespace InGame
         private void Attack()
         {
             if (TargetTower.IsDestroyed) return;
-            config.attackBehaviour.Attack(TargetTower, transform.position, CurrentDamage);
             animController.PlayAttack();
+            config.attackBehaviour.Attack(this, TargetTower, transform.position, CurrentDamage);
         }
 
         public float HitDirectionX { get; set; }
@@ -255,14 +255,29 @@ namespace InGame
             
             if (CurrentHealth <= 0)
             {
-                OnDie();
+                var dieReason = EnemyDieReason.PlayerKill;
+                switch (dmgType)
+                {
+                    case DamageType.Normal:
+                    case DamageType.NormalCritical:
+                        dieReason = EnemyDieReason.PlayerKill;
+                        break;
+                    case DamageType.Tower:
+                    case DamageType.TowerCritical:
+                        dieReason = EnemyDieReason.TowerKill;
+                        break;
+                    case DamageType.SelfDestruct:
+                        dieReason = EnemyDieReason.Suicide;
+                        break;
+                }
+                OnDie(dieReason);
                 sfxHit.Play();
             }
         }
 
         public bool IsDestroyed { get; set; }
 
-        private void OnDie()
+        private void OnDie(EnemyDieReason reason)
         {
             if (attackCoroutine != null)
                 StopCoroutine(attackCoroutine);
@@ -279,17 +294,17 @@ namespace InGame
             callbackBurnComplete?.Invoke();
             callbackBurnComplete = null;
             CollectResource();
-            StartCoroutine(IEDie(.5f));
+            StartCoroutine(IEDie(.5f, reason));
         }
 
-        protected virtual IEnumerator IEDie(float delayRelease)
+        protected virtual IEnumerator IEDie(float delayRelease, EnemyDieReason reason)
         {
             // Đợi chạy xong anim hit rồi mới chạy anim die
             shadow.SetActive(false);    
             OnStartDead?.Invoke();
             OnStartDead = null;
             yield return new WaitForSeconds(animController.PlayDie());
-            OnDead?.Invoke();
+            OnDead?.Invoke(reason);
             OnDead = null;
             yield return new WaitForSeconds(delayRelease);
             EnemyPool.Instance.Release(this, config.enemyId);
@@ -336,11 +351,11 @@ namespace InGame
             callbackBurnComplete = null;
         }
 
-        public void Kill()
+        public void Kill(DamageType dmgType)
         {
             HitDirectionX = 0f;
             HitDirectionY = 0f;
-            Damage(CurrentHealth, transform.position, 0f, DamageType.Normal);
+            Damage(CurrentHealth, transform.position, 0f, dmgType);
         }
         #endregion
 

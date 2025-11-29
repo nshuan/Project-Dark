@@ -102,7 +102,7 @@ namespace InGame
                 unorderedHits[tempClosestHitIndex] = null;
                 unorderedEnemies[tempClosestHitIndex] = null;
                 var a = orderCount;
-                enemyOrder[orderCount].OnDead += () =>
+                enemyOrder[orderCount].OnDead += (reason) =>
                 {
                     hitOrder[a].gameObject.SetActive(false);
                 };
