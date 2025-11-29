@@ -1,5 +1,6 @@
 using Coffee.UIExtensions;
 using DG.Tweening;
+using InGame;
 using Spine.Unity;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,9 +27,11 @@ namespace Dark.Scripts.OutGame.Upgrade
             
             currentState = state;
             lineAvailable.SetActive(state == UIUpgradeNodeState.Available);
-            lineLocked.SetActive(state == UIUpgradeNodeState.Locked);
+            lineLocked.SetActive(GameConst.HideLockedNode == false && state == UIUpgradeNodeState.Locked);
             lineActivated.SetActive(state == UIUpgradeNodeState.Activated);
             lineGlow.SetActive(state == UIUpgradeNodeState.Activated);
+            if (state == UIUpgradeNodeState.Locked) groupLine.alpha = GameConst.HideLockedNode ? 0f : 1f;
+            else groupLine.alpha = 1f;
         }
         
         public Tween DoActivate()
@@ -41,6 +44,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                 {
                     lineActivatedMask.fillAmount = 0f;
                     lineActivatedMask.gameObject.SetActive(true);
+                    groupLine.alpha = 1f;
                 })
                 .Append(DOTween.To(() => 0f, x =>
                 {

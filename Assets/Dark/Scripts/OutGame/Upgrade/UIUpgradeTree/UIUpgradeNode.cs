@@ -4,6 +4,7 @@ using System.Linq;
 using Coffee.UIExtensions;
 using Dark.Scripts.Audio;
 using DG.Tweening;
+using InGame;
 using InGame.Upgrade;
 using TMPro;
 using UnityEditor;
@@ -24,6 +25,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] protected UIUpgradeNodeHoverField hoverField;
         [SerializeField] protected UIUpgradeNodeSpawnAnimation spawnAnimation;
 
+        [SerializeField] protected CanvasGroup groupNode;
         [SerializeField] protected Image nodeVisual;
         [SerializeField] protected Image nodeLockVisual;
         [SerializeField] protected Transform imgBorder;
@@ -43,11 +45,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         public float lineAnchorOffsetRadius;
 
         private UIUpgradeNodeState currentState = UIUpgradeNodeState.Activated;
-        
-        protected virtual void OnEnable()
-        {
-            UpdateUI();
-        }
+        public UIUpgradeNodeState CurrentState => currentState;
 
         public virtual void UpdateUI()
         {
@@ -61,8 +59,8 @@ namespace Dark.Scripts.OutGame.Upgrade
                     if (currentState == UIUpgradeNodeState.Locked)
                     {
                         currentState = UIUpgradeNodeState.Available;
-                        DoUnlockVfx(treeRef.LastUpgradeNodeId).OnComplete(UpdateUI);
-                        return;
+                        // DoUnlockVfx(treeRef.LastUpgradeNodeId).OnComplete(UpdateUI);
+                        // return;
                     }
                     
                     if (config.hideLevelInNode)
@@ -78,6 +76,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     imgActivatedMaxGlow.SetActive(false);
                     rectActivatedMaxOutline.gameObject.SetActive(false);
                     imgBorder.gameObject.SetActive(true);
+                    groupNode.alpha = 1f;
 
                     if (preRequires != null)
                     {
@@ -101,6 +100,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     imgActivatedMaxGlow.SetActive(false);
                     rectActivatedMaxOutline.gameObject.SetActive(false);
                     imgBorder.gameObject.SetActive(true);
+                    groupNode.alpha = GameConst.HideLockedNode ? 0f : 1f;
                     
                     foreach (var lineInfo in preRequires)
                     {
@@ -126,6 +126,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     imgActivatedMaxGlow.SetActive(false);
                     rectActivatedMaxOutline.gameObject.SetActive(false);
                     imgBorder.gameObject.SetActive(true);
+                    groupNode.alpha = GameConst.HideLockedNode ? 0f : 1f;
                     
                     foreach (var lineInfo in preRequires)
                     {
@@ -163,6 +164,8 @@ namespace Dark.Scripts.OutGame.Upgrade
                         rectActivatedMaxOutline.gameObject.SetActive(false);
                         imgBorder.gameObject.SetActive(true);
                     }
+
+                    groupNode.alpha = 1f;
                     
                     foreach (var lineInfo in preRequires)
                     {
@@ -226,7 +229,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     UpgradeManager.Instance.GetData(preRequire.preRequireId).level == 0))
                 return;
             DoUpgrade().Play();
-            treeRef.UpdateChildren(config.nodeId);
+            treeRef.UpdateChildren(config.nodeId, UpgradeManager.Instance.GetData(config.nodeId).level == 1);
         }
 
         public Tween DoUnlockVfx(int fromId)
@@ -249,17 +252,20 @@ namespace Dark.Scripts.OutGame.Upgrade
                     break;
                 }
 
-                seq.Append(imgIconLock.transform.DOShakePosition(0.3f, new Vector3(0f, 1f, 0f), vibrato: 30, fadeOut: false,
-                    randomnessMode: ShakeRandomnessMode.Harmonic))
-                    .Append(imgIconLock.transform.DOLocalMoveY(-5f, 0.5f).SetEase(Ease.OutQuad).SetRelative())
-                    .Join(imgIconLock.DOFade(0f, 0.3f))
-                    .Join(imgLock.DOFade(0f, 0.3f));
+                if (GameConst.HideLockedNode == false)
+                {
+                    seq.Append(imgIconLock.transform.DOShakePosition(0.3f, new Vector3(0f, 1f, 0f), vibrato: 30,
+                        fadeOut: false, randomnessMode: ShakeRandomnessMode.Harmonic))
+                        .Append(imgIconLock.transform.DOLocalMoveY(-5f, 0.5f).SetEase(Ease.OutQuad).SetRelative())
+                        .Join(imgIconLock.DOFade(0f, 0.3f))
+                        .Join(imgLock.DOFade(0f, 0.3f));
+                }
             }
 
             return seq;
         }
         
-        private Tween DoUpgrade()
+        protected virtual Tween DoUpgrade()
         {
             DOTween.Complete(this);
             
