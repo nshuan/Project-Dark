@@ -18,6 +18,11 @@ namespace InGame.Upgrade
             return bonus.GetDisplayValue(level);
         }
 
+        public (string, string) GetBeforeAfterValue(int level)
+        {
+            return bonus.GetBeforeAfterValue(level);
+        }
+
         public int MaxLevel => bonus.MaxLevel;
     }
 }

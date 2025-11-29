@@ -157,13 +157,13 @@ namespace Dark.Scripts.OutGame.Upgrade
                     {
                         imgActivatedMaxGlow.SetActive(true);
                         rectActivatedMaxOutline.gameObject.SetActive(true);
-                        imgBorder.gameObject.SetActive(false);
+                        // imgBorder.gameObject.SetActive(false);
                     }
                     else
                     {
                         imgActivatedMaxGlow.SetActive(false);
                         rectActivatedMaxOutline.gameObject.SetActive(false);
-                        imgBorder.gameObject.SetActive(true);
+                        // imgBorder.gameObject.SetActive(true);
                     }
 
                     groupNode.alpha = 1f;

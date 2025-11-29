@@ -50,6 +50,30 @@ namespace InGame.Upgrade
             return actions[level].GetValue().ToString(CultureInfo.InvariantCulture);
         }
 
+        public (string, string) GetBeforeAfterValue(int level)
+        {
+            var before = "";
+            var after = "";
+            if (level < 0) return ("", "");
+            if (level >= actions.Count) level = actions.Count - 1;
+            if (level == 0)
+            {
+                before = "0";
+                after = GetDisplayValue(level);
+            }
+            else
+            {
+                var sum = 0f;
+                for (var i = 0; i < level; i++)
+                    sum += actions[i].GetValue();
+                
+                before = sum.ToString(CultureInfo.InvariantCulture);
+                after = (sum + actions[level].GetValue()).ToString(CultureInfo.InvariantCulture);
+            }
+		    
+            return (before, after);
+        }
+
         public int MaxLevel => 1;
     }
 }
