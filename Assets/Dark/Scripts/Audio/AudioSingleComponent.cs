@@ -52,15 +52,15 @@ namespace Dark.Scripts.Audio
         {
             if (fadeInDuration > audio.clip.length) fadeInDuration = audio.clip.length;
             if (fadeInDuration + fadeOutDuration > audio.clip.length) fadeOutDuration = audio.clip.length - fadeInDuration;
-            yield return new WaitForSeconds(delay);
+            yield return new WaitForSecondsRealtime(delay);
 
             while (loop != 0)
             {
                 audio.volume = 0f;
                 audio.Play();
-                yield return audio.DOFade(volume, fadeInDuration).SetEase(fadeInEasing).WaitForCompletion();
+                yield return audio.DOFade(volume, fadeInDuration).SetEase(fadeInEasing).SetUpdate(true).WaitForCompletion();
                 yield return new WaitForSeconds(audio.clip.length - fadeInDuration - fadeOutDuration);
-                yield return audio.DOFade(0f, fadeOutDuration).SetEase(fadeOutEasing).WaitForCompletion();
+                yield return audio.DOFade(0f, fadeOutDuration).SetEase(fadeOutEasing).SetUpdate(true).WaitForCompletion();
                 loop -= 1;
             }
         }

@@ -18,14 +18,25 @@ namespace Dark.Scripts.SceneNavigation
         [SerializeField] private TextMeshProUGUI progressText;
         [SerializeField] private float minDuration = 0.5f;
         [SerializeField] private float maxDuration = 1.5f;
+
+        private float normalLoadDelayClose = 0.5f;
+        private float normalLoadHideBlankDuration = 0.3f;
+        private float normalLoadHideDuration = 0.5f;
+        
+        private float quickLoadHideBlankDuration = 0.5f;
         
         public Action onStartLoading;
         private Action onSceneLoaded;
         private Action onLoadingComplete;
         private bool isQuickLoad;
+        private float currentCloseDuration;
 
         private Coroutine coroutineOpen;
         private Coroutine coroutineClose;
+
+        public float CurrentTotalDurationAfterSceneLoaded { get; private set; }
+        public float TotalDurationAfterSceneLoaded => normalLoadDelayClose + currentCloseDuration + normalLoadHideBlankDuration + normalLoadHideDuration;
+        public float TotalDurationAfterSceneQuickLoaded => quickLoadHideBlankDuration;
         
         private void OnSceneLoaded(Scene scene)
         {
@@ -34,7 +45,7 @@ namespace Dark.Scripts.SceneNavigation
             {
                 if (coroutineClose != null) StopCoroutine(coroutineClose);
                 if (coroutineOpen != null) StopCoroutine(coroutineOpen);
-                coroutineClose = StartCoroutine(IEQuickClose(0.5f, () =>
+                coroutineClose = StartCoroutine(IEQuickClose(quickLoadHideBlankDuration, () =>
                 {
                     onLoadingComplete?.Invoke();
                     onLoadingComplete = null;
@@ -44,11 +55,12 @@ namespace Dark.Scripts.SceneNavigation
             {
                 if (coroutineClose != null) StopCoroutine(coroutineClose);
                 if (coroutineOpen != null) StopCoroutine(coroutineOpen);
-                coroutineClose = StartCoroutine(IEClose(RandomUtil.Range(minDuration, maxDuration), 0.3f, 0.5f, () =>
-                {
-                    onLoadingComplete?.Invoke();
-                    onLoadingComplete = null;
-                }));
+                coroutineClose = StartCoroutine(IEClose(currentCloseDuration, normalLoadHideBlankDuration,
+                    normalLoadHideDuration, () =>
+                    {
+                        onLoadingComplete?.Invoke();
+                        onLoadingComplete = null;
+                    }));
             }
             onSceneLoaded?.Invoke();
             onSceneLoaded = null;
@@ -63,6 +75,11 @@ namespace Dark.Scripts.SceneNavigation
             onStartLoading?.Invoke();
             if (coroutineOpen != null) StopCoroutine(coroutineOpen);
             if (coroutineClose != null) StopCoroutine(coroutineClose);
+            
+            // Cache duration for closing loading scene
+            currentCloseDuration = RandomUtil.Range(minDuration, maxDuration);
+            CurrentTotalDurationAfterSceneLoaded = TotalDurationAfterSceneLoaded;
+            
             coroutineOpen = StartCoroutine(IEOpen(0.3f, delay, sceneName));
         }
 
@@ -93,6 +110,7 @@ namespace Dark.Scripts.SceneNavigation
             yield return unloadOp;
             
             yield return new WaitForEndOfFrame();
+            
             OnSceneLoaded(loadedScene);
         }
 
@@ -127,6 +145,9 @@ namespace Dark.Scripts.SceneNavigation
             onStartLoading?.Invoke();
             if (coroutineOpen != null) StopCoroutine(coroutineOpen);
             if (coroutineClose != null) StopCoroutine(coroutineClose);
+
+            CurrentTotalDurationAfterSceneLoaded = TotalDurationAfterSceneQuickLoaded;
+            
             coroutineOpen = StartCoroutine(IEQuickOpen(0.3f, delay, sceneName));
         }
         
@@ -142,6 +163,24 @@ namespace Dark.Scripts.SceneNavigation
             
             yield return new WaitForEndOfFrame();
             Scene currentScene = SceneManager.GetActiveScene();
+
+            if (currentScene.name == sceneName)
+            {
+                // Load Blank scene additively
+                AsyncOperation loadBlankOp = SceneManager.LoadSceneAsync("Blank", LoadSceneMode.Additive);
+                yield return loadBlankOp;
+
+                // Set the new scene active
+                Scene loadedBlankScene = SceneManager.GetSceneByName("Blank");
+                SceneManager.SetActiveScene(loadedBlankScene);
+
+                // Unload previous scene
+                AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(currentScene);
+                yield return unloadOp;
+                
+                currentScene = SceneManager.GetActiveScene();
+            }
+            
             
             // Load additively
             AsyncOperation loadOp = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
@@ -152,8 +191,8 @@ namespace Dark.Scripts.SceneNavigation
             SceneManager.SetActiveScene(loadedScene);
 
             // Unload previous scene
-            AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(currentScene);
-            yield return unloadOp;
+            AsyncOperation unloadBlankOp = SceneManager.UnloadSceneAsync(currentScene);
+            yield return unloadBlankOp;
             
             yield return new WaitForEndOfFrame();
             OnSceneLoaded(loadedScene);

@@ -10,6 +10,7 @@ namespace Dark.Scripts.Recording
     public class RecordTimePlayed : MonoBehaviour
     {
         private List<string> recordScenes = new List<string>() { "Upgrade", "InGame" };
+        private List<string> ignoredScenes = new List<string>() { "Blank "};
         
         private DateTime currentStartTime;
         
@@ -29,6 +30,8 @@ namespace Dark.Scripts.Recording
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
+            if (ignoredScenes.Contains(scene.name)) return;
+            
             // Chuyển sang upgrade từ home hoặc init nghĩa là bắt đầu chơi
             if (recordScenes.Contains(scene.name) && !recordScenes.Contains(currentScene))
             {

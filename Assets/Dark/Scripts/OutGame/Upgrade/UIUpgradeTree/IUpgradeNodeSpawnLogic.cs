@@ -52,15 +52,17 @@ namespace Dark.Scripts.OutGame.Upgrade
         {
             imgBorder.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
             imgBorder.transform.localScale = Vector3.one;
-            
+            vfxSpawn.gameObject.SetActive(false);
+
             return DOTween.Sequence(this)
                 .AppendCallback(() =>
                 {
-                    DOVirtual.DelayedCall(0.2f, () => vfxSpawn.gameObject.SetActive(true));
+                    vfxSpawn.gameObject.SetActive(true);
                 })
-                .Append(imgBorder.transform.DOLocalRotate(new Vector3(0f, 0f, 180f), 0.4f))
-                .Join(imgBorder.transform.DOScale(1.1f, 0.4f).SetEase(Ease.OutQuad))
-                .Append(imgBorder.transform.DOScale(1f, 0.2f).SetEase(Ease.InQuad));
+                .AppendInterval(0.8f)
+                .AppendCallback(() => imgBorder.transform.DOLocalRotate(new Vector3(0f, 0f, 180f), 0.4f));
+            // .Append(imgBorder.transform.DOScale(1.1f, 0.4f).SetEase(Ease.OutQuad))
+            // .Append(imgBorder.transform.DOScale(1f, 0.2f).SetEase(Ease.InQuad));
         }
     }
     

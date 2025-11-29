@@ -394,6 +394,7 @@ Transform:
   - {fileID: 3547437017908099641}
   - {fileID: 552941737063467790}
   - {fileID: 8086995927981409573}
+  - {fileID: 6380797850860650138}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3062036552176871221
@@ -415,6 +416,7 @@ MonoBehaviour:
   floatingMovement: {fileID: 5986016131384664951}
   vfxBreak: {fileID: 1801761623687394874}
   vfxSpawn: {fileID: 7968999423913654289}
+  sfxCollect: {fileID: 6153928995141928595}
   visualEchoes: {fileID: 7142567846556467420}
   shadowEchoes: {fileID: 3547437017908099641}
   delayRespawn: 0
@@ -508,6 +510,53 @@ Transform:
   - {fileID: 1403913782301759869}
   m_Father: {fileID: 7247235443383737815}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4393751886616771261
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6380797850860650138}
+  - component: {fileID: 6153928995141928595}
+  m_Layer: 8
+  m_Name: SfxCollect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6380797850860650138
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4393751886616771261}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7247235443383737815}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6153928995141928595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4393751886616771261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sourceIndex: 14
+  playOnEnable: 0
+  delay: 0
 --- !u!1 &4772527771211524949
 GameObject:
   m_ObjectHideFlags: 0

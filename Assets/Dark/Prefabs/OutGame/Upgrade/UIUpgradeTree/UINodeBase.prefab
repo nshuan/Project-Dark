@@ -462,6 +462,7 @@ MonoBehaviour:
   preRequires: []
   hoverField: {fileID: 3059954444044083529}
   spawnAnimation: {fileID: 8120552272346022950}
+  groupNode: {fileID: 479148875687171241}
   nodeVisual: {fileID: 1538255675983243242}
   nodeLockVisual: {fileID: 4766365177489947650}
   imgBorder: {fileID: 7796629413729799221}
@@ -476,6 +477,7 @@ MonoBehaviour:
   vfxActivateMax: {fileID: 0}
   sfxUnlockSuccess: {fileID: 7662935051262124792}
   sfxUnlockFailure: {fileID: 4246066090246520313}
+  sfxHover: {fileID: 3713460246681654295}
   txtNodeLevel: {fileID: 4030001140250285308}
   txtNodeMaxLevel: {fileID: 3954616260629225610}
   lineAnchorOffsetRadius: 0
@@ -980,6 +982,57 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &6296610718701846892
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3243614412625247832}
+  - component: {fileID: 3713460246681654295}
+  m_Layer: 5
+  m_Name: SfxHover
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &3243614412625247832
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6296610718701846892}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7835864604225814996}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3713460246681654295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6296610718701846892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sourceIndex: 5
+  playOnEnable: 0
+  delay: 0
 --- !u!1 &6460200530950377625
 GameObject:
   m_ObjectHideFlags: 0
@@ -1507,6 +1560,7 @@ RectTransform:
   m_Children:
   - {fileID: 7951062402679325791}
   - {fileID: 1764696157302590875}
+  - {fileID: 3243614412625247832}
   m_Father: {fileID: 7122618173943808181}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}

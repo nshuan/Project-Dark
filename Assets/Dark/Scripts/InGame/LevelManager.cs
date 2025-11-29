@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Core;
+using Dark.Scripts.Utils;
 using Data;
 using Economic;
 using InGame.ChargeConfig;
@@ -68,23 +69,24 @@ namespace InGame
 
         [Space] public bool autoLoadLevel = true;
         public static bool isLoadFromInit;
-        private IEnumerator Start()
+        private void Start()
         {
             InitSkillTreeBonus();
             InitPlayerAndTowers();
             
-            yield return new WaitForSeconds(2f);
 #if UNITY_EDITOR
+
             if (isLoadFromInit == false && autoLoadLevel && Level == null)
-                LoadLevel(testLevel);
+            {
+                this.DelayCall(2f, () => LoadLevel(testLevel));
+            }
 #endif
         }
 
         protected override void OnDestroy()
         {
-            base.OnDestroy();
-
             ClearAction();
+            base.OnDestroy();
         }
 
         #region Core

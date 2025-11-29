@@ -1,3 +1,4 @@
+using DG.Tweening;
 using InGame.Upgrade;
 using UnityEngine;
 
@@ -5,18 +6,6 @@ namespace Dark.Scripts.OutGame.Upgrade
 {
     public class UIUpgradeNodeClass : UIUpgradeNode
     {
-        protected override void OnEnable()
-        {
-            UpdateUI();
-            
-            if (preRequires == null || preRequires.Count == 0)
-            {
-                UpgradeManager.Instance.UpgradeNode(config.nodeId);
-                UpdateUI();
-                treeRef.UpdateChildren(config.nodeId);
-            }
-        }
-
         public override void UpdateUI()
         {
             txtNodeLevel.transform.parent.gameObject.SetActive(false);
@@ -42,6 +31,11 @@ namespace Dark.Scripts.OutGame.Upgrade
                 UIUpgradeNodeInfoPreview.Instance.Shake();
                 sfxUnlockFailure?.Play();
             };
+        }
+
+        protected override Tween DoUpgrade()
+        {
+            return DOTween.Sequence();
         }
     }
 }

@@ -14,10 +14,10 @@ namespace Core
         {
             get
             {
-                if (_instance == null)
+                if (!_instance)
                 {
                     _instance = FindObjectOfType<T> ();
-                    if (_instance == null)
+                    if (!_instance)
                     {
                         GameObject obj = new GameObject ();
                         _instance = obj.AddComponent<T> ();
@@ -38,5 +38,7 @@ namespace Core
         {
             _instance = null;
         }
+
+        public static bool Initialized => _instance != null;
     }
 }

@@ -34,6 +34,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             
             foreach (RectTransform child in rectTransform)
             {
+                if (!child.gameObject.activeSelf) continue;
                 if (child.TryGetComponent<LayoutElement>(out var childLayout) && childLayout.ignoreLayout)
                     continue;
 

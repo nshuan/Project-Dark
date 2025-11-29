@@ -1,3 +1,4 @@
+using System;
 using Dark.Scripts.SceneNavigation;
 using InGame.Pause;
 using UnityEngine;
@@ -10,6 +11,8 @@ namespace InGame.UI
     {
         private Button button;
 
+        private float delayEnableButton = 2f;
+
         private void Awake()
         {
             button = GetComponent<Button>();
@@ -20,9 +23,15 @@ namespace InGame.UI
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() =>
             {
+                if (delayEnableButton > 0f) return;
                 // Loading.Instance.QuickLoadScene(SceneConstants.SceneUpgrade);
                 PauseGame.Instance.Pause();
             });
+        }
+
+        private void Update()
+        {
+            if (delayEnableButton > 0f) delayEnableButton -= Time.deltaTime;
         }
     }
 }
