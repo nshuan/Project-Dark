@@ -45,24 +45,51 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] protected GameObject txtNodeMaxLevel;
         public float lineAnchorOffsetRadius;
 
-        private UIUpgradeNodeState currentState = UIUpgradeNodeState.Activated;
+        protected UIUpgradeNodeState currentState = UIUpgradeNodeState.Locked;
         public UIUpgradeNodeState CurrentState => currentState;
 
+        // This function must be called in layer-order
+        // Nodes layer 0 should be updated before nodes layer 1,...
+        public virtual void UpdateState()
+        {
+            var data = UpgradeManager.Instance.GetData(config.nodeId);
+            if (data == null || data.level == 0) // Not activated yet
+            {
+                // Always available or all pre-required nodes are activated
+                if (preRequires == null || preRequires.Count == 0 || preRequires.Any((preRequire) => preRequire.node.CurrentState == UIUpgradeNodeState.Activated))
+                {
+                    currentState = UIUpgradeNodeState.Available;
+                }
+                else
+                {
+                    // Locked
+                    currentState = UIUpgradeNodeState.Locked;
+                }
+            }
+            else 
+            {
+                // Locked
+                if (preRequires is { Count: > 0 } && preRequires.All((preRequire) => preRequire.node.CurrentState != UIUpgradeNodeState.Activated))
+                {
+                    currentState = UIUpgradeNodeState.Locked;
+                }
+                else
+                {
+                    // Activated
+                    currentState = UIUpgradeNodeState.Activated;
+                }
+            }
+        }
+        
         public virtual void UpdateUI()
         {
             var data = UpgradeManager.Instance.GetData(config.nodeId);
             if (data == null || data.level == 0) // Not activated yet
             {
                 // Always available or all pre-required nodes are activated
-                if (preRequires == null || preRequires.Count == 0 || preRequires.Any((preRequire) => UpgradeManager.Instance.GetData(preRequire.preRequireId) != null && UpgradeManager.Instance.GetData(preRequire.preRequireId).level > 0))
+                if (preRequires == null || preRequires.Count == 0 || preRequires.Any((preRequire) => preRequire.node.CurrentState == UIUpgradeNodeState.Activated))
                 {
-                    // Case available, if currentState = Locked => has just been unlocked
-                    if (currentState == UIUpgradeNodeState.Locked)
-                    {
-                        currentState = UIUpgradeNodeState.Available;
-                        // DoUnlockVfx(treeRef.LastUpgradeNodeId).OnComplete(UpdateUI);
-                        // return;
-                    }
+                    currentState = UIUpgradeNodeState.Available;
                     
                     if (config.hideLevelInNode)
                         txtNodeLevel.transform.parent.gameObject.SetActive(false);
@@ -84,7 +111,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                         foreach (var lineInfo in preRequires)
                         {
                             lineInfo.line.UpdateLineState(
-                                UpgradeManager.Instance.GetData(lineInfo.preRequireId) != null && UpgradeManager.Instance.GetData(lineInfo.preRequireId).level > 0
+                                lineInfo.node.CurrentState == UIUpgradeNodeState.Activated
                                 ? UIUpgradeNodeState.Available
                                 : UIUpgradeNodeState.Locked);
                         }
@@ -106,7 +133,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     foreach (var lineInfo in preRequires)
                     {
                         lineInfo.line.UpdateLineState(
-                            UpgradeManager.Instance.GetData(lineInfo.preRequireId) == null || UpgradeManager.Instance.GetData(lineInfo.preRequireId).level == 0
+                            lineInfo.node.CurrentState != UIUpgradeNodeState.Activated
                             ? UIUpgradeNodeState.Locked
                             : UIUpgradeNodeState.Available);
                     }
@@ -115,9 +142,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             else 
             {
                 // Locked
-                if (preRequires is { Count: > 0 } && preRequires.All((preRequire) =>
-                        UpgradeManager.Instance.GetData(preRequire.preRequireId) == null ||
-                        UpgradeManager.Instance.GetData(preRequire.preRequireId).level == 0))
+                if (preRequires is { Count: > 0 } && preRequires.All((preRequire) => preRequire.node.CurrentState != UIUpgradeNodeState.Activated))
                 {
                     currentState = UIUpgradeNodeState.Locked;
                     txtNodeLevel.transform.parent.gameObject.SetActive(false);
@@ -132,7 +157,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     foreach (var lineInfo in preRequires)
                     {
                         lineInfo.line.UpdateLineState(
-                            UpgradeManager.Instance.GetData(lineInfo.preRequireId) == null || UpgradeManager.Instance.GetData(lineInfo.preRequireId).level == 0
+                            lineInfo.node.CurrentState != UIUpgradeNodeState.Activated
                                 ? UIUpgradeNodeState.Locked
                                 : UIUpgradeNodeState.Available);
                     }
@@ -171,7 +196,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     foreach (var lineInfo in preRequires)
                     {
                         lineInfo.line.UpdateLineState(
-                            UpgradeManager.Instance.GetData(lineInfo.preRequireId) == null || UpgradeManager.Instance.GetData(lineInfo.preRequireId).level == 0
+                            lineInfo.node.CurrentState != UIUpgradeNodeState.Activated
                             ? UIUpgradeNodeState.Locked
                             : UIUpgradeNodeState.Activated);
                     }

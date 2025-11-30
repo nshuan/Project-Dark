@@ -8,6 +8,8 @@ namespace Dark.Scripts.OutGame.Upgrade
     {
         public override void UpdateUI()
         {
+            currentState = UIUpgradeNodeState.Activated;
+            
             txtNodeLevel.transform.parent.gameObject.SetActive(false);
             imgAvailable.SetActive(true);
             imgLock.gameObject.SetActive(false);

@@ -20,6 +20,7 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, List<UIUpgradeNode>> nodesMap; // Luu cac node co cung id
         [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, List<UIUpgradeNode>> nodeChildrenMap;
+        [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, List<UIUpgradeNode>> nodesMapByLayer;
 
         [Space] [Header("UI")] 
         [SerializeField] private Button btnDeselectAll;
@@ -64,68 +65,34 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         private void OnEnable()
         {
-            // Do Spawn Animation
-            var nodesMapByLayer = new Dictionary<int, List<UIUpgradeNode>>();
-            var queueCheck = new Queue<UIUpgradeNode>();
-            var currentLayerNodes = new List<UIUpgradeNode>();
-            foreach (var pair in nodesMap)
+            // Auto upgrade node layer 0
+            foreach (var nodeBase in nodesMapByLayer[0])
             {
-                if (pair.Value[0].preRequires == null || pair.Value[0].preRequires.Count == 0)
-                {
-                    // Tự động upgrade luôn
-                    UpgradeManager.Instance.UpgradeNode(pair.Key);
- 
-                    foreach (var node in pair.Value)
-                    {
-                        node.UpdateUI();
-                        currentLayerNodes.Add(node);
-                        queueCheck.Enqueue(node);
-                    }
-                }
-                else
-                {
-                    foreach (var node in pair.Value)
-                    {
-                        node.UpdateUI();
-                    }
-                }
+                UpgradeManager.Instance.UpgradeNode(nodeBase.config.nodeId);
             }
             
-            nodesMapByLayer[0] = new List<UIUpgradeNode>(currentLayerNodes);
-            currentLayerNodes.Clear();
-
-            var currentLayer = 1;
-            var currentLayerCount = queueCheck.Count;
-            while (queueCheck.Count > 0)
+            // Do Spawn Animation
+            var spawnNodesMapByLayer = new Dictionary<int, List<UIUpgradeNode>>();
+            var currentLayerNodes = new List<UIUpgradeNode>();
+            foreach (var layer in nodesMapByLayer)
             {
-                var node = queueCheck.Dequeue();
-                currentLayerNodes.Add(node);
-                currentLayerCount--;
-                if (nodeChildrenMap.TryGetValue(node.config.nodeId, out var children))
+                foreach (var node in layer.Value)
                 {
-                    foreach (var child in children)
-                    {
-                        if (GameConst.HideLockedNode && child.CurrentState == UIUpgradeNodeState.Locked)
-                            continue;
-                        
-                        if (!queueCheck.Contains(child))
-                        {
-                            queueCheck.Enqueue(child);
-                        }
-                    }
+                    node.UpdateUI();    
+                    if (GameConst.HideLockedNode && node.CurrentState == UIUpgradeNodeState.Locked)
+                        continue;
+                    currentLayerNodes.Add(node);
                 }
-                if (currentLayerCount == 0)
-                {
-                    nodesMapByLayer[currentLayer] = new List<UIUpgradeNode>(currentLayerNodes);
-                    currentLayer++;
-                    currentLayerCount = queueCheck.Count;
-                    currentLayerNodes.Clear(); 
-                }
+                
+                if (currentLayerNodes is { Count: > 0 })
+                    spawnNodesMapByLayer[layer.Key] = new List<UIUpgradeNode>(currentLayerNodes);
+                
+                currentLayerNodes.Clear(); 
             }
             
             DOTween.Kill(this);
             var seq = DOTween.Sequence(this);
-            foreach (var pair in nodesMapByLayer)
+            foreach (var pair in spawnNodesMapByLayer)
             {
                 foreach (var node in pair.Value)
                 {
@@ -200,6 +167,52 @@ namespace Dark.Scripts.OutGame.Upgrade
                 }
                 
                 EditorUtility.SetDirty(node);
+            }
+            
+            // Cache node map by layer
+            nodesMapByLayer = new Dictionary<int, List<UIUpgradeNode>>();
+            var queueCheck = new Queue<UIUpgradeNode>();
+            var currentLayerNodes = new List<UIUpgradeNode>();
+            foreach (var pair in nodesMap)
+            {
+                if (pair.Value[0].preRequires == null || pair.Value[0].preRequires.Count == 0)
+                {
+                    foreach (var node in pair.Value)
+                    {
+                        queueCheck.Enqueue(node);
+                        currentLayerNodes.Add(node);
+                    }
+                }
+            }
+            
+            nodesMapByLayer[0] = new List<UIUpgradeNode>(currentLayerNodes);
+            currentLayerNodes.Clear();
+
+            var currentLayer = 1;
+            var currentLayerCount = queueCheck.Count;
+            while (queueCheck.Count > 0)
+            {
+                var node = queueCheck.Dequeue();
+                currentLayerCount--;
+                if (nodeChildrenMap.TryGetValue(node.config.nodeId, out var childrenNodes))
+                {
+                    foreach (var child in childrenNodes)
+                    {
+                        if (!queueCheck.Contains(child))
+                        {
+                            currentLayerNodes.Add(child);
+                            queueCheck.Enqueue(child);
+                        }
+                    }
+                }
+                if (currentLayerCount == 0)
+                {
+                    if (currentLayerNodes.Count > 0)
+                        nodesMapByLayer[currentLayer] = new List<UIUpgradeNode>(currentLayerNodes);
+                    currentLayer++;
+                    currentLayerCount = queueCheck.Count;
+                    currentLayerNodes.Clear(); 
+                }
             }
             
             EditorUtility.SetDirty(this);
