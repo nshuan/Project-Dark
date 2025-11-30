@@ -254,6 +254,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     UIUpgradeNodeInfoPreview.Instance.Setup(config, true);
                     UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true, () => hoverField.interactable = true);
                     treeRef.LastUpgradeNodeId = config.nodeId;
+                    treeRef.InvokeNodeUpgraded(this);
                     treeRef.UpgradeAllNodesWithId(config.nodeId);
                     sfxUnlockSuccess?.Play();
                 }

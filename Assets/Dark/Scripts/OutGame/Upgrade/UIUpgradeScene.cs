@@ -18,8 +18,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private Button btnBack;
         
         [Space] [Header("Upgrade Tree")]
-        [SerializeField] private GameObject panelUpgradeTree;
-        [SerializeField] private Transform treeParent;
+        [SerializeField] private UIPanelUpgradeTree panelUpgradeTree;
 
         [Space] [Header("Select class")] 
         [SerializeField] private GameObject panelSelectClass;
@@ -28,14 +27,14 @@ namespace Dark.Scripts.OutGame.Upgrade
         {
             if (PlayerDataManager.Instance.Data.initialized == false)
             {
-                panelUpgradeTree.SetActive(false);
+                panelUpgradeTree.gameObject.SetActive(false);
                 panelSelectClass.SetActive(true);
             }
             else
             {
-                panelUpgradeTree.SetActive(true);
+                panelUpgradeTree.gameObject.SetActive(true);
                 panelSelectClass.SetActive(false);
-                Instantiate(UpgradeTreeManifest.GetTreePrefab((CharacterClass)PlayerDataManager.Instance.Data.characterClass), treeParent);
+                panelUpgradeTree.SpawnTree();
             }
             
             btnBack.onClick.RemoveAllListeners();

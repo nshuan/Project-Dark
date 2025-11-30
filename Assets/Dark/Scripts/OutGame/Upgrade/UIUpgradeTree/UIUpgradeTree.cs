@@ -30,6 +30,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private float firstNodeDelayStep = 0.5f;
 
         public int LastUpgradeNodeId { get; set; } = -1;
+        public Action<UIUpgradeNode> OnNodeUpgraded { get; set; }
         
         public void UpdateChildren(int id, bool isUnlock)
         {
@@ -52,6 +53,11 @@ namespace Dark.Scripts.OutGame.Upgrade
                     node.Upgrade();
                 }
             }
+        }
+
+        public void InvokeNodeUpgraded(UIUpgradeNode node)
+        {
+            OnNodeUpgraded?.Invoke(node);
         }
 
         private void Awake()

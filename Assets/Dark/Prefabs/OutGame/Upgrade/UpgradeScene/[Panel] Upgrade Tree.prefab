@@ -475,6 +475,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d76a7b825924b6983c19e111bb67340, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scrollView: {fileID: 7949871149163442355}
+  treeParent: {fileID: 3140676803429804954}
   vfxSpawn: {fileID: 3660822723404352354}
   groupUIHiddenOnSpawn: {fileID: 1178144862438903649}
   treeZoom: {fileID: 6075770563660438773}
@@ -1240,6 +1242,7 @@ GameObject:
   - component: {fileID: 3300631054546661986}
   - component: {fileID: 1803273796590748178}
   - component: {fileID: 7065613613848463204}
+  - component: {fileID: 7949871149163442355}
   m_Layer: 5
   m_Name: Scroll View
   m_TagString: Untagged
@@ -1323,7 +1326,7 @@ MonoBehaviour:
   m_MovementType: 2
   m_Elasticity: 0.1
   m_Inertia: 1
-  m_DecelerationRate: 0.135
+  m_DecelerationRate: 0.01
   m_ScrollSensitivity: 1
   m_Viewport: {fileID: 8843949603755170906}
   m_HorizontalScrollbar: {fileID: 0}
@@ -1335,6 +1338,20 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7949871149163442355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2039541236455692957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d301447424264aab833cbd4de9d65cd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zoom: {fileID: 6075770563660438773}
+  content: {fileID: 3140676803429804954}
 --- !u!1 &2126843667422946875
 GameObject:
   m_ObjectHideFlags: 0
