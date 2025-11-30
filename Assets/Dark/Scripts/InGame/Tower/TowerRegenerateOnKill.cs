@@ -23,8 +23,9 @@ namespace InGame
             CombatActions.OnOneEnemyDead += OnOneEnemyKilled;
         }
 
-        private void OnOneEnemyKilled(EnemyEntity enemy)
+        private void OnOneEnemyKilled(EnemyEntity enemy, EnemyDieReason reason)
         {
+            if (reason == EnemyDieReason.Suicide) return;
             if (regenAmount <= 0) return;
             
             if (tower.CurrentHp < tower.MaxHp && tower.CurrentHp > 0)

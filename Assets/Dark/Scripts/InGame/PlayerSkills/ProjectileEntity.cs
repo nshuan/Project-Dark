@@ -260,7 +260,17 @@ namespace InGame
             var critical = RandomUtil.Range(0f, 1f) <= CriticalRate;
             hit.HitDirectionX = direction.x;
             hit.HitDirectionY = direction.y;
-            hit.Damage(critical ? CriticalDamage : Damage, transform.position, Stagger, critical ? InGame.DamageType.NormalCritical : InGame.DamageType.Normal);
+            InGame.DamageType dmgType = InGame.DamageType.Normal;
+            switch (DamageType)
+            {
+                case ProjectileType.PlayerProjectile:
+                    dmgType = critical ? InGame.DamageType.NormalCritical : InGame.DamageType.Normal;
+                    break;
+                case ProjectileType.TowerProjectile:
+                    dmgType = critical ? InGame.DamageType.TowerCritical : InGame.DamageType.Tower;
+                    break;
+            }
+            hit.Damage(critical ? CriticalDamage : Damage, transform.position, Stagger, dmgType);
             // if (!hit.IsDestroyed)
             {
                 if (DamageType == ProjectileType.PlayerProjectile)

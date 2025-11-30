@@ -191,10 +191,10 @@ namespace InGame
                     enemy.Item1.UniqueId = EnemyManager.Instance.CurrentEnemyIndex;
                     AliveEnemyCount += 1;
                     EnemyManager.Instance.OnEnemySpawn(enemy.Item1);
-                    enemy.Item1.OnDead += () =>
+                    enemy.Item1.OnDead += (reason) =>
                     {
                         AliveEnemyCount -= 1;
-                        EnemyManager.Instance.OnEnemyDead(enemy.Item1);
+                        EnemyManager.Instance.OnEnemyDead(enemy.Item1, reason);
                         CheckAllEnemiesDead();
                     };
                 }
