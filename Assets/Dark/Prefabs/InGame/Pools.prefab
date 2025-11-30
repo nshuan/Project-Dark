@@ -212,6 +212,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c6545c18f734b6fae659d746385f271, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &5854093076132606987
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2191682804942090245}
+  - component: {fileID: 1635131301241625840}
+  m_Layer: 0
+  m_Name: ProjectileHomingDeadPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2191682804942090245
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5854093076132606987}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6229537238230664456}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1635131301241625840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5854093076132606987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18b838a272c46e6b2e6f0783fe2de6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefab: {fileID: 660369880195015961, guid: 7eb7a46490a5f524eafb14a880777da4, type: 3}
+  delayDisappear: 1.5
 --- !u!1 &6410227086279971072
 GameObject:
   m_ObjectHideFlags: 0
@@ -514,6 +560,7 @@ Transform:
   - {fileID: 8623775223776507385}
   - {fileID: 1306400936438960490}
   - {fileID: 125708837354453557}
+  - {fileID: 2191682804942090245}
   - {fileID: 1794418955659821868}
   - {fileID: 5306549983773342539}
   m_Father: {fileID: 0}

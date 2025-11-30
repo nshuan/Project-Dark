@@ -166,19 +166,23 @@ namespace Dark.Scripts.SceneNavigation
 
             if (currentScene.name == sceneName)
             {
-                // Load Blank scene additively
+                // Load blank scene additively
                 AsyncOperation loadBlankOp = SceneManager.LoadSceneAsync("Blank", LoadSceneMode.Additive);
                 yield return loadBlankOp;
+                DebugUtility.LogWarning($"Scene Blank is loaded!");
 
                 // Set the new scene active
                 Scene loadedBlankScene = SceneManager.GetSceneByName("Blank");
                 SceneManager.SetActiveScene(loadedBlankScene);
 
+                var lastSceneName = currentScene.name;
                 // Unload previous scene
                 AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(currentScene);
                 yield return unloadOp;
+                DebugUtility.LogWarning($"Scene {lastSceneName} is unloaded!");
                 
                 currentScene = SceneManager.GetActiveScene();
+                yield return new WaitForSecondsRealtime(0.1f);
             }
             
             

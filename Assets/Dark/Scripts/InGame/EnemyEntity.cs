@@ -293,7 +293,8 @@ namespace InGame
             if (coroutineBurn != null) StopCoroutine(coroutineBurn);
             callbackBurnComplete?.Invoke();
             callbackBurnComplete = null;
-            CollectResource();
+            if (reason != EnemyDieReason.Suicide)
+                CollectResource();
             StartCoroutine(IEDie(.5f, reason));
         }
 
