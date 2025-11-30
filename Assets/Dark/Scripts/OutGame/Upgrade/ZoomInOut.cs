@@ -63,31 +63,31 @@ namespace Dark.Scripts.OutGame.Upgrade
             if (Mathf.Abs(scroll) > 0.01f)
             {
                 Vector2 mousePosition = Input.mousePosition;
+                UpdatePivot(targetRect, mousePosition);
 
                 // Get current scale
                 float currentScale = targetRect.localScale.x;
                 float newScale = Mathf.Clamp(currentScale + scroll * zoomSpeed, minScale, maxScale);
-                float scaleFactor = newScale / currentScale;
 
                 CurrentScale = newScale;
 
-                // Convert mouse position to local position in the targetRect
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                    targetRect, mousePosition, null, out Vector2 localPointBefore);
+                // // Convert mouse position to local position in the targetRect
+                // RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                //     targetRect, mousePosition, null, out Vector2 localPointBefore);
 
                 // Apply the scale
                 targetRect.localScale = new Vector3(newScale, newScale, 1f);
                 txtZoom?.SetText($"x{newScale:F1}");
                 
-                // Convert mouse position again after scaling
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                    targetRect, mousePosition, null, out Vector2 localPointAfter);
+                // // Convert mouse position again after scaling
+                // RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                //     targetRect, mousePosition, null, out Vector2 localPointAfter);
 
-                // Calculate difference caused by scaling
-                Vector2 delta = localPointAfter - localPointBefore;
-
-                // Adjust anchoredPosition to compensate the shift
-                targetRect.anchoredPosition -= delta;
+                // // Calculate difference caused by scaling
+                // Vector2 delta = localPointAfter - localPointBefore;
+                //
+                // // Adjust anchoredPosition to compensate the shift
+                // targetRect.anchoredPosition += delta;
             }
         }
 
@@ -116,6 +116,21 @@ namespace Dark.Scripts.OutGame.Upgrade
             seq.AppendCallback(() => blockZoom = false);
             
             return seq;
+        }
+        
+        private void UpdatePivot(RectTransform target, Vector2 pivotPosition)
+        {
+            var targetSizeScaled = new Vector2(target.rect.width * target.localScale.x,
+                target.rect.height * target.localScale.y);
+            var offset = (0.5f * Vector2.one - target.pivot) * targetSizeScaled;
+            target.pivot = 0.5f * Vector2.one;
+            target.position += (Vector3)offset;
+            
+            var pivotVector = -(Vector2)target.position + pivotPosition + 0.5f * targetSizeScaled;
+            target.pivot = new Vector2(pivotVector.x / targetSizeScaled.x, pivotVector.y / targetSizeScaled.y);
+            offset.x = (target.pivot.x - 0.5f) * targetSizeScaled.x;
+            offset.y = (target.pivot.y - 0.5f) * targetSizeScaled.y;
+            target.position += (Vector3)offset;
         }
     }
 }
