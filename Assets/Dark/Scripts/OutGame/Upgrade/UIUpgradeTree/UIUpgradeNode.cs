@@ -28,6 +28,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] protected CanvasGroup groupNode;
         [SerializeField] protected Image nodeVisual;
         [SerializeField] protected Image nodeLockVisual;
+
         [SerializeField] protected Transform imgBorder;
         [SerializeField] protected GameObject imgActivatedGlow;
         [SerializeField] protected GameObject imgActivatedMaxGlow;
@@ -205,20 +206,24 @@ namespace Dark.Scripts.OutGame.Upgrade
             
             hoverField.onHover = () =>
             {
+                var defaultScale = transform.localScale;
                 if (GameConst.HideLockedNode && CurrentState == UIUpgradeNodeState.Locked)
                     return;
                 DOTween.Kill(transform);
                 sfxHover.Play();
                 transform.localRotation = Quaternion.identity;
                 transform.DOPunchRotation(new Vector3(0f, 0f, 10f), 0.3f, 20, 0.1f).SetTarget(transform);
+                transform.DOScale(new Vector3(defaultScale.x + 0.2f, defaultScale.y + 0.2f, 0), 0.2f).SetEase(Ease.OutQuad);
                 UIUpgradeNodeInfoPreview.Instance.Setup(config, false);
                 UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), false, () => hoverField.interactable = true);
             };
             hoverField.onHoverExit = () =>
             {
+                var endScale = transform.localScale;
                 if (GameConst.HideLockedNode && CurrentState == UIUpgradeNodeState.Locked)
                     return;
                 hoverField.interactable = false;
+                transform.DOScale(new Vector3(endScale.x - 0.2f, endScale.y - 0.2f, 0), 0.2f).SetEase(Ease.InQuad);
                 UIUpgradeNodeInfoPreview.Instance.Hide(false);
             };
             hoverField.onPointerClick = () =>
