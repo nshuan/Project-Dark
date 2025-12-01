@@ -251,6 +251,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                 var success = UpgradeManager.Instance.UpgradeNode(config.nodeId);
                 if (success)
                 {
+                    config.ActivateLevel(UpgradeManager.Instance.GetData(config.nodeId).level, ref UIUpgradeNodeInfoPreview.Instance.bonusInfo);
                     UIUpgradeNodeInfoPreview.Instance.Setup(config, true);
                     UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true, () => hoverField.interactable = true);
                     treeRef.LastUpgradeNodeId = config.nodeId;

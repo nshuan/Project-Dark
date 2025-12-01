@@ -34,9 +34,19 @@ namespace InGame.Upgrade
             {
                 foreach (var logic in nodeLogic)
                 {
-                    logic.ActivateNode(level, ref bonusInfo);
+                    logic.ActivateNode(i, ref bonusInfo);
                 }   
             }
+        }
+        
+        public void ActivateLevel(int level, ref UpgradeBonusInfo bonusInfo)
+        {
+            if (nodeLogic == null) return;
+            if (level <= 0 || level > MaxLevel) return;
+            foreach (var logic in nodeLogic)
+            {
+                logic.ActivateNode(level, ref bonusInfo);
+            }   
         }
     }
 

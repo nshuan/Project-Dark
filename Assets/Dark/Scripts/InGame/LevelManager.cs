@@ -102,6 +102,9 @@ namespace InGame
                 { ChargeType.Bullet, PlayerChargeManifest.Get(ChargeType.Bullet) },
                 { ChargeType.Size, PlayerChargeManifest.Get(ChargeType.Size) }
             };
+            LevelUtility.DashConfig = dashConfig;
+            LevelUtility.FlashConfig = flashConfig;
+            LevelUtility.TeleConfig = defaultTeleConfig; 
         }
         
         private void InitPlayerAndTowers()

@@ -17,10 +17,46 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case BonusMoveTowerType.Cooldown:
-                    if (isMultiply) bonusInfo.moveCooldownMultiplier += value[level - 1];
-                    else bonusInfo.moveCooldownPlus += value[level - 1];
+                    if (isMultiply)
+                    {
+                        bonusInfo.moveCooldownMultiplier += value[level - 1];
+                        // bonusInfo.dashCooldownMultiplier += value[level - 1];
+                        // bonusInfo.flashCooldownMultiplier += value[level - 1];
+                    }
+                    else
+                    {
+                        bonusInfo.moveCooldownPlus += value[level - 1];
+                        // bonusInfo.dashCooldownPlus += value[level - 1];
+                        // bonusInfo.flashCooldownPlus += value[level - 1];
+                    }
                     break;
             }
+        }
+
+        public (string, string) GetBeforeAfterValueTotalStat(int level, ref UpgradeBonusInfo bonusInfo)
+        {
+            var before = "";
+            switch (bonusType)
+            {
+                case BonusMoveTowerType.Cooldown:
+                    before = $"{LevelUtility.GetTeleCooldown().ToString(CultureInfo.InvariantCulture)}s";
+                    break;
+            }
+            if (level >= value.Length)
+                return (before, before);
+            var moveCooldownMultiplier = bonusInfo.moveCooldownMultiplier;
+            var moveCooldownPlus = bonusInfo.moveCooldownPlus;
+            ActivateNode(level, ref bonusInfo);
+            var after = "";
+            switch (bonusType)
+            {
+                case BonusMoveTowerType.Cooldown:
+                    after = $"{LevelUtility.GetTeleCooldown().ToString(CultureInfo.InvariantCulture)}s";
+                    break;
+            }
+            bonusInfo.moveCooldownMultiplier = moveCooldownMultiplier;
+            bonusInfo.moveCooldownPlus = moveCooldownPlus;
+            return (before, after);
         }
 
         public string GetDisplayValue(int level)
@@ -38,51 +74,6 @@ namespace InGame.Upgrade
             }
             
             return value[level].ToString(CultureInfo.InvariantCulture);
-        }
-
-        public (string, string) GetBeforeAfterValue(int level)
-        {
-            var before = "";
-            var after = "";
-            if (level < 0) return ("", "");
-            if (level >= value.Length) level = value.Length - 1;
-            if (level == 0)
-            {
-                before = "0";
-                after = GetDisplayValue(level);
-            }
-            else
-            {
-                var sum = 0f;
-                for (var i = 0; i < level; i++)
-                    sum += value[i];
-                
-                switch (bonusType)
-                {
-                    case BonusMoveTowerType.Cooldown:
-                        if (isMultiply)
-                        {
-                            before = (sum * 100).ToString(CultureInfo.InvariantCulture);
-                            after = ((sum + value[level]) * 100).ToString(CultureInfo.InvariantCulture);
-                        }
-                        else
-                        {
-                            before = sum.ToString(CultureInfo.InvariantCulture);
-                            after = (sum + value[level]).ToString(CultureInfo.InvariantCulture);
-                        }
-                        break;
-                    case BonusMoveTowerType.CastTime:
-                        before = (sum * 100).ToString(CultureInfo.InvariantCulture);
-                        after = ((sum + value[level]) * 100).ToString(CultureInfo.InvariantCulture);
-                        break;
-                    default:
-                        before = sum.ToString(CultureInfo.InvariantCulture);
-                        after = (sum + value[level]).ToString(CultureInfo.InvariantCulture);
-                        break;
-                }
-            }
-		    
-            return (before, after);
         }
 
         public int MaxLevel => value.Length;

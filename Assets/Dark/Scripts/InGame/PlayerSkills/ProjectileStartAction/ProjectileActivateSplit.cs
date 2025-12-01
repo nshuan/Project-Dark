@@ -106,6 +106,22 @@ namespace InGame
             this.angle += casted.angle;
         }
 
+        public void TryCombineAndRevert<T>(T combineWith, Action combinedAction) where T : IProjectileActivate
+        {
+            if (combineWith is not ProjectileActivateSplit casted)
+            {
+                combinedAction?.Invoke();
+                return;
+            }
+            var tempAmount = this.amount;
+            var tempAngle = this.angle;
+            this.amount += casted.amount;
+            this.angle += casted.angle;
+            combinedAction?.Invoke();
+            this.amount = tempAmount;
+            this.angle = tempAngle;
+        }
+
         public float GetValue()
         {
             return amount;

@@ -203,25 +203,25 @@ namespace InGame
         private float GetCooldown(MoveTowersConfig config)
         {
             var cooldown = config.cooldown;
-            if (config.moveLogic is MoveDashToTower) cooldown = LevelUtility.GetDashCooldown(config.cooldown);
-            else if (config.moveLogic is MoveFlashToTower) cooldown = LevelUtility.GetFlashCooldown(config.cooldown);
-            else if (config.moveLogic is MoveTeleToTower) cooldown = LevelUtility.GetTeleCooldown(config.cooldown);
+            if (config.moveLogic is MoveDashToTower) cooldown = LevelUtility.GetDashCooldown();
+            else if (config.moveLogic is MoveFlashToTower) cooldown = LevelUtility.GetFlashCooldown();
+            else if (config.moveLogic is MoveTeleToTower) cooldown = LevelUtility.GetTeleCooldown();
             return cooldown;
         }
 
         private float GetSize(MoveTowersConfig config)
         {
             var size = config.size;
-            if (config.moveLogic is MoveDashToTower) size = LevelUtility.GetDashSize(config.size);
-            else if (config.moveLogic is MoveFlashToTower) size = LevelUtility.GetFlashSize(config.size);
+            if (config.moveLogic is MoveDashToTower) size = LevelUtility.GetDashSize();
+            else if (config.moveLogic is MoveFlashToTower) size = LevelUtility.GetFlashSize();
             return size;
         }
 
         private int GetDamage(MoveTowersConfig config)
         {
             var damage = config.damage;
-            if (config.moveLogic is MoveDashToTower) damage = LevelUtility.GetDashDamage(config.damage);
-            else if (config.moveLogic is MoveFlashToTower) damage = LevelUtility.GetFlashDamage(config.damage);
+            if (config.moveLogic is MoveDashToTower) damage = LevelUtility.GetDashDamage();
+            else if (config.moveLogic is MoveFlashToTower) damage = LevelUtility.GetFlashDamage();
             return damage;
         }
 

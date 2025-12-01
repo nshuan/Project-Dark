@@ -38,7 +38,12 @@ namespace Dark.Scripts.OutGame.Upgrade
             {
                 foreach (var childNode in children)
                 {
-                    if (isUnlock) childNode.DoUnlockVfx(id).OnComplete(() => childNode.UpdateUI());
+                    if (isUnlock) childNode.DoUnlockVfx(id).OnComplete(() =>
+                    {
+                        childNode.UpdateUI();
+                        if (childNode.CurrentState == UIUpgradeNodeState.Activated)
+                            UpdateChildren(childNode.config.nodeId, true);
+                    });
                     else childNode.UpdateUI();
                 }
             }
