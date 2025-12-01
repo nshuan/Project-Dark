@@ -27,7 +27,7 @@ namespace InGame
                 p.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
                 p.transform.position = spawnPos;
                 p.Init(
-                    spawnPos, 
+                    parentProjectile.RangeCenter, 
                     direction, 
                     parentProjectile.Range, 
                     parentProjectile.Size, 
@@ -56,7 +56,7 @@ namespace InGame
                 p.transform.position = spawnPos;
                 p.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(pDir.y, pDir.x) * Mathf.Rad2Deg);
                 p.Init(
-                    spawnPos, 
+                    parentProjectile.RangeCenter, 
                     pDir, 
                     parentProjectile.Range, 
                     parentProjectile.Size, 
@@ -80,7 +80,7 @@ namespace InGame
                 p.transform.position = spawnPos;
                 p.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(pDir.y, pDir.x) * Mathf.Rad2Deg);
                 p.Init(
-                    spawnPos, 
+                    parentProjectile.RangeCenter, 
                     pDir, 
                     parentProjectile.Range, 
                     parentProjectile.Size, 
