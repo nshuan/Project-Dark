@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MAT_UI_Distortion
+  m_Name: MAT_UI_SkillTreeCloud
   m_Shader: {fileID: 4800000, guid: 28f245a4e34998d46b10d12557f0a12b, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -26,12 +26,12 @@ Material:
     m_TexEnvs:
     - _MainNoise:
         m_Texture: {fileID: 2800000, guid: c3ba872455e7c6540b3ad3698f2bd544, type: 3}
-        m_Scale: {x: 2, y: 2}
+        m_Scale: {x: 0.05, y: 0.05}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+        m_Offset: {x: -0.51, y: -0.54}
     - _NoiseTex:
         m_Texture: {fileID: 2800000, guid: 229b6e14b340cbe48837c1c3f16cc258, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -41,8 +41,8 @@ Material:
     - _ColorMask: 15
     - _DarknessFactor: 0
     - _DistortionFactor: 0
-    - _DstFactor: 1
-    - _NoiseValue: 1
+    - _DstFactor: 10
+    - _NoiseValue: 0.76
     - _Opp: 0
     - _SrcFactor: 1
     - _Stencil: 0
@@ -52,7 +52,7 @@ Material:
     - _StencilWriteMask: 255
     - _UseUIAlphaClip: 1
     m_Colors:
-    - _Color: {r: 0.5849056, g: 0.5849056, b: 0.5849056, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _NoiseSpeed: {r: 0.005, g: 0.005, b: 0, a: 0}
     - _Speed: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
