@@ -99,7 +99,7 @@ namespace InGame.Upgrade
         {
             if (level < 0) return "??";
             if (level >= actions.Count) level = actions.Count - 1;
-            return actions[level].GetValue().ToString(CultureInfo.InvariantCulture);
+            return actions[level].GetValue().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
         }
 
         public (string, string) GetBeforeAfterValue(int level)
@@ -119,8 +119,8 @@ namespace InGame.Upgrade
                 for (var i = 1; i <= level; i++)
                     sum += actions[i - 1].GetValue();
                 
-                before = $"+{sum.ToString(CultureInfo.InvariantCulture)}";
-                after = $"+{(sum + actions[level - 1].GetValue()).ToString(CultureInfo.InvariantCulture)}";
+                before = $"+{sum.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}";
+                after = $"+{(sum + actions[level - 1].GetValue()).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}";
             }
 		    
             return (before, after);

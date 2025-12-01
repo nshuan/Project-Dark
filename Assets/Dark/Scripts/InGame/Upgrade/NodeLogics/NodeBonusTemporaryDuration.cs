@@ -44,16 +44,16 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case NodeBonusTemporary.BonusTemporaryType.DamageOnKill:
-                    before = $"{bonusInfo.tempDamageBonusOnMove.bonusDuration.ToString(CultureInfo.InvariantCulture)}s";
+                    before = $"{bonusInfo.tempDamageBonusOnMove.bonusDuration.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
                     break;
                 case NodeBonusTemporary.BonusTemporaryType.DamageOnMove:
-                    before = $"{bonusInfo.tempDamageBonusOnKill.bonusDuration.ToString(CultureInfo.InvariantCulture)}s";
+                    before = $"{bonusInfo.tempDamageBonusOnKill.bonusDuration.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
                     break;
                 case NodeBonusTemporary.BonusTemporaryType.AtkSpeOnKill:
-                    before = $"{bonusInfo.tempAtkSpeBonusOnMove.bonusDuration.ToString(CultureInfo.InvariantCulture)}s";
+                    before = $"{bonusInfo.tempAtkSpeBonusOnMove.bonusDuration.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
                     break;
                 case NodeBonusTemporary.BonusTemporaryType.AtkSpeOnMove:
-                    before = $"{bonusInfo.tempAtkSpeBonusOnKill.bonusDuration.ToString(CultureInfo.InvariantCulture)}s";
+                    before = $"{bonusInfo.tempAtkSpeBonusOnKill.bonusDuration.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
                     break;
             }
             if (level > value.Length)
@@ -67,16 +67,16 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case NodeBonusTemporary.BonusTemporaryType.DamageOnKill:
-                    before = $"{bonusInfo.tempDamageBonusOnMove.bonusDuration.ToString(CultureInfo.InvariantCulture)}s";
+                    before = $"{bonusInfo.tempDamageBonusOnMove.bonusDuration.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
                     break;
                 case NodeBonusTemporary.BonusTemporaryType.DamageOnMove:
-                    before = $"{bonusInfo.tempDamageBonusOnKill.bonusDuration.ToString(CultureInfo.InvariantCulture)}s";
+                    before = $"{bonusInfo.tempDamageBonusOnKill.bonusDuration.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
                     break;
                 case NodeBonusTemporary.BonusTemporaryType.AtkSpeOnKill:
-                    before = $"{bonusInfo.tempAtkSpeBonusOnMove.bonusDuration.ToString(CultureInfo.InvariantCulture)}s";
+                    before = $"{bonusInfo.tempAtkSpeBonusOnMove.bonusDuration.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
                     break;
                 case NodeBonusTemporary.BonusTemporaryType.AtkSpeOnMove:
-                    before = $"{bonusInfo.tempAtkSpeBonusOnKill.bonusDuration.ToString(CultureInfo.InvariantCulture)}s";
+                    before = $"{bonusInfo.tempAtkSpeBonusOnKill.bonusDuration.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
                     break;
             }   
             bonusInfo.tempDamageBonusOnKill.bonusDuration = tempDamageBonusOnKill;
@@ -91,7 +91,7 @@ namespace InGame.Upgrade
             if (level < 0) return "??";
             if (level >= value.Length) level = value.Length - 1;
             
-            return value[level].ToString(CultureInfo.InvariantCulture);
+            return value[level].ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
         }
 
         public int MaxLevel => value.Length;

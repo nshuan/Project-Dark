@@ -49,25 +49,25 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case BonusSkillType.Damage:
-                    before = LevelUtility.GetPlayerBulletDamage(1f).Item1.ToString(CultureInfo.InvariantCulture);
+                    before = LevelUtility.GetPlayerBulletDamage(1f).Item1.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
                 case BonusSkillType.Cooldown:
-                    before = $"{LevelUtility.GetSkillCooldown(false).ToString(CultureInfo.InvariantCulture)}s";   
+                    before = $"{LevelUtility.GetSkillCooldown(false).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";   
                     break;
                 case BonusSkillType.Size:
-                    before = LevelUtility.GetSkillSize(1).ToString(CultureInfo.InvariantCulture);
+                    before = LevelUtility.GetSkillSize(1).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
                 case BonusSkillType.Range:
-                    before = LevelUtility.GetSkillRange(1, Vector2.right).ToString(CultureInfo.InvariantCulture);
+                    before = LevelUtility.GetSkillRange(1, Vector2.right).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
                 case BonusSkillType.BulletNum:
-                    before = LevelUtility.GetNumberOfBullets(1).ToString(CultureInfo.InvariantCulture);
+                    before = LevelUtility.GetNumberOfBullets(1).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
                 case BonusSkillType.BulletMaxHit:
-                    before = (1 + bonusInfo.skillBonus.bulletMaxHitPlus).ToString(CultureInfo.InvariantCulture);
+                    before = (1 + bonusInfo.skillBonus.bulletMaxHitPlus).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
                 case BonusSkillType.Stagger:
-                    before = LevelUtility.GetBulletStagger().ToString(CultureInfo.InvariantCulture);
+                    before = LevelUtility.GetBulletStagger().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
             }
             if (level > value.Length)
@@ -86,25 +86,25 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case BonusSkillType.Damage:
-                    after = LevelUtility.GetPlayerBulletDamage(1f).Item1.ToString(CultureInfo.InvariantCulture);
+                    after = LevelUtility.GetPlayerBulletDamage(1f).Item1.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
                 case BonusSkillType.Cooldown:
-                    after = $"{LevelUtility.GetSkillCooldown(false).ToString(CultureInfo.InvariantCulture)}s";
+                    after = $"{LevelUtility.GetSkillCooldown(false).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
                     break;
                 case BonusSkillType.Size:
-                    after = LevelUtility.GetSkillSize(1).ToString(CultureInfo.InvariantCulture);
+                    after = LevelUtility.GetSkillSize(1).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
                 case BonusSkillType.Range:
-                    after = LevelUtility.GetSkillRange(1, Vector2.right).ToString(CultureInfo.InvariantCulture);
+                    after = LevelUtility.GetSkillRange(1, Vector2.right).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
                 case BonusSkillType.BulletNum:
-                    after = LevelUtility.GetNumberOfBullets(1).ToString(CultureInfo.InvariantCulture);
+                    after = LevelUtility.GetNumberOfBullets(1).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
                 case BonusSkillType.BulletMaxHit:
-                    after = (1 + bonusInfo.skillBonus.bulletMaxHitPlus).ToString(CultureInfo.InvariantCulture);
+                    after = (1 + bonusInfo.skillBonus.bulletMaxHitPlus).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
                 case BonusSkillType.Stagger:
-                    after = LevelUtility.GetBulletStagger().ToString(CultureInfo.InvariantCulture);
+                    after = LevelUtility.GetBulletStagger().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
             }
             bonusInfo.skillBonus.skillDameMultiply = skillDameMultiply;
@@ -130,15 +130,15 @@ namespace InGame.Upgrade
                 case BonusSkillType.Cooldown:
                 case BonusSkillType.Size:
                 case BonusSkillType.Range:
-                    if (isMultiply) return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
-                    else return value[level].ToString(CultureInfo.InvariantCulture);
+                    if (isMultiply) return (value[level] * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+                    else return value[level].ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                 case BonusSkillType.Stagger:
-                    return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
+                    return (value[level] * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                 case BonusSkillType.BulletNum:
                 case BonusSkillType.BulletMaxHit:
                     break;
             }
-            return value[level].ToString(CultureInfo.InvariantCulture);
+            return value[level].ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
         }
 
         public int MaxLevel => value.Length;

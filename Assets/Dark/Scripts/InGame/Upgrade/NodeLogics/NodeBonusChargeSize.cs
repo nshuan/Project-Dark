@@ -21,13 +21,13 @@ namespace InGame.Upgrade
             var before = LevelUtility.GetChargeSizeExplodeBullet((int)PlayerChargeManifest.Get(ChargeType.Size).value);
             if (level > value.Length)
             {
-                return (before.ToString(CultureInfo.InvariantCulture), before.ToString(CultureInfo.InvariantCulture));
+                return (before.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture), before.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture));
             }
             var maxBulletExplodeChargeSize = bonusInfo.chargeBonus.maxBulletExplodeChargeSize;
             ActivateNode(level, ref bonusInfo);
             var after = LevelUtility.GetChargeSizeExplodeBullet((int)PlayerChargeManifest.Get(ChargeType.Size).value);
             bonusInfo.chargeBonus.maxBulletExplodeChargeSize = maxBulletExplodeChargeSize;
-            return (before.ToString(CultureInfo.InvariantCulture), after.ToString(CultureInfo.InvariantCulture));
+            return (before.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture), after.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture));
         }
 
         public string GetDisplayValue(int level)
@@ -35,7 +35,7 @@ namespace InGame.Upgrade
             if (level < 0) return "??";
             if (level >= value.Length) level = value.Length - 1;
             
-            return value[level].ToString(CultureInfo.InvariantCulture);
+            return value[level].ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
         }
 
         public int MaxLevel => value.Length;

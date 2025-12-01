@@ -37,13 +37,13 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case BonusType.Cooldown:
-                    before = $"{LevelUtility.GetFlashCooldown().ToString(CultureInfo.InvariantCulture)}s";
+                    before = $"{LevelUtility.GetFlashCooldown().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
                     break;
                 case BonusType.Size:
-                    before = LevelUtility.GetFlashSize().ToString(CultureInfo.InvariantCulture);
+                    before = LevelUtility.GetFlashSize().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
                 case BonusType.Damage:
-                    before = LevelUtility.GetFlashDamage().ToString(CultureInfo.InvariantCulture);
+                    before = LevelUtility.GetFlashDamage().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
             }
             if (level > value.Length)
@@ -61,13 +61,13 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case BonusType.Cooldown:
-                    after = $"{LevelUtility.GetFlashCooldown().ToString(CultureInfo.InvariantCulture)}s";
+                    after = $"{LevelUtility.GetFlashCooldown().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
                     break;
                 case BonusType.Size:
-                    after = LevelUtility.GetFlashSize().ToString(CultureInfo.InvariantCulture);
+                    after = LevelUtility.GetFlashSize().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
                 case BonusType.Damage:
-                    after = LevelUtility.GetFlashDamage().ToString(CultureInfo.InvariantCulture);
+                    after = LevelUtility.GetFlashDamage().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
             }
             bonusInfo.flashCooldownMultiplier = flashCooldownMultiplier;
@@ -85,8 +85,8 @@ namespace InGame.Upgrade
             if (level >= value.Length) level = value.Length - 1;
 
             if (isMultiply)
-                return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
-            return value[level].ToString(CultureInfo.InvariantCulture);
+                return (value[level] * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+            return value[level].ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
         }
 
         public int MaxLevel => value.Length;

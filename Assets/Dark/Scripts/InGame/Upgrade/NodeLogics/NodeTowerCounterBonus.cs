@@ -47,10 +47,10 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case BonusType.Cooldown:
-                    before = $"{LevelUtility.GetTowerCounterCooldown(counterType, TowerCounterManifest.Get(counterType).cooldown).ToString(CultureInfo.InvariantCulture)}s";
+                    before = $"{LevelUtility.GetTowerCounterCooldown(counterType, TowerCounterManifest.Get(counterType).cooldown).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
                     break;
                 case BonusType.Damage:
-                    before = $"{LevelUtility.GetTowerCounterDamage(TowerCounterManifest.Get(counterType).damage).ToString(CultureInfo.InvariantCulture)}";
+                    before = $"{LevelUtility.GetTowerCounterDamage(TowerCounterManifest.Get(counterType).damage).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}";
                     break;
             }
             if (level > value.Length) return (before, before);
@@ -65,10 +65,10 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case BonusType.Cooldown:
-                    after = $"{LevelUtility.GetTowerCounterCooldown(counterType, TowerCounterManifest.Get(counterType).cooldown).ToString(CultureInfo.InvariantCulture)}s";
+                    after = $"{LevelUtility.GetTowerCounterCooldown(counterType, TowerCounterManifest.Get(counterType).cooldown).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
                     break;
                 case BonusType.Damage:
-                    after = $"{LevelUtility.GetTowerCounterDamage(TowerCounterManifest.Get(counterType).damage).ToString(CultureInfo.InvariantCulture)}";
+                    after = $"{LevelUtility.GetTowerCounterDamage(TowerCounterManifest.Get(counterType).damage).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}";
                     break;
             }
             bonusInfo.towerCounterCooldownPlus[counterType] = tempCooldownPlus;
@@ -83,7 +83,7 @@ namespace InGame.Upgrade
             if (level < 0) return "??";
             if (level >= value.Length) level = value.Length - 1;
 
-            return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
+            return (value[level] * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
         }
 
         public int MaxLevel => value.Length;
