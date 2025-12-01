@@ -34,7 +34,7 @@ namespace InGame.Upgrade
                     before = LevelUtility.GetTowerAutoRegen(LevelUtility.GetTowerHp()).ToString(CultureInfo.InvariantCulture);
                     break;
                 case BonusType.OnEnemyDied:
-                    before = LevelUtility.GetTowerRegenOnKill(LevelUtility.GetTowerHp()).ToString(CultureInfo.InvariantCulture);
+                    before = (bonusInfo.toleranceRegenPercentWhenKill * 100).ToString(CultureInfo.InvariantCulture);
                     break;
             }
             if (level >= value.Length)
@@ -49,7 +49,7 @@ namespace InGame.Upgrade
                     after = LevelUtility.GetTowerAutoRegen(LevelUtility.GetTowerHp()).ToString(CultureInfo.InvariantCulture);
                     break;
                 case BonusType.OnEnemyDied:
-                    after = LevelUtility.GetTowerRegenOnKill(LevelUtility.GetTowerHp()).ToString(CultureInfo.InvariantCulture);
+                    after = (bonusInfo.toleranceRegenPercentWhenKill * 100).ToString(CultureInfo.InvariantCulture);
                     break;
             } 
             bonusInfo.toleranceRegenPercentPerSecond = toleranceRegenPercentPerSecond;

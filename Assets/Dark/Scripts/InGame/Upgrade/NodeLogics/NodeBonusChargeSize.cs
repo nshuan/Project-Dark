@@ -19,7 +19,7 @@ namespace InGame.Upgrade
         public (string, string) GetBeforeAfterValueTotalStat(int level, ref UpgradeBonusInfo bonusInfo)
         {
             var before = LevelUtility.GetChargeSizeExplodeBullet((int)PlayerChargeManifest.Get(ChargeType.Size).value);
-            if (level >= value.Length)
+            if (level > value.Length)
             {
                 return (before.ToString(CultureInfo.InvariantCulture), before.ToString(CultureInfo.InvariantCulture));
             }

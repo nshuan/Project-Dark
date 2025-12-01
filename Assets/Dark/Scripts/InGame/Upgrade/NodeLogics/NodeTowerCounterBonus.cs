@@ -53,7 +53,7 @@ namespace InGame.Upgrade
                     before = $"{LevelUtility.GetTowerCounterDamage(TowerCounterManifest.Get(counterType).damage).ToString(CultureInfo.InvariantCulture)}";
                     break;
             }
-            if (level <= 0 || level > value.Length) return (before, before);
+            if (level > value.Length) return (before, before);
             
             bonusInfo.towerCounterCooldownPlus.TryAdd(counterType, 0f);
             bonusInfo.towerCounterCooldownMultiplier.TryAdd(counterType, 0f);

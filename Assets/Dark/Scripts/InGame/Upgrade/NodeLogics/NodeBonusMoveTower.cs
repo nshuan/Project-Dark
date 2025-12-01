@@ -42,7 +42,7 @@ namespace InGame.Upgrade
                     before = $"{LevelUtility.GetTeleCooldown().ToString(CultureInfo.InvariantCulture)}s";
                     break;
             }
-            if (level >= value.Length)
+            if (level > value.Length)
                 return (before, before);
             var moveCooldownMultiplier = bonusInfo.moveCooldownMultiplier;
             var moveCooldownPlus = bonusInfo.moveCooldownPlus;

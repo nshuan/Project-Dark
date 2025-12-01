@@ -46,7 +46,7 @@ namespace InGame.Upgrade
                     before = LevelUtility.GetDashDamage().ToString(CultureInfo.InvariantCulture);
                     break;
             }
-            if (level >= value.Length)
+            if (level > value.Length)
             {
                 return (before, before);
             }

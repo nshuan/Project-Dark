@@ -56,7 +56,7 @@ namespace InGame.Upgrade
                     before = $"{bonusInfo.tempAtkSpeBonusOnKill.bonusDuration.ToString(CultureInfo.InvariantCulture)}s";
                     break;
             }
-            if (level >= value.Length)
+            if (level > value.Length)
                 return (before, before);
             var tempDamageBonusOnKill = bonusInfo.tempDamageBonusOnKill.bonusDuration;
             var tempDamageBonusOnMove = bonusInfo.tempDamageBonusOnMove.bonusDuration;

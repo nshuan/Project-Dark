@@ -70,7 +70,7 @@ namespace InGame.Upgrade
                     before = LevelUtility.GetBulletStagger().ToString(CultureInfo.InvariantCulture);
                     break;
             }
-            if (level >= value.Length)
+            if (level > value.Length)
                 return (before, before); 
             var skillDameMultiply = bonusInfo.skillBonus.skillDameMultiply;
             var skillDamePlus = bonusInfo.skillBonus.skillDamePlus;

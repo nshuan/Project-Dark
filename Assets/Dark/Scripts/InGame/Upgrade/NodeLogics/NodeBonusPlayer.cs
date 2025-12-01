@@ -55,7 +55,7 @@ namespace InGame.Upgrade
                     before = $"{(LevelUtility.GetCriticalRate() * 100).ToString(CultureInfo.InvariantCulture)}%";
                     break;
             }
-            if (level >= value.Length)
+            if (level > value.Length)
                 return (before, before);
  
             var hpMultiply = bonusInfo.hpMultiply;
