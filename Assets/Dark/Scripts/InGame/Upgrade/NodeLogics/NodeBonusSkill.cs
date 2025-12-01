@@ -101,7 +101,7 @@ namespace InGame.Upgrade
                     after = LevelUtility.GetNumberOfBullets(1).ToString(CultureInfo.InvariantCulture);
                     break;
                 case BonusSkillType.BulletMaxHit:
-                    after = (1 + bulletMaxHitPlus).ToString(CultureInfo.InvariantCulture);
+                    after = (1 + bonusInfo.skillBonus.bulletMaxHitPlus).ToString(CultureInfo.InvariantCulture);
                     break;
                 case BonusSkillType.Stagger:
                     after = LevelUtility.GetBulletStagger().ToString(CultureInfo.InvariantCulture);
