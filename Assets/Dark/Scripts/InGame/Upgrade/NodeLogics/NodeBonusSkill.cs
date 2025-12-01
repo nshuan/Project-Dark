@@ -55,10 +55,10 @@ namespace InGame.Upgrade
                     before = $"{LevelUtility.GetSkillCooldown(false).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";   
                     break;
                 case BonusSkillType.Size:
-                    before = LevelUtility.GetSkillSize(1).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+                    before = $"{((1 + bonusInfo.skillBonus.skillSizeMultiply) * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}%";
                     break;
                 case BonusSkillType.Range:
-                    before = LevelUtility.GetSkillRange(1, Vector2.right).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+                    before = $"{((1 + bonusInfo.skillBonus.skillRangeMultiply) * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}%";
                     break;
                 case BonusSkillType.BulletNum:
                     before = LevelUtility.GetNumberOfBullets(1).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
@@ -92,10 +92,10 @@ namespace InGame.Upgrade
                     after = $"{LevelUtility.GetSkillCooldown(false).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
                     break;
                 case BonusSkillType.Size:
-                    after = LevelUtility.GetSkillSize(1).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+                    after = $"{((1 + bonusInfo.skillBonus.skillSizeMultiply) * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}%";
                     break;
                 case BonusSkillType.Range:
-                    after = LevelUtility.GetSkillRange(1, Vector2.right).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+                    after = $"{((1 + bonusInfo.skillBonus.skillRangeMultiply) * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}%";
                     break;
                 case BonusSkillType.BulletNum:
                     after = LevelUtility.GetNumberOfBullets(1).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
