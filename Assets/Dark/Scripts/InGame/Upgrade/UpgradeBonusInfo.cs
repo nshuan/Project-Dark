@@ -105,6 +105,7 @@ namespace InGame
             passiveMapByTriggerType = new Dictionary<PassiveTriggerType, List<PassiveType>>();
             unlockedTowerCounter = new Dictionary<NodeTowerCounter.CounterType, bool>();
             towerCounterCooldownPlus = new Dictionary<NodeTowerCounter.CounterType, float>();
+            towerCounterCooldownMultiplier = new Dictionary<NodeTowerCounter.CounterType, float>();
             chargeBonus = new UpgradeBonusChargeInfo();
             chargeDameBonus = new UpgradeBonusChargeInfo();
             chargeBulletBonus = new UpgradeBonusChargeInfo();

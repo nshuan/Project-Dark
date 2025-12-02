@@ -69,7 +69,7 @@ namespace InGame.Upgrade
             else
             {
                 var sum = 0f;
-                for (var i = 1; i <= level; i++)
+                for (var i = 1; i < level; i++)
                     sum += value[i - 1];
 
                 before = (sum * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
