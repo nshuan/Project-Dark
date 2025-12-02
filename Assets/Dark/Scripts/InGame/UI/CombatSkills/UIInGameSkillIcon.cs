@@ -71,8 +71,9 @@ namespace InGame.UI.CombatSkills
             }
 
             ShowToast();
+            DOTween.Kill(groupIcon);
             icon.localScale = Vector3.one;
-            icon.DOPunchScale(0.1f * Vector3.one, 0.2f);
+            icon.DOPunchScale(0.1f * Vector3.one, 0.2f).SetTarget(groupIcon);
             vfx.Play();
         }
 
@@ -84,6 +85,7 @@ namespace InGame.UI.CombatSkills
             btnTogglePassive.onClick.AddListener(() =>
             {
                 DOTween.Kill(groupIcon, complete:true);
+                groupIcon.transform.localScale = Vector3.one;
                 groupIcon.DOPunchScale(-0.2f * Vector3.one, 0.2f).SetTarget(groupIcon);
                 btnTogglePassive.interactable = false;
                 isShowPassive = !isShowPassive;

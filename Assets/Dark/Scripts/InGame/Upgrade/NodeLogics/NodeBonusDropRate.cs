@@ -27,7 +27,7 @@ namespace InGame.Upgrade
             if (level < 0) return "??";
             if (level >= value.Length) level = value.Length - 1;
             
-            return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
+            return (value[level] * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
         }
 
         public (string, string) GetBonusBeforeAfterValue(int level)
@@ -46,8 +46,8 @@ namespace InGame.Upgrade
                 var sum = 0f;
                 for (var i = 1; i <= level; i++)
                     sum += value[i - 1];
-                before = $"+{(sum * 100).ToString(CultureInfo.InvariantCulture)}%";
-                after = $"+{((sum + value[level - 1]) * 100).ToString(CultureInfo.InvariantCulture)}%";
+                before = $"+{(sum * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}%";
+                after = $"+{((sum + value[level - 1]) * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}%";
             }
 		    
             return (before, after);

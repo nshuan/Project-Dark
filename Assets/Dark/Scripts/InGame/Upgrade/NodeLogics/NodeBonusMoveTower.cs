@@ -39,7 +39,7 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case BonusMoveTowerType.Cooldown:
-                    before = $"{LevelUtility.GetTeleCooldown().ToString(CultureInfo.InvariantCulture)}s";
+                    before = $"{LevelUtility.GetTeleCooldown().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
                     break;
             }
             if (level > value.Length)
@@ -51,7 +51,7 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case BonusMoveTowerType.Cooldown:
-                    after = $"{LevelUtility.GetTeleCooldown().ToString(CultureInfo.InvariantCulture)}s";
+                    after = $"{LevelUtility.GetTeleCooldown().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
                     break;
             }
             bonusInfo.moveCooldownMultiplier = moveCooldownMultiplier;
@@ -67,13 +67,13 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case BonusMoveTowerType.Cooldown:
-                    if (isMultiply) return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
-                    return value[level].ToString(CultureInfo.InvariantCulture);
+                    if (isMultiply) return (value[level] * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+                    return value[level].ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                 case BonusMoveTowerType.CastTime:
-                    return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
+                    return (value[level] * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
             }
             
-            return value[level].ToString(CultureInfo.InvariantCulture);
+            return value[level].ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
         }
 
         public int MaxLevel => value.Length;

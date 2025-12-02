@@ -31,7 +31,7 @@ namespace InGame.Upgrade
 
 	    public (string, string) GetBeforeAfterValueTotalStat(int level, ref UpgradeBonusInfo bonusInfo)
 	    {
-		    var before = LevelUtility.GetChargeStepTime().ToString(CultureInfo.InvariantCulture);
+		    var before = LevelUtility.GetChargeStepTime().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
 		    if (level > value.Length)
 		    {
 			    return (before, before);
@@ -39,7 +39,7 @@ namespace InGame.Upgrade
 		    var stepTimeMul = bonusInfo.chargeBonus.stepTimeMul;
 		    var stepTime = bonusInfo.chargeBonus.stepTime;
 		    ActivateNode(level, ref bonusInfo);
-		    var after = LevelUtility.GetChargeStepTime().ToString(CultureInfo.InvariantCulture);
+		    var after = LevelUtility.GetChargeStepTime().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
 		    bonusInfo.chargeBonus.stepTimeMul = stepTimeMul;
 		    bonusInfo.chargeBonus.stepTime = stepTime;
 		    return ($"{before}s", $"{after}s");
@@ -51,9 +51,9 @@ namespace InGame.Upgrade
 		    if (level >= value.Length) level = value.Length - 1;
 
 		    if (isMul)
-			    return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
+			    return (value[level] * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
 		    
-		    return value[level].ToString(CultureInfo.InvariantCulture);
+		    return value[level].ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
 	    }
 
 	    public int MaxLevel => value.Length;

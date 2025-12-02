@@ -43,16 +43,16 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case BonusPlayerType.Health:
-                    before = LevelUtility.GetTowerHp().ToString(CultureInfo.InvariantCulture);
+                    before = LevelUtility.GetTowerHp().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
                 case BonusPlayerType.Damage:
-                    before = LevelUtility.BasePlayerDamageWithBonus.ToString(CultureInfo.InvariantCulture);
+                    before = LevelUtility.BasePlayerDamageWithBonus.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
                 case BonusPlayerType.Cooldown:
-                    before = $"{(LevelUtility.BasePLayerCooldownWithBonus * 100).ToString(CultureInfo.InvariantCulture)}%";
+                    before = $"{(LevelUtility.BasePLayerCooldownWithBonus * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}%";
                     break;
                 case BonusPlayerType.CriticalRate:
-                    before = $"{(LevelUtility.GetCriticalRate() * 100).ToString(CultureInfo.InvariantCulture)}%";
+                    before = $"{(LevelUtility.GetCriticalRate() * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}%";
                     break;
             }
             if (level > value.Length)
@@ -71,16 +71,16 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case BonusPlayerType.Health:
-                    after = LevelUtility.GetTowerHp().ToString(CultureInfo.InvariantCulture);
+                    after = LevelUtility.GetTowerHp().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
                 case BonusPlayerType.Damage:
-                    after = LevelUtility.BasePlayerDamageWithBonus.ToString(CultureInfo.InvariantCulture);
+                    after = LevelUtility.BasePlayerDamageWithBonus.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
                 case BonusPlayerType.Cooldown:
-                    after = $"{(LevelUtility.BasePLayerCooldownWithBonus * 100).ToString(CultureInfo.InvariantCulture)}%";
+                    after = $"{(LevelUtility.BasePLayerCooldownWithBonus * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}%";
                     break;
                 case BonusPlayerType.CriticalRate:
-                    after = $"{(LevelUtility.GetCriticalRate() * 100).ToString(CultureInfo.InvariantCulture)}%";
+                    after = $"{(LevelUtility.GetCriticalRate() * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}%";
                     break;
             }
             bonusInfo.hpMultiply = hpMultiply;
@@ -103,14 +103,14 @@ namespace InGame.Upgrade
             {
                 case BonusPlayerType.Health:
                 case BonusPlayerType.Damage:
-                    if (isMultiply) return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
-                    else return value[level].ToString(CultureInfo.InvariantCulture);
+                    if (isMultiply) return (value[level] * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+                    else return value[level].ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                 case BonusPlayerType.Cooldown:
                 case BonusPlayerType.CriticalRate:
                 case BonusPlayerType.CriticalDame:
-                    return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
+                    return (value[level] * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
             }
-            return value[level].ToString(CultureInfo.InvariantCulture);
+            return value[level].ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
         }
 
         public int MaxLevel => value.Length;

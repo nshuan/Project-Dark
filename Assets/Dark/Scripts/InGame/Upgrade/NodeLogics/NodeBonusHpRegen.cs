@@ -31,10 +31,10 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case BonusType.AutoRegenerate:
-                    before = LevelUtility.GetTowerAutoRegen(LevelUtility.GetTowerHp()).ToString(CultureInfo.InvariantCulture);
+                    before = LevelUtility.GetTowerAutoRegen(LevelUtility.GetTowerHp()).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
                 case BonusType.OnEnemyDied:
-                    before = (bonusInfo.toleranceRegenPercentWhenKill * 100).ToString(CultureInfo.InvariantCulture);
+                    before = (bonusInfo.toleranceRegenPercentWhenKill * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
             }
             if (level >= value.Length)
@@ -46,10 +46,10 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case BonusType.AutoRegenerate:
-                    after = LevelUtility.GetTowerAutoRegen(LevelUtility.GetTowerHp()).ToString(CultureInfo.InvariantCulture);
+                    after = LevelUtility.GetTowerAutoRegen(LevelUtility.GetTowerHp()).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
                 case BonusType.OnEnemyDied:
-                    after = (bonusInfo.toleranceRegenPercentWhenKill * 100).ToString(CultureInfo.InvariantCulture);
+                    after = (bonusInfo.toleranceRegenPercentWhenKill * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
             } 
             bonusInfo.toleranceRegenPercentPerSecond = toleranceRegenPercentPerSecond;
@@ -65,11 +65,11 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case BonusType.AutoRegenerate:
-                    return value[level].ToString(CultureInfo.InvariantCulture);
+                    return value[level].ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                 case BonusType.OnEnemyDied:
-                    return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
+                    return (value[level] * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
             }
-            return value[level].ToString(CultureInfo.InvariantCulture);
+            return value[level].ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
         }
 
         public int MaxLevel => value.Length;

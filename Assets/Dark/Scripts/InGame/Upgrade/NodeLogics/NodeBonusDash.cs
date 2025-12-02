@@ -37,13 +37,13 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case BonusType.Cooldown:
-                    before = $"{LevelUtility.GetDashCooldown().ToString(CultureInfo.InvariantCulture)}s";
+                    before = $"{LevelUtility.GetDashCooldown().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
                     break;
                 case BonusType.Size:
-                    before = LevelUtility.GetDashSize().ToString(CultureInfo.InvariantCulture);
+                    before = LevelUtility.GetDashSize().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
                 case BonusType.Damage:
-                    before = LevelUtility.GetDashDamage().ToString(CultureInfo.InvariantCulture);
+                    before = LevelUtility.GetDashDamage().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
             }
             if (level > value.Length)
@@ -61,13 +61,13 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case BonusType.Cooldown:
-                    after = $"{LevelUtility.GetDashCooldown().ToString(CultureInfo.InvariantCulture)}s";
+                    after = $"{LevelUtility.GetDashCooldown().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
                     break;
                 case BonusType.Size:
-                    after = LevelUtility.GetDashSize().ToString(CultureInfo.InvariantCulture);
+                    after = LevelUtility.GetDashSize().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
                 case BonusType.Damage:
-                    after = LevelUtility.GetDashDamage().ToString(CultureInfo.InvariantCulture);
+                    after = LevelUtility.GetDashDamage().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                     break;
             }
             bonusInfo.dashCooldownMultiplier = dashCooldownMultiplier;
@@ -85,8 +85,8 @@ namespace InGame.Upgrade
             if (level >= value.Length) level = value.Length - 1;
             
             if (isMultiply)
-                return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
-            return value[level].ToString(CultureInfo.InvariantCulture);
+                return (value[level] * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+            return value[level].ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
         }
 
         public int MaxLevel => value.Length;
