@@ -10,6 +10,7 @@ namespace InGame
         public static Action<float> OnAttackNormal { get; set; }
         public static Action<float> OnAttackCharge { get; set; }
         public static Action<float> OnMoveTowerComplete { get; set; }
+        public static Action OnMoveCooldownComplete { get; set; }
         public static Action<NodeTowerCounter.CounterType, float> OnTowerCounter { get; set; }
         public static Action<PassiveTriggerType, PassiveType, float> OnEffectTriggered { get; set; }
         public static Action<EnemyEntity, EnemyDieReason> OnOneEnemyDead { get; set; }
@@ -22,6 +23,7 @@ namespace InGame
             OnAttackNormal = null;
             OnAttackCharge = null;
             OnMoveTowerComplete = null;
+            OnMoveCooldownComplete = null;
             OnTowerCounter = null;
             OnEffectTriggered = null;
             OnOneEnemyDead = null;
