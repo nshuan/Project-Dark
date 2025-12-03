@@ -20,7 +20,7 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, List<UIUpgradeNode>> nodesMap; // Luu cac node co cung id
         [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, List<UIUpgradeNode>> nodeChildrenMap;
-        [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, List<UIUpgradeNode>> nodesMapByLayer;
+        [ReadOnly, OdinSerialize, NonSerialized] public Dictionary<int, List<UIUpgradeNode>> nodesMapByLayer;
 
         [Space] [Header("UI")] 
         [SerializeField] private Button btnDeselectAll;

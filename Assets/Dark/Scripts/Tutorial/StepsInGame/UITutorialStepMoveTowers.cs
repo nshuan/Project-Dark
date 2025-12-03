@@ -1,7 +1,7 @@
 using InGame;
 using UnityEngine;
 
-namespace Dark.Scripts.Tutorial.Steps
+namespace Dark.Scripts.Tutorial
 {
     public class UITutorialStepMoveTowers : UIAbstractTutorialStepInGame
     {
