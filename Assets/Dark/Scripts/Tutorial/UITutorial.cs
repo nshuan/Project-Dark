@@ -35,8 +35,13 @@ namespace Dark.Scripts.Tutorial
                     continue;
                 }
 
-                tutorialSteps[currentStepIndex].OnComplete += NextStep;
-                tutorialSteps[currentStepIndex].Setup();
+                var currentStep = tutorialSteps[currentStepIndex];
+                currentStep.OnComplete += () =>
+                {
+                    currentStep.Hide();
+                    NextStep();
+                };
+                currentStep.Setup();
                 break;
             }
         }

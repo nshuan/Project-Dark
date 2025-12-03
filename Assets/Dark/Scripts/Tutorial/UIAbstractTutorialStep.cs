@@ -15,4 +15,9 @@ namespace Dark.Scripts.Tutorial
             gameObject.SetActive(false);
         }
     }
+    
+    public abstract class UIAbstractTutorialStepInGame : UIAbstractTutorialStep
+    {
+
+    }
 }

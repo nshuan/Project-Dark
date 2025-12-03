@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Dark.Scripts.Tutorial.Steps
 {
-    public class UITutorialStepMoveCooldown : UIAbstractTutorialStep
+    public class UITutorialStepMoveCooldown : UIAbstractTutorialStepInGame
     {
         [SerializeField] private GameObject objInstruction;
 
