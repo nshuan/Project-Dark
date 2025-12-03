@@ -4,18 +4,20 @@ namespace Dark.Scripts.Tutorial
 {
     public class UITutorial : MonoBehaviour
     {
+        [SerializeField] private string keyTutorial;
         [SerializeField] private UIAbstractTutorialStep[] tutorialSteps;
 
         private int currentStepIndex = -1;
 
         protected virtual void Start()
         {
+            if (TutorialManager.Instance.GetCurrentTutorialStep(keyTutorial) >= tutorialSteps.Length) return;
             StartTutorial();
         }
 
         protected void StartTutorial()
         {
-            currentStepIndex = -1;
+            currentStepIndex = TutorialManager.Instance.GetCurrentTutorialStep(keyTutorial) - 1;
             NextStep();
         }
 
@@ -36,8 +38,10 @@ namespace Dark.Scripts.Tutorial
                 }
 
                 var currentStep = tutorialSteps[currentStepIndex];
+                var tempStepIndex = currentStepIndex;
                 currentStep.OnComplete += () =>
                 {
+                    TutorialManager.Instance.CompleteTutorialStep(keyTutorial, tempStepIndex);
                     currentStep.Hide();
                     NextStep();
                 };

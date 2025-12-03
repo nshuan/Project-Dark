@@ -32,13 +32,11 @@ namespace Dark.Scripts.Tutorial
             
             if (!panelUpgradeTree)
             {
-                OnComplete?.Invoke();
                 return;
             }
 
             if (!panelUpgradeTree.Tree)
             {
-                OnComplete?.Invoke();
                 return;
             }
 
