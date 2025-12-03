@@ -194,6 +194,7 @@ namespace InGame
 
         // Start from 0
         private int currentWaveIndex;
+        public int CurrentWaveIndex => currentWaveIndex;
         private Coroutine waveCoroutine;
         private IEnumerator IEWave(WaveInfo[] waves)
         {
