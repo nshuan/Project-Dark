@@ -126,5 +126,15 @@ namespace InGame
         {
             return amount;
         }
+
+        public IProjectileActivate Clone()
+        {
+            return new ProjectileActivateSplit()
+            {
+                projectile = projectile,
+                amount = amount,
+                angle = angle,
+            };
+        }
     }
 }

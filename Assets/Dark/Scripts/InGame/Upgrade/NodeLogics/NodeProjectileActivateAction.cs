@@ -18,7 +18,7 @@ namespace InGame.Upgrade
             if (actions == null) return;
             if (level <= 0 || level > actions.Count) return;
             
-            var action = actions[level - 1];
+            var action = actions[level - 1].Clone();
             
             if (isCharge)
             {
@@ -116,7 +116,7 @@ namespace InGame.Upgrade
             else
             {
                 var sum = 0f;
-                for (var i = 1; i <= level; i++)
+                for (var i = 1; i < level; i++)
                     sum += actions[i - 1].GetValue();
                 
                 before = $"+{sum.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}";
@@ -126,6 +126,6 @@ namespace InGame.Upgrade
             return (before, after);
         }
 
-        public int MaxLevel => 1;
+        public int MaxLevel => actions.Count;
     }
 }
