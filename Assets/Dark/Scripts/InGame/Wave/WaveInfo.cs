@@ -15,7 +15,7 @@ namespace InGame
         public int waveIndex;
         public float scaleHp = 1f;
         public float scaleDmg = 1f;
-        public float timeToEnd;
+        public float timeToEnd = 1f;
         public WaveConfig waveConfig;
         public WaveConfig[] randomWaveConfigs;
         public bool isRandomWaveConfig;
