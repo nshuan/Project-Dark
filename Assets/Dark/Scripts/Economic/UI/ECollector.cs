@@ -26,18 +26,18 @@ namespace Economic.UI
         private void OnWin()
         {
             EItemDropManager.Instance.CollectAll(player.transform);
-            CombatActions.OnCollectResource -= OnEnemyDead;
+            CombatActions.OnDropResource -= OnEnemyDead;
         }
         
         private void OnLose()
         {
-            CombatActions.OnCollectResource -= OnEnemyDead;
+            CombatActions.OnDropResource -= OnEnemyDead;
         }
 
         private void OnLevelLoaded(LevelConfig levelConfig)
         {
             player = LevelManager.Instance.Player;
-            CombatActions.OnCollectResource += OnEnemyDead;
+            CombatActions.OnDropResource += OnEnemyDead;
         }
         
         private void OnEnemyDead(EnemyEntity enemy)

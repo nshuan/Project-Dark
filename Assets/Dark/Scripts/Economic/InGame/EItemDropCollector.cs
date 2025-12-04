@@ -89,6 +89,7 @@ namespace Economic.InGame
             {
                 activated = true;
                 collider.enabled = true;
+                CombatActions.OnResourceCollectorInitialized?.Invoke(this);
             });
         }
 

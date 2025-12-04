@@ -296,7 +296,7 @@ namespace InGame
             callbackBurnComplete?.Invoke();
             callbackBurnComplete = null;
             if (reason != EnemyDieReason.Suicide)
-                CollectResource();
+                DropResource();
             StartCoroutine(IEDie(.5f, reason));
         }
 
@@ -314,9 +314,9 @@ namespace InGame
             EnemyPool.Instance.Release(this, config.enemyId);
         }
 
-        protected virtual void CollectResource()
+        protected virtual void DropResource()
         {
-            CombatActions.OnCollectResource?.Invoke(this);
+            CombatActions.OnDropResource?.Invoke(this);
         }
 
         #region Effect 
