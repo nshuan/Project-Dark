@@ -72,7 +72,7 @@ namespace InGame
         {
             if (Gates.All((gate) => gate.AllEnemyDead))
             {
-                DebugUtility.LogError($"Stop wave {waveIndex}: All enemies are dead");
+                DebugUtility.LogError($"Stop wave {waveIndex + 1}: All enemies are dead");
                 WaveEndedCompletely = true;
                 OnWaveForceStop?.Invoke(waveIndex, WaveEndReason.AllDead);
                 OnWaveForceStop = null;

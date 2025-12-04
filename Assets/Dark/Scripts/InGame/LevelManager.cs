@@ -153,7 +153,7 @@ namespace InGame
             WealthManager.Instance.Save();
             PlayerDataManager.Instance.CompleteLevel();
             
-            DebugUtility.LogError($"Level {Level.level} is ended: WIN");
+            DebugUtility.LogError($"Level {Level.level + 1} is ended: WIN");
             IsEndLevel = true;
             OnWin?.Invoke();
             ClearAction();
