@@ -7,9 +7,9 @@ namespace Dark.Scripts.Common
 {
     public class UIButtonAnimated : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
     {
-        [SerializeField] private float hoverScale = 1.1f;
-        [SerializeField] private float pressScale = 1f;
-        [SerializeField] private float duration = 0.2f;
+        [SerializeField] protected float hoverScale = 1.1f;
+        [SerializeField] protected float pressScale = 1f;
+        [SerializeField] protected float duration = 0.2f;
         
         public void OnPointerEnter(PointerEventData eventData)
         {
@@ -18,7 +18,7 @@ namespace Dark.Scripts.Common
                 .Append(transform.DOScale(hoverScale, duration)).Play();
         }
 
-        public void OnPointerExit(PointerEventData eventData)
+        public virtual void OnPointerExit(PointerEventData eventData)
         {
             DOTween.Kill(this);
             DOTween.Sequence(this)
