@@ -66,6 +66,8 @@ namespace InGame.Boss
         private void DropFakeVestige(GameObject deadBoss)
         {
             var dropPosition = deadBoss.transform.position + new Vector3(-0.2f, 0.9f, 0f);
+            var spanRight = 135f;
+            var spanLeft = 135f;
             for (int i = 0; i < 20; i++)
             {
                 var item = Instantiate(fakeVestigePrefab, transform);
@@ -74,7 +76,7 @@ namespace InGame.Boss
                 item.transform.localScale = bossTargetScale * Vector3.one;
                 fakeVestige.Add(item);
                 item.gameObject.SetActive(true);
-                item.Drop(dropPosition, Vector2.right, 80f);
+                item.Drop(dropPosition,  Quaternion.Euler(0, 0, spanRight / 2 - 90f) * Vector2.right, spanRight, 2f);
             }
             
             for (int i = 0; i < 20; i++)
@@ -85,7 +87,7 @@ namespace InGame.Boss
                 item.transform.localScale = bossTargetScale * Vector3.one;
                 fakeVestige.Add(item);
                 item.gameObject.SetActive(true);
-                item.Drop(dropPosition, Vector2.left, 80f);
+                item.Drop(dropPosition, Quaternion.Euler(0, 0, 90f - spanLeft / 2) * Vector2.left, spanLeft, 2f);
             }
         }
 
