@@ -29,7 +29,7 @@ namespace Dark.Scripts.Common
             return DOTween.Sequence()
                 .Append(transform.DOScale(zoomingInScale, duration).SetEase(Ease.OutQuad))
                 .Append(transform.DOScale(zoomingOutScale, duration).SetEase(Ease.OutQuad))
-                    .SetLoops(-1, LoopType.Yoyo);
+                    .SetLoops(10, LoopType.Yoyo);
         }
     }
 }
