@@ -231,12 +231,12 @@ namespace InGame
             vfxOpen.SetActive(true);
             this.DelayCall(2f, () => vfxOpen.SetActive(false));
 
-            yield return new WaitForSeconds(config.durationVisual);
+            yield return new WaitForSeconds(config.durationVisual - vfxCloseAppearDuration);
             
             vfxClose.SetActive(true);
             yield return new WaitForSeconds(vfxCloseAppearDuration);
-            // vfxPortal.gameObject.SetActive(false);
-            yield return new WaitForSeconds(vfxCloseTotalDuration - vfxCloseAppearDuration);
+            //vfxPortal.gameObject.SetActive(false);
+            yield return new WaitForSeconds(vfxCloseTotalDuration + vfxCloseAppearDuration);
             vfxClose.SetActive(false);
         }
 
