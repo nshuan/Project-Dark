@@ -11,6 +11,8 @@ namespace Dark.Scripts.OutGame.Home
 {
     public class UIHomeFullscreenStartButton : MonoBehaviour, IPointerClickHandler
     {
+        public static bool EnableFullscreenInput { get; set; } = true;
+        
         [SerializeField] private Image imgBlockRaycast;
         [SerializeField] private Transform rectTitle;
         [SerializeField] private Transform rectBackground;
@@ -57,6 +59,8 @@ namespace Dark.Scripts.OutGame.Home
         {
             if (!isShowHome) return;
             if (isAnimating) return;
+            if (!EnableFullscreenInput) return;
+            
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 imgBlockRaycast.enabled = true;

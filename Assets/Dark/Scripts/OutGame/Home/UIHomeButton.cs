@@ -89,6 +89,7 @@ namespace Dark.Scripts.OutGame.Home
 
         public override void OnPointerClick(PointerEventData eventData)
         {
+            UIHomeFullscreenStartButton.EnableFullscreenInput = false;
             PlaySelectVfx();
             base.OnPointerClick(eventData);
         }
