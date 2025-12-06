@@ -25,6 +25,38 @@ namespace InGame.Upgrade
             }
         }
 
+        public (string, string) GetBeforeAfterValueTotalStat(int level, ref UpgradeBonusInfo bonusInfo)
+        {
+            var before = "";
+            switch (bonusType)
+            {
+                case BonusType.AutoRegenerate:
+                    before = LevelUtility.GetTowerAutoRegen(LevelUtility.GetTowerHp()).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+                    break;
+                case BonusType.OnEnemyDied:
+                    before = (bonusInfo.toleranceRegenPercentWhenKill * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+                    break;
+            }
+            if (level >= value.Length)
+                return (before, before);
+            var toleranceRegenPercentPerSecond = bonusInfo.toleranceRegenPercentPerSecond;
+            var toleranceRegenPercentWhenKill = bonusInfo.toleranceRegenPercentWhenKill;
+            ActivateNode(level, ref bonusInfo);
+            var after = "";
+            switch (bonusType)
+            {
+                case BonusType.AutoRegenerate:
+                    after = LevelUtility.GetTowerAutoRegen(LevelUtility.GetTowerHp()).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+                    break;
+                case BonusType.OnEnemyDied:
+                    after = (bonusInfo.toleranceRegenPercentWhenKill * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+                    break;
+            } 
+            bonusInfo.toleranceRegenPercentPerSecond = toleranceRegenPercentPerSecond;
+            bonusInfo.toleranceRegenPercentWhenKill = toleranceRegenPercentWhenKill;
+            return (before, after);
+        }
+
         public string GetDisplayValue(int level)
         {
             if (level < 0) return "??";
@@ -33,48 +65,11 @@ namespace InGame.Upgrade
             switch (bonusType)
             {
                 case BonusType.AutoRegenerate:
-                    return value[level].ToString(CultureInfo.InvariantCulture);
+                    return value[level].ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                 case BonusType.OnEnemyDied:
-                    return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
+                    return (value[level] * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
             }
-            return value[level].ToString(CultureInfo.InvariantCulture);
-        }
-
-        public (string, string) GetBeforeAfterValue(int level)
-        {
-            var before = "";
-            var after = "";
-            if (level < 0) return ("", "");
-            if (level >= value.Length) level = value.Length - 1;
-            if (level == 0)
-            {
-                before = "0";
-                after = GetDisplayValue(level);
-            }
-            else
-            {
-                var sum = 0f;
-                for (var i = 0; i < level; i++)
-                    sum += value[i];
-                
-                switch (bonusType)
-                {
-                    case BonusType.AutoRegenerate:
-                        before = sum.ToString(CultureInfo.InvariantCulture);
-                        after = (sum + value[level]).ToString(CultureInfo.InvariantCulture);
-                        break;
-                    case BonusType.OnEnemyDied:
-                        before = (sum * 100).ToString(CultureInfo.InvariantCulture);
-                        after = ((sum + value[level]) * 100).ToString(CultureInfo.InvariantCulture);
-                        break;
-                    default:
-                        before = sum.ToString(CultureInfo.InvariantCulture);
-                        after = (sum + value[level]).ToString(CultureInfo.InvariantCulture);
-                        break;
-                }
-            }
-		    
-            return (before, after);
+            return value[level].ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
         }
 
         public int MaxLevel => value.Length;

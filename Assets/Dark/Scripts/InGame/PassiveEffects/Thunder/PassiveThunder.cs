@@ -41,7 +41,7 @@ namespace InGame
                     while (triggerCount > 0)
                     {
                         VfxThunderPool.Instance.GetAndRelease(null, triggerredEnemies[triggerCount - 1].transform.position, 0.1f * indexVfx, 1f);
-                        triggerredEnemies[triggerCount - 1].Kill();
+                        triggerredEnemies[triggerCount - 1].Kill(DamageType.Normal);
                         triggerCount -= 1;
                         indexVfx += 1;
                         sfx.Play();
@@ -67,7 +67,7 @@ namespace InGame
                                 VfxThunderPool.Instance.GetAndRelease(null, tempTarget.Position, 0.1f * i, 1f);
                                 if (tempTarget.PercentageHpLeft < value)
                                 {
-                                    tempTarget.Kill();
+                                    tempTarget.Kill(DamageType.Normal);
                                 }
                             }
                         }

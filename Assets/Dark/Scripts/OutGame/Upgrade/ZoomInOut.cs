@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -22,6 +23,7 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         private bool activateKeyHolding = false;
         private bool blockZoom = false;
+        private Coroutine coroutineZoom;
 
         public static float CurrentScale;
         
@@ -63,31 +65,31 @@ namespace Dark.Scripts.OutGame.Upgrade
             if (Mathf.Abs(scroll) > 0.01f)
             {
                 Vector2 mousePosition = Input.mousePosition;
+                UpdatePivot(targetRect, mousePosition);
 
                 // Get current scale
                 float currentScale = targetRect.localScale.x;
                 float newScale = Mathf.Clamp(currentScale + scroll * zoomSpeed, minScale, maxScale);
-                float scaleFactor = newScale / currentScale;
 
                 CurrentScale = newScale;
 
-                // Convert mouse position to local position in the targetRect
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                    targetRect, mousePosition, null, out Vector2 localPointBefore);
+                // // Convert mouse position to local position in the targetRect
+                // RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                //     targetRect, mousePosition, null, out Vector2 localPointBefore);
 
                 // Apply the scale
                 targetRect.localScale = new Vector3(newScale, newScale, 1f);
                 txtZoom?.SetText($"x{newScale:F1}");
                 
-                // Convert mouse position again after scaling
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                    targetRect, mousePosition, null, out Vector2 localPointAfter);
+                // // Convert mouse position again after scaling
+                // RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                //     targetRect, mousePosition, null, out Vector2 localPointAfter);
 
-                // Calculate difference caused by scaling
-                Vector2 delta = localPointAfter - localPointBefore;
-
-                // Adjust anchoredPosition to compensate the shift
-                targetRect.anchoredPosition -= delta;
+                // // Calculate difference caused by scaling
+                // Vector2 delta = localPointAfter - localPointBefore;
+                //
+                // // Adjust anchoredPosition to compensate the shift
+                // targetRect.anchoredPosition += delta;
             }
         }
 
@@ -101,21 +103,48 @@ namespace Dark.Scripts.OutGame.Upgrade
         {
             targetRect.localScale = new Vector3(scale, scale, 1f);
         }
+        
+        public void ZoomTo(float scale, Vector2 position, float duration, float delay)
+        {
+            if (coroutineZoom != null) StopCoroutine(coroutineZoom);
+            coroutineZoom = StartCoroutine(IEZoomTo(scale, position, duration, delay));
+        }
 
-        public Tween DoZoomTo(float scale, Vector2 pivot, float duration)
+        private IEnumerator IEZoomTo(float scale, Vector2 position, float duration, float delay)
         {
             blockZoom = true;
-            var seq = DOTween.Sequence(this);
-
-            // Get current scale
+            yield return new WaitForSecondsRealtime(delay);
+            UpdatePivot(targetRect, position);
             scale = Mathf.Clamp(scale, minScale, maxScale);
+            var originalScale = targetRect.localScale.x;
+            var originalPosition = targetRect.position;
+            var scaleValue = scale - originalScale;
+            var moveValue = transform.position - originalPosition;
 
-            // Apply the scale
-            seq.Append(targetRect.DOScale(new Vector3(scale, scale, 1f), duration));
+            yield return DOTween.To(() => 0, x =>
+            {
+                targetRect.localScale = new Vector3(originalScale + x * scaleValue, originalScale + x * scaleValue, 1f);
+                targetRect.position = originalPosition + x * moveValue;
+            }, 1f, duration).SetUpdate(true).WaitForCompletion();
 
-            seq.AppendCallback(() => blockZoom = false);
+            CurrentScale = scale;
+            // yield return targetRect.DOScale(new Vector3(scale, scale, 1f), duration).SetUpdate(true).WaitForCompletion();
+            blockZoom = false;
+        }
+        
+        private void UpdatePivot(RectTransform target, Vector2 pivotPosition)
+        {
+            var targetSizeScaled = new Vector2(target.rect.width * target.localScale.x,
+                target.rect.height * target.localScale.y);
+            var offset = (0.5f * Vector2.one - target.pivot) * targetSizeScaled;
+            target.pivot = 0.5f * Vector2.one;
+            target.position += (Vector3)offset;
             
-            return seq;
+            var pivotVector = -(Vector2)target.position + pivotPosition + 0.5f * targetSizeScaled;
+            target.pivot = new Vector2(pivotVector.x / targetSizeScaled.x, pivotVector.y / targetSizeScaled.y);
+            offset.x = (target.pivot.x - 0.5f) * targetSizeScaled.x;
+            offset.y = (target.pivot.y - 0.5f) * targetSizeScaled.y;
+            target.position += (Vector3)offset;
         }
     }
 }

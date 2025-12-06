@@ -40,7 +40,7 @@ namespace InGame
                             VfxThunderPool.Instance.GetAndRelease(null, triggerredEnemy.transform.position, 0f, 1f);
                             if (triggerredEnemy.PercentageHpLeft < value)
                             {
-                                triggerredEnemy.Kill();
+                                triggerredEnemy.Kill(DamageType.Normal);
                             }
                             else
                             {
@@ -68,7 +68,7 @@ namespace InGame
                         VfxThunderPool.Instance.GetAndRelease(null, triggerredEnemy.transform.position, 0f, 1f);
                         if (triggerredEnemy.PercentageHpLeft < value)
                         {
-                            triggerredEnemy.Kill();
+                            triggerredEnemy.Kill(DamageType.Normal);
                         }
                         else
                         {

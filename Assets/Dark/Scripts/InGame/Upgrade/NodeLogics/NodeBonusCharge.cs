@@ -29,46 +29,31 @@ namespace InGame.Upgrade
 		    }
 	    }
 
+	    public (string, string) GetBeforeAfterValueTotalStat(int level, ref UpgradeBonusInfo bonusInfo)
+	    {
+		    var before = LevelUtility.GetChargeStepTime().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+		    if (level > value.Length)
+		    {
+			    return (before, before);
+		    }
+		    var stepTimeMul = bonusInfo.chargeBonus.stepTimeMul;
+		    var stepTime = bonusInfo.chargeBonus.stepTime;
+		    ActivateNode(level, ref bonusInfo);
+		    var after = LevelUtility.GetChargeStepTime().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+		    bonusInfo.chargeBonus.stepTimeMul = stepTimeMul;
+		    bonusInfo.chargeBonus.stepTime = stepTime;
+		    return ($"{before}s", $"{after}s");
+	    }
+
 	    public string GetDisplayValue(int level)
 	    {
 		    if (level < 0) return "??";
 		    if (level >= value.Length) level = value.Length - 1;
 
 		    if (isMul)
-			    return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
+			    return (value[level] * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
 		    
-		    return value[level].ToString(CultureInfo.InvariantCulture);
-	    }
-
-	    public (string, string) GetBeforeAfterValue(int level)
-	    {
-		    var before = "";
-		    var after = "";
-		    if (level < 0) return ("", "");
-		    if (level >= value.Length) level = value.Length - 1;
-		    if (level == 0)
-		    {
-			    before = "0";
-			    after = GetDisplayValue(level);
-		    }
-		    else
-		    {
-			    var sum = 0f;
-			    for (var i = 0; i < level; i++)
-				    sum += value[i];
-			    if (isMul)
-			    {
-				    before = (sum * 100).ToString(CultureInfo.InvariantCulture);
-				    after = ((sum + value[level]) * 100).ToString(CultureInfo.InvariantCulture);
-			    }
-			    else
-			    {
-				    before = sum.ToString(CultureInfo.InvariantCulture);
-				    after = (sum + value[level]).ToString(CultureInfo.InvariantCulture);
-			    }
-		    }
-		    
-		    return (before, after);
+		    return value[level].ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
 	    }
 
 	    public int MaxLevel => value.Length;

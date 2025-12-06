@@ -75,7 +75,7 @@ namespace InGame
 
             if (!activated)
             {
-                // Change direction slowly to target
+                // Change projectile's direction slowly to target
                 if (canRotate && targetToChase)
                 {
                     if (targetToChase.gameObject.activeInHierarchy)
@@ -109,7 +109,7 @@ namespace InGame
                         if (Vector2.Distance(transform.position + moveDirection, RangeCenter) > LevelUtility.GetRelativeRange(Range, transform.position - RangeCenter))
                         {
                             if (!BlockSpawnDeadBody)
-                                ProjectileDeadPool.Instance.Get(direction).position = transform.position;
+                                ProjectileHomingDeadPool.Instance.Get(direction).transform.position = transform.position;
                             ProjectileHit(null);
                         }
                         else
@@ -135,7 +135,7 @@ namespace InGame
                         if (Vector2.Distance(transform.position + moveDirection, RangeCenter) > LevelUtility.GetRelativeRange(Range, transform.position - RangeCenter))
                         {
                             if (!BlockSpawnDeadBody)
-                                ProjectileDeadPool.Instance.Get(direction).position = transform.position;
+                                ProjectileHomingDeadPool.Instance.Get(direction).transform.position = transform.position;
                             ProjectileHit(null);
                         }
                         else

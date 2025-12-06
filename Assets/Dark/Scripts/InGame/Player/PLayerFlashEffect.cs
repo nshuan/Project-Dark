@@ -12,7 +12,6 @@ namespace InGame
         [SerializeField] private AudioComponent sfxFlashAoe;
         [SerializeField] private AudioComponent sfxFlashAoe_end;
 
-
         public Transform explodeCenter;
         public float startDuration = 0.5f;
 

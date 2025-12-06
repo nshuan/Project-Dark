@@ -50,7 +50,9 @@ namespace Dark.Scripts.OutGame.Upgrade
         
         public Tween DoSpawn()
         {
-            imgBorder.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
+            // calculate target z-rotation
+            var targetRotation =
+                new Vector3(0f, 0f, (Mathf.RoundToInt(imgBorder.transform.rotation.z / 180f) + 1) * 180f);
             imgBorder.transform.localScale = Vector3.one;
             vfxSpawn.gameObject.SetActive(false);
 
@@ -60,7 +62,14 @@ namespace Dark.Scripts.OutGame.Upgrade
                     vfxSpawn.gameObject.SetActive(true);
                 })
                 .AppendInterval(0.8f)
-                .AppendCallback(() => imgBorder.transform.DOLocalRotate(new Vector3(0f, 0f, 180f), 0.4f));
+                .AppendCallback(() =>
+                {
+                    imgBorder.transform.DOLocalRotate(targetRotation, 0.4f).SetRelative()
+                        .OnComplete(() =>
+                        {
+                            imgBorder.transform.localRotation = Quaternion.Euler(targetRotation);
+                        });
+                });
             // .Append(imgBorder.transform.DOScale(1.1f, 0.4f).SetEase(Ease.OutQuad))
             // .Append(imgBorder.transform.DOScale(1f, 0.2f).SetEase(Ease.InQuad));
         }

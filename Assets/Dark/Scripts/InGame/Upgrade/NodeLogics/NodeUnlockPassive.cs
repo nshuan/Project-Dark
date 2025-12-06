@@ -19,6 +19,11 @@ namespace InGame.Upgrade
 			    bonusInfo.passiveMapByTriggerType[triggerType].Add(passiveType);
 	    }
 
+	    public (string, string) GetBeforeAfterValueTotalStat(int level, ref UpgradeBonusInfo bonusInfo)
+	    {
+		    return ("", "");
+	    }
+
 	    public string GetDisplayValue(int level)
 	    {
 		    return "";
@@ -49,14 +54,14 @@ namespace InGame.Upgrade
 		    }
 	    }
 
+	    public (string, string) GetBeforeAfterValueTotalStat(int level, ref UpgradeBonusInfo bonusInfo)
+	    {
+		    return ("", "");
+	    }
+
 	    public string GetDisplayValue(int level)
 	    {
 		    return "";
-	    }
-
-	    public (string, string) GetBeforeAfterValue(int level)
-	    {
-		    return ("", "");
 	    }
 
 	    public int MaxLevel => 1;

@@ -13,14 +13,14 @@ namespace InGame.Upgrade
             action.ActivateNode(level, ref bonusInfo);
         }
 
+        public (string, string) GetBeforeAfterValueTotalStat(int level, ref UpgradeBonusInfo bonusInfo)
+        {
+            return action.GetBeforeAfterValueTotalStat(level, ref bonusInfo);
+        }
+
         public string GetDisplayValue(int level)
         {
             return action.GetDisplayValue(level);
-        }
-
-        public (string, string) GetBeforeAfterValue(int level)
-        {
-            return action.GetBeforeAfterValue(level);
         }
 
         public int MaxLevel => action.MaxLevel;

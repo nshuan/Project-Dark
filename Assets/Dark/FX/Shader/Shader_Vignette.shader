@@ -10,7 +10,14 @@ Shader "MyShader/VignetteOverlay"
     }
     SubShader
     {
-        Tags { "Queue"="Overlay" "RenderType"="Transparent" "IgnoreProjector"="True" }
+        Tags
+        {
+            "Queue"="Transparent"
+            "RenderType"="Transparent"
+            "IgnoreProjector"="True"
+            "PreviewType"="Plane"
+            "CanUseSpriteAtlas"="True"
+        }
         Cull Off
         ZWrite Off
         Blend SrcAlpha OneMinusSrcAlpha
@@ -20,6 +27,8 @@ Shader "MyShader/VignetteOverlay"
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
+            #pragma multi_compile __ UNITY_UI_CLIP_RECT
+            #pragma multi_compile __ UNITY_UI_ALPHACLIP
             #include "UnityCG.cginc"
 
             fixed4 _Color;

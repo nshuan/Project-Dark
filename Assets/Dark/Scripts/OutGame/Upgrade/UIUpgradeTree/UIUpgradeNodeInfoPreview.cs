@@ -1,10 +1,16 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Core;
 using Dark.Scripts.InGame.Upgrade;
 using Dark.Scripts.Utils.Camera;
+using Data;
 using DG.Tweening;
 using Economic;
+using InGame;
+using InGame.ChargeConfig;
+using InGame.ConfigManager;
 using InGame.Upgrade;
 using Sirenix.Serialization;
 using TMPro;
@@ -37,6 +43,13 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private Color colorEnoughResource;
         [SerializeField] private Color colorNotEnoughResource;
 
+        [Space] [Header("Base stats config")] 
+        [SerializeField] private PlayerStats playerStatsConfig;
+        [SerializeField] private MoveTowersConfig teleConfig;
+        [SerializeField] private MoveTowersConfig flashConfig;
+        [SerializeField] private MoveTowersConfig dashConfig;
+        public UpgradeBonusInfo bonusInfo = new UpgradeBonusInfo();
+        
         [Serializable]
         public class RequirementInfo
         {
@@ -52,6 +65,22 @@ namespace Dark.Scripts.OutGame.Upgrade
         private Vector2 mousePos = Vector2.zero;
         private Vector2 cacheHoverNodePosition = new Vector2(0, 0);
         private Vector2 cacheHoverNodePadding = new Vector2(0, 0);
+
+        private void Start()
+        {
+            UpgradeManager.Instance.ActivateTree(ref bonusInfo);
+            LevelUtility.BonusInfo = bonusInfo;
+            LevelUtility.PlayerStats = playerStatsConfig;
+            LevelUtility.CurrentSkill = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
+            LevelUtility.ChargeConfigMap = new Dictionary<ChargeType, PlayerChargeConfig>()
+            {
+                { ChargeType.Bullet, PlayerChargeManifest.Get(ChargeType.Bullet) },
+                { ChargeType.Size, PlayerChargeManifest.Get(ChargeType.Size) }
+            };
+            LevelUtility.DashConfig = dashConfig;
+            LevelUtility.FlashConfig = flashConfig;
+            LevelUtility.TeleConfig = teleConfig; 
+        }
 
         public void Setup(UpgradeNodeConfig config, bool forceUpdate)
         {
@@ -88,7 +117,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             var bonusAfterStr = "";
             for (var i = 0; i < cacheConfig.nodeLogic.Length; i++)
             {
-                var bonusChanged = cacheConfig.nodeLogic[i].GetBeforeAfterValue(cacheData?.level ?? 0);
+                var bonusChanged = cacheConfig.nodeLogic[i].GetBeforeAfterValueTotalStat(cacheData?.level + 1 ?? 1, ref bonusInfo);
                 if (string.IsNullOrEmpty(bonusChanged.Item1) && string.IsNullOrEmpty(bonusChanged.Item2))
                     continue;
                 bonusAfterStr += bonusChanged.Item2;
@@ -179,6 +208,19 @@ namespace Dark.Scripts.OutGame.Upgrade
             DoShow().OnComplete(() => onShow?.Invoke());
         }
 
+        public void ShowImmediately(Vector2 position, Vector2 padding, bool forceShow, Action onShow)
+        {
+            cacheHoverNodePosition.x = position.x;
+            cacheHoverNodePosition.y = position.y;
+            cacheHoverNodePadding.x = padding.x;
+            cacheHoverNodePadding.y = padding.y;
+            if (CanAutoShowHide == false && forceShow == false) return;
+            isVisible = true;
+            rectInfoFrame.localScale = Vector3.one;
+            rectInfoFrame.gameObject.SetActive(true);
+            onShow?.Invoke();
+        }
+
         public void Hide(bool forceHide)
         {
             if (CanAutoShowHide == false && forceHide == false) return;
@@ -214,6 +256,19 @@ namespace Dark.Scripts.OutGame.Upgrade
                 {
                     rectInfoFrame.gameObject.SetActive(false);
                 });
+        }
+
+        private string ExtractValueString(string input)
+        {
+            const string pattern = @"[+-]?\[X\]%?";
+            var match = Regex.Match(input, pattern);
+
+            if (match.Success)
+            {
+                return match.Value;
+            }
+            
+            return string.Empty;
         }
     }
 }
