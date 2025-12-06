@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -22,6 +23,7 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         private bool activateKeyHolding = false;
         private bool blockZoom = false;
+        private Coroutine coroutineZoom;
 
         public static float CurrentScale;
         
@@ -101,21 +103,33 @@ namespace Dark.Scripts.OutGame.Upgrade
         {
             targetRect.localScale = new Vector3(scale, scale, 1f);
         }
+        
+        public void ZoomTo(float scale, Vector2 position, float duration, float delay)
+        {
+            if (coroutineZoom != null) StopCoroutine(coroutineZoom);
+            coroutineZoom = StartCoroutine(IEZoomTo(scale, position, duration, delay));
+        }
 
-        public Tween DoZoomTo(float scale, Vector2 pivot, float duration)
+        private IEnumerator IEZoomTo(float scale, Vector2 position, float duration, float delay)
         {
             blockZoom = true;
-            var seq = DOTween.Sequence(this);
-
-            // Get current scale
+            yield return new WaitForSecondsRealtime(delay);
+            UpdatePivot(targetRect, position);
             scale = Mathf.Clamp(scale, minScale, maxScale);
+            var originalScale = targetRect.localScale.x;
+            var originalPosition = targetRect.position;
+            var scaleValue = scale - originalScale;
+            var moveValue = transform.position - originalPosition;
 
-            // Apply the scale
-            seq.Append(targetRect.DOScale(new Vector3(scale, scale, 1f), duration));
+            yield return DOTween.To(() => 0, x =>
+            {
+                targetRect.localScale = new Vector3(originalScale + x * scaleValue, originalScale + x * scaleValue, 1f);
+                targetRect.position = originalPosition + x * moveValue;
+            }, 1f, duration).SetUpdate(true).WaitForCompletion();
 
-            seq.AppendCallback(() => blockZoom = false);
-            
-            return seq;
+            CurrentScale = scale;
+            // yield return targetRect.DOScale(new Vector3(scale, scale, 1f), duration).SetUpdate(true).WaitForCompletion();
+            blockZoom = false;
         }
         
         private void UpdatePivot(RectTransform target, Vector2 pivotPosition)

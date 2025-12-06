@@ -26,6 +26,7 @@ namespace Dark.Scripts.Audio
         private AudioSource audio;
         private Coroutine coroutinePlay;
         private float volume;
+        private int tempLoop;
 
         private void Awake()
         {
@@ -42,26 +43,28 @@ namespace Dark.Scripts.Audio
                 Play();
         }
 
-        public void Play()
+        public void Play(float delay = -1f)
         {
+            if (delay < 0f) delay = this.delay;
+            tempLoop = loop;
             if (coroutinePlay != null) StopCoroutine(coroutinePlay);
-            coroutinePlay = StartCoroutine(IEPlay());
+            coroutinePlay = StartCoroutine(IEPlay(delay));
         }
 
-        private IEnumerator IEPlay()
+        private IEnumerator IEPlay(float delay)
         {
             if (fadeInDuration > audio.clip.length) fadeInDuration = audio.clip.length;
             if (fadeInDuration + fadeOutDuration > audio.clip.length) fadeOutDuration = audio.clip.length - fadeInDuration;
             yield return new WaitForSecondsRealtime(delay);
 
-            while (loop != 0)
+            while (tempLoop != 0)
             {
                 audio.volume = 0f;
                 audio.Play();
                 yield return audio.DOFade(volume, fadeInDuration).SetEase(fadeInEasing).SetUpdate(true).WaitForCompletion();
                 yield return new WaitForSeconds(audio.clip.length - fadeInDuration - fadeOutDuration);
                 yield return audio.DOFade(0f, fadeOutDuration).SetEase(fadeOutEasing).SetUpdate(true).WaitForCompletion();
-                loop -= 1;
+                tempLoop -= 1;
             }
         }
     }

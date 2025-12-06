@@ -131,7 +131,7 @@ Shader "MyShader/Shader_Noise_Distortion"
                     clip (color.a - 0.001);
                 #endif
 
-                return color;
+                return color*IN.color.a;
             }
             ENDCG
         }

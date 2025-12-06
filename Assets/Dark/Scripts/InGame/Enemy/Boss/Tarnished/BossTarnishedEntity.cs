@@ -14,14 +14,14 @@ namespace InGame.Boss
             CanvasInGame.Instance.HideUI();
             
             CombatActions.OnBossKilled?.Invoke(config, transform.position);
-            CombatActions.OnCollectResource?.Invoke(this);
+            CombatActions.OnDropResource?.Invoke(this);
             OnDead?.Invoke(reason);
             OnDead = null;
             yield return new WaitForSeconds(delayRelease);
             EnemyPool.Instance.Release(this, config.enemyId);
         }
 
-        protected override void CollectResource()
+        protected override void DropResource()
         {
             
         }

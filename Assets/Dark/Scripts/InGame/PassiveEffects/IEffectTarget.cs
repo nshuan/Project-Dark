@@ -10,6 +10,6 @@ namespace InGame
         Vector2 Position => TargetTransform.position;
         void Burn(float duration, float delayEachBurn, int damage, Action callbackComplete);
         Transform BurnVfxParent { get; }
-        void Kill(DamageType dmgType);
+        void Kill(DamageType dmgType, float delayAnimation = 0f);
     }
 }

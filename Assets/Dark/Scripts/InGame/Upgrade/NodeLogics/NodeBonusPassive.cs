@@ -31,9 +31,14 @@ namespace InGame.Upgrade
                 case BonusType.Chance:
                     bonusInfo.passiveBonusChanceMapByType ??= new Dictionary<PassiveType, float>();
                     bonusInfo.passiveBonusChanceMapByType.TryAdd(passiveType, 0);
-                    bonusInfo.passiveBonusChanceMapByType.TryAdd(passiveType, 0);
+                    bonusInfo.passiveBonusChanceMapByType[passiveType] += value[level - 1];
                     break;
             }
+        }
+
+        public (string, string) GetBeforeAfterValueTotalStat(int level, ref UpgradeBonusInfo bonusInfo)
+        {
+            return GetBonusBeforeAfterValue(level);
         }
 
         public string GetDisplayValue(int level)
@@ -42,21 +47,21 @@ namespace InGame.Upgrade
             if (level >= value.Length) level = value.Length - 1;
 
             if (passiveType == PassiveType.Lightning && bonusType == BonusType.Size)
-                return value[level].ToString(CultureInfo.InvariantCulture);
+                return value[level].ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
             
             if (passiveType == PassiveType.Burning && bonusType == BonusType.Size) 
-                return value[level].ToString(CultureInfo.InvariantCulture);
+                return value[level].ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
             
-            return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
+            return (value[level] * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
         }
 
-        public (string, string) GetBeforeAfterValue(int level)
+        public (string, string) GetBonusBeforeAfterValue(int level)
         {
             var before = "";
             var after = "";
-            if (level < 0) return ("", "");
-            if (level >= value.Length) level = value.Length - 1;
-            if (level == 0)
+            if (level <= 0) return ("", "");
+            if (level > value.Length) level = value.Length;
+            if (level == 1)
             {
                 before = "0";
                 after = GetDisplayValue(level);
@@ -64,26 +69,31 @@ namespace InGame.Upgrade
             else
             {
                 var sum = 0f;
-                for (var i = 0; i < level; i++)
-                    sum += value[i];
+                for (var i = 1; i < level; i++)
+                    sum += value[i - 1];
 
-                before = (sum * 100).ToString(CultureInfo.InvariantCulture);
-                after = ((sum + value[level]) * 100).ToString(CultureInfo.InvariantCulture);
+                before = (sum * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+                after = ((sum + value[level - 1]) * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                 
                 if (passiveType == PassiveType.Lightning && bonusType == BonusType.Size)
                 {
-                    before = sum.ToString(CultureInfo.InvariantCulture);
-                    after = (sum + value[level]).ToString(CultureInfo.InvariantCulture);
+                    before = sum.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+                    after = (sum + value[level - 1]).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                 }
 
                 if (passiveType == PassiveType.Burning && bonusType == BonusType.Size)
                 {
-                    before = sum.ToString(CultureInfo.InvariantCulture);
-                    after = (sum + value[level]).ToString(CultureInfo.InvariantCulture);
+                    before = sum.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+                    after = (sum + value[level - 1]).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                 }
             }
 		    
-            return (before, after);
+            if (passiveType == PassiveType.Lightning && bonusType == BonusType.Size)
+                return ($"+{before}", $"+{after}");
+            if (passiveType == PassiveType.Burning && bonusType == BonusType.Size)
+                return ($"+{before}s", $"+{after}s");
+            
+            return ($"+{before}%", $"+{after}%");
         }
 
         public int MaxLevel => value.Length;

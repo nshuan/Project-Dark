@@ -102,6 +102,9 @@ namespace InGame
                 { ChargeType.Bullet, PlayerChargeManifest.Get(ChargeType.Bullet) },
                 { ChargeType.Size, PlayerChargeManifest.Get(ChargeType.Size) }
             };
+            LevelUtility.DashConfig = dashConfig;
+            LevelUtility.FlashConfig = flashConfig;
+            LevelUtility.TeleConfig = defaultTeleConfig; 
         }
         
         private void InitPlayerAndTowers()
@@ -150,7 +153,7 @@ namespace InGame
             WealthManager.Instance.Save();
             PlayerDataManager.Instance.CompleteLevel();
             
-            DebugUtility.LogError($"Level {Level.level} is ended: WIN");
+            DebugUtility.LogError($"Level {Level.level + 1} is ended: WIN");
             IsEndLevel = true;
             OnWin?.Invoke();
             ClearAction();
@@ -191,6 +194,7 @@ namespace InGame
 
         // Start from 0
         private int currentWaveIndex;
+        public int CurrentWaveIndex => currentWaveIndex;
         private Coroutine waveCoroutine;
         private IEnumerator IEWave(WaveInfo[] waves)
         {

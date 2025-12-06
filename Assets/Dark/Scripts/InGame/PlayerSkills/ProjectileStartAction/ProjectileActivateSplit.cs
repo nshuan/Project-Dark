@@ -27,7 +27,7 @@ namespace InGame
                 p.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
                 p.transform.position = spawnPos;
                 p.Init(
-                    spawnPos, 
+                    parentProjectile.RangeCenter, 
                     direction, 
                     parentProjectile.Range, 
                     parentProjectile.Size, 
@@ -56,7 +56,7 @@ namespace InGame
                 p.transform.position = spawnPos;
                 p.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(pDir.y, pDir.x) * Mathf.Rad2Deg);
                 p.Init(
-                    spawnPos, 
+                    parentProjectile.RangeCenter, 
                     pDir, 
                     parentProjectile.Range, 
                     parentProjectile.Size, 
@@ -80,7 +80,7 @@ namespace InGame
                 p.transform.position = spawnPos;
                 p.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(pDir.y, pDir.x) * Mathf.Rad2Deg);
                 p.Init(
-                    spawnPos, 
+                    parentProjectile.RangeCenter, 
                     pDir, 
                     parentProjectile.Range, 
                     parentProjectile.Size, 
@@ -106,9 +106,35 @@ namespace InGame
             this.angle += casted.angle;
         }
 
+        public void TryCombineAndRevert<T>(T combineWith, Action combinedAction) where T : IProjectileActivate
+        {
+            if (combineWith is not ProjectileActivateSplit casted)
+            {
+                combinedAction?.Invoke();
+                return;
+            }
+            var tempAmount = this.amount;
+            var tempAngle = this.angle;
+            this.amount += casted.amount;
+            this.angle += casted.angle;
+            combinedAction?.Invoke();
+            this.amount = tempAmount;
+            this.angle = tempAngle;
+        }
+
         public float GetValue()
         {
             return amount;
+        }
+
+        public IProjectileActivate Clone()
+        {
+            return new ProjectileActivateSplit()
+            {
+                projectile = projectile,
+                amount = amount,
+                angle = angle,
+            };
         }
     }
 }

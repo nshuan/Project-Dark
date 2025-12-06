@@ -97,6 +97,24 @@ namespace Dark.Scripts.SceneNavigation
             yield return new WaitForEndOfFrame();
             Scene currentScene = SceneManager.GetActiveScene();
             
+            // Load blank scene additively
+            AsyncOperation loadBlankOp = SceneManager.LoadSceneAsync("Blank", LoadSceneMode.Additive);
+            yield return loadBlankOp;
+            DebugUtility.LogWarning($"Scene Blank is loaded!");
+
+            // Set the new scene active
+            Scene loadedBlankScene = SceneManager.GetSceneByName("Blank");
+            SceneManager.SetActiveScene(loadedBlankScene);
+
+            var lastSceneName = currentScene.name;
+            // Unload previous scene
+            AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(currentScene);
+            yield return unloadOp;
+            DebugUtility.LogWarning($"Scene {lastSceneName} is unloaded!");
+                
+            currentScene = SceneManager.GetActiveScene();
+            yield return new WaitForSecondsRealtime(0.1f);
+            
             // Load additively
             AsyncOperation loadOp = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
             yield return loadOp;
@@ -106,7 +124,7 @@ namespace Dark.Scripts.SceneNavigation
             SceneManager.SetActiveScene(loadedScene);
 
             // Unload previous scene
-            AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(currentScene);
+            unloadOp = SceneManager.UnloadSceneAsync(currentScene);
             yield return unloadOp;
             
             yield return new WaitForEndOfFrame();
@@ -164,27 +182,23 @@ namespace Dark.Scripts.SceneNavigation
             yield return new WaitForEndOfFrame();
             Scene currentScene = SceneManager.GetActiveScene();
 
-            if (currentScene.name == sceneName)
-            {
-                // Load blank scene additively
-                AsyncOperation loadBlankOp = SceneManager.LoadSceneAsync("Blank", LoadSceneMode.Additive);
-                yield return loadBlankOp;
-                DebugUtility.LogWarning($"Scene Blank is loaded!");
+            // Load blank scene additively
+            AsyncOperation loadBlankOp = SceneManager.LoadSceneAsync("Blank", LoadSceneMode.Additive);
+            yield return loadBlankOp;
+            DebugUtility.LogWarning($"Scene Blank is loaded!");
 
-                // Set the new scene active
-                Scene loadedBlankScene = SceneManager.GetSceneByName("Blank");
-                SceneManager.SetActiveScene(loadedBlankScene);
+            // Set the new scene active
+            Scene loadedBlankScene = SceneManager.GetSceneByName("Blank");
+            SceneManager.SetActiveScene(loadedBlankScene);
 
-                var lastSceneName = currentScene.name;
-                // Unload previous scene
-                AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(currentScene);
-                yield return unloadOp;
-                DebugUtility.LogWarning($"Scene {lastSceneName} is unloaded!");
+            var lastSceneName = currentScene.name;
+            // Unload previous scene
+            AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(currentScene);
+            yield return unloadOp;
+            DebugUtility.LogWarning($"Scene {lastSceneName} is unloaded!");
                 
-                currentScene = SceneManager.GetActiveScene();
-                yield return new WaitForSecondsRealtime(0.1f);
-            }
-            
+            currentScene = SceneManager.GetActiveScene();
+            yield return new WaitForSecondsRealtime(0.1f);
             
             // Load additively
             AsyncOperation loadOp = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);

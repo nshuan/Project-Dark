@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Dark.Scripts.Audio;
 using UnityEngine;
 
 namespace InGame
@@ -13,6 +14,7 @@ namespace InGame
         [SerializeField] private SpriteRenderer cooldownRing;
         [SerializeField] private ParticleSystem vfxCooldownComplete;
         [SerializeField] private GameObject vfxSelected;
+        [SerializeField] private AudioComponent sfxCooldown;
 
         [Header("Setup Materials")]
         [SerializeField] private List<SpriteRenderer> cdRingSprites;
@@ -62,7 +64,7 @@ namespace InGame
                 inProgress = false;
                 ringMaterial.SetFloat(RadialProgress, 0f);
                 vfxCooldownComplete.Play(true);
-                // vfxSelected.SetActive(true);
+                sfxCooldown.Play();
             }
         }
 

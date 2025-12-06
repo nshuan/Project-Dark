@@ -15,7 +15,7 @@ namespace InGame
         public int waveIndex;
         public float scaleHp = 1f;
         public float scaleDmg = 1f;
-        public float timeToEnd;
+        public float timeToEnd = 1f;
         public WaveConfig waveConfig;
         public WaveConfig[] randomWaveConfigs;
         public bool isRandomWaveConfig;
@@ -72,7 +72,7 @@ namespace InGame
         {
             if (Gates.All((gate) => gate.AllEnemyDead))
             {
-                DebugUtility.LogError($"Stop wave {waveIndex}: All enemies are dead");
+                DebugUtility.LogError($"Stop wave {waveIndex + 1}: All enemies are dead");
                 WaveEndedCompletely = true;
                 OnWaveForceStop?.Invoke(waveIndex, WaveEndReason.AllDead);
                 OnWaveForceStop = null;

@@ -7,14 +7,11 @@ namespace Dark.Scripts.OutGame.Home
 {
     public class UIWishlistButton : UIHomeButton
     {
-        [Space]
-        public string steamWishlistURL = "https://store.steampowered.com/app/3913310/Ash_Warden/";
-
         public override bool BlockSelect => true;
 
         private void OpenSteamWishlist()
         {
-            Application.OpenURL(steamWishlistURL);
+            Application.OpenURL(GameConst.SteamWishlistURL);
         }
 
         public override void OnPointerClick(PointerEventData eventData)

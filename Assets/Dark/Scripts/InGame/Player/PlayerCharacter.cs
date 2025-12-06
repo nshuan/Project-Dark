@@ -142,7 +142,7 @@ namespace InGame
             flashSequence.Kill();
             flashSequence = DOTween.Sequence();
             flashEffect.PLayEnd();
-            return flashSequence.AppendInterval(Mathf.Max(0f, 0.15f))
+            return flashSequence.AppendInterval(0.15f)
                 .AppendCallback(() =>
                 {
                     PlayAoe();

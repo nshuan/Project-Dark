@@ -23,16 +23,19 @@ namespace InGame.EnemyEffect
         private float timer;
         private bool isSpawningEffect = false;
         private float spawningTimer;
+        private Vector3 originalScale;
 
         private void Awake()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
+            originalScale = spriteRenderer.transform.localScale;
         }
 
         public float PlaySpawn()
         {
             currentAnim = spawnAnim;
             currentFrame = 0;
+            spriteRenderer.transform.localScale = originalScale * currentAnim.scale;
             spriteRenderer.sprite = currentAnim.frames[0];
             timer = 0;
             spawningTimer = 0f;
@@ -50,6 +53,7 @@ namespace InGame.EnemyEffect
         {
             currentAnim = idleAnim;
             currentFrame = 0;
+            spriteRenderer.transform.localScale = originalScale * currentAnim.scale;
             spriteRenderer.sprite = currentAnim.frames[0];
             timer = 0f;
         }
@@ -58,6 +62,7 @@ namespace InGame.EnemyEffect
         {
             currentAnim = runAnim;
             currentFrame = 0;
+            spriteRenderer.transform.localScale = originalScale * currentAnim.scale;
             spriteRenderer.sprite = currentAnim.frames[0];
             timer = 0f;
         }
@@ -66,6 +71,7 @@ namespace InGame.EnemyEffect
         {
             currentAnim = attackAnim;
             currentFrame = 0;
+            spriteRenderer.transform.localScale = originalScale * currentAnim.scale;
             spriteRenderer.sprite = currentAnim.frames[0];
             timer = 0f;
         }
@@ -74,6 +80,7 @@ namespace InGame.EnemyEffect
         {
             currentAnim = hitAnim;
             currentFrame = 0;
+            spriteRenderer.transform.localScale = originalScale * currentAnim.scale;
             spriteRenderer.sprite = currentAnim.frames[0];
             timer = 0f;
         }
@@ -82,6 +89,7 @@ namespace InGame.EnemyEffect
         {
             currentAnim = dieAnim;
             currentFrame = 0;
+            spriteRenderer.transform.localScale = originalScale * currentAnim.scale;
             spriteRenderer.sprite = currentAnim.frames[0];
             timer = 0f;
             return dieAnim.frames.Length * dieAnim.frameRate;
@@ -136,6 +144,7 @@ namespace InGame.EnemyEffect
         public Sprite[] frames;
         public bool isLoop;
         public float frameRate = 0.1f;
+        public float scale = 1f;
         public bool autoExit = true;
     }
 }

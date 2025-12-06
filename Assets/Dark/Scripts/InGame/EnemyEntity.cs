@@ -62,6 +62,8 @@ namespace InGame
         
         private float invisibleTimer;
         private float freezeDuration;
+
+        private float delayDieAnimation;
         
         #region Initialize
 
@@ -294,7 +296,7 @@ namespace InGame
             callbackBurnComplete?.Invoke();
             callbackBurnComplete = null;
             if (reason != EnemyDieReason.Suicide)
-                CollectResource();
+                DropResource();
             StartCoroutine(IEDie(.5f, reason));
         }
 
@@ -304,6 +306,7 @@ namespace InGame
             shadow.SetActive(false);    
             OnStartDead?.Invoke();
             OnStartDead = null;
+            yield return new WaitForSeconds(delayDieAnimation);
             yield return new WaitForSeconds(animController.PlayDie());
             OnDead?.Invoke(reason);
             OnDead = null;
@@ -311,9 +314,9 @@ namespace InGame
             EnemyPool.Instance.Release(this, config.enemyId);
         }
 
-        protected virtual void CollectResource()
+        protected virtual void DropResource()
         {
-            CombatActions.OnCollectResource?.Invoke(this);
+            CombatActions.OnDropResource?.Invoke(this);
         }
 
         #region Effect 
@@ -352,8 +355,9 @@ namespace InGame
             callbackBurnComplete = null;
         }
 
-        public void Kill(DamageType dmgType)
+        public void Kill(DamageType dmgType, float delayAnimation = 0f)
         {
+            delayDieAnimation = delayAnimation;
             HitDirectionX = 0f;
             HitDirectionY = 0f;
             Damage(CurrentHealth, transform.position, 0f, dmgType);

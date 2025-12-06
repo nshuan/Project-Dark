@@ -20,7 +20,7 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, List<UIUpgradeNode>> nodesMap; // Luu cac node co cung id
         [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, List<UIUpgradeNode>> nodeChildrenMap;
-        [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, List<UIUpgradeNode>> nodesMapByLayer;
+        [ReadOnly, OdinSerialize, NonSerialized] public Dictionary<int, List<UIUpgradeNode>> nodesMapByLayer;
 
         [Space] [Header("UI")] 
         [SerializeField] private Button btnDeselectAll;
@@ -30,6 +30,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private float firstNodeDelayStep = 0.5f;
 
         public int LastUpgradeNodeId { get; set; } = -1;
+        public Action<UIUpgradeNode> OnNodeUpgraded { get; set; }
         
         public void UpdateChildren(int id, bool isUnlock)
         {
@@ -37,7 +38,12 @@ namespace Dark.Scripts.OutGame.Upgrade
             {
                 foreach (var childNode in children)
                 {
-                    if (isUnlock) childNode.DoUnlockVfx(id).OnComplete(() => childNode.UpdateUI());
+                    if (isUnlock) childNode.DoUnlockVfx(id).OnComplete(() =>
+                    {
+                        childNode.UpdateUI();
+                        if (childNode.CurrentState == UIUpgradeNodeState.Activated)
+                            UpdateChildren(childNode.config.nodeId, true);
+                    });
                     else childNode.UpdateUI();
                 }
             }
@@ -52,6 +58,11 @@ namespace Dark.Scripts.OutGame.Upgrade
                     node.Upgrade();
                 }
             }
+        }
+
+        public void InvokeNodeUpgraded(UIUpgradeNode node)
+        {
+            OnNodeUpgraded?.Invoke(node);
         }
 
         private void Awake()

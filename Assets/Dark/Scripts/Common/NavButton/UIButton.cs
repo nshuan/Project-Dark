@@ -29,17 +29,17 @@ namespace Dark.Scripts.OutGame.Common.NavButton
         public virtual void OnPointerClick(PointerEventData eventData)
         {
             if (BlockSelect) return;
-            FuncUpdateNav(this, UIButtonState.Selected);
+            FuncUpdateNav?.Invoke(this, UIButtonState.Selected);
         }
 
         public virtual void OnPointerEnter(PointerEventData eventData)
         {
-            FuncUpdateNav(this, UIButtonState.Hover);
+            FuncUpdateNav?.Invoke(this, UIButtonState.Hover);
         }
 
         public virtual void OnPointerExit(PointerEventData eventData)
         {
-            FuncUpdateNav(this, UIButtonState.None);
+            FuncUpdateNav?.Invoke(this, UIButtonState.None);
         }
     }
 

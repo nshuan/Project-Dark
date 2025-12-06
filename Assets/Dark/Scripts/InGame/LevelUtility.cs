@@ -11,7 +11,11 @@ namespace InGame
         public static UpgradeBonusInfo BonusInfo { get; set; } = new UpgradeBonusInfo();
         public static PlayerStats PlayerStats { get; set; }
         public static PlayerSkillConfig CurrentSkill { get; set; }
+        public static MoveTowersConfig DashConfig { get; set; }
+        public static MoveTowersConfig FlashConfig { get; set; }
+        public static MoveTowersConfig TeleConfig { get; set; }
         public static Dictionary<ChargeType, PlayerChargeConfig> ChargeConfigMap { get; set; }
+        public static Dictionary<PassiveTriggerType, Dictionary<PassiveType, PassiveConfig>> EffectConfigsMap;
         
         public static int BasePlayerDamageWithBonus
         {
@@ -236,48 +240,67 @@ namespace InGame
             return CurrentSkill.chargeRangeMaxStep + BonusInfo.chargeBonus.rangeMaxStep;
         }
 
-        public static int GetChargeSizeExplodeBullet(int baseBullet)
+        public static int GetChargeSizeExplodeBullet(int baseAmount)
         {
-            return baseBullet + BonusInfo.chargeBonus.maxBulletExplodeChargeSize;
+            return baseAmount + BonusInfo.chargeBonus.maxBulletExplodeChargeSize;
         }
         #endregion
         
         #region Passive
 
-        public static float GetPassiveCooldown(PassiveType passiveType, float baseCooldown)
+        public static float GetPassiveCooldown(PassiveTriggerType triggerType, PassiveType passiveType)
         {
+            var baseCooldown = 1f;
+            if (EffectConfigsMap.TryGetValue(triggerType, out var triggerDict) && triggerDict.TryGetValue(passiveType, out var config))
+                baseCooldown = config.cooldown;
             if (BonusInfo.passiveBonusCooldownMapByType == null) return Mathf.Max(baseCooldown * (1f - BasePLayerCooldownWithBonus), 0f);
             if (BonusInfo.passiveBonusCooldownMapByType.TryGetValue(passiveType, out var bonus))
                 return Mathf.Max(baseCooldown * (1f - bonus) * (1f - BasePLayerCooldownWithBonus), 0f);
             return Mathf.Max(baseCooldown * (1f - BasePLayerCooldownWithBonus), 0f);
         }
 
-        public static float GetPassiveChance(PassiveType passiveType, float baseChance)
+        public static float GetPassiveChance(PassiveTriggerType triggerType, PassiveType passiveType)
         {
+            var baseChance = 0f;
+            if (EffectConfigsMap.TryGetValue(triggerType, out var triggerDict) && triggerDict.TryGetValue(passiveType, out var config))
+                baseChance = config.chance;
             if (BonusInfo.passiveBonusChanceMapByType == null) return baseChance;
             if (BonusInfo.passiveBonusChanceMapByType.TryGetValue(passiveType, out var bonus))
                 return Mathf.Min(baseChance * (1f + bonus), 1f);
             return baseChance;
         }
         
-        public static float GetPassiveSize(PassiveType passiveType, float baseSize)
+        public static float GetPassiveSize(PassiveTriggerType triggerType, PassiveType passiveType)
         {
+            var baseSize = 0f;
+            if (EffectConfigsMap.TryGetValue(triggerType, out var triggerDict) && triggerDict.TryGetValue(passiveType, out var config))
+                baseSize = config.size;
             if (BonusInfo.passiveBonusSizeMapByType == null) return baseSize;
             if (BonusInfo.passiveBonusSizeMapByType.TryGetValue(passiveType, out var bonus))
+            {
+                if (passiveType == PassiveType.Lightning) return baseSize + bonus;
+                if (passiveType == PassiveType.Burning) return baseSize + bonus;
                 return baseSize * (1f + bonus);
+            }
             return baseSize;
         }
 
-        public static float GetPassiveValue(PassiveType passiveType, float baseValue)
+        public static float GetPassiveValue(PassiveTriggerType triggerType, PassiveType passiveType)
         {
+            var baseValue = 0f;
+            if (EffectConfigsMap.TryGetValue(triggerType, out var triggerDict) && triggerDict.TryGetValue(passiveType, out var config))
+                baseValue = config.value;   
             if (BonusInfo.passiveBonusValueMapByType == null) return baseValue + BasePlayerDamageWithBonus;
             if (BonusInfo.passiveBonusValueMapByType.TryGetValue(passiveType, out var bonus))
                 return (baseValue + BasePlayerDamageWithBonus) * (1f + bonus);
             return baseValue + BasePlayerDamageWithBonus;
         }
 
-        public static float GetPassiveStagger(PassiveType passiveType, float baseStagger)
+        public static float GetPassiveStagger(PassiveTriggerType triggerType, PassiveType passiveType)
         {
+            var baseStagger = 0f;
+            if (EffectConfigsMap.TryGetValue(triggerType, out var triggerDict) && triggerDict.TryGetValue(passiveType, out var config))
+                baseStagger = config.stagger;
             if (BonusInfo.passiveBonusStaggerMapByType == null) return baseStagger;
             if (BonusInfo.passiveBonusStaggerMapByType.TryGetValue(passiveType, out var bonus))
                 return baseStagger * (1f + bonus);
@@ -288,39 +311,39 @@ namespace InGame
 
         #region Move Towers
 
-        public static float GetTeleCooldown(float baseCooldown)
+        public static float GetTeleCooldown()
         {
-            return Mathf.Max((baseCooldown - BonusInfo.moveCooldownPlus) * (1f - BonusInfo.moveCooldownMultiplier) * (1f - BasePLayerCooldownWithBonus), 0f);
+            return Mathf.Max((TeleConfig.cooldown - BonusInfo.moveCooldownPlus) * (1f - BonusInfo.moveCooldownMultiplier) * (1f - BasePLayerCooldownWithBonus), 0f);
         }
         
-        public static float GetDashCooldown(float baseCooldown)
+        public static float GetDashCooldown()
         {
-            return Mathf.Max((baseCooldown - BonusInfo.dashCooldownPlus) * (1f - BonusInfo.dashCooldownMultiplier) * (1f - BasePLayerCooldownWithBonus), 0f);
+            return Mathf.Max((DashConfig.cooldown - BonusInfo.dashCooldownPlus) * (1f - BonusInfo.dashCooldownMultiplier) * (1f - BasePLayerCooldownWithBonus), 0f);
         }
 
-        public static float GetDashSize(float baseSize)
+        public static float GetDashSize()
         {
-            return (1f + BonusInfo.dashSizeMultiplier) * (baseSize + BonusInfo.dashSizePlus);
+            return (1f + BonusInfo.dashSizeMultiplier) * (DashConfig.size + BonusInfo.dashSizePlus);
         }
 
-        public static int GetDashDamage(int baseDamage)
+        public static int GetDashDamage()
         {
-            return (int)((1f + BonusInfo.dashDamageMultiplier) * (baseDamage + BonusInfo.dashDamagePlus + BasePlayerDamageWithBonus));
+            return (int)((1f + BonusInfo.dashDamageMultiplier) * (DashConfig.damage + BonusInfo.dashDamagePlus + BasePlayerDamageWithBonus));
         }
 
-        public static float GetFlashCooldown(float baseCooldown)
+        public static float GetFlashCooldown()
         {
-            return Mathf.Max((baseCooldown - BonusInfo.flashCooldownPlus) * (1f - BonusInfo.flashCooldownMultiplier) * (1f - BasePLayerCooldownWithBonus), 0f);
+            return Mathf.Max((FlashConfig.cooldown - BonusInfo.flashCooldownPlus) * (1f - BonusInfo.flashCooldownMultiplier) * (1f - BasePLayerCooldownWithBonus), 0f);
         }
 
-        public static float GetFlashSize(float baseSize)
+        public static float GetFlashSize()
         {
-            return (1f + BonusInfo.flashSizeMultiplier) * (baseSize + BonusInfo.flashSizePlus);
+            return (1f + BonusInfo.flashSizeMultiplier) * (FlashConfig.size + BonusInfo.flashSizePlus);
         }
 
-        public static int GetFlashDamage(int baseDamage)
+        public static int GetFlashDamage()
         {
-            return (int)((1f + BonusInfo.flashDamageMultiplier) * (baseDamage + BonusInfo.flashDamagePlus + BasePlayerDamageWithBonus));
+            return (int)((1f + BonusInfo.flashDamageMultiplier) * (FlashConfig.damage + BonusInfo.flashDamagePlus + BasePlayerDamageWithBonus));
         }
 
         #endregion
@@ -345,7 +368,8 @@ namespace InGame
         public static float GetTowerCounterCooldown(NodeTowerCounter.CounterType counterType, float baseCooldown)
         {
             var bonus = BonusInfo.towerCounterCooldownPlus.GetValueOrDefault(counterType, 0f);
-            return Mathf.Max((baseCooldown - bonus) * (1f - BasePLayerCooldownWithBonus), 0f);
+            var bonusMultiplier = BonusInfo.towerCounterCooldownMultiplier.GetValueOrDefault(counterType, 0f);
+            return Mathf.Max((baseCooldown - bonus) * (1f - bonusMultiplier) * (1f - BasePLayerCooldownWithBonus), 0f);
         }
 
         public static float GetTowerCounterRange(NodeTowerCounter.CounterType counterType, float baseRange)
