@@ -313,7 +313,10 @@ namespace InGame
             {
                 cdCounterCharge -= Time.deltaTime;
                 if (cdCounterCharge <= 0)
+                {
                     CanShootCharge = true;
+                    CombatActions.OnChargeCooldownComplete?.Invoke();
+                }
             }
             else
             {

@@ -208,6 +208,19 @@ namespace Dark.Scripts.OutGame.Upgrade
             DoShow().OnComplete(() => onShow?.Invoke());
         }
 
+        public void ShowImmediately(Vector2 position, Vector2 padding, bool forceShow, Action onShow)
+        {
+            cacheHoverNodePosition.x = position.x;
+            cacheHoverNodePosition.y = position.y;
+            cacheHoverNodePadding.x = padding.x;
+            cacheHoverNodePadding.y = padding.y;
+            if (CanAutoShowHide == false && forceShow == false) return;
+            isVisible = true;
+            rectInfoFrame.localScale = Vector3.one;
+            rectInfoFrame.gameObject.SetActive(true);
+            onShow?.Invoke();
+        }
+
         public void Hide(bool forceHide)
         {
             if (CanAutoShowHide == false && forceHide == false) return;

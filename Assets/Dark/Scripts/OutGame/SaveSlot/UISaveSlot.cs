@@ -1,6 +1,7 @@
 using System;
 using Dark.Scripts.Common;
 using Dark.Scripts.Common.UIWarning;
+using Dark.Scripts.OutGame.Home;
 using Dark.Scripts.SceneNavigation;
 using Dark.Scripts.Utils;
 using DG.Tweening;
@@ -24,6 +25,7 @@ namespace Dark.Scripts.OutGame.SaveSlot
             {
                 btnBack.interactable = false;
                 DoClose(UIConst.BtnDelayOnClick);
+                UIHomeFullscreenStartButton.EnableFullscreenInput = true;
             });
         }
 

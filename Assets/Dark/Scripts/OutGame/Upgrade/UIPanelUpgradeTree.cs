@@ -23,6 +23,9 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private AudioSingleComponent sfxSpawnTree;
         [SerializeField] private AudioSingleComponent sfxSpawnNodes;
 
+        private UIUpgradeTree tree;
+        public UIUpgradeTree Tree => tree; 
+        
         private void OnEnable()
         {
             StopAllCoroutines();
@@ -47,7 +50,7 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         public void SpawnTree()
         {
-            var tree = Instantiate(UpgradeTreeManifest.GetTreePrefab((CharacterClass)PlayerDataManager.Instance.Data.characterClass), treeParent);
+            tree = Instantiate(UpgradeTreeManifest.GetTreePrefab((CharacterClass)PlayerDataManager.Instance.Data.characterClass), treeParent);
             tree.OnNodeUpgraded += (node) => scrollView.FocusTo((RectTransform)node.transform);
         }
     }

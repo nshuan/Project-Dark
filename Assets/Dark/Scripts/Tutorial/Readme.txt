@@ -1,0 +1,4 @@
+- Mỗi step sẽ tự xử lý logic tutorial riêng
+- Điều kiện để step hiện tutorial là điều kiện tạm thời, KHÔNG lưu lại data để check xem đã show hay chưa
+- Nghĩa là nếu không có điều kiện show ở level bao nhiêu thì level nào cũng có thể show
+- Để lưu lại trạng thais của tutorial (đã show đến step nào) thì xử lý trong UITutorial

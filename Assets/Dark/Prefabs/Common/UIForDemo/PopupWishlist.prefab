@@ -498,7 +498,7 @@ MonoBehaviour:
   m_PositionMode: 0
   m_AutoScaling: 0
   m_AutoScalingMode: 2
-  m_ResetScaleOnEnable: 1
+  m_ResetScaleOnEnable: 0
 --- !u!1 &2081727722520146025
 GameObject:
   m_ObjectHideFlags: 0
@@ -789,41 +789,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!1 &3783235140025941186
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6044759781581929173}
-  m_Layer: 5
-  m_Name: 'Index: 0'
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &6044759781581929173
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3783235140025941186}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1612446472248773701}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5937909664642335130
 GameObject:
   m_ObjectHideFlags: 0
@@ -836,6 +801,7 @@ GameObject:
   - component: {fileID: 1349679294328800438}
   - component: {fileID: 4694340645383308276}
   - component: {fileID: -2282543926887448717}
+  - component: {fileID: 2802498179561072544}
   m_Layer: 5
   m_Name: PopupWishlist
   m_TagString: Untagged
@@ -855,7 +821,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6044759781581929173}
   - {fileID: 4812175504094316033}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -914,6 +879,20 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &2802498179561072544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5937909664642335130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76a8a7bb04a4c0c8d206871420167f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiPopup: {fileID: 4812175504094316033}
+  groupPopup: {fileID: -2282543926887448717}
 --- !u!1 &6221138680254130350
 GameObject:
   m_ObjectHideFlags: 0
@@ -1001,7 +980,7 @@ GameObject:
   - component: {fileID: 3347689195225093907}
   - component: {fileID: 2978366488332788538}
   - component: {fileID: 143090432013345374}
-  - component: {fileID: 7060421085843521959}
+  - component: {fileID: 7152544821829556485}
   m_Layer: 5
   m_Name: btnWishlist
   m_TagString: Untagged
@@ -1086,7 +1065,7 @@ MonoBehaviour:
   hoverPointer: {fileID: 2392337894411068969}
   vfxHover: {fileID: 3928592101621112113}
   vfxSelect: {fileID: 8505720472594816866}
---- !u!114 &7060421085843521959
+--- !u!114 &7152544821829556485
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1095,7 +1074,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7117399790642202046}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c58ba58b69fe4aefb8afb91ccc5fae9d, type: 3}
+  m_Script: {fileID: 11500000, guid: 38af482ca50c4f79aa98fc532c19f177, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   hoverScale: 1.1

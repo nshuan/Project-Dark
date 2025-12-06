@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Coffee.UIExtensions;
 using Dark.Scripts.Audio;
+using Dark.Scripts.Utils;
 using DG.Tweening;
 using InGame;
 using InGame.Upgrade;
@@ -254,6 +255,13 @@ namespace Dark.Scripts.OutGame.Upgrade
                     config.ActivateLevel(UpgradeManager.Instance.GetData(config.nodeId).level, ref UIUpgradeNodeInfoPreview.Instance.bonusInfo);
                     UIUpgradeNodeInfoPreview.Instance.Setup(config, true);
                     UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true, () => hoverField.interactable = true);
+                    UIUpgradeNodeInfoPreview.Instance.CanAutoShowHide = false;
+                    this.DelayCall(0.5f, () =>
+                    {
+                        UIUpgradeNodeInfoPreview.Instance.ShowImmediately(transform.position,
+                            new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true,
+                            () => UIUpgradeNodeInfoPreview.Instance.CanAutoShowHide = true);
+                    });
                     treeRef.LastUpgradeNodeId = config.nodeId;
                     treeRef.InvokeNodeUpgraded(this);
                     treeRef.UpgradeAllNodesWithId(config.nodeId);
