@@ -1,10 +1,9 @@
 using System;
-using Dark.Scripts.Audio;
+using Dark.Scripts.AudioV2;
 using Dark.Scripts.CoreUI;
 using Dark.Scripts.SceneNavigation;
 using Data;
 using DG.Tweening;
-using Economic;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -16,7 +15,7 @@ namespace InGame.UI
     {
         [SerializeField] private UIPopup ui;
         [SerializeField] private float delayShowPopup = 2f;
-        [SerializeField] private AudioComponent sfxWin;
+        [SerializeField] private AudioPlayComponentV2 sfxWin;
         
         [Space]
         [SerializeField] private Button btnBackToTree;
