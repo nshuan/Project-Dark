@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Coffee.UIExtensions;
 using Dark.Scripts.Audio;
+using Dark.Scripts.AudioV2;
 using Dark.Scripts.SceneNavigation;
 using Dark.Scripts.Utils;
 using Data;
@@ -20,8 +21,8 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private CanvasGroup groupUIHiddenOnSpawn;
         [SerializeField] private ZoomInOut treeZoom;
         [SerializeField] private float delaShowUI;
-        [SerializeField] private AudioSingleComponent sfxSpawnTree;
-        [SerializeField] private AudioSingleComponent sfxSpawnNodes;
+        [SerializeField] private string cueSpawnTree;
+        [SerializeField] private string cueSpawnNodes; 
 
         private UIUpgradeTree tree;
         public UIUpgradeTree Tree => tree; 
@@ -38,9 +39,9 @@ namespace Dark.Scripts.OutGame.Upgrade
             groupUIHiddenOnSpawn.alpha = 0f;
             vfxSpawn.gameObject.SetActive(false);
             treeZoom.SetZoom(1f);
-            sfxSpawnTree.Play(Loading.Instance.CurrentTotalDurationAfterSceneLoaded);
             yield return new WaitForSeconds(delaySpawn);
-            sfxSpawnNodes.Play();
+            AudioManagerV2.Instance.PlayOutGame(cueSpawnTree);
+            AudioManagerV2.Instance.PlayOutGame(cueSpawnNodes);
             treeZoom.ZoomTo(0.7f, ((RectTransform)transform).position, 0.5f, 0.3f);
             if (!GameConst.HideLaserWaveOnSpawnTree)
                 vfxSpawn.gameObject.SetActive(true);

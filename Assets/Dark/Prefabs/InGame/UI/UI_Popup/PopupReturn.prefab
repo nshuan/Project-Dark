@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1796165166330385314}
   - component: {fileID: 6433684576686236353}
   - component: {fileID: 1258626100874456661}
+  - component: {fileID: 5330694811843753169}
   m_Layer: 5
   m_Name: btnBackToHome
   m_TagString: Untagged
@@ -137,6 +138,20 @@ MonoBehaviour:
   hoverScale: 1.05
   pressScale: 1
   duration: 0.2
+--- !u!114 &5330694811843753169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 171857454947632613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7bed68000214097b8a49d055b1437b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cueKey: click_strong
+  channel: 3
 --- !u!1 &2014639707747419303
 GameObject:
   m_ObjectHideFlags: 0
@@ -796,8 +811,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ui: {fileID: 7256447572933235228}
+  delayShowPopup: 2
+  sfxWin: {fileID: 0}
   btnBackToTree: {fileID: 6433684576686236353}
   btnNextLevel: {fileID: 2042573081520487984}
+  imgTitle: {fileID: 0}
+  imgTitleBg: {fileID: 0}
+  txtDescription: {fileID: 0}
+  txtTitleResourceCollected: {fileID: 0}
+  groupResourceCollected: {fileID: 0}
+  groupTimePlayed: {fileID: 0}
+  rectLine: {fileID: 0}
+  groupBtnBackToTree: {fileID: 0}
+  groupBtnReplay: {fileID: 0}
+  durationTitle: 2
+  delayBeforeResourceGroup: 1
+  durationItemResourceGroup: 0.3
 --- !u!1 &7803900705109906919
 GameObject:
   m_ObjectHideFlags: 0
@@ -811,6 +840,7 @@ GameObject:
   - component: {fileID: 7661953701962919491}
   - component: {fileID: 2042573081520487984}
   - component: {fileID: 5772234332454861997}
+  - component: {fileID: 1392180192277574814}
   m_Layer: 5
   m_Name: btnNextLevel
   m_TagString: Untagged
@@ -935,6 +965,20 @@ MonoBehaviour:
   hoverScale: 1.05
   pressScale: 1
   duration: 0.2
+--- !u!114 &1392180192277574814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7803900705109906919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7bed68000214097b8a49d055b1437b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cueKey: click_strong
+  channel: 3
 --- !u!1 &7899176054842830502
 GameObject:
   m_ObjectHideFlags: 0
