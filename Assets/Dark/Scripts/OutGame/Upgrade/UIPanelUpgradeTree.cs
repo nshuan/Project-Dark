@@ -52,7 +52,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         public void SpawnTree()
         {
             tree = Instantiate(UpgradeTreeManifest.GetTreePrefab((CharacterClass)PlayerDataManager.Instance.Data.characterClass), treeParent);
-            tree.OnNodeUpgraded += (node) => scrollView.FocusTo((RectTransform)node.transform);
+            // tree.OnNodeUpgraded += (node) => scrollView.FocusTo((RectTransform)node.transform);
         }
     }
 }
