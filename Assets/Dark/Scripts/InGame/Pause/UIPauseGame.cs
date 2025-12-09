@@ -1,4 +1,5 @@
 using System;
+using Dark.Scripts.Settings;
 using Dark.Scripts.Utils;
 using UnityEngine;
 
@@ -32,7 +33,7 @@ namespace InGame.Pause
                 }
                 else
                 {
-                    if (Input.GetKey(KeyCode.Escape))
+                    if (Input.GetKey(GameSettings.KeyPause))
                     {
                         if (PauseGame.Instance.IsPaused) PauseGame.Instance.Resume();
                         else PauseGame.Instance.Pause();

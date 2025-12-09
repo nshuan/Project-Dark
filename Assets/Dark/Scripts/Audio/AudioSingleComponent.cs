@@ -12,6 +12,7 @@ namespace Dark.Scripts.Audio
         [SerializeField] private int loop = 1;
         [SerializeField] private bool playOnStart = true;
         [SerializeField] private float delay;
+        [SerializeField] private AudioPlayType audioType;
         
         [Space]
         [Header("Fade in")]
@@ -27,6 +28,7 @@ namespace Dark.Scripts.Audio
         private Coroutine coroutinePlay;
         private float volume;
         private int tempLoop;
+        private int settingVolumeEnabled = 1;
 
         private void Awake()
         {
@@ -39,8 +41,18 @@ namespace Dark.Scripts.Audio
 
         private void Start()
         {
+            if (audioType == AudioPlayType.Sound) settingVolumeEnabled = Settings.GameSettings.EnableSound ? 1 : 0;
+            else settingVolumeEnabled = Settings.GameSettings.EnableMusic ? 1 : 0;
+            
             if (playOnStart)
                 Play();
+            
+            Settings.GameSettings.OnSettingUpdated += OnSettingsUpdated;
+        }
+
+        private void OnDestroy()
+        {
+            Settings.GameSettings.OnSettingUpdated -= OnSettingsUpdated;
         }
 
         public void Play(float delay = -1f)
@@ -61,10 +73,25 @@ namespace Dark.Scripts.Audio
             {
                 audio.volume = 0f;
                 audio.Play();
-                yield return audio.DOFade(volume, fadeInDuration).SetEase(fadeInEasing).SetUpdate(true).WaitForCompletion();
+                yield return audio.DOFade(volume * settingVolumeEnabled, fadeInDuration).SetEase(fadeInEasing).SetUpdate(true).WaitForCompletion();
                 yield return new WaitForSeconds(audio.clip.length - fadeInDuration - fadeOutDuration);
                 yield return audio.DOFade(0f, fadeOutDuration).SetEase(fadeOutEasing).SetUpdate(true).WaitForCompletion();
                 tempLoop -= 1;
+            }
+        }
+
+        private void OnSettingsUpdated()
+        {
+            switch (audioType)
+            {
+                case AudioPlayType.Sound:
+                    settingVolumeEnabled = Settings.GameSettings.EnableSound ? 1 : 0;
+                    audio.volume = volume * settingVolumeEnabled;
+                    break;
+                case AudioPlayType.Music:
+                    settingVolumeEnabled = Settings.GameSettings.EnableMusic ? 1 : 0;
+                    audio.volume = volume * settingVolumeEnabled;
+                    break;
             }
         }
     }
