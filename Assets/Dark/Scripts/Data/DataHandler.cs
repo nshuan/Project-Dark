@@ -1,5 +1,6 @@
 using System.IO;
 using UnityEngine;
+using Newtonsoft.Json;
 
 namespace Data
 {
@@ -24,7 +25,7 @@ namespace Data
         public static void Save<T>(string key, T data)
         {
             string filePath = DataPath + "/" + key + ".json";
-            var jsonData = JsonUtility.ToJson(data);
+            var jsonData = JsonConvert.SerializeObject(data);
             File.WriteAllText(filePath, jsonData);
         }
 
@@ -34,7 +35,7 @@ namespace Data
             if (File.Exists(filePath))
             {
                 string jsonData = File.ReadAllText(filePath);
-                return JsonUtility.FromJson<T>(jsonData);
+                return JsonConvert.DeserializeObject<T>(jsonData);
             }
             return defaultValue;
         }

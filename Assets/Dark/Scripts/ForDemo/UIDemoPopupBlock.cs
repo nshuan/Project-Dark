@@ -1,6 +1,7 @@
 using System;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Dark.Scripts.ForDemo
 {
@@ -8,7 +9,7 @@ namespace Dark.Scripts.ForDemo
     {
         [SerializeField] private RectTransform uiPopup;
         [SerializeField] private CanvasGroup groupPopup;
- 
+
         private void OnEnable()
         {
             UpdateUI();

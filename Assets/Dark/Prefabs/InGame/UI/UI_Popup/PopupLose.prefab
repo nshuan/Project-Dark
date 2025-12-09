@@ -1108,6 +1108,7 @@ GameObject:
   - component: {fileID: 9197805344346604662}
   - component: {fileID: 7951439453588950331}
   - component: {fileID: 2980420399888446442}
+  - component: {fileID: 1949969286772179969}
   m_Layer: 5
   m_Name: btnBackToHome
   m_TagString: Untagged
@@ -1244,6 +1245,20 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1949969286772179969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2231511320426924616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7bed68000214097b8a49d055b1437b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cueKey: click_strong
+  channel: 3
 --- !u!1 &2267110496974050907
 GameObject:
   m_ObjectHideFlags: 0
@@ -2023,6 +2038,7 @@ GameObject:
   - component: {fileID: 396683488046443712}
   - component: {fileID: 8180075124887807664}
   - component: {fileID: 790456200749069726}
+  - component: {fileID: 322055320167411880}
   m_Layer: 5
   m_Name: btnReplay
   m_TagString: Untagged
@@ -2159,6 +2175,20 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &322055320167411880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3615428288358290145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7bed68000214097b8a49d055b1437b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cueKey: click_strong
+  channel: 3
 --- !u!1 &3798752476614935798
 GameObject:
   m_ObjectHideFlags: 0
@@ -2400,7 +2430,7 @@ MonoBehaviour:
   ui: {fileID: 3712872850445270429}
   popupLoseCanvasGroup: {fileID: 7865435199738711122}
   delayShowPopup: 4.75
-  sfxLose: {fileID: 288485008710429596}
+  sfxLose: {fileID: 1875269623321644740}
   btnBackToTree: {fileID: 9197805344346604662}
   btnReplay: {fileID: 396683488046443712}
   imgSymbol: {fileID: 1808165903114077339}
@@ -4129,7 +4159,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4651759469969911380}
-  - component: {fileID: 288485008710429596}
+  - component: {fileID: 1875269623321644740}
   m_Layer: 0
   m_Name: SfxLose
   m_TagString: Untagged
@@ -4152,7 +4182,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4288406641200345285}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &288485008710429596
+--- !u!114 &1875269623321644740
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4161,12 +4191,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 7745465706258484836}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd5da469a3f44fe9fc2c158040f77d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sourceIndex: 16
-  playOnEnable: 0
-  delay: 0
+  cueKey: ingame_lose
+  channel: 3
 --- !u!1 &7921966970249565169
 GameObject:
   m_ObjectHideFlags: 0

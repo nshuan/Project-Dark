@@ -1,0 +1,223 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5786697079334774885
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8839059311664363939}
+  m_Layer: 0
+  m_Name: AudioV2_Pools
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8839059311664363939
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5786697079334774885}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3385196017061023560}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5828832237223945358
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3385196017061023560}
+  - component: {fileID: 8972112395963405297}
+  m_Layer: 0
+  m_Name: AudioManagerV2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3385196017061023560
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5828832237223945358}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8839059311664363939}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8972112395963405297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5828832237223945358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b180a73478d70646afd6a822f8ce101, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cues:
+  - key: bgm_home_intro
+    channel: 0
+    clip: {fileID: 8300000, guid: e408113ae62dc974b8cbce2b5a17eada, type: 3}
+    volume: 0.2
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 1, y: 1}
+    preloadPool: 1
+    maxPool: 1
+    stealWhenExhausted: 0
+  - key: bgm_home_loop
+    channel: 0
+    clip: {fileID: 8300000, guid: bcc6c49491c993648942dfeadffe9be8, type: 3}
+    volume: 0.2
+    loop: 1
+    spatialBlend: 0.5
+    pitchRange: {x: 1, y: 1}
+    preloadPool: 1
+    maxPool: 1
+    stealWhenExhausted: 0
+  - key: bgm_ingame_intro
+    channel: 0
+    clip: {fileID: 8300000, guid: 5593075eee29b2e41bb7be709f52fa92, type: 3}
+    volume: 0.15
+    loop: 0
+    spatialBlend: 0
+    pitchRange: {x: 1, y: 1}
+    preloadPool: 1
+    maxPool: 1
+    stealWhenExhausted: 0
+  - key: bgm_ingame_loop
+    channel: 0
+    clip: {fileID: 8300000, guid: ce69bccea0129bd4887104b1c05a705b, type: 3}
+    volume: 0.15
+    loop: 1
+    spatialBlend: 0
+    pitchRange: {x: 1, y: 1}
+    preloadPool: 1
+    maxPool: 1
+    stealWhenExhausted: 0
+  - key: click_strong
+    channel: 3
+    clip: {fileID: 8300000, guid: 1e2760cfdd5ed164aa54d0fd249ee9fd, type: 3}
+    volume: 1
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 1, y: 2}
+    preloadPool: 2
+    maxPool: 4
+    stealWhenExhausted: 0
+  - key: click_weak
+    channel: 3
+    clip: {fileID: 8300000, guid: 1e2760cfdd5ed164aa54d0fd249ee9fd, type: 3}
+    volume: 0.8
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 1, y: 1}
+    preloadPool: 2
+    maxPool: 4
+    stealWhenExhausted: 0
+  - key: click_upgrade
+    channel: 3
+    clip: {fileID: 8300000, guid: 4483de7e6f1b3994fb174635d7af4d9c, type: 3}
+    volume: 1
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 0.5, y: 1.5}
+    preloadPool: 1
+    maxPool: 2
+    stealWhenExhausted: 1
+  - key: click_select_class
+    channel: 3
+    clip: {fileID: 8300000, guid: b5a1c9837ffef974f8596c8cfe896426, type: 3}
+    volume: 1
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 1, y: 1}
+    preloadPool: 1
+    maxPool: 2
+    stealWhenExhausted: 0
+  - key: click_upgrade_fail
+    channel: 3
+    clip: {fileID: 8300000, guid: a6fc0887677c04347b99cb53b250b958, type: 3}
+    volume: 0.5
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 1, y: 2}
+    preloadPool: 2
+    maxPool: 4
+    stealWhenExhausted: 1
+  - key: hover_upgrade
+    channel: 3
+    clip: {fileID: 8300000, guid: 4e4e9a52b5f794e4f9c4f5b1abea8be0, type: 3}
+    volume: 0.5
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 1, y: 1.5}
+    preloadPool: 2
+    maxPool: 4
+    stealWhenExhausted: 1
+  - key: upgrade_spawn_tree
+    channel: 2
+    clip: {fileID: 8300000, guid: 37ac7f46962c3eb42bfa720610de4fa5, type: 3}
+    volume: 1
+    loop: 0
+    spatialBlend: 0
+    pitchRange: {x: 1, y: 1}
+    preloadPool: 1
+    maxPool: 2
+    stealWhenExhausted: 0
+  - key: upgrade_spawn_nodes
+    channel: 2
+    clip: {fileID: 8300000, guid: 8b2dcb778178d5c4988948b33d0df95f, type: 3}
+    volume: 1
+    loop: 0
+    spatialBlend: 0
+    pitchRange: {x: 1, y: 1}
+    preloadPool: 1
+    maxPool: 2
+    stealWhenExhausted: 0
+  - key: ingame_win
+    channel: 3
+    clip: {fileID: 8300000, guid: b135ebc2a39141d4ab9f5a51366b9751, type: 3}
+    volume: 1
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 1, y: 1}
+    preloadPool: 1
+    maxPool: 2
+    stealWhenExhausted: 0
+  - key: ingame_lose
+    channel: 3
+    clip: {fileID: 8300000, guid: 3a171b3092006c74cb616673b7ccf074, type: 3}
+    volume: 1
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 1, y: 1}
+    preloadPool: 1
+    maxPool: 2
+    stealWhenExhausted: 0
+  poolRoot: {fileID: 8839059311664363939}
+  autoPlaySceneMusic: 1
+  sceneMusic: []
+  defaultMusicFade: 1

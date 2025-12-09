@@ -18,7 +18,7 @@ namespace InGame.UI
 
         private void Start()
         {
-            PauseGame.Instance.onPause += OnPauseGame;
+            // PauseGame.Instance.onPause += OnPauseGame;
             LevelManager.Instance.OnWin += OnLevelCompleted;
             LevelManager.Instance.OnLose += OnLevelCompleted;
         }
@@ -38,7 +38,7 @@ namespace InGame.UI
 
         private void OnLevelCompleted()
         {
-            PauseGame.Instance.onPause -= OnPauseGame;
+            // PauseGame.Instance.onPause -= OnPauseGame;
         }
 
         private void UpdateUI()
