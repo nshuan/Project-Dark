@@ -153,7 +153,7 @@ namespace InGame
             WealthManager.Instance.Save();
             PlayerDataManager.Instance.CompleteLevel();
             
-            DebugUtility.LogError($"Level {Level.level} is ended: WIN");
+            DebugUtility.LogError($"Level {Level.level + 1} is ended: WIN");
             IsEndLevel = true;
             OnWin?.Invoke();
             ClearAction();
@@ -194,6 +194,7 @@ namespace InGame
 
         // Start from 0
         private int currentWaveIndex;
+        public int CurrentWaveIndex => currentWaveIndex;
         private Coroutine waveCoroutine;
         private IEnumerator IEWave(WaveInfo[] waves)
         {

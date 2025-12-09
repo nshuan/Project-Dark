@@ -185,7 +185,10 @@ namespace InGame
                 {
                     cdCounter -= Time.deltaTime;
                     if (cdCounter <= 0)
+                    {
                         CanMove = true;
+                        CombatActions.OnMoveCooldownComplete?.Invoke();
+                    }
                 }
             }
         }

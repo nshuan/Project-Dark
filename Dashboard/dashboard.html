@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Game Logs Dashboard</title>
+<style>
+body { font-family: Arial; margin: 20px; }
+table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+th, td { padding: 8px; border: 1px solid #ccc; }
+tr:nth-child(even) { background: #f2f2f2; }
+input { padding: 5px; width: 200px; margin-right: 10px; }
+</style>
+</head>
+<body>
+
+<h2>Game Logs Dashboard</h2>
+
+<input id="filterType" placeholder="Filter by type...">
+<input id="filterDevice" placeholder="Filter by device...">
+<button onclick="reload()">Reload</button>
+
+<table id="logs">
+<thead>
+<tr>
+  <th>Time</th>
+  <th>Type</th>
+  <th>Message</th>
+  <th>Device</th>
+  <th>Version</th>
+  <th>Platform</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+
+<script>
+const url = "https://lwgbiectkfewvwsmkskw.supabase.co/rest/v1/game_logs?select=*";
+const apikey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx3Z2JpZWN0a2Zld3Z3c21rc2t3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ3Mjk3ODAsImV4cCI6MjA4MDMwNTc4MH0._f6PEOt7KNCg33Gy3TBTT03pEr5K_C2-vCw1lz3zeXI";
+
+async function reload() {
+  let fullUrl = url;
+
+  let type = document.getElementById("filterType").value;
+  let device = document.getElementById("filterDevice").value;
+
+  if (type.length > 0) fullUrl += `&event_type=eq.${type}`;
+  if (device.length > 0) fullUrl += `&device_id=eq.${device}`;
+
+  const res = await fetch(fullUrl, {
+    headers: { apikey }
+  });
+  const data = await res.json();
+
+  let tbody = document.querySelector("#logs tbody");
+  tbody.innerHTML = "";
+
+  data.forEach(row => {
+    let tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${row.timestamp}</td>
+      <td>${row.event_type}</td>
+      <td>${row.message}</td>
+      <td>${row.device_id}</td>
+      <td>${row.build_version}</td>
+      <td>${row.platform}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+reload();
+</script>
+
+</body>
+</html>

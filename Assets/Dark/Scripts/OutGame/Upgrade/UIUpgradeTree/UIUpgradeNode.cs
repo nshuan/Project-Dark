@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Coffee.UIExtensions;
 using Dark.Scripts.Audio;
+using Dark.Scripts.AudioV2;
+using Dark.Scripts.Utils;
 using DG.Tweening;
 using InGame;
 using InGame.Upgrade;
@@ -39,9 +41,9 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] protected UIParticle vfxUnlock;
         [SerializeField] protected UIParticle vfxActivate;
         [SerializeField] protected UIParticle vfxActivateMax;
-        [SerializeField] protected AudioComponent sfxUnlockSuccess;
-        [SerializeField] protected AudioComponent sfxUnlockFailure;
-        [SerializeField] protected AudioComponent sfxHover;
+        [SerializeField] protected AudioPlayComponentV2 sfxUnlockSuccess;
+        [SerializeField] protected AudioPlayComponentV2 sfxUnlockFailure;
+        [SerializeField] protected AudioPlayComponentV2 sfxHover;
         [SerializeField] protected TextMeshProUGUI txtNodeLevel;
         [SerializeField] protected GameObject txtNodeMaxLevel;
         public float lineAnchorOffsetRadius;
@@ -252,8 +254,22 @@ namespace Dark.Scripts.OutGame.Upgrade
                 if (success)
                 {
                     config.ActivateLevel(UpgradeManager.Instance.GetData(config.nodeId).level, ref UIUpgradeNodeInfoPreview.Instance.bonusInfo);
-                    UIUpgradeNodeInfoPreview.Instance.Setup(config, true);
-                    UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true, () => hoverField.interactable = true);
+                    // UIUpgradeNodeInfoPreview.Instance.Setup(config, true);
+                    // UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true, () => hoverField.interactable = true);
+                    UIUpgradeNodeInfoPreview.Instance.Hide(true);
+                    UIUpgradeNodeInfoPreview.Instance.CanAutoShowHide = false;
+                    this.DelayCall(0.5f, () =>
+                    {
+                        UIUpgradeNodeInfoPreview.Instance.Setup(config, true);
+                        UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true, () =>
+                        {
+                            hoverField.interactable = true;
+                            UIUpgradeNodeInfoPreview.Instance.CanAutoShowHide = true;
+                        });
+                        // UIUpgradeNodeInfoPreview.Instance.ShowImmediately(transform.position,
+                        //     new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true,
+                        //     () => UIUpgradeNodeInfoPreview.Instance.CanAutoShowHide = true);
+                    });
                     treeRef.LastUpgradeNodeId = config.nodeId;
                     treeRef.InvokeNodeUpgraded(this);
                     treeRef.UpgradeAllNodesWithId(config.nodeId);

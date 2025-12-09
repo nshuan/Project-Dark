@@ -1,11 +1,9 @@
 using System;
-using Dark.Scripts.Audio;
+using Dark.Scripts.AudioV2;
 using Dark.Scripts.CoreUI;
 using Dark.Scripts.SceneNavigation;
-using Dark.Scripts.Utils;
 using Data;
 using DG.Tweening;
-using InGame.UI.EndingLevel;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -18,7 +16,7 @@ namespace InGame.UI
         [SerializeField] private UIPopup ui;
         [SerializeField] private CanvasGroup popupLoseCanvasGroup;
         [SerializeField] private float delayShowPopup = 5f; // Do có vfx endgame khi trụ bị phá nên cần delay xong vfx mới show popup
-        [SerializeField] private AudioComponent sfxLose;
+        [SerializeField] private AudioPlayComponentV2 sfxLose;
         
         [Space]
         [SerializeField] private Button btnBackToTree;

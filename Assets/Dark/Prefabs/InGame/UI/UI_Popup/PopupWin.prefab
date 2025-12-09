@@ -797,6 +797,7 @@ GameObject:
   - component: {fileID: 4806467450004079409}
   - component: {fileID: 3664497357396015275}
   - component: {fileID: 2649926800036385995}
+  - component: {fileID: 1870432643041623833}
   m_Layer: 5
   m_Name: btnBackToHome
   m_TagString: Untagged
@@ -933,6 +934,20 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1870432643041623833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3185956260212687611}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7bed68000214097b8a49d055b1437b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cueKey: click_strong
+  channel: 3
 --- !u!1 &3980682525397109894
 GameObject:
   m_ObjectHideFlags: 0
@@ -1076,7 +1091,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8855906530577722681}
-  - component: {fileID: 7851823933911313822}
+  - component: {fileID: 7411492883587100919}
   m_Layer: 5
   m_Name: SfxWin
   m_TagString: Untagged
@@ -1103,7 +1118,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &7851823933911313822
+--- !u!114 &7411492883587100919
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1112,12 +1127,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4368176016888338805}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd5da469a3f44fe9fc2c158040f77d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sourceIndex: 15
-  playOnEnable: 0
-  delay: 0
+  cueKey: ingame_win
+  channel: 3
 --- !u!1 &7176807453301257574
 GameObject:
   m_ObjectHideFlags: 0
@@ -1245,8 +1259,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ui: {fileID: 243568242340740697}
-  delayShowPopup: 3
-  sfxWin: {fileID: 7851823933911313822}
+  delayShowPopup: 6
+  sfxWin: {fileID: 7411492883587100919}
   btnBackToTree: {fileID: 4806467450004079409}
   btnNextLevel: {fileID: 5436280967308278267}
   imgTitle: {fileID: 654819072805573452}
@@ -1469,6 +1483,7 @@ GameObject:
   - component: {fileID: 5436280967308278267}
   - component: {fileID: 7564136313942004148}
   - component: {fileID: 3057232664058494343}
+  - component: {fileID: 6573957733060070981}
   m_Layer: 5
   m_Name: btnNextLevel
   m_TagString: Untagged
@@ -1605,6 +1620,20 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &6573957733060070981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8275211345449457320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7bed68000214097b8a49d055b1437b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cueKey: click_strong
+  channel: 3
 --- !u!1 &8418152118902609302
 GameObject:
   m_ObjectHideFlags: 0
