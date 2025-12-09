@@ -48,6 +48,7 @@ namespace Dark.Scripts.Analytics
         // -------- PUBLIC API --------
         public static void Log(string eventType, string message)
         {
+            if (!GameConst.EnableLog) return;
             if (Instance == null) return;
 
             var entry = new LogEntry(
