@@ -202,8 +202,16 @@ namespace Dark.Scripts.AudioV2
             if (musicRoutine != null)
                 StopCoroutine(musicRoutine);
 
-            musicRoutine = StartCoroutine(FadeOutActiveMusic(fadeDuration));
+            musicRoutine = StartCoroutine(FadeOutActiveMusic(0f, fadeDuration));
             currentMusicKey = null;
+        }
+
+        public void FadeVolumeMusic(float volume, float fadeDuration = 0.25f)
+        {
+            if (musicRoutine != null)
+                StopCoroutine(musicRoutine);
+            
+            musicRoutine = StartCoroutine(FadeActiveMusic(volume, fadeDuration));
         }
 
         public void SetChannelVolume(AudioChannel channel, float volume)
@@ -315,7 +323,7 @@ namespace Dark.Scripts.AudioV2
             musicRoutine = null;
         }
 
-        private IEnumerator FadeOutActiveMusic(float fadeDuration)
+        private IEnumerator FadeOutActiveMusic(float fadeTo, float fadeDuration)
         {
             fadeDuration = Mathf.Max(0.01f, fadeDuration);
 
@@ -326,13 +334,32 @@ namespace Dark.Scripts.AudioV2
             while (elapsed < fadeDuration)
             {
                 var t = elapsed / fadeDuration;
-                active.volume = Mathf.Lerp(startVolume, 0f, t);
+                active.volume = Mathf.Lerp(startVolume, fadeTo, t);
                 elapsed += Time.unscaledDeltaTime;
                 yield return null;
             }
 
             active.Stop();
             active.clip = null;
+            musicRoutine = null;
+        }
+        
+        private IEnumerator FadeActiveMusic(float fadeTo, float fadeDuration)
+        {
+            fadeDuration = Mathf.Max(0.01f, fadeDuration);
+
+            var active = ActiveMusicSource();
+            var startVolume = active.volume;
+            var elapsed = 0f;
+
+            while (elapsed < fadeDuration)
+            {
+                var t = elapsed / fadeDuration;
+                active.volume = Mathf.Lerp(startVolume, fadeTo, t);
+                elapsed += Time.unscaledDeltaTime;
+                yield return null;
+            }
+            
             musicRoutine = null;
         }
         

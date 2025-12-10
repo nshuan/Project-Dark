@@ -51,7 +51,7 @@ namespace InGame.UI
             delayShowPopup = 0f;
             endingLevel = TowerDestroyedAnim.Instance;
             if (endingLevel != null) delayShowPopup = endingLevel.Play();
-            
+            AudioManagerV2.Instance.FadeVolumeMusic(0.08f, 2f);
             ui.DoOpenFadeIn().SetDelay(delayShowPopup).OnComplete(() =>
             {
                 onShowPopup?.Invoke();

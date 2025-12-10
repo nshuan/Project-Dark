@@ -38,6 +38,7 @@ namespace InGame.UI
         private void OnWin()
         {
             UpdateUI();
+            AudioManagerV2.Instance.FadeVolumeMusic(0.08f, 2f);
             ui.DoOpenFadeIn(delayShowPopup).OnComplete(() =>
             {
                 onShowPopup?.Invoke();
