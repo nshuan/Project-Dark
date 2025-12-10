@@ -228,6 +228,14 @@ namespace Dark.Scripts.OutGame.Upgrade
             DoHide();
         }
 
+        public void HideImmediately(bool forceHide)
+        {
+            if (CanAutoShowHide == false && forceHide == false) return;
+            isVisible = false;
+            rectInfoFrame.localScale = Vector3.zero;
+            rectInfoFrame.gameObject.SetActive(false);
+        }
+
         public void Shake()
         {
             DOTween.Kill(rectInfoFrame);

@@ -1,4 +1,5 @@
 using System;
+using Dark.Scripts.Analytics;
 using Dark.Scripts.AudioV2;
 using Dark.Scripts.CoreUI;
 using Dark.Scripts.SceneNavigation;
@@ -63,6 +64,8 @@ namespace InGame.UI
                 {
                     LevelManager.Instance.LoadLevel(PlayerDataManager.Instance.Data.level + 1);
                 });
+                
+                LogManager.Log(LogConst.EventLogStartLevel, $"level_{PlayerDataManager.Instance.Data.level + 1}", "from popup win");
             });
         }
         
