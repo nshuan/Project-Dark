@@ -1,5 +1,7 @@
 using System;
 using Core;
+using Dark.Scripts.Analytics;
+using Dark.Scripts.OutGame.SaveSlot;
 using Dark.Scripts.SceneNavigation;
 using Dark.Scripts.Utils;
 using Data;
@@ -55,6 +57,11 @@ namespace Dark.Scripts.OutGame.Upgrade
                 data.initialized = true;
                 
                 PlayerDataManager.Instance.Save(data);
+                
+                var totalDataCreated = SaveSlotManager.Instance.GetTotalDataCreated();
+                totalDataCreated += 1;
+                SaveSlotManager.Instance.SaveTotalDataCreated(totalDataCreated);
+                LogManager.Log(LogConst.EventLogTotalDataSlotsCreated, totalDataCreated.ToString());
             }
             
             // // Load Upgrade tree
@@ -68,6 +75,8 @@ namespace Dark.Scripts.OutGame.Upgrade
 #endif
             this.DelayCall(0.5f, () =>
             {
+                LogManager.Log(LogConst.EventLogStartLevel, $"level_{PlayerDataManager.Instance.Data.level + 1}", "from class select");
+                
                 Loading.Instance.LoadScene(SceneConstants.SceneInGame, () =>
                 {
                     LevelManager.Instance.LoadLevel(PlayerDataManager.Instance.Data.level + 1);
