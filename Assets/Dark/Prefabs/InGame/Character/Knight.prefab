@@ -327,6 +327,52 @@ Transform:
   - {fileID: 4361236499155451569}
   m_Father: {fileID: 5030302812807991888}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4805932837724671349
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3990357130958821457}
+  - component: {fileID: 7425517794924517862}
+  m_Layer: 0
+  m_Name: SfxShoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3990357130958821457
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4805932837724671349}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8748002566143027518}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7425517794924517862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4805932837724671349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fd5da469a3f44fe9fc2c158040f77d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cueKey: ingame_shoot
+  channel: 1
 --- !u!1 &5024185902455934170
 GameObject:
   m_ObjectHideFlags: 0
@@ -336,7 +382,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4024820797592249520}
-  - component: {fileID: 7769734864946281101}
+  - component: {fileID: 2198847625681820384}
   m_Layer: 0
   m_Name: Sfx
   m_TagString: Untagged
@@ -359,7 +405,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8145007962343359822}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7769734864946281101
+--- !u!114 &2198847625681820384
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -368,12 +414,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 5024185902455934170}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd5da469a3f44fe9fc2c158040f77d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sourceIndex: 5
-  playOnEnable: 0
-  delay: 0
+  cueKey: ingame_flash
+  channel: 1
 --- !u!1 &5062660904737895108
 GameObject:
   m_ObjectHideFlags: 0
@@ -383,7 +428,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2944879331256660662}
-  - component: {fileID: 8799550207561448223}
+  - component: {fileID: 7113975513821960368}
   m_Layer: 0
   m_Name: Sfx
   m_TagString: Untagged
@@ -406,7 +451,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3583126784990348408}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8799550207561448223
+--- !u!114 &7113975513821960368
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -415,12 +460,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 5062660904737895108}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd5da469a3f44fe9fc2c158040f77d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sourceIndex: 4
-  playOnEnable: 0
-  delay: 0
+  cueKey: ingame_dash
+  channel: 1
 --- !u!1 &5172817909561374074
 GameObject:
   m_ObjectHideFlags: 0
@@ -473,7 +517,7 @@ MonoBehaviour:
   vfxDash: {fileID: 6871637279354987061}
   vfxDashEnd: {fileID: 8367432281041672097}
   vfxDashStart: {fileID: 3424987337302415221}
-  sfxDashStart: {fileID: 8799550207561448223}
+  sfxDashStart: {fileID: 7113975513821960368}
 --- !u!1 &5187033588023561501
 GameObject:
   m_ObjectHideFlags: 0
@@ -1720,6 +1764,7 @@ Transform:
   - {fileID: 4970255151918616057}
   - {fileID: 2373403900721381165}
   - {fileID: 3763136088036720457}
+  - {fileID: 3990357130958821457}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3085034273742998862
@@ -1739,6 +1784,7 @@ MonoBehaviour:
   dashEffect: {fileID: 3429588698789199020}
   flashEffect: {fileID: 4018836128705738750}
   teleEffect: {fileID: 4743792241669313904}
+  sfxAttack: {fileID: 7425517794924517862}
   weapon: {fileID: 911039652012823249}
   offset: {x: 0, y: 1.46}
   defaultSortingLayerName: Entity
@@ -1753,7 +1799,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4361236499155451569}
-  - component: {fileID: 3987501735696127702}
+  - component: {fileID: 9101247309055818399}
   m_Layer: 0
   m_Name: Sfx
   m_TagString: Untagged
@@ -1776,7 +1822,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 718817775484275503}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3987501735696127702
+--- !u!114 &9101247309055818399
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1785,12 +1831,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6659225453108109463}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd5da469a3f44fe9fc2c158040f77d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sourceIndex: 11
-  playOnEnable: 0
-  delay: 0
+  cueKey: ingame_teleport
+  channel: 1
 --- !u!1 &6893469635362895251
 GameObject:
   m_ObjectHideFlags: 0
@@ -1916,7 +1961,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1311769478901262072}
-  - component: {fileID: 7409647548841790248}
+  - component: {fileID: 6248048724027096971}
   m_Layer: 0
   m_Name: Sfx_End
   m_TagString: Untagged
@@ -1939,7 +1984,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7279068461053968205}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7409647548841790248
+--- !u!114 &6248048724027096971
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1948,12 +1993,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 7062671596932512312}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd5da469a3f44fe9fc2c158040f77d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sourceIndex: 10
-  playOnEnable: 0
-  delay: 0
+  cueKey: ingame_flash_end
+  channel: 1
 --- !u!1 &7154120705868887404
 GameObject:
   m_ObjectHideFlags: 0
@@ -2010,7 +2054,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 879280908995769225}
-  - component: {fileID: 1386407685724292384}
+  - component: {fileID: 2495788755026907224}
   m_Layer: 0
   m_Name: Sfx_End
   m_TagString: Untagged
@@ -2033,7 +2077,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8223639854303467283}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1386407685724292384
+--- !u!114 &2495788755026907224
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2042,12 +2086,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 7570699615969157487}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd5da469a3f44fe9fc2c158040f77d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sourceIndex: 12
-  playOnEnable: 0
-  delay: 0
+  cueKey: ingame_teleport_end
+  channel: 1
 --- !u!1 &7669368777136257405
 GameObject:
   m_ObjectHideFlags: 0
@@ -2098,8 +2141,8 @@ MonoBehaviour:
   flashStartGO: {fileID: 2149639450612047414}
   flashEndGO: {fileID: 5722444782891215567}
   flashAoeGO: {fileID: 4301204045883437026}
-  sfxFlashAoe: {fileID: 7769734864946281101}
-  sfxFlashAoe_end: {fileID: 7409647548841790248}
+  sfxFlashAoe: {fileID: 2198847625681820384}
+  sfxFlashAoe_end: {fileID: 6248048724027096971}
   explodeCenter: {fileID: 8944547525315985478}
   startDuration: 0.5
 --- !u!1 &8230564808788660892
@@ -2186,8 +2229,8 @@ MonoBehaviour:
   teleStartGO: {fileID: 4632297593910109013}
   teleEndChargingGO: {fileID: 5187033588023561501}
   teleEndGO: {fileID: 1122051478950969927}
-  sfxTele: {fileID: 3987501735696127702}
-  sfxTeleEnd: {fileID: 1386407685724292384}
+  sfxTele: {fileID: 9101247309055818399}
+  sfxTeleEnd: {fileID: 2495788755026907224}
   startDuration: 0.2
 --- !u!1 &8550124977618678165
 GameObject:

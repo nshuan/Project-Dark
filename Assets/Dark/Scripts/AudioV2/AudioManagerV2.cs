@@ -154,18 +154,24 @@ namespace Dark.Scripts.AudioV2
 
         #region Public API
 
+        public bool BlockPlayInGame { get; set; }
         public AudioSource PlayInGame(string key, Vector3? worldPos = null, float volumeScale = 1f, float? pitch = null)
         {
+            if (BlockPlayInGame) volumeScale = 0f;
             return PlayInternal(key, AudioChannel.InGame, worldPos, volumeScale, pitch);
         }
 
+        public bool BlockPlayOutGame { get; set; }
         public AudioSource PlayOutGame(string key, Vector3? worldPos = null, float volumeScale = 1f, float? pitch = null)
         {
+            if (BlockPlayOutGame) volumeScale = 0f;
             return PlayInternal(key, AudioChannel.OutGame, worldPos, volumeScale, pitch);
         }
 
+        public bool BlockPlayUi { get; set; }
         public AudioSource PlayUi(string key, float volumeScale = 1f, float? pitch = null)
         {
+            if (BlockPlayUi) volumeScale = 0f;
             return PlayInternal(key, AudioChannel.Ui, null, volumeScale, pitch);
         }
 

@@ -1,15 +1,11 @@
 using System;
 using System.Collections;
-using Dark.Scripts.Audio;
+using Dark.Scripts.AudioV2;
 using DG.Tweening;
-using Economic;
 using InGame.EnemyEffect;
 using InGame.EnemyVisualBody;
 using InGame.MapBoundary;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 namespace InGame
 {
@@ -24,7 +20,7 @@ namespace InGame
         public TowerEntity TargetTower { get; set; }
         protected EnemyBehaviour config;
 
-        [SerializeField] private AudioComponent sfxHit;
+        [SerializeField] private AudioPlayComponentV2 sfxHit;
 
         #region Stats
         public int MaxHealth { get; set; }

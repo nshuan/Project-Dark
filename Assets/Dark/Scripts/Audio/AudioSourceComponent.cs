@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Core;
+using Dark.Scripts.AudioV2;
+using Dark.Scripts.Settings;
 using Sirenix.OdinInspector;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -11,7 +13,7 @@ namespace Dark.Scripts.Audio
 {
     public class AudioSourceComponent : MonoBehaviour
     {
-        [SerializeField] private AudioPlayType audioType;
+        [SerializeField] private AudioChannel audioType;
         
         [Header("Customization")] 
         [SerializeField] private bool enableRandomPitch = false;
@@ -37,21 +39,33 @@ namespace Dark.Scripts.Audio
 
         private void Start()
         {
-            if (audioType == AudioPlayType.Sound) settingVolumeEnabled = Settings.GameSettings.EnableSound ? 1 : 0;
-            else settingVolumeEnabled = Settings.GameSettings.EnableMusic ? 1 : 0;
+            OnSettingsUpdated();
             
-            Settings.GameSettings.OnSettingUpdated += OnSettingUpdated;
+            GameSettings.OnSettingUpdated += OnSettingsUpdated;
         }
 
         private void OnDestroy()
         {
-            Settings.GameSettings.OnSettingUpdated -= OnSettingUpdated;
+            GameSettings.OnSettingUpdated -= OnSettingsUpdated;
         }
 
-        private void OnSettingUpdated()
+        private void OnSettingsUpdated()
         {
-            if (audioType == AudioPlayType.Sound) settingVolumeEnabled = Settings.GameSettings.EnableSound ? 1 : 0;
-            else settingVolumeEnabled = Settings.GameSettings.EnableMusic ? 1 : 0;
+            switch (audioType)
+            {
+                case AudioChannel.Ui:
+                    settingVolumeEnabled = GameSettings.EnableUISound ? 1 : 0;
+                    break;
+                case AudioChannel.Music:
+                    settingVolumeEnabled = GameSettings.EnableMusic ? 1 : 0;
+                    break;
+                case AudioChannel.InGame:
+                    settingVolumeEnabled = GameSettings.EnableInGameSound ? 1 : 0;
+                    break;
+                case AudioChannel.OutGame:
+                    settingVolumeEnabled = GameSettings.EnableOutGameSound ? 1 : 0;
+                    break;
+            }   
 
             foreach (var sourceInPool in SourcePool)
             {

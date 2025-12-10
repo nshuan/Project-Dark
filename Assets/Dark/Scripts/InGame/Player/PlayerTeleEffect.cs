@@ -1,5 +1,5 @@
 using System.Collections;
-using Dark.Scripts.Audio;
+using Dark.Scripts.AudioV2;
 using UnityEngine;
 
 namespace InGame
@@ -10,8 +10,8 @@ namespace InGame
         [SerializeField] private GameObject teleStartGO;
         [SerializeField] private GameObject teleEndChargingGO;
         [SerializeField] private GameObject teleEndGO;
-        [SerializeField] private AudioComponent sfxTele;
-        [SerializeField] private AudioComponent sfxTeleEnd;
+        [SerializeField] private AudioPlayComponentV2 sfxTele;
+        [SerializeField] private AudioPlayComponentV2 sfxTeleEnd;
         
         public float startDuration = 0.5f;
 

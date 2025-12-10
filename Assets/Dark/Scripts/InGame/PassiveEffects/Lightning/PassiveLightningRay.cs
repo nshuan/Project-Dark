@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
-using Dark.Scripts.Audio;
+using Dark.Scripts.AudioV2;
 using Dark.Scripts.Utils;
 using InGame.Effects;
 using UnityEngine;
@@ -17,7 +17,7 @@ namespace InGame
         [SerializeField] private float delayEachHit = 0.05f;
         [SerializeField] private float durationEachHit = 0.13f;
         [SerializeField] private float durationImpact = 1.2f;
-        [SerializeField] private AudioComponent sfx;
+        [SerializeField] private AudioPlayComponentV2 sfx;
         
         private Vector2 Position { get; set; }
         private float Stagger { get; set; }

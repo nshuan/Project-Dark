@@ -12,8 +12,6 @@ namespace Dark.Scripts.AudioV2
         
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (!GameSettings.EnableSound) return;
-            
             switch (channel)
             {
                 case AudioChannel.InGame:

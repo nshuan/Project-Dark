@@ -40,8 +40,8 @@ namespace Dark.Scripts.OutGame.Upgrade
             vfxSpawn.gameObject.SetActive(false);
             treeZoom.SetZoom(1f);
             yield return new WaitForSeconds(delaySpawn);
-            AudioManagerV2.Instance.PlayOutGame(cueSpawnTree);
-            AudioManagerV2.Instance.PlayOutGame(cueSpawnNodes);
+            AudioManagerV2.Instance.PlayInGame(cueSpawnTree);
+            AudioManagerV2.Instance.PlayInGame(cueSpawnNodes);
             treeZoom.ZoomTo(0.7f, ((RectTransform)transform).position, 0.5f, 0.3f);
             if (!GameConst.HideLaserWaveOnSpawnTree)
                 vfxSpawn.gameObject.SetActive(true);

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6316921548955998491}
-  - component: {fileID: 2652375896104876645}
+  - component: {fileID: 4189280908616056337}
   m_Layer: 0
   m_Name: Sfx
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1293356390909347609}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2652375896104876645
+--- !u!114 &4189280908616056337
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,12 +41,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 450554032247623154}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd5da469a3f44fe9fc2c158040f77d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sourceIndex: 3
-  playOnEnable: 0
-  delay: 0
+  cueKey: ingame_thunder
+  channel: 1
 --- !u!1 &7457678575592124400
 GameObject:
   m_ObjectHideFlags: 0
@@ -97,4 +96,4 @@ MonoBehaviour:
     m_Bits: 8
   maxTriggeredEnemies: 20
   triggerAllEnemies: 1
-  sfx: {fileID: 2652375896104876645}
+  sfx: {fileID: 4189280908616056337}

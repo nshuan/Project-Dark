@@ -1,16 +1,15 @@
 using System;
 using System.Collections;
-using Dark.Scripts.Audio;
+using Dark.Scripts.AudioV2;
 using InGame.Effects;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace InGame
 {
     public class PassiveThunderSingle : MonoPassiveEntity
     {
         [SerializeField] private bool randomEnemy;
-        [SerializeField] private AudioComponent sfx;
+        [SerializeField] private AudioPlayComponentV2 sfx;
         
         private EnemyEntity triggerredEnemy;
         private RaycastHit2D[] hits = new RaycastHit2D[50];

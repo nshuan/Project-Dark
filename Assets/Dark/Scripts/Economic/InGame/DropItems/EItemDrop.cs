@@ -1,5 +1,5 @@
 using System;
-using Dark.Scripts.Audio;
+using Dark.Scripts.AudioV2;
 using Dark.Scripts.Utils;
 using DG.Tweening;
 using InGame;
@@ -16,7 +16,7 @@ namespace Economic.InGame.DropItems
         [SerializeField] private TargetedProjectile targetLogic;
         [SerializeField] private GameObject vfxClaim;
         [SerializeField] private GameObject visual;
-        [SerializeField] private AudioComponent sfx;
+        [SerializeField] private AudioPlayComponentV2 sfx;
         [SerializeField] private Transform shadow;
         [SerializeField] private float minDistanceToTower = 1.5f;
         [SerializeField] private float dropSpanAngleToExcludeTower = 240f;

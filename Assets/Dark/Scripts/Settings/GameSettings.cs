@@ -9,7 +9,9 @@ namespace Dark.Scripts.Settings
         public static KeyCode KeyPause = KeyCode.Escape;
 
         [Header("Audio settings")] 
-        public static bool EnableSound = true;
+        public static bool EnableUISound = true;
+        public static bool EnableInGameSound = true;
+        public static bool EnableOutGameSound = true;
         public static bool EnableMusic = true;
 
         public static event Action OnSettingUpdated;

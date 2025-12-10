@@ -1,5 +1,6 @@
 using System;
 using Dark.Scripts.Audio;
+using Dark.Scripts.AudioV2;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -35,7 +36,7 @@ namespace Dark.Scripts.Settings.UI
     [Serializable]
     public class SettingActiveAudio : ISettingItemButton
     {
-        [SerializeField] private AudioPlayType settingType;
+        [SerializeField] private AudioChannel settingType;
 
         public Button Button { get; set; }
         public TextMeshProUGUI DisplayText { get; set; }
@@ -53,11 +54,17 @@ namespace Dark.Scripts.Settings.UI
         {
             switch (settingType)
             {
-                case AudioPlayType.Sound:
-                    GameSettings.EnableSound = !GameSettings.EnableSound;
+                case AudioChannel.Ui:
+                    GameSettings.EnableUISound = !GameSettings.EnableUISound;
                     break;
-                case AudioPlayType.Music:
+                case AudioChannel.Music:
                     GameSettings.EnableMusic = !GameSettings.EnableMusic;
+                    break;
+                case AudioChannel.InGame:
+                    GameSettings.EnableInGameSound = !GameSettings.EnableInGameSound;
+                    break;
+                case AudioChannel.OutGame:
+                    GameSettings.EnableOutGameSound = !GameSettings.EnableOutGameSound;
                     break;
             }
             
@@ -69,11 +76,17 @@ namespace Dark.Scripts.Settings.UI
         {
             switch (settingType)
             {
-                case AudioPlayType.Sound:
-                    if (DisplayText) DisplayText.SetText(GameSettings.EnableSound ? "on" : "off");
+                case AudioChannel.Ui:
+                    if (DisplayText) DisplayText.SetText(GameSettings.EnableUISound ? "on" : "off");
                     break;
-                case AudioPlayType.Music:
+                case AudioChannel.Music:
                     if (DisplayText) DisplayText.SetText(GameSettings.EnableMusic ? "on" : "off");
+                    break;
+                case AudioChannel.InGame:
+                    if (DisplayText) DisplayText.SetText(GameSettings.EnableInGameSound ? "on" : "off");
+                    break;
+                case AudioChannel.OutGame:
+                    if (DisplayText) DisplayText.SetText(GameSettings.EnableOutGameSound ? "on" : "off");
                     break;
             }
         }

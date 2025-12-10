@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5085002175941718960}
-  - component: {fileID: 4440598892829019648}
+  - component: {fileID: 8511830646563580284}
   m_Layer: 0
   m_Name: SfxTowerCooldown
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8540445364392104723}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4440598892829019648
+--- !u!114 &8511830646563580284
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,12 +41,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 614111787059449291}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd5da469a3f44fe9fc2c158040f77d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sourceIndex: 17
-  playOnEnable: 0
-  delay: 0
+  cueKey: ingame_tower_cooldown
+  channel: 1
 --- !u!1 &655408977626516025
 GameObject:
   m_ObjectHideFlags: 0
@@ -360,7 +359,7 @@ MonoBehaviour:
   autoRegenerate: {fileID: 7603125141272037379}
   regenerateOnKill: {fileID: 5926552855755970944}
   itemCollectorPosition: {fileID: 6118742615793322515}
-  sfxHit: {fileID: 3283040643563396951}
+  sfxHit: {fileID: 5061761836619854956}
   normalSortingLayerName: Default
   normalSortingOrder: 55
   hoverSortingLayerName: UILower
@@ -1196,7 +1195,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1903735068486522707}
-  - component: {fileID: 3283040643563396951}
+  - component: {fileID: 5061761836619854956}
   m_Layer: 0
   m_Name: SfxHit
   m_TagString: Untagged
@@ -1219,7 +1218,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8540445364392104723}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3283040643563396951
+--- !u!114 &5061761836619854956
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1228,12 +1227,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4590216449570193756}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd5da469a3f44fe9fc2c158040f77d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sourceIndex: 1
-  playOnEnable: 0
-  delay: 0
+  cueKey: ingame_tower_hit
+  channel: 1
 --- !u!1 &5306584919319295418
 GameObject:
   m_ObjectHideFlags: 0
@@ -6905,7 +6903,7 @@ MonoBehaviour:
   cooldownRing: {fileID: 1996824622331216885}
   vfxCooldownComplete: {fileID: 5872743704754558887}
   vfxSelected: {fileID: 4451143533698579918}
-  sfxCooldown: {fileID: 4440598892829019648}
+  sfxCooldown: {fileID: 8511830646563580284}
   cdRingSprites:
   - {fileID: 1996824622331216885}
   - {fileID: 5266713008108530578}

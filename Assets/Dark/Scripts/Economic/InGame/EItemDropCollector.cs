@@ -1,12 +1,9 @@
 using System;
 using System.Linq;
-using Dark.Scripts.Audio;
-using Dark.Scripts.Utils;
+using Dark.Scripts.AudioV2;
 using DG.Tweening;
-using Economic.InGame.DropItems;
 using InGame;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Economic.InGame
 {
@@ -19,7 +16,7 @@ namespace Economic.InGame
         [SerializeField] private FloatingEffect floatingMovement;
         [SerializeField] private ParticleSystem vfxBreak;
         [SerializeField] private ParticleSystem vfxSpawn;
-        [SerializeField] private AudioComponent sfxCollect;
+        [SerializeField] private AudioPlayComponentV2 sfxCollect;
 
         [Header("Echoes")] 
         [SerializeField] private Transform visualEchoes;

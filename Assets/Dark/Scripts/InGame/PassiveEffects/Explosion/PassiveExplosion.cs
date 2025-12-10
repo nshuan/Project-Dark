@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using Dark.Scripts.Audio;
+using Dark.Scripts.AudioV2;
 using InGame.Effects;
 using UnityEngine;
 
@@ -16,7 +16,7 @@ namespace InGame
         private RaycastHit2D[] hits = new RaycastHit2D[50];
         private IDamageable hitTarget;
         private CameraShake cameraShakeEffect;
-        [SerializeField] private AudioComponent sfx;
+        [SerializeField] private AudioPlayComponentV2 sfx;
 
         public override void Initialize()
         {

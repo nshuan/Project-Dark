@@ -1,12 +1,12 @@
 using UnityEngine;
-using Dark.Scripts.Audio;
+using Dark.Scripts.AudioV2;
 
 namespace InGame
 {
     public class PassiveBurn : MonoPassiveEntity
     {
         [SerializeField] private float delayEachBurn = 1f;
-        [SerializeField] private AudioComponent sfx;
+        [SerializeField] private AudioPlayComponentV2 sfx;
 
         public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool)
         {

@@ -1,13 +1,7 @@
 using System;
-using System.Collections;
-using Dark.Scripts.Audio;
-using Economic.InGame;
-using InGame.Effects;
+using Dark.Scripts.AudioV2;
 using InGame.UI;
-using Spine.Unity;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 namespace InGame
 {
@@ -24,7 +18,7 @@ namespace InGame
         [SerializeField] private TowerAutoRegenerate autoRegenerate;
         [SerializeField] private TowerRegenerateOnKill regenerateOnKill;
         public Transform itemCollectorPosition;
-        [SerializeField] private AudioComponent sfxHit;
+        [SerializeField] private AudioPlayComponentV2 sfxHit;
 
         [Header("Config")]
         [SerializeField] private string normalSortingLayerName;
