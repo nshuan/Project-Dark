@@ -9,6 +9,8 @@ namespace InGame
 {
     public class TowerAnim : MonoBehaviour
     {
+        private static readonly int OutlineWidth = Shader.PropertyToID("_OutlineWidth");
+        private static readonly int Color1 = Shader.PropertyToID("_Color");
         public SkeletonAnimation skeleton;
         
         [SpineAnimationName(nameof(skeleton))]
@@ -79,9 +81,9 @@ namespace InGame
             if (!outlineMaterial) GetOutlineMat();
             
             if (active)
-                outlineMaterial.SetFloat("_OutlineWidth", 2f);
+                outlineMaterial.SetFloat(OutlineWidth, 2f);
             else 
-                outlineMaterial.SetFloat("_OutlineWidth", 0f);
+                outlineMaterial.SetFloat(OutlineWidth, 0f);
         }
 
         #region Idle
@@ -256,7 +258,7 @@ namespace InGame
         public void PlayHit()
         {
             if (coroutineHitTransition != null) StopCoroutine(coroutineHitTransition);
-            if (!gameObject.activeInHierarchy)
+            if (gameObject.activeInHierarchy)
                 coroutineHitTransition = StartCoroutine(IEColorTransition(hitColor, normalColor, 0.1f));
         }
         
@@ -271,12 +273,12 @@ namespace InGame
                 var lerp = t / duration;
 
                 color = Color.Lerp(from, to, lerp);
-                outlineMaterial.SetColor("_Color", color);
+                outlineMaterial.SetColor(Color1, color);
                 yield return null;
             }
 
             color = to; // Ensure final color
-            outlineMaterial.SetColor("_Color", color);
+            outlineMaterial.SetColor(Color1, color);
         }
     }
 }
