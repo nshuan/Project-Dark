@@ -102,6 +102,8 @@ namespace InGame
             
             shadow.SetActive(true);
             
+            delayDieAnimation = 0f;
+            
             ActivateELite(config.elite);
         }
 
