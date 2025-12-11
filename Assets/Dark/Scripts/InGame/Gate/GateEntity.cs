@@ -125,7 +125,7 @@ namespace InGame
         private Coroutine delayCoroutine;
         private Coroutine spawnCoroutine;
         private Coroutine visualCoroutine;
-        public Action onActivated;
+        [NonSerialized] public Action onActivated;
         private IEnumerator IEStartSpawn(float delay)
         {
             yield return new WaitForSeconds(delay);
@@ -224,19 +224,23 @@ namespace InGame
 
         private IEnumerator IEVisual()
         {
+            yield return new WaitForSeconds(config.startTimeVisual);
             visual.SetActive(true);
             vfxIdle = vfxPortal.main;
-            vfxIdle.startLifetime = config.durationVisual;
+            vfxIdle.startLifetime = 100f;
             vfxPortal.gameObject.SetActive(true);
-            vfxOpen.SetActive(true);
-            this.DelayCall(2f, () => vfxOpen.SetActive(false));
+            // vfxOpen.SetActive(true);
+            // this.DelayCall(2f, () => vfxOpen.SetActive(false));
 
-            yield return new WaitForSeconds(config.durationVisual - vfxCloseAppearDuration);
+            yield return new WaitForSeconds(config.durationVisual);
             
             vfxClose.SetActive(true);
-            yield return new WaitForSeconds(vfxCloseAppearDuration);
+            yield return new WaitForSeconds(1f);
+            vfxPortal.gameObject.SetActive(false);
+            // yield return new WaitForSeconds(vfxCloseAppearDuration);
             //vfxPortal.gameObject.SetActive(false);
-            yield return new WaitForSeconds(vfxCloseTotalDuration + vfxCloseAppearDuration);
+            yield return new WaitForSeconds(vfxCloseTotalDuration - 1f);
+            vfxPortal.gameObject.SetActive(false);
             vfxClose.SetActive(false);
         }
 
