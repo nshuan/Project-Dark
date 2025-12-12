@@ -12,7 +12,7 @@ namespace Dark.Scripts.ForDemo
             btnFeedback.onClick.RemoveAllListeners();
             btnFeedback.onClick.AddListener(() =>
             {
-                Application.OpenURL(GameConst.FeedbackURL);
+                Application.OpenURL(DemoConfig.FeedbackURL);
             });
         }
     }

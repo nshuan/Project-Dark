@@ -1,7 +1,7 @@
-using System;
 using System.Collections;
 using Coffee.UIExtensions;
 using Dark.Scripts.AudioV2;
+using Dark.Scripts.ForDemo;
 using Dark.Scripts.SceneNavigation;
 using Data;
 using DG.Tweening;
@@ -71,7 +71,7 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         public void ShowDemoButtons()
         {
-            if (!GameConst.IsDemo) return;
+            if (!DemoConfig.IsDemo) return;
             
             DOTween.Kill(btnWishlist, true);
             DOTween.Kill(btnFeedback, true);
@@ -93,7 +93,7 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         public void HideDemoButtons()
         {
-            if (!GameConst.IsDemo) return;
+            if (!DemoConfig.IsDemo) return;
             
             DOTween.Kill(btnWishlist, true);
             DOTween.Kill(btnFeedback, true);

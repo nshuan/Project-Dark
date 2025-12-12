@@ -1,5 +1,4 @@
-using Dark.Scripts.Common;
-using Dark.Scripts.Utils;
+using Dark.Scripts.ForDemo;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -9,7 +8,7 @@ namespace Dark.Scripts.OutGame.Home
     {
         private void OpenSteamWishlist()
         {
-            Application.OpenURL(GameConst.SteamWishlistURL);
+            Application.OpenURL(DemoConfig.SteamWishlistURL);
         }
 
         public void OnPointerClick(PointerEventData eventData)

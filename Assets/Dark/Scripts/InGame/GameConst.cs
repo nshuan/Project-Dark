@@ -1,10 +1,5 @@
 public class GameConst
 {
-    public const string SteamWishlistURL = "https://store.steampowered.com/app/3913310/Ash_Warden/";
-    public const string FeedbackURL = "https://forms.gle/3f5XtYzSyrJen8yW8";
-    public const int MaxDemoLevel = 3; // Tester can only play 3 levels in demo version
-    public const bool IsDemo = true;
-
     #region Log
 
     public const bool EnableLogManagerDebugLog = false; // Enable debug log for LogManager
