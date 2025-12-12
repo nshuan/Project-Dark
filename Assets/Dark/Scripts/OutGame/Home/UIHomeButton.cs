@@ -36,7 +36,7 @@ namespace Dark.Scripts.OutGame.Home
                     break;
                 case UIButtonState.Selected:
                     DoHidePointer();
-                    DoShowLight().OnComplete(() => DoHideLight());
+                    DoShowLight();
                     break;
             }
         }

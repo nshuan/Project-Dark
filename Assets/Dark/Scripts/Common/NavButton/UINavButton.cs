@@ -7,6 +7,7 @@ namespace Dark.Scripts.OutGame.Common.NavButton
     {
         [SerializeField] private UIButton[] buttons;
         [SerializeField] private int startIndex = -1;
+        [SerializeField] private bool focusSelectedButton = false; // if the button is selected, skip hover
 
         private UIButton currentSelectButton;
         
@@ -31,8 +32,9 @@ namespace Dark.Scripts.OutGame.Common.NavButton
             switch (state)
             {
                 case UIButtonState.None:
-                    // if (target.State != UIButtonState.Selected)
-                    target.UpdateState(state);
+                    if (!focusSelectedButton) target.UpdateState(state);
+                    else if (target.State != UIButtonState.Selected) 
+                        target.UpdateState(state);
                     break;
                 case UIButtonState.Hover:
                     foreach (var button in buttons)
@@ -40,8 +42,9 @@ namespace Dark.Scripts.OutGame.Common.NavButton
                         if (button.State == UIButtonState.Selected) continue;
                         button.UpdateState(UIButtonState.None);
                     }
-                    // if (target.State != UIButtonState.Selected)
-                    target.UpdateState(state);
+                    if (!focusSelectedButton) target.UpdateState(state);
+                    else if (target.State != UIButtonState.Selected)
+                        target.UpdateState(state);
                     break;
                 case UIButtonState.Selected:
                     currentSelectButton = target;
