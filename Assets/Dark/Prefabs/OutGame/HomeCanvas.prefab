@@ -1984,7 +1984,7 @@ MonoBehaviour:
   - {fileID: 3748642968105781385}
   - {fileID: 4159803644308811696}
   - {fileID: 5252450469554685633}
-  - {fileID: 7552016192446291320}
+  - {fileID: 7493387687614333707}
   - {fileID: 1630979882701152237}
   startIndex: -1
 --- !u!1 &3942206660743115378
@@ -5296,6 +5296,7 @@ GameObject:
   - component: {fileID: 1364803709578477360}
   - component: {fileID: 7552016192446291320}
   - component: {fileID: 1013360292747548035}
+  - component: {fileID: 7493387687614333707}
   m_Layer: 5
   m_Name: btnWishlist
   m_TagString: Untagged
@@ -5377,10 +5378,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12fb76520fcd404e9ba0e9e8991f670b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactable: 1
-  hoverPointer: {fileID: 6744181513311641687}
-  vfxHover: {fileID: 8913471375006889432}
-  vfxSelect: {fileID: 7822560347711294564}
 --- !u!114 &1013360292747548035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5395,6 +5392,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cueKey: click_select_class
   channel: 3
+--- !u!114 &7493387687614333707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8994519069931446864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46e6fdd36888445ca1e3d5e5a9794212, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactable: 1
+  hoverPointer: {fileID: 6744181513311641687}
+  vfxHover: {fileID: 8913471375006889432}
+  vfxSelect: {fileID: 7822560347711294564}
 --- !u!1001 &642765716995136096
 PrefabInstance:
   m_ObjectHideFlags: 0

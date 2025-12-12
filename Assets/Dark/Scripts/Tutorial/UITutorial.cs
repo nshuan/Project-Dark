@@ -1,10 +1,12 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Dark.Scripts.Tutorial
 {
     public class UITutorial : MonoBehaviour
     {
         [SerializeField] private string keyTutorial;
+        [SerializeField] private Image imgCover;
         [SerializeField] private UIAbstractTutorialStep[] tutorialSteps;
 
         private int currentStepIndex = -1;

@@ -6,7 +6,7 @@ namespace Dark.Scripts.ForDemo
     {
         protected override bool ShouldShowButton()
         {
-            return PlayerDataManager.Instance.Data.level >= GameConst.MaxDemoLevel;
+            return PlayerDataManager.Instance.Data.level >= DemoConfig.MaxDemoLevel;
         }        
     }
 }
