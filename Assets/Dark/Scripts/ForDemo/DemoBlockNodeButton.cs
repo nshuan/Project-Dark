@@ -20,7 +20,25 @@ namespace Dark.Scripts.ForDemo
             defaultScale = node.transform.localScale;
             defaultScale.z = 1f;
         }
-        
+
+        protected override void Start()
+        {
+            if (!DemoConfig.IsDemo) return;
+            
+            if (!ShouldShowButton())
+            {
+                hiddenButton?.SetActive(true);
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                extraHidden.SetActive(false);
+                nodeHoverField.SetActive(false);
+                hiddenButton?.SetActive(false);
+                buttonVisual.alpha = 1f;
+            }
+        }
+
         protected override bool ShouldShowButton()
         {
             if (node.config == null) return false;

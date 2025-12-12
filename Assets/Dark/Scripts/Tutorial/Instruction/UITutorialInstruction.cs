@@ -15,10 +15,10 @@ namespace Dark.Scripts.Tutorial
         {
             DOTween.Kill(this);
             
-            transform.localScale = 1.1f * Vector3.zero;
+            transform.localScale = 1.1f * Vector3.one;
             gameObject.SetActive(true);
 
-            return transform.DOScale(Vector3.one, 0.2f).SetEase(Ease.InBack).SetTarget(this);
+            return transform.DOScale(Vector3.one, 0.2f).SetEase(Ease.InBack).SetTarget(this).SetUpdate(true);
         }
     }
 }
