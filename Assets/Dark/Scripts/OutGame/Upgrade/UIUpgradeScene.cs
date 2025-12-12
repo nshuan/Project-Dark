@@ -7,18 +7,12 @@ using Dark.Scripts.Utils;
 using Data;
 using InGame;
 using InGame.CharacterClass;
-using InGame.Upgrade;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 namespace Dark.Scripts.OutGame.Upgrade
 {
     public class UIUpgradeScene : MonoSingleton<UIUpgradeScene>
     {
-        [Header("Common")] 
-        [SerializeField] private Button btnBack;
-        
         [Space] [Header("Upgrade Tree")]
         [SerializeField] private UIPanelUpgradeTree panelUpgradeTree;
 
@@ -38,13 +32,6 @@ namespace Dark.Scripts.OutGame.Upgrade
                 panelSelectClass.SetActive(false);
                 panelUpgradeTree.SpawnTree();
             }
-            
-            btnBack.onClick.RemoveAllListeners();
-            btnBack.onClick.AddListener(() =>
-            {
-                btnBack.interactable = false;
-                Loading.Instance.LoadScene(SceneConstants.SceneMenu);
-            });
         }
 
         public void SelectClass(CharacterClass classType)

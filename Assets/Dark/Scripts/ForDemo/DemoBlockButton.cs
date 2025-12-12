@@ -20,11 +20,15 @@ namespace Dark.Scripts.ForDemo
 
         private void Awake()
         {
+            if (!GameConst.IsDemo) return;
+            
             parentCanvas = GetComponentInParent<Canvas>();
         }
 
         private void Start()
         {
+            if (!GameConst.IsDemo) return;
+            
             if (!ShouldShowButton())
             {
                 hiddenButton?.SetActive(true);
@@ -34,6 +38,8 @@ namespace Dark.Scripts.ForDemo
 
         private void OnEnable()
         {
+            if (!GameConst.IsDemo) return;
+            
             buttonVisual.alpha = 0f;
             hiddenButton?.SetActive(true);
         }
@@ -45,6 +51,8 @@ namespace Dark.Scripts.ForDemo
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            if (!GameConst.IsDemo) return;
+            
             cachePopupWishlist ??= Instantiate(popupWishlist, parentCanvas.transform);
             cachePopupWishlist.transform.SetAsLastSibling();
             cachePopupWishlist.gameObject.SetActive(true);
@@ -52,6 +60,8 @@ namespace Dark.Scripts.ForDemo
 
         public void OnPointerEnter(PointerEventData eventData)
         {
+            if (!GameConst.IsDemo) return;
+            
             DOTween.Kill(this);
             buttonVisual.alpha = 1f;
             hiddenButton?.SetActive(false);
@@ -61,6 +71,8 @@ namespace Dark.Scripts.ForDemo
 
         public void OnPointerExit(PointerEventData eventData)
         {
+            if (!GameConst.IsDemo) return;
+            
             if (hideOnExit)
             {
                 DOTween.Kill(this);
