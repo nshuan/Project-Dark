@@ -77,7 +77,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             {
                 LogManager.Log(LogConst.EventLogStartLevel, $"level_{PlayerDataManager.Instance.Data.level + 1}", "from class select");
                 
-                Loading.Instance.LoadScene(SceneConstants.SceneInGame, () =>
+                Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame, () =>
                 {
                     LevelManager.Instance.LoadLevel(PlayerDataManager.Instance.Data.level + 1);
                 });
