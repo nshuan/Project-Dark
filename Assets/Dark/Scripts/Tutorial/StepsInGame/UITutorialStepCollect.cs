@@ -14,11 +14,10 @@ namespace Dark.Scripts.Tutorial
         
         private int totalVestigeDropAmount;
         private Transform instructionTarget;
-        private Camera mainCamera;
+        [SerializeField] private Camera mainCamera;
 
         private void Awake()
         {
-            mainCamera ??= Camera.main;
             CombatActions.OnResourceCollectorInitialized += OnResourceCollectorInitialized;
         }
 
@@ -48,6 +47,8 @@ namespace Dark.Scripts.Tutorial
         {
             CombatActions.OnResourceCollectorInitialized -= OnResourceCollectorInitialized;
             instructionTarget = collector.transform;
+            if (mainCamera)
+                actionUpdateFocus?.Invoke(mainCamera.WorldToScreenPoint(collector.transform.position), false, false);
         }
 
         private void OnCollectEntityDamaged(EItemDropCollector collector)
