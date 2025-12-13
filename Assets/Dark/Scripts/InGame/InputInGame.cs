@@ -234,8 +234,8 @@ namespace InGame
                         teleMouseInput?.OnDeactivated();
                     }
                     
-                    mouseInput?.OnMouseClick();
                     mouseInput?.ResetChargeVariable();
+                    mouseInput?.OnMouseClick();
                     return;
                 }
                 
