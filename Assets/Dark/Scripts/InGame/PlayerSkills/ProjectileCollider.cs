@@ -10,6 +10,7 @@ namespace InGame
     public class ProjectileCollider : MonoBehaviour
     {
         public LayerMask hitLayer;
+        public LayerMask collectibleLayer;
         
         private ProjectileEntity projectile;
 
@@ -123,20 +124,15 @@ namespace InGame
         
         public void CheckHitEnemiesOnInit(float radius = 1f)
         {
-            // Lấy y làm radius nếu ảnh viên đạn trong prefab nằm ngang
-            // var hitCount = Physics2D.CircleCastNonAlloc(projectile.transform.position, radius, direction, hits, 0f, hitLayer);
-            // if (hitCount > 0)
-            // {
-            //     // Chỉ check hit 1 object đầu tiên va chạm
-            //     for (var i = 0; i < 1; i++)
-            //     {
-            //         if (hits[i].transform.TryGetComponent<EnemyEntity>(out hitEnemy))
-            //         {
-            //             Projectile.ProjectileHit(hitEnemy);
-            //             DebugUtility.Log($"Hit enemy {hitEnemy.name}");
-            //         }
-            //     }
-            // }
+
+        }
+
+        public bool CheckCollectibleOnWay(Vector2 direction)
+        {
+            var collectibleHits = new RaycastHit2D[5];
+            var hitCount = Physics2D.LinecastNonAlloc(transform.position, transform.position + (Vector3)direction * 10f,
+                collectibleHits, collectibleLayer);
+            return hitCount > 0 && collectibleHits.Any((hit) => hit && hit.transform.CompareTag("Collectible"));
         }
 
         public void IgnoreEnemy(EnemyEntity enemy)

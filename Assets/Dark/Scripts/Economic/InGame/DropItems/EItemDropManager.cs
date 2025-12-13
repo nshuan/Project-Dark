@@ -37,6 +37,7 @@ namespace Economic.InGame.DropItems
             var delay = 0f;
             var maxDelay = 0f;
             var minDelay = 0f;
+            var index = 0;
             foreach (var item in listItemToCollect)
             {
                 switch (item.kind)
@@ -52,10 +53,18 @@ namespace Economic.InGame.DropItems
                         break;
                 }
                 
-                delay = RandomUtil.Range(0f, 1f);
+                // 5 cái đầu ko nên delay random
+                if (index < 5)
+                    delay = 0.02f * index;
+                else
+                    delay = RandomUtil.Range(0f, 0.2f);
+                
                 if (delay > maxDelay) maxDelay = delay;
                 if (delay < minDelay) minDelay = delay;
+                    
                 item.Collect(target, delay);
+
+                index += 1;
             }
             
             this.DelayCall(minDelay + collectDuration, () =>

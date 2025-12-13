@@ -41,6 +41,7 @@ namespace InGame
         public ProjectileType DamageType { get; set; }
         public bool BlockDestroy { get; set; } // Block destroy so that the projectile can go through enemies but still deal damage
         public bool BlockSpawnDeadBody { get; set; } // Do not spawn dead projectile on hit
+        public bool BlockAutoDestroyOutRange { get; set; } // If the projectile reach max range, destroy it automatically
         
         public Transform TargetTransform => transform;
 
@@ -117,6 +118,8 @@ namespace InGame
             hitStatus = ProjectileCollider.ProjectileHitStatus.None;
             hitEnemyInfo = new ProjectileCollider.HitEnemyInfo();
             collider.Init();
+
+            BlockAutoDestroyOutRange = false;
         }
 
         public void Activate(float delay)
@@ -131,6 +134,10 @@ namespace InGame
             
             // Khi vừa activate đạn thì check luôn tại vị trí spawn, bán kính [x] để xử lý những enemy ở quá gân
             collider.CheckHitEnemiesOnInit();
+            
+            // Cast 1 đường theo direction, nếu đi qua itemCollector thì BlockAutoDestroyOutRange
+            if (collider.CheckCollectibleOnWay(direction))
+                BlockAutoDestroyOutRange = true;
             
             activated = true;
             collider.CanTrigger = true;
@@ -147,15 +154,18 @@ namespace InGame
         protected virtual void Update()
         {
             if (!activated) return;
-            if (Vector2.Distance(transform.position, SpawnPosition) > maxDistanceFromSpawnPosition)
+            if (!BlockAutoDestroyOutRange)
             {
-                if (!BlockSpawnDeadBody)
+                if (Vector2.Distance(transform.position, SpawnPosition) > maxDistanceFromSpawnPosition)
                 {
-                    // ProjectileDeadPool.Instance.Get(direction).position = transform.position;
-                    ProjectileDeadPool.Instance.Get(direction).position = BoundPosition;
+                    if (!BlockSpawnDeadBody)
+                    {
+                        // ProjectileDeadPool.Instance.Get(direction).position = transform.position;
+                        ProjectileDeadPool.Instance.Get(direction).position = BoundPosition;
+                    }
+                    ProjectileHit(null);
+                    return;
                 }
-                ProjectileHit(null);
-                return;
             }
 
             moveDirection.x = Speed * Time.deltaTime * direction.x;
