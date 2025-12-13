@@ -77,16 +77,16 @@ namespace Dark.Scripts.Settings.UI
             switch (settingType)
             {
                 case AudioChannel.Ui:
-                    if (DisplayText) DisplayText.SetText(GameSettings.EnableUISound ? "on" : "off");
+                    if (DisplayText) DisplayText.SetText(GameSettings.EnableUISound ? "On" : "Off");
                     break;
                 case AudioChannel.Music:
-                    if (DisplayText) DisplayText.SetText(GameSettings.EnableMusic ? "on" : "off");
+                    if (DisplayText) DisplayText.SetText(GameSettings.EnableMusic ? "On" : "Off");
                     break;
                 case AudioChannel.InGame:
-                    if (DisplayText) DisplayText.SetText(GameSettings.EnableInGameSound ? "on" : "off");
+                    if (DisplayText) DisplayText.SetText(GameSettings.EnableInGameSound ? "On" : "Off");
                     break;
                 case AudioChannel.OutGame:
-                    if (DisplayText) DisplayText.SetText(GameSettings.EnableOutGameSound ? "on" : "off");
+                    if (DisplayText) DisplayText.SetText(GameSettings.EnableOutGameSound ? "On" : "Off");
                     break;
             }
         }

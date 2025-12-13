@@ -97,7 +97,7 @@ namespace Dark.Scripts.OutGame.Settings
                         listBossIcons[i].DOFade(1f, durationShowBossIcon).SetDelay(delay).SetEase(Ease.OutQuad);
                     }
                 })
-                .AppendInterval(0.5f)
+                .AppendInterval(0.2f)
                 .AppendCallback(() =>
                 {
                     groupBack.alpha = 0f;
