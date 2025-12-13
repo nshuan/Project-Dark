@@ -7,6 +7,7 @@ namespace InGame
 {
     public class CombatActions
     {
+        public static Action<GateEntity, int, int> OnGateActivated { get; set; } // <WaveIndex, GateIndex>
         public static Action<float> OnAttackNormal { get; set; }
         public static Action<float> OnAttackCharge { get; set; }
         public static Action OnChargeCooldownComplete { get; set; }
