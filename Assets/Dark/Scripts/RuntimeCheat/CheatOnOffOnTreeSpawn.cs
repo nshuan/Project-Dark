@@ -6,6 +6,7 @@ namespace Dark.Scripts.RuntimeCheat
 {
     public class CheatOnOffOnTreeSpawn : MonoBehaviour
     {
+#if UNITY_EDITOR
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.O))
@@ -18,5 +19,6 @@ namespace Dark.Scripts.RuntimeCheat
                 GameConst.HideLockedNode = !GameConst.HideLockedNode;
             }
         }
+#endif
     }
 }

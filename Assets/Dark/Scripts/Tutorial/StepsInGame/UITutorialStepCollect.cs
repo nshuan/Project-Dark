@@ -60,11 +60,11 @@ namespace Dark.Scripts.Tutorial
             if (!instructionTarget) return;
             if (!mainCamera) return;
             objInstruction.transform.position = mainCamera.WorldToScreenPoint(instructionTarget.position);
-            actionUpdateFocus?.Invoke(
-                objInstruction.transform.position - new Vector3(0f, 96f, 0f),
-                new Vector2(0.03f, 0.05f),
-                2f,
-                false, false);
+            // actionUpdateFocus?.Invoke(
+            //     objInstruction.transform.localPosition - new Vector3(0f, 96f, 0f),
+            //     new Vector2(0.03f, 0.05f),
+            //     2f,
+            //     false, false);
         }
     }
 }

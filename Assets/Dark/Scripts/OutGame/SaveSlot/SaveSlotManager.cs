@@ -1,5 +1,6 @@
 using System;
 using Core;
+using Dark.Scripts.Tutorial;
 using Data;
 using Economic;
 using InGame.CharacterClass;
@@ -40,6 +41,7 @@ namespace Dark.Scripts.OutGame.SaveSlot
             if (index < 0 || index >= SlotDataKeys.Length) return;
             PlayerDataManager.Instance.ClearData(SlotDataKeys[index]);
             UpgradeManager.Instance.ClearData(UpgradeManager.GetDataKey(SlotDataKeys[index]));
+            TutorialManager.Instance.ClearData(SlotDataKeys[index]);
         }
         
         public int GetTotalDataCreated()

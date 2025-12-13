@@ -11,11 +11,10 @@ namespace Dark.Scripts.Tutorial
         private static readonly int MatRadiusXYProperty = Shader.PropertyToID("_RadiusXY");
         private static readonly int MatRoundnessProperty = Shader.PropertyToID("_Roundness");
 
-        [SerializeField] private string keyTutorial;
         [SerializeField] private Image imgCover;
-        [SerializeField] private UIAbstractTutorialStep[] tutorialSteps;
+        [SerializeField] protected UIAbstractTutorialStep[] tutorialSteps;
 
-        private int currentStepIndex = -1;
+        protected int currentStepIndex = -1;
         private Material matCover;
 
         private void Awake()
@@ -25,14 +24,13 @@ namespace Dark.Scripts.Tutorial
 
         protected virtual void Start()
         {
-            // if (TutorialManager.Instance.GetCurrentTutorialStep(keyTutorial) >= tutorialSteps.Length) return;
+            if (TutorialManager.Instance.GetCurrentTutorialStepTree() >= tutorialSteps.Length) return;
+            currentStepIndex = TutorialManager.Instance.GetCurrentTutorialStepTree() - 1;
             StartTutorial();
         }
 
         protected void StartTutorial()
         {
-            // currentStepIndex = TutorialManager.Instance.GetCurrentTutorialStep(keyTutorial) - 1;
-            currentStepIndex = -1;
             NextStep();
         }
 
@@ -56,7 +54,7 @@ namespace Dark.Scripts.Tutorial
                 var tempStepIndex = currentStepIndex;
                 currentStep.OnComplete += () =>
                 {
-                    TutorialManager.Instance.CompleteTutorialStep(keyTutorial, tempStepIndex);
+                    CompleteStep(tempStepIndex);
                     imgCover.gameObject.SetActive(false);
                     Time.timeScale = 1f;
                     currentStep.Hide();
@@ -79,6 +77,7 @@ namespace Dark.Scripts.Tutorial
                         {
                             Time.timeScale = 1f;
                             imgCover.gameObject.SetActive(false);
+                            currentStep.Hide();
                         });
                     }
                     imgCover.gameObject.SetActive(true);
@@ -87,6 +86,11 @@ namespace Dark.Scripts.Tutorial
                 
                 break;
             }
+        }
+
+        protected virtual void CompleteStep(int indexStep)
+        {
+            TutorialManager.Instance.CompleteTutorialStepTree(indexStep);
         }
     }
 }
