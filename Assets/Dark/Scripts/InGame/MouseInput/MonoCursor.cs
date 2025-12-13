@@ -17,7 +17,8 @@ namespace InGame
         [SerializeField] private Color cooldownMaxColor;
         [SerializeField] private TextMeshProUGUI txtChargeUnitAdd;
         [SerializeField] private TextMeshProUGUI txtMax;
-        [SerializeField] private GameObject txtAuto;
+        [SerializeField] private TextMeshProUGUI txtReadyToCharge;
+        [SerializeField] private TextMeshProUGUI txtAuto;
         
         public void UpdateCooldown(bool active, float value)
         {
@@ -54,7 +55,7 @@ namespace InGame
             if (active)
             {
                 txtAuto.transform.localScale = 0.3f * Vector3.one;
-                txtAuto.SetActive(true);
+                txtAuto.gameObject.SetActive(true);
                 txtAuto.transform.DOScale(1f, 0.3f).SetEase(Ease.OutBack).SetTarget(txtAuto);
             }
             else
@@ -62,6 +63,29 @@ namespace InGame
                 txtAuto.transform.DOScale(0.3f, 0.3f).SetEase(Ease.InBack).SetTarget(txtAuto)
                     .OnComplete(() => txtAuto.gameObject.SetActive(false));
             }
+        }
+
+        public void SetReadyToCharge()
+        {
+            DOTween.Kill(txtReadyToCharge);
+            
+            txtChargeUnitAdd.SetAlpha(0f);
+            txtMax.SetAlpha(0f);
+            txtAuto.SetAlpha(0f);
+            txtReadyToCharge.SetAlpha(1f);
+            txtReadyToCharge.gameObject.SetActive(true);
+
+            DOTween.Sequence().SetTarget(txtReadyToCharge)
+                .Append(txtReadyToCharge.transform.DOPunchScale(new Vector3(0.1f, 0.1f, 0.1f), 0.2f))
+                .AppendInterval(0.5f)
+                .AppendCallback(() =>
+                {
+                    txtChargeUnitAdd.SetAlpha(1f);
+                    txtMax.SetAlpha(1f);
+                    txtAuto.SetAlpha(1f);
+                    txtReadyToCharge.SetAlpha(0f);
+                    txtReadyToCharge.gameObject.SetActive(false);
+                });
         }
     }
 }
