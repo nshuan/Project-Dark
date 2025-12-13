@@ -41,6 +41,12 @@ namespace Dark.Scripts.Tutorial
             
             // Còn không thì show instruction và đợi move sang tower cần di chuyển
             objInstruction.SetActive(true);
+            actionUpdateFocus?.Invoke(
+                objInstruction.transform.localPosition - new Vector3(0f, 150f, 0f),
+                new Vector2(0.06f, 0.1f),
+                2f,
+                false,
+                false);
             LevelManager.Instance.OnChangeTower += OnTowerChanged;
         }
 
@@ -50,6 +56,18 @@ namespace Dark.Scripts.Tutorial
             {
                 LevelManager.Instance.OnChangeTower -= OnTowerChanged;
                 OnComplete?.Invoke();
+            }
+            else
+            {
+                if (objInstruction.activeInHierarchy)
+                {
+                    actionUpdateFocus?.Invoke(
+                        objInstruction.transform.localPosition - new Vector3(0f, 150f, 0f),
+                        new Vector2(0.06f, 0.1f),
+                        2f,
+                        false,
+                        false);
+                }
             }
         }
     }

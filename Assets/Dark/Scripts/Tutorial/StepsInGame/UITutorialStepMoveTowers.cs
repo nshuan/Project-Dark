@@ -5,7 +5,7 @@ namespace Dark.Scripts.Tutorial
 {
     public class UITutorialStepMoveTowers : UIAbstractTutorialStepInGame
     {
-        [SerializeField] private GameObject objInstruction;
+        [SerializeField] protected GameObject objInstruction;
         
         [Space] [Header("Config")]
         [SerializeField] private int levelToShow;
@@ -40,6 +40,12 @@ namespace Dark.Scripts.Tutorial
                 // Còn không thì show instruction và đợi move sang tower cần di chuyển
                 LevelManager.Instance.OnWaveStart -= OnWaveStart;
                 objInstruction.SetActive(true);
+                actionUpdateFocus?.Invoke(
+                    objInstruction.transform.localPosition - new Vector3(0f, 150f, 0f),
+                    new Vector2(0.06f, 0.1f),
+                    2f,
+                    false,
+                    false);
                 LevelManager.Instance.OnChangeTower += OnTowerChanged;
                 return;
             }

@@ -19,6 +19,12 @@ namespace Dark.Scripts.Tutorial
         public override void Setup()
         {
             objInstruction.SetActive(true);
+            actionUpdateFocus?.Invoke(
+                objInstruction.transform.localPosition - new Vector3(240f, 0f, 0f),
+                new Vector2(0.05f, 0.05f),
+                4.4f,
+                true,
+                true);
             CombatActions.OnMoveCooldownComplete += OnMoveCooldownComplete;
         }
 

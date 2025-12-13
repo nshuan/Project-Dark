@@ -50,6 +50,11 @@ namespace Dark.Scripts.Tutorial
             });
         }
 
+        public override void Setup(Action<Vector2, Vector2, float, bool, bool> actionUpdateFocus)
+        {
+            Setup();
+        }
+
         private void OnNodeUpgraded(UIUpgradeNode node)
         {
             panelUpgradeTree.Tree.OnNodeUpgraded -= OnNodeUpgraded;

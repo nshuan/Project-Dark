@@ -38,7 +38,6 @@ namespace Dark.Scripts.Tutorial
             {
                 CombatActions.OnDropResource -= OnDropResource;
                 objInstruction.SetActive(true);
-                
                 CombatActions.OnResourceCollectorDamaged += OnCollectEntityDamaged;
             }
         }
@@ -47,8 +46,6 @@ namespace Dark.Scripts.Tutorial
         {
             CombatActions.OnResourceCollectorInitialized -= OnResourceCollectorInitialized;
             instructionTarget = collector.transform;
-            if (mainCamera)
-                actionUpdateFocus?.Invoke(mainCamera.WorldToScreenPoint(collector.transform.position), false, false);
         }
 
         private void OnCollectEntityDamaged(EItemDropCollector collector)
@@ -63,6 +60,11 @@ namespace Dark.Scripts.Tutorial
             if (!instructionTarget) return;
             if (!mainCamera) return;
             objInstruction.transform.position = mainCamera.WorldToScreenPoint(instructionTarget.position);
+            actionUpdateFocus?.Invoke(
+                objInstruction.transform.position - new Vector3(0f, 96f, 0f),
+                new Vector2(0.03f, 0.05f),
+                2f,
+                false, false);
         }
     }
 }
