@@ -226,7 +226,7 @@ namespace InGame
             var seq = DOTween.Sequence(this);
             seq.Append(cursor.transform.DOPunchScale(0.3f * Vector3.one, 0.13f).SetEase(Ease.InQuad))
                 .Join(cursor.visual.DOFade(0.3f, 0.13f).SetEase(Ease.InQuad).SetLoops(2, LoopType.Yoyo))
-                .Join(DOTween.To(() => cursor.content.localScale.x - 1f, x =>
+                .Join(DOTween.To(() => cursor.content.transform.localScale.x - 1f, x =>
                 {
                     cursor.UpdateScale(x);
                 }, 0f, 0.13f));

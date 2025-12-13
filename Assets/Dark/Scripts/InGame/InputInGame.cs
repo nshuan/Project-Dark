@@ -74,7 +74,7 @@ namespace InGame
                 cursor ??= ShotCursorManager.Instance.GetPrefab(LevelUtility.CurrentSkill.shootLogic.cursorType, canvas.transform);
                 cursor.gameObject.SetActive(true);
                 
-                teleMouseInput = new MoveToTower(cam, this, PlayerVisual, availableTeleConfigs[0], availableTeleConfigs.Count > 1 ? availableTeleConfigs[1] : null, LevelManager.Instance.Towers, 0, this.TryDelayCall);
+                teleMouseInput = new MoveToTower(cam, cursor, this, PlayerVisual, availableTeleConfigs[0], availableTeleConfigs.Count > 1 ? availableTeleConfigs[1] : null, LevelManager.Instance.Towers, 0, this.TryDelayCall);
                 
                 if (mouseInput != null)
                 {

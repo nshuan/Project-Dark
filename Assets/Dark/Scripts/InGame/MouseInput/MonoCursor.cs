@@ -8,8 +8,9 @@ namespace InGame
 {
     public class MonoCursor : MonoBehaviour
     {
+        [Header("Normal cursor")]
         public Image visual;
-        public Transform content;
+        public CanvasGroup content;
         [SerializeField] private float contentMaxScale;
         [SerializeField] private GameObject groupCooldown;
         [SerializeField] private GameObject cooldownGlow;
@@ -19,6 +20,9 @@ namespace InGame
         [SerializeField] private TextMeshProUGUI txtMax;
         [SerializeField] private TextMeshProUGUI txtReadyToCharge;
         [SerializeField] private TextMeshProUGUI txtAuto;
+
+        [Header("Move cursor")] 
+        public CanvasGroup contentMove;
         
         public void UpdateCooldown(bool active, float value)
         {
@@ -86,6 +90,20 @@ namespace InGame
                     txtReadyToCharge.SetAlpha(0f);
                     txtReadyToCharge.gameObject.SetActive(false);
                 });
+        }
+
+        public void SetMoveCursor(bool active)
+        {
+            if (active)
+            {
+                content.alpha = 0f;
+                contentMove.alpha = 1f;
+            }
+            else
+            {
+                content.alpha = 1f;
+                contentMove.alpha = 0f;
+            }
         }
     }
 }
