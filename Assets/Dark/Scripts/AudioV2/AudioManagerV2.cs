@@ -175,8 +175,10 @@ namespace Dark.Scripts.AudioV2
             return PlayInternal(key, AudioChannel.Ui, null, volumeScale, pitch);
         }
 
+        public bool BlockPlayMusic { get; set; }
         public void PlayMusic(string cueKey, float fadeDuration = -1f)
         {
+            if (BlockPlayMusic) return;
             if (!pools.TryGetValue(cueKey, out var pool) || pool.Cue.channel != AudioChannel.Music)
             {
                 DebugUtility.LogWarning($"[AudioManagerV2] Music cue '{cueKey}' was not found or is not marked as Music.");
@@ -208,6 +210,7 @@ namespace Dark.Scripts.AudioV2
 
         public void FadeVolumeMusic(float volume, float fadeDuration = 0.25f)
         {
+            if (BlockPlayMusic) return;
             if (musicRoutine != null)
                 StopCoroutine(musicRoutine);
             
