@@ -14,7 +14,8 @@ namespace InGame.Boss
             CanvasInGame.Instance.HideUI();
             
             CombatActions.OnBossKilled?.Invoke(config, transform.position);
-            CombatActions.OnDropResource?.Invoke(this);
+            var dropVestige = Dark > 0;
+            CombatActions.OnDropResource?.Invoke(this, dropVestige);
             OnDead?.Invoke(reason);
             OnDead = null;
             yield return new WaitForSeconds(delayRelease);

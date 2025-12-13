@@ -314,7 +314,8 @@ namespace InGame
 
         protected virtual void DropResource()
         {
-            CombatActions.OnDropResource?.Invoke(this);
+            var dropVestige = RandomUtil.Range(0f, 1f) <= DarkRatio && Dark > 0;
+            CombatActions.OnDropResource?.Invoke(this, dropVestige);
         }
 
         #region Effect 

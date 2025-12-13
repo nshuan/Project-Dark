@@ -31,9 +31,10 @@ namespace Dark.Scripts.Tutorial
             CombatActions.OnDropResource += OnDropResource;
         }
 
-        private void OnDropResource(EnemyEntity enemy)
+        private void OnDropResource(EnemyEntity enemy, bool hasVestige)
         {
-            totalVestigeDropAmount += enemy.Dark;
+            if (hasVestige)
+                totalVestigeDropAmount += enemy.Dark;
             if (totalVestigeDropAmount >= amountToShowInstruction)
             {
                 CombatActions.OnDropResource -= OnDropResource;
