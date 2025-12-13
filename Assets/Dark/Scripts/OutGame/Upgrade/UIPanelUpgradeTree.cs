@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Coffee.UIExtensions;
 using Dark.Scripts.AudioV2;
@@ -23,8 +24,12 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private ZoomInOut treeZoom;
         [SerializeField] private float delaShowUI;
         [SerializeField] private string cueSpawnTree;
-        [SerializeField] private string cueSpawnNodes; 
+        [SerializeField] private string cueSpawnNodes;
 
+        [Space] [Header("Settings")] 
+        [SerializeField] private GameObject popupSettings;
+
+        private bool treeSpawned;
         private UIUpgradeTree tree;
         public UIUpgradeTree Tree => tree;
         private Vector3 offsetOnHideDemoButtons = new Vector3(30f, 0f, 0f);
@@ -47,8 +52,20 @@ namespace Dark.Scripts.OutGame.Upgrade
             StartCoroutine(IESpawn());
         }
 
+        private void Update()
+        {
+            if (treeSpawned)
+            {
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    popupSettings.SetActive(true);
+                }
+            }
+        }
+
         private IEnumerator IESpawn()
         {
+            treeSpawned = false;
             var delaySpawn = Loading.Instance.CurrentTotalDurationAfterSceneLoaded;
             groupUIHiddenOnSpawn.alpha = 0f;
             vfxSpawn.gameObject.SetActive(false);
@@ -61,6 +78,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                 vfxSpawn.gameObject.SetActive(true);
             yield return new WaitForSeconds(delaShowUI);
             yield return groupUIHiddenOnSpawn.DOFade(1f, 0.3f).SetEase(Ease.OutQuad).WaitForCompletion();
+            treeSpawned = true;
         }
 
         public void SpawnTree()
