@@ -48,7 +48,7 @@ namespace InGame
             lineRenderer.gameObject.SetActive(false);
             lineRenderer.Initialize();
             lineRenderer.ResetLine(Array.Empty<Transform>());
-            cameraShakeEffect = new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera };
+            cameraShakeEffect = new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera, Magnitude = 0.05f };
         }
 
         public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool)
