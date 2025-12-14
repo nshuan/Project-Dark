@@ -11,6 +11,8 @@ namespace InGame
         public static Action<float> OnAttackNormal { get; set; }
         public static Action<float> OnAttackCharge { get; set; }
         public static Action OnChargeCooldownComplete { get; set; }
+        public static Action<TowerEntity> OnTowerHoverIn { get; set; }
+        public static Action<TowerEntity> OnTowerHoverOut { get; set; }
         public static Action<float> OnMoveTowerComplete { get; set; }
         public static Action OnMoveCooldownComplete { get; set; }
         public static Action<NodeTowerCounter.CounterType, float> OnTowerCounter { get; set; }
@@ -23,9 +25,12 @@ namespace InGame
 
         public static void Clear()
         {
+            OnGateActivated = null;
             OnAttackNormal = null;
             OnAttackCharge = null;
             OnChargeCooldownComplete = null;
+            OnTowerHoverIn = null;
+            OnTowerHoverOut = null;
             OnMoveTowerComplete = null;
             OnMoveCooldownComplete = null;
             OnTowerCounter = null;

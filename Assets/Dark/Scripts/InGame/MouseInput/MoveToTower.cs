@@ -167,6 +167,7 @@ namespace InGame
                                 tower.Hover(true, false);
                             }
                             cursor.SetMoveCursor(true);
+                            CombatActions.OnTowerHoverIn?.Invoke(tower);
                             break;
                         }
                     }
@@ -180,6 +181,7 @@ namespace InGame
                         Towers[selectingTower].Hover(false);
                         cursor.SetMoveCursor(false);
                         PlaySlowMotion(false);
+                        CombatActions.OnTowerHoverOut?.Invoke(Towers[selectingTower]);
                         selectingTower = -1;
                     }
                 }
