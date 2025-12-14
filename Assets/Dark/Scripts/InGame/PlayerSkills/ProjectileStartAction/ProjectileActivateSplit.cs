@@ -16,40 +16,45 @@ namespace InGame
             direction.Normalize();
 
             var spawnPos = new Vector2();
-            var calculatedAmount = amount;
+            var calculatedAmount = amount + 1; // +1 đạn chính
+            var angleOffset = 0f;
             
             ProjectileEntity p = null;
-            // if (calculatedAmount % 2 == 1)
-            // {
-            //     p = ProjectilePool.Instance.Get(projectile, null, false);
-            //     spawnPos.x = parentProjectile.transform.position.x;
-            //     spawnPos.y = parentProjectile.transform.position.y;
-            //     p.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
-            //     p.transform.position = spawnPos;
-            //     p.Init(
-            //         parentProjectile.RangeCenter, 
-            //         direction, 
-            //         parentProjectile.Range, 
-            //         parentProjectile.Size, 
-            //         parentProjectile.SpeedScale, 
-            //         parentProjectile.Damage, 
-            //         parentProjectile.CriticalDamage, 
-            //         parentProjectile.CriticalRate, 
-            //         parentProjectile.Stagger, 
-            //         parentProjectile.IsCharge, 
-            //         parentProjectile.MaxHit, 
-            //         null,
-            //         parentProjectile.HitActions,
-            //         ProjectileType.PlayerProjectile
-            //         );
-            //     p.Activate(0.2f);
-            //
-            //     calculatedAmount -= 1;
-            // }
+            if (calculatedAmount % 2 == 1)
+            {
+                p = ProjectilePool.Instance.Get(projectile, null, false);
+                spawnPos.x = parentProjectile.transform.position.x;
+                spawnPos.y = parentProjectile.transform.position.y;
+                p.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+                p.transform.position = spawnPos;
+                p.Init(
+                    parentProjectile.RangeCenter, 
+                    direction, 
+                    parentProjectile.Range, 
+                    parentProjectile.Size, 
+                    parentProjectile.SpeedScale, 
+                    parentProjectile.Damage, 
+                    parentProjectile.CriticalDamage, 
+                    parentProjectile.CriticalRate, 
+                    parentProjectile.Stagger, 
+                    parentProjectile.IsCharge, 
+                    parentProjectile.MaxHit, 
+                    null,
+                    parentProjectile.HitActions,
+                    ProjectileType.PlayerProjectile
+                    );
+                p.Activate(0f);
+            
+                calculatedAmount -= 1;
+            }
+            else
+            {
+                angleOffset = angle / calculatedAmount / 2;
+            }
             
             for (var i = 1; i <= calculatedAmount / 2; i++)
             {
-                var pDir = (Vector2)(Quaternion.Euler(0f, 0f, i * angle / calculatedAmount) * direction);
+                var pDir = (Vector2)(Quaternion.Euler(0f, 0f, i * angle / calculatedAmount - angleOffset) * direction);
                 p = ProjectilePool.Instance.Get(projectile, null, false);
                 spawnPos.x = parentProjectile.transform.position.x;
                 spawnPos.y = parentProjectile.transform.position.y;
@@ -73,7 +78,7 @@ namespace InGame
                 );
                 p.Activate(0f);
             
-                pDir = Quaternion.Euler(0f, 0f, - i * angle / calculatedAmount) * direction;
+                pDir = Quaternion.Euler(0f, 0f, - i * angle / calculatedAmount + angleOffset) * direction;
                 p = ProjectilePool.Instance.Get(projectile, null, false);
                 spawnPos.x = parentProjectile.transform.position.x;
                 spawnPos.y = parentProjectile.transform.position.y;

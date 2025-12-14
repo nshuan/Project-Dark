@@ -142,13 +142,13 @@ namespace InGame
             activated = true;
             collider.CanTrigger = true;
             
-            if (ActivateActions != null)
-            {
-                foreach (var action in ActivateActions)
-                {
-                    action.DoAction(this, direction);
-                }
-            }
+            // if (ActivateActions != null)
+            // {
+            //     foreach (var action in ActivateActions)
+            //     {
+            //         action.DoAction(this, direction);
+            //     }
+            // }
         }
 
         protected virtual void Update()
