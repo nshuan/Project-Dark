@@ -129,10 +129,15 @@ namespace InGame
 
         public bool CheckCollectibleOnWay(Vector2 direction)
         {
+#if UNITY_EDITOR
+            gizmosDirection = direction;
+#endif
             var collectibleHits = new RaycastHit2D[5];
             var hitCount = Physics2D.LinecastNonAlloc(transform.position, transform.position + (Vector3)direction * 10f,
                 collectibleHits, collectibleLayer);
-            return hitCount > 0 && collectibleHits.Any((hit) => hit && hit.transform.CompareTag("Collectible"));
+            if (hitCount > 0)
+                return collectibleHits.Any((hit) => hit && hit.transform.CompareTag("Collectible"));
+            return false;
         }
 
         public void IgnoreEnemy(EnemyEntity enemy)
@@ -144,6 +149,14 @@ namespace InGame
                 allHitEnemiesInCurrentShot.Add(enemy.transform);
             totalHitCountInCurrentShot += 1;
         }
+
+#if UNITY_EDITOR
+        private Vector2 gizmosDirection = Vector2.zero;
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawLine(transform.position, transform.position + (Vector3)gizmosDirection * 10f);
+        }
+#endif
 
         public enum ProjectileHitStatus
         {

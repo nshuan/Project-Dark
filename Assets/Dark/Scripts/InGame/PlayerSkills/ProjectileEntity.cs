@@ -210,7 +210,7 @@ namespace InGame
             }
             else
             {
-                if (Vector2.Distance(transform.position + moveDirection, SpawnPosition) > maxDistanceFromSpawnPosition)
+                if (!BlockAutoDestroyOutRange && Vector2.Distance(transform.position + moveDirection, SpawnPosition) > maxDistanceFromSpawnPosition)
                 {
                     if (!BlockSpawnDeadBody)
                     {
