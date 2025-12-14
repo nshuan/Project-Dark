@@ -132,7 +132,7 @@ namespace InGame
 #if UNITY_EDITOR
             gizmosDirection = direction;
 #endif
-            var collectibleHits = new RaycastHit2D[5];
+            var collectibleHits = new RaycastHit2D[1];
             var hitCount = Physics2D.LinecastNonAlloc(transform.position, transform.position + (Vector3)direction * 10f,
                 collectibleHits, collectibleLayer);
             if (hitCount > 0)
