@@ -315,7 +315,7 @@ namespace InGame
                 if (cdCounterCharge <= 0)
                 {
                     CanShootCharge = true;
-                    cursor.SetReadyToCharge();
+                    if (CanCharge) cursor.SetReadyToCharge();
                     CombatActions.OnChargeCooldownComplete?.Invoke();
                 }
             }
