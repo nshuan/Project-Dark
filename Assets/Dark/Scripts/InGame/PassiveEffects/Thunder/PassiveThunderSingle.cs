@@ -76,7 +76,7 @@ namespace InGame
                         sfx.Play();
                     }
                     
-                    cameraShakeEffect.Duration = 0.5f;
+                    cameraShakeEffect.Duration = 0.3f;
                     VisualEffectHelper.Instance.PlayEffect(cameraShakeEffect);
                 }, () =>
                 {
