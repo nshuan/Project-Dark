@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using UnityEngine;
 using Newtonsoft.Json;
@@ -25,7 +26,11 @@ namespace Data
         public static void Save<T>(string key, T data)
         {
             string filePath = DataPath + "/" + key + ".json";
-            var jsonData = JsonConvert.SerializeObject(data);
+            var jsonData = "";
+            if (typeof(T) == typeof(int))
+                jsonData = JsonConvert.SerializeObject(new WrappedData<T>(data));
+            else
+                jsonData = JsonConvert.SerializeObject(data);
             File.WriteAllText(filePath, jsonData);
         }
 
@@ -35,6 +40,8 @@ namespace Data
             if (File.Exists(filePath))
             {
                 string jsonData = File.ReadAllText(filePath);
+                if (typeof(T) == typeof(int))
+                    return JsonConvert.DeserializeObject<WrappedData<T>>(jsonData).value;
                 return JsonConvert.DeserializeObject<T>(jsonData);
             }
             return defaultValue;
@@ -47,6 +54,17 @@ namespace Data
             {
                 File.Delete(filePath);
             }
+        }
+    }
+
+    [Serializable]
+    public class WrappedData<T>
+    {
+        public T value;
+
+        public WrappedData(T data)
+        {
+            this.value = data;
         }
     }
 }

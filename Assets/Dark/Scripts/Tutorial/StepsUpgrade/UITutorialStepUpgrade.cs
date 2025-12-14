@@ -4,6 +4,7 @@ using Dark.Scripts.OutGame.Upgrade;
 using Dark.Scripts.Utils;
 using InGame.Upgrade;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Dark.Scripts.Tutorial
 {
@@ -11,6 +12,8 @@ namespace Dark.Scripts.Tutorial
     {
         [SerializeField] private GameObject objPointToResource;
         [SerializeField] private GameObject objInstruction;
+        [SerializeField] private GameObject objTreeInstruction;
+        [SerializeField] private Button btnCloseTreeInstruction;
         [SerializeField] private UIPanelUpgradeTree panelUpgradeTree;
 
         [Space] [Header("Config")] 
@@ -29,6 +32,7 @@ namespace Dark.Scripts.Tutorial
         {
             objPointToResource.SetActive(false);
             objInstruction.SetActive(false);
+            btnCloseTreeInstruction.gameObject.SetActive(false);
             
             if (!panelUpgradeTree)
             {
@@ -43,6 +47,8 @@ namespace Dark.Scripts.Tutorial
             targetNode = panelUpgradeTree.Tree.nodesMapByLayer[1][0].transform;
             this.DelayCall(delay, () =>
             {
+                if (targetNode) 
+                    objInstruction.transform.position = targetNode.position;
                 objPointToResource.SetActive(true);
                 objInstruction.SetActive(true);
                 
@@ -58,14 +64,23 @@ namespace Dark.Scripts.Tutorial
         private void OnNodeUpgraded(UIUpgradeNode node)
         {
             panelUpgradeTree.Tree.OnNodeUpgraded -= OnNodeUpgraded;
-            OnComplete?.Invoke();
+            btnCloseTreeInstruction.onClick.RemoveAllListeners();
+            btnCloseTreeInstruction.onClick.AddListener(() =>
+            {
+                OnComplete?.Invoke();
+            });
+            
+            objPointToResource.SetActive(false);
+            objInstruction.SetActive(false);
+            btnCloseTreeInstruction.gameObject.SetActive(true);
         }
 
         private void Update()
         {
-             if (!objInstruction.activeInHierarchy) return;
-             if (!targetNode) return;
-             objInstruction.transform.position = targetNode.position;
+             if (objInstruction.activeInHierarchy && targetNode) 
+                 objInstruction.transform.position = targetNode.position;
+             if (objTreeInstruction.activeInHierarchy && panelUpgradeTree.Tree)
+                 objTreeInstruction.transform.position = panelUpgradeTree.Tree.transform.position;
         }
     }
 }
