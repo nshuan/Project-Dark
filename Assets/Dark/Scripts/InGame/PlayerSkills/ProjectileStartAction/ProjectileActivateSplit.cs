@@ -19,33 +19,33 @@ namespace InGame
             var calculatedAmount = amount;
             
             ProjectileEntity p = null;
-            if (calculatedAmount % 2 == 1)
-            {
-                p = ProjectilePool.Instance.Get(projectile, null, false);
-                spawnPos.x = parentProjectile.transform.position.x;
-                spawnPos.y = parentProjectile.transform.position.y;
-                p.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
-                p.transform.position = spawnPos;
-                p.Init(
-                    parentProjectile.RangeCenter, 
-                    direction, 
-                    parentProjectile.Range, 
-                    parentProjectile.Size, 
-                    parentProjectile.SpeedScale, 
-                    parentProjectile.Damage, 
-                    parentProjectile.CriticalDamage, 
-                    parentProjectile.CriticalRate, 
-                    parentProjectile.Stagger, 
-                    parentProjectile.IsCharge, 
-                    parentProjectile.MaxHit, 
-                    null,
-                    parentProjectile.HitActions,
-                    ProjectileType.PlayerProjectile
-                    );
-                p.Activate(0.2f);
-
-                calculatedAmount -= 1;
-            }
+            // if (calculatedAmount % 2 == 1)
+            // {
+            //     p = ProjectilePool.Instance.Get(projectile, null, false);
+            //     spawnPos.x = parentProjectile.transform.position.x;
+            //     spawnPos.y = parentProjectile.transform.position.y;
+            //     p.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+            //     p.transform.position = spawnPos;
+            //     p.Init(
+            //         parentProjectile.RangeCenter, 
+            //         direction, 
+            //         parentProjectile.Range, 
+            //         parentProjectile.Size, 
+            //         parentProjectile.SpeedScale, 
+            //         parentProjectile.Damage, 
+            //         parentProjectile.CriticalDamage, 
+            //         parentProjectile.CriticalRate, 
+            //         parentProjectile.Stagger, 
+            //         parentProjectile.IsCharge, 
+            //         parentProjectile.MaxHit, 
+            //         null,
+            //         parentProjectile.HitActions,
+            //         ProjectileType.PlayerProjectile
+            //         );
+            //     p.Activate(0.2f);
+            //
+            //     calculatedAmount -= 1;
+            // }
             
             for (var i = 1; i <= calculatedAmount / 2; i++)
             {

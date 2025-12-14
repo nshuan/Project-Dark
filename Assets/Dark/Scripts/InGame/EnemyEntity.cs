@@ -354,7 +354,7 @@ namespace InGame
             callbackBurnComplete = null;
         }
 
-        public void Kill(DamageType dmgType, float delayAnimation = 0f)
+        public virtual void Kill(DamageType dmgType, float delayAnimation = 0f)
         {
             delayDieAnimation = delayAnimation;
             HitDirectionX = 0f;

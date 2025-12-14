@@ -51,7 +51,7 @@ namespace InGame
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(1f);
             var critRate = LevelUtility.GetCriticalRate();
-            var bulletNum = LevelUtility.GetNumberOfBullets( 0);
+            var bulletNum = 1;
             var skillSize = LevelUtility.GetSkillSize(1f);
             var skillRange = LevelUtility.GetSkillRange(
                 1f,

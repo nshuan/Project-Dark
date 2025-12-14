@@ -106,7 +106,7 @@ namespace InGame
             var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(
                 canChargeDame && dameChargeAdded > 0 ? 1 + dameChargeAdded : 1f);
             var critRate = LevelUtility.GetCriticalRate();
-            var bulletNum = LevelUtility.GetNumberOfBullets(bulletChargeAdded);
+            var bulletNum = LevelUtility.GetNumberOfBulletsCharge(bulletChargeAdded);
             var skillSize = LevelUtility.GetSkillSize(
                 canChargeSize && sizeChargeAdded > 0 ? 1 + sizeChargeAdded : 1f);
             var skillRange = LevelUtility.GetSkillRange(
