@@ -14,7 +14,13 @@ namespace Dark.Scripts.AudioV2
         {
             audioManager = AudioManagerV2.Instance;
             OnSettingsUpdated();
+            GameSettings.OnSettingInitialized += OnSettingsInitialized;
             GameSettings.OnSettingUpdated += OnSettingsUpdated;
+        }
+
+        private void OnSettingsInitialized()
+        {
+            OnSettingsUpdated();
         }
 
         private void OnSettingsUpdated()

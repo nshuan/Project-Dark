@@ -3,12 +3,12 @@ using UnityEngine.EventSystems;
 
 namespace Dark.Scripts.AudioV2
 {
-    public class AudioPlayOnClickV2 : MonoBehaviour, IPointerClickHandler
+    public class AudioPlayOnHoverV2 : MonoBehaviour, IPointerEnterHandler
     {
         [SerializeField] private string cueKey;
         [SerializeField] private AudioChannel channel = AudioChannel.Ui;
         
-        public void OnPointerClick(PointerEventData eventData)
+        public void OnPointerEnter(PointerEventData eventData)
         {
             switch (channel)
             {

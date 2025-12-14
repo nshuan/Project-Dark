@@ -20,6 +20,7 @@ namespace Dark.Scripts.Settings
         public static bool EnableMusic;
 
         public static event Action OnSettingUpdated;
+        public static event Action OnSettingInitialized;
         
         private static SerializedGameSettings _settings;
         
@@ -32,6 +33,8 @@ namespace Dark.Scripts.Settings
             EnableInGameSound = _settings.enableInGameSound;
             EnableOutGameSound = _settings.enableOutGameSound;
             EnableMusic = _settings.enableMusic;
+            
+            OnSettingInitialized?.Invoke();
         }
 
         private static void SaveSettingsData()
