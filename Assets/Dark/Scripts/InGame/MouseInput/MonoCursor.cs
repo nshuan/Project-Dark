@@ -1,4 +1,5 @@
 using System;
+using Coffee.UIExtensions;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -19,6 +20,7 @@ namespace InGame
         [SerializeField] private TextMeshProUGUI txtChargeUnitAdd;
         [SerializeField] private TextMeshProUGUI txtMax;
         [SerializeField] private TextMeshProUGUI txtReadyToCharge;
+        [SerializeField] private UIParticle vfxReadyToCharge;
         [SerializeField] private TextMeshProUGUI txtAuto;
 
         [Header("Move cursor")] 
@@ -78,10 +80,11 @@ namespace InGame
             txtAuto.SetAlpha(0f);
             txtReadyToCharge.SetAlpha(1f);
             txtReadyToCharge.gameObject.SetActive(true);
+            vfxReadyToCharge.Play();
 
             DOTween.Sequence().SetTarget(txtReadyToCharge)
                 .Append(txtReadyToCharge.transform.DOPunchScale(new Vector3(0.1f, 0.1f, 0.1f), 0.2f))
-                .AppendInterval(0.5f)
+                .AppendInterval(1f)
                 .AppendCallback(() =>
                 {
                     txtChargeUnitAdd.SetAlpha(1f);
