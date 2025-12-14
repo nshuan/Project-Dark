@@ -103,6 +103,16 @@ namespace Dark.Scripts.Tutorial
         {
             if (objCursorInstruction.activeInHierarchy)
                 objCursorInstruction.transform.position = Input.mousePosition;
+
+            if (objInstruction.activeInHierarchy)
+            {
+                actionUpdateFocus?.Invoke(
+                    objInstruction.transform.localPosition,
+                    new Vector2(0.06f, 0.1f),
+                    2f,
+                    false,
+                    false);
+            }
         }
     }
 }
