@@ -106,8 +106,16 @@ namespace InGame.UI.CombatSkills
                 case NodeTowerCounter.CounterType.Pierce:
                     OnSkillUsed(cooldown);
                     break;
+                // Mặc định counter piercing là skill số 1, check nếu đã unlock thì counter slash là skill số 2,
+                // không thì counter slash là skill số 1
                 case NodeTowerCounter.CounterType.Slash:
-                    On2ndSkillUsed(cooldown);
+                    var unlockedPierce =
+                        LevelUtility.BonusInfo.unlockedTowerCounter.TryGetValue(NodeTowerCounter.CounterType.Pierce,
+                            out var unlocked) && unlocked;
+                    if (unlockedPierce)
+                        On2ndSkillUsed(cooldown);
+                    else
+                        OnSkillUsed(cooldown);
                     break;
             }
         }

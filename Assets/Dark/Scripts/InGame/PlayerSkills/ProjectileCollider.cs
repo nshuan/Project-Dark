@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Economic.InGame;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -90,10 +91,10 @@ namespace InGame
 
                     if (hits[i].transform.CompareTag("Collectible"))
                     {
-                        if (hits[i].transform.TryGetComponent<IDamageable>(out var damageable))
+                        if (hits[i].transform.TryGetComponent<EItemDropCollectorCollider>(out var damageable))
                         {
                             Projectile.ProjectileHit(null);
-                            damageable.Damage(0, Projectile.transform.position, 0f, DamageType.Normal);
+                            damageable.Break();
                             return ProjectileHitStatus.None;
                         }
                     }
