@@ -28,8 +28,17 @@ namespace Economic.InGame.DropItems
             
             listItemToCollect = new List<EItemDrop>();
             collectedData = new ECollectorData();
+
+            WealthManager.Instance.OnLevelPointChanged += OnEchoesAdded;
         }
-        
+
+        protected override void OnDestroy()
+        {
+            WealthManager.Instance.OnLevelPointChanged -= OnEchoesAdded;
+            
+            base.OnDestroy();
+        }
+
         public void CollectAll(Transform target)
         {
             if (listItemToCollect.Count == 0) return;
@@ -44,9 +53,6 @@ namespace Economic.InGame.DropItems
                 {
                     case WealthType.Vestige:
                         collectedData.AddVestige(item.Quantity);
-                        break;
-                    case WealthType.Echoes:
-                        collectedData.AddEchoes(item.Quantity);
                         break;
                     case WealthType.Sigils:
                         collectedData.AddSigils(item.Quantity);
@@ -105,6 +111,11 @@ namespace Economic.InGame.DropItems
                 DropOne(kind, quantity, position);
             }
         }
+        
+        private void OnEchoesAdded(int before, int after)
+        {
+            collectedData.AddEchoes(after - before);
+        }
     }
     
     public class ECollectorData
@@ -120,7 +131,8 @@ namespace Economic.InGame.DropItems
         {
             if (Vestige > 0)  WealthManager.Instance.AddVestige(Vestige);
             if (Sigils > 0)  WealthManager.Instance.AddBossPoint(Sigils);
-            if (Echoes > 0)  WealthManager.Instance.AddLevelPoint(Echoes);
+            
+            // Echoes không collect ở đây, khi đủ exp đã tự + echoes rồi
 
             Vestige = 0;
             Sigils = 0;
