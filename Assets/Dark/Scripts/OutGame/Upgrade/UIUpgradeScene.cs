@@ -51,12 +51,6 @@ namespace Dark.Scripts.OutGame.Upgrade
                 LogManager.Log(LogConst.EventLogTotalDataSlotsCreated, totalDataCreated.ToString());
             }
             
-            // // Load Upgrade tree
-            // panelUpgradeTree.SetActive(true);
-            // panelSelectClass.SetActive(false);
-            // Instantiate(UpgradeTreeManifest.GetTreePrefab(classType), treeParent);
-            
-            // Load level
 #if UNITY_EDITOR
             LevelManager.isLoadFromInit = true;
 #endif

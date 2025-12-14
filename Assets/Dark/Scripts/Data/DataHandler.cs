@@ -41,7 +41,20 @@ namespace Data
             {
                 string jsonData = File.ReadAllText(filePath);
                 if (typeof(T) == typeof(int))
-                    return JsonConvert.DeserializeObject<WrappedData<T>>(jsonData).value;
+                {
+                    // Handle old data, old int data is not wrapped
+                    try
+                    {
+                        return JsonConvert.DeserializeObject<WrappedData<T>>(jsonData).value;
+                    }
+                    catch (Exception e)
+                    {
+                        var data = JsonConvert.DeserializeObject<T>(jsonData);
+                        File.Delete(filePath);
+                        Save<T>(key, data);
+                        return data;
+                    }
+                }
                 return JsonConvert.DeserializeObject<T>(jsonData);
             }
             return defaultValue;
