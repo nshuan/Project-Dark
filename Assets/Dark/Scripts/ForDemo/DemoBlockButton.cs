@@ -27,8 +27,6 @@ namespace Dark.Scripts.ForDemo
 
         protected virtual void Start()
         {
-            if (!DemoConfig.IsDemo) return;
-            
             if (!ShouldShowButton())
             {
                 hiddenButton?.SetActive(true);
@@ -46,6 +44,7 @@ namespace Dark.Scripts.ForDemo
 
         protected virtual bool ShouldShowButton()
         {
+            if (!DemoConfig.IsDemo) return false;
             return true;
         }
 
