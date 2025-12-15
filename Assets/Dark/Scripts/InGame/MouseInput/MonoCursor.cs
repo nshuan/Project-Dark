@@ -1,4 +1,5 @@
 using System;
+using Coffee.UIExtensions;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -8,8 +9,9 @@ namespace InGame
 {
     public class MonoCursor : MonoBehaviour
     {
+        [Header("Normal cursor")]
         public Image visual;
-        public Transform content;
+        public CanvasGroup content;
         [SerializeField] private float contentMaxScale;
         [SerializeField] private GameObject groupCooldown;
         [SerializeField] private GameObject cooldownGlow;
@@ -17,7 +19,12 @@ namespace InGame
         [SerializeField] private Color cooldownMaxColor;
         [SerializeField] private TextMeshProUGUI txtChargeUnitAdd;
         [SerializeField] private TextMeshProUGUI txtMax;
-        [SerializeField] private GameObject txtAuto;
+        [SerializeField] private TextMeshProUGUI txtReadyToCharge;
+        [SerializeField] private UIParticle vfxReadyToCharge;
+        [SerializeField] private TextMeshProUGUI txtAuto;
+
+        [Header("Move cursor")] 
+        public CanvasGroup contentMove;
         
         public void UpdateCooldown(bool active, float value)
         {
@@ -54,13 +61,51 @@ namespace InGame
             if (active)
             {
                 txtAuto.transform.localScale = 0.3f * Vector3.one;
-                txtAuto.SetActive(true);
+                txtAuto.gameObject.SetActive(true);
                 txtAuto.transform.DOScale(1f, 0.3f).SetEase(Ease.OutBack).SetTarget(txtAuto);
             }
             else
             {
                 txtAuto.transform.DOScale(0.3f, 0.3f).SetEase(Ease.InBack).SetTarget(txtAuto)
                     .OnComplete(() => txtAuto.gameObject.SetActive(false));
+            }
+        }
+
+        public void SetReadyToCharge()
+        {
+            DOTween.Kill(txtReadyToCharge);
+            
+            txtChargeUnitAdd.SetAlpha(0f);
+            txtMax.SetAlpha(0f);
+            txtAuto.SetAlpha(0f);
+            txtReadyToCharge.SetAlpha(1f);
+            txtReadyToCharge.gameObject.SetActive(true);
+            vfxReadyToCharge.Play();
+
+            DOTween.Sequence().SetTarget(txtReadyToCharge)
+                .Append(txtReadyToCharge.transform.DOPunchScale(new Vector3(0.1f, 0.1f, 0.1f), 0.2f))
+                .AppendInterval(1f)
+                .AppendCallback(() =>
+                {
+                    txtChargeUnitAdd.SetAlpha(1f);
+                    txtMax.SetAlpha(1f);
+                    txtAuto.SetAlpha(1f);
+                    txtReadyToCharge.SetAlpha(0f);
+                    txtReadyToCharge.gameObject.SetActive(false);
+                });
+        }
+
+        public void SetMoveCursor(bool active)
+        {
+            if (active)
+            {
+                content.alpha = 0f;
+                contentMove.alpha = 1f;
+            }
+            else
+            {
+                content.alpha = 1f;
+                contentMove.alpha = 0f;
             }
         }
     }

@@ -154,23 +154,31 @@ namespace Dark.Scripts.AudioV2
 
         #region Public API
 
+        public bool BlockPlayInGame { get; set; }
         public AudioSource PlayInGame(string key, Vector3? worldPos = null, float volumeScale = 1f, float? pitch = null)
         {
+            if (BlockPlayInGame) volumeScale = 0f;
             return PlayInternal(key, AudioChannel.InGame, worldPos, volumeScale, pitch);
         }
 
+        public bool BlockPlayOutGame { get; set; }
         public AudioSource PlayOutGame(string key, Vector3? worldPos = null, float volumeScale = 1f, float? pitch = null)
         {
+            if (BlockPlayOutGame) volumeScale = 0f;
             return PlayInternal(key, AudioChannel.OutGame, worldPos, volumeScale, pitch);
         }
 
+        public bool BlockPlayUi { get; set; }
         public AudioSource PlayUi(string key, float volumeScale = 1f, float? pitch = null)
         {
+            if (BlockPlayUi) volumeScale = 0f;
             return PlayInternal(key, AudioChannel.Ui, null, volumeScale, pitch);
         }
 
+        public bool BlockPlayMusic { get; set; }
         public void PlayMusic(string cueKey, float fadeDuration = -1f)
         {
+            if (BlockPlayMusic) return;
             if (!pools.TryGetValue(cueKey, out var pool) || pool.Cue.channel != AudioChannel.Music)
             {
                 DebugUtility.LogWarning($"[AudioManagerV2] Music cue '{cueKey}' was not found or is not marked as Music.");
@@ -196,8 +204,17 @@ namespace Dark.Scripts.AudioV2
             if (musicRoutine != null)
                 StopCoroutine(musicRoutine);
 
-            musicRoutine = StartCoroutine(FadeOutActiveMusic(fadeDuration));
+            musicRoutine = StartCoroutine(FadeOutActiveMusic(0f, fadeDuration));
             currentMusicKey = null;
+        }
+
+        public void FadeVolumeMusic(float volume, float fadeDuration = 0.25f)
+        {
+            if (BlockPlayMusic) return;
+            if (musicRoutine != null)
+                StopCoroutine(musicRoutine);
+            
+            musicRoutine = StartCoroutine(FadeActiveMusic(volume, fadeDuration));
         }
 
         public void SetChannelVolume(AudioChannel channel, float volume)
@@ -309,7 +326,7 @@ namespace Dark.Scripts.AudioV2
             musicRoutine = null;
         }
 
-        private IEnumerator FadeOutActiveMusic(float fadeDuration)
+        private IEnumerator FadeOutActiveMusic(float fadeTo, float fadeDuration)
         {
             fadeDuration = Mathf.Max(0.01f, fadeDuration);
 
@@ -320,13 +337,32 @@ namespace Dark.Scripts.AudioV2
             while (elapsed < fadeDuration)
             {
                 var t = elapsed / fadeDuration;
-                active.volume = Mathf.Lerp(startVolume, 0f, t);
+                active.volume = Mathf.Lerp(startVolume, fadeTo, t);
                 elapsed += Time.unscaledDeltaTime;
                 yield return null;
             }
 
             active.Stop();
             active.clip = null;
+            musicRoutine = null;
+        }
+        
+        private IEnumerator FadeActiveMusic(float fadeTo, float fadeDuration)
+        {
+            fadeDuration = Mathf.Max(0.01f, fadeDuration);
+
+            var active = ActiveMusicSource();
+            var startVolume = active.volume;
+            var elapsed = 0f;
+
+            while (elapsed < fadeDuration)
+            {
+                var t = elapsed / fadeDuration;
+                active.volume = Mathf.Lerp(startVolume, fadeTo, t);
+                elapsed += Time.unscaledDeltaTime;
+                yield return null;
+            }
+            
             musicRoutine = null;
         }
         

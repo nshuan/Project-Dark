@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace InGame
 {
-    public class HomingProjectileDead : MonoBehaviour
+    public class HomingProjectileDead : ProjectileDead
     {
         [SerializeField] private GameObject vfxDispose;
         public Transform visual;
@@ -20,6 +20,12 @@ namespace InGame
         {
             visual.gameObject.SetActive(true);
             vfxDispose.SetActive(false);
+        }
+
+        protected override void Swallowed()
+        {
+            Dispose();
+            ProjectileHomingDeadPool.Instance.Release(this);
         }
     }
 }

@@ -1,5 +1,49 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3683450455912896525
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2139886362551351148}
+  - component: {fileID: 7006130888980056822}
+  m_Layer: 0
+  m_Name: AudioSettingsListener
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2139886362551351148
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3683450455912896525}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3385196017061023560}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7006130888980056822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3683450455912896525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f51ff1705da42ce8ab1372ec614ed93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5786697079334774885
 GameObject:
   m_ObjectHideFlags: 0
@@ -62,6 +106,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8839059311664363939}
+  - {fileID: 2139886362551351148}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8972112395963405297
@@ -86,7 +131,7 @@ MonoBehaviour:
     pitchRange: {x: 1, y: 1}
     preloadPool: 1
     maxPool: 1
-    stealWhenExhausted: 0
+    stealWhenExhausted: 1
   - key: bgm_home_loop
     channel: 0
     clip: {fileID: 8300000, guid: bcc6c49491c993648942dfeadffe9be8, type: 3}
@@ -96,7 +141,7 @@ MonoBehaviour:
     pitchRange: {x: 1, y: 1}
     preloadPool: 1
     maxPool: 1
-    stealWhenExhausted: 0
+    stealWhenExhausted: 1
   - key: bgm_ingame_intro
     channel: 0
     clip: {fileID: 8300000, guid: 5593075eee29b2e41bb7be709f52fa92, type: 3}
@@ -106,7 +151,7 @@ MonoBehaviour:
     pitchRange: {x: 1, y: 1}
     preloadPool: 1
     maxPool: 1
-    stealWhenExhausted: 0
+    stealWhenExhausted: 1
   - key: bgm_ingame_loop
     channel: 0
     clip: {fileID: 8300000, guid: ce69bccea0129bd4887104b1c05a705b, type: 3}
@@ -116,7 +161,7 @@ MonoBehaviour:
     pitchRange: {x: 1, y: 1}
     preloadPool: 1
     maxPool: 1
-    stealWhenExhausted: 0
+    stealWhenExhausted: 1
   - key: click_strong
     channel: 3
     clip: {fileID: 8300000, guid: 1e2760cfdd5ed164aa54d0fd249ee9fd, type: 3}
@@ -126,7 +171,7 @@ MonoBehaviour:
     pitchRange: {x: 1, y: 2}
     preloadPool: 2
     maxPool: 4
-    stealWhenExhausted: 0
+    stealWhenExhausted: 1
   - key: click_weak
     channel: 3
     clip: {fileID: 8300000, guid: 1e2760cfdd5ed164aa54d0fd249ee9fd, type: 3}
@@ -136,16 +181,16 @@ MonoBehaviour:
     pitchRange: {x: 1, y: 1}
     preloadPool: 2
     maxPool: 4
-    stealWhenExhausted: 0
+    stealWhenExhausted: 1
   - key: click_upgrade
-    channel: 3
+    channel: 1
     clip: {fileID: 8300000, guid: 4483de7e6f1b3994fb174635d7af4d9c, type: 3}
     volume: 1
     loop: 0
     spatialBlend: 0.5
-    pitchRange: {x: 0.5, y: 1.5}
-    preloadPool: 1
-    maxPool: 2
+    pitchRange: {x: 1, y: 1.5}
+    preloadPool: 4
+    maxPool: 8
     stealWhenExhausted: 1
   - key: click_select_class
     channel: 3
@@ -156,9 +201,9 @@ MonoBehaviour:
     pitchRange: {x: 1, y: 1}
     preloadPool: 1
     maxPool: 2
-    stealWhenExhausted: 0
+    stealWhenExhausted: 1
   - key: click_upgrade_fail
-    channel: 3
+    channel: 1
     clip: {fileID: 8300000, guid: a6fc0887677c04347b99cb53b250b958, type: 3}
     volume: 0.5
     loop: 0
@@ -168,9 +213,9 @@ MonoBehaviour:
     maxPool: 4
     stealWhenExhausted: 1
   - key: hover_upgrade
-    channel: 3
+    channel: 1
     clip: {fileID: 8300000, guid: 4e4e9a52b5f794e4f9c4f5b1abea8be0, type: 3}
-    volume: 0.5
+    volume: 0.2
     loop: 0
     spatialBlend: 0.5
     pitchRange: {x: 1, y: 1.5}
@@ -178,7 +223,7 @@ MonoBehaviour:
     maxPool: 4
     stealWhenExhausted: 1
   - key: upgrade_spawn_tree
-    channel: 2
+    channel: 1
     clip: {fileID: 8300000, guid: 37ac7f46962c3eb42bfa720610de4fa5, type: 3}
     volume: 1
     loop: 0
@@ -186,9 +231,9 @@ MonoBehaviour:
     pitchRange: {x: 1, y: 1}
     preloadPool: 1
     maxPool: 2
-    stealWhenExhausted: 0
+    stealWhenExhausted: 1
   - key: upgrade_spawn_nodes
-    channel: 2
+    channel: 1
     clip: {fileID: 8300000, guid: 8b2dcb778178d5c4988948b33d0df95f, type: 3}
     volume: 1
     loop: 0
@@ -196,9 +241,9 @@ MonoBehaviour:
     pitchRange: {x: 1, y: 1}
     preloadPool: 1
     maxPool: 2
-    stealWhenExhausted: 0
+    stealWhenExhausted: 1
   - key: ingame_win
-    channel: 1
+    channel: 3
     clip: {fileID: 8300000, guid: b135ebc2a39141d4ab9f5a51366b9751, type: 3}
     volume: 1
     loop: 0
@@ -206,9 +251,9 @@ MonoBehaviour:
     pitchRange: {x: 1, y: 1}
     preloadPool: 1
     maxPool: 2
-    stealWhenExhausted: 0
+    stealWhenExhausted: 1
   - key: ingame_lose
-    channel: 1
+    channel: 3
     clip: {fileID: 8300000, guid: 3a171b3092006c74cb616673b7ccf074, type: 3}
     volume: 1
     loop: 0
@@ -216,7 +261,157 @@ MonoBehaviour:
     pitchRange: {x: 1, y: 1}
     preloadPool: 1
     maxPool: 2
-    stealWhenExhausted: 0
+    stealWhenExhausted: 1
+  - key: ingame_collect
+    channel: 1
+    clip: {fileID: 8300000, guid: d5a0674db22dc0742add4d2961ec8f58, type: 3}
+    volume: 1
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 1, y: 2}
+    preloadPool: 1
+    maxPool: 2
+    stealWhenExhausted: 1
+  - key: ingame_tower_hit
+    channel: 1
+    clip: {fileID: 8300000, guid: ad0f5d93f1375e949b4af4fc4f96c040, type: 3}
+    volume: 0.2
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 1, y: 2}
+    preloadPool: 4
+    maxPool: 8
+    stealWhenExhausted: 1
+  - key: ingame_tower_cooldown
+    channel: 1
+    clip: {fileID: 8300000, guid: 20a7d9e1e55150a4d899e28127fb9418, type: 3}
+    volume: 1
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 1, y: 1}
+    preloadPool: 1
+    maxPool: 2
+    stealWhenExhausted: 1
+  - key: ingame_flash_start
+    channel: 1
+    clip: {fileID: 8300000, guid: 9b7bd179696b9f5498b32a27d4baa845, type: 3}
+    volume: 0.8
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 1, y: 1}
+    preloadPool: 1
+    maxPool: 2
+    stealWhenExhausted: 1
+  - key: ingame_flash_end
+    channel: 1
+    clip: {fileID: 8300000, guid: 44cf5e11236643d429e38c6e65fb9ba9, type: 3}
+    volume: 0.1
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 1, y: 1}
+    preloadPool: 1
+    maxPool: 2
+    stealWhenExhausted: 1
+  - key: ingame_dash
+    channel: 1
+    clip: {fileID: 8300000, guid: 64d9796ef03021941af3917c59d7fe9d, type: 3}
+    volume: 0.8
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 1, y: 1}
+    preloadPool: 1
+    maxPool: 2
+    stealWhenExhausted: 1
+  - key: ingame_teleport
+    channel: 1
+    clip: {fileID: 8300000, guid: ce9578a3e9766964cb377822cf3e982e, type: 3}
+    volume: 0.1
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 1, y: 1}
+    preloadPool: 1
+    maxPool: 2
+    stealWhenExhausted: 1
+  - key: ingame_teleport_end
+    channel: 1
+    clip: {fileID: 8300000, guid: 09076476f9456814bbc48272375bd7af, type: 3}
+    volume: 0.1
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 1, y: 1}
+    preloadPool: 1
+    maxPool: 2
+    stealWhenExhausted: 1
+  - key: ingame_burning
+    channel: 1
+    clip: {fileID: 8300000, guid: 978119a2720698e47b3449c0b178c6fb, type: 3}
+    volume: 0.5
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 1, y: 1.5}
+    preloadPool: 4
+    maxPool: 8
+    stealWhenExhausted: 1
+  - key: ingame_explosion
+    channel: 1
+    clip: {fileID: 8300000, guid: 50a6f6a761dec5c47ac5fdb9be0220a2, type: 3}
+    volume: 0.25
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 1, y: 1.5}
+    preloadPool: 4
+    maxPool: 8
+    stealWhenExhausted: 1
+  - key: ingame_lightning
+    channel: 1
+    clip: {fileID: 8300000, guid: 0330fff7cc1086b45b06478d96c9a64e, type: 3}
+    volume: 0.5
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 0.8, y: 1.5}
+    preloadPool: 4
+    maxPool: 8
+    stealWhenExhausted: 1
+  - key: ingame_thunder
+    channel: 1
+    clip: {fileID: 8300000, guid: a91f5df29d6b3e84ebc39465e40abcb4, type: 3}
+    volume: 0.5
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 1, y: 1.5}
+    preloadPool: 4
+    maxPool: 8
+    stealWhenExhausted: 1
+  - key: ingame_item_drop
+    channel: 1
+    clip: {fileID: 8300000, guid: 0e93cd27e5a2e4c4c865594ec5b7bd75, type: 3}
+    volume: 1
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 0.5, y: 2}
+    preloadPool: 4
+    maxPool: 16
+    stealWhenExhausted: 1
+  - key: ingame_enemy_hit
+    channel: 1
+    clip: {fileID: 8300000, guid: ee6061257e78bf54d9f5015807b1c422, type: 3}
+    volume: 0.1
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 1, y: 1.5}
+    preloadPool: 4
+    maxPool: 8
+    stealWhenExhausted: 1
+  - key: ingame_shoot
+    channel: 1
+    clip: {fileID: 8300000, guid: 662f52019f5929d439da1b3b3a4effa2, type: 3}
+    volume: 0.25
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 1, y: 2}
+    preloadPool: 4
+    maxPool: 16
+    stealWhenExhausted: 1
   poolRoot: {fileID: 8839059311664363939}
   autoPlaySceneMusic: 1
   sceneMusic: []

@@ -1,5 +1,5 @@
 using System;
-using Dark.Scripts.Audio;
+using Dark.Scripts.AudioV2;
 using Dark.Scripts.Utils;
 using DG.Tweening;
 using InGame;
@@ -11,12 +11,12 @@ namespace Economic.InGame.DropItems
 {
     public class EItemDrop : MonoBehaviour, ICollectible
     {
-        private const float FlySpeed = 22f;
+        private const float FlySpeed = 25f;
         
         [SerializeField] private TargetedProjectile targetLogic;
         [SerializeField] private GameObject vfxClaim;
         [SerializeField] private GameObject visual;
-        [SerializeField] private AudioComponent sfx;
+        [SerializeField] private AudioPlayComponentV2 sfx;
         [SerializeField] private Transform shadow;
         [SerializeField] private float minDistanceToTower = 1.5f;
         [SerializeField] private float dropSpanAngleToExcludeTower = 240f;
@@ -72,10 +72,15 @@ namespace Economic.InGame.DropItems
         
         public void Collect(Transform target, float delay)
         {
+            delayCollect = delay;
+            collectCounter = delayCollect;
             Collect(target);
         }
 
         private bool isCollecting;
+        private float delayCollect;
+        private float collectStartDuration = 0.24f;
+        private float collectCounter;
         private Transform target;
         public void Collect(Transform target)
         {
@@ -85,8 +90,6 @@ namespace Economic.InGame.DropItems
                 ProjectileCurveManifest.GetAxisCorrectionCurve(0), ProjectileCurveManifest.GetProjectileSpeedCurve(1));
             
             isCollecting = true;
-
-            shadow.DOScale(0f, 0.2f);
         }
 
         private Vector2 nextPosition;
@@ -94,6 +97,21 @@ namespace Economic.InGame.DropItems
         {
             if (!isCollecting) return;
 
+            if (delayCollect > 0f)
+            {
+                delayCollect -= Time.deltaTime;
+                return;
+            }
+
+            if (collectCounter > 0f)
+            {
+                visual.transform.position += new Vector3(0f, 0.5f * Time.deltaTime, 0f);
+                collectCounter -= Time.deltaTime;
+                if (collectCounter <= 0f)
+                    shadow.DOScale(0f, 0.2f);
+                return;
+            }
+            
             if (Vector2.Distance(transform.position, target.transform.position) < 0.1f)
             {
                 visual.gameObject.SetActive(false);

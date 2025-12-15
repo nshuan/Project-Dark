@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using Dark.Scripts.AudioV2;
+using Dark.Scripts.Settings;
 using DG.Tweening;
 using UnityEngine;
 
@@ -12,7 +14,7 @@ namespace Dark.Scripts.Audio
         [SerializeField] private int loop = 1;
         [SerializeField] private bool playOnStart = true;
         [SerializeField] private float delay;
-        [SerializeField] private AudioPlayType audioType;
+        [SerializeField] private AudioChannel audioType;
         
         [Space]
         [Header("Fade in")]
@@ -41,18 +43,17 @@ namespace Dark.Scripts.Audio
 
         private void Start()
         {
-            if (audioType == AudioPlayType.Sound) settingVolumeEnabled = Settings.GameSettings.EnableSound ? 1 : 0;
-            else settingVolumeEnabled = Settings.GameSettings.EnableMusic ? 1 : 0;
+            OnSettingsUpdated();
             
             if (playOnStart)
                 Play();
             
-            Settings.GameSettings.OnSettingUpdated += OnSettingsUpdated;
+            GameSettings.OnSettingUpdated += OnSettingsUpdated;
         }
 
         private void OnDestroy()
         {
-            Settings.GameSettings.OnSettingUpdated -= OnSettingsUpdated;
+            GameSettings.OnSettingUpdated -= OnSettingsUpdated;
         }
 
         public void Play(float delay = -1f)
@@ -84,12 +85,20 @@ namespace Dark.Scripts.Audio
         {
             switch (audioType)
             {
-                case AudioPlayType.Sound:
-                    settingVolumeEnabled = Settings.GameSettings.EnableSound ? 1 : 0;
+                case AudioChannel.Ui:
+                    settingVolumeEnabled = GameSettings.EnableUISound ? 1 : 0;
                     audio.volume = volume * settingVolumeEnabled;
                     break;
-                case AudioPlayType.Music:
-                    settingVolumeEnabled = Settings.GameSettings.EnableMusic ? 1 : 0;
+                case AudioChannel.Music:
+                    settingVolumeEnabled = GameSettings.EnableMusic ? 1 : 0;
+                    audio.volume = volume * settingVolumeEnabled;
+                    break;
+                case AudioChannel.InGame:
+                    settingVolumeEnabled = GameSettings.EnableInGameSound ? 1 : 0;
+                    audio.volume = volume * settingVolumeEnabled;
+                    break;
+                case AudioChannel.OutGame:
+                    settingVolumeEnabled = GameSettings.EnableOutGameSound ? 1 : 0; 
                     audio.volume = volume * settingVolumeEnabled;
                     break;
             }

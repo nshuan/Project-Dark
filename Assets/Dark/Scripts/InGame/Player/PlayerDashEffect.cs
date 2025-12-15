@@ -1,4 +1,4 @@
-using Dark.Scripts.Audio;
+using Dark.Scripts.AudioV2;
 using UnityEngine;
 
 namespace InGame
@@ -8,7 +8,7 @@ namespace InGame
         [SerializeField] private GameObject vfxDash;
         [SerializeField] private ParticleSystem vfxDashEnd;
         [SerializeField] private ParticleSystem vfxDashStart;
-        [SerializeField] private AudioComponent sfxDashStart;
+        [SerializeField] private AudioPlayComponentV2 sfxDashStart;
         
         public void PLayStart(Vector2 direction)
         {

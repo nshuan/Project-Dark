@@ -71,7 +71,7 @@ namespace InGame
             
             // Do aoe damage
             character.PlayAoe();
-            cameraShake ??= new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera };
+            cameraShake ??= new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera, Magnitude = 0.08f };
             VisualEffectHelper.Instance.PlayEffect(cameraShake);
                 
             count = Physics2D.CircleCastNonAlloc(character.FlashExplodeCenter, aoeSize, Vector2.zero, hits,

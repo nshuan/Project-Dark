@@ -14,6 +14,7 @@ namespace InGame
             var obj = Get(null);
             var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             obj.visual.rotation = Quaternion.Euler(0f, 0f, angle);
+            obj.Reset();
             obj.gameObject.SetActive(true);
             StartCoroutine(IERelease(obj, overrideDelayDisappear));
             return obj;

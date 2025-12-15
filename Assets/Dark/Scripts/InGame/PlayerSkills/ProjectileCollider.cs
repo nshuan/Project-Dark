@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Economic.InGame;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -10,6 +11,7 @@ namespace InGame
     public class ProjectileCollider : MonoBehaviour
     {
         public LayerMask hitLayer;
+        public LayerMask collectibleLayer;
         
         private ProjectileEntity projectile;
 
@@ -89,10 +91,10 @@ namespace InGame
 
                     if (hits[i].transform.CompareTag("Collectible"))
                     {
-                        if (hits[i].transform.TryGetComponent<IDamageable>(out var damageable))
+                        if (hits[i].transform.TryGetComponent<EItemDropCollectorCollider>(out var damageable))
                         {
                             Projectile.ProjectileHit(null);
-                            damageable.Damage(0, Projectile.transform.position, 0f, DamageType.Normal);
+                            damageable.Break();
                             return ProjectileHitStatus.None;
                         }
                     }
@@ -123,20 +125,20 @@ namespace InGame
         
         public void CheckHitEnemiesOnInit(float radius = 1f)
         {
-            // Lấy y làm radius nếu ảnh viên đạn trong prefab nằm ngang
-            // var hitCount = Physics2D.CircleCastNonAlloc(projectile.transform.position, radius, direction, hits, 0f, hitLayer);
-            // if (hitCount > 0)
-            // {
-            //     // Chỉ check hit 1 object đầu tiên va chạm
-            //     for (var i = 0; i < 1; i++)
-            //     {
-            //         if (hits[i].transform.TryGetComponent<EnemyEntity>(out hitEnemy))
-            //         {
-            //             Projectile.ProjectileHit(hitEnemy);
-            //             DebugUtility.Log($"Hit enemy {hitEnemy.name}");
-            //         }
-            //     }
-            // }
+
+        }
+
+        public bool CheckCollectibleOnWay(Vector2 direction)
+        {
+#if UNITY_EDITOR
+            gizmosDirection = direction;
+#endif
+            var collectibleHits = new RaycastHit2D[1];
+            var hitCount = Physics2D.LinecastNonAlloc(transform.position, transform.position + (Vector3)direction * 10f,
+                collectibleHits, collectibleLayer);
+            if (hitCount > 0)
+                return collectibleHits.Any((hit) => hit && hit.transform.CompareTag("Collectible"));
+            return false;
         }
 
         public void IgnoreEnemy(EnemyEntity enemy)
@@ -148,6 +150,14 @@ namespace InGame
                 allHitEnemiesInCurrentShot.Add(enemy.transform);
             totalHitCountInCurrentShot += 1;
         }
+
+#if UNITY_EDITOR
+        private Vector2 gizmosDirection = Vector2.zero;
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawLine(transform.position, transform.position + (Vector3)gizmosDirection * 10f);
+        }
+#endif
 
         public enum ProjectileHitStatus
         {

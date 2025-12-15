@@ -1,3 +1,5 @@
+using System;
+using Dark.Scripts.Settings;
 using UnityEngine;
 
 namespace Dark.Scripts.AudioV2
@@ -10,8 +12,28 @@ namespace Dark.Scripts.AudioV2
         
         private void Start()
         {
+            if (GameSettings.EnableMusic)
+            {
+                AudioManagerV2.Instance.StopMusic();
+                AudioManagerV2.Instance.PlayMusicIntroThenLoop(introCueKey, loopCueKey, fadeDuration);
+            }
+
+            AudioSettingController.OnMusicSettingChanged += OnMusicSettingChanged;
+        }
+
+        private void OnDestroy()
+        {
+            AudioSettingController.OnMusicSettingChanged -= OnMusicSettingChanged;
+        }
+
+        private void OnMusicSettingChanged()
+        {
             AudioManagerV2.Instance.StopMusic();
-            AudioManagerV2.Instance.PlayMusicIntroThenLoop(introCueKey, loopCueKey, fadeDuration);
+            
+            if (GameSettings.EnableMusic)
+            {
+                AudioManagerV2.Instance.PlayMusicIntroThenLoop(introCueKey, loopCueKey, fadeDuration);
+            }
         }
     }
 }

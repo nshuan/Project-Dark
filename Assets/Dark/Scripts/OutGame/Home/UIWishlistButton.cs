@@ -1,23 +1,19 @@
-using Dark.Scripts.Common;
-using Dark.Scripts.Utils;
+using Dark.Scripts.ForDemo;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Dark.Scripts.OutGame.Home
 {
-    public class UIWishlistButton : UIHomeButton
+    public class UIWishlistButton : MonoBehaviour, IPointerClickHandler
     {
-        public override bool BlockSelect => true;
-
         private void OpenSteamWishlist()
         {
-            Application.OpenURL(GameConst.SteamWishlistURL);
+            Application.OpenURL(DemoConfig.SteamWishlistURL);
         }
 
-        public override void OnPointerClick(PointerEventData eventData)
+        public void OnPointerClick(PointerEventData eventData)
         {
-            this.DelayCall(UIConst.HomeBtnDelayOnClick, OpenSteamWishlist);
-            base.OnPointerClick(eventData);
+            OpenSteamWishlist();
         }
     }
 }

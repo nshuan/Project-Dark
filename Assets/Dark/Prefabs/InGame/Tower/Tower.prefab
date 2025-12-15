@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5085002175941718960}
-  - component: {fileID: 4440598892829019648}
+  - component: {fileID: 8511830646563580284}
   m_Layer: 0
   m_Name: SfxTowerCooldown
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8540445364392104723}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4440598892829019648
+--- !u!114 &8511830646563580284
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,12 +41,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 614111787059449291}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd5da469a3f44fe9fc2c158040f77d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sourceIndex: 17
-  playOnEnable: 0
-  delay: 0
+  cueKey: ingame_tower_cooldown
+  channel: 1
 --- !u!1 &655408977626516025
 GameObject:
   m_ObjectHideFlags: 0
@@ -357,10 +356,11 @@ MonoBehaviour:
   - 0
   - 0.3
   - 0.7
+  vfxExplode: {fileID: 404144510269794447}
   autoRegenerate: {fileID: 7603125141272037379}
   regenerateOnKill: {fileID: 5926552855755970944}
   itemCollectorPosition: {fileID: 6118742615793322515}
-  sfxHit: {fileID: 3283040643563396951}
+  sfxHit: {fileID: 5061761836619854956}
   normalSortingLayerName: Default
   normalSortingOrder: 55
   hoverSortingLayerName: UILower
@@ -769,6 +769,8 @@ MonoBehaviour:
   animHover100: Base/Base_Phase0_Hover
   animHover70: Base/Base_Phase1_Hover
   animHover30: Base/Base_Phase2_Hover
+  hitColor: {r: 1, g: 0.61960787, b: 0.61960787, a: 1}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &3156425384395682638
 GameObject:
   m_ObjectHideFlags: 0
@@ -981,6 +983,7 @@ Transform:
   - {fileID: 1747907380051897723}
   - {fileID: 4684616804398873469}
   - {fileID: 2040696284116812424}
+  - {fileID: 4029160907934714222}
   m_Father: {fileID: 8540445364392104723}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3663075634551970121
@@ -1008,6 +1011,8 @@ MonoBehaviour:
   animHover100: Phase0_Hover
   animHover70: Phase1_Hover
   animHover30: Phase2_Hover
+  hitColor: {r: 1, g: 0.6179246, b: 0.6179246, a: 1}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &4356545432568626876
 GameObject:
   m_ObjectHideFlags: 0
@@ -1196,7 +1201,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1903735068486522707}
-  - component: {fileID: 3283040643563396951}
+  - component: {fileID: 5061761836619854956}
   m_Layer: 0
   m_Name: SfxHit
   m_TagString: Untagged
@@ -1219,7 +1224,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8540445364392104723}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3283040643563396951
+--- !u!114 &5061761836619854956
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1228,12 +1233,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4590216449570193756}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd5da469a3f44fe9fc2c158040f77d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sourceIndex: 1
-  playOnEnable: 0
-  delay: 0
+  cueKey: ingame_tower_hit
+  channel: 1
 --- !u!1 &5306584919319295418
 GameObject:
   m_ObjectHideFlags: 0
@@ -6501,6 +6505,8 @@ MonoBehaviour:
   animHover100: 
   animHover70: 
   animHover30: 
+  hitColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &6343287202614458571
 GameObject:
   m_ObjectHideFlags: 0
@@ -6905,7 +6911,7 @@ MonoBehaviour:
   cooldownRing: {fileID: 1996824622331216885}
   vfxCooldownComplete: {fileID: 5872743704754558887}
   vfxSelected: {fileID: 4451143533698579918}
-  sfxCooldown: {fileID: 4440598892829019648}
+  sfxCooldown: {fileID: 8511830646563580284}
   cdRingSprites:
   - {fileID: 1996824622331216885}
   - {fileID: 5266713008108530578}
@@ -7098,6 +7104,10 @@ PrefabInstance:
     - target: {fileID: 42301398181920706, guid: 90334e1ac15193d42bcd46997f30d97c, type: 3}
       propertyPath: m_Name
       value: FX_Ingame_Tower_Endgame
+      objectReference: {fileID: 0}
+    - target: {fileID: 42301398181920706, guid: 90334e1ac15193d42bcd46997f30d97c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6828575255515216399, guid: 90334e1ac15193d42bcd46997f30d97c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7442,6 +7452,89 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 8807019013366415862, guid: 417fa70fa550a82499d8e30a933e2d49, type: 3}
   m_PrefabInstance: {fileID: 4803450287396633782}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &4948827976302742448
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8249688804626138219}
+    m_Modifications:
+    - target: {fileID: 1956835097097445737, guid: 0918455499489bf46b17e18dbcdd1208, type: 3}
+      propertyPath: m_Name
+      value: FX_Ingame_Tower_Explode
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306802293078786782, guid: 0918455499489bf46b17e18dbcdd1208, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306802293078786782, guid: 0918455499489bf46b17e18dbcdd1208, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306802293078786782, guid: 0918455499489bf46b17e18dbcdd1208, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306802293078786782, guid: 0918455499489bf46b17e18dbcdd1208, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306802293078786782, guid: 0918455499489bf46b17e18dbcdd1208, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306802293078786782, guid: 0918455499489bf46b17e18dbcdd1208, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306802293078786782, guid: 0918455499489bf46b17e18dbcdd1208, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306802293078786782, guid: 0918455499489bf46b17e18dbcdd1208, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306802293078786782, guid: 0918455499489bf46b17e18dbcdd1208, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306802293078786782, guid: 0918455499489bf46b17e18dbcdd1208, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306802293078786782, guid: 0918455499489bf46b17e18dbcdd1208, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306802293078786782, guid: 0918455499489bf46b17e18dbcdd1208, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306802293078786782, guid: 0918455499489bf46b17e18dbcdd1208, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306802293078786782, guid: 0918455499489bf46b17e18dbcdd1208, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0918455499489bf46b17e18dbcdd1208, type: 3}
+--- !u!198 &404144510269794447 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 4698956015021089599, guid: 0918455499489bf46b17e18dbcdd1208, type: 3}
+  m_PrefabInstance: {fileID: 4948827976302742448}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4029160907934714222 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8306802293078786782, guid: 0918455499489bf46b17e18dbcdd1208, type: 3}
+  m_PrefabInstance: {fileID: 4948827976302742448}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6001957365109637347
 PrefabInstance:

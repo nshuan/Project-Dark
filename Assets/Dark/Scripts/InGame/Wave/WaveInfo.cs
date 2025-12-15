@@ -53,7 +53,11 @@ namespace InGame
             {
                 var gate = Gates[i];
                 var a = i;
-                gate.onActivated += () => { currentGateIndex = a; };
+                gate.onActivated += () => {
+                {
+                    currentGateIndex = a;
+                    CombatActions.OnGateActivated?.Invoke(gate, waveIndex, currentGateIndex);   
+                }};
                 gate.Activate();
                 gate.OnAllEnemiesDead += () => { OnStopGate(a); };
             }

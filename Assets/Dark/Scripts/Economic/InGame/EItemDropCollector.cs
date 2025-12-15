@@ -1,16 +1,13 @@
 using System;
 using System.Linq;
-using Dark.Scripts.Audio;
-using Dark.Scripts.Utils;
+using Dark.Scripts.AudioV2;
 using DG.Tweening;
-using Economic.InGame.DropItems;
 using InGame;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Economic.InGame
 {
-    public class EItemDropCollector : MonoBehaviour, IDamageable
+    public class EItemDropCollector : MonoBehaviour
     {
         [SerializeField] private Collider2D collider;
         [SerializeField] private Transform visual;
@@ -19,7 +16,7 @@ namespace Economic.InGame
         [SerializeField] private FloatingEffect floatingMovement;
         [SerializeField] private ParticleSystem vfxBreak;
         [SerializeField] private ParticleSystem vfxSpawn;
-        [SerializeField] private AudioComponent sfxCollect;
+        [SerializeField] private AudioPlayComponentV2 sfxCollect;
 
         [Header("Echoes")] 
         [SerializeField] private Transform visualEchoes;
@@ -32,9 +29,6 @@ namespace Economic.InGame
         private bool activated = false;
         private bool orbitMoving;
         private float orbitTimer;
-        
-        public float HitDirectionX { get; set; }
-        public float HitDirectionY { get; set; }
 
         private void Awake()
         {
@@ -134,7 +128,7 @@ namespace Economic.InGame
             });
         }
         
-        public void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
+        public void Break()
         {
             if (!activated) return;
             collider.enabled = false;
@@ -203,8 +197,5 @@ namespace Economic.InGame
                     shadowEchoes.gameObject.SetActive(false);
                 });
         }
-
-        public bool IsDestroyed { get; set; }
-        public Action<int, DamageType> OnHit { get; set; }
     }
 }

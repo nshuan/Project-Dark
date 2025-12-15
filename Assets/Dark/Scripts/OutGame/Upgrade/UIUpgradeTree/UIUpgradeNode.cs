@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Coffee.UIExtensions;
+using Dark.Scripts.Analytics;
 using Dark.Scripts.Audio;
 using Dark.Scripts.AudioV2;
 using Dark.Scripts.Utils;
@@ -253,23 +254,28 @@ namespace Dark.Scripts.OutGame.Upgrade
                 var success = UpgradeManager.Instance.UpgradeNode(config.nodeId);
                 if (success)
                 {
+                    if (treeRef.IsNodeSkill(config.nodeId))
+                        LogManager.Log(LogConst.EventLogActivateNode, "skill", config.nodeName);
+                    else if (treeRef.IsNodePassive(config.nodeId))
+                        LogManager.Log(LogConst.EventLogActivateNode, "passive", config.nodeName);
+                    
                     config.ActivateLevel(UpgradeManager.Instance.GetData(config.nodeId).level, ref UIUpgradeNodeInfoPreview.Instance.bonusInfo);
-                    // UIUpgradeNodeInfoPreview.Instance.Setup(config, true);
-                    // UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true, () => hoverField.interactable = true);
-                    UIUpgradeNodeInfoPreview.Instance.Hide(true);
-                    UIUpgradeNodeInfoPreview.Instance.CanAutoShowHide = false;
-                    this.DelayCall(0.5f, () =>
-                    {
-                        UIUpgradeNodeInfoPreview.Instance.Setup(config, true);
-                        UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true, () =>
-                        {
-                            hoverField.interactable = true;
-                            UIUpgradeNodeInfoPreview.Instance.CanAutoShowHide = true;
-                        });
-                        // UIUpgradeNodeInfoPreview.Instance.ShowImmediately(transform.position,
-                        //     new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true,
-                        //     () => UIUpgradeNodeInfoPreview.Instance.CanAutoShowHide = true);
-                    });
+                    UIUpgradeNodeInfoPreview.Instance.Setup(config, true);
+                    UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true, () => hoverField.interactable = true);
+                    // UIUpgradeNodeInfoPreview.Instance.HideImmediately(true);
+                    // UIUpgradeNodeInfoPreview.Instance.CanAutoShowHide = false;
+                    // this.DelayCall(0.5f, () =>
+                    // {
+                    //     UIUpgradeNodeInfoPreview.Instance.Setup(config, true);
+                    //     UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true, () =>
+                    //     {
+                    //         hoverField.interactable = true;
+                    //         UIUpgradeNodeInfoPreview.Instance.CanAutoShowHide = true;
+                    //     });
+                    //     // UIUpgradeNodeInfoPreview.Instance.ShowImmediately(transform.position,
+                    //     //     new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true,
+                    //     //     () => UIUpgradeNodeInfoPreview.Instance.CanAutoShowHide = true);
+                    // });
                     treeRef.LastUpgradeNodeId = config.nodeId;
                     treeRef.InvokeNodeUpgraded(this);
                     treeRef.UpgradeAllNodesWithId(config.nodeId);

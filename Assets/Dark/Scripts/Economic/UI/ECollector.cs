@@ -10,8 +10,6 @@ namespace Economic.UI
 {
     public class ECollector : MonoBehaviour
     {
-        public int selectMethod = 1;
-
         private PlayerCharacter player;
         
         private void Awake()
@@ -26,21 +24,21 @@ namespace Economic.UI
         private void OnWin()
         {
             EItemDropManager.Instance.CollectAll(player.transform);
-            CombatActions.OnDropResource -= OnEnemyDead;
+            CombatActions.OnDropResource -= OnDropResource;
         }
         
         private void OnLose()
         {
-            CombatActions.OnDropResource -= OnEnemyDead;
+            CombatActions.OnDropResource -= OnDropResource;
         }
 
         private void OnLevelLoaded(LevelConfig levelConfig)
         {
             player = LevelManager.Instance.Player;
-            CombatActions.OnDropResource += OnEnemyDead;
+            CombatActions.OnDropResource += OnDropResource;
         }
         
-        private void OnEnemyDead(EnemyEntity enemy)
+        private void OnDropResource(EnemyEntity enemy, bool hasVestige)
         {
             if (!player) player = LevelManager.Instance.Player;
             
@@ -51,14 +49,10 @@ namespace Economic.UI
                 UIKillCollectedPool.Instance.ShowCollected(WealthType.Exp, enemy.Exp, player.transform.position);
             }
             
-            // TH1: Rớt item ra end wave thì tự động collect hết
-            if (selectMethod == 1)
-            {
-                if (RandomUtil.Range(0f, 1f) <= enemy.DarkRatio && enemy.Dark > 0)
-                    EItemDropManager.Instance.Drop(WealthType.Vestige, enemy.DarkUnitValue, enemy.Dark, enemy.transform.position);
-                if (enemy.BossPoint > 0)
-                    EItemDropManager.Instance.DropOne(WealthType.Sigils, enemy.BossPoint, enemy.transform.position);
-            }
+            if (hasVestige)
+                EItemDropManager.Instance.Drop(WealthType.Vestige, enemy.DarkUnitValue, enemy.Dark, enemy.transform.position);
+            if (enemy.BossPoint > 0)
+                EItemDropManager.Instance.DropOne(WealthType.Sigils, enemy.BossPoint, enemy.transform.position);
         }
 
         private void OnCollectEntityDamaged(EItemDropCollector collector)

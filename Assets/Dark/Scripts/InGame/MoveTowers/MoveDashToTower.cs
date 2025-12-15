@@ -61,8 +61,13 @@ namespace InGame
                 timeElapsed += Time.deltaTime;
                 var speed = speedCurve.Evaluate(Mathf.Clamp01(timeElapsed / duration));
                 character.transform.position = Vector2.Lerp(startPos, endPos, speed);
-                
-                var count = Physics2D.CircleCastNonAlloc(character.FlashExplodeCenter, hitRadius, Vector2.zero, hits,
+                var positionRatio = (character.transform.position.x - startPos.x) / (endPos.x - startPos.x);
+                // var count = Physics2D.CircleCastNonAlloc(character.FlashExplodeCenter, hitRadius, Vector2.zero, hits,
+                //     0f,
+                //     enemyLayer);
+                var count = Physics2D.CircleCastNonAlloc(
+                    fromTower.GetBaseCenter() + positionRatio * (toTower.GetBaseCenter() - fromTower.GetBaseCenter()), 
+                    hitRadius, Vector2.zero, hits,
                     0f,
                     enemyLayer);
                 if (count > 0)

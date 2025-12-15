@@ -37,7 +37,8 @@ namespace InGame
                 return towers[currentTowerIndex];
             }
         }
-   
+
+        public bool LevelStarted { get; private set; } = false;
         public LevelConfig Level { get; private set; }
         private bool IsEndLevel { get; set; }
         
@@ -140,6 +141,7 @@ namespace InGame
             if (waveCoroutine != null) StopCoroutine(waveCoroutine);
             waveCoroutine = StartCoroutine(IEWave(level.waveInfo));
             
+            LevelStarted = true;
             OnLevelLoaded?.Invoke(level);
             StartTimer();
         }

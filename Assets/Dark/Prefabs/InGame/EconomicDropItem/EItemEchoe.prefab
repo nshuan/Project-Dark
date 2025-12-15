@@ -93,7 +93,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2047650973381596726}
-  - component: {fileID: 5866269221410926326}
+  - component: {fileID: 8283444231719473650}
   m_Layer: 0
   m_Name: Sfx
   m_TagString: Untagged
@@ -116,7 +116,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8878898953844404854}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5866269221410926326
+--- !u!114 &8283444231719473650
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -125,12 +125,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3156127811757204167}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd5da469a3f44fe9fc2c158040f77d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sourceIndex: 13
-  playOnEnable: 0
-  delay: 0
+  cueKey: ingame_item_drop
+  channel: 1
 --- !u!1 &3362547422226500229
 GameObject:
   m_ObjectHideFlags: 0
@@ -183,8 +182,11 @@ MonoBehaviour:
   targetLogic: {fileID: 6221442816883955672}
   vfxClaim: {fileID: 3565376113205855755}
   visual: {fileID: 6201417445858934342}
-  sfx: {fileID: 5866269221410926326}
+  sfx: {fileID: 8283444231719473650}
   shadow: {fileID: 6683946561747321668}
+  minDistanceToTower: 1.5
+  dropSpanAngleToExcludeTower: 240
+  dropRange: 0.8
   kind: 1
 --- !u!114 &6221442816883955672
 MonoBehaviour:

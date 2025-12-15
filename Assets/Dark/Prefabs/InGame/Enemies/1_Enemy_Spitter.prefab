@@ -118,8 +118,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 7240177759504556298}
+  m_Children: []
   m_Father: {fileID: 2189210148331816725}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4558745767686598611
@@ -200,6 +199,7 @@ Transform:
   - {fileID: 541454038136209678}
   - {fileID: 4866854412893186082}
   - {fileID: 5752248193413532118}
+  - {fileID: 7240177759504556298}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3140594308172958890
@@ -217,7 +217,7 @@ MonoBehaviour:
   collider2d: {fileID: 5182120916084546678}
   burnVfxParent: {fileID: 766302213115647003}
   body: {fileID: 4859926275843960341}
-  sfxHit: {fileID: 9139653417033023692}
+  sfxHit: {fileID: 5207631424547411298}
   boidAgent: {fileID: 708390462539577957}
   uiHealth: {fileID: 2775015567938810026}
   animController: {fileID: 2498714227618212496}
@@ -290,7 +290,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7240177759504556298}
-  - component: {fileID: 9139653417033023692}
+  - component: {fileID: 5207631424547411298}
   m_Layer: 0
   m_Name: Sfx
   m_TagString: Untagged
@@ -306,14 +306,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3285169992567912852}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5752248193413532118}
+  m_Father: {fileID: 2189210148331816725}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9139653417033023692
+--- !u!114 &5207631424547411298
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -322,12 +322,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3285169992567912852}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd5da469a3f44fe9fc2c158040f77d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sourceIndex: 6
-  playOnEnable: 0
-  delay: 0
+  cueKey: ingame_enemy_hit
+  channel: 1
 --- !u!1 &4456709303197038145
 GameObject:
   m_ObjectHideFlags: 0
@@ -436,6 +435,7 @@ MonoBehaviour:
     - {fileID: -1845635527, guid: c3e0f8aeb94a19947a5d70fe1d34c58e, type: 3}
     isLoop: 1
     frameRate: 0.1
+    scale: 1
     autoExit: 1
   runAnim:
     frames:
@@ -448,6 +448,7 @@ MonoBehaviour:
     - {fileID: -1829018657, guid: c3e0f8aeb94a19947a5d70fe1d34c58e, type: 3}
     isLoop: 1
     frameRate: 0.1
+    scale: 1
     autoExit: 1
   attackAnim:
     frames:
@@ -461,6 +462,7 @@ MonoBehaviour:
     - {fileID: -614112401, guid: c3e0f8aeb94a19947a5d70fe1d34c58e, type: 3}
     isLoop: 0
     frameRate: 0.1
+    scale: 1
     autoExit: 1
   hitAnim:
     frames:
@@ -469,6 +471,7 @@ MonoBehaviour:
     - {fileID: 1851168464, guid: c3e0f8aeb94a19947a5d70fe1d34c58e, type: 3}
     isLoop: 0
     frameRate: 0.1
+    scale: 1
     autoExit: 1
   dieAnim:
     frames:
@@ -482,13 +485,17 @@ MonoBehaviour:
     - {fileID: -386476653, guid: c3e0f8aeb94a19947a5d70fe1d34c58e, type: 3}
     isLoop: 0
     frameRate: 0.1
+    scale: 1
     autoExit: 0
   spawnAnim:
     frames:
     - {fileID: 999089178, guid: c3e0f8aeb94a19947a5d70fe1d34c58e, type: 3}
     isLoop: 0
     frameRate: 0.1
+    scale: 1
     autoExit: 1
+  spawnEffect: {fileID: 0}
+  spriteRenderer: {fileID: 0}
   isDefaultRun: 1
 --- !u!114 &4971913884154288251
 MonoBehaviour:
