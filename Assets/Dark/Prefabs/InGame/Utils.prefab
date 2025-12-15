@@ -51,6 +51,50 @@ MonoBehaviour:
     prefab: {fileID: 1475500146204445689, guid: bc6e537afba91374ca41ce6e1e5bb9bc, type: 3}
   - kind: 2
     prefab: {fileID: 1475500146204445689, guid: 24df689f13c2f6a43bc479a96bec3122, type: 3}
+--- !u!1 &3524563877688636820
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5564988850298942369}
+  - component: {fileID: 1127449169688437822}
+  m_Layer: 0
+  m_Name: GateManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5564988850298942369
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3524563877688636820}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7434651052062188398}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1127449169688437822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3524563877688636820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8da2ed1fb9840e6922a24a8937c4c97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4201795278103923817
 GameObject:
   m_ObjectHideFlags: 0
@@ -130,6 +174,7 @@ Transform:
   - {fileID: 4890485596681104877}
   - {fileID: 8461543699496012954}
   - {fileID: 8107707231902838605}
+  - {fileID: 5564988850298942369}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4924835323469490292
@@ -653,7 +698,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7892015862db417ca142b9a613c557b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectMethod: 1
 --- !u!1 &7693600794771655065
 GameObject:
   m_ObjectHideFlags: 0

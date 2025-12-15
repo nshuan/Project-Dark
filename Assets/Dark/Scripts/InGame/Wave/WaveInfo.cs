@@ -56,7 +56,8 @@ namespace InGame
                 gate.onActivated += () => {
                 {
                     currentGateIndex = a;
-                    CombatActions.OnGateActivated?.Invoke(gate, waveIndex, currentGateIndex);   
+                    CombatActions.OnGateActivated?.Invoke(gate, waveIndex, currentGateIndex);
+                    GateManager.Instance.AddGate(gate);
                 }};
                 gate.Activate();
                 gate.OnAllEnemiesDead += () => { OnStopGate(a); };
