@@ -8,12 +8,13 @@ namespace InGame
     {
         [SerializeField] private float delayDisappear = 8f;
         
-        public Transform Get(Vector2 direction, float overrideDelayDisappear = -1)
+        public Transform Get(Vector2 position, Vector2 direction, float overrideDelayDisappear = -1)
         {
             if (overrideDelayDisappear <= 0) overrideDelayDisappear = delayDisappear; 
             var obj = Get(null);
             var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             obj.GetChild(0).rotation = Quaternion.Euler(0f, 0f, angle);
+            obj.position = position;
             obj.gameObject.SetActive(true);
             StartCoroutine(IERelease(obj, overrideDelayDisappear));
             return obj;
