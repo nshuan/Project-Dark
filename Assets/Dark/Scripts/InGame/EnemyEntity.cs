@@ -34,7 +34,7 @@ namespace InGame
 
         #endregion
 
-        public float PercentageHpLeft => CurrentHealth / MaxHealth * 100f;
+        public float PercentageHpLeft => (float)CurrentHealth / MaxHealth;
         public Action<int, DamageType> OnHit { get; set; }
         public Action OnStartDead { get; set; }
         public Action<EnemyDieReason> OnDead { get; set; }
