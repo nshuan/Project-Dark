@@ -40,6 +40,7 @@ namespace InGame
         [SerializeField] private GameObject vfxClose;
         [SerializeField] private float vfxAppearDuration = 0.5f; // duration of vfxOpen
         [SerializeField] private float vfxCloseDuration = 6f; // duration of vfxClose
+        [SerializeField] private float visualRadius = 2f;
 
         private ParticleSystem.MainModule vfxIdle;
         
@@ -281,6 +282,11 @@ namespace InGame
         {
             Deactivate();
             gameObject.SetActive(false);
+        }
+
+        public bool IsInGate(Vector2 position)
+        {
+            return Vector2.Distance(position, transform.position) < visualRadius;
         }
     }
 }
