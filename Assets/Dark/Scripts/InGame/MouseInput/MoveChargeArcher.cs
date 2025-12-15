@@ -14,7 +14,7 @@ namespace InGame
 
         private List<ProjectileEntity> projectiles;
         private List<Coroutine> spawnCoroutines;
-
+        
         private void Awake()
         {
             projectiles  = new List<ProjectileEntity>();
@@ -45,10 +45,27 @@ namespace InGame
 
         public override void Attack(Action<ProjectileEntity, Vector2, float> actionSetupProjectile)
         {
+            const float damageReducePercentageOnBoss = 0.25f;
+            
+            var totalTargetBoss = 0;
             for (var i = 0; i < projectiles.Count; i++)
             {
                 StopCoroutine(spawnCoroutines[i]);
                 actionSetupProjectile?.Invoke(projectiles[i], Cam.ScreenToWorldPoint(Input.mousePosition) - projectiles[i].transform.position, i * 0.15f);
+                
+                // Giảm dame dần nếu target vào boss trong cùng 1 lượt bắn
+                if (projectiles[i] is HomingProjectileV2Entity castedProjectile)
+                {
+                    if (castedProjectile.TargetEnemy && castedProjectile.TargetEnemy.IsBoss)
+                    {
+                        for (var reduceTime = 0; reduceTime <= totalTargetBoss; reduceTime++)
+                        {
+                            projectiles[i].Damage -= (int)(damageReducePercentageOnBoss * projectiles[i].Damage);
+                        }
+
+                        totalTargetBoss += 1;
+                    }
+                }
             }
 
             projectiles = new List<ProjectileEntity>();

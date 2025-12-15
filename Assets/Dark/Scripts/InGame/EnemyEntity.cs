@@ -34,6 +34,7 @@ namespace InGame
 
         #endregion
 
+        public bool IsBoss { get; set; }
         public float PercentageHpLeft => (float)CurrentHealth / MaxHealth;
         public Action<int, DamageType> OnHit { get; set; }
         public Action OnStartDead { get; set; }

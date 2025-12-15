@@ -22,6 +22,9 @@ namespace InGame
         private bool canRotate = false;
         private bool blockHit;
 
+        private EnemyEntity targetEnemy;
+        public EnemyEntity TargetEnemy => targetEnemy;
+        
         public override void Init(Vector2 startPos, Vector2 direction, float range, float size, float speedScale, int damage,
             int criticalDamage, float criticalRate, float stagger, bool isCharge, int maxHit, List<IProjectileActivate> activateActions, List<IProjectileHit> hitActions, ProjectileType damageType)
         {
@@ -34,7 +37,9 @@ namespace InGame
             if (WeaponSupporter.EnemyTargetingIndex < WeaponSupporter.EnemiesCountInRange)
             {
                 targetToChase = WeaponSupporter.EnemiesInRange[WeaponSupporter.EnemyTargetingIndex].transform;
-                WeaponSupporter.EnemyTargetingIndex += 1;
+                // Nếu là boss thì ko tăng target index
+                if (!targetToChase.TryGetComponent<EnemyEntity>(out targetEnemy) || !targetEnemy.IsBoss)
+                    WeaponSupporter.EnemyTargetingIndex += 1;
             }
             
             homingController = GetComponent<TargetedProjectile>();
