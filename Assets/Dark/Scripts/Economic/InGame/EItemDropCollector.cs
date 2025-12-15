@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Dark.Scripts.AudioV2;
 using DG.Tweening;
@@ -25,10 +26,18 @@ namespace Economic.InGame
         [Header("Config")]
         [SerializeField] private float delayRespawn = 2f;
         
-        private Transform[] orbitCenters; // Map by tower id
+        [Space] [Header("Auto detect enemy")] 
+        [SerializeField] private float checkEnemyInterval;
+        [SerializeField] private float radiusCheckEnemy;
+        [SerializeField] private LayerMask enemyLayer;
+        
+        private List<Transform[]> orbitCenters; // Map by tower id
         private bool activated = false;
         private bool orbitMoving;
         private float orbitTimer;
+
+        private float checkEnemyCounter;
+        private int currentPositionIndexInTower;
 
         private void Awake()
         {
@@ -68,12 +77,29 @@ namespace Economic.InGame
                     orbitMoving = true;
                 }
             }
+            
+            // Check nếu có enemy gần thì di chuyển sang chỗ khác
+            if (checkEnemyCounter < 0f)
+            {
+                var enemiesHit = new RaycastHit2D[1];
+                var enemyCount = Physics2D.CircleCastNonAlloc(transform.position, radiusCheckEnemy, Vector2.zero, enemiesHit, 0f, enemyLayer);
+                if (enemyCount > 0)
+                {
+                    TeleportToOtherPosition();
+                }
+                checkEnemyCounter = checkEnemyInterval;
+            }
+            else
+            {
+                checkEnemyCounter -= Time.deltaTime;
+            }
         }
 
         private void OnLevelLoaded(LevelConfig level)
         {
-            orbitCenters = LevelManager.Instance.Towers.Select((tower) => tower.itemCollectorPosition).ToArray();
-            transform.position = LevelManager.Instance.CurrentTower.itemCollectorPosition.position;
+            currentPositionIndexInTower = 0;
+            orbitCenters = LevelManager.Instance.Towers.Select((tower) => tower.itemCollectorPositions).ToList();
+            transform.position = LevelManager.Instance.CurrentTower.itemCollectorPositions[currentPositionIndexInTower].position;
             orbitMovement.ResetOrbit();
             orbitMovement.StartOrbit();
             orbitMovement.ResumeOrbit();
@@ -90,11 +116,12 @@ namespace Economic.InGame
         private void OnMoveTower(float cooldown)
         {
             var id = LevelManager.Instance.CurrentTower.Id;
-            if (id < 0 || id >= orbitCenters.Length) return;
+            if (id < 0 || id >= orbitCenters.Count) return;
             activated = false;
             DoHide().OnComplete(() =>
             {
-                transform.position = orbitCenters[id].position;
+                currentPositionIndexInTower = RandomUtil.Range(0, orbitCenters[id].Length);
+                transform.position = orbitCenters[id][currentPositionIndexInTower].position;
                 orbitMovement.ResetOrbit();
                 orbitMovement.StartOrbit();
                 orbitMovement.ResumeOrbit();
@@ -114,7 +141,7 @@ namespace Economic.InGame
             DoShowEchoes().OnComplete(() =>
             {
                 var id = LevelManager.Instance.CurrentTower.Id;
-                if (id >= 0 && id < orbitCenters.Length) transform.position = orbitCenters[id].position;
+                if (id >= 0 && id < orbitCenters.Count) transform.position = orbitCenters[id][currentPositionIndexInTower].position;
                 orbitMovement.ResetOrbit();
                 orbitMovement.StartOrbit();
                 orbitMovement.ResumeOrbit();
@@ -127,6 +154,29 @@ namespace Economic.InGame
                 });
             });
         }
+
+        private void TeleportToOtherPosition()
+        {
+            collider.enabled = false;
+            DoHide().OnComplete(() =>
+            {
+                var id = LevelManager.Instance.CurrentTower.Id;
+                if (currentPositionIndexInTower == 0 && id >= 0 && id < orbitCenters.Count)
+                    currentPositionIndexInTower = RandomUtil.Range(1, orbitCenters[id].Length);
+                else currentPositionIndexInTower = 0;
+                transform.position = orbitCenters[id][currentPositionIndexInTower].position;
+                
+                orbitMovement.ResetOrbit();
+                orbitMovement.StartOrbit();
+                orbitMovement.ResumeOrbit();
+                orbitMoving = true;
+                orbitTimer = 0f;
+                DoSpawn().SetDelay(delayRespawn).OnComplete(() =>
+                {
+                    collider.enabled = true;
+                });
+            });
+        }
         
         public void Break()
         {
@@ -135,10 +185,7 @@ namespace Economic.InGame
             CombatActions.OnResourceCollectorDamaged?.Invoke(this);
             vfxBreak.Play(true);
             sfxCollect.Play();
-            DoHide().OnComplete(() =>
-            {
-                DoSpawn().SetDelay(delayRespawn).OnComplete(() => collider.enabled = true);
-            });
+            TeleportToOtherPosition();
         }
         
         public Tween DoSpawn()
