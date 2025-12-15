@@ -23,8 +23,6 @@ namespace Dark.Scripts.ForDemo
 
         protected override void Start()
         {
-            if (!DemoConfig.IsDemo) return;
-            
             if (!ShouldShowButton())
             {
                 hiddenButton?.SetActive(true);
