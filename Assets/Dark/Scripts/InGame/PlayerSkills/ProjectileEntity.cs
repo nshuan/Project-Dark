@@ -187,21 +187,21 @@ namespace InGame
                 if (hitStatus == ProjectileCollider.ProjectileHitStatus.Enemy)
                 {
                     DebugUtility.Log($"Hit enemy {hitEnemyInfo.hitEnemy}");
-                    ProjectileHit(hitEnemyInfo.hitEnemy);
                     // Nếu trúng con quái này xong là destroy đạn thì ko di chuyển viên đạn nữa, set vị trí vào chỗ con quái luôn
-                    if (!hitEnemyInfo.hitEnemy.IsDestroyed && !forceHideDeadObject && currentHit >= MaxHit)
+                    if (!hitEnemyInfo.hitEnemy.IsDestroyed && !forceHideDeadObject && currentHit + 1 >= MaxHit)
                     {
                         transform.position = hitEnemyInfo.hitEnemy.transform.position;
                         
-                        var deadProjectile = ProjectileDeadOnEnemyPool.Instance.Get(direction);
+                        var deadProjectile = ProjectileDeadOnEnemyPool.Instance.Get(moveDirection);
                         deadProjectile.position = hitEnemyInfo.hit.point;
-                        hitEnemyInfo.hitEnemy.body.SetupProjectileHit(deadProjectile.transform, direction);
+                        hitEnemyInfo.hitEnemy.body.SetupProjectileHit(deadProjectile.transform, moveDirection);
                         deadProjectile.SetParent(hitEnemyInfo.hitEnemy.transform);
                         hitEnemyInfo.hitEnemy.OnStartDead += () =>
                         {
                             deadProjectile.gameObject.SetActive(false);
                         };
                     }
+                    ProjectileHit(hitEnemyInfo.hitEnemy);
                 }
                 
                 transform.position += moveDirection;

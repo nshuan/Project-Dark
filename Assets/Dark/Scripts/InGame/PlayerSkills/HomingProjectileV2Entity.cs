@@ -106,7 +106,18 @@ namespace InGame
                     {
                         DebugUtility.Log($"Homing Hit enemy {hitEnemyInfo.hitEnemy}");
                         transform.position = hitEnemyInfo.hitEnemy.transform.position;
-                    
+
+                        if (!hitEnemyInfo.hitEnemy.IsDestroyed && !forceHideDeadObject && currentHit + 1 >= MaxHit)
+                        {
+                            var deadProjectile = ProjectileDeadOnEnemyPool.Instance.Get(moveDirection);
+                            deadProjectile.position = hitEnemyInfo.hit.point;
+                            hitEnemyInfo.hitEnemy.body.SetupProjectileHit(deadProjectile.transform, moveDirection);
+                            deadProjectile.SetParent(hitEnemyInfo.hitEnemy.transform);
+                            hitEnemyInfo.hitEnemy.OnStartDead += () =>
+                            {
+                                deadProjectile.gameObject.SetActive(false);
+                            };
+                        }
                         ProjectileHit(hitEnemyInfo.hitEnemy);
                     }
                     else
@@ -127,26 +138,16 @@ namespace InGame
                 {
                     moveDirection = homingController.GetProjectileNextPosition(BoundPosition) - transform.position;
                     transform.rotation = homingController.GetProjectileNextRotation();
-                    // hitStatus = collider.CheckCollision(ref moveDirection, ref hitEnemyInfo);
-                    // if (hitStatus == ProjectileCollider.ProjectileHitStatus.Enemy)
-                    // {
-                    //     DebugUtility.Log($"Homing Hit enemy {hitEnemyInfo.hitEnemy}");
-                    //     transform.position = hitEnemyInfo.hitEnemy.transform.position;
-                    //
-                    //     ProjectileHit(hitEnemyInfo.hitEnemy);
-                    // }
-                    // else
+                    
+                    if (Vector2.Distance(transform.position + moveDirection, RangeCenter) > LevelUtility.GetRelativeRange(Range, transform.position - RangeCenter))
                     {
-                        if (Vector2.Distance(transform.position + moveDirection, RangeCenter) > LevelUtility.GetRelativeRange(Range, transform.position - RangeCenter))
-                        {
-                            if (!BlockSpawnDeadBody)
-                                ProjectileHomingDeadPool.Instance.Get(transform.position, direction);
-                            ProjectileHit(null);
-                        }
-                        else
-                        {
-                            transform.position += moveDirection;
-                        }
+                        if (!BlockSpawnDeadBody)
+                            ProjectileHomingDeadPool.Instance.Get(transform.position, direction);
+                        ProjectileHit(null);
+                    }
+                    else
+                    {
+                        transform.position += moveDirection;
                     }
                 }
             }
