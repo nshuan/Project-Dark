@@ -171,58 +171,41 @@ namespace InGame
             moveDirection.x = Speed * Time.deltaTime * direction.x;
             moveDirection.y = Speed * Time.deltaTime * direction.y;
             moveDirection.z = 0f;
-            hitStatus = collider.CheckCollision(ref moveDirection, ref hitEnemyInfo);
-            if (hitStatus == ProjectileCollider.ProjectileHitStatus.Enemy)
+            
+            if (!BlockAutoDestroyOutRange && Vector2.Distance(transform.position + moveDirection, SpawnPosition) > maxDistanceFromSpawnPosition)
             {
-                DebugUtility.Log($"Hit enemy {hitEnemyInfo.hitEnemy}");
-                // Nếu trúng con quái này xong là destroy đạn thì ko di chuyển viên đạn nữa, set vị trí vào chỗ con quái luôn
-                if (!forceHideDeadObject && currentHit + 1 >= MaxHit)
+                if (!BlockSpawnDeadBody)
                 {
-                    transform.position = hitEnemyInfo.hitEnemy.transform.position;
-                    
-                    var deadProjectile = ProjectileDeadOnEnemyPool.Instance.Get(direction);
-                    deadProjectile.position = hitEnemyInfo.hit.point;
-                    deadProjectile.SetParent(hitEnemyInfo.hitEnemy.transform);
-                    hitEnemyInfo.hitEnemy.body.SetupProjectileHit(deadProjectile.transform, direction);
-                    hitEnemyInfo.hitEnemy.OnStartDead += () =>
-                    {
-                        deadProjectile.gameObject.SetActive(false);
-                    };
+                    // ProjectileDeadPool.Instance.Get(direction).position = transform.position;
+                    ProjectileDeadPool.Instance.Get(BoundPosition, direction);
                 }
-                else
-                {
-                    if (Vector2.Distance(transform.position + moveDirection, SpawnPosition) > maxDistanceFromSpawnPosition)
-                    {
-                        if (!BlockSpawnDeadBody)
-                        {
-                            // ProjectileDeadPool.Instance.Get(direction).position = transform.position;
-                            ProjectileDeadPool.Instance.Get(BoundPosition, direction);
-                        }
-                        ProjectileHit(null);
-                    }
-                    else
-                    {
-                        transform.position += moveDirection;
-                    }
-                }
-                
-                ProjectileHit(hitEnemyInfo.hitEnemy);
+                ProjectileHit(null);
             }
             else
             {
-                if (!BlockAutoDestroyOutRange && Vector2.Distance(transform.position + moveDirection, SpawnPosition) > maxDistanceFromSpawnPosition)
+                hitStatus = collider.CheckCollision(ref moveDirection, ref hitEnemyInfo);
+                if (hitStatus == ProjectileCollider.ProjectileHitStatus.Enemy)
                 {
-                    if (!BlockSpawnDeadBody)
+                    DebugUtility.Log($"Hit enemy {hitEnemyInfo.hitEnemy}");
+                    // Nếu trúng con quái này xong là destroy đạn thì ko di chuyển viên đạn nữa, set vị trí vào chỗ con quái luôn
+                    if (!forceHideDeadObject && currentHit + 1 >= MaxHit)
                     {
-                        // ProjectileDeadPool.Instance.Get(direction).position = transform.position;
-                        ProjectileDeadPool.Instance.Get(BoundPosition, direction);
+                        transform.position = hitEnemyInfo.hitEnemy.transform.position;
+                        
+                        var deadProjectile = ProjectileDeadOnEnemyPool.Instance.Get(direction);
+                        deadProjectile.position = hitEnemyInfo.hit.point;
+                        deadProjectile.SetParent(hitEnemyInfo.hitEnemy.transform);
+                        hitEnemyInfo.hitEnemy.body.SetupProjectileHit(deadProjectile.transform, direction);
+                        hitEnemyInfo.hitEnemy.OnStartDead += () =>
+                        {
+                            deadProjectile.gameObject.SetActive(false);
+                        };
                     }
-                    ProjectileHit(null);
+                    
+                    ProjectileHit(hitEnemyInfo.hitEnemy);
                 }
-                else
-                {
-                    transform.position += moveDirection;
-                }
+                
+                transform.position += moveDirection;
             }
                 
             lifeTime += Time.deltaTime;
