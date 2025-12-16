@@ -34,6 +34,7 @@ namespace InGame
 
         #endregion
 
+        public bool IsBoss { get; set; }
         public float PercentageHpLeft => (float)CurrentHealth / MaxHealth;
         public Action<int, DamageType> OnHit { get; set; }
         public Action OnStartDead { get; set; }
@@ -300,6 +301,7 @@ namespace InGame
 
         protected virtual IEnumerator IEDie(float delayRelease, EnemyDieReason reason)
         {
+            yield return new WaitForEndOfFrame();
             // Đợi chạy xong anim hit rồi mới chạy anim die
             shadow.SetActive(false);    
             OnStartDead?.Invoke();

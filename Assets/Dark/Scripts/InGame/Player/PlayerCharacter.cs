@@ -189,7 +189,7 @@ namespace InGame
             else
             {
                 DOTween.Kill(shotRadius);
-                shotRadius.DOScale(radius, 0.3f).SetTarget(shotRadius).SetDelay(0.3f);
+                shotRadius.DOScale(radius, 0.2f).SetTarget(shotRadius).SetDelay(0.3f);
             }
         }
 

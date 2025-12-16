@@ -18,7 +18,7 @@ namespace InGame
         [SerializeField] private ParticleSystem vfxExplode;
         [SerializeField] private TowerAutoRegenerate autoRegenerate;
         [SerializeField] private TowerRegenerateOnKill regenerateOnKill;
-        public Transform itemCollectorPosition;
+        public Transform[] itemCollectorPositions;
         [SerializeField] private AudioPlayComponentV2 sfxHit;
 
         [Header("Config")]

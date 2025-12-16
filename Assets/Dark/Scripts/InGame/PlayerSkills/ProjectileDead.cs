@@ -8,18 +8,17 @@ namespace InGame
         [SerializeField] private LayerMask gateLayer;
         
         private RaycastHit2D[] hits = new RaycastHit2D[1];
-        
-        private void OnEnable()
-        {
-            CheckSwallowedByGate();
-        }
 
-        private void CheckSwallowedByGate()
+        public void CheckSwallowedByGate()
         {
-            var gateHit = Physics2D.CircleCastNonAlloc(transform.position, 0.1f, Vector2.zero, hits, 0.1f, gateLayer);
-            if (gateHit > 0)
+            if (GateManager.Instance.ListGateInLevel == null) return;
+            foreach (var gate in GateManager.Instance.ListGateInLevel)
             {
-                Swallowed();
+                if (gate.IsActive && gate.IsInGate(transform.position))
+                {
+                    Swallowed();
+                    return;
+                }
             }
         }
 
