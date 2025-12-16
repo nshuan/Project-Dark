@@ -34,6 +34,16 @@ namespace InGame
 
         #endregion
 
+        #region Wave and Level config
+
+        public float WaveHpMultiplier { get; private set; }
+        public float WaveDmgMultiplier { get; private set; }
+        public float LevelExpRatio { get; private set; }
+        public float LevelDarkRatio { get; private set; }
+        public int LevelDarkUnitValue { get; private set; }
+
+        #endregion
+
         public bool IsBoss { get; set; }
         public float PercentageHpLeft => (float)CurrentHealth / MaxHealth;
         public Action<int, DamageType> OnHit { get; set; }
@@ -72,6 +82,13 @@ namespace InGame
         public void Init(EnemyBehaviour eConfig, TowerEntity target, float hpMultiplier, float dmgMultiplier, float levelExpRatio, float levelDarkRatio, int levelDarkUnitValue)
         {
             config = eConfig;
+            
+            // Set wave and level configs
+            WaveHpMultiplier = hpMultiplier;
+            WaveDmgMultiplier = dmgMultiplier;
+            LevelExpRatio = levelExpRatio;
+            LevelDarkRatio = levelDarkRatio;
+            LevelDarkUnitValue = levelDarkUnitValue;
             
             // Set target and attack position
             Target = target.transform;
