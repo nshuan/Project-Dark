@@ -15,6 +15,11 @@ namespace InGame
             var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             obj.GetChild(0).rotation = Quaternion.Euler(0f, 0f, angle);
             obj.position = position;
+            if (IsInAnyGate(position))
+            {
+                Release(obj);
+                return null;
+            }
             obj.gameObject.SetActive(true);
             StartCoroutine(IERelease(obj, overrideDelayDisappear));
             return obj;
@@ -24,6 +29,20 @@ namespace InGame
         {
             yield return new WaitForSeconds(delayDisappear);
             Release(obj);
+        }
+        
+        public static bool IsInAnyGate(Vector2 position)
+        {
+            if (GateManager.Instance.ListGateInLevel == null) return false;
+            foreach (var gate in GateManager.Instance.ListGateInLevel)
+            {
+                if (gate.IsActive && gate.IsInGate(position))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

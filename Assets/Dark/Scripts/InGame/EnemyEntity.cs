@@ -301,6 +301,7 @@ namespace InGame
 
         protected virtual IEnumerator IEDie(float delayRelease, EnemyDieReason reason)
         {
+            yield return new WaitForEndOfFrame();
             // Đợi chạy xong anim hit rồi mới chạy anim die
             shadow.SetActive(false);    
             OnStartDead?.Invoke();

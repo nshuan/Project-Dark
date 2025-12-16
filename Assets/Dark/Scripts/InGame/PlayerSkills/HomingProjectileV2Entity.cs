@@ -114,7 +114,7 @@ namespace InGame
                         if (Vector2.Distance(transform.position + moveDirection, RangeCenter) > LevelUtility.GetRelativeRange(Range, transform.position - RangeCenter))
                         {
                             if (!BlockSpawnDeadBody)
-                                ProjectileHomingDeadPool.Instance.Get(direction).transform.position = transform.position;
+                                ProjectileHomingDeadPool.Instance.Get(transform.position, direction);
                             ProjectileHit(null);
                         }
                         else
@@ -140,7 +140,7 @@ namespace InGame
                         if (Vector2.Distance(transform.position + moveDirection, RangeCenter) > LevelUtility.GetRelativeRange(Range, transform.position - RangeCenter))
                         {
                             if (!BlockSpawnDeadBody)
-                                ProjectileHomingDeadPool.Instance.Get(direction).transform.position = transform.position;
+                                ProjectileHomingDeadPool.Instance.Get(transform.position, direction);
                             ProjectileHit(null);
                         }
                         else
