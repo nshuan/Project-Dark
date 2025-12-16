@@ -3,7 +3,7 @@ public class GameConst
     #region Log
 
     public const bool EnableLogManagerDebugLog = false; // Enable debug log for LogManager
-    public const bool EnableLog = true; // Enable event log in LogManager
+    public const bool EnableLog = false; // Enable event log in LogManager
 
     #endregion
     
