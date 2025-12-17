@@ -18,7 +18,7 @@ namespace InGame
         private MapBoundaryManager boundaryManager;
         public Transform Target { get; set; }
         public TowerEntity TargetTower { get; set; }
-        protected EnemyBehaviour config;
+        public EnemyBehaviour config;
 
         [SerializeField] private AudioPlayComponentV2 sfxHit;
 
