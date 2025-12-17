@@ -28,8 +28,17 @@ namespace Economic.InGame.DropItems
             
             listItemToCollect = new List<EItemDrop>();
             collectedData = new ECollectorData();
+
+            WealthManager.Instance.OnLevelPointChanged += OnEchoesAdded;
         }
-        
+
+        protected override void OnDestroy()
+        {
+            WealthManager.Instance.OnLevelPointChanged -= OnEchoesAdded;
+            
+            base.OnDestroy();
+        }
+
         public void CollectAll(Transform target)
         {
             if (listItemToCollect.Count == 0) return;
@@ -37,6 +46,7 @@ namespace Economic.InGame.DropItems
             var delay = 0f;
             var maxDelay = 0f;
             var minDelay = 0f;
+            var index = 0;
             foreach (var item in listItemToCollect)
             {
                 switch (item.kind)
@@ -44,18 +54,23 @@ namespace Economic.InGame.DropItems
                     case WealthType.Vestige:
                         collectedData.AddVestige(item.Quantity);
                         break;
-                    case WealthType.Echoes:
-                        collectedData.AddEchoes(item.Quantity);
-                        break;
                     case WealthType.Sigils:
                         collectedData.AddSigils(item.Quantity);
                         break;
                 }
                 
-                delay = RandomUtil.Range(0f, 1f);
+                // 5 cái đầu ko nên delay random
+                if (index < 5)
+                    delay = 0.02f * index;
+                else
+                    delay = RandomUtil.Range(0f, 0.2f);
+                
                 if (delay > maxDelay) maxDelay = delay;
                 if (delay < minDelay) minDelay = delay;
+                    
                 item.Collect(target, delay);
+
+                index += 1;
             }
             
             this.DelayCall(minDelay + collectDuration, () =>
@@ -96,6 +111,11 @@ namespace Economic.InGame.DropItems
                 DropOne(kind, quantity, position);
             }
         }
+        
+        private void OnEchoesAdded(int before, int after)
+        {
+            collectedData.AddEchoes(after - before);
+        }
     }
     
     public class ECollectorData
@@ -109,9 +129,10 @@ namespace Economic.InGame.DropItems
 
         public void Claim()
         {
-            if (Vestige > 0)  WealthManager.Instance.AddDark(Vestige);
+            if (Vestige > 0)  WealthManager.Instance.AddVestige(Vestige);
             if (Sigils > 0)  WealthManager.Instance.AddBossPoint(Sigils);
-            if (Echoes > 0)  WealthManager.Instance.AddLevelPoint(Echoes);
+            
+            // Echoes không collect ở đây, khi đủ exp đã tự + echoes rồi
 
             Vestige = 0;
             Sigils = 0;

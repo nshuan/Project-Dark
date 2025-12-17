@@ -1,13 +1,7 @@
 using System;
-using System.Collections;
-using Dark.Scripts.Audio;
-using Economic.InGame;
-using InGame.Effects;
+using Dark.Scripts.AudioV2;
 using InGame.UI;
-using Spine.Unity;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 namespace InGame
 {
@@ -21,9 +15,11 @@ namespace InGame
         // [SerializeField] private TowerAnim towerVisualUILayer;
         [SerializeField] private Sprite[] spriteStates;
         [SerializeField] private float[] thresholdState = new[] { 0f, 0.3f, 0.7f };
+        [SerializeField] private ParticleSystem vfxExplode;
         [SerializeField] private TowerAutoRegenerate autoRegenerate;
         [SerializeField] private TowerRegenerateOnKill regenerateOnKill;
-        [SerializeField] private AudioComponent sfxHit;
+        public Transform[] itemCollectorPositions;
+        [SerializeField] private AudioPlayComponentV2 sfxHit;
 
         [Header("Config")]
         [SerializeField] private string normalSortingLayerName;
@@ -98,6 +94,7 @@ namespace InGame
                 if ((float)CurrentHp / MaxHp < thresholdState[currentState])
                 {
                     currentState -= 1;
+                    vfxExplode?.Play(true);
                     towerAnim.TransitionToIdle(currentState, true);
                     towerBaseAnim.TransitionToIdle(currentState, true);
                 }

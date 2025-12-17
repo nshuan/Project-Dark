@@ -18,11 +18,13 @@ namespace InGame
         private void Awake()
         {
             CombatActions.OnOneEnemyDead += OnEnemyKilled;
-            CombatActions.OnMoveTower += OnMoveTower;
+            CombatActions.OnMoveTowerComplete += OnMoveTower;
         }
 
-        private void OnEnemyKilled(EnemyEntity enemy)
+        private void OnEnemyKilled(EnemyEntity enemy, EnemyDieReason reason)
         {
+            if (reason == EnemyDieReason.Suicide) return;
+            
             if (LevelTemporaryUtility.activatedTemporaryDamageOnKill == false && 
                 LevelUtility.BonusInfo.tempDamageBonusOnKill != null && 
                 LevelUtility.BonusInfo.tempDamageBonusOnKill.bonusDuration > 0)

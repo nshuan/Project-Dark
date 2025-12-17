@@ -1,9 +1,10 @@
 using System;
+using Dark.Scripts.Analytics;
+using Dark.Scripts.AudioV2;
 using Dark.Scripts.CoreUI;
 using Dark.Scripts.SceneNavigation;
 using Data;
 using DG.Tweening;
-using Economic;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -15,6 +16,7 @@ namespace InGame.UI
     {
         [SerializeField] private UIPopup ui;
         [SerializeField] private float delayShowPopup = 2f;
+        [SerializeField] private AudioPlayComponentV2 sfxWin;
         
         [Space]
         [SerializeField] private Button btnBackToTree;
@@ -36,6 +38,7 @@ namespace InGame.UI
         private void OnWin()
         {
             UpdateUI();
+            AudioManagerV2.Instance.FadeVolumeMusic(0.08f, 2f);
             ui.DoOpenFadeIn(delayShowPopup).OnComplete(() =>
             {
                 onShowPopup?.Invoke();
@@ -62,6 +65,8 @@ namespace InGame.UI
                 {
                     LevelManager.Instance.LoadLevel(PlayerDataManager.Instance.Data.level + 1);
                 });
+                
+                LogManager.Log(LogConst.EventLogStartLevel, $"level_{PlayerDataManager.Instance.Data.level + 1}", "from popup win");
             });
         }
         
@@ -103,6 +108,7 @@ namespace InGame.UI
             seq.AppendCallback(ResetPopupUI)
                 .AppendCallback((() =>
                 {
+                    sfxWin.Play();
                     imgTitleBg.DOFade(1f, 0.3f).SetUpdate(true);
                     imgTitle.DOFade(1f, durationTitle).SetUpdate(true).SetDelay(0.1f);
                     

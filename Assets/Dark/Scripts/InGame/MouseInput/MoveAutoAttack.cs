@@ -51,7 +51,7 @@ namespace InGame
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
             var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(1f);
             var critRate = LevelUtility.GetCriticalRate();
-            var bulletNum = LevelUtility.GetNumberOfBullets( 0);
+            var bulletNum = 1;
             var skillSize = LevelUtility.GetSkillSize(1f);
             var skillRange = LevelUtility.GetSkillRange(
                 1f,
@@ -94,7 +94,7 @@ namespace InGame
             var seq = DOTween.Sequence(this);
             seq.Append(cursor.transform.DOPunchScale(0.3f * Vector3.one, 0.13f).SetEase(Ease.InQuad))
                 .Join(cursor.visual.DOFade(0.3f, 0.13f).SetEase(Ease.InQuad).SetLoops(2, LoopType.Yoyo))
-                .Join(DOTween.To(() => cursor.content.localScale.x - 1f, x =>
+                .Join(DOTween.To(() => cursor.content.transform.localScale.x - 1f, x =>
                 {
                     cursor.UpdateScale(x);
                 }, 0f, 0.13f));
@@ -128,18 +128,18 @@ namespace InGame
 
         public bool CanMove => true;
 
-        public virtual void OnUpdate()
+        public virtual void OnUpdate(Vector2 worldMousePosition)
         {
             if (cdCounter >= 0) cdCounter -= Time.deltaTime;
             
             if (!CanShoot) return;
 
-            worldMousePosition = Cam.ScreenToWorldPoint(Input.mousePosition);
+            this.worldMousePosition.x = worldMousePosition.x;
+            this.worldMousePosition.y = worldMousePosition.y; 
             
             mousePosition = Input.mousePosition;
             mousePosition.z = 0; // Set z to 0 for 2D
             cursorRect.position = mousePosition;    
-            InputManager.PlayerVisual.SetDirection(worldMousePosition);
             
             cursor.UpdateCooldown(true, 1 - Mathf.Clamp(cdCounter / Cooldown, 0f, 1f));
             if (cdCounter <= 0)

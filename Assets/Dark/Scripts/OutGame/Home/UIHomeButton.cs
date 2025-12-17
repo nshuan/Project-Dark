@@ -1,5 +1,6 @@
 using System;
 using Coffee.UIExtensions;
+using Dark.Scripts.AudioV2;
 using Dark.Scripts.Common;
 using Dark.Scripts.OutGame.Common.NavButton;
 using Dark.Scripts.Utils;
@@ -89,8 +90,15 @@ namespace Dark.Scripts.OutGame.Home
 
         public override void OnPointerClick(PointerEventData eventData)
         {
+            UIHomeFullscreenStartButton.EnableFullscreenInput = false;
             PlaySelectVfx();
             base.OnPointerClick(eventData);
+        }
+
+        public override void OnPointerEnter(PointerEventData eventData)
+        {
+            AudioManagerV2.Instance.PlayUi("click_weak");
+            base.OnPointerEnter(eventData);
         }
 
         protected void PlaySelectVfx()

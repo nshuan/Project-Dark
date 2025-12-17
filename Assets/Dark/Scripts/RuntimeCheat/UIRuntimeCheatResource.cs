@@ -13,7 +13,7 @@ namespace Dark.Scripts.RuntimeCheat
 
         private void OnEnable()
         {
-            inpSetVestige.text = WealthManager.Instance.Dark.ToString();
+            inpSetVestige.text = WealthManager.Instance.Vestige.ToString();
             inpSetSigil.text = WealthManager.Instance.BossPoint.ToString();
             inpSetEchoes.text = WealthManager.Instance.LevelPoint.ToString();
         }
@@ -22,7 +22,7 @@ namespace Dark.Scripts.RuntimeCheat
         {
             if (int.TryParse(inpSetVestige.text, out var valueInt))
             {
-                WealthManager.Instance.AddDark(valueInt - WealthManager.Instance.Dark);
+                WealthManager.Instance.AddVestige(valueInt - WealthManager.Instance.Vestige);
             }
 
             if (int.TryParse(inpSetSigil.text, out valueInt))

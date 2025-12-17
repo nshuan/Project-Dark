@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Core;
 using DG.Tweening;
 using TMPro;
@@ -17,39 +18,49 @@ namespace Dark.Scripts.SceneNavigation
         [SerializeField] private TextMeshProUGUI progressText;
         [SerializeField] private float minDuration = 0.5f;
         [SerializeField] private float maxDuration = 1.5f;
+
+        private float normalLoadDelayClose = 0.5f;
+        private float normalLoadHideBlankDuration = 0.3f;
+        private float normalLoadHideDuration = 0.5f;
+        
+        private float quickLoadHideBlankDuration = 0.5f;
         
         public Action onStartLoading;
         private Action onSceneLoaded;
         private Action onLoadingComplete;
         private bool isQuickLoad;
+        private float currentCloseDuration;
+
+        private Coroutine coroutineOpen;
+        private Coroutine coroutineClose;
+
+        public float CurrentTotalDurationAfterSceneLoaded { get; private set; }
+        public float TotalDurationAfterSceneLoaded => normalLoadDelayClose + currentCloseDuration + normalLoadHideBlankDuration + normalLoadHideDuration;
+        public float TotalDurationAfterSceneQuickLoaded => quickLoadHideBlankDuration;
         
-        protected override void Awake()
-        {
-            base.Awake();
-            
-            SceneManager.sceneLoaded += OnSceneLoaded;
-        }
-        
-        private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+        private void OnSceneLoaded(Scene scene)
         {
             DebugUtility.LogWarning($"Scene {scene.name} is loaded!");
             if (isQuickLoad)
             {
-                DoQuickClose(0.5f)
-                    .OnComplete(() =>
-                    {
-                        onLoadingComplete?.Invoke();
-                        onLoadingComplete = null;
-                    });
+                if (coroutineClose != null) StopCoroutine(coroutineClose);
+                if (coroutineOpen != null) StopCoroutine(coroutineOpen);
+                coroutineClose = StartCoroutine(IEQuickClose(quickLoadHideBlankDuration, () =>
+                {
+                    onLoadingComplete?.Invoke();
+                    onLoadingComplete = null;
+                }));
             }
             else
             {
-                DoClose(RandomUtil.Range(minDuration, maxDuration), 0.3f,0.5f)
-                    .OnComplete(() =>
+                if (coroutineClose != null) StopCoroutine(coroutineClose);
+                if (coroutineOpen != null) StopCoroutine(coroutineOpen);
+                coroutineClose = StartCoroutine(IEClose(currentCloseDuration, normalLoadHideBlankDuration,
+                    normalLoadHideDuration, () =>
                     {
                         onLoadingComplete?.Invoke();
                         onLoadingComplete = null;
-                    });
+                    }));
             }
             onSceneLoaded?.Invoke();
             onSceneLoaded = null;
@@ -62,53 +73,85 @@ namespace Dark.Scripts.SceneNavigation
             DebugUtility.LogWarning($"Loading scene {sceneName}");
             onLoadingComplete = completeCallback;
             onStartLoading?.Invoke();
-            DoOpen(0.3f, delay).OnComplete(() =>
-            {
-                isQuickLoad = false;
-                SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
-            });
+            if (coroutineOpen != null) StopCoroutine(coroutineOpen);
+            if (coroutineClose != null) StopCoroutine(coroutineClose);
+            
+            // Cache duration for closing loading scene
+            currentCloseDuration = RandomUtil.Range(minDuration, maxDuration);
+            CurrentTotalDurationAfterSceneLoaded = TotalDurationAfterSceneLoaded;
+            
+            coroutineOpen = StartCoroutine(IEOpen(0.3f, delay, sceneName));
         }
 
-        private Tween DoOpen(float duration, float delay)
+        private IEnumerator IEOpen(float duration, float delay, string sceneName)
         {
             loadingPanel.alpha = 0f;
             loadingPanel.gameObject.SetActive(false);
             blankPanel.alpha = 0f;
             blankPanel.gameObject.SetActive(true);
-            DOTween.Kill(this);
-            var seq = DOTween.Sequence(this).SetUpdate(true);
-            seq.AppendInterval(delay);
-            seq.Append(blankPanel.DOFade(1f, duration));
-            return seq;
+            yield return new WaitForSecondsRealtime(delay);
+            yield return blankPanel.DOFade(1f, duration).WaitForCompletion();
+
+            isQuickLoad = false;
+            
+            yield return new WaitForEndOfFrame();
+            Scene currentScene = SceneManager.GetActiveScene();
+            
+            // Load blank scene additively
+            AsyncOperation loadBlankOp = SceneManager.LoadSceneAsync("Blank", LoadSceneMode.Additive);
+            yield return loadBlankOp;
+            DebugUtility.LogWarning($"Scene Blank is loaded!");
+
+            // Set the new scene active
+            Scene loadedBlankScene = SceneManager.GetSceneByName("Blank");
+            SceneManager.SetActiveScene(loadedBlankScene);
+
+            var lastSceneName = currentScene.name;
+            // Unload previous scene
+            AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(currentScene);
+            yield return unloadOp;
+            DebugUtility.LogWarning($"Scene {lastSceneName} is unloaded!");
+                
+            currentScene = SceneManager.GetActiveScene();
+            yield return new WaitForSecondsRealtime(0.1f);
+            
+            // Load additively
+            AsyncOperation loadOp = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+            yield return loadOp;
+
+            // Set the new scene active
+            Scene loadedScene = SceneManager.GetSceneByName(sceneName);
+            SceneManager.SetActiveScene(loadedScene);
+
+            // Unload previous scene
+            unloadOp = SceneManager.UnloadSceneAsync(currentScene);
+            yield return unloadOp;
+            
+            yield return new WaitForEndOfFrame();
+            
+            OnSceneLoaded(loadedScene);
         }
 
-        private Tween DoClose(float duration, float hideBlankDuration, float hideDuration)
+        private IEnumerator IEClose(float duration, float hideBlankDuration, float hideDuration,
+            Action callbackComplete = null)
         {
-            DOTween.Kill(this);
-            var seq = DOTween.Sequence(this).SetUpdate(true);
-            seq.AppendCallback(() =>
-                {
-                    loadingPanel.alpha = 1f;
-                    loadingPanel.gameObject.SetActive(true);
-                    progress.fillAmount = 0f;
-                    progressText.SetText($"0%");
-                })
-                .AppendInterval(0.5f)
-                .Append(blankPanel.DOFade(0f, hideBlankDuration))
-                .Append(DOTween.To(() => 0f, x =>
-                {
-                    progress.fillAmount = x;
-                    progressText.SetText($"{(int)(x * 100)}%");
-                }, 1f, duration))
-                .Append(loadingPanel.DOFade(0f, hideDuration))
-                .AppendCallback(() =>
-                {
-                    blankPanel.gameObject.SetActive(false);
-                    loadingPanel.gameObject.SetActive(false);
-                });
-            return seq.Play();
+            loadingPanel.alpha = 1f;
+            loadingPanel.gameObject.SetActive(true);
+            progress.fillAmount = 0f;
+            progressText.SetText($"0%");
+            yield return new WaitForSecondsRealtime(0.5f);
+            yield return blankPanel.DOFade(0f, hideBlankDuration).SetUpdate(true).WaitForCompletion();
+            yield return DOTween.To(() => 0f, x =>
+            {
+                progress.fillAmount = x;
+                progressText.SetText($"{(int)(x * 100)}%");
+            }, 1f, duration).SetUpdate(true).WaitForCompletion();
+            yield return loadingPanel.DOFade(0f, hideDuration).SetUpdate(true).WaitForCompletion();
+            loadingPanel.gameObject.SetActive(false);
+            blankPanel.gameObject.SetActive(false);
+            callbackComplete?.Invoke(); 
         }
-
+        
         #endregion
 
         #region QuickLoad
@@ -118,36 +161,67 @@ namespace Dark.Scripts.SceneNavigation
             DebugUtility.LogWarning($"Loading (quick) scene {sceneName}");
             onLoadingComplete = completeCallback;
             onStartLoading?.Invoke();
-            DoQuickOpen(0.3f, delay).OnComplete(() =>
-            {
-                isQuickLoad = true;
-                SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
-            });
-        }
+            if (coroutineOpen != null) StopCoroutine(coroutineOpen);
+            if (coroutineClose != null) StopCoroutine(coroutineClose);
 
-        private Tween DoQuickOpen(float duration, float delay)
+            CurrentTotalDurationAfterSceneLoaded = TotalDurationAfterSceneQuickLoaded;
+            
+            coroutineOpen = StartCoroutine(IEQuickOpen(0.3f, delay, sceneName));
+        }
+        
+        private IEnumerator IEQuickOpen(float duration, float delay, string sceneName)
         {
             loadingPanel.gameObject.SetActive(false);
             blankPanel.alpha = 0f;
             blankPanel.gameObject.SetActive(true);
-            DOTween.Kill(this);
-            var seq = DOTween.Sequence(this).SetUpdate(true);
-            seq.AppendInterval(delay);
-            seq.Append(blankPanel.DOFade(1f, duration));
-            return seq;
-        }
+            yield return new WaitForSecondsRealtime(delay);
+            yield return blankPanel.DOFade(1f, duration).SetUpdate(true).WaitForCompletion();
+            
+            isQuickLoad = true;
+            
+            yield return new WaitForEndOfFrame();
+            Scene currentScene = SceneManager.GetActiveScene();
 
-        private Tween DoQuickClose(float hideBlankDuration)
+            // Load blank scene additively
+            AsyncOperation loadBlankOp = SceneManager.LoadSceneAsync("Blank", LoadSceneMode.Additive);
+            yield return loadBlankOp;
+            DebugUtility.LogWarning($"Scene Blank is loaded!");
+
+            // Set the new scene active
+            Scene loadedBlankScene = SceneManager.GetSceneByName("Blank");
+            SceneManager.SetActiveScene(loadedBlankScene);
+
+            var lastSceneName = currentScene.name;
+            // Unload previous scene
+            AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(currentScene);
+            yield return unloadOp;
+            DebugUtility.LogWarning($"Scene {lastSceneName} is unloaded!");
+                
+            currentScene = SceneManager.GetActiveScene();
+            yield return new WaitForSecondsRealtime(0.1f);
+            
+            // Load additively
+            AsyncOperation loadOp = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+            yield return loadOp;
+
+            // Set the new scene active
+            Scene loadedScene = SceneManager.GetSceneByName(sceneName);
+            SceneManager.SetActiveScene(loadedScene);
+
+            // Unload previous scene
+            AsyncOperation unloadBlankOp = SceneManager.UnloadSceneAsync(currentScene);
+            yield return unloadBlankOp;
+            
+            yield return new WaitForEndOfFrame();
+            OnSceneLoaded(loadedScene);
+        }
+        
+        private IEnumerator IEQuickClose(float hideBlankDuration, Action callbackComplete = null)
         {
-            DOTween.Kill(this);
-            var seq = DOTween.Sequence(this).SetUpdate(true);
-            seq.Append(blankPanel.DOFade(0f, hideBlankDuration).SetEase(Ease.InQuad))
-                .AppendCallback(() =>
-                {
-                    blankPanel.gameObject.SetActive(false);
-                    loadingPanel.gameObject.SetActive(false);
-                });
-            return seq.Play();
+            yield return blankPanel.DOFade(0f, hideBlankDuration).SetUpdate(true).WaitForCompletion();
+            blankPanel.gameObject.SetActive(false);
+            loadingPanel.gameObject.SetActive(false);
+            callbackComplete?.Invoke();
         }
 
         #endregion

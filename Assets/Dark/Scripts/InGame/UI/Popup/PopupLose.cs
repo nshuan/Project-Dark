@@ -1,9 +1,10 @@
 using System;
+using Dark.Scripts.Analytics;
+using Dark.Scripts.AudioV2;
 using Dark.Scripts.CoreUI;
 using Dark.Scripts.SceneNavigation;
 using Data;
 using DG.Tweening;
-using InGame.UI.EndingLevel;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -14,14 +15,15 @@ namespace InGame.UI
     public class PopupLose : MonoBehaviour
     {
         [SerializeField] private UIPopup ui;
+        [SerializeField] private CanvasGroup popupLoseCanvasGroup;
         [SerializeField] private float delayShowPopup = 5f; // Do có vfx endgame khi trụ bị phá nên cần delay xong vfx mới show popup
+        [SerializeField] private AudioPlayComponentV2 sfxLose;
         
         [Space]
         [SerializeField] private Button btnBackToTree;
         [SerializeField] private Button btnReplay;
-
-        [Space] [Header("Ending Level")] 
-        [SerializeField] private UIEndingAnimation uiEndingLevel;
+        
+        private IEndGameLoseAnimation endingLevel;
 
         public static event Action onShowPopup;
 
@@ -45,7 +47,11 @@ namespace InGame.UI
         private void OnLose()
         {
             UpdateUI();
-            // uiEndingLevel.Play();
+
+            delayShowPopup = 0f;
+            endingLevel = TowerDestroyedAnim.Instance;
+            if (endingLevel != null) delayShowPopup = endingLevel.Play();
+            AudioManagerV2.Instance.FadeVolumeMusic(0.08f, 2f);
             ui.DoOpenFadeIn().SetDelay(delayShowPopup).OnComplete(() =>
             {
                 onShowPopup?.Invoke();
@@ -61,8 +67,13 @@ namespace InGame.UI
             btnBackToTree.onClick.AddListener(() =>
             {
                 btnReplay.interactable = false;
-                btnBackToTree.interactable = false;
-                Loading.Instance.QuickLoadScene(SceneConstants.SceneUpgrade);
+                btnBackToTree.interactable = false;;
+                popupLoseCanvasGroup.DOFade(0f, 0.2f)
+                    .OnComplete(() =>
+                    {
+                        var returnDuration = endingLevel.PlayReturn();
+                        Loading.Instance.QuickLoadScene(SceneConstants.SceneUpgrade, null, returnDuration + 0.2f);
+                    });
             });
             
             // Todo reload level
@@ -75,6 +86,8 @@ namespace InGame.UI
                 {
                     LevelManager.Instance.LoadLevel(PlayerDataManager.Instance.Data.level + 1);
                 });
+                
+                LogManager.Log(LogConst.EventLogStartLevel, $"level_{PlayerDataManager.Instance.Data.level + 1}", "from popup lose");
             });
         }
 
@@ -82,6 +95,7 @@ namespace InGame.UI
         private static readonly int MatDisolveValue = Shader.PropertyToID("Disolve_Value");
         
         [SerializeField] private Image imgSymbol;
+        [SerializeField] private Image imgSymbolShiny;
         [SerializeField] private Image imgTitle;
         [SerializeField] private Image imgTitleBg;
         [SerializeField] private TextMeshProUGUI txtDescription;
@@ -102,6 +116,7 @@ namespace InGame.UI
         private void ResetPopupUI()
         {
             matSymbol.SetFloat(MatDisolveValue, 1f);
+            imgSymbolShiny.gameObject.SetActive(false);
             imgTitle.SetAlpha(0f);
             imgTitleBg.SetAlpha(0f);
             txtDescription.SetAlpha(0f);
@@ -118,10 +133,15 @@ namespace InGame.UI
             DOTween.Kill(ui);
             var seq = DOTween.Sequence(ui).SetUpdate(true);
 
-            seq.AppendCallback(ResetPopupUI)
+            seq.AppendCallback(() =>
+                {
+                    sfxLose.Play();
+                    ResetPopupUI();
+                })
                 .Append(DOTween.To(() => 1f, (x) => matSymbol.SetFloat(MatDisolveValue, x), 0f, 1f))
                 .AppendCallback((() =>
                 {
+                    imgSymbolShiny.gameObject.SetActive(true);
                     imgTitleBg.DOFade(1f, 0.3f).SetUpdate(true);
                     imgTitle.DOFade(1f, durationTitle).SetUpdate(true).SetDelay(0.1f);
                     

@@ -1,11 +1,15 @@
 using System.Collections;
+using DG.Tweening;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Economic.UI
 {
-    public class UIEconomic : MonoBehaviour
+    public class UIEconomic : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        private Coroutine coroutineAnimatedUpdating;
+        [SerializeField] private bool showInstruction = false;
+        [SerializeField] private GameObject panelInstruction;
+        
         protected int current;
         protected int target;
         protected float updateInterval = 0.05f;
@@ -20,44 +24,77 @@ namespace Economic.UI
         {
             if (target == this.target) return;
             this.target = target;
-            
-            if (coroutineAnimatedUpdating == null)
+
+            DoAnimatedUpdating().OnComplete(() =>
             {
-                coroutineAnimatedUpdating = StartCoroutine(IEAnimatedUpdating());
-            }
+                current = this.target;
+                UpdateUI();
+            });
         }
 
-        private IEnumerator IEAnimatedUpdating()
+        private Tween DoAnimatedUpdating()
         {
-            var step = 1;
+            DOTween.Kill(this);
+            var seq = DOTween.Sequence(this);
+            var stepSize = 1;
+            var step = (int)(maxUpdateDuration / updateInterval);
             if (current < target)
             {
                 if ((target - current) * updateInterval > maxUpdateDuration)
-                    step = (int)((target - current) / maxUpdateDuration * updateInterval);
-                
-                while (current < target)
+                    stepSize = (int)((target - current) / maxUpdateDuration * updateInterval);
+                else step = target - current;
+
+                TweenCallback actionUpdate = () =>
                 {
-                    current += step;
+                    current += stepSize;
                     UpdateUI();
-                    yield return new WaitForSeconds(updateInterval);
+                };
+                
+                for (var i = 0; i < step; i++)
+                {
+                    seq.AppendCallback(actionUpdate)
+                        .AppendInterval(updateInterval);
                 }
+                
             }
             else if (current > target)
             {
-                if ((- target + current) * updateInterval > maxUpdateDuration)
-                    step = (int)((- target + current) / maxUpdateDuration * updateInterval);
+                if ((-target + current) * updateInterval > maxUpdateDuration)
+                    stepSize = (int)((-target + current) / maxUpdateDuration * updateInterval);
+                else step = -target + current;
                 
-                while (current > target)
+                TweenCallback actionUpdate = () =>
                 {
-                    current -= step;
+                    current -= stepSize;
                     UpdateUI();
-                    yield return new WaitForSeconds(updateInterval);
+                };
+                
+                for (var i = 0; i < step; i++)
+                {
+                    seq.AppendCallback(actionUpdate)
+                        .AppendInterval(updateInterval);
                 }
             }
 
-            current = target;
-            UpdateUI();
-            coroutineAnimatedUpdating = null;
+            seq.AppendCallback(() =>
+            {
+                current = target;
+                UpdateUI();
+            });
+
+            return seq;
         }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            if (!showInstruction) return;
+            panelInstruction.SetActive(true);
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+             if (!showInstruction) return;
+            panelInstruction.SetActive(false);
+       }
     }
 }

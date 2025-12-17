@@ -48,7 +48,7 @@ namespace InGame
                 if (!BlockSpawnDeadBody)
                 {
                     // ProjectileDeadPool.Instance.Get(direction).position = transform.position;
-                    ProjectileDeadPool.Instance.Get(direction).position = BoundPosition;
+                    ProjectileDeadPool.Instance.Get(BoundPosition, direction);
                 }
                 ProjectileHit(null);
                 return;

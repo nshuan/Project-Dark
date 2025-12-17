@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
-using Dark.Scripts.Audio;
+using Dark.Scripts.AudioV2;
 using Dark.Scripts.Utils;
 using InGame.Effects;
 using UnityEngine;
@@ -17,7 +17,7 @@ namespace InGame
         [SerializeField] private float delayEachHit = 0.05f;
         [SerializeField] private float durationEachHit = 0.13f;
         [SerializeField] private float durationImpact = 1.2f;
-        [SerializeField] private AudioComponent sfx;
+        [SerializeField] private AudioPlayComponentV2 sfx;
         
         private Vector2 Position { get; set; }
         private float Stagger { get; set; }
@@ -48,12 +48,12 @@ namespace InGame
             lineRenderer.gameObject.SetActive(false);
             lineRenderer.Initialize();
             lineRenderer.ResetLine(Array.Empty<Transform>());
-            cameraShakeEffect = new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera };
+            cameraShakeEffect = new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera, Magnitude = 0.05f };
         }
 
         public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool)
         {
-            maxHitWithBonus = (int)size;
+            maxHitWithBonus = Mathf.RoundToInt(size);
             lineRenderer.ResetLine(Array.Empty<Transform>());
             transform.position = Vector3.zero;
             this.Position = target.Position;
@@ -102,7 +102,7 @@ namespace InGame
                 unorderedHits[tempClosestHitIndex] = null;
                 unorderedEnemies[tempClosestHitIndex] = null;
                 var a = orderCount;
-                enemyOrder[orderCount].OnDead += () =>
+                enemyOrder[orderCount].OnDead += (reason) =>
                 {
                     hitOrder[a].gameObject.SetActive(false);
                 };

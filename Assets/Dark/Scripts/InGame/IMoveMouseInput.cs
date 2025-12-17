@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace InGame
 {
     public interface IMoveTowerMouseInput : IMoveMouseInput
@@ -10,7 +12,7 @@ namespace InGame
     public interface IMoveMouseInput
     {
         bool CanMove { get; }
-        void OnUpdate();
+        void OnUpdate(Vector2 worldMousePosition);
         void Deactivate();
     }
 }

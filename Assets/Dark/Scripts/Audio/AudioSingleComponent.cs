@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using Dark.Scripts.AudioV2;
+using Dark.Scripts.Settings;
 using DG.Tweening;
 using UnityEngine;
 
@@ -12,6 +14,7 @@ namespace Dark.Scripts.Audio
         [SerializeField] private int loop = 1;
         [SerializeField] private bool playOnStart = true;
         [SerializeField] private float delay;
+        [SerializeField] private AudioChannel audioType;
         
         [Space]
         [Header("Fade in")]
@@ -26,6 +29,8 @@ namespace Dark.Scripts.Audio
         private AudioSource audio;
         private Coroutine coroutinePlay;
         private float volume;
+        private int tempLoop;
+        private int settingVolumeEnabled = 1;
 
         private void Awake()
         {
@@ -38,30 +43,64 @@ namespace Dark.Scripts.Audio
 
         private void Start()
         {
+            OnSettingsUpdated();
+            
             if (playOnStart)
                 Play();
+            
+            GameSettings.OnSettingUpdated += OnSettingsUpdated;
         }
 
-        public void Play()
+        private void OnDestroy()
         {
-            if (coroutinePlay != null) StopCoroutine(coroutinePlay);
-            coroutinePlay = StartCoroutine(IEPlay());
+            GameSettings.OnSettingUpdated -= OnSettingsUpdated;
         }
 
-        private IEnumerator IEPlay()
+        public void Play(float delay = -1f)
+        {
+            if (delay < 0f) delay = this.delay;
+            tempLoop = loop;
+            if (coroutinePlay != null) StopCoroutine(coroutinePlay);
+            coroutinePlay = StartCoroutine(IEPlay(delay));
+        }
+
+        private IEnumerator IEPlay(float delay)
         {
             if (fadeInDuration > audio.clip.length) fadeInDuration = audio.clip.length;
             if (fadeInDuration + fadeOutDuration > audio.clip.length) fadeOutDuration = audio.clip.length - fadeInDuration;
-            yield return new WaitForSeconds(delay);
+            yield return new WaitForSecondsRealtime(delay);
 
-            while (loop != 0)
+            while (tempLoop != 0)
             {
                 audio.volume = 0f;
                 audio.Play();
-                yield return audio.DOFade(volume, fadeInDuration).SetEase(fadeInEasing).WaitForCompletion();
+                yield return audio.DOFade(volume * settingVolumeEnabled, fadeInDuration).SetEase(fadeInEasing).SetUpdate(true).WaitForCompletion();
                 yield return new WaitForSeconds(audio.clip.length - fadeInDuration - fadeOutDuration);
-                yield return audio.DOFade(0f, fadeOutDuration).SetEase(fadeOutEasing).WaitForCompletion();
-                loop -= 1;
+                yield return audio.DOFade(0f, fadeOutDuration).SetEase(fadeOutEasing).SetUpdate(true).WaitForCompletion();
+                tempLoop -= 1;
+            }
+        }
+
+        private void OnSettingsUpdated()
+        {
+            switch (audioType)
+            {
+                case AudioChannel.Ui:
+                    settingVolumeEnabled = GameSettings.EnableUISound ? 1 : 0;
+                    audio.volume = volume * settingVolumeEnabled;
+                    break;
+                case AudioChannel.Music:
+                    settingVolumeEnabled = GameSettings.EnableMusic ? 1 : 0;
+                    audio.volume = volume * settingVolumeEnabled;
+                    break;
+                case AudioChannel.InGame:
+                    settingVolumeEnabled = GameSettings.EnableInGameSound ? 1 : 0;
+                    audio.volume = volume * settingVolumeEnabled;
+                    break;
+                case AudioChannel.OutGame:
+                    settingVolumeEnabled = GameSettings.EnableOutGameSound ? 1 : 0; 
+                    audio.volume = volume * settingVolumeEnabled;
+                    break;
             }
         }
     }

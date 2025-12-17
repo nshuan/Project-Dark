@@ -22,6 +22,16 @@ namespace InGame
         {
             base.Awake();
             
+            // Setup passive config map in LevelUtility
+            LevelUtility.EffectConfigsMap = new Dictionary<PassiveTriggerType, Dictionary<PassiveType, PassiveConfig>>();
+            foreach (var pair in effectConfigsMap)
+            {
+                var subDict = new Dictionary<PassiveType, PassiveConfig>();
+                foreach (var subPair in pair.Value)
+                    subDict.Add(subPair.Key, subPair.Value);
+                LevelUtility.EffectConfigsMap.Add(pair.Key, subDict);
+            }
+            
             cooldownEffectMap = new Dictionary<PassiveTriggerType, Dictionary<PassiveType, bool>>();
             foreach (PassiveTriggerType triggerType in Enum.GetValues(typeof(PassiveTriggerType)))
             {
@@ -72,17 +82,17 @@ namespace InGame
                 if (cooldownEffectMap[triggerType][effectConfig.logicType]) continue;
                 
                 // Calculate chance
-                if (RandomUtil.Range(0f, 1f) <= LevelUtility.GetPassiveChance(effectConfig.logicType, effectConfig.chance))
+                if (RandomUtil.Range(0f, 1f) <= LevelUtility.GetPassiveChance(triggerType, effectConfig.logicType))
                 {
                     pool.Get(effectConfig.passivePrefab, effectConfig.passiveId, null, false)
                         .TriggerEffect(effectConfig.passiveId, target, 
-                            LevelUtility.GetPassiveSize(effectConfig.logicType, effectConfig.size), 
-                            LevelUtility.GetPassiveValue(effectConfig.logicType, effectConfig.value), 
-                            LevelUtility.GetPassiveStagger(effectConfig.logicType, effectConfig.stagger), 
+                            LevelUtility.GetPassiveSize(triggerType, effectConfig.logicType), 
+                            LevelUtility.GetPassiveValue(triggerType, effectConfig.logicType), 
+                            LevelUtility.GetPassiveStagger(triggerType, effectConfig.logicType), 
                             pool);
 
                     cooldownEffectMap[triggerType][effectConfig.logicType] = true;
-                    var cooldown = LevelUtility.GetPassiveCooldown(effectConfig.logicType, effectConfig.cooldown);
+                    var cooldown = LevelUtility.GetPassiveCooldown(triggerType, effectConfig.logicType);
                     StartCoroutine(IECooldown(cooldown, () => cooldownEffectMap[triggerType][effectConfig.logicType] = false));
                     
                     CombatActions.OnEffectTriggered?.Invoke(triggerType, effectConfig.logicType, cooldown);
@@ -95,9 +105,9 @@ namespace InGame
             var passiveConfig = effectConfigsMap[triggerType][passiveType];
             pool.Get(passiveConfig.passivePrefab, passiveConfig.passiveId, null, false)
                 .TriggerEffect(passiveConfig.passiveId, target, 
-                    LevelUtility.GetPassiveSize(passiveConfig.logicType, passiveConfig.size), 
-                    LevelUtility.GetPassiveValue(passiveConfig.logicType, passiveConfig.value), 
-                    LevelUtility.GetPassiveStagger(passiveConfig.logicType, passiveConfig.stagger), 
+                    LevelUtility.GetPassiveSize(triggerType, passiveType), 
+                    LevelUtility.GetPassiveValue(triggerType, passiveType), 
+                    LevelUtility.GetPassiveStagger(triggerType, passiveType), 
                     pool);
         }
 

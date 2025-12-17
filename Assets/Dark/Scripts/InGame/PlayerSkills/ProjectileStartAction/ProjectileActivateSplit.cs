@@ -16,7 +16,8 @@ namespace InGame
             direction.Normalize();
 
             var spawnPos = new Vector2();
-            var calculatedAmount = amount;
+            var calculatedAmount = amount + 1; // +1 đạn chính
+            var angleOffset = 0f;
             
             ProjectileEntity p = null;
             if (calculatedAmount % 2 == 1)
@@ -27,7 +28,7 @@ namespace InGame
                 p.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
                 p.transform.position = spawnPos;
                 p.Init(
-                    spawnPos, 
+                    parentProjectile.RangeCenter, 
                     direction, 
                     parentProjectile.Range, 
                     parentProjectile.Size, 
@@ -42,21 +43,25 @@ namespace InGame
                     parentProjectile.HitActions,
                     ProjectileType.PlayerProjectile
                     );
-                p.Activate(0.2f);
-
+                p.Activate(0f);
+            
                 calculatedAmount -= 1;
+            }
+            else
+            {
+                angleOffset = angle / calculatedAmount / 2;
             }
             
             for (var i = 1; i <= calculatedAmount / 2; i++)
             {
-                var pDir = (Vector2)(Quaternion.Euler(0f, 0f, i * angle / calculatedAmount) * direction);
+                var pDir = (Vector2)(Quaternion.Euler(0f, 0f, i * angle / calculatedAmount - angleOffset) * direction);
                 p = ProjectilePool.Instance.Get(projectile, null, false);
                 spawnPos.x = parentProjectile.transform.position.x;
                 spawnPos.y = parentProjectile.transform.position.y;
                 p.transform.position = spawnPos;
                 p.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(pDir.y, pDir.x) * Mathf.Rad2Deg);
                 p.Init(
-                    spawnPos, 
+                    parentProjectile.RangeCenter, 
                     pDir, 
                     parentProjectile.Range, 
                     parentProjectile.Size, 
@@ -73,14 +78,14 @@ namespace InGame
                 );
                 p.Activate(0f);
             
-                pDir = Quaternion.Euler(0f, 0f, - i * angle / calculatedAmount) * direction;
+                pDir = Quaternion.Euler(0f, 0f, - i * angle / calculatedAmount + angleOffset) * direction;
                 p = ProjectilePool.Instance.Get(projectile, null, false);
                 spawnPos.x = parentProjectile.transform.position.x;
                 spawnPos.y = parentProjectile.transform.position.y;
                 p.transform.position = spawnPos;
                 p.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(pDir.y, pDir.x) * Mathf.Rad2Deg);
                 p.Init(
-                    spawnPos, 
+                    parentProjectile.RangeCenter, 
                     pDir, 
                     parentProjectile.Range, 
                     parentProjectile.Size, 
@@ -106,9 +111,35 @@ namespace InGame
             this.angle += casted.angle;
         }
 
+        public void TryCombineAndRevert<T>(T combineWith, Action combinedAction) where T : IProjectileActivate
+        {
+            if (combineWith is not ProjectileActivateSplit casted)
+            {
+                combinedAction?.Invoke();
+                return;
+            }
+            var tempAmount = this.amount;
+            var tempAngle = this.angle;
+            this.amount += casted.amount;
+            this.angle += casted.angle;
+            combinedAction?.Invoke();
+            this.amount = tempAmount;
+            this.angle = tempAngle;
+        }
+
         public float GetValue()
         {
             return amount;
+        }
+
+        public IProjectileActivate Clone()
+        {
+            return new ProjectileActivateSplit()
+            {
+                projectile = projectile,
+                amount = amount,
+                angle = angle,
+            };
         }
     }
 }

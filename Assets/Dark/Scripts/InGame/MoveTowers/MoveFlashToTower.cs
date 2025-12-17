@@ -45,7 +45,7 @@ namespace InGame
             
             yield return character.StopFlashEffect(() =>
             {
-                cameraShake ??= new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera };
+                cameraShake ??= new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera, Magnitude = 0.05f};
                 VisualEffectHelper.Instance.PlayEffect(cameraShake);
                 
                 var count = Physics2D.CircleCastNonAlloc(character.FlashExplodeCenter, explodeSize, Vector2.zero, hits,

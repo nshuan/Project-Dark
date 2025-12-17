@@ -34,12 +34,64 @@ namespace InGame.Upgrade
             }
         }
 
+        public (string, string) GetBeforeAfterValueTotalStat(int level, ref UpgradeBonusInfo bonusInfo)
+        {
+            bonusInfo.tempDamageBonusOnKill ??= new UpgradeBonusTempInfo();
+            bonusInfo.tempDamageBonusOnMove ??= new UpgradeBonusTempInfo();
+            bonusInfo.tempAtkSpeBonusOnKill ??= new UpgradeBonusTempInfo();
+            bonusInfo.tempAtkSpeBonusOnMove ??= new UpgradeBonusTempInfo();
+            var before = "";
+            switch (bonusType)
+            {
+                case NodeBonusTemporary.BonusTemporaryType.DamageOnKill:
+                    before = $"{bonusInfo.tempDamageBonusOnMove.bonusDuration.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
+                    break;
+                case NodeBonusTemporary.BonusTemporaryType.DamageOnMove:
+                    before = $"{bonusInfo.tempDamageBonusOnKill.bonusDuration.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
+                    break;
+                case NodeBonusTemporary.BonusTemporaryType.AtkSpeOnKill:
+                    before = $"{bonusInfo.tempAtkSpeBonusOnMove.bonusDuration.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
+                    break;
+                case NodeBonusTemporary.BonusTemporaryType.AtkSpeOnMove:
+                    before = $"{bonusInfo.tempAtkSpeBonusOnKill.bonusDuration.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
+                    break;
+            }
+            if (level > value.Length)
+                return (before, before);
+            var tempDamageBonusOnKill = bonusInfo.tempDamageBonusOnKill.bonusDuration;
+            var tempDamageBonusOnMove = bonusInfo.tempDamageBonusOnMove.bonusDuration;
+            var tempAtkSpeBonusOnKill = bonusInfo.tempAtkSpeBonusOnKill.bonusDuration;
+            var tempAtkSpeBonusOnMove = bonusInfo.tempAtkSpeBonusOnMove.bonusDuration;
+            ActivateNode(level, ref bonusInfo);
+            var after = "";
+            switch (bonusType)
+            {
+                case NodeBonusTemporary.BonusTemporaryType.DamageOnKill:
+                    before = $"{bonusInfo.tempDamageBonusOnMove.bonusDuration.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
+                    break;
+                case NodeBonusTemporary.BonusTemporaryType.DamageOnMove:
+                    before = $"{bonusInfo.tempDamageBonusOnKill.bonusDuration.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
+                    break;
+                case NodeBonusTemporary.BonusTemporaryType.AtkSpeOnKill:
+                    before = $"{bonusInfo.tempAtkSpeBonusOnMove.bonusDuration.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
+                    break;
+                case NodeBonusTemporary.BonusTemporaryType.AtkSpeOnMove:
+                    before = $"{bonusInfo.tempAtkSpeBonusOnKill.bonusDuration.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
+                    break;
+            }   
+            bonusInfo.tempDamageBonusOnKill.bonusDuration = tempDamageBonusOnKill;
+            bonusInfo.tempDamageBonusOnMove.bonusDuration = tempDamageBonusOnMove;
+            bonusInfo.tempAtkSpeBonusOnKill.bonusDuration = tempAtkSpeBonusOnKill;
+            bonusInfo.tempAtkSpeBonusOnMove.bonusDuration = tempAtkSpeBonusOnMove;
+            return (before, after);
+        }
+
         public string GetDisplayValue(int level)
         {
             if (level < 0) return "??";
             if (level >= value.Length) level = value.Length - 1;
             
-            return value[level].ToString(CultureInfo.InvariantCulture);
+            return value[level].ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
         }
 
         public int MaxLevel => value.Length;

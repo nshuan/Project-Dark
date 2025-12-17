@@ -19,7 +19,7 @@ namespace Dark.Scripts.Common.ParticleSystemUtil
         public void Play()
         {
             if (childPS is { Length: > 0 })
-                childPS[0].Play();
+                childPS[0].Play(true);
         }
 
         public void ScaleDuration(float scale)

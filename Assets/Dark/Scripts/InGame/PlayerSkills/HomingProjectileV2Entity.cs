@@ -22,6 +22,9 @@ namespace InGame
         private bool canRotate = false;
         private bool blockHit;
 
+        private EnemyEntity targetEnemy;
+        public EnemyEntity TargetEnemy => targetEnemy;
+        
         public override void Init(Vector2 startPos, Vector2 direction, float range, float size, float speedScale, int damage,
             int criticalDamage, float criticalRate, float stagger, bool isCharge, int maxHit, List<IProjectileActivate> activateActions, List<IProjectileHit> hitActions, ProjectileType damageType)
         {
@@ -34,7 +37,9 @@ namespace InGame
             if (WeaponSupporter.EnemyTargetingIndex < WeaponSupporter.EnemiesCountInRange)
             {
                 targetToChase = WeaponSupporter.EnemiesInRange[WeaponSupporter.EnemyTargetingIndex].transform;
-                WeaponSupporter.EnemyTargetingIndex += 1;
+                // Nếu là boss thì ko tăng target index
+                if (!targetToChase.TryGetComponent<EnemyEntity>(out targetEnemy) || !targetEnemy.IsBoss)
+                    WeaponSupporter.EnemyTargetingIndex += 1;
             }
             
             homingController = GetComponent<TargetedProjectile>();
@@ -75,7 +80,7 @@ namespace InGame
 
             if (!activated)
             {
-                // Change direction slowly to target
+                // Change projectile's direction slowly to target
                 if (canRotate && targetToChase)
                 {
                     if (targetToChase.gameObject.activeInHierarchy)
@@ -101,7 +106,18 @@ namespace InGame
                     {
                         DebugUtility.Log($"Homing Hit enemy {hitEnemyInfo.hitEnemy}");
                         transform.position = hitEnemyInfo.hitEnemy.transform.position;
-                    
+
+                        if (!hitEnemyInfo.hitEnemy.IsDestroyed && !forceHideDeadObject && currentHit + 1 >= MaxHit)
+                        {
+                            var deadProjectile = ProjectileDeadOnEnemyPool.Instance.Get(moveDirection);
+                            deadProjectile.position = hitEnemyInfo.hit.point;
+                            hitEnemyInfo.hitEnemy.body.SetupProjectileHit(deadProjectile.transform, moveDirection);
+                            deadProjectile.SetParent(hitEnemyInfo.hitEnemy.transform);
+                            hitEnemyInfo.hitEnemy.OnStartDead += () =>
+                            {
+                                deadProjectile.gameObject.SetActive(false);
+                            };
+                        }
                         ProjectileHit(hitEnemyInfo.hitEnemy);
                     }
                     else
@@ -109,7 +125,7 @@ namespace InGame
                         if (Vector2.Distance(transform.position + moveDirection, RangeCenter) > LevelUtility.GetRelativeRange(Range, transform.position - RangeCenter))
                         {
                             if (!BlockSpawnDeadBody)
-                                ProjectileDeadPool.Instance.Get(direction).position = transform.position;
+                                ProjectileHomingDeadPool.Instance.Get(transform.position, direction);
                             ProjectileHit(null);
                         }
                         else
@@ -122,26 +138,16 @@ namespace InGame
                 {
                     moveDirection = homingController.GetProjectileNextPosition(BoundPosition) - transform.position;
                     transform.rotation = homingController.GetProjectileNextRotation();
-                    // hitStatus = collider.CheckCollision(ref moveDirection, ref hitEnemyInfo);
-                    // if (hitStatus == ProjectileCollider.ProjectileHitStatus.Enemy)
-                    // {
-                    //     DebugUtility.Log($"Homing Hit enemy {hitEnemyInfo.hitEnemy}");
-                    //     transform.position = hitEnemyInfo.hitEnemy.transform.position;
-                    //
-                    //     ProjectileHit(hitEnemyInfo.hitEnemy);
-                    // }
-                    // else
+                    
+                    if (Vector2.Distance(transform.position + moveDirection, RangeCenter) > LevelUtility.GetRelativeRange(Range, transform.position - RangeCenter))
                     {
-                        if (Vector2.Distance(transform.position + moveDirection, RangeCenter) > LevelUtility.GetRelativeRange(Range, transform.position - RangeCenter))
-                        {
-                            if (!BlockSpawnDeadBody)
-                                ProjectileDeadPool.Instance.Get(direction).position = transform.position;
-                            ProjectileHit(null);
-                        }
-                        else
-                        {
-                            transform.position += moveDirection;
-                        }
+                        if (!BlockSpawnDeadBody)
+                            ProjectileHomingDeadPool.Instance.Get(transform.position, direction);
+                        ProjectileHit(null);
+                    }
+                    else
+                    {
+                        transform.position += moveDirection;
                     }
                 }
             }

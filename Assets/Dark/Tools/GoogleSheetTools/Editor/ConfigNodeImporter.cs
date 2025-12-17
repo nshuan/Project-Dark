@@ -107,6 +107,26 @@ namespace Dark.Tools.GoogleSheetTool
                     config = funcCreateNewNodeConfig($"{csvNodeId}_{nodeName}");
                     config.nodeId = csvNodeId;
                 }
+                else
+                {
+                    var nodeName = "Unnamed";
+                    for (var fieldIndex = 0; fieldIndex < fields.Length; fieldIndex++)
+                    {
+                        if (fields[fieldIndex] != "nodeName") continue;
+                        nodeName = cols[fieldIndex];
+                        break;
+                    }
+
+                    var newName = $"{csvNodeId}_{nodeName}";
+                    if (newName != config.name)
+                    {
+                        config.name = newName;
+#if UNITY_EDITOR
+                        EditorUtility.SetDirty(config);
+                        AssetDatabase.RenameAsset(AssetDatabase.GetAssetPath(config), newName);
+#endif
+                    }
+                }
                 
                 // Thêm logic
                 var logicInfos = new List<NodeLogicInfo>();
@@ -125,9 +145,7 @@ namespace Dark.Tools.GoogleSheetTool
                         isMul = cols[indexInfo.isMulIndex]
                     });
                 }
-
-                var a = 1;
-                    
+   
                 config.nodeLogic = ConfigNodeLogicFactory.Generate(logicInfos);
 
                 var allCost = new List<UpgradeNodeCostInfo>();

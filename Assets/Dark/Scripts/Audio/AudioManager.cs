@@ -19,10 +19,7 @@ namespace Dark.Scripts.Audio
     public class AudioManager : MonoSingleton<AudioManager>
     {
         [SerializeField] private AudioSourceInfo[] sources;
-            
-        [Header("Settings")]
-        public int initialPoolSize = 10; // starting number of AudioSources
-
+        
         protected override void Awake()
         {
             base.Awake();
@@ -36,7 +33,7 @@ namespace Dark.Scripts.Audio
             {
                 sources[index].component.Source = sources[index].component.GetComponent<AudioSource>();
                 var pool = new List<AudioSource>();
-                for (int i = 0; i < initialPoolSize; i++)
+                for (int i = 0; i < sources[index].poolSize; i++)
                 {
                     var sourceSub = new GameObject($"{sources[index].component.name} - {i}");
                     sourceSub.transform.SetParent(sources[index].component.transform);
@@ -56,27 +53,61 @@ namespace Dark.Scripts.Audio
         {
             sources[index].component.PlaySFX(volume, pitch, delay);
         }
+
+        public bool IsMuted => AudioListener.volume <= 0.0001f || AudioListener.pause; 
+        public void Mute()
+        {
+            AudioListener.volume = 0f;
+        }
+
+        public void Unmute()
+        {
+            AudioListener.volume = 1f;
+        }
         
         [Serializable]
         public class AudioSourceInfo
         {
             public int index;
             public AudioSourceComponent component;
+            public int poolSize = 1;
         }
 
         [Button]
         private void Refresh()
         {
             var components = GetComponentsInChildren<AudioSourceComponent>();
-            sources = new AudioSourceInfo[components.Length];
-            for (var i = 0; i < sources.Length; i++)
+            var sourceList = new List<AudioSourceInfo>();
+            if (sources != null)
             {
-                sources[i] = new AudioSourceInfo()
+                foreach (var source in sources)
                 {
-                    index = i,
-                    component = components[i]
-                };
+                    sourceList.Add(source);
+                }
             }
+            
+            for (var i = 0; i < components.Length; i++)
+            {
+                if (i < sourceList.Count && ReferenceEquals(components[i], sourceList[i].component))
+                    continue;
+                if (i < sourceList.Count)
+                {
+                    sourceList[i] = new AudioSourceInfo()
+                    {
+                        index = i,
+                        component = components[i],
+                    };
+                }
+                else
+                {
+                    sourceList.Add(new  AudioSourceInfo()
+                    {
+                        index = i,
+                        component = components[i],
+                    });
+                }
+            }
+            sources = sourceList.ToArray();
         }
         
 #if UNITY_EDITOR

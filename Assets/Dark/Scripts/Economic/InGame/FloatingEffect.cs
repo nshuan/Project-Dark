@@ -4,6 +4,9 @@ namespace Economic.InGame
 {
     public class FloatingEffect : MonoBehaviour
     {
+        [Header("General Settings")]
+        [SerializeField] private bool ignoreTimeScale = false;
+        
         [Header("Floating Settings")]
         [SerializeField] private float floatSpeed = 1f;
         [SerializeField] private float floatAmplitude = 0.5f;
@@ -19,6 +22,7 @@ namespace Economic.InGame
         private Vector3 _startPosition;
         private Vector3 _basePosition;
         private float _time;
+        private bool _isPaused;
 
         private void Awake()
         {
@@ -29,7 +33,11 @@ namespace Economic.InGame
 
         private void Update()
         {
-            _time += Time.deltaTime;
+            if (_isPaused) return;
+            if (ignoreTimeScale)
+                _time += Time.unscaledDeltaTime;
+            else
+                _time += Time.deltaTime;
             
             // Calculate floating position using sine wave
             float floatingValue = Mathf.Sin(_time * floatSpeed) * floatAmplitude;
@@ -39,7 +47,10 @@ namespace Economic.InGame
             // Apply rotation if enabled
             if (enableRotation)
             {
-                transform.Rotate(rotationSpeed * Time.deltaTime);
+                if (ignoreTimeScale)
+                    transform.Rotate(rotationSpeed * Time.unscaledDeltaTime);
+                else
+                    transform.Rotate(rotationSpeed * Time.deltaTime);
             }
         }
 
@@ -58,6 +69,16 @@ namespace Economic.InGame
             _startPosition = transform.localPosition;
             _basePosition = _startPosition + startOffset;
             _time = 0f;
+        }
+
+        public void PauseFloat()
+        {
+            _isPaused = true;
+        }
+
+        public void ResumeFloat()
+        {
+            _isPaused = false;
         }
     }
 }

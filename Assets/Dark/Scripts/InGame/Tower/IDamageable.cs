@@ -15,6 +15,10 @@ namespace InGame
     public enum DamageType
     {
         Normal,
-        NormalCritical
+        NormalCritical,
+        Tower,
+        TowerCritical,
+        Enemy,
+        SelfDestruct,
     }
 }

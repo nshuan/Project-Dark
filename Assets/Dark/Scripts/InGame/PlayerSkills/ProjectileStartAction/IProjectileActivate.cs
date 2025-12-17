@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace InGame
@@ -12,6 +13,8 @@ namespace InGame
     {
         void DoAction(ProjectileEntity parentProjectile, Vector2 direction);
         void Combine<T>(T combineWith) where T : IProjectileActivate;
+        void TryCombineAndRevert<T>(T combineWith, Action combinedAction) where T : IProjectileActivate;
         float GetValue();
+        IProjectileActivate Clone();
     }
 }

@@ -1,5 +1,5 @@
 using System;
-using Dark.Scripts.Audio;
+using Dark.Scripts.AudioV2;
 using Dark.Scripts.Utils;
 using DG.Tweening;
 using InGame;
@@ -11,12 +11,12 @@ namespace Economic.InGame.DropItems
 {
     public class EItemDrop : MonoBehaviour, ICollectible
     {
-        private const float FlySpeed = 22f;
+        private const float FlySpeed = 25f;
         
         [SerializeField] private TargetedProjectile targetLogic;
         [SerializeField] private GameObject vfxClaim;
         [SerializeField] private GameObject visual;
-        [SerializeField] private AudioComponent sfx;
+        [SerializeField] private AudioPlayComponentV2 sfx;
         [SerializeField] private Transform shadow;
         [SerializeField] private float minDistanceToTower = 1.5f;
         [SerializeField] private float dropSpanAngleToExcludeTower = 240f;
@@ -37,6 +37,7 @@ namespace Economic.InGame.DropItems
                 if (Vector2.Distance(tower.transform.position, position) < minDistanceToTower + dropRange)
                 {
                     targetPos = position + RandomUtil.InsideUnitSpan(position - (Vector2)tower.transform.position, dropSpanAngleToExcludeTower) * dropRange;
+                    targetPos *= LevelUtility.GetRelativeRange(dropRange, targetPos - position) / dropRange;
                     calculatedTargetPosition = true;
                     break;
                 }
@@ -53,12 +54,33 @@ namespace Economic.InGame.DropItems
             shadow.DOMove((Vector3)targetPos - transform.position + shadow.position, dropDuration);
         }
         
+        public void Drop(Vector2 position, Vector2 direction, float span, float scaleRange)
+        {
+            visual.gameObject.SetActive(true);
+            
+            var targetPos = position + RandomUtil.InsideUnitSpan(direction, span) * (dropRange * scaleRange);
+            targetPos *= LevelUtility.GetRelativeRange(dropRange, targetPos - position) / dropRange;
+            
+            var dropJumps = RandomUtil.Range(1, 4);
+            var dropDuration = Mathf.Max(dropJumps * 0.2f, 0.36f);
+            shadow.SetParent(null);
+            shadow.localScale = Vector3.one;
+            transform.DOJump(targetPos, 0.16f, dropJumps, dropDuration).SetTarget(this)
+                .OnComplete(() => shadow.SetParent(transform));
+            shadow.DOMove((Vector3)targetPos - transform.position + shadow.position, dropDuration);
+        }
+        
         public void Collect(Transform target, float delay)
         {
+            delayCollect = delay;
+            collectCounter = delayCollect;
             Collect(target);
         }
 
         private bool isCollecting;
+        private float delayCollect;
+        private float collectStartDuration = 0.24f;
+        private float collectCounter;
         private Transform target;
         public void Collect(Transform target)
         {
@@ -68,8 +90,6 @@ namespace Economic.InGame.DropItems
                 ProjectileCurveManifest.GetAxisCorrectionCurve(0), ProjectileCurveManifest.GetProjectileSpeedCurve(1));
             
             isCollecting = true;
-
-            shadow.DOScale(0f, 0.2f);
         }
 
         private Vector2 nextPosition;
@@ -77,6 +97,21 @@ namespace Economic.InGame.DropItems
         {
             if (!isCollecting) return;
 
+            if (delayCollect > 0f)
+            {
+                delayCollect -= Time.deltaTime;
+                return;
+            }
+
+            if (collectCounter > 0f)
+            {
+                visual.transform.position += new Vector3(0f, 0.5f * Time.deltaTime, 0f);
+                collectCounter -= Time.deltaTime;
+                if (collectCounter <= 0f)
+                    shadow.DOScale(0f, 0.2f);
+                return;
+            }
+            
             if (Vector2.Distance(transform.position, target.transform.position) < 0.1f)
             {
                 visual.gameObject.SetActive(false);

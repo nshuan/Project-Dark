@@ -13,6 +13,11 @@ namespace InGame.Upgrade
             bonus.ActivateNode(level, ref bonusInfo);
         }
 
+        public (string, string) GetBeforeAfterValueTotalStat(int level, ref UpgradeBonusInfo bonusInfo)
+        {
+            return bonus.GetBeforeAfterValueTotalStat(level, ref bonusInfo);
+        }
+
         public string GetDisplayValue(int level)
         {
             return bonus.GetDisplayValue(level);

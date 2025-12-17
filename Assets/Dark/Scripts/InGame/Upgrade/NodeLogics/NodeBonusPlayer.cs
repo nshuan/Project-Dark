@@ -37,6 +37,63 @@ namespace InGame.Upgrade
             }
         }
 
+        public (string, string) GetBeforeAfterValueTotalStat(int level, ref UpgradeBonusInfo bonusInfo)
+        {
+            var before = "";
+            switch (bonusType)
+            {
+                case BonusPlayerType.Health:
+                    before = LevelUtility.GetTowerHp().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+                    break;
+                case BonusPlayerType.Damage:
+                    before = LevelUtility.BasePlayerDamageWithBonus.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+                    break;
+                case BonusPlayerType.Cooldown:
+                    before = $"{(LevelUtility.BasePLayerCooldownWithBonus * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}%";
+                    break;
+                case BonusPlayerType.CriticalRate:
+                    before = $"{(LevelUtility.GetCriticalRate() * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}%";
+                    break;
+            }
+            if (level > value.Length)
+                return (before, before);
+ 
+            var hpMultiply = bonusInfo.hpMultiply;
+            var hpPlus = bonusInfo.hpPlus;
+            var dameMultiply = bonusInfo.dameMultiply;
+            var damePlus = bonusInfo.damePlus;
+            var cooldownMultiplier = bonusInfo.cooldownMultiplier;
+            var cooldownPlus = bonusInfo.cooldownPlus;
+            var criticalRatePlus = bonusInfo.criticalRatePlus;
+            var criticalDame = bonusInfo.criticalDame;
+            ActivateNode(level, ref bonusInfo);
+            var after = "";
+            switch (bonusType)
+            {
+                case BonusPlayerType.Health:
+                    after = LevelUtility.GetTowerHp().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+                    break;
+                case BonusPlayerType.Damage:
+                    after = LevelUtility.BasePlayerDamageWithBonus.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+                    break;
+                case BonusPlayerType.Cooldown:
+                    after = $"{(LevelUtility.BasePLayerCooldownWithBonus * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}%";
+                    break;
+                case BonusPlayerType.CriticalRate:
+                    after = $"{(LevelUtility.GetCriticalRate() * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}%";
+                    break;
+            }
+            bonusInfo.hpMultiply = hpMultiply;
+            bonusInfo.hpPlus = hpPlus;
+            bonusInfo.dameMultiply = dameMultiply;
+            bonusInfo.damePlus = damePlus;
+            bonusInfo.cooldownMultiplier = cooldownMultiplier;
+            bonusInfo.cooldownPlus = cooldownPlus;
+            bonusInfo.criticalRatePlus = criticalRatePlus;
+            bonusInfo.criticalDame = criticalDame;
+            return (before, after);
+        }
+
         public string GetDisplayValue(int level)
         {
             if (level < 0) return "??";
@@ -46,14 +103,14 @@ namespace InGame.Upgrade
             {
                 case BonusPlayerType.Health:
                 case BonusPlayerType.Damage:
+                    if (isMultiply) return (value[level] * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+                    else return value[level].ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
                 case BonusPlayerType.Cooldown:
-                    if (isMultiply) return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
-                    else return value[level].ToString(CultureInfo.InvariantCulture);
                 case BonusPlayerType.CriticalRate:
                 case BonusPlayerType.CriticalDame:
-                    return (value[level] * 100).ToString(CultureInfo.InvariantCulture);
+                    return (value[level] * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
             }
-            return value[level].ToString(CultureInfo.InvariantCulture);
+            return value[level].ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
         }
 
         public int MaxLevel => value.Length;

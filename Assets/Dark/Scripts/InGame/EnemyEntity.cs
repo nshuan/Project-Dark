@@ -1,15 +1,11 @@
 using System;
 using System.Collections;
-using Dark.Scripts.Audio;
+using Dark.Scripts.AudioV2;
 using DG.Tweening;
-using Economic;
 using InGame.EnemyEffect;
 using InGame.EnemyVisualBody;
 using InGame.MapBoundary;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 namespace InGame
 {
@@ -24,7 +20,7 @@ namespace InGame
         public TowerEntity TargetTower { get; set; }
         protected EnemyBehaviour config;
 
-        [SerializeField] private AudioComponent sfxHit;
+        [SerializeField] private AudioPlayComponentV2 sfxHit;
 
         #region Stats
         public int MaxHealth { get; set; }
@@ -38,10 +34,21 @@ namespace InGame
 
         #endregion
 
-        public float PercentageHpLeft => CurrentHealth / MaxHealth * 100f;
+        #region Wave and Level config
+
+        public float WaveHpMultiplier { get; private set; }
+        public float WaveDmgMultiplier { get; private set; }
+        public float LevelExpRatio { get; private set; }
+        public float LevelDarkRatio { get; private set; }
+        public int LevelDarkUnitValue { get; private set; }
+
+        #endregion
+
+        public bool IsBoss { get; set; }
+        public float PercentageHpLeft => (float)CurrentHealth / MaxHealth;
         public Action<int, DamageType> OnHit { get; set; }
         public Action OnStartDead { get; set; }
-        public Action OnDead { get; set; }
+        public Action<EnemyDieReason> OnDead { get; set; }
         public EnemyState State { get; set; }
         public int UniqueId { get; set; }
         private Vector3 direction = new Vector3();
@@ -62,6 +69,8 @@ namespace InGame
         
         private float invisibleTimer;
         private float freezeDuration;
+
+        private float delayDieAnimation;
         
         #region Initialize
 
@@ -73,6 +82,13 @@ namespace InGame
         public void Init(EnemyBehaviour eConfig, TowerEntity target, float hpMultiplier, float dmgMultiplier, float levelExpRatio, float levelDarkRatio, int levelDarkUnitValue)
         {
             config = eConfig;
+            
+            // Set wave and level configs
+            WaveHpMultiplier = hpMultiplier;
+            WaveDmgMultiplier = dmgMultiplier;
+            LevelExpRatio = levelExpRatio;
+            LevelDarkRatio = levelDarkRatio;
+            LevelDarkUnitValue = levelDarkUnitValue;
             
             // Set target and attack position
             Target = target.transform;
@@ -103,6 +119,8 @@ namespace InGame
             config.Init(this);
             
             shadow.SetActive(true);
+            
+            delayDieAnimation = 0f;
             
             ActivateELite(config.elite);
         }
@@ -173,6 +191,8 @@ namespace InGame
             {
                 inAttackRange = true;
                 animController.SetDefaultRun(false);
+                animController.transform.localScale =
+                    new Vector3(Mathf.Sign(Target.position.x - transform.position.x), 1f, 1f);
             }
             else
             {
@@ -213,8 +233,8 @@ namespace InGame
         private void Attack()
         {
             if (TargetTower.IsDestroyed) return;
-            config.attackBehaviour.Attack(TargetTower, transform.position, CurrentDamage);
             animController.PlayAttack();
+            config.attackBehaviour.Attack(this, TargetTower, transform.position, CurrentDamage);
         }
 
         public float HitDirectionX { get; set; }
@@ -253,14 +273,29 @@ namespace InGame
             
             if (CurrentHealth <= 0)
             {
-                OnDie();
+                var dieReason = EnemyDieReason.PlayerKill;
+                switch (dmgType)
+                {
+                    case DamageType.Normal:
+                    case DamageType.NormalCritical:
+                        dieReason = EnemyDieReason.PlayerKill;
+                        break;
+                    case DamageType.Tower:
+                    case DamageType.TowerCritical:
+                        dieReason = EnemyDieReason.TowerKill;
+                        break;
+                    case DamageType.SelfDestruct:
+                        dieReason = EnemyDieReason.Suicide;
+                        break;
+                }
+                OnDie(dieReason);
                 sfxHit.Play();
             }
         }
 
         public bool IsDestroyed { get; set; }
 
-        private void OnDie()
+        private void OnDie(EnemyDieReason reason)
         {
             if (attackCoroutine != null)
                 StopCoroutine(attackCoroutine);
@@ -276,26 +311,30 @@ namespace InGame
             if (coroutineBurn != null) StopCoroutine(coroutineBurn);
             callbackBurnComplete?.Invoke();
             callbackBurnComplete = null;
-            CollectResource();
-            StartCoroutine(IEDie(.5f));
+            if (reason != EnemyDieReason.Suicide)
+                DropResource();
+            StartCoroutine(IEDie(.5f, reason));
         }
 
-        protected virtual IEnumerator IEDie(float delayRelease)
+        protected virtual IEnumerator IEDie(float delayRelease, EnemyDieReason reason)
         {
+            yield return new WaitForEndOfFrame();
             // Đợi chạy xong anim hit rồi mới chạy anim die
             shadow.SetActive(false);    
             OnStartDead?.Invoke();
             OnStartDead = null;
+            yield return new WaitForSeconds(delayDieAnimation);
             yield return new WaitForSeconds(animController.PlayDie());
-            OnDead?.Invoke();
+            OnDead?.Invoke(reason);
             OnDead = null;
             yield return new WaitForSeconds(delayRelease);
             EnemyPool.Instance.Release(this, config.enemyId);
         }
 
-        protected virtual void CollectResource()
+        protected virtual void DropResource()
         {
-            CombatActions.OnCollectResource?.Invoke(this);
+            var dropVestige = RandomUtil.Range(0f, 1f) <= DarkRatio && Dark > 0;
+            CombatActions.OnDropResource?.Invoke(this, dropVestige);
         }
 
         #region Effect 
@@ -334,11 +373,12 @@ namespace InGame
             callbackBurnComplete = null;
         }
 
-        public void Kill()
+        public virtual void Kill(DamageType dmgType, float delayAnimation = 0f)
         {
+            delayDieAnimation = delayAnimation;
             HitDirectionX = 0f;
             HitDirectionY = 0f;
-            Damage(CurrentHealth, transform.position, 0f, DamageType.Normal);
+            Damage(CurrentHealth, transform.position, 0f, dmgType);
         }
         #endregion
 

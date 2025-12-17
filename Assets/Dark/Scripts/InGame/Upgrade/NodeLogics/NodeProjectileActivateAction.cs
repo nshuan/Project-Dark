@@ -18,7 +18,7 @@ namespace InGame.Upgrade
             if (actions == null) return;
             if (level <= 0 || level > actions.Count) return;
             
-            var action = actions[level - 1];
+            var action = actions[level - 1].Clone();
             
             if (isCharge)
             {
@@ -43,13 +43,89 @@ namespace InGame.Upgrade
             }
         }
 
+        public (string, string) GetBeforeAfterValueTotalStat(int level, ref UpgradeBonusInfo bonusInfo)
+        {
+            // if (actions == null)
+            // {
+            //     return ("", "");
+            // }
+            //
+            // if (level <= 0 || level > actions.Count)
+            // {
+            //     activatedAction?.Invoke();
+            //     return;
+            // }
+            //
+            // var action = actions[level - 1];
+            //
+            // if (isCharge)
+            // {
+            //     bonusInfo.skillBonus.projectileChargeActivateActions ??= new List<IProjectileActivate>();
+            //     var exist = bonusInfo.skillBonus.projectileChargeActivateActions.FirstOrDefault((a) =>
+            //         a.GetType() == action.GetType());
+            //     if (exist == null)
+            //     {
+            //         bonusInfo.skillBonus.projectileChargeActivateActions.Add(action);
+            //         activatedAction?.Invoke();
+            //         bonusInfo.skillBonus.projectileChargeActivateActions.Remove(action);
+            //     }
+            //     else
+            //     {
+            //         exist.TryCombineAndRevert(action, activatedAction);
+            //     }
+            //     
+            // }
+            // else
+            // {
+            //     bonusInfo.skillBonus.projectileActivateActions ??= new List<IProjectileActivate>();
+            //     var exist = bonusInfo.skillBonus.projectileActivateActions.FirstOrDefault((a) =>
+            //         a.GetType() == action.GetType());
+            //     if (exist == null)
+            //     {
+            //         bonusInfo.skillBonus.projectileActivateActions.Add(action);
+            //         activatedAction?.Invoke();
+            //         bonusInfo.skillBonus.projectileActivateActions.Remove(action);
+            //     }
+            //     else
+            //     {
+            //         exist.TryCombineAndRevert(action, activatedAction);
+            //     }   
+            // }
+            
+            return GetBeforeAfterValue(level);
+        }
+
         public string GetDisplayValue(int level)
         {
             if (level < 0) return "??";
             if (level >= actions.Count) level = actions.Count - 1;
-            return actions[level].GetValue().ToString(CultureInfo.InvariantCulture);
+            return actions[level].GetValue().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
         }
 
-        public int MaxLevel => 1;
+        public (string, string) GetBeforeAfterValue(int level)
+        {
+            var before = "";
+            var after = "";
+            if (level <= 0) return ("", "");
+            if (level > actions.Count) level = actions.Count;
+            if (level == 1)
+            {
+                before = "+0";
+                after = GetDisplayValue(level);
+            }
+            else
+            {
+                var sum = 0f;
+                for (var i = 1; i < level; i++)
+                    sum += actions[i - 1].GetValue();
+                
+                before = $"+{sum.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}";
+                after = $"+{(sum + actions[level - 1].GetValue()).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}";
+            }
+		    
+            return (before, after);
+        }
+
+        public int MaxLevel => actions.Count;
     }
 }

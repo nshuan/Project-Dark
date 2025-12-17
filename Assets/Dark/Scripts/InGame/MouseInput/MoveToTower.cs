@@ -17,6 +17,7 @@ namespace InGame
         private TowerEntity[] Towers { get; set; }
         private int CurrentTowerIndex { get; set; }
         private Camera Cam { get; set; }
+        private MonoCursor cursor;
         private Func<float, Action, bool> DelayCallFunction { get; set; }
         public bool IsActivate { get; set; } 
 
@@ -32,9 +33,10 @@ namespace InGame
         private Action<TowerEntity> actionTowerChanged;
         private int selectingTower = -1;
 
-        public MoveToTower(Camera cam, InputInGame inputController, PlayerCharacter player, MoveTowersConfig shortConfig, MoveTowersConfig longConfig, TowerEntity[] towers, int currentTowerIndex, Func<float, Action, bool> delayCallFunction)
+        public MoveToTower(Camera cam, MonoCursor cursor, InputInGame inputController, PlayerCharacter player, MoveTowersConfig shortConfig, MoveTowersConfig longConfig, TowerEntity[] towers, int currentTowerIndex, Func<float, Action, bool> delayCallFunction)
         {
             Cam = cam;
+            this.cursor = cursor;
             InputController = inputController;
             Character = player;
             Towers = towers;
@@ -78,7 +80,7 @@ namespace InGame
                     Cooldown = GetCooldown(ShortConfig);
                     cdCounter = Cooldown;
                     CanCountdown = true;
-                    CombatActions.OnMoveTower?.Invoke(Cooldown);
+                    CombatActions.OnMoveTowerComplete?.Invoke(Cooldown);
                 };
                 
                 Character.HideShotRadius();
@@ -117,6 +119,7 @@ namespace InGame
                 {
                     tower.Hover(false);
                 }
+                cursor.SetMoveCursor(false);
                 PlaySlowMotion(false);
             }
         }
@@ -130,24 +133,25 @@ namespace InGame
 
         public void OnDeactivated()
         {
-            if (Towers == null) return;
-            foreach (var tower in Towers)
-            {
-                tower.Hover(false);
-            }
+            // if (Towers == null) return;
+            // foreach (var tower in Towers)
+            // {
+            //     tower.Hover(false);
+            // }
         }
 
-        public void OnUpdate()
+        public void OnUpdate(Vector2 worldMousePosition)
         {
             if (IsActivate)
             {
-                worldMousePosition = Cam.ScreenToWorldPoint(Input.mousePosition);
+                this.worldMousePosition.x = worldMousePosition.x;
+                this.worldMousePosition.y = worldMousePosition.y;
                 if (!hovering)
                 {
                     foreach (var tower in Towers)
                     {
                         if (tower.Id == CurrentTowerIndex) continue;
-                        if (Vector2.Distance(tower.transform.position, worldMousePosition) < HoverRadius)
+                        if (Vector2.Distance(tower.transform.position, this.worldMousePosition) < HoverRadius)
                         {
                             hovering = true;
                             hoveringCenter = tower.transform.position;
@@ -155,12 +159,15 @@ namespace InGame
                             if (CanMove)
                             {
                                 tower.Hover(true, true);
+                                
                                 PlaySlowMotion(true);
                             }
                             else
                             {
                                 tower.Hover(true, false);
                             }
+                            cursor.SetMoveCursor(true);
+                            CombatActions.OnTowerHoverIn?.Invoke(tower);
                             break;
                         }
                     }
@@ -168,11 +175,13 @@ namespace InGame
 
                 if (hovering)
                 {
-                    if (Vector2.Distance(worldMousePosition, hoveringCenter) >= HoverRadius)
+                    if (Vector2.Distance(this.worldMousePosition, hoveringCenter) >= HoverRadius)
                     {
                         hovering = false;
                         Towers[selectingTower].Hover(false);
+                        cursor.SetMoveCursor(false);
                         PlaySlowMotion(false);
+                        CombatActions.OnTowerHoverOut?.Invoke(Towers[selectingTower]);
                         selectingTower = -1;
                     }
                 }
@@ -184,7 +193,10 @@ namespace InGame
                 {
                     cdCounter -= Time.deltaTime;
                     if (cdCounter <= 0)
+                    {
                         CanMove = true;
+                        CombatActions.OnMoveCooldownComplete?.Invoke();
+                    }
                 }
             }
         }
@@ -202,25 +214,25 @@ namespace InGame
         private float GetCooldown(MoveTowersConfig config)
         {
             var cooldown = config.cooldown;
-            if (config.moveLogic is MoveDashToTower) cooldown = LevelUtility.GetDashCooldown(config.cooldown);
-            else if (config.moveLogic is MoveFlashToTower) cooldown = LevelUtility.GetFlashCooldown(config.cooldown);
-            else if (config.moveLogic is MoveTeleToTower) cooldown = LevelUtility.GetTeleCooldown(config.cooldown);
+            if (config.moveLogic is MoveDashToTower) cooldown = LevelUtility.GetDashCooldown();
+            else if (config.moveLogic is MoveFlashToTower) cooldown = LevelUtility.GetFlashCooldown();
+            else if (config.moveLogic is MoveTeleToTower) cooldown = LevelUtility.GetTeleCooldown();
             return cooldown;
         }
 
         private float GetSize(MoveTowersConfig config)
         {
             var size = config.size;
-            if (config.moveLogic is MoveDashToTower) size = LevelUtility.GetDashSize(config.size);
-            else if (config.moveLogic is MoveFlashToTower) size = LevelUtility.GetFlashSize(config.size);
+            if (config.moveLogic is MoveDashToTower) size = LevelUtility.GetDashSize();
+            else if (config.moveLogic is MoveFlashToTower) size = LevelUtility.GetFlashSize();
             return size;
         }
 
         private int GetDamage(MoveTowersConfig config)
         {
             var damage = config.damage;
-            if (config.moveLogic is MoveDashToTower) damage = LevelUtility.GetDashDamage(config.damage);
-            else if (config.moveLogic is MoveFlashToTower) damage = LevelUtility.GetFlashDamage(config.damage);
+            if (config.moveLogic is MoveDashToTower) damage = LevelUtility.GetDashDamage();
+            else if (config.moveLogic is MoveFlashToTower) damage = LevelUtility.GetFlashDamage();
             return damage;
         }
 

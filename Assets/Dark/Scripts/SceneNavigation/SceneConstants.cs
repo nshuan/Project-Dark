@@ -5,7 +5,7 @@ namespace Dark.Scripts.SceneNavigation
         public const string SceneMenu = "Home";
         public const string SceneSaveSlot = "SaveSlot";
         public const string SceneUpgrade = "Upgrade";
-        // public const string SceneInGame = "BaseLevel";
-        public const string SceneInGame = "CheatLevel";
+        public const string SceneInGame = "BaseLevel";
+        // public const string SceneInGame = "CheatLevel";
     }
 }

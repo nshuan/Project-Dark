@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace InGame
@@ -18,6 +19,8 @@ namespace InGame
         public int maxHitEachTrigger = 5;
         public float hitRadius = 2f;
         
+        protected List<Transform> hitHistory = new List<Transform>();
+        protected int currentHitHistoryIndex;
         protected RaycastHit2D[] hits = new RaycastHit2D[10];
         protected IDamageable hitTarget;
         protected Vector2 direction;
@@ -42,6 +45,8 @@ namespace InGame
         public virtual IEnumerator IEMove(PlayerCharacter character, TowerEntity fromTower, TowerEntity toTower, Action onComplete)
         {
             hits ??= new RaycastHit2D[50];
+            hitHistory ??= new List<Transform>();
+            currentHitHistoryIndex = 0;
             startPos.x = fromTower.transform.position.x + fromTower.GetTowerHeight().x;
             startPos.y = fromTower.transform.position.y + fromTower.GetTowerHeight().y;
             endPos.x = toTower.transform.position.x + toTower.GetTowerHeight().x;
@@ -56,8 +61,13 @@ namespace InGame
                 timeElapsed += Time.deltaTime;
                 var speed = speedCurve.Evaluate(Mathf.Clamp01(timeElapsed / duration));
                 character.transform.position = Vector2.Lerp(startPos, endPos, speed);
-                
-                var count = Physics2D.CircleCastNonAlloc(character.FlashExplodeCenter, hitRadius, Vector2.zero, hits,
+                var positionRatio = (character.transform.position.x - startPos.x) / (endPos.x - startPos.x);
+                // var count = Physics2D.CircleCastNonAlloc(character.FlashExplodeCenter, hitRadius, Vector2.zero, hits,
+                //     0f,
+                //     enemyLayer);
+                var count = Physics2D.CircleCastNonAlloc(
+                    fromTower.GetBaseCenter() + positionRatio * (toTower.GetBaseCenter() - fromTower.GetBaseCenter()), 
+                    hitRadius, Vector2.zero, hits,
                     0f,
                     enemyLayer);
                 if (count > 0)
@@ -70,7 +80,8 @@ namespace InGame
                 
                 yield return null;
             }
-                
+
+            currentHitHistoryIndex = 0;
             character.transform.position = endPos;
             character.StopDashEffect();
             yield return new WaitForEndOfFrame();
@@ -83,6 +94,18 @@ namespace InGame
             {
                 if (hitTransform.TryGetComponent(out hitTarget))
                 {
+                    if (hitHistory.Contains(hitTransform)) return;
+
+                    if (currentHitHistoryIndex >= hitHistory.Count)
+                    {
+                        hitHistory.Add(hitTransform);
+                        currentHitHistoryIndex += 1;
+                    }
+                    else
+                    {
+                        hitHistory[currentHitHistoryIndex] = hitTransform;
+                        currentHitHistoryIndex += 1;
+                    }
                     hitTarget.HitDirectionX = direction.x;
                     hitTarget.HitDirectionY = direction.y;
                     hitTarget.Damage((int)value, characterRef.FlashExplodeCenter, stagger, DamageType.Normal);

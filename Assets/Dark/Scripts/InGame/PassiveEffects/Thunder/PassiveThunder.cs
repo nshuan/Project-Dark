@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using Dark.Scripts.Audio;
+using Dark.Scripts.AudioV2;
 using InGame.Effects;
 using UnityEngine;
 
@@ -10,7 +10,7 @@ namespace InGame
     {
         [SerializeField] private int maxTriggeredEnemies = 20;
         [SerializeField] private bool triggerAllEnemies = false;
-        [SerializeField] private AudioComponent sfx;
+        [SerializeField] private AudioPlayComponentV2 sfx;
         
         private EnemyEntity[] triggerredEnemies;
         private RaycastHit2D[] hits = new RaycastHit2D[50];
@@ -41,7 +41,7 @@ namespace InGame
                     while (triggerCount > 0)
                     {
                         VfxThunderPool.Instance.GetAndRelease(null, triggerredEnemies[triggerCount - 1].transform.position, 0.1f * indexVfx, 1f);
-                        triggerredEnemies[triggerCount - 1].Kill();
+                        triggerredEnemies[triggerCount - 1].Kill(DamageType.Normal);
                         triggerCount -= 1;
                         indexVfx += 1;
                         sfx.Play();
@@ -67,7 +67,7 @@ namespace InGame
                                 VfxThunderPool.Instance.GetAndRelease(null, tempTarget.Position, 0.1f * i, 1f);
                                 if (tempTarget.PercentageHpLeft < value)
                                 {
-                                    tempTarget.Kill();
+                                    tempTarget.Kill(DamageType.Normal);
                                 }
                             }
                         }

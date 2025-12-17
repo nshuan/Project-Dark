@@ -7,21 +7,21 @@ namespace Dark.Scripts.Common
 {
     public class UIButtonAnimated : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
     {
-        [SerializeField] private float hoverScale = 1.1f;
-        [SerializeField] private float pressScale = 1f;
-        [SerializeField] private float duration = 0.2f;
+        [SerializeField] protected float hoverScale = 1.1f;
+        [SerializeField] protected float pressScale = 1f;
+        [SerializeField] protected float duration = 0.2f;
         
         public void OnPointerEnter(PointerEventData eventData)
         {
             DOTween.Kill(this);
-            DOTween.Sequence(this)
+            DOTween.Sequence(this).SetUpdate(true)
                 .Append(transform.DOScale(hoverScale, duration)).Play();
         }
 
-        public void OnPointerExit(PointerEventData eventData)
+        public virtual void OnPointerExit(PointerEventData eventData)
         {
             DOTween.Kill(this);
-            DOTween.Sequence(this)
+            DOTween.Sequence(this).SetUpdate(true)
                 .Append(transform.DOScale(1f, duration)).Play();
         }
 
@@ -34,17 +34,17 @@ namespace Dark.Scripts.Common
         private Coroutine coroutinePointerDown;
         private IEnumerator IEPointerDown()
         {
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSecondsRealtime(0.2f);
             
             DOTween.Kill(this);
-            DOTween.Sequence(this)
-                .Append(transform.DOScale(pressScale, duration)).Play();
+            DOTween.Sequence(this).SetUpdate(true)
+                .Append(transform.DOScale(pressScale, duration).SetEase(Ease.OutQuad)).Play();
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
             DOTween.Kill(this);
-            DOTween.Sequence(this)
+            DOTween.Sequence(this).SetUpdate(true)
                 .Append(transform.DOScale(1f, duration)).Play();
         }
 
@@ -53,7 +53,7 @@ namespace Dark.Scripts.Common
             if (coroutinePointerDown != null) StopCoroutine(coroutinePointerDown);
             
             DOTween.Kill(this);
-            DOTween.Sequence(this)
+            DOTween.Sequence(this).SetUpdate(true)
                 .Append(transform.DOPunchScale(new Vector3(pressScale - hoverScale, pressScale - hoverScale, pressScale - hoverScale), duration)).Play();
         }
     }

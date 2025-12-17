@@ -1,3 +1,4 @@
+using Dark.Scripts.Analytics;
 using Dark.Scripts.Common;
 using Dark.Scripts.SceneNavigation;
 using Dark.Scripts.Utils;
@@ -27,6 +28,8 @@ namespace Dark.Scripts.OutGame.Upgrade
                     LevelManager.Instance.LoadLevel(PlayerDataManager.Instance.Data.level + 1);
                 });
             });
+            
+            LogManager.Log(LogConst.EventLogStartLevel, $"level_{PlayerDataManager.Instance.Data.level + 1}", "from upgrade");
         }
     }
 }

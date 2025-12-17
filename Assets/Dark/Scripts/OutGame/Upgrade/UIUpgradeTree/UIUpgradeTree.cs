@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dark.Scripts.SceneNavigation;
+using DG.Tweening;
+using InGame;
+using InGame.Upgrade;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEditor;
@@ -16,17 +20,37 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, List<UIUpgradeNode>> nodesMap; // Luu cac node co cung id
         [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, List<UIUpgradeNode>> nodeChildrenMap;
+        [ReadOnly, OdinSerialize, NonSerialized] public Dictionary<int, List<UIUpgradeNode>> nodesMapByLayer;
 
+        [Space] [Header("Skill Node Ids")]
+        public List<int> skillNodeIds = new List<int>();
+        
+        [Space] [Header("Passive Node Ids")]
+        public List<int> passiveNodeIds = new List<int>();
+        
         [Space] [Header("UI")] 
         [SerializeField] private Button btnDeselectAll;
 
-        public void UpdateChildren(int id)
+        [Space] [Header("Spawn")] 
+        [SerializeField] private float nodeSpawnDelayStep = 0.1f;
+        [SerializeField] private float firstNodeDelayStep = 0.5f;
+
+        public int LastUpgradeNodeId { get; set; } = -1;
+        public Action<UIUpgradeNode> OnNodeUpgraded { get; set; }
+        
+        public void UpdateChildren(int id, bool isUnlock)
         {
             if (nodeChildrenMap.TryGetValue(id, out var children))
             {
                 foreach (var childNode in children)
                 {
-                    childNode.UpdateUI();
+                    if (isUnlock) childNode.DoUnlockVfx(id).OnComplete(() =>
+                    {
+                        childNode.UpdateUI();
+                        if (childNode.CurrentState == UIUpgradeNodeState.Activated)
+                            UpdateChildren(childNode.config.nodeId, true);
+                    });
+                    else childNode.UpdateUI();
                 }
             }
         }
@@ -42,6 +66,21 @@ namespace Dark.Scripts.OutGame.Upgrade
             }
         }
 
+        public void InvokeNodeUpgraded(UIUpgradeNode node)
+        {
+            OnNodeUpgraded?.Invoke(node);
+        }
+
+        public bool IsNodeSkill(int nodeId)
+        {
+            return skillNodeIds.Contains(nodeId);
+        }
+
+        public bool IsNodePassive(int nodeId)
+        {
+            return passiveNodeIds.Contains(nodeId);
+        }
+
         private void Awake()
         {
             btnDeselectAll.onClick.RemoveAllListeners();
@@ -49,6 +88,64 @@ namespace Dark.Scripts.OutGame.Upgrade
             {
                 UIUpgradeNodeInfoPreview.Instance.Hide(true);
             });
+        }
+
+        private void OnEnable()
+        {
+            // Auto upgrade node layer 0
+            foreach (var nodeBase in nodesMapByLayer[0])
+            {
+                UpgradeManager.Instance.UpgradeNode(nodeBase.config.nodeId);
+            }
+            
+            // Do Spawn Animation
+            var spawnNodesMapByLayer = new Dictionary<int, List<UIUpgradeNode>>();
+            var currentLayerNodes = new List<UIUpgradeNode>();
+            foreach (var layer in nodesMapByLayer)
+            {
+                foreach (var node in layer.Value)
+                {
+                    node.UpdateUI();    
+                    if (GameConst.HideLockedNode && node.CurrentState == UIUpgradeNodeState.Locked)
+                        continue;
+                    currentLayerNodes.Add(node);
+                }
+                
+                if (currentLayerNodes is { Count: > 0 })
+                    spawnNodesMapByLayer[layer.Key] = new List<UIUpgradeNode>(currentLayerNodes);
+                
+                currentLayerNodes.Clear(); 
+            }
+            
+            DOTween.Kill(this);
+            var seq = DOTween.Sequence(this);
+            foreach (var pair in spawnNodesMapByLayer)
+            {
+                foreach (var node in pair.Value)
+                {
+                    var stepSeq = DOTween.Sequence();
+                    if (node.preRequires is { Count: > 0 })
+                    {
+                        foreach (var preRequireInfo in node.preRequires)
+                        {
+                            stepSeq.Join(preRequireInfo.line.DoSpawn());
+                        }
+                    }
+
+                    stepSeq.Join(node.DoSpawn().SetDelay(0.05f));
+                    stepSeq.Pause();
+                    
+                    seq.AppendCallback(() =>
+                    {
+                        stepSeq.Play();
+                    });
+                }
+
+                if (pair.Key == 0) seq.AppendInterval(firstNodeDelayStep);
+                else seq.AppendInterval(nodeSpawnDelayStep);
+            }
+
+            seq.SetDelay(Loading.Instance.CurrentTotalDurationAfterSceneLoaded);
         }
 
 #if UNITY_EDITOR
@@ -97,6 +194,52 @@ namespace Dark.Scripts.OutGame.Upgrade
                 }
                 
                 EditorUtility.SetDirty(node);
+            }
+            
+            // Cache node map by layer
+            nodesMapByLayer = new Dictionary<int, List<UIUpgradeNode>>();
+            var queueCheck = new Queue<UIUpgradeNode>();
+            var currentLayerNodes = new List<UIUpgradeNode>();
+            foreach (var pair in nodesMap)
+            {
+                if (pair.Value[0].preRequires == null || pair.Value[0].preRequires.Count == 0)
+                {
+                    foreach (var node in pair.Value)
+                    {
+                        queueCheck.Enqueue(node);
+                        currentLayerNodes.Add(node);
+                    }
+                }
+            }
+            
+            nodesMapByLayer[0] = new List<UIUpgradeNode>(currentLayerNodes);
+            currentLayerNodes.Clear();
+
+            var currentLayer = 1;
+            var currentLayerCount = queueCheck.Count;
+            while (queueCheck.Count > 0)
+            {
+                var node = queueCheck.Dequeue();
+                currentLayerCount--;
+                if (nodeChildrenMap.TryGetValue(node.config.nodeId, out var childrenNodes))
+                {
+                    foreach (var child in childrenNodes)
+                    {
+                        if (!queueCheck.Contains(child))
+                        {
+                            currentLayerNodes.Add(child);
+                            queueCheck.Enqueue(child);
+                        }
+                    }
+                }
+                if (currentLayerCount == 0)
+                {
+                    if (currentLayerNodes.Count > 0)
+                        nodesMapByLayer[currentLayer] = new List<UIUpgradeNode>(currentLayerNodes);
+                    currentLayer++;
+                    currentLayerCount = queueCheck.Count;
+                    currentLayerNodes.Clear(); 
+                }
             }
             
             EditorUtility.SetDirty(this);

@@ -8,16 +8,16 @@ namespace Economic.UI
         
         private void Start()
         {
-            current = WealthManager.Instance.Dark;
-            target = WealthManager.Instance.Dark;
+            current = WealthManager.Instance.Vestige;
+            target = WealthManager.Instance.Vestige;
             UpdateUI();
             
-            WealthManager.Instance.OnDarkChanged += OnDarkChanged;
+            WealthManager.Instance.OnVestigeChanged += OnDarkChanged;
         }
         
         private void OnDestroy()
         {
-            WealthManager.Instance.OnDarkChanged -= OnDarkChanged;
+            WealthManager.Instance.OnVestigeChanged -= OnDarkChanged;
         }
 
         private void OnDarkChanged(int before, int after)

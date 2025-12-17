@@ -40,4 +40,9 @@ public static class RandomUtil
         
         return direction * magnitude;
     }
+
+    public static Vector3 InsideUnitSpan(Vector3 spanDirection, float spanAngle)
+    {
+        return InsideUnitSpan((Vector2)spanDirection, spanAngle);
+    }
 }

@@ -12,8 +12,17 @@ namespace InGame.UI.InGameToast
         [SerializeField] private TextMeshProUGUI txtMessage;
         [SerializeField] private Image imgIcon;
         [SerializeField] private Image imgLight;
+
+        private Coroutine coroutineShowToast;
+        private bool inProgress;
         
-        public Tween DoShowToast(ToastInGame toast)
+        public void ShowToast(ToastInGame toast, Action callbackComplete)
+        {
+            if (coroutineShowToast != null) StopCoroutine(coroutineShowToast);
+            coroutineShowToast = StartCoroutine(IEShowToast(toast, callbackComplete));
+        }
+        
+        private IEnumerator IEShowToast(ToastInGame toast, Action callbackComplete)
         {
             transform.localScale = new Vector3(1f, 0f, 1f);
             txtMessage.SetText(toast.message);
@@ -25,38 +34,35 @@ namespace InGame.UI.InGameToast
             imgLight.SetAlpha(0f);
             gameObject.SetActive(true);
 
-            var seq =  DOTween.Sequence(this)
-                .AppendCallback(() =>
-                {
-                    txtMessage.DOFade(1f, 0.15f);
-                    imgLight.DOFade(0.6f, 0.1f);
-                })
-                .Append(transform.DOScaleY(1f, 0.2f));
+            inProgress = true;
+            
+            txtMessage.DOFade(1f, 0.15f).SetUpdate(true);
+            imgLight.DOFade(0.6f, 0.1f).SetUpdate(true);
+
+            yield return transform.DOScaleY(1f, 0.2f).WaitForCompletion();
 
             if (toast.icon)
             {
-                seq.AppendCallback(() =>
-                    {
-                        imgIcon.DOFade(1f, 0.15f);
-                    })
-                    .Append(imgIcon.transform.DOScale(1f, 0.2f).SetEase(Ease.OutBack));
+                imgIcon.DOFade(1f, 0.15f).SetUpdate(true);
+                yield return imgIcon.transform.DOScale(1f, 0.2f).SetUpdate(true).SetEase(Ease.OutBack).WaitForCompletion();
             }
-            else seq.AppendInterval(0.5f);
+            else
+            {
+                yield return new WaitForSecondsRealtime(0.5f);
+            }
                 
-            seq.AppendCallback(() =>
-                {
-                    transform.DOScale(0.85f, 0.2f);
-                    imgLight.DOFade(0f, 0.3f);
-                })
-                .AppendInterval(3f)
-                .Append(imgIcon.transform.DOScale(0f, 0.3f).SetEase(Ease.InBack))
-                .Append(transform.DOScale(0f, 0.2f))
-                .OnUpdate(() =>
-                {
-                    LayoutRebuilder.MarkLayoutForRebuild((RectTransform)transform.parent);
-                });
+            transform.DOScale(0.85f, 0.2f).SetUpdate(true);
+            imgLight.DOFade(0f, 0.3f).SetUpdate(true);
 
-            return seq;
+            yield return new WaitForSecondsRealtime(3f);
+            yield return imgIcon.transform.DOScale(0f, 0.3f).SetUpdate(true).SetEase(Ease.InBack).WaitForCompletion();
+            yield return transform.DOScale(0f, 0.2f).SetUpdate(true).WaitForCompletion();
+            inProgress = false;
+        }
+
+        private void Update()
+        {
+            if (inProgress) LayoutRebuilder.MarkLayoutForRebuild((RectTransform)transform.parent);
         }
     }
 }

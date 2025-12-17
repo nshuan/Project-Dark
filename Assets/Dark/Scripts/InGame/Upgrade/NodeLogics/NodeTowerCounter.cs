@@ -15,6 +15,11 @@ namespace InGame.Upgrade
             bonusInfo.unlockedTowerCounter[counterType] = true;
         }
 
+        public (string, string) GetBeforeAfterValueTotalStat(int level, ref UpgradeBonusInfo bonusInfo)
+        {
+            return ("", "");
+        }       
+
         public string GetDisplayValue(int level)
         {
             return "";

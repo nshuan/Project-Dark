@@ -12,9 +12,14 @@ namespace InGame.Upgrade
             
         }
 
+        public (string, string) GetBeforeAfterValueTotalStat(int level, ref UpgradeBonusInfo bonusInfo)
+        {
+            return ("", "");
+        }
+
         public string GetDisplayValue(int level)
         {
-            return bonusDescription;
+            return "";
         }
 
         public int MaxLevel => 1;

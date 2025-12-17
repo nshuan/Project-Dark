@@ -16,9 +16,16 @@ namespace InGame.UI.InGameToast
             itemPool = new Queue<UIToastInGameItem>();
             
             ToastInGameManager.Instance.OnShowToast += OnShowToast;
+            // LevelManager.Instance.OnWin += ClearActions;
+            // LevelManager.Instance.OnLose += ClearActions;
         }
 
         private void OnDestroy()
+        {
+            ClearActions();
+        }
+
+        private void ClearActions()
         {
             ToastInGameManager.Instance.OnShowToast -= OnShowToast;
         }
@@ -33,7 +40,7 @@ namespace InGame.UI.InGameToast
             }
             
             item.transform.SetAsLastSibling();
-            item.DoShowToast(toast).OnComplete(() =>
+            item.ShowToast(toast, () =>
             {
                 item.gameObject.SetActive(false);
                 itemPool.Enqueue(item);
