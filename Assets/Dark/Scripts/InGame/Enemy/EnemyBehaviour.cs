@@ -34,19 +34,23 @@ namespace InGame
         public string summonAmountString;
         public List<int> summonIds;
         public List<int> summonAmount;
+        public int summonIdOnSpawned;
+        public int summonAmountOnSpawned;
         
         public void Init(EnemyEntity enemy)
         {
             spawnBehaviour.Init(enemy);
         }
         
-        public void Spawn(EnemyEntity enemy, Action completeCallback)
+        public void Spawn(EnemyEntity enemy, float delayComplete, Action completeCallback)
         {
             DOTween.Kill(enemy);
             if (spawnBehaviour)
             {
                 enemy.gameObject.SetActive(true);
-                spawnBehaviour.DoSpawn(enemy).OnComplete(() => completeCallback?.Invoke()).SetTarget(enemy);
+                DOTween.Sequence().Append(spawnBehaviour.DoSpawn(enemy))
+                    .AppendInterval(delayComplete)
+                    .OnComplete(() => completeCallback?.Invoke()).SetTarget(enemy);
             }
         }
 

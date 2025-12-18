@@ -134,9 +134,9 @@ namespace InGame
             DOTween.Kill(this);
         }
         
-        public virtual void Activate()
+        public virtual void Activate(float delayStartAttack = 0f)
         {
-            config.Spawn(this, () =>
+            config.Spawn(this, delayStartAttack, () =>
             {
                 StartAttackCoroutine();
                 State = EnemyState.Move;

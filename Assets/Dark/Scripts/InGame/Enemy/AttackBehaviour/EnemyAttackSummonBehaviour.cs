@@ -10,7 +10,10 @@ namespace InGame
     {
         [SerializeField] private List<EnemyBehaviour> spawnableEnemies;
         [SerializeField] private float summonSpanAngle = 80f;
+        [SerializeField] private float creepDelayAttack = 0.5f;
 
+        public List<EnemyBehaviour> SpawnableEnemies => spawnableEnemies;
+        
         // [Tooltip("True if you want to randomize the enemy type spawned each turn")] 
         // [SerializeField] private bool randomize = true;
         
@@ -18,16 +21,22 @@ namespace InGame
         {
             var summonIndex = RandomUtil.Range(0, enemy.config.summonIds.Count);
             if (spawnableEnemies == null) return;
-            var spawnEnemyConfig =
-                spawnableEnemies.FirstOrDefault(e => e.enemyId == enemy.config.summonIds[summonIndex]);
-            if (!spawnEnemyConfig) return;
 
+            Summon(enemy, target, enemy.config.summonIds[summonIndex], enemy.config.summonAmount[summonIndex]);
+        }
+
+        public void Summon(EnemyEntity enemy, TowerEntity target, int enemyId, int amount)
+        {
+            var spawnEnemyConfig =
+                spawnableEnemies.FirstOrDefault(e => e.enemyId == enemyId);
+            if (!spawnEnemyConfig) return;
+            
             var summonInfo = new SummonInfo()
             {
                 enemyConfig = spawnEnemyConfig,
-                amount = enemy.config.summonAmount[summonIndex]
+                amount = amount
             };
-
+            
             for (var i = 0; i < summonInfo.amount; i++)
             {
                 var direction = (target.transform.position - enemy.transform.position).normalized;
@@ -44,7 +53,7 @@ namespace InGame
                     enemy.LevelDarkRatio, 
                     enemy.LevelDarkUnitValue);
                 
-                creep.Activate();
+                creep.Activate(creepDelayAttack);
                 enemy.UniqueId = EnemyManager.Instance.CurrentEnemyIndex;
                 EnemyManager.Instance.OnEnemySpawn(creep);
                 creep.OnDead += (reason) =>
