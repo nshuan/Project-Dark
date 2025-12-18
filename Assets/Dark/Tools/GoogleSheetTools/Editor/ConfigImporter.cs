@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
+using InGame;
 using UnityEditor;
 using UnityEngine;
 
@@ -58,6 +59,8 @@ namespace Dark.Tools.GoogleSheetTool
                     {
                         SetValue(config, fields[fieldIndex], cols[fieldIndex]);
                     }
+                    
+                    if (config is EnemyBehaviour enemyConfig) enemyConfig.Validate();
 
                     EditorUtility.SetDirty(config);
                 }
