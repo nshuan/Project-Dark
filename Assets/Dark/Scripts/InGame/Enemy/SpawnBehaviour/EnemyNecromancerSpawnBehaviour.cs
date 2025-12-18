@@ -23,7 +23,7 @@ namespace InGame.SpawnBehaviour
             if (enemy.config.listSummonIdsOnSpawned == null || enemy.config.listSummonAmountOnSpawned == null ||
                 enemy.config.listSummonIdsOnSpawned.Count == 0 || enemy.config.listSummonAmountOnSpawned.Count == 0) return seq;
             
-            var summonIndex = RandomUtil.Range(0, enemy.config.summonIds.Count);
+            var summonIndex = RandomUtil.Range(0, enemy.config.listSummonAmountOnSpawned.Count);
             if (summonIndex >= 0 && summonIndex < enemy.config.listSummonAmountOnSpawned.Count && enemy.config.listSummonAmountOnSpawned[summonIndex] > 0)
             {
                 seq.AppendCallback(() =>
