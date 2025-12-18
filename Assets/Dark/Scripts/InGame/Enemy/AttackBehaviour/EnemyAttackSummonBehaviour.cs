@@ -19,6 +19,7 @@ namespace InGame
         
         public override void Attack(EnemyEntity enemy, TowerEntity target, Vector2 enemyPosition, int damage)
         {
+            if (enemy.config.summonIds == null || enemy.config.summonAmount == null || enemy.config.summonIds.Count <= 0 || enemy.config.summonAmount.Count <= 0) return;
             var summonIndex = RandomUtil.Range(0, enemy.config.summonIds.Count);
             if (spawnableEnemies == null) return;
 

@@ -20,7 +20,11 @@ namespace InGame.SpawnBehaviour
             var spawnTime = enemy.animController.PlaySpawn();
             var seq = DOTween.Sequence().AppendInterval(spawnTime);
 
-            if (enemy.config.summonAmountOnSpawned > 0)
+            if (enemy.config.listSummonIdsOnSpawned == null || enemy.config.listSummonAmountOnSpawned == null ||
+                enemy.config.listSummonIdsOnSpawned.Count == 0 || enemy.config.listSummonAmountOnSpawned.Count == 0) return seq;
+            
+            var summonIndex = RandomUtil.Range(0, enemy.config.summonIds.Count);
+            if (summonIndex >= 0 && summonIndex < enemy.config.listSummonAmountOnSpawned.Count && enemy.config.listSummonAmountOnSpawned[summonIndex] > 0)
             {
                 seq.AppendCallback(() =>
                     {
@@ -30,8 +34,8 @@ namespace InGame.SpawnBehaviour
                     .AppendInterval(0.5f)
                     .AppendCallback(() =>
                     {
-                        summonBehaviour.Summon(enemy, enemy.TargetTower, enemy.config.summonIdOnSpawned,
-                            enemy.config.summonAmountOnSpawned);
+                        summonBehaviour.Summon(enemy, enemy.TargetTower, enemy.config.listSummonIdsOnSpawned[summonIndex],
+                            enemy.config.listSummonAmountOnSpawned[summonIndex]);
                     })
                     .AppendInterval(firstCreepSpawnDuration - 0.5f);
             }

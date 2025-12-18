@@ -34,8 +34,10 @@ namespace InGame
         public string summonAmountString;
         public List<int> summonIds;
         public List<int> summonAmount;
-        public int summonIdOnSpawned;
-        public int summonAmountOnSpawned;
+        public string summonIdOnSpawnedString;
+        public string summonAmountOnSpawnedString;
+        public List<int> listSummonIdsOnSpawned;
+        public List<int> listSummonAmountOnSpawned;
         
         public void Init(EnemyEntity enemy)
         {
@@ -73,6 +75,26 @@ namespace InGame
                             summonAmount.Add(int.TryParse(amountSplit[i], out var amount) ? amount : 0);
                         }
                         else summonAmount.Add(0);
+                    }
+                }
+            }   
+            
+            listSummonIdsOnSpawned = new List<int>();
+            listSummonAmountOnSpawned = new List<int>();
+            if (!string.IsNullOrEmpty(summonIdOnSpawnedString) && !string.IsNullOrEmpty(summonAmountOnSpawnedString))
+            {
+                var idsSplit = summonIdOnSpawnedString.Split(",");
+                var amountSplit = summonAmountOnSpawnedString.Split(",");
+                for (var i = 0; i < idsSplit.Length; i++)
+                {
+                    if (int.TryParse(idsSplit[i], out var id))
+                    {
+                        listSummonIdsOnSpawned.Add(id);
+                        if (i < amountSplit.Length)
+                        {
+                            listSummonAmountOnSpawned.Add(int.TryParse(amountSplit[i], out var amount) ? amount : 0);
+                        }
+                        else listSummonAmountOnSpawned.Add(0);
                     }
                 }
             }   
