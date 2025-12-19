@@ -1,74 +1,362 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-<title>Game Logs Dashboard</title>
-<style>
-body { font-family: Arial; margin: 20px; }
-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-th, td { padding: 8px; border: 1px solid #ccc; }
-tr:nth-child(even) { background: #f2f2f2; }
-input { padding: 5px; width: 200px; margin-right: 10px; }
-</style>
+  <meta charset="utf-8" />
+  <title>Supabase Table Viewer — Filterable + Sort</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: system-ui, Arial; margin: 24px; }
+    .controls { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+    label { display:flex; flex-direction:column; font-size:0.9rem; }
+    input[type=text], select { padding:6px; width:220px; }
+    button { padding:6px 10px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 12px; }
+    th, td { border: 1px solid #ddd; padding: 6px; text-align: left; max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: default; }
+    th { background: #f5f5f5; cursor: pointer; user-select: none; }
+    th.sort-asc::after { content: " ▲"; font-size:0.8em; }
+    th.sort-desc::after { content: " ▼"; font-size:0.8em; }
+    .muted { color:#666; font-size:0.9em; }
+    .status { margin-top:12px; color:#333; }
+    .filters { margin-top:12px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  </style>
 </head>
 <body>
+  <h1>Supabase Table Viewer — Filterable + Sort</h1>
 
-<h2>Game Logs Dashboard</h2>
+  <div class="controls">
+    <label>Supabase URL
+      <input id="supabaseUrl" type="text" placeholder="https://xyz.supabase.co" value="https://lwgbiectkfewvwsmkskw.supabase.co"/>
+    </label>
+    <label>Supabase ANON Key
+      <input id="supabaseKey" type="text" placeholder="public-anon-key" value="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx3Z2JpZWN0a2Zld3Z3c21rc2t3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ3Mjk3ODAsImV4cCI6MjA4MDMwNTc4MH0._f6PEOt7KNCg33Gy3TBTT03pEr5K_C2-vCw1lz3zeXI"/>
+    </label>
+    <label>Table name
+      <input id="tableName" type="text" placeholder="public.my_table" value="game_logs"/>
+    </label>
+    <button id="connectBtn">Connect & Load</button>
+  </div>
 
-<input id="filterType" placeholder="Filter by type...">
-<input id="filterDevice" placeholder="Filter by device...">
-<button onclick="reload()">Reload</button>
+  <div class="muted">This page uses the browser to talk directly to Supabase. Keep your anon key private.</div>
 
-<table id="logs">
-<thead>
-<tr>
-  <th>Time</th>
-  <th>Type</th>
-  <th>Message</th>
-  <th>Device</th>
-  <th>Version</th>
-  <th>Platform</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
+  <div class="status" id="status"></div>
 
-<script>
-const url = "https://lwgbiectkfewvwsmkskw.supabase.co/rest/v1/game_logs?select=*";
-const apikey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx3Z2JpZWN0a2Zld3Z3c21rc2t3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ3Mjk3ODAsImV4cCI6MjA4MDMwNTc4MH0._f6PEOt7KNCg33Gy3TBTT03pEr5K_C2-vCw1lz3zeXI";
+  <div id="filterUI" style="display:none;">
+    <div class="filters">
+      <label>Full-text search (all cols)
+        <input id="fulltext" type="text" placeholder="search term" />
+      </label>
 
-async function reload() {
-  let fullUrl = url;
+      <label>Column
+        <select id="colSelect"><option value="">-- select column --</option></select>
+      </label>
 
-  let type = document.getElementById("filterType").value;
-  let device = document.getElementById("filterDevice").value;
+      <label>Operator
+        <select id="opSelect">
+          <option value="=">=</option>
+          <option value="!=">!=</option>
+          <option value="<">&lt;</option>
+          <option value="<=">&lt;=</option>
+          <option value=">">&gt;</option>
+          <option value=">=">&gt;=</option>
+          <option value="like">LIKE</option>
+          <option value="ilike">ILIKE</option>
+        </select>
+      </label>
 
-  if (type.length > 0) fullUrl += `&event_type=eq.${type}`;
-  if (device.length > 0) fullUrl += `&device_id=eq.${device}`;
+      <label>Value
+        <input id="colValue" type="text" placeholder="value" />
+      </label>
 
-  const res = await fetch(fullUrl, {
-    headers: { apikey }
-  });
-  const data = await res.json();
+      <button id="applyFilter">Apply Column Filter</button>
+      <button id="clearFilter">Clear Filters</button>
+    </div>
 
-  let tbody = document.querySelector("#logs tbody");
-  tbody.innerHTML = "";
+    <div style="margin-top:8px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+      <label>Limit rows (for performance)
+        <input id="limitInput" type="number" value="100" min="1" max="1000" />
+      </label>
 
-  data.forEach(row => {
-    let tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${row.timestamp}</td>
-      <td>${row.event_type}</td>
-      <td>${row.message}</td>
-      <td>${row.device_id}</td>
-      <td>${row.build_version}</td>
-      <td>${row.platform}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
+      <label>Sort column
+        <select id="sortCol"><option value="">-- none --</option></select>
+      </label>
 
-reload();
-</script>
+      <label>Direction
+        <select id="sortDir">
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
+        </select>
+      </label>
 
+      <button id="runQuery">Run Query</button>
+    </div>
+  </div>
+
+  <div id="tableContainer"></div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    const supabaseUrlInput = document.getElementById('supabaseUrl');
+    const supabaseKeyInput = document.getElementById('supabaseKey');
+    const tableNameInput = document.getElementById('tableName');
+    const connectBtn = document.getElementById('connectBtn');
+    const statusEl = document.getElementById('status');
+    const tableContainer = document.getElementById('tableContainer');
+
+    const filterUI = document.getElementById('filterUI');
+    const colSelect = document.getElementById('colSelect');
+    const opSelect = document.getElementById('opSelect');
+    const colValue = document.getElementById('colValue');
+    const fulltext = document.getElementById('fulltext');
+    const applyFilterBtn = document.getElementById('applyFilter');
+    const clearFilterBtn = document.getElementById('clearFilter');
+    const limitInput = document.getElementById('limitInput');
+    const runQueryBtn = document.getElementById('runQuery');
+
+    const sortCol = document.getElementById('sortCol');
+    const sortDir = document.getElementById('sortDir');
+
+    let supabase = null;
+    let currentTable = '';
+    let columns = [];
+    let activeColumnFilters = []; // {col, op, val}
+    let lastRows = [];
+    let currentSort = { col: '', dir: 'asc' };
+
+    connectBtn.addEventListener('click', async () => {
+      const url = supabaseUrlInput.value.trim();
+      const key = supabaseKeyInput.value.trim();
+      const table = tableNameInput.value.trim();
+      if (!url || !key || !table) {
+        statusEl.textContent = 'Please provide Supabase URL, anon key, and table name.';
+        return;
+      }
+      statusEl.textContent = 'Initializing client...';
+      supabase = createClient(url, key);
+      currentTable = table;
+      activeColumnFilters = [];
+      currentSort = { col: '', dir: 'asc' };
+      await initialLoad();
+    });
+
+    applyFilterBtn.addEventListener('click', () => {
+      const col = colSelect.value;
+      const op = opSelect.value;
+      const val = colValue.value;
+      if (!col || val === '') {
+        statusEl.textContent = 'Select a column and enter a value for the filter.';
+        return;
+      }
+      activeColumnFilters.push({ col, op, val });
+      statusEl.textContent = 'Added filter: ' + col + ' ' + op + ' ' + val;
+      renderActiveFilters();
+    });
+
+    clearFilterBtn.addEventListener('click', () => {
+      activeColumnFilters = [];
+      fulltext.value = '';
+      colValue.value = '';
+      statusEl.textContent = 'Filters cleared.';
+      renderActiveFilters();
+    });
+
+    runQueryBtn.addEventListener('click', async () => {
+      // read sorting from UI
+      currentSort.col = sortCol.value;
+      currentSort.dir = sortDir.value || 'asc';
+      await runQuery();
+    });
+
+    function renderActiveFilters() {
+      const elId = 'activeFilters';
+      let el = document.getElementById(elId);
+      if (!el) {
+        el = document.createElement('div');
+        el.id = elId;
+        el.style.marginTop = '8px';
+        filterUI.appendChild(el);
+      }
+      el.innerHTML = activeColumnFilters.length
+        ? 'Active column filters: ' + activeColumnFilters.map((f, i) => `${i+1}. ${f.col} ${f.op} ${f.val}`).join('  |  ')
+        : 'No column filters';
+    }
+
+    async function initialLoad() {
+      statusEl.textContent = 'Fetching sample rows to detect columns...';
+      try {
+        const limit = Math.min(1000, Math.max(10, Number(limitInput.value) || 100));
+        const res = await supabase
+          .from(currentTable)
+          .select('*')
+          .limit(limit);
+
+        console.log('supabase response', res);
+        const { data, error } = res;
+        if (error) {
+          statusEl.textContent = 'Error: ' + (error.message || JSON.stringify(error));
+          return;
+        }
+        if (!data || data.length === 0) {
+          statusEl.textContent = 'No rows returned. Check table name, RLS, or permissions.';
+          tableContainer.innerHTML = '';
+          return;
+        }
+        lastRows = data;
+        columns = deriveColumns(data);
+        populateColumnSelects(columns);
+        filterUI.style.display = 'block';
+        renderActiveFilters();
+        renderTable(data);
+        statusEl.textContent = 'Loaded ' + data.length + ' rows (sample). Use filters/sorting and Run Query to fetch filtered results.';
+      } catch (err) {
+        statusEl.textContent = 'Unexpected error: ' + (err.message || JSON.stringify(err));
+      }
+    }
+
+    function deriveColumns(rows) {
+      if (!rows || rows.length === 0) return [];
+      const cols = new Set();
+      rows.forEach(r => Object.keys(r).forEach(k => cols.add(k)));
+      return Array.from(cols);
+    }
+
+    function populateColumnSelects(cols) {
+      colSelect.innerHTML = '<option value="">-- select column --</option>';
+      sortCol.innerHTML = '<option value="">-- none --</option>';
+      cols.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        colSelect.appendChild(opt);
+
+        const opt2 = document.createElement('option');
+        opt2.value = c;
+        opt2.textContent = c;
+        sortCol.appendChild(opt2);
+      });
+    }
+
+    async function runQuery() {
+      if (!supabase || !currentTable) return;
+      statusEl.textContent = 'Running query...';
+      try {
+        const limit = Math.min(1000, Math.max(1, Number(limitInput.value) || 100));
+        // Build query
+        let query = supabase.from(currentTable).select('*').limit(limit);
+
+        // Apply column filters
+        const OP_MAP = {
+          "=": "eq",
+          "!=": "neq",
+          "<": "lt",
+          "<=": "lte",
+          ">": "gt",
+          ">=": "gte",
+          "like": "like",
+          "ilike": "ilike",
+        };
+
+        for (const f of activeColumnFilters) {
+          const op = OP_MAP[f.op] ?? f.op; // allow already-correct ops
+          query = query.filter(f.col, op, f.val);
+        }
+
+        // Apply sorting server-side if a column is selected
+        if (currentSort.col) {
+          // supabase-js order takes column, { ascending: true/false }
+          query = query.order(currentSort.col, { ascending: currentSort.dir === 'asc' });
+        }
+
+        const { data, error } = await query;
+        console.log('query response', { data, error });
+        if (error) {
+          statusEl.textContent = 'Query error: ' + (error.message || JSON.stringify(error));
+          return;
+        }
+        let rows = data || [];
+
+        // Apply fulltext client-side
+        const fulltextVal = fulltext.value.trim();
+        if (fulltextVal) {
+          const q = fulltextVal.toLowerCase();
+          rows = rows.filter(r => {
+            return columns.some(col => {
+              const v = r[col];
+              if (v === null || v === undefined) return false;
+              const s = typeof v === 'object' ? JSON.stringify(v) : String(v);
+              return s.toLowerCase().includes(q);
+            });
+          });
+        }
+
+        lastRows = rows;
+        renderTable(rows);
+        statusEl.textContent = 'Query returned ' + (rows?.length ?? 0) + ' rows (limited to ' + limit + ').';
+      } catch (err) {
+        statusEl.textContent = 'Unexpected error: ' + (err.message || JSON.stringify(err));
+      }
+    }
+
+    function renderTable(rows) {
+      tableContainer.innerHTML = '';
+      if (!rows || rows.length === 0) {
+        tableContainer.textContent = 'No rows to display.';
+        return;
+      }
+      const table = document.createElement('table');
+      const thead = document.createElement('thead');
+      const tbody = document.createElement('tbody');
+
+      const cols = columns.length ? columns : Object.keys(rows[0]);
+
+      const trHead = document.createElement('tr');
+      cols.forEach(c => {
+        const th = document.createElement('th');
+        th.textContent = c;
+        // highlight current sort column
+        th.classList.remove('sort-asc', 'sort-desc');
+        if (currentSort.col === c) {
+          th.classList.add(currentSort.dir === 'asc' ? 'sort-asc' : 'sort-desc');
+        }
+        // clicking header toggles sort
+        th.addEventListener('click', () => {
+          if (currentSort.col === c) {
+            currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+          } else {
+            currentSort.col = c;
+            currentSort.dir = 'asc';
+          }
+          // update selectors to reflect header click
+          sortCol.value = currentSort.col;
+          sortDir.value = currentSort.dir;
+          // re-run query with updated sort
+          runQuery();
+        });
+        trHead.appendChild(th);
+      });
+      thead.appendChild(trHead);
+
+      rows.forEach(row => {
+        const tr = document.createElement('tr');
+        cols.forEach(col => {
+          const td = document.createElement('td');
+          const v = row[col];
+          td.textContent = formatValue(v);
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+
+      table.appendChild(thead);
+      table.appendChild(tbody);
+      tableContainer.appendChild(table);
+    }
+
+    function formatValue(v) {
+      if (v === null || v === undefined) return '';
+      if (typeof v === 'object') return JSON.stringify(v);
+      return String(v);
+    }
+  </script>
 </body>
 </html>
