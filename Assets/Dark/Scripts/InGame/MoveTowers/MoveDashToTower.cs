@@ -46,6 +46,7 @@ namespace InGame
         {
             hits ??= new RaycastHit2D[50];
             hitHistory ??= new List<Transform>();
+            hitHistory.Clear();
             currentHitHistoryIndex = 0;
             startPos.x = fromTower.transform.position.x + fromTower.GetTowerHeight().x;
             startPos.y = fromTower.transform.position.y + fromTower.GetTowerHeight().y;
@@ -60,15 +61,20 @@ namespace InGame
             {
                 timeElapsed += Time.deltaTime;
                 var speed = speedCurve.Evaluate(Mathf.Clamp01(timeElapsed / duration));
-                character.transform.position = Vector2.Lerp(startPos, endPos, speed);
-                var positionRatio = (character.transform.position.x - startPos.x) / (endPos.x - startPos.x);
-                // var count = Physics2D.CircleCastNonAlloc(character.FlashExplodeCenter, hitRadius, Vector2.zero, hits,
+                // character.transform.position = Vector2.Lerp(startPos, endPos, speed);
+                // var positionRatio = (character.transform.position.x - startPos.x) / (endPos.x - startPos.x);
+                // var count = Physics2D.CircleCastNonAlloc(
+                //     fromTower.GetBaseCenter() + positionRatio * (toTower.GetBaseCenter() - fromTower.GetBaseCenter()), 
+                //     hitRadius, Vector2.zero, hits,
                 //     0f,
                 //     enemyLayer);
+                var lastPos = character.transform.position;
+                character.transform.position = Vector2.Lerp(startPos, endPos, speed);
+                var movePath = character.transform.position - lastPos;
                 var count = Physics2D.CircleCastNonAlloc(
-                    fromTower.GetBaseCenter() + positionRatio * (toTower.GetBaseCenter() - fromTower.GetBaseCenter()), 
-                    hitRadius, Vector2.zero, hits,
-                    0f,
+                    lastPos, 
+                    hitRadius, movePath, hits,
+                    movePath.magnitude,
                     enemyLayer);
                 if (count > 0)
                 {
@@ -97,15 +103,10 @@ namespace InGame
                     if (hitHistory.Contains(hitTransform)) return;
 
                     if (currentHitHistoryIndex >= hitHistory.Count)
-                    {
                         hitHistory.Add(hitTransform);
-                        currentHitHistoryIndex += 1;
-                    }
                     else
-                    {
                         hitHistory[currentHitHistoryIndex] = hitTransform;
-                        currentHitHistoryIndex += 1;
-                    }
+                    currentHitHistoryIndex += 1;
                     hitTarget.HitDirectionX = direction.x;
                     hitTarget.HitDirectionY = direction.y;
                     hitTarget.Damage((int)value, characterRef.FlashExplodeCenter, stagger, DamageType.Normal);
