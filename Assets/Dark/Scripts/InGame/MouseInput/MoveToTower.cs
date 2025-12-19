@@ -1,4 +1,5 @@
 using System;
+using Dark.Scripts.Settings;
 using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -183,6 +184,26 @@ namespace InGame
                         PlaySlowMotion(false);
                         CombatActions.OnTowerHoverOut?.Invoke(Towers[selectingTower]);
                         selectingTower = -1;
+                    }
+                }
+
+                // Hot keys
+                if (CanMove)
+                {
+                    if (Input.GetKeyDown(GameSettings.KeyMoveTower0) && CurrentTowerIndex != 0)
+                    {
+                        selectingTower = 0;
+                        OnMouseClick(false);
+                    }
+                    else if (Input.GetKeyDown(GameSettings.KeyMoveTower1) && CurrentTowerIndex != 1)
+                    {
+                        selectingTower = 1;
+                        OnMouseClick(false);
+                    }
+                    else if (Input.GetKeyDown(GameSettings.KeyMoveTower2) && CurrentTowerIndex != 2)
+                    {
+                        selectingTower = 2;
+                        OnMouseClick(false);
                     }
                 }
             }
