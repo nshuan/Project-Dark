@@ -40,6 +40,7 @@ namespace InGame
         public void Release(EnemyEntity obj, int typeId)
         {
             obj.gameObject.SetActive(false);
+            obj.animController.PlaySpawn();
             obj.transform.SetParent(transform);
             queueDict.TryAdd(typeId, new Queue<EnemyEntity>());
             queueDict[typeId].Enqueue(obj);
