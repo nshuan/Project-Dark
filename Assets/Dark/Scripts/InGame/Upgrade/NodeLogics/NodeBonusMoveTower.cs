@@ -40,6 +40,13 @@ namespace InGame.Upgrade
             {
                 case BonusMoveTowerType.Cooldown:
                     before = $"{LevelUtility.GetTeleCooldown().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
+                    if (bonusInfo.unlockedMoveToTower is { Count: > 0 })
+                    {
+                        if (bonusInfo.unlockedMoveToTower[0] == 1)
+                            before = $"{LevelUtility.GetFlashCooldown().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
+                        else if (bonusInfo.unlockedMoveToTower[0] == 2)
+                            before = $"{LevelUtility.GetDashCooldown().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture)}s";
+                    }
                     break;
             }
             if (level > value.Length)
