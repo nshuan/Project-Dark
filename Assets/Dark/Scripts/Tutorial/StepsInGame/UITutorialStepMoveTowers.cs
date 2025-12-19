@@ -1,4 +1,5 @@
 using System;
+using Data;
 using InGame;
 using TMPro;
 using UnityEngine;
@@ -7,6 +8,9 @@ namespace Dark.Scripts.Tutorial
 {
     public class UITutorialStepMoveTowers : UIAbstractTutorialStepInGame
     {
+        // Check if player has used hot keys for move towers
+        const string KeyHotKeyMoveTowers = "has_used_hot_key";
+        
         [SerializeField] private Camera mainCamera;
         [SerializeField] protected GameObject objInstruction;
         [SerializeField] protected GameObject objCursorInstruction;
@@ -18,7 +22,31 @@ namespace Dark.Scripts.Tutorial
         [SerializeField] private int gateToShow;
         
         private int towerToInstruct;
+
+        private static bool hasShowHotKeyInstruction;
+        private static bool hasInitShowHotKeyInstruction;
+
+        public static bool ShouldShowHotKeyInstruction
+        {
+            get
+            {
+                if (hasInitShowHotKeyInstruction) return !hasShowHotKeyInstruction;
+                if (LevelManager.Instance.Level.level == 1
+                    && LevelManager.Instance.CurrentWaveIndex <= 1
+                    && TutorialManager.Instance.GetCurrentTutorialStep() < 1)
+                    return false;
+                hasInitShowHotKeyInstruction = true;
+                hasShowHotKeyInstruction = DataHandler.Load<bool>(KeyHotKeyMoveTowers);
+                return !hasShowHotKeyInstruction;
+            }
+        }
         
+        public static void HideHotKeyInstruction()
+        {
+            hasShowHotKeyInstruction = true;
+            DataHandler.Save<bool>(KeyHotKeyMoveTowers, true);
+        }
+
         public override bool IsValid()
         {
             if (LevelManager.Instance.Level.level == levelToShow && LevelManager.Instance.CurrentWaveIndex <= waveToShow) return true;

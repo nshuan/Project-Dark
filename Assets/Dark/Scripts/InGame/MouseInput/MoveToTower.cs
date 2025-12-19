@@ -1,5 +1,6 @@
 using System;
 using Dark.Scripts.Settings;
+using Dark.Scripts.Tutorial;
 using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -120,7 +121,7 @@ namespace InGame
                 {
                     tower.Hover(false);
                 }
-                cursor.SetMoveCursor(false);
+                cursor.SetMoveCursor(false, selectingTower);
                 PlaySlowMotion(false);
             }
         }
@@ -167,7 +168,7 @@ namespace InGame
                             {
                                 tower.Hover(true, false);
                             }
-                            cursor.SetMoveCursor(true);
+                            cursor.SetMoveCursor(true, selectingTower);
                             CombatActions.OnTowerHoverIn?.Invoke(tower);
                             break;
                         }
@@ -180,7 +181,7 @@ namespace InGame
                     {
                         hovering = false;
                         Towers[selectingTower].Hover(false);
-                        cursor.SetMoveCursor(false);
+                        cursor.SetMoveCursor(false, selectingTower);
                         PlaySlowMotion(false);
                         CombatActions.OnTowerHoverOut?.Invoke(Towers[selectingTower]);
                         selectingTower = -1;
@@ -194,16 +195,31 @@ namespace InGame
                     {
                         selectingTower = 0;
                         OnMouseClick(false);
+                        if (UITutorialStepMoveTowers.ShouldShowHotKeyInstruction)
+                        {
+                            UITutorialStepMoveTowers.HideHotKeyInstruction();
+                            cursor.SetMoveCursor(false, selectingTower);
+                        }
                     }
                     else if (Input.GetKeyDown(GameSettings.KeyMoveTower1) && CurrentTowerIndex != 1)
                     {
                         selectingTower = 1;
                         OnMouseClick(false);
+                        if (UITutorialStepMoveTowers.ShouldShowHotKeyInstruction)
+                        {
+                            UITutorialStepMoveTowers.HideHotKeyInstruction();
+                            cursor.SetMoveCursor(false, selectingTower);
+                        }
                     }
                     else if (Input.GetKeyDown(GameSettings.KeyMoveTower2) && CurrentTowerIndex != 2)
                     {
                         selectingTower = 2;
                         OnMouseClick(false);
+                        if (UITutorialStepMoveTowers.ShouldShowHotKeyInstruction)
+                        {
+                            UITutorialStepMoveTowers.HideHotKeyInstruction();
+                            cursor.SetMoveCursor(false, selectingTower);
+                        }
                     }
                 }
             }
