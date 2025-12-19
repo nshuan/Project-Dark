@@ -81,11 +81,11 @@ namespace Economic.InGame.DropItems
         private float delayCollect;
         private float collectStartDuration = 0.24f;
         private float collectCounter;
-        private Transform target;
+        private Vector3 targetPosition;
         public void Collect(Transform target)
         {
-            this.target = target;
-            targetLogic.InitializeProjectile(target.transform.position, FlySpeed, 0.15f);
+            targetPosition = target.position;
+            targetLogic.InitializeProjectile(targetPosition, FlySpeed, 0.15f);
             targetLogic.InitializeAnimationCurve(ProjectileCurveManifest.GetRandomTrajectoryCurve(),
                 ProjectileCurveManifest.GetAxisCorrectionCurve(0), ProjectileCurveManifest.GetProjectileSpeedCurve(1));
             
@@ -103,19 +103,19 @@ namespace Economic.InGame.DropItems
                 return;
             }
 
-            if (collectCounter > 0f)
-            {
-                visual.transform.position += new Vector3(0f, 0.5f * Time.deltaTime, 0f);
-                collectCounter -= Time.deltaTime;
-                if (collectCounter <= 0f)
-                    shadow.DOScale(0f, 0.2f);
-                return;
-            }
+            // if (collectCounter > 0f)
+            // {
+            //     visual.transform.position += new Vector3(0f, 0.5f * Time.deltaTime, 0f);
+            //     collectCounter -= Time.deltaTime;
+            //     if (collectCounter <= 0f)
+            //         shadow.DOScale(0f, 0.2f);
+            //     return;
+            // }
             
-            if (Vector2.Distance(transform.position, target.transform.position) < 0.1f)
+            if (Vector2.Distance(transform.position, targetPosition) < 0.1f)
             {
                 visual.gameObject.SetActive(false);
-                vfxClaim.transform.position = target.transform.position + vfxPositionOffset;
+                vfxClaim.transform.position = targetPosition + vfxPositionOffset;
                 vfxClaim.SetActive(true);
                 sfx.Play();
                 isCollecting = false;
@@ -127,11 +127,11 @@ namespace Economic.InGame.DropItems
                 return;
             }
             
-            nextPosition = targetLogic.GetProjectileNextPosition(target.transform.position);
-            if ((target.transform.position.x - transform.position.x) * (target.transform.position.x - nextPosition.x) < 0f) 
-                transform.position = target.transform.position;
-            else if ((target.transform.position.y - transform.position.y) * (target.transform.position.y - nextPosition.y) < 0f)
-                transform.position = target.transform.position;
+            nextPosition = targetLogic.GetProjectileNextPosition(targetPosition);
+            if ((targetPosition.x - transform.position.x) * (targetPosition.x - nextPosition.x) < 0f) 
+                transform.position = targetPosition;
+            else if ((targetPosition.y - transform.position.y) * (targetPosition.y - nextPosition.y) < 0f)
+                transform.position = targetPosition;
             else
                 transform.position = nextPosition;
         }

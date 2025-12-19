@@ -27,7 +27,7 @@ namespace Data
         {
             string filePath = DataPath + "/" + key + ".json";
             var jsonData = "";
-            if (typeof(T) == typeof(int))
+            if (typeof(T) == typeof(int) || typeof(T) == typeof(bool))
                 jsonData = JsonConvert.SerializeObject(new WrappedData<T>(data));
             else
                 jsonData = JsonConvert.SerializeObject(data);
@@ -40,7 +40,7 @@ namespace Data
             if (File.Exists(filePath))
             {
                 string jsonData = File.ReadAllText(filePath);
-                if (typeof(T) == typeof(int))
+                if (typeof(T) == typeof(int) || typeof(T) == typeof(bool))
                 {
                     // Handle old data, old int data is not wrapped
                     try

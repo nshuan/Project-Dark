@@ -85,7 +85,7 @@ namespace Economic.InGame
                 var enemyCount = Physics2D.CircleCastNonAlloc(transform.position, radiusCheckEnemy, Vector2.zero, enemiesHit, 0f, enemyLayer);
                 if (enemyCount > 0)
                 {
-                    TeleportToOtherPosition();
+                    TeleportToOtherPosition(0f);
                 }
                 checkEnemyCounter = checkEnemyInterval;
             }
@@ -155,10 +155,10 @@ namespace Economic.InGame
             });
         }
 
-        private void TeleportToOtherPosition()
+        private void TeleportToOtherPosition(float delayHideAndShow)
         {
             collider.enabled = false;
-            DoHide().OnComplete(() =>
+            DoHide().SetDelay(delayHideAndShow).OnComplete(() =>
             {
                 var id = LevelManager.Instance.CurrentTower.Id;
                 if (currentPositionIndexInTower == 0 && id >= 0 && id < orbitCenters.Count)
@@ -182,10 +182,17 @@ namespace Economic.InGame
         {
             if (!activated) return;
             collider.enabled = false;
+            CombatActions.OnCollectAllResourceDrop -= OnCollectAllResources;
+            CombatActions.OnCollectAllResourceDrop += OnCollectAllResources;
             CombatActions.OnResourceCollectorDamaged?.Invoke(this);
             vfxBreak.Play(true);
             sfxCollect.Play();
-            TeleportToOtherPosition();
+        }
+
+        private void OnCollectAllResources(int amount, float duration)
+        {
+            CombatActions.OnCollectAllResourceDrop -= OnCollectAllResources;
+            TeleportToOtherPosition(amount <= 0 ? 0f : duration);
         }
         
         public Tween DoSpawn()
