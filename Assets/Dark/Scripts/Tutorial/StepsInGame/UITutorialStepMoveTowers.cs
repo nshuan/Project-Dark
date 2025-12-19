@@ -1,5 +1,6 @@
 using System;
 using InGame;
+using TMPro;
 using UnityEngine;
 
 namespace Dark.Scripts.Tutorial
@@ -9,6 +10,7 @@ namespace Dark.Scripts.Tutorial
         [SerializeField] private Camera mainCamera;
         [SerializeField] protected GameObject objInstruction;
         [SerializeField] protected GameObject objCursorInstruction;
+        [SerializeField] protected TextMeshProUGUI txtCursorInstruction;
         
         [Space] [Header("Config")]
         [SerializeField] private int levelToShow;
@@ -91,6 +93,7 @@ namespace Dark.Scripts.Tutorial
 
         private void OnTowerHoverIn(TowerEntity tower)
         {
+            txtCursorInstruction.SetText($"Left click\nor press  {tower.Id + 1}\nto move");
             objCursorInstruction.SetActive(true);
         }
 

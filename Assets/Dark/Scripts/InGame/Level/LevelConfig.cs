@@ -8,7 +8,7 @@ namespace InGame
     [CreateAssetMenu(menuName = "InGame/Level/Level Config", fileName = "Level")]
     public class LevelConfig : SerializedScriptableObject
     {
-        [ReadOnly] public int level;
+        [ReadOnly] public int level; // Start from 1
         public float levelExpRatio = 1f;
         public float levelDarkRatio = 1f;
         public int levelDarkUnitValue = 1;
