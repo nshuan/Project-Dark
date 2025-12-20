@@ -48,8 +48,7 @@ namespace InGame
                 creep.Init(
                     summonInfo.enemyConfig, 
                     target, 
-                    enemy.WaveHpMultiplier, 
-                    enemy.WaveDmgMultiplier, 
+                    enemy.StatsScale,
                     enemy.LevelExpRatio, 
                     enemy.LevelDarkRatio, 
                     enemy.LevelDarkUnitValue);
