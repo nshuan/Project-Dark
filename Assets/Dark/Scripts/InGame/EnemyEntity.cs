@@ -24,7 +24,7 @@ namespace InGame
 
         #region Stats
         public int MaxHealth { get; set; }
-        private int CurrentHealth { get; set; }
+        protected int CurrentHealth { get; set; }
         private int CurrentDamage { get; set; }
         public int Exp { get; private set; }
         public int Dark { get; private set; }
@@ -64,7 +64,7 @@ namespace InGame
         private bool inAttackRange;
         private Coroutine attackCoroutine;
 
-        private Vector2 attackPosition;
+        protected Vector2 attackPosition;
         
         private float invisibleTimer;
         private float freezeDuration;
@@ -238,7 +238,7 @@ namespace InGame
         public float HitDirectionX { get; set; }
         public float HitDirectionY { get; set; }
 
-        public void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
+        public virtual void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
         {
             if (IsDestroyed) return;
             if (State == EnemyState.Invisible) return;
@@ -360,6 +360,7 @@ namespace InGame
 
             while (totalBurn > 0)
             {
+                if (State == EnemyState.Freeze) yield return null;
                 yield return new WaitForSeconds(delayEachBurn);
                 HitDirectionX = 0f;
                 HitDirectionY = 0f;
