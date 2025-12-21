@@ -78,6 +78,7 @@ namespace InGame.Boss
             // Jump up
             var jumpDuration = animController.PlayCustomAnim(jumpUpAnim);
             animController.Resume();
+            BurnVfxParent.gameObject.SetActive(false);
             yield return new WaitForSeconds(jumpDuration);
             
             // Get random tower
@@ -101,6 +102,7 @@ namespace InGame.Boss
             // Jump down
             jumpDuration = animController.PlayCustomAnim(jumpDownAnim);
             yield return new WaitForSeconds(jumpDuration);
+            BurnVfxParent.gameObject.SetActive(true);
             State = EnemyState.Move;
         }
         
