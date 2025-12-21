@@ -78,7 +78,7 @@ namespace InGame
             boundaryManager = MapBoundaryManager.Instance;
         }
 
-        public void Init(EnemyBehaviour eConfig, TowerEntity target, WaveStatsScale statsScale, float levelExpRatio, float levelDarkRatio, int levelDarkUnitValue)
+        public virtual void Init(EnemyBehaviour eConfig, TowerEntity target, WaveStatsScale statsScale, float levelExpRatio, float levelDarkRatio, int levelDarkUnitValue)
         {
             config = eConfig;
             
@@ -388,7 +388,7 @@ namespace InGame
         [SerializeField] private Material materialNormal;
         [SerializeField] private Material materialElite;
         
-        public void ActivateELite(bool active)
+        public virtual void ActivateELite(bool active)
         {
             if (active)
             {
