@@ -60,7 +60,7 @@ namespace Dark.Tools.GoogleSheetTool
                         SetValue(config, fields[fieldIndex], cols[fieldIndex]);
                     }
                     
-                    if (config is EnemyBehaviour enemyConfig) enemyConfig.Validate();
+                    if (config is EnemySummonBehaviour enemyConfig) enemyConfig.Validate();
 
                     EditorUtility.SetDirty(config);
                 }

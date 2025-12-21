@@ -17,30 +17,37 @@ namespace InGame.SpawnBehaviour
 
         public override Tween DoSpawn(EnemyEntity enemy)
         {
-            var spawnTime = enemy.animController.PlaySpawn();
-            var seq = DOTween.Sequence().AppendInterval(spawnTime);
-
-            if (enemy.config.listSummonIdsOnSpawned == null || enemy.config.listSummonAmountOnSpawned == null ||
-                enemy.config.listSummonIdsOnSpawned.Count == 0 || enemy.config.listSummonAmountOnSpawned.Count == 0) return seq;
-            
-            var summonIndex = RandomUtil.Range(0, enemy.config.listSummonAmountOnSpawned.Count);
-            if (summonIndex >= 0 && summonIndex < enemy.config.listSummonAmountOnSpawned.Count && enemy.config.listSummonAmountOnSpawned[summonIndex] > 0)
+            if (enemy.config is EnemySummonBehaviour enemyConfig)
             {
-                seq.AppendCallback(() =>
-                    {
-                        enemy.animController.PlayAttack();
-                        
-                    })
-                    .AppendInterval(0.5f)
-                    .AppendCallback(() =>
-                    {
-                        summonBehaviour.Summon(enemy, enemy.TargetTower, enemy.config.listSummonIdsOnSpawned[summonIndex],
-                            enemy.config.listSummonAmountOnSpawned[summonIndex]);
-                    })
-                    .AppendInterval(firstCreepSpawnDuration - 0.5f);
+                var spawnTime = enemy.animController.PlaySpawn();
+                var seq = DOTween.Sequence().AppendInterval(spawnTime);
+
+                if (enemyConfig.listSummonIdsOnSpawned == null || enemyConfig.listSummonAmountOnSpawned == null ||
+                    enemyConfig.listSummonIdsOnSpawned.Count == 0 || enemyConfig.listSummonAmountOnSpawned.Count == 0) return seq;
+                
+                var summonIndex = RandomUtil.Range(0, enemyConfig.listSummonAmountOnSpawned.Count);
+                if (summonIndex >= 0 && summonIndex < enemyConfig.listSummonAmountOnSpawned.Count && enemyConfig.listSummonAmountOnSpawned[summonIndex] > 0)
+                {
+                    seq.AppendCallback(() =>
+                        {
+                            enemy.animController.PlayAttack();
+                            
+                        })
+                        .AppendInterval(0.5f)
+                        .AppendCallback(() =>
+                        {
+                            summonBehaviour.Summon(enemy, enemy.TargetTower, enemyConfig.listSummonIdsOnSpawned[summonIndex],
+                                enemyConfig.listSummonAmountOnSpawned[summonIndex]);
+                        })
+                        .AppendInterval(firstCreepSpawnDuration - 0.5f);
+                }
+                
+                return seq;
             }
-            
-            return seq;
+
+            // Spawn thường
+            enemy.transform.localScale = 0.3f * Vector3.one;
+            return enemy.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
         }
     }
 }

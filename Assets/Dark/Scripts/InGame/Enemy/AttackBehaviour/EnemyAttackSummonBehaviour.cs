@@ -19,11 +19,14 @@ namespace InGame
         
         public override void Attack(EnemyEntity enemy, TowerEntity target, Vector2 enemyPosition, int damage)
         {
-            if (enemy.config.summonIds == null || enemy.config.summonAmount == null || enemy.config.summonIds.Count <= 0 || enemy.config.summonAmount.Count <= 0) return;
-            var summonIndex = RandomUtil.Range(0, enemy.config.summonIds.Count);
-            if (spawnableEnemies == null) return;
+            if (enemy.config is EnemySummonBehaviour enemyConfig)
+            {
+                if (enemyConfig.summonIds == null || enemyConfig.summonAmount == null || enemyConfig.summonIds.Count <= 0 || enemyConfig.summonAmount.Count <= 0) return;
+                var summonIndex = RandomUtil.Range(0, enemyConfig.summonIds.Count);
+                if (spawnableEnemies == null) return;
 
-            Summon(enemy, target, enemy.config.summonIds[summonIndex], enemy.config.summonAmount[summonIndex]);
+                Summon(enemy, target, enemyConfig.summonIds[summonIndex], enemyConfig.summonAmount[summonIndex]);
+            }
         }
 
         public void Summon(EnemyEntity enemy, TowerEntity target, int enemyId, int amount)
