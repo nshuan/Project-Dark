@@ -102,6 +102,21 @@ namespace Economic.InGame.DropItems
             
             collectedData.Claim();
         }
+
+        public void Claim(EItemDrop item)
+        {
+            switch (item.kind)
+            {
+                case WealthType.Vestige:
+                    collectedData.AddVestige(item.Quantity);
+                    break;
+                case WealthType.Sigils:
+                    collectedData.AddSigils(item.Quantity);
+                    break;
+            }
+            
+            collectedData.Claim();
+        }
         
         public void DropOne(WealthType kind, int quantity, Vector3 position)
         {
