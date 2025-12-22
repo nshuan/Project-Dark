@@ -89,6 +89,26 @@ namespace InGame
                     DebugUtility.LogError($"Level {i} is missing!");
             }
         }
+
+        [Button]
+        public void ValidateDefaultSpawnAngle()
+        {
+            foreach (var pair in levelMap)
+            {
+                foreach (var wave in pair.Value.waveInfo)
+                {
+                    foreach (var gate in wave.waveConfig.gateConfigs)
+                    {
+                        if (gate.spawnLogic is GateSpawnSingle spawnSingle) spawnSingle.randomSpanAngle = 90;
+                        else if (gate.spawnLogic is GateSpawnTriangle spawnTri) spawnTri.randomSpanAngle = 90;
+                        else if (gate.spawnLogic is GateSpawnMultiple spawnMul) spawnMul.randomSpanAngle = 120;
+                        EditorUtility.SetDirty(wave.waveConfig);
+                        AssetDatabase.SaveAssets();
+                        AssetDatabase.Refresh();
+                    }
+                }
+            }
+        }
 #endif
     }
 }
