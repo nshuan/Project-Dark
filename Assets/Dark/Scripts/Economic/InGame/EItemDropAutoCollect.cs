@@ -42,11 +42,23 @@ namespace Economic.InGame
         {
             while (true)
             {
+                if (!enableAutoCollect) yield return null;
                 yield return new WaitForSeconds(cooldown);
                 yield return new WaitForEndOfFrame();
                 
+                if (!enableAutoCollect) yield return null;
                 EItemDropManager.Instance.CollectAll(visualTarget, true);
             }
         }
+
+#if UNITY_EDITOR
+        private bool enableAutoCollect = true;
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.I))
+                enableAutoCollect = !enableAutoCollect;
+                
+        }
+#endif
     }
 }
