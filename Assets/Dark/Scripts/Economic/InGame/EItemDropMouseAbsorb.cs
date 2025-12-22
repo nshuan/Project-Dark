@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Dark.Scripts.ForDemo;
 using Economic.InGame.DropItems;
 using UnityEngine;
 
@@ -56,7 +57,7 @@ namespace Economic.InGame
 
         private void Start()
         {
-            if (!_cam)
+            if (DemoConfig.CollectLogicType == 2 && !_cam)
                 _cam = Camera.main;
         }
 
