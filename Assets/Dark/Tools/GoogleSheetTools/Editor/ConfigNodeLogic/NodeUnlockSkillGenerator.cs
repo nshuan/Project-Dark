@@ -104,7 +104,6 @@ namespace Dark.Tools.GoogleSheetTool
                         {
                             projectile = projectile,
                             amount = bonusValue,
-                            angle = 50
                         } as IProjectileActivate).ToList(),
                         isCharge = false
                     }
