@@ -24,13 +24,24 @@ namespace InGame.EnemyEffect
         private bool isSpawningEffect = false;
         private float spawningTimer;
         private Vector3 originalScale;
-
+        private bool isPause;
+        
         private void Awake()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
             originalScale = spriteRenderer.transform.localScale;
         }
 
+        public float PlayCustomAnim(EnemySpritesAnimationInfo anim)
+        {
+            currentAnim = anim;
+            currentFrame = 0;
+            spriteRenderer.transform.localScale = originalScale * currentAnim.scale;
+            spriteRenderer.sprite = currentAnim.frames[0];
+            timer = 0f;
+            return anim.frames.Length * anim.frameRate;
+        }
+        
         public float PlaySpawn()
         {
             currentAnim = spawnAnim;
@@ -97,6 +108,7 @@ namespace InGame.EnemyEffect
 
         private void Update()
         {
+            if (isPause) return;
             if (isSpawningEffect)
             {
                 if (spawningTimer > 0)
@@ -136,6 +148,17 @@ namespace InGame.EnemyEffect
                 timer -= currentAnim.frameRate; // subtract instead of reset to avoid drift
             }
         }
+
+        public void Pause()
+        {
+            isPause = true;
+        }
+
+        public void Resume()
+        {
+            isPause = false;
+        }
+        
     }
 
     [Serializable]

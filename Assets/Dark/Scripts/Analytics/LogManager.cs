@@ -32,6 +32,8 @@ namespace Dark.Scripts.Analytics
 #endif
             LoadQueue();
 
+            Log(LogConst.EventLogStartSession, "start_session");
+            
             // Application.logMessageReceived += HandleUnityLog;
         }
 
@@ -46,14 +48,15 @@ namespace Dark.Scripts.Analytics
         }
 
         // -------- PUBLIC API --------
-        public static void Log(string eventType, string message)
+        public static void Log(string eventType, string message, string param = "")
         {
             if (!GameConst.EnableLog) return;
-            if (Instance == null) return;
+            if (!Instance) return;
 
             var entry = new LogEntry(
                 eventType,
                 message,
+                param,
                 SystemInfo.deviceUniqueIdentifier,
                 Application.version,
                 Application.platform.ToString()
@@ -110,17 +113,19 @@ namespace Dark.Scripts.Analytics
     {
         public string event_type;
         public string message;
+        public string param;
         public string device_id;
         public string build_version;
         public string platform;
 
-        public LogEntry(string e, string m, string d, string b, string p)
+        public LogEntry(string e, string m, string p, string d, string b, string pl)
         {
             event_type = e;
             message = m;
+            this.param = p;
             device_id = d;
             build_version = b;
-            platform = p;
+            platform = pl;
         }
     }
 

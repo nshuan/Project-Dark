@@ -1,5 +1,5 @@
 using System.Collections;
-using Dark.Scripts.Audio;
+using Dark.Scripts.AudioV2;
 using UnityEngine;
 
 namespace InGame
@@ -9,8 +9,8 @@ namespace InGame
         [SerializeField] private GameObject flashStartGO;
         [SerializeField] private GameObject flashEndGO;
         [SerializeField] private GameObject flashAoeGO;
-        [SerializeField] private AudioComponent sfxFlashAoe;
-        [SerializeField] private AudioComponent sfxFlashAoe_end;
+        [SerializeField] private AudioPlayComponentV2 sfxFlashAoe;
+        [SerializeField] private AudioPlayComponentV2 sfxFlashAoe_end;
 
         public Transform explodeCenter;
         public float startDuration = 0.5f;

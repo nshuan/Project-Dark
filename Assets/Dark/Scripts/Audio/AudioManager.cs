@@ -117,10 +117,4 @@ namespace Dark.Scripts.Audio
         }
 #endif
     }
-
-    public enum AudioPlayType
-    {
-        Sound,
-        Music
-    }
 }

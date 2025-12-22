@@ -38,7 +38,7 @@ namespace Dark.Scripts.Common
             
             DOTween.Kill(this);
             DOTween.Sequence(this).SetUpdate(true)
-                .Append(transform.DOScale(pressScale, duration)).Play();
+                .Append(transform.DOScale(pressScale, duration).SetEase(Ease.OutQuad)).Play();
         }
 
         public void OnPointerUp(PointerEventData eventData)

@@ -16,7 +16,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [Space]
         public RectTransform targetRect; // The UI element to zoom
         public KeyCode keyHold = KeyCode.None;
-        public float zoomSpeed = 0.1f;
+        public float zoomSpeed = 0.2f;
         public float minScale = 0.5f;
         public float maxScale = 1.2f;
         public float defaultScale = 0.5f;

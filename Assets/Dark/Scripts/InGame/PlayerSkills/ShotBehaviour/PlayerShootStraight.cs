@@ -34,7 +34,20 @@ namespace InGame
                 p.transform.position = spawnPos;
                 p.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
                 p.Init(rangeCenter, (target - spawnPos).normalized, skillRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, isCharge, maxHit, activateActions, projectileHitActions, ProjectileType.PlayerProjectile);
-                p.Activate(delayEachBullet * i);
+                
+                // Có activate action thì ko bắn đạn nữa
+                if (activateActions == null || activateActions.Count == 0)
+                    p.Activate(delayEachBullet * i);
+                else
+                {
+                    var activateDirection = (target - spawnPos).normalized;
+                    foreach (var activateAction in activateActions)
+                    {
+                        activateAction.DoAction(p, activateDirection);
+                    }
+                    
+                    ProjectilePool.Instance.Release(p, 0f);
+                }
             }
         }
     }

@@ -76,7 +76,7 @@ namespace InGame
         /// <param name="baseBulletNum"></param>
         /// <param name="chargeBulletNum"></param>
         /// <returns></returns>
-        public static int GetNumberOfBullets(int chargeBulletNum)
+        public static int GetNumberOfBulletsCharge(int chargeBulletNum)
         {
             return CurrentSkill.numberOfBullets + BonusInfo.skillBonus.bulletPlus + chargeBulletNum;
         }
@@ -289,11 +289,12 @@ namespace InGame
         {
             var baseValue = 0f;
             if (EffectConfigsMap.TryGetValue(triggerType, out var triggerDict) && triggerDict.TryGetValue(passiveType, out var config))
-                baseValue = config.value;   
-            if (BonusInfo.passiveBonusValueMapByType == null) return baseValue + BasePlayerDamageWithBonus;
+                baseValue = config.value;
+            if (passiveType != PassiveType.Thunder) baseValue = baseValue + BasePlayerDamageWithBonus;
+            if (BonusInfo.passiveBonusValueMapByType == null) return baseValue;
             if (BonusInfo.passiveBonusValueMapByType.TryGetValue(passiveType, out var bonus))
-                return (baseValue + BasePlayerDamageWithBonus) * (1f + bonus);
-            return baseValue + BasePlayerDamageWithBonus;
+                return baseValue * (1f + bonus);
+            return baseValue;
         }
 
         public static float GetPassiveStagger(PassiveTriggerType triggerType, PassiveType passiveType)

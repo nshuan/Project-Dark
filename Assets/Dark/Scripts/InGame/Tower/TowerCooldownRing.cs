@@ -1,7 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using Dark.Scripts.Audio;
+using Dark.Scripts.AudioV2;
 using UnityEngine;
 
 namespace InGame
@@ -14,7 +12,7 @@ namespace InGame
         [SerializeField] private SpriteRenderer cooldownRing;
         [SerializeField] private ParticleSystem vfxCooldownComplete;
         [SerializeField] private GameObject vfxSelected;
-        [SerializeField] private AudioComponent sfxCooldown;
+        [SerializeField] private AudioPlayComponentV2 sfxCooldown;
 
         [Header("Setup Materials")]
         [SerializeField] private List<SpriteRenderer> cdRingSprites;

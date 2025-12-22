@@ -14,11 +14,10 @@ namespace Dark.Scripts.Tutorial
         
         private int totalVestigeDropAmount;
         private Transform instructionTarget;
-        private Camera mainCamera;
+        [SerializeField] private Camera mainCamera;
 
         private void Awake()
         {
-            mainCamera ??= Camera.main;
             CombatActions.OnResourceCollectorInitialized += OnResourceCollectorInitialized;
         }
 
@@ -32,14 +31,14 @@ namespace Dark.Scripts.Tutorial
             CombatActions.OnDropResource += OnDropResource;
         }
 
-        private void OnDropResource(EnemyEntity enemy)
+        private void OnDropResource(EnemyEntity enemy, bool hasVestige)
         {
-            totalVestigeDropAmount += enemy.Dark;
+            if (hasVestige)
+                totalVestigeDropAmount += enemy.Dark;
             if (totalVestigeDropAmount >= amountToShowInstruction)
             {
                 CombatActions.OnDropResource -= OnDropResource;
                 objInstruction.SetActive(true);
-                
                 CombatActions.OnResourceCollectorDamaged += OnCollectEntityDamaged;
             }
         }
@@ -62,6 +61,11 @@ namespace Dark.Scripts.Tutorial
             if (!instructionTarget) return;
             if (!mainCamera) return;
             objInstruction.transform.position = mainCamera.WorldToScreenPoint(instructionTarget.position);
+            actionUpdateFocus?.Invoke(
+                objInstruction.transform.localPosition,
+                new Vector2(0.03f, 0.05f),
+                1.5f,
+                true, true);
         }
     }
 }

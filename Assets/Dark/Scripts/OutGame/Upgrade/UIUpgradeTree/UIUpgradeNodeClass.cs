@@ -44,8 +44,8 @@ namespace Dark.Scripts.OutGame.Upgrade
             hoverField.onPointerClick = () =>
             {
                 UIUpgradeNodeInfoPreview.Instance.Shake();
-                sfxUnlockFailure?.Play();
                 if (!canSpawnVfx) return;
+                sfxUnlockSuccess?.Play();
                 StartCoroutine(IECooldownClick(cooldownClickSpawnVfx));
                 spawnAnimation.SpawnLogic.DoSpawn();
             };

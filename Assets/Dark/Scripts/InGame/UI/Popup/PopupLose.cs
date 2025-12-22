@@ -1,4 +1,5 @@
 using System;
+using Dark.Scripts.Analytics;
 using Dark.Scripts.AudioV2;
 using Dark.Scripts.CoreUI;
 using Dark.Scripts.SceneNavigation;
@@ -50,7 +51,7 @@ namespace InGame.UI
             delayShowPopup = 0f;
             endingLevel = TowerDestroyedAnim.Instance;
             if (endingLevel != null) delayShowPopup = endingLevel.Play();
-            
+            AudioManagerV2.Instance.FadeVolumeMusic(0.08f, 2f);
             ui.DoOpenFadeIn().SetDelay(delayShowPopup).OnComplete(() =>
             {
                 onShowPopup?.Invoke();
@@ -85,6 +86,8 @@ namespace InGame.UI
                 {
                     LevelManager.Instance.LoadLevel(PlayerDataManager.Instance.Data.level + 1);
                 });
+                
+                LogManager.Log(LogConst.EventLogStartLevel, $"level_{PlayerDataManager.Instance.Data.level + 1}", "from popup lose");
             });
         }
 

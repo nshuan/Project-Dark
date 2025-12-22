@@ -1,5 +1,6 @@
 using System;
 using Core;
+using Dark.Scripts.Tutorial;
 using Data;
 using Economic;
 using InGame.CharacterClass;
@@ -11,6 +12,8 @@ namespace Dark.Scripts.OutGame.SaveSlot
     {
         #region Data
 
+        private const string TotalDataCreatedKey = "totalDataSlotsCreated";
+        
         private readonly string[] SlotDataKeys = new[]
         {
             "playerDataSlot0",
@@ -38,6 +41,17 @@ namespace Dark.Scripts.OutGame.SaveSlot
             if (index < 0 || index >= SlotDataKeys.Length) return;
             PlayerDataManager.Instance.ClearData(SlotDataKeys[index]);
             UpgradeManager.Instance.ClearData(UpgradeManager.GetDataKey(SlotDataKeys[index]));
+            TutorialManager.Instance.ClearData(SlotDataKeys[index]);
+        }
+        
+        public int GetTotalDataCreated()
+        {
+            return DataHandler.Load<int>(TotalDataCreatedKey, 0);
+        }
+
+        public void SaveTotalDataCreated(int count)
+        {
+            DataHandler.Save(TotalDataCreatedKey, count);
         }
 
         #endregion

@@ -4,6 +4,9 @@ namespace Economic.InGame
 {
     public class FloatingEffect : MonoBehaviour
     {
+        [Header("General Settings")]
+        [SerializeField] private bool ignoreTimeScale = false;
+        
         [Header("Floating Settings")]
         [SerializeField] private float floatSpeed = 1f;
         [SerializeField] private float floatAmplitude = 0.5f;
@@ -31,7 +34,10 @@ namespace Economic.InGame
         private void Update()
         {
             if (_isPaused) return;
-            _time += Time.deltaTime;
+            if (ignoreTimeScale)
+                _time += Time.unscaledDeltaTime;
+            else
+                _time += Time.deltaTime;
             
             // Calculate floating position using sine wave
             float floatingValue = Mathf.Sin(_time * floatSpeed) * floatAmplitude;
@@ -41,7 +47,10 @@ namespace Economic.InGame
             // Apply rotation if enabled
             if (enableRotation)
             {
-                transform.Rotate(rotationSpeed * Time.deltaTime);
+                if (ignoreTimeScale)
+                    transform.Rotate(rotationSpeed * Time.unscaledDeltaTime);
+                else
+                    transform.Rotate(rotationSpeed * Time.deltaTime);
             }
         }
 

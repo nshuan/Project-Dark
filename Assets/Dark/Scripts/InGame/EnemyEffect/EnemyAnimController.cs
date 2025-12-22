@@ -12,6 +12,11 @@ namespace InGame.EnemyEffect
             spritesAnim.isDefaultRun = defaultRun;
         }
 
+        public float PlayCustomAnim(EnemySpritesAnimationInfo anim)
+        {
+            return spritesAnim.PlayCustomAnim(anim);
+        }
+
         public float PlaySpawn()
         {
             return spritesAnim.PlaySpawn();
@@ -40,6 +45,16 @@ namespace InGame.EnemyEffect
         public float PlayDie()
         {
             return spritesAnim.PlayDie();   
+        }
+
+        public void Pause()
+        {
+            spritesAnim.Pause();
+        }
+
+        public void Resume()
+        {
+            spritesAnim.Resume();
         }
     }
 }

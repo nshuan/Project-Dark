@@ -1,9 +1,6 @@
-using System;
 using Dark.Scripts.Common;
 using Dark.Scripts.Common.UIWarning;
 using Dark.Scripts.OutGame.Home;
-using Dark.Scripts.SceneNavigation;
-using Dark.Scripts.Utils;
 using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
