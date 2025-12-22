@@ -41,7 +41,11 @@ namespace Economic.InGame.DropItems
 
         public void CollectAll(Transform target)
         {
-            if (listItemToCollect.Count == 0) return;
+            if (listItemToCollect.Count == 0)
+            {
+                CombatActions.OnCollectAllResourceDrop?.Invoke(0, 0f);
+                return;
+            }
             
             var delay = 0f;
             var maxDelay = 0f;
@@ -72,6 +76,8 @@ namespace Economic.InGame.DropItems
 
                 index += 1;
             }
+            
+            CombatActions.OnCollectAllResourceDrop?.Invoke(listItemToCollect.Count, maxDelay + 0.2f);
             
             this.DelayCall(minDelay + collectDuration, () =>
             {

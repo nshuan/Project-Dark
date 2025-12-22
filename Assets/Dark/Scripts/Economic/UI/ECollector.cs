@@ -1,5 +1,4 @@
-using System;
-using Core;
+using Data;
 using Economic.InGame;
 using InGame;
 using Economic.InGame.DropItems;
@@ -11,6 +10,9 @@ namespace Economic.UI
     public class ECollector : MonoBehaviour
     {
         private PlayerCharacter player;
+        
+        private const int EnsureVestige = 10;
+        private int droppedEnsureVestige;
         
         private void Awake()
         {
@@ -35,6 +37,7 @@ namespace Economic.UI
         private void OnLevelLoaded(LevelConfig levelConfig)
         {
             player = LevelManager.Instance.Player;
+            droppedEnsureVestige = PlayerDataManager.Instance.Data.passedDay == 1 ? 0 : EnsureVestige;
             CombatActions.OnDropResource += OnDropResource;
         }
         
@@ -48,9 +51,17 @@ namespace Economic.UI
                 WealthManager.Instance.AddExp(enemy.Exp);
                 UIKillCollectedPool.Instance.ShowCollected(WealthType.Exp, enemy.Exp, player.transform.position);
             }
+
+            if (TryDropFirstDayVestige(out var dropAmount))
+            {
+                EItemDropManager.Instance.Drop(WealthType.Vestige, 1, dropAmount, enemy.transform.position);
+            }
+            else
+            {
+                if (hasVestige)
+                    EItemDropManager.Instance.Drop(WealthType.Vestige, enemy.DarkUnitValue, enemy.Dark, enemy.transform.position);
+            }
             
-            if (hasVestige)
-                EItemDropManager.Instance.Drop(WealthType.Vestige, enemy.DarkUnitValue, enemy.Dark, enemy.transform.position);
             if (enemy.BossPoint > 0)
                 EItemDropManager.Instance.DropOne(WealthType.Sigils, enemy.BossPoint, enemy.transform.position);
         }
@@ -59,7 +70,28 @@ namespace Economic.UI
         {
             EItemDropManager.Instance.CollectAll(collector.transform);
         }
+        
+        /// <summary>
+        /// If this is first play in run, ensure that 10 vestige are dropped
+        /// </summary>
+        /// <returns></returns>
+        private bool TryDropFirstDayVestige(out int dropAmount)
+        {
+            if (droppedEnsureVestige >= EnsureVestige)
+            {
+                dropAmount = 0;
+                return false;
+            }
 
+            dropAmount = RandomUtil.Range(0, 5);
+            if (dropAmount > EnsureVestige - droppedEnsureVestige) dropAmount = EnsureVestige - droppedEnsureVestige;
+            droppedEnsureVestige += dropAmount;
+            if (dropAmount > 0)
+                return true;
+
+            return false;
+        }
+        
         // private void OnWaveEnded(int wave, WaveEndReason reason)
         // {
         //     EItemDropManager.Instance.CollectAll(player.transform);

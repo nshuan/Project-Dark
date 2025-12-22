@@ -1,4 +1,6 @@
 using System;
+using Dark.Scripts.Settings;
+using Dark.Scripts.Tutorial;
 using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -119,7 +121,7 @@ namespace InGame
                 {
                     tower.Hover(false);
                 }
-                cursor.SetMoveCursor(false);
+                cursor.SetMoveCursor(false, selectingTower);
                 PlaySlowMotion(false);
             }
         }
@@ -166,7 +168,7 @@ namespace InGame
                             {
                                 tower.Hover(true, false);
                             }
-                            cursor.SetMoveCursor(true);
+                            cursor.SetMoveCursor(true, selectingTower);
                             CombatActions.OnTowerHoverIn?.Invoke(tower);
                             break;
                         }
@@ -179,10 +181,45 @@ namespace InGame
                     {
                         hovering = false;
                         Towers[selectingTower].Hover(false);
-                        cursor.SetMoveCursor(false);
+                        cursor.SetMoveCursor(false, selectingTower);
                         PlaySlowMotion(false);
                         CombatActions.OnTowerHoverOut?.Invoke(Towers[selectingTower]);
                         selectingTower = -1;
+                    }
+                }
+
+                // Hot keys
+                if (CanMove)
+                {
+                    if (Input.GetKeyDown(GameSettings.KeyMoveTower0) && CurrentTowerIndex != 0)
+                    {
+                        selectingTower = 0;
+                        OnMouseClick(false);
+                        if (UITutorialStepMoveTowers.ShouldShowHotKeyInstruction)
+                        {
+                            UITutorialStepMoveTowers.HideHotKeyInstruction();
+                            cursor.SetMoveCursor(false, selectingTower);
+                        }
+                    }
+                    else if (Input.GetKeyDown(GameSettings.KeyMoveTower1) && CurrentTowerIndex != 1)
+                    {
+                        selectingTower = 1;
+                        OnMouseClick(false);
+                        if (UITutorialStepMoveTowers.ShouldShowHotKeyInstruction)
+                        {
+                            UITutorialStepMoveTowers.HideHotKeyInstruction();
+                            cursor.SetMoveCursor(false, selectingTower);
+                        }
+                    }
+                    else if (Input.GetKeyDown(GameSettings.KeyMoveTower2) && CurrentTowerIndex != 2)
+                    {
+                        selectingTower = 2;
+                        OnMouseClick(false);
+                        if (UITutorialStepMoveTowers.ShouldShowHotKeyInstruction)
+                        {
+                            UITutorialStepMoveTowers.HideHotKeyInstruction();
+                            cursor.SetMoveCursor(false, selectingTower);
+                        }
                     }
                 }
             }
@@ -214,8 +251,8 @@ namespace InGame
         private float GetCooldown(MoveTowersConfig config)
         {
             var cooldown = config.cooldown;
-            if (config.moveLogic is MoveDashToTower) cooldown = LevelUtility.GetDashCooldown();
-            else if (config.moveLogic is MoveFlashToTower) cooldown = LevelUtility.GetFlashCooldown();
+            if (config.moveLogic is MoveDashToTower or MoveDashFuseToTower) cooldown = LevelUtility.GetDashCooldown();
+            else if (config.moveLogic is MoveFlashToTower or MoveFlashFuseToTower) cooldown = LevelUtility.GetFlashCooldown();
             else if (config.moveLogic is MoveTeleToTower) cooldown = LevelUtility.GetTeleCooldown();
             return cooldown;
         }
@@ -223,16 +260,16 @@ namespace InGame
         private float GetSize(MoveTowersConfig config)
         {
             var size = config.size;
-            if (config.moveLogic is MoveDashToTower) size = LevelUtility.GetDashSize();
-            else if (config.moveLogic is MoveFlashToTower) size = LevelUtility.GetFlashSize();
+            if (config.moveLogic is MoveDashToTower or MoveDashFuseToTower) size = LevelUtility.GetDashSize();
+            else if (config.moveLogic is MoveFlashToTower or MoveFlashFuseToTower) size = LevelUtility.GetFlashSize();
             return size;
         }
 
         private int GetDamage(MoveTowersConfig config)
         {
             var damage = config.damage;
-            if (config.moveLogic is MoveDashToTower) damage = LevelUtility.GetDashDamage();
-            else if (config.moveLogic is MoveFlashToTower) damage = LevelUtility.GetFlashDamage();
+            if (config.moveLogic is MoveDashToTower or MoveDashFuseToTower) damage = LevelUtility.GetDashDamage();
+            else if (config.moveLogic is MoveFlashToTower or MoveFlashFuseToTower) damage = LevelUtility.GetFlashDamage();
             return damage;
         }
 

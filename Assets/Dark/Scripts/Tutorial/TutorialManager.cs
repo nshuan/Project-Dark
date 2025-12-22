@@ -7,7 +7,7 @@ namespace Dark.Scripts.Tutorial
     public class TutorialManager : Singleton<TutorialManager>
     {
         private const string KeyTutorial = "tutorial";
-        public static string KeyTutorialSlot = KeyTutorial + "_" + PlayerDataManager.DataKey;
+        public static string KeyTutorialSlot => KeyTutorial + "_" + PlayerDataManager.DataKey;
         
         public int GetCurrentTutorialStep()
         {
