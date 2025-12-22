@@ -189,9 +189,10 @@ namespace Economic.InGame
             sfxCollect.Play();
         }
 
-        private void OnCollectAllResources(int amount, float duration)
+        private void OnCollectAllResources(bool isAutoCollect, int amount, float duration)
         {
             CombatActions.OnCollectAllResourceDrop -= OnCollectAllResources;
+            if (isAutoCollect) return;
             TeleportToOtherPosition(amount <= 0 ? 0f : duration);
         }
         

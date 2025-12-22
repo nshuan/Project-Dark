@@ -417,6 +417,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7247235443383737815}
   - component: {fileID: 3062036552176871221}
+  - component: {fileID: 5623576414334588024}
   - component: {fileID: 6411603087483007222}
   m_Layer: 7
   m_Name: ItemCollector
@@ -475,6 +476,20 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 8
+--- !u!114 &5623576414334588024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2910906341739593616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 016ad5fd05cc4c5fa2539218dbdeb286, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visualTarget: {fileID: 7247235443383737815}
+  cooldown: 5
 --- !u!114 &6411603087483007222
 MonoBehaviour:
   m_ObjectHideFlags: 0
