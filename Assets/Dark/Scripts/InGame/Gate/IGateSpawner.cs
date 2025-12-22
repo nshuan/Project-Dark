@@ -14,6 +14,7 @@ namespace InGame
     public class GateSpawnSingle : IGateSpawner
     {
         [Range(1f, 2f)] public float radius = 1.5f;
+        public float randomSpanAngle = 90f;
         
         public (EnemyEntity, TowerEntity)[] Spawn(GateEntity gate, int enemyId, EnemyEntity enemyPrefab, TowerEntity[] targetTower)
         {
@@ -23,7 +24,7 @@ namespace InGame
             target = targetTower[RandomUtil.Range(0, targetTower.Length)];
             enemy.transform.position =
                 gate.transform.position + 
-                (Quaternion.Euler(0f, 0f, RandomUtil.Range(-45f, 45f)) * (target.transform.position - gate.transform.position).normalized)
+                (Quaternion.Euler(0f, 0f, RandomUtil.Range(-randomSpanAngle / 2, randomSpanAngle / 2)) * (target.transform.position - gate.transform.position).normalized)
                 * radius;
             
             return new [] { (enemy, target) };
@@ -34,6 +35,7 @@ namespace InGame
     public class GateSpawnTriangle : IGateSpawner
     {
         [Range(1f, 2f)] public float radius = 1.5f;
+        public float randomSpanAngle = 90f;
         
         public (EnemyEntity, TowerEntity)[] Spawn(GateEntity gate, int enemyId, EnemyEntity enemyPrefab, TowerEntity[] targetTower)
         {
@@ -44,21 +46,21 @@ namespace InGame
             targets[0] = targetTower[RandomUtil.Range(0, targetTower.Length)];
             enemies[0].transform.position =
                 gate.transform.position + 
-                (Quaternion.Euler(0f, 0f, RandomUtil.Range(-45f, 45f)) * (targets[0].transform.position - gate.transform.position).normalized)
+                (Quaternion.Euler(0f, 0f, RandomUtil.Range(-randomSpanAngle / 2, randomSpanAngle / 2)) * (targets[0].transform.position - gate.transform.position).normalized)
                 * radius;
 
             enemies[1] = EnemyPool.Instance.Get(enemyPrefab, enemyId, null, false);
             targets[1] = targetTower[RandomUtil.Range(0, targetTower.Length)];
             enemies[1].transform.position =
                 gate.transform.position + 
-                (Quaternion.Euler(0f, 0f, RandomUtil.Range(-45f, 45f)) * (targets[1].transform.position - gate.transform.position).normalized)
+                (Quaternion.Euler(0f, 0f, RandomUtil.Range(-randomSpanAngle / 2, randomSpanAngle / 2)) * (targets[1].transform.position - gate.transform.position).normalized)
                 * radius;
             
             enemies[2] = EnemyPool.Instance.Get(enemyPrefab, enemyId, null, false);
             targets[2] = targetTower[RandomUtil.Range(0, targetTower.Length)];
             enemies[2].transform.position =
                 gate.transform.position + 
-                (Quaternion.Euler(0f, 0f, RandomUtil.Range(-45f, 45f)) * (targets[2].transform.position - gate.transform.position).normalized)
+                (Quaternion.Euler(0f, 0f, RandomUtil.Range(-randomSpanAngle / 2, randomSpanAngle / 2)) * (targets[2].transform.position - gate.transform.position).normalized)
                 * radius;
             
             return new []
@@ -75,6 +77,7 @@ namespace InGame
     {
         [Range(1, 10)] public int amount = 1;
         [Range(1f, 2f)] public float maxRadius = 1.8f;
+        public float randomSpanAngle = 120f;
         
         public (EnemyEntity, TowerEntity)[] Spawn(GateEntity gate, int enemyId, EnemyEntity enemyPrefab, TowerEntity[] targetTower)
         {
@@ -88,7 +91,7 @@ namespace InGame
                 targets[i] = targetTower[RandomUtil.Range(0, targetTower.Length)];
                 enemies[i].transform.position =
                     gate.transform.position +
-                    (Quaternion.Euler(0f, 0f, RandomUtil.Range(-60f, 60f)) *
+                    (Quaternion.Euler(0f, 0f, RandomUtil.Range(-randomSpanAngle / 2, randomSpanAngle / 2)) *
                      (targets[i].transform.position - gate.transform.position).normalized)
                     * RandomUtil.Range(maxRadius - 0.3f, maxRadius);
                 result[i] = (enemies[i], targets[i]);
