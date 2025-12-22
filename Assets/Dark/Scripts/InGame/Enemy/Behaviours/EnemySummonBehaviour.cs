@@ -1,34 +1,12 @@
-using System;
 using System.Collections.Generic;
-using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace InGame
 {
-    [CreateAssetMenu(menuName = "InGame/Enemy/Enemy Behaviour", fileName = "EnemyBehaviour")]
-    public class EnemyBehaviour : ScriptableObject
+    [CreateAssetMenu(menuName = "InGame/Enemy/Enemy Summon Behaviour", fileName = "EnemySummonBehaviour")]
+    public class EnemySummonBehaviour : EnemyBehaviour
     {
-        public int enemyId;
-        public bool elite;
-        public EnemyEntity enemyPrefab;
-        public EnemySpawnBehaviour spawnBehaviour;
-        public EnemyMoveBehaviour moveBehaviour;
-        public EnemyAttackBehaviour attackBehaviour;
-        public float attackRange; // Distance to start attacking
-        public float attackSpeed; // Hit per second
-        public int hp;
-        public int dmg; // Base damage
-        public float moveSpeed;
-        public float staggerResist; // Reduce projectile stagger
-        public float staggerVelocity = 1.5f; // Hit back X on 1s
-        public float invisibleDuration;
-        public int exp;
-        public int dark;
-        [Range(0f, 1f)] public float darkRatio;
-        public int bossPoint;
-
         [Space] [Header("Summoner exclusive")] 
         public string summonIdsString;
         public string summonAmountString;
@@ -39,23 +17,6 @@ namespace InGame
         public List<int> listSummonIdsOnSpawned;
         public List<int> listSummonAmountOnSpawned;
         
-        public void Init(EnemyEntity enemy)
-        {
-            spawnBehaviour.Init(enemy);
-        }
-        
-        public void Spawn(EnemyEntity enemy, float delayComplete, Action completeCallback)
-        {
-            DOTween.Kill(enemy);
-            if (spawnBehaviour)
-            {
-                enemy.gameObject.SetActive(true);
-                DOTween.Sequence().Append(spawnBehaviour.DoSpawn(enemy))
-                    .AppendInterval(delayComplete)
-                    .OnComplete(() => completeCallback?.Invoke()).SetTarget(enemy);
-            }
-        }
-
         [Button]
         public void Validate()
         {
@@ -104,13 +65,5 @@ namespace InGame
         {
             Validate();
         }
-    }
-
-    public enum EnemyState
-    {
-        Spawn,
-        Move,
-        Invisible,
-        Freeze
     }
 }

@@ -17,8 +17,7 @@ namespace InGame
         [SerializeField] private EnemyBoidObstacle obstacle;
         
         [ReadOnly] public TowerEntity[] target;
-        private float WaveHpMultiplier { get; set; }
-        private float WaveDmgMultiplier { get; set; }
+        private WaveStatsScale StatsScale { get; set; }
         private float LevelExpRatio { get; set; }
         private float LevelDarkRatio { get; set; }
         private int LevelDarkUnitValue { get; set; }
@@ -92,12 +91,11 @@ namespace InGame
             obstacle.gameObject.SetActive(false);
         }
         
-        public void Initialize(GateConfig cfg, TowerEntity[] targetBase, float waveHpMultiplier, float waveDmgMultiplier, float levelExpRatio, float levelDarkRatio, int levelDarkUnitValue)
+        public void Initialize(GateConfig cfg, TowerEntity[] targetBase, WaveStatsScale statsScale, float levelExpRatio, float levelDarkRatio, int levelDarkUnitValue)
         {
             config = cfg;
             target = targetBase;
-            WaveHpMultiplier = waveHpMultiplier;
-            WaveDmgMultiplier = waveDmgMultiplier;
+            StatsScale = statsScale;
             LevelExpRatio = levelExpRatio;
             LevelDarkRatio = levelDarkRatio;
             LevelDarkUnitValue = levelDarkUnitValue;
@@ -147,7 +145,9 @@ namespace InGame
                     foreach (var enemy in enemies)
                     {
                         enemy.Item1.IsBoss = true;
+                        LevelManager.Instance.LevelBossName = config.spawnType.displayName;
                     }
+                    
                 }
                 else
                 {
@@ -201,7 +201,7 @@ namespace InGame
                 for (var i = 0; i < enemies.Length; i++)
                 {
                     var enemy = enemies[i];
-                    enemy.Item1.Init(config.spawnType, enemy.Item2, WaveHpMultiplier, WaveDmgMultiplier, LevelExpRatio, LevelDarkRatio, LevelDarkUnitValue);
+                    enemy.Item1.Init(config.spawnType, enemy.Item2, StatsScale, LevelExpRatio, LevelDarkRatio, LevelDarkUnitValue);
                     enemy.Item1.Activate();
                     enemy.Item1.UniqueId = EnemyManager.Instance.CurrentEnemyIndex;
                     AliveEnemyCount += 1;

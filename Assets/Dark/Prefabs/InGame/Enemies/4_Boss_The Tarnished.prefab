@@ -139,6 +139,7 @@ MonoBehaviour:
   collider2d: {fileID: 2405272052621527813}
   burnVfxParent: {fileID: 4667279865502068525}
   body: {fileID: 536348229780131438}
+  config: {fileID: 0}
   sfxHit: {fileID: 5303075705981205121}
   boidAgent: {fileID: 7383520355259516268}
   uiHealth: {fileID: 2775015567938810026}
@@ -146,7 +147,46 @@ MonoBehaviour:
   shadow: {fileID: 3947532968561510528}
   visual: {fileID: 2164173735719195637}
   materialNormal: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  materialElite: {fileID: 2100000, guid: f311ef86e4e83944d8d8b830fc9ff5c2, type: 2}
+  materialElite: {fileID: 2100000, guid: 96d557139b52b064fa4bbb216521a74e, type: 2}
+  tarnishedConfig: {fileID: 11400000, guid: 16ec82c6baebbef4ca3e3d58ee828044, type: 2}
+  jumpUpAnim:
+    frames:
+    - {fileID: -1440868933, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    - {fileID: 2125291822, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    - {fileID: -340634359, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    - {fileID: 1082200372, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    - {fileID: 1877286372, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    - {fileID: -556603214, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    - {fileID: 1707570600, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    - {fileID: 409576332, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    - {fileID: -657829643, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    - {fileID: -89544242, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    - {fileID: -53267678, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    - {fileID: 774988298, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    - {fileID: -2138448994, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    - {fileID: 180032669, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    - {fileID: 2061185545, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    - {fileID: -1831584084, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    isLoop: 0
+    frameRate: 0.1
+    scale: 1
+    autoExit: 0
+  jumpDownAnim:
+    frames:
+    - {fileID: 2029893738, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    - {fileID: -39562633, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    - {fileID: -502109291, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    - {fileID: -1462848253, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    - {fileID: 863108899, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    - {fileID: -500079521, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    - {fileID: 811317430, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    - {fileID: -1674942794, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    - {fileID: 1195043877, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    - {fileID: 1072016846, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
+    isLoop: 0
+    frameRate: 0.1
+    scale: 1
+    autoExit: 1
 --- !u!114 &7383520355259516268
 MonoBehaviour:
   m_ObjectHideFlags: 0

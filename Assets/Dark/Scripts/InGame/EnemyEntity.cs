@@ -24,7 +24,7 @@ namespace InGame
 
         #region Stats
         public int MaxHealth { get; set; }
-        private int CurrentHealth { get; set; }
+        protected int CurrentHealth { get; set; }
         private int CurrentDamage { get; set; }
         public int Exp { get; private set; }
         public int Dark { get; private set; }
@@ -36,8 +36,7 @@ namespace InGame
 
         #region Wave and Level config
 
-        public float WaveHpMultiplier { get; private set; }
-        public float WaveDmgMultiplier { get; private set; }
+        public WaveStatsScale StatsScale { get; set; }
         public float LevelExpRatio { get; private set; }
         public float LevelDarkRatio { get; private set; }
         public int LevelDarkUnitValue { get; private set; }
@@ -65,7 +64,7 @@ namespace InGame
         private bool inAttackRange;
         private Coroutine attackCoroutine;
 
-        private Vector2 attackPosition;
+        protected Vector2 attackPosition;
         
         private float invisibleTimer;
         private float freezeDuration;
@@ -79,13 +78,12 @@ namespace InGame
             boundaryManager = MapBoundaryManager.Instance;
         }
 
-        public void Init(EnemyBehaviour eConfig, TowerEntity target, float hpMultiplier, float dmgMultiplier, float levelExpRatio, float levelDarkRatio, int levelDarkUnitValue)
+        public virtual void Init(EnemyBehaviour eConfig, TowerEntity target, WaveStatsScale statsScale, float levelExpRatio, float levelDarkRatio, int levelDarkUnitValue)
         {
             config = eConfig;
             
             // Set wave and level configs
-            WaveHpMultiplier = hpMultiplier;
-            WaveDmgMultiplier = dmgMultiplier;
+            StatsScale = statsScale;
             LevelExpRatio = levelExpRatio;
             LevelDarkRatio = levelDarkRatio;
             LevelDarkUnitValue = levelDarkUnitValue;
@@ -104,9 +102,9 @@ namespace InGame
             animController.transform.localScale =
                 new Vector3(Mathf.Sign(attackPosition.x - myPos.x), 1f, 1f);
             
-            MaxHealth = (int)(config.hp * hpMultiplier);
+            MaxHealth = (int)(config.hp * StatsScale.hpScale);
             CurrentHealth = MaxHealth;
-            CurrentDamage = Mathf.RoundToInt(config.dmg * dmgMultiplier);
+            CurrentDamage = Mathf.RoundToInt(config.dmg * StatsScale.dmgScale);
             Exp = Mathf.RoundToInt(config.exp * levelExpRatio);
             Dark = Mathf.RoundToInt(config.dark * levelDarkRatio);
             DarkRatio = LevelUtility.GetDropRate(config.darkRatio);
@@ -196,7 +194,7 @@ namespace InGame
             }
             else
             {
-                config.moveBehaviour.MoveNonAlloc(transform, attackPosition, directionAddition, config.attackRange, config.moveSpeed, ref direction);
+                config.moveBehaviour.MoveNonAlloc(transform, attackPosition, directionAddition, config.attackRange, config.moveSpeed * StatsScale.speScale, ref direction);
                 animController.SetDefaultRun(true);
             }
         }
@@ -240,7 +238,7 @@ namespace InGame
         public float HitDirectionX { get; set; }
         public float HitDirectionY { get; set; }
 
-        public void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
+        public virtual void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
         {
             if (IsDestroyed) return;
             if (State == EnemyState.Invisible) return;
@@ -362,6 +360,7 @@ namespace InGame
 
             while (totalBurn > 0)
             {
+                if (State == EnemyState.Freeze) yield return null;
                 yield return new WaitForSeconds(delayEachBurn);
                 HitDirectionX = 0f;
                 HitDirectionY = 0f;
@@ -389,7 +388,7 @@ namespace InGame
         [SerializeField] private Material materialNormal;
         [SerializeField] private Material materialElite;
         
-        public void ActivateELite(bool active)
+        public virtual void ActivateELite(bool active)
         {
             if (active)
             {

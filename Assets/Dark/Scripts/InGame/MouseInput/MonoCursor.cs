@@ -1,5 +1,5 @@
-using System;
 using Coffee.UIExtensions;
+using Dark.Scripts.Tutorial;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -25,7 +25,8 @@ namespace InGame
 
         [Header("Move cursor")] 
         public CanvasGroup contentMove;
-        
+        [SerializeField] private TextMeshProUGUI txtMoveInstruction;
+
         public void UpdateCooldown(bool active, float value)
         {
             groupCooldown.SetActive(active);
@@ -95,17 +96,25 @@ namespace InGame
                 });
         }
 
-        public void SetMoveCursor(bool active)
+        public void SetMoveCursor(bool active, int towerId)
         {
             if (active)
             {
                 content.alpha = 0f;
                 contentMove.alpha = 1f;
+                
+                if (UITutorialStepMoveTowers.ShouldShowHotKeyInstruction)
+                {
+                    txtMoveInstruction.gameObject.SetActive(true);
+                    txtMoveInstruction.SetText($"Press  {towerId + 1}\nto move");
+                }
             }
             else
             {
                 content.alpha = 1f;
                 contentMove.alpha = 0f;
+                
+                txtMoveInstruction.gameObject.SetActive(false);
             }
         }
     }
