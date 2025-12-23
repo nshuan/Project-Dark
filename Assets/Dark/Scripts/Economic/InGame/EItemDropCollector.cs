@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Dark.Scripts.AudioV2;
+using Dark.Scripts.ForDemo;
 using DG.Tweening;
 using InGame;
 using UnityEngine;
@@ -41,6 +42,12 @@ namespace Economic.InGame
 
         private void Awake()
         {
+            if (DemoConfig.CollectLogicType == 2)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+            
             visual.gameObject.SetActive(false);
             shadow.gameObject.SetActive(false);
             visualEchoes.gameObject.SetActive(false);
