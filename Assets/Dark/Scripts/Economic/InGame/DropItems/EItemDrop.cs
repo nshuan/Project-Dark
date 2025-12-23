@@ -93,7 +93,7 @@ namespace Economic.InGame.DropItems
         }
 
         private Vector2 nextPosition;
-        private void Update()
+        private void FixedUpdate()
         {
             if (!isCollecting) return;
 
