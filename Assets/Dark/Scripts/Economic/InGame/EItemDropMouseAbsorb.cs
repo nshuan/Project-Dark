@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Dark.Scripts.ForDemo;
 using Economic.InGame.DropItems;
+using InGame;
 using UnityEngine;
 
 namespace Economic.InGame
@@ -63,6 +64,11 @@ namespace Economic.InGame
 
         private void LateUpdate()
         {
+            if (!_cam)
+            {
+                if (DemoConfig.CollectLogicType == 2)
+                    _cam = VisualEffectHelper.Instance.DefaultCamera;
+            }
             if (!_cam) return;
 
             Vector3 mouseWorld = _cam.ScreenToWorldPoint(Input.mousePosition);
