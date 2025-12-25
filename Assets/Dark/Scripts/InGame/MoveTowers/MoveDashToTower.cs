@@ -84,7 +84,7 @@ namespace InGame
                     }
                 }
                 
-                yield return null;
+                yield return new WaitForFixedUpdate();
             }
 
             currentHitHistoryIndex = 0;

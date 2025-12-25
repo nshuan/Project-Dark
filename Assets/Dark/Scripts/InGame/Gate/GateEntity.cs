@@ -40,6 +40,7 @@ namespace InGame
         [SerializeField] private float vfxAppearDuration = 0.5f; // duration of vfxOpen
         [SerializeField] private float vfxCloseDuration = 6f; // duration of vfxClose
         [SerializeField] private float visualRadius = 2f;
+        [SerializeField] private bool spawnOrb;
 
         private ParticleSystem.MainModule vfxIdle;
         
@@ -135,11 +136,11 @@ namespace InGame
             visualCoroutine = StartCoroutine(IEVisual());
         }
         
-        private IEnumerator IESpawn()
+        protected virtual IEnumerator IESpawn()
         {
             while (TotalSpawnTurn == -1 || currentSpawnTurn < TotalSpawnTurn)
             {
-                var enemies = config.spawnLogic.Spawn(transform.position, config.spawnType.enemyId, config.spawnType.enemyPrefab, target);
+                var enemies = config.spawnLogic.Spawn(this, config.spawnType.enemyId, config.spawnType.enemyPrefab, target);
                 if (config.isBossGate)
                 {
                     foreach (var enemy in enemies)
@@ -158,7 +159,7 @@ namespace InGame
                 }
                 
                 // Không phải boss thì spawn orb
-                if (!config.isBossGate)
+                if (!config.isBossGate && spawnOrb)
                 {
                     var orbs = new Transform[enemies.Length];
 

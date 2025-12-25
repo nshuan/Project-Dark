@@ -151,7 +151,7 @@ namespace InGame
             // }
         }
 
-        protected virtual void Update()
+        protected virtual void FixedUpdate()
         {
             if (!activated) return;
             if (!BlockAutoDestroyOutRange)
