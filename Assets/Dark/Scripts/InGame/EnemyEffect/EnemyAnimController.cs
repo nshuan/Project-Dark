@@ -37,9 +37,9 @@ namespace InGame.EnemyEffect
             enemyHitEffect.OnHit();
         }
 
-        public void PlayAttack()
+        public float PlayAttack()
         {
-            spritesAnim.PlayAttack();
+            return spritesAnim.PlayAttack();
         }
 
         public float PlayDie()

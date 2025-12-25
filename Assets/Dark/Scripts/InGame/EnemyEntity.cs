@@ -25,7 +25,7 @@ namespace InGame
         #region Stats
         public int MaxHealth { get; set; }
         protected int CurrentHealth { get; set; }
-        private int CurrentDamage { get; set; }
+        protected int CurrentDamage { get; set; }
         public int Exp { get; private set; }
         public int Dark { get; private set; }
         public int DarkUnitValue { get; private set; }
@@ -61,7 +61,7 @@ namespace InGame
         public EnemyAnimController animController;
         [SerializeField] protected GameObject shadow;
         
-        private bool inAttackRange;
+        protected bool inAttackRange;
         private Coroutine attackCoroutine;
 
         protected Vector2 attackPosition;
@@ -228,7 +228,7 @@ namespace InGame
             }
         }
 
-        private void Attack()
+        protected virtual void Attack()
         {
             if (TargetTower.IsDestroyed) return;
             animController.PlayAttack();

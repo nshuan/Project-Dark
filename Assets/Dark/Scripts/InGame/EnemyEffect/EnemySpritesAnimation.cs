@@ -78,13 +78,14 @@ namespace InGame.EnemyEffect
             timer = 0f;
         }
 
-        public void PlayAttack()
+        public float PlayAttack()
         {
             currentAnim = attackAnim;
             currentFrame = 0;
             spriteRenderer.transform.localScale = originalScale * currentAnim.scale;
             spriteRenderer.sprite = currentAnim.frames[0];
             timer = 0f;
+            return attackAnim.frames.Length * attackAnim.frameRate;
         }
         
         public void PlayHit()
