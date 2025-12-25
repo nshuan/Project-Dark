@@ -96,10 +96,9 @@ namespace InGame
             
             var myPos = transform.position;
             var targetPos = Target.position;
-            var directionFromTower = Quaternion.Euler(0f, 0f, RandomUtil.Range(-75f, 75f)) *
-                                       (Vector2)(myPos - targetPos).normalized;
-            attackPosition = directionFromTower * (0.9f * LevelUtility.GetRelativeRange(config.attackRange, directionFromTower))
-                              + targetPos;
+            attackPosition = ((Quaternion.Euler(0f, 0f, RandomUtil.Range(-75f, 75f)) *
+                               (Vector2)(myPos - targetPos).normalized) * (0.9f * config.attackRange)
+                              + targetPos);
             animController.transform.localScale =
                 new Vector3(Mathf.Sign(attackPosition.x - myPos.x), 1f, 1f);
             
@@ -186,7 +185,7 @@ namespace InGame
         
         private void MoveTo(Transform target)
         {
-            if (Vector3.Distance(transform.position, target.position) < LevelUtility.GetRelativeRange(config.attackRange, target.position - transform.position))
+            if (Vector3.Distance(transform.position, target.position) < config.attackRange)
             {
                 inAttackRange = true;
                 animController.SetDefaultRun(false);
