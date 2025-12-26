@@ -236,6 +236,7 @@ namespace InGame
                     
                     mouseInput?.ResetChargeVariable();
                     mouseInput?.OnMouseClick();
+                    mouseAutoAttack?.OnMouseClick();
                     return;
                 }
                 
@@ -244,6 +245,7 @@ namespace InGame
                 mouseAutoAttack?.OnHoldReleased();
                 mouseInput?.OnHoldReleased();
                 mouseInput?.OnMouseClick();
+                mouseAutoAttack?.OnMouseClick();
             }
         }
 

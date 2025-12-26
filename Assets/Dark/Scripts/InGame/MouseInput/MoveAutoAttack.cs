@@ -25,6 +25,9 @@ namespace InGame
         private LevelManager levelManager;
         private EnemyManager manager;
         private EnemyEntity nearestEnemy;
+        private EnemyEntity forceTargetEnemy;
+        private EnemyEntity hoveringEnemy;
+        private Collider2D[] mouseHoverEnemies;
         
         public MoveAutoAttack()
         {
@@ -38,6 +41,8 @@ namespace InGame
             cursorRect = cursor.GetComponent<RectTransform>();
             levelManager = LevelManager.Instance;
             manager = EnemyManager.Instance;
+
+            mouseHoverEnemies = new Collider2D[20];
         }
 
         public void Initialize(InputInGame manager, MoveChargeController chargeController)
@@ -49,11 +54,17 @@ namespace InGame
             Cooldown = LevelUtility.GetSkillCooldown(false);
             ActivateDuration = 1f;
         }
-        
+
         public virtual void OnMouseClick()
         {
+            forceTargetEnemy = hoveringEnemy;
+            hoveringEnemy?.SetHover(false);
+        }
+        
+        private void AutoAttack()
+        {
             if (!CanShoot) return;
-
+            
             var tempMousePos = new Vector2(worldMousePosition.x, worldMousePosition.y);
             var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(1f);
             var critRate = LevelUtility.GetCriticalRate();
@@ -66,12 +77,14 @@ namespace InGame
             var stagger = LevelUtility.GetBulletStagger();
             
             var delayShot = InputManager.PlayerVisual.PlayShoot(worldMousePosition);
+            var targetEnemy = nearestEnemy;
             InputManager.DelayCall(delayShot, () =>
             {
                 InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(skillRange);
                 
-                LevelUtility.CurrentSkill.Shoot(
+                LevelUtility.CurrentSkill.ShootToTarget(
                     LevelUtility.CurrentSkill.projectiles[PlayerProjectileType.Normal],
+                    targetEnemy,
                     InputManager.ProjectileSpawnPos.position,
                     LevelManager.Instance.CurrentTower.GetBaseCenter(),
                     tempMousePos,
@@ -142,8 +155,32 @@ namespace InGame
             {
                 InputManager.PlayerVisual.SetDirection(worldMousePosition);
                 if (nearestEnemy) nearestEnemy.SetAimed(false);
+                forceTargetEnemy?.SetAimed(false);
                 return;
             }
+            
+            // Check bấm vào enemy để force attack vào đó
+            var mouseOverCount = Physics2D.OverlapPointNonAlloc(worldMousePosition, mouseHoverEnemies, LayerMask.GetMask("Entity"));
+            if (mouseOverCount > 0)
+            {
+                hoveringEnemy?.SetHover(false);
+                hoveringEnemy = null;
+                for (var i = 0; i < mouseOverCount; i++)
+                {
+                    if (mouseHoverEnemies[i].TryGetComponent<EnemyEntity>(out var entity))
+                    {
+                        hoveringEnemy = entity;
+                        hoveringEnemy.SetHover(true);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                hoveringEnemy?.SetHover(false);
+                hoveringEnemy = null;
+            }
+                
 
             // Nếu auto target thì check enemy gần nhất rồi target vào
             var canAutoTarget = GetNearestEnemy();
@@ -166,7 +203,7 @@ namespace InGame
             
             cursor.UpdateCooldown(true, 1 - Mathf.Clamp(cdCounter / Cooldown, 0f, 1f));
             if (cdCounter <= 0)
-                OnMouseClick();
+                AutoAttack();
         }
 
         public void Deactivate()
@@ -186,6 +223,14 @@ namespace InGame
         
         private bool GetNearestEnemy()
         {
+            if (forceTargetEnemy && !forceTargetEnemy.IsDestroyed)
+            {
+                nearestEnemy?.SetAimed(false);
+                nearestEnemy = forceTargetEnemy;
+                nearestEnemy.SetAimed(true);
+                return nearestEnemy;
+            }
+            
             var nearestDistance = float.MaxValue;
             EnemyEntity tempNearestEnemy = null;
                  

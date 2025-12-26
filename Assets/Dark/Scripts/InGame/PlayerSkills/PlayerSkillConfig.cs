@@ -65,6 +65,44 @@ namespace InGame
                 activateActions,
                 hitActions);
         }
+        
+        public void ShootToTarget(
+            ProjectileEntity projectile,
+            EnemyEntity targetEnemy,
+            Vector2 spawnPos, 
+            Vector2 rangeCenter,
+            Vector2 target, 
+            int damagePerBullet, 
+            int bulletNumber,
+            float skillSize,
+            float skillRange,
+            int criticalDamagePerBullet,
+            float criticalRatePerBullet,
+            float stagger,
+            int maxHit,
+            bool isCharge,
+            List<IProjectileActivate> activateActions,
+            List<IProjectileHit> hitActions)
+        {
+            shootLogic.ShootWithTarget(
+                projectile,
+                targetEnemy,
+                spawnPos, 
+                rangeCenter,
+                target,
+                damagePerBullet,
+                criticalDamagePerBullet,
+                criticalRatePerBullet,
+                bulletNumber,
+                skillSize,
+                skillRange,
+                speedScale,
+                stagger,
+                maxHit,
+                isCharge,
+                activateActions,
+                hitActions);
+        }
     }
 
     public enum PlayerProjectileType

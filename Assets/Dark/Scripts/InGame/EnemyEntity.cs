@@ -62,6 +62,7 @@ namespace InGame
         public EnemyAnimController animController;
         [SerializeField] protected GameObject shadow;
         [SerializeField] protected GameObject aimPointer;
+        [SerializeField] protected GameObject hoverPointer;
         
         private bool inAttackRange;
         private Coroutine attackCoroutine;
@@ -414,6 +415,11 @@ namespace InGame
         public void SetAimed(bool aimed)
         {
             aimPointer.SetActive(aimed);
+        }
+
+        public void SetHover(bool hover)
+        {
+            hoverPointer.SetActive(hover);
         }
     }
 }
