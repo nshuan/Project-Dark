@@ -106,7 +106,7 @@ namespace InGame
             var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(
                 canChargeDame && dameChargeAdded > 0 ? 1 + dameChargeAdded : 1f);
             var critRate = LevelUtility.GetCriticalRate();
-            var bulletNum = LevelUtility.GetNumberOfBullets(bulletChargeAdded);
+            var bulletNum = LevelUtility.GetNumberOfBulletsCharge(bulletChargeAdded);
             var skillSize = LevelUtility.GetSkillSize(
                 canChargeSize && sizeChargeAdded > 0 ? 1 + sizeChargeAdded : 1f);
             var skillRange = LevelUtility.GetSkillRange(
@@ -226,7 +226,7 @@ namespace InGame
             var seq = DOTween.Sequence(this);
             seq.Append(cursor.transform.DOPunchScale(0.3f * Vector3.one, 0.13f).SetEase(Ease.InQuad))
                 .Join(cursor.visual.DOFade(0.3f, 0.13f).SetEase(Ease.InQuad).SetLoops(2, LoopType.Yoyo))
-                .Join(DOTween.To(() => cursor.content.localScale.x - 1f, x =>
+                .Join(DOTween.To(() => cursor.content.transform.localScale.x - 1f, x =>
                 {
                     cursor.UpdateScale(x);
                 }, 0f, 0.13f));
@@ -315,6 +315,7 @@ namespace InGame
                 if (cdCounterCharge <= 0)
                 {
                     CanShootCharge = true;
+                    if (CanCharge) cursor.SetReadyToCharge();
                     CombatActions.OnChargeCooldownComplete?.Invoke();
                 }
             }

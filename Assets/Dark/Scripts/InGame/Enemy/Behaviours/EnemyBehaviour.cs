@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
@@ -9,6 +8,7 @@ namespace InGame
     public class EnemyBehaviour : ScriptableObject
     {
         public int enemyId;
+        public string displayName;
         public bool elite;
         public EnemyEntity enemyPrefab;
         public EnemySpawnBehaviour spawnBehaviour;
@@ -32,13 +32,15 @@ namespace InGame
             spawnBehaviour.Init(enemy);
         }
         
-        public void Spawn(EnemyEntity enemy, Action completeCallback)
+        public void Spawn(EnemyEntity enemy, float delayComplete, Action completeCallback)
         {
             DOTween.Kill(enemy);
             if (spawnBehaviour)
             {
                 enemy.gameObject.SetActive(true);
-                spawnBehaviour.DoSpawn(enemy).OnComplete(() => completeCallback?.Invoke()).SetTarget(enemy);
+                DOTween.Sequence().Append(spawnBehaviour.DoSpawn(enemy))
+                    .AppendInterval(delayComplete)
+                    .OnComplete(() => completeCallback?.Invoke()).SetTarget(enemy);
             }
         }
     }

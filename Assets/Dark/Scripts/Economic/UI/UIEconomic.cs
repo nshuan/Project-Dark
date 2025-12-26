@@ -1,11 +1,15 @@
 using System.Collections;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Economic.UI
 {
-    public class UIEconomic : MonoBehaviour
+    public class UIEconomic : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
+        [SerializeField] private bool showInstruction = false;
+        [SerializeField] private GameObject panelInstruction;
+        
         protected int current;
         protected int target;
         protected float updateInterval = 0.05f;
@@ -80,5 +84,17 @@ namespace Economic.UI
 
             return seq;
         }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            if (!showInstruction) return;
+            panelInstruction.SetActive(true);
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+             if (!showInstruction) return;
+            panelInstruction.SetActive(false);
+       }
     }
 }

@@ -1,5 +1,51 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &153866072907602091
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 162400782623409022}
+  - component: {fileID: 2888268933156853219}
+  m_Layer: 0
+  m_Name: SfxShoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &162400782623409022
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 153866072907602091}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8748002566143027518}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2888268933156853219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 153866072907602091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fd5da469a3f44fe9fc2c158040f77d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cueKey: ingame_shoot
+  channel: 1
 --- !u!1 &192765987599666672
 GameObject:
   m_ObjectHideFlags: 0
@@ -179,8 +225,8 @@ MonoBehaviour:
   flashStartGO: {fileID: 1645562885888194866}
   flashEndGO: {fileID: 9137705237316602402}
   flashAoeGO: {fileID: 321540747711025084}
-  sfxFlashAoe: {fileID: 5272930182811632203}
-  sfxFlashAoe_end: {fileID: 9103810989611059074}
+  sfxFlashAoe: {fileID: 6857426488264740919}
+  sfxFlashAoe_end: {fileID: 8283971188627445220}
   explodeCenter: {fileID: 6161533850593521826}
   startDuration: 0.5
 --- !u!1 &1645562885888194866
@@ -268,7 +314,7 @@ MonoBehaviour:
   vfxDash: {fileID: 2478906233305319134}
   vfxDashEnd: {fileID: 7956859789546018163}
   vfxDashStart: {fileID: 3142732437388069618}
-  sfxDashStart: {fileID: 8553467086391013459}
+  sfxDashStart: {fileID: 922552463762590255}
 --- !u!1 &2376292991015942629
 GameObject:
   m_ObjectHideFlags: 0
@@ -460,7 +506,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4950926957540918332}
-  - component: {fileID: 6139629491500921360}
+  - component: {fileID: 2522854320018958373}
   m_Layer: 0
   m_Name: Sfx
   m_TagString: Untagged
@@ -483,7 +529,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8066399975474884716}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6139629491500921360
+--- !u!114 &2522854320018958373
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -492,12 +538,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3010981298044399864}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd5da469a3f44fe9fc2c158040f77d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sourceIndex: 11
-  playOnEnable: 0
-  delay: 0
+  cueKey: ingame_teleport
+  channel: 1
 --- !u!1 &3795815053030327788
 GameObject:
   m_ObjectHideFlags: 0
@@ -539,7 +584,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4882703856398208318}
-  - component: {fileID: 1074406091338343717}
+  - component: {fileID: 4750728428014973655}
   m_Layer: 0
   m_Name: Sfx_End
   m_TagString: Untagged
@@ -562,7 +607,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7800574629119387361}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1074406091338343717
+--- !u!114 &4750728428014973655
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -571,12 +616,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3914211676992068534}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd5da469a3f44fe9fc2c158040f77d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sourceIndex: 12
-  playOnEnable: 0
-  delay: 0
+  cueKey: ingame_teleport_end
+  channel: 1
 --- !u!1 &4051566418034428798
 GameObject:
   m_ObjectHideFlags: 0
@@ -586,7 +630,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 494529235477553924}
-  - component: {fileID: 5272930182811632203}
+  - component: {fileID: 6857426488264740919}
   m_Layer: 0
   m_Name: Sfx
   m_TagString: Untagged
@@ -609,7 +653,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8126641321210888156}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5272930182811632203
+--- !u!114 &6857426488264740919
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -618,12 +662,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4051566418034428798}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd5da469a3f44fe9fc2c158040f77d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sourceIndex: 5
-  playOnEnable: 0
-  delay: 0
+  cueKey: ingame_flash_start
+  channel: 1
 --- !u!1 &5644949011015942855
 GameObject:
   m_ObjectHideFlags: 0
@@ -1868,6 +1911,7 @@ Transform:
   - {fileID: 8875509042617920227}
   - {fileID: 1810020658236173976}
   - {fileID: 3359619549918100054}
+  - {fileID: 162400782623409022}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3085034273742998862
@@ -1887,6 +1931,7 @@ MonoBehaviour:
   dashEffect: {fileID: 3216691245108859979}
   flashEffect: {fileID: 6194580792556600830}
   teleEffect: {fileID: 1610547230557707745}
+  sfxAttack: {fileID: 2888268933156853219}
   weapon: {fileID: 2997467557329049479}
   offset: {x: 0, y: 1.46}
   defaultSortingLayerName: Entity
@@ -1991,8 +2036,8 @@ MonoBehaviour:
   teleStartGO: {fileID: 2817436640900813322}
   teleEndChargingGO: {fileID: 715211515124644260}
   teleEndGO: {fileID: 2376292991015942629}
-  sfxTele: {fileID: 6139629491500921360}
-  sfxTeleEnd: {fileID: 1074406091338343717}
+  sfxTele: {fileID: 2522854320018958373}
+  sfxTeleEnd: {fileID: 4750728428014973655}
   startDuration: 0.2
 --- !u!1 &7373470921108189585
 GameObject:
@@ -2134,7 +2179,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1828201278123004014}
-  - component: {fileID: 9103810989611059074}
+  - component: {fileID: 8283971188627445220}
   m_Layer: 0
   m_Name: Sfx_End
   m_TagString: Untagged
@@ -2157,7 +2202,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4374371994887962442}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9103810989611059074
+--- !u!114 &8283971188627445220
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2166,12 +2211,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 8009713270322909412}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd5da469a3f44fe9fc2c158040f77d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sourceIndex: 10
-  playOnEnable: 0
-  delay: 0
+  cueKey: ingame_flash_end
+  channel: 1
 --- !u!1 &8093634977475200776
 GameObject:
   m_ObjectHideFlags: 0
@@ -2181,7 +2225,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2394746257232094121}
-  - component: {fileID: 8553467086391013459}
+  - component: {fileID: 922552463762590255}
   m_Layer: 0
   m_Name: Sfx
   m_TagString: Untagged
@@ -2204,7 +2248,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2938300384642361823}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8553467086391013459
+--- !u!114 &922552463762590255
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2213,12 +2257,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 8093634977475200776}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd5da469a3f44fe9fc2c158040f77d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sourceIndex: 4
-  playOnEnable: 0
-  delay: 0
+  cueKey: ingame_dash
+  channel: 1
 --- !u!1 &9137705237316602402
 GameObject:
   m_ObjectHideFlags: 0

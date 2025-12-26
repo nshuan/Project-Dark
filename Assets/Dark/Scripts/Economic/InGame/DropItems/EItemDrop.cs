@@ -1,5 +1,5 @@
 using System;
-using Dark.Scripts.Audio;
+using Dark.Scripts.AudioV2;
 using Dark.Scripts.Utils;
 using DG.Tweening;
 using InGame;
@@ -11,12 +11,12 @@ namespace Economic.InGame.DropItems
 {
     public class EItemDrop : MonoBehaviour, ICollectible
     {
-        private const float FlySpeed = 22f;
+        private const float FlySpeed = 25f;
         
         [SerializeField] private TargetedProjectile targetLogic;
         [SerializeField] private GameObject vfxClaim;
         [SerializeField] private GameObject visual;
-        [SerializeField] private AudioComponent sfx;
+        [SerializeField] private AudioPlayComponentV2 sfx;
         [SerializeField] private Transform shadow;
         [SerializeField] private float minDistanceToTower = 1.5f;
         [SerializeField] private float dropSpanAngleToExcludeTower = 240f;
@@ -72,32 +72,50 @@ namespace Economic.InGame.DropItems
         
         public void Collect(Transform target, float delay)
         {
+            delayCollect = delay;
+            collectCounter = delayCollect;
             Collect(target);
         }
 
         private bool isCollecting;
-        private Transform target;
+        private float delayCollect;
+        private float collectStartDuration = 0.24f;
+        private float collectCounter;
+        private Vector3 targetPosition;
         public void Collect(Transform target)
         {
-            this.target = target;
-            targetLogic.InitializeProjectile(target.transform.position, FlySpeed, 0.15f);
+            targetPosition = target.position;
+            targetLogic.InitializeProjectile(targetPosition, FlySpeed, 0.15f);
             targetLogic.InitializeAnimationCurve(ProjectileCurveManifest.GetRandomTrajectoryCurve(),
                 ProjectileCurveManifest.GetAxisCorrectionCurve(0), ProjectileCurveManifest.GetProjectileSpeedCurve(1));
             
             isCollecting = true;
-
-            shadow.DOScale(0f, 0.2f);
         }
 
         private Vector2 nextPosition;
-        private void Update()
+        private void FixedUpdate()
         {
             if (!isCollecting) return;
 
-            if (Vector2.Distance(transform.position, target.transform.position) < 0.1f)
+            if (delayCollect > 0f)
+            {
+                delayCollect -= Time.deltaTime;
+                return;
+            }
+
+            // if (collectCounter > 0f)
+            // {
+            //     visual.transform.position += new Vector3(0f, 0.5f * Time.deltaTime, 0f);
+            //     collectCounter -= Time.deltaTime;
+            //     if (collectCounter <= 0f)
+            //         shadow.DOScale(0f, 0.2f);
+            //     return;
+            // }
+            
+            if (Vector2.Distance(transform.position, targetPosition) < 0.1f)
             {
                 visual.gameObject.SetActive(false);
-                vfxClaim.transform.position = target.transform.position + vfxPositionOffset;
+                vfxClaim.transform.position = targetPosition + vfxPositionOffset;
                 vfxClaim.SetActive(true);
                 sfx.Play();
                 isCollecting = false;
@@ -109,11 +127,11 @@ namespace Economic.InGame.DropItems
                 return;
             }
             
-            nextPosition = targetLogic.GetProjectileNextPosition(target.transform.position);
-            if ((target.transform.position.x - transform.position.x) * (target.transform.position.x - nextPosition.x) < 0f) 
-                transform.position = target.transform.position;
-            else if ((target.transform.position.y - transform.position.y) * (target.transform.position.y - nextPosition.y) < 0f)
-                transform.position = target.transform.position;
+            nextPosition = targetLogic.GetProjectileNextPosition(targetPosition);
+            if ((targetPosition.x - transform.position.x) * (targetPosition.x - nextPosition.x) < 0f) 
+                transform.position = targetPosition;
+            else if ((targetPosition.y - transform.position.y) * (targetPosition.y - nextPosition.y) < 0f)
+                transform.position = targetPosition;
             else
                 transform.position = nextPosition;
         }

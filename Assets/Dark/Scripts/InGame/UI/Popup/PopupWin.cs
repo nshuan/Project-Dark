@@ -1,4 +1,5 @@
 using System;
+using Dark.Scripts.Analytics;
 using Dark.Scripts.AudioV2;
 using Dark.Scripts.CoreUI;
 using Dark.Scripts.SceneNavigation;
@@ -37,6 +38,7 @@ namespace InGame.UI
         private void OnWin()
         {
             UpdateUI();
+            AudioManagerV2.Instance.FadeVolumeMusic(0.08f, 2f);
             ui.DoOpenFadeIn(delayShowPopup).OnComplete(() =>
             {
                 onShowPopup?.Invoke();
@@ -63,10 +65,14 @@ namespace InGame.UI
                 {
                     LevelManager.Instance.LoadLevel(PlayerDataManager.Instance.Data.level + 1);
                 });
+                
+                LogManager.Log(LogConst.EventLogStartLevel, $"level_{PlayerDataManager.Instance.Data.level + 1}", "from popup win");
             });
         }
-        
+
         [Space] [Header("UI Tween")] 
+        
+        private string txtBossDown = "[BOSS] was down";
         
         [SerializeField] private Image imgTitle;
         [SerializeField] private Image imgTitleBg;
@@ -87,6 +93,7 @@ namespace InGame.UI
         {
             imgTitle.SetAlpha(0f);
             imgTitleBg.SetAlpha(0f);
+            txtDescription.SetText(txtBossDown.Replace("[BOSS]", LevelManager.Instance.LevelBossName));
             txtDescription.SetAlpha(0f);
             txtTitleResourceCollected.SetAlpha(0f);
             groupResourceCollected.alpha = 0f;

@@ -1,5 +1,3 @@
-using System;
-using Dark.Scripts.Settings;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -12,8 +10,6 @@ namespace Dark.Scripts.AudioV2
         
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (!GameSettings.EnableSound) return;
-            
             switch (channel)
             {
                 case AudioChannel.InGame:

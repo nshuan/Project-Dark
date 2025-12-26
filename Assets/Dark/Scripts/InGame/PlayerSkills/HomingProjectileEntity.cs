@@ -40,7 +40,7 @@ namespace InGame
             canChase = true;
         }
         
-        protected override void Update()
+        protected override void FixedUpdate()
         {
             if (!activated) return;
             if (Vector2.Distance(transform.position, RangeCenter) > LevelUtility.GetRelativeRange(Range, transform.position - RangeCenter))
@@ -48,7 +48,7 @@ namespace InGame
                 if (!BlockSpawnDeadBody)
                 {
                     // ProjectileDeadPool.Instance.Get(direction).position = transform.position;
-                    ProjectileDeadPool.Instance.Get(direction).position = BoundPosition;
+                    ProjectileDeadPool.Instance.Get(BoundPosition, direction);
                 }
                 ProjectileHit(null);
                 return;

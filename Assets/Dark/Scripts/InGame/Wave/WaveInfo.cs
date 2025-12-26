@@ -15,6 +15,7 @@ namespace InGame
         public int waveIndex;
         public float scaleHp = 1f;
         public float scaleDmg = 1f;
+        public float scaleSpeed = 1f;
         public float timeToEnd = 1f;
         public WaveConfig waveConfig;
         public WaveConfig[] randomWaveConfigs;
@@ -31,11 +32,17 @@ namespace InGame
                 waveConfig = randomWaveConfigs[RandomUtil.Range(0, randomWaveConfigs.Length)];
             DebugUtility.LogError($"Setup wave {waveConfig.name}");
             Gates = new GateEntity[waveConfig.gateConfigs.Count];
+            var waveStatsScale = new WaveStatsScale()
+            {
+                hpScale = scaleHp,
+                dmgScale = scaleDmg,
+                speScale = scaleSpeed,
+            };
             for (var i = 0; i < waveConfig.gateConfigs.Count; i++)
             {
                 var gateCfg = waveConfig.gateConfigs[i];
                 Gates[i] = Object.Instantiate(gatePrefab, gateCfg.position, quaternion.identity, null);
-                Gates[i].Initialize(gateCfg, gateCfg.targetBaseIndex.Select((index) => towers[index]).ToArray(), scaleHp, scaleDmg, levelExpRatio, levelDarkRatio, levelDarkUnitValue);
+                Gates[i].Initialize(gateCfg, gateCfg.targetBaseIndex.Select((index) => towers[index]).ToArray(), waveStatsScale, levelExpRatio, levelDarkRatio, levelDarkUnitValue);
             }
             
             Gates.Sort((gate1, gate2) => gate1.config.startTime.CompareTo(gate2.config.startTime));
@@ -53,7 +60,12 @@ namespace InGame
             {
                 var gate = Gates[i];
                 var a = i;
-                gate.onActivated += () => { currentGateIndex = a; };
+                gate.onActivated += () => {
+                {
+                    currentGateIndex = a;
+                    CombatActions.OnGateActivated?.Invoke(gate, waveIndex, currentGateIndex);
+                    GateManager.Instance.AddGate(gate);
+                }};
                 gate.Activate();
                 gate.OnAllEnemiesDead += () => { OnStopGate(a); };
             }
@@ -107,5 +119,12 @@ namespace InGame
     {
         EndTime,
         AllDead
+    }
+
+    public class WaveStatsScale
+    {
+        public float hpScale = 1f;
+        public float dmgScale = 1f;
+        public float speScale = 1f;
     }
 }

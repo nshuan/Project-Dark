@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1355034846226656982}
-  - component: {fileID: 7095661978394893028}
+  - component: {fileID: 2744662179512012218}
   m_Layer: 0
   m_Name: Sfx
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1293356390909347609}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7095661978394893028
+--- !u!114 &2744662179512012218
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,12 +41,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2234592222994264937}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9523e7ab12c4f93ac675353a242a3db, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd5da469a3f44fe9fc2c158040f77d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sourceIndex: 8
-  playOnEnable: 0
-  delay: 0
+  cueKey: ingame_burning
+  channel: 1
 --- !u!1 &7457678575592124400
 GameObject:
   m_ObjectHideFlags: 0
@@ -97,7 +96,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   delayEachBurn: 1
-  sfx: {fileID: 7095661978394893028}
+  sfx: {fileID: 2744662179512012218}
 --- !u!1001 &9108251149719151650
 PrefabInstance:
   m_ObjectHideFlags: 0

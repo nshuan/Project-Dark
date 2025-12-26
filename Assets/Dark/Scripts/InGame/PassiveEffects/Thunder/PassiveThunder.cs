@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using Dark.Scripts.Audio;
+using Dark.Scripts.AudioV2;
 using InGame.Effects;
 using UnityEngine;
 
@@ -10,7 +10,7 @@ namespace InGame
     {
         [SerializeField] private int maxTriggeredEnemies = 20;
         [SerializeField] private bool triggerAllEnemies = false;
-        [SerializeField] private AudioComponent sfx;
+        [SerializeField] private AudioPlayComponentV2 sfx;
         
         private EnemyEntity[] triggerredEnemies;
         private RaycastHit2D[] hits = new RaycastHit2D[50];

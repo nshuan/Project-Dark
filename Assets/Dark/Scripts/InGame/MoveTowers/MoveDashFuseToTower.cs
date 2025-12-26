@@ -50,11 +50,16 @@ namespace InGame
             {
                 timeElapsed += Time.deltaTime;
                 var speed = speedCurve.Evaluate(Mathf.Clamp01(timeElapsed / duration));
-                character.transform.position = Vector2.Lerp(startPos, endPos, speed);
                 
-                count = Physics2D.CircleCastNonAlloc(character.FlashExplodeCenter, hitRadius, Vector2.zero, hits,
-                    0f,
+                var lastPos = character.transform.position;
+                character.transform.position = Vector2.Lerp(startPos, endPos, speed);
+                var movePath = character.transform.position - lastPos;
+                count = Physics2D.CircleCastNonAlloc(
+                    lastPos, 
+                    hitRadius, movePath, hits,
+                    movePath.magnitude,
                     enemyLayer);
+
                 if (count > 0)
                 {
                     for (int i = 0; i < count; i++)
@@ -71,7 +76,7 @@ namespace InGame
             
             // Do aoe damage
             character.PlayAoe();
-            cameraShake ??= new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera };
+            cameraShake ??= new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera, Magnitude = 0.08f };
             VisualEffectHelper.Instance.PlayEffect(cameraShake);
                 
             count = Physics2D.CircleCastNonAlloc(character.FlashExplodeCenter, aoeSize, Vector2.zero, hits,

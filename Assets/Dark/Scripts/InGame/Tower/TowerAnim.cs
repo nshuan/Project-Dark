@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Linq;
 using Dark.Scripts.Utils.Skeleton;
 using Spine.Unity;
@@ -8,6 +9,8 @@ namespace InGame
 {
     public class TowerAnim : MonoBehaviour
     {
+        private static readonly int OutlineWidth = Shader.PropertyToID("_OutlineWidth");
+        private static readonly int Color1 = Shader.PropertyToID("_Color");
         public SkeletonAnimation skeleton;
         
         [SpineAnimationName(nameof(skeleton))]
@@ -46,7 +49,12 @@ namespace InGame
         [SpineAnimationName(nameof(skeleton))]
         [SerializeField] private string animHover30;
         
+        [Header("Hit")]
+        [SerializeField] private Color hitColor;
+        [SerializeField] private Color normalColor;
+        
         private Material outlineMaterial;
+        private Coroutine coroutineHitTransition;
 
         private void Awake()
         {
@@ -73,9 +81,9 @@ namespace InGame
             if (!outlineMaterial) GetOutlineMat();
             
             if (active)
-                outlineMaterial.SetFloat("_OutlineWidth", 2f);
+                outlineMaterial.SetFloat(OutlineWidth, 2f);
             else 
-                outlineMaterial.SetFloat("_OutlineWidth", 0f);
+                outlineMaterial.SetFloat(OutlineWidth, 0f);
         }
 
         #region Idle
@@ -249,7 +257,28 @@ namespace InGame
         
         public void PlayHit()
         {
-            
+            if (coroutineHitTransition != null) StopCoroutine(coroutineHitTransition);
+            if (gameObject.activeInHierarchy)
+                coroutineHitTransition = StartCoroutine(IEColorTransition(hitColor, normalColor, 0.1f));
+        }
+        
+        private IEnumerator IEColorTransition(Color from, Color to, float duration)
+        {
+            var t = 0f;
+            var color = from;
+                
+            while (t < duration)
+            {
+                t += Time.deltaTime;
+                var lerp = t / duration;
+
+                color = Color.Lerp(from, to, lerp);
+                outlineMaterial.SetColor(Color1, color);
+                yield return null;
+            }
+
+            color = to; // Ensure final color
+            outlineMaterial.SetColor(Color1, color);
         }
     }
 }

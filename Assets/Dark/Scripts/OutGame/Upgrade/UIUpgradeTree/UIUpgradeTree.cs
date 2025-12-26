@@ -22,6 +22,12 @@ namespace Dark.Scripts.OutGame.Upgrade
         [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, List<UIUpgradeNode>> nodeChildrenMap;
         [ReadOnly, OdinSerialize, NonSerialized] public Dictionary<int, List<UIUpgradeNode>> nodesMapByLayer;
 
+        [Space] [Header("Skill Node Ids")]
+        public List<int> skillNodeIds = new List<int>();
+        
+        [Space] [Header("Passive Node Ids")]
+        public List<int> passiveNodeIds = new List<int>();
+        
         [Space] [Header("UI")] 
         [SerializeField] private Button btnDeselectAll;
 
@@ -63,6 +69,16 @@ namespace Dark.Scripts.OutGame.Upgrade
         public void InvokeNodeUpgraded(UIUpgradeNode node)
         {
             OnNodeUpgraded?.Invoke(node);
+        }
+
+        public bool IsNodeSkill(int nodeId)
+        {
+            return skillNodeIds.Contains(nodeId);
+        }
+
+        public bool IsNodePassive(int nodeId)
+        {
+            return passiveNodeIds.Contains(nodeId);
         }
 
         private void Awake()

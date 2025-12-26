@@ -1,5 +1,7 @@
+using Dark.Scripts.Analytics;
 using Dark.Scripts.CoreUI;
 using Dark.Scripts.SceneNavigation;
+using Data;
 using InGame.Pause;
 using UnityEngine;
 using UnityEngine.UI;
@@ -48,6 +50,7 @@ namespace InGame.UI
                 PauseGame.Instance.onPause = null;
                 PauseGame.Instance.Resume();
                 Loading.Instance.QuickLoadScene(SceneConstants.SceneUpgrade);
+                LogManager.Log(LogConst.EventLogQuitLevel, $"level_{PlayerDataManager.Instance.Data.level + 1}", $"wave_{LevelManager.Instance.CurrentWaveIndex + 1}");
             });
             
             btnResume.onClick.RemoveAllListeners();

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Dark.Scripts.AudioV2;
 using DG.Tweening;
 using InGame.Effects;
 using UnityEngine;
@@ -13,6 +14,7 @@ namespace InGame
         [SerializeField] private PlayerDashEffect dashEffect;
         [SerializeField] private PLayerFlashEffect flashEffect;
         [SerializeField] private PlayerTeleEffect teleEffect;
+        [SerializeField] private AudioPlayComponentV2 sfxAttack;
 
         [Space] [SerializeField] private WeaponSupporter weapon;
         public WeaponSupporter Weapon => weapon;
@@ -34,6 +36,7 @@ namespace InGame
             // transform.localScale =
             //     new Vector3(Mathf.Sign(target.x - transform.position.x), 1f, 1f);
             var attackDuration = animController.PlayAttack();
+            sfxAttack?.Play();
             blockRotate = true;
             StartCoroutine(IEBlockRotate(attackDuration.Item2));
             return attackDuration.Item1;
@@ -186,7 +189,7 @@ namespace InGame
             else
             {
                 DOTween.Kill(shotRadius);
-                shotRadius.DOScale(radius, 0.3f).SetTarget(shotRadius).SetDelay(0.3f);
+                shotRadius.DOScale(radius, 0.2f).SetTarget(shotRadius).SetDelay(0.3f);
             }
         }
 
