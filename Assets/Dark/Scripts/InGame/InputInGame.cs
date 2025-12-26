@@ -183,7 +183,7 @@ namespace InGame
         private void LateUpdate()
         {
             worldMousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
-            if (playerInitialized) PlayerVisual.SetDirection(worldMousePosition);
+            // if (playerInitialized) PlayerVisual.SetDirection(worldMousePosition);
             
             if (BlockAllInput) return;
             

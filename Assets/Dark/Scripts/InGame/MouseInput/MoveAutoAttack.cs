@@ -14,7 +14,7 @@ namespace InGame
         protected Camera Cam { get; set; }
         protected MonoCursor cursor;
         protected RectTransform cursorRect;
-        protected Vector3 mousePosition;
+        // protected Vector3 mousePosition;
         protected Vector3 worldMousePosition;
         
         public bool CanShoot { get; set; }
@@ -22,9 +22,13 @@ namespace InGame
         protected float ActivateDuration { get; set; } = 1f;
         protected float cdCounter;
 
+        private LevelManager levelManager;
+        private EnemyManager manager;
+        private EnemyEntity nearestEnemy;
+        
         public MoveAutoAttack()
         {
-
+            
         }
 
         public MoveAutoAttack(Camera cam, MonoCursor cursor)
@@ -32,6 +36,8 @@ namespace InGame
             Cam = cam;
             this.cursor = cursor;
             cursorRect = cursor.GetComponent<RectTransform>();
+            levelManager = LevelManager.Instance;
+            manager = EnemyManager.Instance;
         }
 
         public void Initialize(InputInGame manager, MoveChargeController chargeController)
@@ -47,8 +53,8 @@ namespace InGame
         public virtual void OnMouseClick()
         {
             if (!CanShoot) return;
-            
-            var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
+
+            var tempMousePos = new Vector2(worldMousePosition.x, worldMousePosition.y);
             var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(1f);
             var critRate = LevelUtility.GetCriticalRate();
             var bulletNum = 1;
@@ -131,13 +137,30 @@ namespace InGame
         public virtual void OnUpdate(Vector2 worldMousePosition)
         {
             if (cdCounter >= 0) cdCounter -= Time.deltaTime;
-            
-            if (!CanShoot) return;
 
-            this.worldMousePosition.x = worldMousePosition.x;
-            this.worldMousePosition.y = worldMousePosition.y; 
+            if (!CanShoot)
+            {
+                InputManager.PlayerVisual.SetDirection(worldMousePosition);
+                if (nearestEnemy) nearestEnemy.SetAimed(false);
+                return;
+            }
+
+            // Nếu auto target thì check enemy gần nhất rồi target vào
+            var canAutoTarget = GetNearestEnemy();
+            if (canAutoTarget)
+            {
+                this.worldMousePosition.x = nearestEnemy.transform.position.x;
+                this.worldMousePosition.y = nearestEnemy.transform.position.y;
+            }
+            else
+            {
+                this.worldMousePosition.x = worldMousePosition.x;
+                this.worldMousePosition.y = worldMousePosition.y; 
+            }
             
-            mousePosition = Input.mousePosition;
+            InputManager.PlayerVisual.SetDirection(this.worldMousePosition);
+            
+            var mousePosition = Input.mousePosition;
             mousePosition.z = 0; // Set z to 0 for 2D
             cursorRect.position = mousePosition;    
             
@@ -159,6 +182,32 @@ namespace InGame
         public void Dispose()
         {
             
+        }
+        
+        private bool GetNearestEnemy()
+        {
+            var nearestDistance = float.MaxValue;
+            EnemyEntity tempNearestEnemy = null;
+                 
+            foreach (var enemy in manager.Enemies)
+            {
+                if (manager.EnemiesAliveMap.TryGetValue(enemy.Key, out var alive) && alive && enemy.Value.Activated && enemy.Value.IsDestroyed == false)
+                {
+                    var distance = Vector2.Distance(levelManager.CurrentTower.GetBaseCenter(), enemy.Value.transform.position);
+                    if (distance < nearestDistance)
+                    {
+                        nearestDistance = distance;
+                        tempNearestEnemy = enemy.Value;
+                    }
+                }
+            }
+
+            if (nearestEnemy &&  tempNearestEnemy != nearestEnemy) nearestEnemy.SetAimed(false);
+            if (!tempNearestEnemy) return false;
+            nearestEnemy = tempNearestEnemy;
+            nearestEnemy.SetAimed(true);
+            
+            return true;
         }
     }
 }

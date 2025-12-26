@@ -49,6 +49,7 @@ namespace InGame
         public Action OnStartDead { get; set; }
         public Action<EnemyDieReason> OnDead { get; set; }
         public EnemyState State { get; set; }
+        public bool Activated { get; set; }
         public int UniqueId { get; set; }
         private Vector3 direction = new Vector3();
         private Vector2 directionAddition = new Vector2();
@@ -60,6 +61,7 @@ namespace InGame
         [SerializeField] private Transform uiHealth;
         public EnemyAnimController animController;
         [SerializeField] protected GameObject shadow;
+        [SerializeField] protected GameObject aimPointer;
         
         private bool inAttackRange;
         private Coroutine attackCoroutine;
@@ -117,8 +119,11 @@ namespace InGame
             config.Init(this);
             
             shadow.SetActive(true);
+            SetAimed(false);
             
             delayDieAnimation = 0f;
+
+            Activated = false;
             
             ActivateELite(config.elite);
         }
@@ -141,6 +146,7 @@ namespace InGame
                 animController.PlayRun();
                 boidAgent.IsActive = true;
                 collider2d.enabled = true;
+                Activated = true;
             });
         }
 
@@ -309,6 +315,7 @@ namespace InGame
             if (coroutineBurn != null) StopCoroutine(coroutineBurn);
             callbackBurnComplete?.Invoke();
             callbackBurnComplete = null;
+            SetAimed(false);
             if (reason != EnemyDieReason.Suicide)
                 DropResource();
             StartCoroutine(IEDie(.5f, reason));
@@ -403,5 +410,10 @@ namespace InGame
         }
 
         #endregion
+
+        public void SetAimed(bool aimed)
+        {
+            aimPointer.SetActive(aimed);
+        }
     }
 }
