@@ -24,6 +24,7 @@ namespace Economic.InGame.DropItems
         
         public WealthType kind;
         public int Quantity { get; set; }
+        public bool MarkedNotCollectedByManager { get; set; }
         [NonSerialized] public Vector3 vfxPositionOffset;
         
         public void Drop(Vector2 position)

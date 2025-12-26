@@ -25,7 +25,7 @@ namespace Economic.UI
 
         private void OnWin()
         {
-            EItemDropManager.Instance.CollectAll(player.transform);
+            EItemDropManager.Instance.CollectAll(player.transform, true);
             CombatActions.OnDropResource -= OnDropResource;
         }
         
@@ -68,7 +68,7 @@ namespace Economic.UI
 
         private void OnCollectEntityDamaged(EItemDropCollector collector)
         {
-            EItemDropManager.Instance.CollectAll(collector.transform);
+            EItemDropManager.Instance.CollectAll(collector.transform, false);
         }
         
         /// <summary>
