@@ -77,13 +77,16 @@ MonoBehaviour:
       Data: 0
     - Name: intervalLoop
       Entry: 4
-      Data: 1
+      Data: 2
     - Name: spawnLogic
       Entry: 7
-      Data: 3|InGame.GateSpawnSingle, Assembly-CSharp
-    - Name: radius
+      Data: 3|InGame.GateSpawnMultiple, Assembly-CSharp
+    - Name: amount
+      Entry: 3
+      Data: 2
+    - Name: maxRadius
       Entry: 4
-      Data: 1.5
+      Data: 1
     - Name: randomSpanAngle
       Entry: 4
       Data: 60
@@ -146,11 +149,14 @@ MonoBehaviour:
       Data: 1
     - Name: intervalLoop
       Entry: 4
-      Data: 1
+      Data: 2
     - Name: spawnLogic
       Entry: 7
-      Data: 6|InGame.GateSpawnSingle, Assembly-CSharp
-    - Name: radius
+      Data: 6|InGame.GateSpawnMultiple, Assembly-CSharp
+    - Name: amount
+      Entry: 3
+      Data: 2
+    - Name: maxRadius
       Entry: 4
       Data: 1.5
     - Name: randomSpanAngle
