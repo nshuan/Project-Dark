@@ -26,10 +26,17 @@ namespace Economic.InGame.DropItems
         public WealthType kind;
         public int Quantity { get; set; }
         public bool MarkedNotCollectedByManager { get; set; }
+        public bool Collectible { get; set; }
         [NonSerialized] public Vector3 vfxPositionOffset;
-        
+
+        private void OnDisable()
+        {
+            Collectible = false;
+        }
+
         public void Drop(Vector2 position)
         {
+            Collectible = false;
             visual.gameObject.SetActive(true);
 
             var calculatedTargetPosition = false;
@@ -58,10 +65,12 @@ namespace Economic.InGame.DropItems
             transform.DOJump(targetPos, 0.16f, dropJumps, dropDuration).SetTarget(this)
                 .OnComplete(() => shadow.SetParent(transform));
             shadow.DOMove((Vector3)targetPos - transform.position + shadow.position, dropDuration);
+            this.DelayCall(dropDuration, () => Collectible = true);
         }
         
         public void Drop(Vector2 position, Vector2 direction, float span, float scaleRange)
         {
+            Collectible = false;
             visual.gameObject.SetActive(true);
             
             var targetPos = position + RandomUtil.InsideUnitSpan(direction, span) * (dropRange * scaleRange);
@@ -74,6 +83,7 @@ namespace Economic.InGame.DropItems
             transform.DOJump(targetPos, 0.16f, dropJumps, dropDuration).SetTarget(this)
                 .OnComplete(() => shadow.SetParent(transform));
             shadow.DOMove((Vector3)targetPos - transform.position + shadow.position, dropDuration);
+            this.DelayCall(dropDuration, () => Collectible = true);
         }
         
         public void Collect(Transform target, float delay)

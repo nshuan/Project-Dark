@@ -9,10 +9,7 @@ namespace Economic.InGame
 {
     /// <summary>
     /// Handles "absorb to mouse" behaviour for 2D items with colliders (no Rigidbody required).
-    /// Attach this to a GameObject (e.g. same as EItemDropMouseCollect) and
-    /// set which layers are considered "items".
-    /// Items will fly towards the mouse with an "in-back" like easing.
-    /// If the mouse moves very fast, the items will smoothly slow down and stop instead of snapping.
+    /// When the mouse moves to an item, it gets a slight push, then after a short delay moves to the mouse.
     /// </summary>
     public class EItemDropMouseAbsorb : MonoBehaviour
     {
@@ -20,21 +17,21 @@ namespace Economic.InGame
         [SerializeField] private float radius = 2f;
         [SerializeField] private LayerMask itemLayer;
 
-        [Header("Movement")]
-        [Tooltip("How long (in seconds) it takes an item to reach the mouse position.")]
+        [Header("Movement")] 
+        [Tooltip("Duration for the item to reach the pushed position")] 
+        [SerializeField] private float pushDuration = 0.5f;
+        
+        [Tooltip("Delay before the item starts moving to the mouse (in seconds).")]
+        [SerializeField] private float moveDelay = 0.1f;
+
+        [Tooltip("How long (in seconds) it takes an item to reach the mouse position after the delay.")]
         [SerializeField] private float absorbDuration = 0.35f;
 
         [Tooltip("Maximum movement speed of the item.")]
         [SerializeField] private float maxMoveSpeed = 20f;
 
-        [Tooltip("Mouse speed (units / second in world space) above which the item starts to smoothly stop.")]
-        [SerializeField] private float mouseStopSpeed = 25f;
-
-        [Tooltip("How quickly the item slows to a stop when mouse is too fast. Higher = faster stop.")]
-        [SerializeField] private float stopSmooth = 10f;
-
-        [Tooltip("Maximum distance from mouse before item stops following and is released. Set to 0 to disable.")]
-        [SerializeField] private float maxDistance = 5f;
+        [Tooltip("Distance of the push effect when mouse first approaches the item.")]
+        [SerializeField] private float pushDistance = 0.15f;
 
         [Tooltip("Optional extra distance at which items start being absorbed (0 = exactly at radius).")]
         [SerializeField] private float absorbMargin = 0.05f;
@@ -43,9 +40,11 @@ namespace Economic.InGame
 
         private struct AbsorbState
         {
-            public Vector3 startPos;
-            public float t;
-            public Vector3 velocity;
+            public EItemDrop targetItem;
+            public Vector3 originalPos;
+            public Vector3 pushTargetPos;
+            public float timeSinceDetected;
+            public bool hasPushed;
         }
 
         // We track the Transform directly; no Rigidbody is required.
@@ -53,8 +52,6 @@ namespace Economic.InGame
         // Temporary buffer to safely iterate active items without modifying the collection during enumeration.
         private readonly List<Transform> _updateBuffer = new List<Transform>();
         [SerializeField] private Camera _cam;
-        private Vector3 _lastMouseWorld;
-        private bool _hasLastMouse;
 
         private void Start()
         {
@@ -76,15 +73,6 @@ namespace Economic.InGame
 
             float dt = Time.deltaTime;
 
-            // Mouse "speed" in world units / second
-            float mouseSpeed = 0f;
-            if (_hasLastMouse && dt > 0f)
-            {
-                mouseSpeed = Vector3.Distance(mouseWorld, _lastMouseWorld) / dt;
-            }
-            _lastMouseWorld = mouseWorld;
-            _hasLastMouse = true;
-
             // 1. Discover nearby items under the mouse radius.
             int count = Physics2D.CircleCastNonAlloc(mouseWorld, radius + absorbMargin, Vector2.zero, _hits, 0f, itemLayer);
             for (int i = 0; i < count; i++)
@@ -92,16 +80,30 @@ namespace Economic.InGame
                 var col = _hits[i].collider;
                 if (!col) continue;
                 if (!col.CompareTag("Collectible")) continue;
+                if (col.transform.TryGetComponent<EItemDrop>(out var targetItem) && !targetItem.Collectible) continue;
 
                 Transform target = col.transform;
 
                 if (!_active.ContainsKey(target))
                 {
+                    // Calculate push direction (slight push away from mouse)
+                    Vector3 toItem = target.position - mouseWorld;
+                    Vector3 pushDir = toItem.normalized;
+                    if (pushDir.magnitude < 0.01f)
+                    {
+                        // If item is exactly at mouse, push in a random direction
+                        float angle = UnityEngine.Random.Range(0f, Mathf.PI * 2f);
+                        pushDir = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f);
+                    }
+                    Vector3 pushTarget = target.position + pushDir * pushDistance;
+
                     _active[target] = new AbsorbState
                     {
-                        startPos = target.position,
-                        t = 0f,
-                        velocity = Vector3.zero
+                        targetItem = targetItem,
+                        originalPos = target.position,
+                        pushTargetPos = pushTarget,
+                        timeSinceDetected = 0f,
+                        hasPushed = false
                     };
                 }
             }
@@ -128,90 +130,63 @@ namespace Economic.InGame
                 {
                     continue;
                 }
+                
+                if (!state.targetItem.Collectible) continue;
 
-                // Progress (0 → 1) over absorbDuration.
-                state.t += dt / Mathf.Max(0.0001f, absorbDuration);
-                float eased = InBack01(Mathf.Clamp01(state.t));
-
-                // Desired position using easing along the direction from startPos to current mouse position.
-                Vector3 dir = mouseWorld - state.startPos;
-                Vector3 desiredPos = state.startPos + dir * eased;
-
-                // Clamp desiredPos to never exceed mouse position (prevent overshooting).
-                float desiredDist = Vector2.Distance(state.startPos, desiredPos);
-                float maxDist = Vector2.Distance(state.startPos, mouseWorld);
-                if (desiredDist > maxDist)
-                {
-                    desiredPos = mouseWorld;
-                }
-
+                state.timeSinceDetected += dt;
                 Vector3 current = tr.position;
-                float distanceToMouse = Vector2.Distance(current, mouseWorld);
 
-                // Check if mouse is too far away - stop
-                if (maxDistance > 0f && distanceToMouse > maxDistance)
+                // Phase 1: Push effect (immediate, slight movement)
+                if (!state.hasPushed)
                 {
-                    // Smoothly stop the item.
-                    state.velocity = Vector3.Lerp(state.velocity, Vector3.zero, stopSmooth * dt);
-                    
-                    // Apply remaining velocity.
-                    current += state.velocity * dt;
+                    // Apply push immediately
+                    float pushProgress = Mathf.Clamp01(state.timeSinceDetected / pushDuration);
+                    current = Vector3.Lerp(state.originalPos, state.pushTargetPos, pushProgress);
                     tr.position = current;
-
-                    _active[tr] = state;
-                    continue;
+                    
+                    // Mark as pushed after a brief moment
+                    if (state.timeSinceDetected >= pushDuration)
+                    {
+                        state.hasPushed = true;
+                    }
                 }
-
-                if (mouseSpeed > mouseStopSpeed)
+                // Phase 2: Move to mouse (after delay)
+                else if (state.timeSinceDetected >= moveDelay)
                 {
-                    // Mouse is too fast: smoothly reduce velocity to zero (item eases to a stop).
-                    state.velocity = Vector3.Lerp(state.velocity, Vector3.zero, stopSmooth * dt);
+                    // Move towards mouse with speed limit (always tries to reach mouse, no stopping)
+                    Vector3 toMouse = mouseWorld - current;
+                    float distanceToMouse = toMouse.magnitude;
+                    
+                    if (distanceToMouse > 0.01f)
+                    {
+                        // Move towards mouse, limited by maxMoveSpeed
+                        float moveDistance = Mathf.Min(distanceToMouse, maxMoveSpeed * dt);
+                        current += toMouse.normalized * moveDistance;
+                        tr.position = current;
+                    }
+                    else
+                    {
+                        // Very close to mouse, snap to it and mark for cleanup
+                        tr.position = mouseWorld;
+                        toClear.Add(tr);
+                        continue;
+                    }
                 }
+                // Phase 2 delay: Just wait (push is done, waiting for moveDelay)
                 else
                 {
-                    // Normal follow: move towards desiredPos, limited by maxMoveSpeed.
-                    Vector3 toTarget = desiredPos - current;
-
-                    // Desired velocity to reach the target in this frame (clamped).
-                    Vector3 desiredVel = Vector3.zero;
-                    if (dt > 0f)
-                    {
-                        desiredVel = toTarget / dt;
-                        if (desiredVel.magnitude > maxMoveSpeed)
-                        {
-                            desiredVel = desiredVel.normalized * maxMoveSpeed;
-                        }
-                    }
-
-                    // Smoothly blend towards desired velocity.
-                    state.velocity = Vector3.Lerp(state.velocity, desiredVel, 10f * dt);
+                    // Keep item at pushed position during delay
+                    tr.position = current;
                 }
 
-                // Apply velocity.
-                current += state.velocity * dt;
-                
-                // Clamp position to never go past the mouse (prevent overshooting).
-                float distFromStart = Vector2.Distance(state.startPos, current);
-                float distStartToMouse = Vector2.Distance(state.startPos, mouseWorld);
-                
-                // If we've passed the mouse position, clamp to mouse position.
-                if (distFromStart > distStartToMouse)
-                {
-                    current = mouseWorld;
-                    state.velocity = Vector3.zero;
-                }
-                
-                tr.position = current;
+                // Update state
+                _active[tr] = state;
 
-                // Optional: when it's very close to the mouse, remove from active list.
-                float newDistanceToMouse = Vector2.Distance(tr.position, mouseWorld);
-                if (newDistanceToMouse < 0.15f)
+                // Safety check: if item is very close to mouse, mark for cleanup
+                float finalDistanceToMouse = Vector2.Distance(tr.position, mouseWorld);
+                if (finalDistanceToMouse < 0.15f)
                 {
                     toClear.Add(tr);
-                }
-                else
-                {
-                    _active[tr] = state;
                 }
             }
 
@@ -228,20 +203,15 @@ namespace Economic.InGame
             }
         }
 
-        /// <summary>
-        /// Custom in-back easing (0 → 1).
-        /// Similar to standard easeInBack (overshoots negatively then comes back).
-        /// </summary>
-        private static float InBack01(float t)
-        {
-            const float s = 1.70158f;
-            return t * t * ((s + 1f) * t - s);
-        }
 
         private void OnDrawGizmosSelected()
         {
+            if (!_cam) return;
+            Vector3 mouseWorld = _cam.ScreenToWorldPoint(Input.mousePosition);
+            mouseWorld.z = 0f;
+            
             Gizmos.color = new Color(0.2f, 0.8f, 1f, 0.35f);
-            Gizmos.DrawWireSphere(transform.position, radius);
+            Gizmos.DrawWireSphere(mouseWorld, radius);
         }
     }
 }
