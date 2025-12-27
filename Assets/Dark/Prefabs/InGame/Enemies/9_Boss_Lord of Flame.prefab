@@ -112,18 +112,18 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0.12086755, y: -0.7987894}
-      - {x: 0.012303114, y: -0.87739956}
-      - {x: -0.04878074, y: -1.1132817}
-      - {x: -0.05263692, y: -1.4056685}
-      - {x: -0.045856595, y: -1.6209869}
-      - {x: 0.07846649, y: -1.655475}
-      - {x: 0.6035863, y: -1.5931778}
+    - - {x: -0.00005222857, y: -0.6636441}
+      - {x: -0.08016479, y: -0.7991575}
+      - {x: -0.1270226, y: -1.1986368}
+      - {x: -0.11665337, y: -1.4910235}
+      - {x: -0.074308254, y: -1.6494389}
+      - {x: 0.10691814, y: -1.6697009}
+      - {x: 0.5893605, y: -1.6571943}
       - {x: 0.62058073, y: -1.3774981}
-      - {x: 0.6420415, y: -1.1995146}
-      - {x: 0.6029412, y: -0.9428491}
-      - {x: 0.53477645, y: -0.69117457}
-      - {x: 0.23989975, y: -0.7250591}
+      - {x: 0.6420415, y: -1.2066274}
+      - {x: 0.6313929, y: -0.86460716}
+      - {x: 0.52766377, y: -0.5489164}
+      - {x: 0.3110291, y: -0.5258973}
   m_UseDelaunayMesh: 0
 --- !u!114 &1367309541428699416
 MonoBehaviour:
@@ -195,11 +195,52 @@ MonoBehaviour:
     isLoop: 0
     frameRate: 0.1
     scale: 1
+    autoExit: 0
+  disappearAnim:
+    frames:
+    - {fileID: -1267773028, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: 1607567868, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: 1370214803, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: -63618014, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: 1797511981, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: -1354818309, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: -850475954, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: 1609539690, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: 1974649833, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: 1389773145, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: 1681961140, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: -404292257, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: -2034628129, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: 595513083, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: 2121494048, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    isLoop: 0
+    frameRate: 0.1
+    scale: 1
+    autoExit: 0
+  appearAnim:
+    frames:
+    - {fileID: 2121494048, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: 595513083, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: -2034628129, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: -404292257, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: 1681961140, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: 1389773145, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: 1974649833, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: 1609539690, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: -850475954, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: -1354818309, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: 1797511981, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: -63618014, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: 1370214803, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: 1607567868, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    - {fileID: -1267773028, guid: b11528e7e48a0e442af9cf781595aa91, type: 3}
+    isLoop: 0
+    frameRate: 0.1
+    scale: 1
     autoExit: 1
+  lordOfFlameConfig: {fileID: 11400000, guid: abded5f2cf756b247947fb5f4ada716e, type: 2}
   delayAttackAnim: 0.4
   delayAttack2Anim: 0.6
-  hpPercentageToRecover: 0.3
-  hpPercentageRecover: 0.3
   delayRecover: 1
 --- !u!114 &7383520355259516268
 MonoBehaviour:
@@ -345,7 +386,7 @@ Transform:
   m_GameObject: {fileID: 3695826321489209505}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.206, y: 0.616, z: 0}
+  m_LocalPosition: {x: -0.206, y: 0.708, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -363,7 +404,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b83c34ccbdd417b8b440ba159a90b18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 0.08
+  range: 0.1
 --- !u!1 &4456709303197038145
 GameObject:
   m_ObjectHideFlags: 0
@@ -606,7 +647,7 @@ Transform:
   m_GameObject: {fileID: 5235947318105936491}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.029, y: 0.653, z: 0}
+  m_LocalPosition: {x: 0.057, y: 0.738, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
