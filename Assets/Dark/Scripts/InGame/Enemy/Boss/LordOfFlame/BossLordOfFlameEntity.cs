@@ -14,6 +14,7 @@ namespace InGame.Boss
         [SerializeField] protected EnemySpritesAnimationInfo recoverAnim;
         [SerializeField] protected EnemySpritesAnimationInfo disappearAnim;
         [SerializeField] protected EnemySpritesAnimationInfo appearAnim;
+        [SerializeField] protected EnemySpritesAnimationInfo spearAttackAnim;
 
         [Space] [Header("Config")]
         [Tooltip("Config that store exclusive variable for this boss")] 
@@ -59,14 +60,25 @@ namespace InGame.Boss
                     isAttacking = true;
                     if (currentAttackCountdown > 0)
                     {
-                        attackDuration = animController.PlayAttack();
                         currentAttackCountdown -= 1;
-                        delayAttack = Mathf.Min(delayAttackAnim, 1 / config.attackSpeed);
+                        // phase 1 dùng attack thường, phase 2 dùng spear
+                        if (hasRecoverOnce)
+                        {
+                            attackDuration = animController.PlayCustomAnim(spearAttackAnim);
+                            delayAttack = Mathf.Min(delayAttack2Anim, 1 / config.attackSpeed); // số frame delay attack của spear bằng attack2
+                        }
+                        else
+                        {
+                            attackDuration = animController.PlayAttack();
+                            delayAttack = Mathf.Min(delayAttackAnim, 1 / config.attackSpeed);
+                        }
                         if (delayAttack > attackDuration) delayAttack = attackDuration;
                     }
                     else
                     {
-                        attackDuration = animController.PlayCustomAnim(attack2Anim);
+                        // phase 1 dùng attack thường, phase 2 dùng spear
+                        if (hasRecoverOnce) attackDuration = animController.PlayCustomAnim(spearAttackAnim);
+                        else attackDuration = animController.PlayCustomAnim(attack2Anim);
                         currentAttackCountdown = RandomUtil.Range(minAttackTurnToSwitchType, maxAttackTurnToSwitchType + 1);
                         delayAttack = Mathf.Min(delayAttack2Anim, 1 / config.attackSpeed);
                         if (delayAttack > attackDuration) delayAttack = attackDuration;
