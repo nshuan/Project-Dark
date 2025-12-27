@@ -395,23 +395,32 @@ namespace InGame
         [SerializeField] private SpriteRenderer visual;
         [SerializeField] private Material materialNormal;
         [SerializeField] private Material materialElite;
+
+        private Material cacheMaterial;
         
         public virtual void ActivateELite(bool active)
         {
             if (active)
             {
                 visual.material = materialElite;
+                cacheMaterial = materialElite;
                 transform.localScale = GameConst.EnemyEliteScale * Vector3.one;
             }
             else
             {
                 visual.material = materialNormal;
+                cacheMaterial = materialNormal;
                 transform.localScale = Vector3.one;
             }
         }
 
         #endregion
 
+        #region Highlight
+
+        [Space] [Header("Highlight")] 
+        [SerializeField] private Material materialHighlight;
+        
         public void SetAimed(bool aimed)
         {
             aimPointer.SetActive(aimed);
@@ -420,6 +429,9 @@ namespace InGame
         public void SetHover(bool hover)
         {
             hoverPointer.SetActive(hover);
+            visual.material = hover ? materialHighlight : cacheMaterial;
         }
+
+        #endregion
     }
 }

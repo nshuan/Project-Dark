@@ -20,6 +20,7 @@ namespace Economic.InGame.DropItems
         [SerializeField] private Transform shadow;
         [SerializeField] private float minDistanceToTower = 1.5f;
         [SerializeField] private float dropSpanAngleToExcludeTower = 240f;
+        [SerializeField] private float dropRangeMin = 0.6f;
         [SerializeField] private float dropRange = 0.8f;
         
         public WealthType kind;
@@ -43,8 +44,12 @@ namespace Economic.InGame.DropItems
                     break;
                 }
             }
+
             if (!calculatedTargetPosition)
-                targetPos = position + Random.insideUnitCircle * dropRange;
+            {
+                var dropPos = RandomUtil.InsideUnitSpan(Vector2.right, 360f);
+                targetPos = position + dropPos * (dropRange - dropRangeMin) + dropPos.normalized * dropRangeMin;
+            }
             
             var dropJumps = RandomUtil.Range(1, 4);
             var dropDuration = Mathf.Max(dropJumps * 0.2f, 0.36f);
