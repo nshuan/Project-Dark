@@ -15,6 +15,7 @@ namespace InGame.Boss
         [SerializeField] protected EnemySpritesAnimationInfo disappearAnim;
         [SerializeField] protected EnemySpritesAnimationInfo appearAnim;
         [SerializeField] protected EnemySpritesAnimationInfo spearAttackAnim;
+        [SerializeField] public EnemySpritesAnimationInfo comboAttackAnim;
 
         [Space] [Header("Config")]
         [Tooltip("Config that store exclusive variable for this boss")] 

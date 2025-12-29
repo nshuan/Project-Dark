@@ -44,6 +44,8 @@ namespace InGame.EnemyEffect
             timer = 0f;
             return anim.frames.Length * anim.frameRate;
         }
+
+        public float GetCustomAnimDuration(EnemySpritesAnimationInfo anim) => anim.frames.Length * anim.frameRate;
         
         public float PlaySpawn()
         {
@@ -63,6 +65,8 @@ namespace InGame.EnemyEffect
             }
             return spawningTimer + spawnAnim.frames.Length * spawnAnim.frameRate;
         }
+        
+        public float GetSpawnDuration() => spawnAnim.frames.Length * spawnAnim.frameRate;
         
         public void PlayIdle()
         {
@@ -95,6 +99,8 @@ namespace InGame.EnemyEffect
             return attackAnim.frames.Length * attackAnim.frameRate;
         }
         
+        public float GetAttackDuration() => attackAnim.frames.Length * attackAnim.frameRate;
+        
         public void PlayHit()
         {
             currentAnim = hitAnim;
@@ -115,6 +121,8 @@ namespace InGame.EnemyEffect
             timer = 0f;
             return dieAnim.frames.Length * dieAnim.frameRate;
         }
+        
+        public float GetDieDuration() => dieAnim.frames.Length * dieAnim.frameRate;
 
         private void Update()
         {
