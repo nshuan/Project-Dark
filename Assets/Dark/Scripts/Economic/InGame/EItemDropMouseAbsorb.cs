@@ -52,6 +52,7 @@ namespace Economic.InGame
         // Temporary buffer to safely iterate active items without modifying the collection during enumeration.
         private readonly List<Transform> _updateBuffer = new List<Transform>();
         [SerializeField] private Camera _cam;
+        [SerializeField] private Transform mouseFollower;
 
         private void Start()
         {
@@ -70,6 +71,7 @@ namespace Economic.InGame
 
             Vector3 mouseWorld = _cam.ScreenToWorldPoint(Input.mousePosition);
             mouseWorld.z = 0f;
+            mouseFollower.position = mouseWorld;
 
             float dt = Time.deltaTime;
 
@@ -197,6 +199,7 @@ namespace Economic.InGame
                 if (toClear[i].TryGetComponent<EItemDrop>(out var item))
                 {
                     item.MarkedNotCollectedByManager = true;
+                    item.DoClaimedVisual(mouseFollower);
                     EItemDropManager.Instance.Claim(item);
                     EItemDropPool.Instance.Release(item);
                 }

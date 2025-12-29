@@ -151,5 +151,14 @@ namespace Economic.InGame.DropItems
             else
                 transform.position = nextPosition;
         }
+
+        public void DoClaimedVisual(Transform target)
+        {
+            vfxClaim.SetActive(false);
+            vfxClaim.transform.position = target.position;
+            vfxClaim.transform.SetParent(target);
+            vfxClaim.SetActive(true);
+            sfx.Play();
+        }
     }
 }
