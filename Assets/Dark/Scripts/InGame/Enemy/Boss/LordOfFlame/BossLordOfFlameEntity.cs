@@ -49,12 +49,12 @@ namespace InGame.Boss
 
         protected override IEnumerator IEAttack()
         {
-            // Đợi qua vài frame của anim attack rồi mới xử logic để cho đẹp
+            // Đợi qua vài frame của anim attack rồi mới xử lý logic để cho đẹp
             while (true)
             {
                 if (inAttackRange)
                 {
-                    if (isRecovering) yield return null;
+                    if (isRecovering) yield return new WaitUntil(() => !isRecovering);
                     var attackDuration = 0f;
                     var delayAttack = 0f;
                     isAttacking = true;
@@ -109,14 +109,14 @@ namespace InGame.Boss
             if (IsDestroyed) return;
             if (!hasRecoverOnce && PercentageHpLeft < lordOfFlameConfig.percentageToHeal)
             {
+                isRecovering = true;
+                hasRecoverOnce = true;
                 StartCoroutine(IERecover(0.5f));
             }
         }
 
         private IEnumerator IERecover(float delay)
         {
-            isRecovering = true;
-            hasRecoverOnce = true;
             State = EnemyState.Freeze;
             animController.PlayIdle();
             yield return new WaitUntil(() => isAttacking == false);
@@ -144,8 +144,9 @@ namespace InGame.Boss
             TargetTower = LevelManager.Instance.Towers.FirstOrDefault((t) => t.Id == lordOfFlameConfig.phase2TowerId);
             if (!TargetTower) TargetTower = LevelManager.Instance.CurrentTower;
             Target = TargetTower.transform;
+            AttackRange = lordOfFlameConfig.phase2AtkRange;
             // Mặc định rớt trong tầm đánh luôn
-            var dropDistanceToTower = config.attackRange * 0.9f;
+            var dropDistanceToTower = AttackRange - 0.1f;
             transform.position = Target.position + 
                                  (Quaternion.Euler(0f, 0f, RandomUtil.Range(-20f, 20f)) * (transform.position - Target.position).normalized) * dropDistanceToTower;
             attackPosition = transform.position;

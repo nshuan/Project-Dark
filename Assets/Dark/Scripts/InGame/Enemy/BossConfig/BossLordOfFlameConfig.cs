@@ -9,6 +9,9 @@ namespace InGame.BossConfig
         public float percentageToHeal = 0.3f;
         [Tooltip("Hp to recover once")]
         public float percentageHealed = 0.3f;
+        [Tooltip("Tower to move to in phase 2")]
         public int phase2TowerId = 2;
+        [Tooltip("Attack range in phase 2")] 
+        public float phase2AtkRange = 3f;
     }
 }
