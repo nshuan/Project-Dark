@@ -31,6 +31,7 @@ namespace InGame
         public int DarkUnitValue { get; private set; }
         public float DarkRatio { get; private set; }
         public int BossPoint { get; private set; }
+        public float AttackRange { get; set; }
 
         #endregion
 
@@ -100,7 +101,7 @@ namespace InGame
             var myPos = transform.position;
             var targetPos = Target.position;
             attackPosition = ((Quaternion.Euler(0f, 0f, RandomUtil.Range(-75f, 75f)) *
-                               (Vector2)(myPos - targetPos).normalized) * (0.9f * config.attackRange)
+                               (Vector2)(myPos - targetPos).normalized) * (0.9f * AttackRange)
                               + targetPos);
             animController.transform.localScale =
                 new Vector3(Mathf.Sign(attackPosition.x - myPos.x), 1f, 1f);
@@ -113,6 +114,7 @@ namespace InGame
             DarkRatio = LevelUtility.GetDropRate(config.darkRatio);
             DarkUnitValue = levelDarkUnitValue;
             BossPoint = config.bossPoint;
+            AttackRange = config.attackRange;
             
             State = EnemyState.Spawn;
             inAttackRange = false;
@@ -192,7 +194,7 @@ namespace InGame
         
         private void MoveTo(Transform target)
         {
-            if (Vector3.Distance(transform.position, target.position) < config.attackRange)
+            if (Vector3.Distance(transform.position, target.position) < AttackRange)
             {
                 inAttackRange = true;
                 animController.SetDefaultRun(false);
@@ -201,7 +203,7 @@ namespace InGame
             }
             else
             {
-                config.moveBehaviour.MoveNonAlloc(transform, attackPosition, directionAddition, config.attackRange, config.moveSpeed * StatsScale.speScale, ref direction);
+                config.moveBehaviour.MoveNonAlloc(transform, attackPosition, directionAddition, AttackRange, config.moveSpeed * StatsScale.speScale, ref direction);
                 animController.SetDefaultRun(true);
             }
         }
