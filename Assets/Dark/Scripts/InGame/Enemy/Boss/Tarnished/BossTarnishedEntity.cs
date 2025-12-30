@@ -11,7 +11,8 @@ namespace InGame.Boss
 {
     public class BossTarnishedEntity : EnemyEntity
     {
-        private Coroutine coroutineChangeTower;
+        private bool isAttacking = false;
+        private bool isChangingTower = false;
 
         public override void ActivateELite(bool active)
         {
@@ -36,19 +37,49 @@ namespace InGame.Boss
             EnemyPool.Instance.Release(this, config.enemyId);
         }
 
-        protected override void DropResource()
+        protected override IEnumerator IEAttack()
         {
-            
+            while (true)
+            {
+                if (inAttackRange)
+                {
+                    var delayAttack = 0f;
+                    isAttacking = true;
+                    delayAttack = Mathf.Min(delayAttackAnim, 1 / config.attackSpeed);
+                    var attackDuration = animController.PlayAttack();
+                    yield return new WaitForSeconds(delayAttack);
+                    Attack();
+                    if (IsChangeTower())
+                    {
+                        currentThresholdChangeTowerIndex += 1;
+                        State = EnemyState.Freeze;
+                        yield return new WaitForSeconds(Mathf.Max(attackDuration - delayAttack, 0f));
+                        isAttacking = false;
+                        yield return StartCoroutine(IEChangeTower(0f));
+                    }
+                    else
+                    {
+                        isAttacking = false;
+                        yield return new WaitForSeconds(1 / config.attackSpeed - delayAttack);
+                    }
+
+                }
+                else
+                    yield return new WaitUntil(() => inAttackRange);
+            }
         }
 
-        public override void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
+        protected override void Attack()
         {
-            if (State == EnemyState.Freeze) return;
-            base.Damage(damage, dealerPosition, stagger, dmgType);
-            
-            if (!config.elite) return;
+            if (TargetTower.IsDestroyed) return;
+            config.attackBehaviour.Attack(this, TargetTower, transform.position, CurrentDamage);
+        }
+
+        private bool IsChangeTower()
+        {
+            if (!config.elite) return false;
                 
-            if (CurrentHealth <= 0) return;
+            if (CurrentHealth <= 0) return false;
 
             for (var i = thresholdChangeTower.Count - 1; i > currentThresholdChangeTowerIndex; i--)
             {
@@ -58,13 +89,21 @@ namespace InGame.Boss
                     break;
                 }
             }
-            
-            if (currentThresholdChangeTowerIndex < thresholdChangeTower.Count && PercentageHpLeft <= thresholdChangeTower[currentThresholdChangeTowerIndex])
+
+            return currentThresholdChangeTowerIndex < thresholdChangeTower.Count &&
+                   PercentageHpLeft <= thresholdChangeTower[currentThresholdChangeTowerIndex];
+        }
+
+        public override void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
+        {
+            if (State == EnemyState.Freeze) return;
+            base.Damage(damage, dealerPosition, stagger, dmgType);
+
+            if (!isAttacking && !isChangingTower && IsChangeTower())
             {
-                if (coroutineChangeTower != null)
-                    StopCoroutine(coroutineChangeTower);
-                coroutineChangeTower = StartCoroutine(IEChangeTower(0.2f));
                 currentThresholdChangeTowerIndex += 1;
+                State = EnemyState.Freeze;
+                StartCoroutine(IEChangeTower(0f));
             }
         }
 
@@ -74,6 +113,8 @@ namespace InGame.Boss
         [SerializeField] private BossTarnishedConfig tarnishedConfig;
         [SerializeField] protected EnemySpritesAnimationInfo jumpUpAnim;
         [SerializeField] protected EnemySpritesAnimationInfo jumpDownAnim;
+        [Tooltip("After play attack animation, delay these seconds before doing attack logic")]
+        [SerializeField] private float delayAttackAnim = 0.4f;
         
         private List<float> thresholdChangeTower = new List<float>() { 0.75f, 0.5f, 0.25f };
         private List<int> orderChangeTower = new List<int>() { }; // Nếu null hoặc ko có phần tử thì random
@@ -82,7 +123,7 @@ namespace InGame.Boss
 
         private IEnumerator IEChangeTower(float delay)
         {
-            State = EnemyState.Freeze;
+            isChangingTower = true;
             yield return new WaitForSeconds(delay);
             animController.Pause();
             yield return new WaitForEndOfFrame();
@@ -115,7 +156,7 @@ namespace InGame.Boss
             }
 
             // Mặc định rớt trong tầm đánh luôn
-            var dropDistanceToTower = config.attackRange;
+            var dropDistanceToTower = config.attackRange * 0.9f;
             if (startDistanceEachPhase != null && startDistanceEachPhase.Count > currentThresholdChangeTowerIndex - 1)
             {
                 dropDistanceToTower = startDistanceEachPhase[currentThresholdChangeTowerIndex - 1];
@@ -136,6 +177,7 @@ namespace InGame.Boss
             yield return new WaitForSeconds(jumpDuration);
             BurnVfxParent.gameObject.SetActive(true);
             State = EnemyState.Move;
+            isChangingTower = false;
         }
         
         #endregion
