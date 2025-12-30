@@ -11,6 +11,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
 
         public Action onDrag;
         public Action onClick;
+        public Action onEndDrag;
 
         private bool isDrag;
 
@@ -30,6 +31,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         {
             isDrag = false;
             Align();
+            onEndDrag?.Invoke();
         }
         public void OnPointerClick(PointerEventData eventData)
         {

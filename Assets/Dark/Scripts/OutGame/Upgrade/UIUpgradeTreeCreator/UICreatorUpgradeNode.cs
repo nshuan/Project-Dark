@@ -30,6 +30,10 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             {
                 manager.SelectNode(this);
             };
+            hoverField.onEndDrag = () =>
+            {
+                manager.UpdateLine(guid);
+            };
         }
 
         public void SelectThis()
