@@ -75,12 +75,33 @@ namespace Dark.Tools.GoogleSheetTool
                     Debug.LogWarning($"Row {i+1} skipped - invalid speed scale");
                     continue;
                 }
+                
+                // The seventh column is scale exp
+                if (!float.TryParse(cols[6], NumberStyles.Float, new NumberFormatInfo { NumberDecimalSeparator = "," }, out var scaleExp))
+                {
+                    Debug.LogWarning($"Row {i+1} skipped - invalid exp scale");
+                    continue;
+                }
+                
+                // The eighth column is scale vestige
+                if (!float.TryParse(cols[7], NumberStyles.Float, new NumberFormatInfo { NumberDecimalSeparator = "," }, out var scaleVestige))
+                {
+                    Debug.LogWarning($"Row {i+1} skipped - invalid vestige scale");
+                    continue;
+                }
+                
+                // The nineth column is vestige unit value
+                if (!int.TryParse(cols[8], out var vestigeUnitValue))
+                {
+                    Debug.LogWarning($"Row {i+1} skipped - invalid vestige unit value");
+                    continue;
+                }
 
                 if (configDict.TryGetValue(level, out LevelConfig config))
                 {
                     for (var fieldIndex = 0; fieldIndex < cols.Length; fieldIndex++)
                     {
-                        SetValue(config, wave, scaleHp, scaleDmg, scaleSpe);
+                        SetValue(config, wave, scaleHp, scaleDmg, scaleSpe, scaleExp, scaleVestige, vestigeUnitValue);
                     }
 
                     EditorUtility.SetDirty(config);
@@ -92,7 +113,7 @@ namespace Dark.Tools.GoogleSheetTool
             }
         }
         
-        public static void SetValue(LevelConfig level, int wave, float scaleHp, float scaleDamage, float scaleSpeed)
+        public static void SetValue(LevelConfig level, int wave, float scaleHp, float scaleDamage, float scaleSpeed, float scaleExp, float scaleVestige, int vestigeUnitValue)
         {
             foreach (var waveInfo in level.waveInfo)
             {
@@ -101,6 +122,9 @@ namespace Dark.Tools.GoogleSheetTool
                     waveInfo.scaleHp = scaleHp;
                     waveInfo.scaleDmg = scaleDamage;
                     waveInfo.scaleSpeed = scaleSpeed;
+                    waveInfo.expRatio = scaleExp;
+                    waveInfo.darkRatio = scaleVestige;
+                    waveInfo.darkUnitValue = vestigeUnitValue;
                     break;
                 }
             }
