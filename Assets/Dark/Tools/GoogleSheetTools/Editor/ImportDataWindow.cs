@@ -85,7 +85,14 @@ public class ImportDataWindow : EditorWindow
             return;
         }
 
-        if (tabName.ToString().ToLower().Contains("nodeconfig"))
+        if (tabName.ToString().ToLower().Contains("levelconfig"))
+        {
+            foreach (var data in listDataToUpdate)
+            {
+                ConfigLevelImporter.Import(data.configs, csvTable);
+            }
+        }
+        else if (tabName.ToString().ToLower().Contains("nodeconfig"))
         {
             foreach (var data in listDataToUpdate)
             {

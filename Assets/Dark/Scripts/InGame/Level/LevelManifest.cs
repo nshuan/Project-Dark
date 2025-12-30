@@ -45,7 +45,7 @@ namespace InGame
         #endregion
         
 #if UNITY_EDITOR
-        private const string LevelPath = "Assets/Dark/Config/LevelInGame";
+        public const string LevelPath = "Assets/Dark/Config/LevelInGame";
 
         [MenuItem("Dark/Manifest/Generate Level Manifest")]
         public static void CreateInstance()
