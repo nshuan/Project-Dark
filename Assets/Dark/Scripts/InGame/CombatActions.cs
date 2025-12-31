@@ -23,6 +23,8 @@ namespace InGame
         public static Action<EItemDropCollector> OnResourceCollectorInitialized { get; set; }
         public static Action<EItemDropCollector> OnResourceCollectorDamaged { get; set; }
         public static Action<int, float> OnCollectAllResourceDrop { get; set; } // <amount, duration>
+        public static Action<int> OnDamageDealt { get; set; }
+        public static Action<int> OnDamageReceived { get; set; }
 
         public static void Clear()
         {
