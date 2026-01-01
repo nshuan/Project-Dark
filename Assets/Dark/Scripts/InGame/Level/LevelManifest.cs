@@ -27,6 +27,14 @@ namespace InGame
             if (levelMap.TryGetValue(level, out var value)) return Instantiate(value);
             return null;
         }
+
+        public LevelConfig[] GetAllLevels()
+        {
+            if (levelMap == null)
+                return null;
+            
+            return levelMap.Values.ToArray();
+        }
         
         #region SINGLETON
 
