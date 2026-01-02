@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -7,11 +9,14 @@ namespace InGame.GateEditorV2
     public class LevelGatePrefabEditorV2 : MonoBehaviour, IBeginDragHandler, IDragHandler, IPointerClickHandler
     {
         public GameObject parentVfx;
+        public RectTransform linePrefab;
+        public TextMeshProUGUI txtLineDistancePrefab;
         
         public bool Selecting { get; private set; }
         public Action<LevelGatePrefabEditorV2> OnClick { get; set; }
         public Action<Vector2> OnDragging { get; set; }
         public GateConfig Config { get; set; }
+        public Vector2[] TargetPositions { get; set; }
         
         // public bool IsBossGate { get; set; }
         public Vector2 Position { get; set; }
@@ -27,6 +32,8 @@ namespace InGame.GateEditorV2
         private Camera camera;
         private RectTransform rectTransform;
         private GameObject objSelect;
+        private List<RectTransform> lines;
+        private List<TextMeshProUGUI> txtLines;
         
         private void Awake()
         {
@@ -34,6 +41,24 @@ namespace InGame.GateEditorV2
             objSelect = vfx.Find("SpriteSelect").gameObject;
             camera = Camera.main;
             rectTransform = GetComponent<RectTransform>();
+        }
+
+        private void Update()
+        {
+            if (TargetPositions == null || TargetPositions.Length == 0) return;
+            if (lines == null) InitLines();
+            for (var i = 0; i < TargetPositions.Length; i++)
+            {
+                var line = lines[i];
+                var direction = TargetPositions[i] - (Vector2)transform.position;
+                line.sizeDelta = new Vector2(5f, direction.magnitude);
+                line.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f);
+
+                var txtLine = txtLines[i];
+                txtLine.transform.position = (TargetPositions[i] + (Vector2)transform.position) / 2;
+                txtLine.transform.rotation = Quaternion.identity;
+                txtLine.SetText($"{((Vector2)camera.ScreenToWorldPoint(TargetPositions[i]) - Position).magnitude.ToString(GameConst.FloatFormat)}");
+            }
         }
 
         public void UpdateUI(GateConfig gate)
@@ -65,6 +90,27 @@ namespace InGame.GateEditorV2
             vfx.position = gate.position;
         }
 
+        private void InitLines()
+        {
+            lines = new List<RectTransform>();
+            txtLines = new List<TextMeshProUGUI>();
+            for (var i = 0; i < TargetPositions.Length; i++)
+            {
+                var line = Instantiate(linePrefab, transform);
+                var direction = TargetPositions[i] - (Vector2)transform.position;
+                line.localPosition = Vector3.zero;
+                line.sizeDelta = new Vector2(5f, direction.magnitude);
+                line.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f);
+                lines.Add(line);
+                
+                var txtLine = Instantiate(txtLineDistancePrefab, line.transform);
+                txtLine.transform.position = (TargetPositions[i] + (Vector2)transform.position) / 2;
+                txtLine.transform.rotation = Quaternion.identity;
+                txtLine.SetText($"{((Vector2)camera.ScreenToWorldPoint(TargetPositions[i]) - Position).magnitude.ToString(GameConst.FloatFormat)}");
+                txtLines.Add(txtLine);
+            }
+        }
+        
         public void SelectGate()
         {
             Selecting = true;
@@ -97,7 +143,7 @@ namespace InGame.GateEditorV2
         public void OnDrag(PointerEventData eventData)
         {
             rectTransform.position += (Vector3)eventData.delta;
-            var pos = camera.ScreenToWorldPoint(eventData.position);
+            var pos = camera.ScreenToWorldPoint(rectTransform.position);
             pos.z = 0;
             vfx.position = pos;
             Position = pos;
