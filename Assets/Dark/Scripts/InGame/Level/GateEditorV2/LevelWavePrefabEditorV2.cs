@@ -32,8 +32,9 @@ namespace InGame.GateEditorV2
         public InputField inpStartTimeVisual;
         public InputField inpDurationVisual;
 
-        private WaveConfig waveConfig;
+        public WaveConfig waveConfig;
         private Vector2[] targetPositions;
+        public bool Selecting { get; set; }
 
         private List<EnemyBehaviour> AvailableEnemies
         {
@@ -109,6 +110,7 @@ namespace InGame.GateEditorV2
             {
                 SelectGate(gate);
                 UpdateSelectingGate(gate);
+                UpdateGatePositionDisplay(gate.Position);
             };
             newGate.OnDragging = UpdateGatePositionDisplay;
         }

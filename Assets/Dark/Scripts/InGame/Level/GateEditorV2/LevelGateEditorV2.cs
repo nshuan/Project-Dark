@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Core;
+using Dark.Scripts.Common.UIWarning;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -18,6 +19,8 @@ namespace InGame.GateEditorV2
         public LevelWavePrefabEditorV2 prefabWave;
         public Button btnSave;
         public Button btnAddWave;
+        public Button btnDeleteWave;
+        public UIPopupWarning popupConfirm;
 
         [Space] [Header("Display")] 
         public TextMeshProUGUI txtLevel;
@@ -34,6 +37,8 @@ namespace InGame.GateEditorV2
             btnSave.onClick.AddListener(SaveLevel);
             btnAddWave.onClick.RemoveAllListeners();
             btnAddWave.onClick.AddListener(AddNewWave);
+            btnDeleteWave.onClick.RemoveAllListeners();
+            btnDeleteWave.onClick.AddListener(DeleteSelectingWave);
         }
         
         public void LoadLevel(int levelId)
@@ -120,8 +125,8 @@ namespace InGame.GateEditorV2
             button.onClick.AddListener(() => SelectWave(button.transform.GetSiblingIndex()));
             var txtWave = button.GetComponentInChildren<TextMeshProUGUI>();
             txtWave?.SetText($"Wave {waveInfo.waveIndex}");
-            SelectWave(button.transform.GetSiblingIndex());
             btnAddWave.transform.SetAsLastSibling();
+            SelectWave(button.transform.GetSiblingIndex());
         }
 
         public void SelectWave(int waveIndex)
@@ -138,12 +143,86 @@ namespace InGame.GateEditorV2
             foreach (Transform child in parentWaves)
             {
                 child.gameObject.SetActive(false);
+                if (child.TryGetComponent<LevelWavePrefabEditorV2>(out var wave))
+                {
+                    wave.Selecting = false;
+                }
             }
 
             var selectButton = parentWaveButtons.GetChild(waveIndex).GetComponent<Button>();
             var selectWave = parentWaves.GetChild(waveIndex);
             selectButton.targetGraphic.color = Color.cyan;
             selectWave.gameObject.SetActive(true);
+            if (selectWave.TryGetComponent<LevelWavePrefabEditorV2>(out var selectWaveScript))
+            {
+                selectWaveScript.Selecting = true;
+            }
+        }
+
+        public void DeleteSelectingWave()
+        {
+            popupConfirm.Setup(
+                "Remember to save your changes!",
+                "Confirm delete wave?",
+                () =>
+                {
+                    foreach (Transform child in parentWaves)
+                    {
+                        if (child.TryGetComponent<LevelWavePrefabEditorV2>(out var wave))
+                        {
+                            if (wave.Selecting)
+                            {
+                                DeleteWave(child.GetSiblingIndex());
+                            }
+                        }
+                    }
+                    
+                    LoadLevel(currentLevel.level);
+                    popupConfirm.gameObject.SetActive(false);
+                }, () =>
+                {
+                    popupConfirm.gameObject.SetActive(false);
+                });
+            popupConfirm.gameObject.SetActive(true);
+        }
+        
+        public void DeleteWave(int waveIndex)
+        {
+            if (!currentLevel) return;
+            if (waveIndex < 0 || waveIndex >= parentWaves.childCount) return;
+            
+            var newWaveInfos = new List<WaveInfo>();
+            WaveConfig configToDelete = null;
+            foreach (var waveInfo in currentLevel.waveInfo)
+            {
+                if (waveInfo.waveIndex != waveIndex)
+                {
+                    newWaveInfos.Add(waveInfo);
+                }
+                else
+                {
+                    configToDelete = waveInfo.waveConfig;
+                }
+            }
+            currentLevel.waveInfo = newWaveInfos.ToArray();
+            
+#if UNITY_EDITOR
+            if (configToDelete)
+            {
+                var wavePath = AssetDatabase.GetAssetPath(configToDelete);
+                AssetDatabase.DeleteAsset(wavePath);
+            }
+
+            for (var i = 0; i < currentLevel.waveInfo.Length; i++)
+            {
+                currentLevel.waveInfo[i].waveIndex = i;
+                var configPath = AssetDatabase.GetAssetPath(currentLevel.waveInfo[i].waveConfig);
+                AssetDatabase.RenameAsset(configPath, $"Level_{currentLevel.level}_Wave_{i + 1}");
+            }
+            EditorUtility.SetDirty(currentLevel);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+#endif
         }
 
         #endregion

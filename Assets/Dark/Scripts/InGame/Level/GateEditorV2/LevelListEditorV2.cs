@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Dark.Scripts.Common.UIWarning;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,8 @@ namespace InGame.GateEditorV2
         [SerializeField] private RectTransform contentHolder;
         [SerializeField] private LevelListItemEditorV2 itemPrefab;
         [SerializeField] private Button btnAddLevel;
+        [SerializeField] private Button btnDeleteLevel;
+        [SerializeField] private UIPopupWarning popupConfirm;
         
         private LevelManifest levelManifest;
         
@@ -19,6 +22,8 @@ namespace InGame.GateEditorV2
             levelManifest = LevelManifest.Instance;
             btnAddLevel.onClick.RemoveAllListeners();
             btnAddLevel.onClick.AddListener(AddLevel);
+            btnDeleteLevel.onClick.RemoveAllListeners();
+            btnDeleteLevel.onClick.AddListener(DeleteSelectingLevel);
         }
 
         private void Start()
@@ -43,6 +48,23 @@ namespace InGame.GateEditorV2
                 var newLevelItem = Instantiate(itemPrefab, contentHolder);
                 newLevelItem.name = level.name;
                 newLevelItem.UpdateUI(level);
+                newLevelItem.btnClick.onClick.AddListener(() =>
+                {
+                    foreach (Transform child in contentHolder)
+                    {
+                        if (child.name != btnAddLevel.transform.name)
+                        {
+                            if (child.TryGetComponent<LevelListItemEditorV2>(out var levelItem))
+                            {
+                                levelItem.Selecting = false;
+                                levelItem.btnClick.targetGraphic.color = Color.white;
+                            }
+                        }
+                    }
+                    
+                    newLevelItem.Selecting = true;
+                    newLevelItem.btnClick.targetGraphic.color = Color.cyan;
+                });
             }
             
             btnAddLevel.transform.SetAsLastSibling();
@@ -75,6 +97,51 @@ namespace InGame.GateEditorV2
                     }
                 }
             }
+        }
+
+        public void DeleteSelectingLevel()
+        {
+            popupConfirm.Setup(
+                "Remember to save your changes!",
+                "Confirm delete level?",
+                () =>
+                {
+                    LevelGateEditorV2.Instance.ClearAllWaves();
+            
+                    foreach (Transform child in contentHolder)
+                    {
+                        if (child.name != btnAddLevel.transform.name)
+                        {
+                            if (child.TryGetComponent<LevelListItemEditorV2>(out var levelItem))
+                            {
+                                if (levelItem.Selecting)
+                                {
+                                    Destroy(levelItem.gameObject);
+                                    DeleteLevel(levelItem.Config);
+                                }
+                            }
+                        }
+                    }
+                    
+                    popupConfirm.gameObject.SetActive(false);
+                }, () =>
+                {
+                    popupConfirm.gameObject.SetActive(false);
+                });
+            popupConfirm.gameObject.SetActive(true);
+        }
+        
+        public void DeleteLevel(LevelConfig level)
+        {
+            var wavePath = Path.Combine(LevelManifest.WavePath, $"Level {level.level}");
+            var levelPath = Path.Combine(LevelManifest.LevelPath, $"Level {level.level}.asset");
+#if UNITY_EDITOR
+            AssetDatabase.DeleteAsset(wavePath);
+            AssetDatabase.DeleteAsset(levelPath);
+            AssetDatabase.Refresh();
+            
+            LevelManifest.Instance.Validate();
+#endif
         }
     }
 }
