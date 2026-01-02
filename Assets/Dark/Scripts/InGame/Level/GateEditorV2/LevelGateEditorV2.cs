@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Core;
 using TMPro;
 using UnityEditor;
@@ -14,6 +17,7 @@ namespace InGame.GateEditorV2
         public RectTransform parentWaves;
         public LevelWavePrefabEditorV2 prefabWave;
         public Button btnSave;
+        public Button btnAddWave;
 
         [Space] [Header("Display")] 
         public TextMeshProUGUI txtLevel;
@@ -28,12 +32,14 @@ namespace InGame.GateEditorV2
             levelManifest = LevelManifest.Instance;
             btnSave.onClick.RemoveAllListeners();
             btnSave.onClick.AddListener(SaveLevel);
+            btnAddWave.onClick.RemoveAllListeners();
+            btnAddWave.onClick.AddListener(AddNewWave);
         }
         
         public void LoadLevel(int levelId)
         {
             if (!levelManifest) return;
-            currentLevel= levelManifest.GetLevel(levelId);
+            currentLevel = levelManifest.GetTrueLevel(levelId);
             if (!currentLevel) return;
             
             // Destroy all old wave buttons
@@ -54,7 +60,8 @@ namespace InGame.GateEditorV2
         {
             foreach (Transform child in parentWaveButtons)
             {
-                Destroy(child.gameObject);
+                if (child.name != btnAddWave.transform.name)
+                    Destroy(child.gameObject);
             }
 
             foreach (Transform child in parentWaves)
@@ -63,6 +70,48 @@ namespace InGame.GateEditorV2
             }
         }
 
+        public void AddNewWave()
+        {
+            if (!currentLevel) return;
+            var waveList = currentLevel.waveInfo != null ? currentLevel.waveInfo.ToList() : new List<WaveInfo>();
+            waveList.Sort((wave1, wave2) => wave1.waveIndex.CompareTo(wave2.waveIndex));
+
+            var newWave = 0;
+            if (waveList.Count > 0) newWave = waveList[^1].waveIndex + 1;
+            var newWaveInfo = new WaveInfo()
+            {
+                waveIndex = newWave
+            };
+            WaveConfig newWaveAsset;
+#if UNITY_EDITOR
+            if (!Directory.Exists(Path.Combine(LevelManifest.WavePath, $"Level {currentLevel.level}")))
+            {
+                Directory.CreateDirectory(Path.Combine(LevelManifest.WavePath, $"Level {currentLevel.level}"));
+            }
+            var filePath = Path.Combine(LevelManifest.WavePath,
+                $"Level {currentLevel.level}/Level_{currentLevel.level}_Wave_{newWave + 1}.asset");
+            if (File.Exists(filePath))
+            {
+                newWaveAsset = AssetDatabase.LoadAssetAtPath<WaveConfig>(filePath);
+            }
+            else
+            {
+                newWaveAsset = ScriptableObject.CreateInstance<WaveConfig>();
+                AssetDatabase.CreateAsset(newWaveAsset, filePath);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+            }
+            
+            newWaveInfo.waveConfig = newWaveAsset;
+            waveList.Add(newWaveInfo);
+            currentLevel.waveInfo = waveList.ToArray();
+            EditorUtility.SetDirty(currentLevel);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+#endif
+            AddNewWave(newWaveInfo);
+        }
+        
         public void AddNewWave(WaveInfo waveInfo)
         {
             var wave = Instantiate(prefabWave, parentWaves);
@@ -72,6 +121,7 @@ namespace InGame.GateEditorV2
             var txtWave = button.GetComponentInChildren<TextMeshProUGUI>();
             txtWave?.SetText($"Wave {waveInfo.waveIndex}");
             SelectWave(button.transform.GetSiblingIndex());
+            btnAddWave.transform.SetAsLastSibling();
         }
 
         public void SelectWave(int waveIndex)
@@ -81,6 +131,7 @@ namespace InGame.GateEditorV2
             // Hide all buttons and waves
             foreach (Transform child in parentWaveButtons)
             {
+                if (child.name == btnAddWave.transform.name) continue;
                 var button = child.GetComponent<Button>();
                 button.targetGraphic.color = Color.white;
             }

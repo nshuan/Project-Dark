@@ -33,6 +33,7 @@ namespace InGame.GateEditorV2
         public InputField inpDurationVisual;
 
         private WaveConfig waveConfig;
+        private Vector2[] targetPositions;
 
         private List<EnemyBehaviour> AvailableEnemies
         {
@@ -55,6 +56,12 @@ namespace InGame.GateEditorV2
             availableEnemies = AssetUtility.LoadAllScriptableObjectsInFolder<EnemyBehaviour>(folderPath).ToList();
             availableEnemies.Sort((enemy1, enemy2) => enemy1.enemyId.CompareTo(enemy2.enemyId));
 #endif
+        }
+
+        private void Awake()
+        {
+            if (Camera.main)
+                targetPositions = FindObjectsOfType<TowerEntity>().Select((tower) => (Vector2)Camera.main.WorldToScreenPoint(tower.transform.position)).ToArray();
         }
 
         private void Start()
@@ -97,6 +104,7 @@ namespace InGame.GateEditorV2
         {
             var newGate = Instantiate(prefabGate, parentGates);
             newGate.UpdateUI(gateConfig);
+            newGate.TargetPositions = targetPositions;
             newGate.OnClick = (gate) =>
             {
                 SelectGate(gate);
@@ -238,6 +246,7 @@ namespace InGame.GateEditorV2
                     //     startTimeVisual = gateConfigEditor.StartTimeVisual,
                     //     durationVisual = gateConfigEditor.DurationVisual,
                     // });
+                    gateConfigEditor.Config.position = gateConfigEditor.Position;
                     waveConfig.gateConfigs.Add(gateConfigEditor.Config);
                 }
             }
