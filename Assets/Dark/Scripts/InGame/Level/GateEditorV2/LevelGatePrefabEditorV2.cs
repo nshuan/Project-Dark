@@ -11,6 +11,7 @@ namespace InGame.GateEditorV2
         public GameObject parentVfx;
         public RectTransform linePrefab;
         public TextMeshProUGUI txtLineDistancePrefab;
+        public TextMeshProUGUI txtGateLabel;
         
         public bool Selecting { get; private set; }
         public Action<LevelGatePrefabEditorV2> OnClick { get; set; }

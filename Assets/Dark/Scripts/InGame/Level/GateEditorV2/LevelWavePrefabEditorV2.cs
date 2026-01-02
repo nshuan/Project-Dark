@@ -13,24 +13,26 @@ namespace InGame.GateEditorV2
     {
         public Transform parentGates;
         public LevelGatePrefabEditorV2 prefabGate;
+        public Transform parentGateConfig;
+        public LevelGateConfigEditorV2 prefabGateConfig;
         public Button btnDeleteGate;
         public Button btnAddGate;
 
-        [Space] [Header("Gate info")]
 #if UNITY_EDITOR
         [FolderOnly] public DefaultAsset configFolderPath;
 #endif
         public List<EnemyBehaviour> availableEnemies;
-        public GameObject panelGateInfo;
-        public Toggle txtIsBossGate;
-        public TextMeshProUGUI txtPosition;
-        public InputField inpTargetTower;
-        public InputField inpStartTime;
-        public InputField inpDuration;
-        public Dropdown drdEnemy;
-        public InputField inpIntervalLoop;
-        public InputField inpStartTimeVisual;
-        public InputField inpDurationVisual;
+        // [Space] [Header("Gate info")]
+        // public GameObject panelGateInfo;
+        // public Toggle txtIsBossGate;
+        // public TextMeshProUGUI txtPosition;
+        // public InputField inpTargetTower;
+        // public InputField inpStartTime;
+        // public InputField inpDuration;
+        // public Dropdown drdEnemy;
+        // public InputField inpIntervalLoop;
+        // public InputField inpStartTimeVisual;
+        // public InputField inpDurationVisual;
 
         public WaveConfig waveConfig;
         private Vector2[] targetPositions;
@@ -67,8 +69,7 @@ namespace InGame.GateEditorV2
 
         private void Start()
         {
-            drdEnemy.options = AvailableEnemies.Select(enemy => 
-                new Dropdown.OptionData($"{enemy.enemyId} - {enemy.displayName}")).ToList();
+            _ = AvailableEnemies;
             
             btnDeleteGate.onClick.RemoveAllListeners();
             btnDeleteGate.onClick.AddListener(DeleteSelectingGate);
@@ -88,7 +89,7 @@ namespace InGame.GateEditorV2
         public void UpdateUI(WaveConfig waveInfo)
         {
             waveConfig = waveInfo;
-            if (waveInfo == null) return;
+            if (!waveInfo) return;
             
             // Delete all gate
             foreach (Transform child in parentGates)
@@ -106,13 +107,11 @@ namespace InGame.GateEditorV2
             var newGate = Instantiate(prefabGate, parentGates);
             newGate.UpdateUI(gateConfig);
             newGate.TargetPositions = targetPositions;
-            newGate.OnClick = (gate) =>
-            {
-                SelectGate(gate);
-                UpdateSelectingGate(gate);
-                UpdateGatePositionDisplay(gate.Position);
-            };
-            newGate.OnDragging = UpdateGatePositionDisplay;
+            newGate.OnClick = SelectGate;
+            newGate.OnDragging = null;
+            var newGateConfig = Instantiate(prefabGateConfig, parentGateConfig);
+            newGateConfig.AvailableEnemies = AvailableEnemies;
+            newGateConfig.Setup(newGate);
         }
         
         public void SelectGate(LevelGatePrefabEditorV2 gate)
@@ -123,19 +122,32 @@ namespace InGame.GateEditorV2
                 if (!childScript) continue;
                 childScript.DeselectGate();
             }
+
+            foreach (Transform child in parentGateConfig)
+            {
+                if (child.TryGetComponent<LevelGateConfigEditorV2>(out var childGateConfig))
+                {
+                    if (childGateConfig.targetGate == gate)
+                        childGateConfig.Select();
+                    else
+                        childGateConfig.Deselect();
+                }
+            }
             
             gate.SelectGate();
         }
 
         private void DeleteSelectingGate()
         {
-            foreach (Transform child in parentGates)
+            foreach (Transform child in parentGateConfig)
             {
-                var childScript = child.GetComponent<LevelGatePrefabEditorV2>();
-                if (!childScript) continue;
-                if (childScript.Selecting)
+                if (child.TryGetComponent<LevelGateConfigEditorV2>(out var childGateConfig))
                 {
-                    DeleteGate(childScript);
+                    if (childGateConfig.targetGate.Selecting)
+                    {
+                        DeleteGate(childGateConfig.targetGate);
+                        Destroy(childGateConfig.gameObject);
+                    }
                 }
             }
         }
@@ -143,85 +155,6 @@ namespace InGame.GateEditorV2
         public void DeleteGate(LevelGatePrefabEditorV2 gate)
         {
             Destroy(gate.gameObject);
-        }
-
-        public void UpdateSelectingGate(LevelGatePrefabEditorV2 gate)
-        {
-            txtIsBossGate.onValueChanged.RemoveAllListeners();
-            inpTargetTower.onValueChanged.RemoveAllListeners();
-            inpStartTime.onValueChanged.RemoveAllListeners();
-            inpDuration.onValueChanged.RemoveAllListeners();
-            drdEnemy.onValueChanged.RemoveAllListeners();
-            inpIntervalLoop.onValueChanged.RemoveAllListeners();
-            inpStartTimeVisual.onValueChanged.RemoveAllListeners();
-            inpDurationVisual.onValueChanged.RemoveAllListeners();
-            
-            var gateConfig = gate.Config;
-            txtIsBossGate.isOn = gateConfig.isBossGate;
-            inpTargetTower.text = string.Join(", ", gateConfig.targetBaseIndex);
-            inpStartTime.text = gateConfig.startTime.ToString(GameConst.FloatFormat);
-            inpDuration.text = gateConfig.duration.ToString(GameConst.FloatFormat);
-            drdEnemy.value = gateConfig.spawnType.enemyId;
-            inpIntervalLoop.text = gateConfig.intervalLoop.ToString(GameConst.FloatFormat);
-            inpStartTimeVisual.text = gateConfig.startTimeVisual.ToString(GameConst.FloatFormat);
-            inpDurationVisual.text = gateConfig.durationVisual.ToString(GameConst.FloatFormat);
-
-            // txtIsBossGate.onValueChanged.AddListener((isOn) => gate.IsBossGate = isOn);
-            txtIsBossGate.onValueChanged.AddListener((isOn) => gate.Config.isBossGate = isOn);
-            inpTargetTower.onValueChanged.AddListener((value) =>
-            {
-                value = value.Trim(' ');
-                if (value == "0,1,2" || value == "0,2,1" || value == "1,0,2" || value == "1,2,0" || value == "2,0,1" ||
-                    value == "2,1,0"
-                    || value == "0,1" || value == "1,0" || value == "0,2" || value == "2,0" || value == "1,2" ||
-                    value == "2,1"
-                    || value == "0" || value == "1" || value == "2")
-                {
-                    // gate.StrTargetTowers = value;
-                    gate.Config.targetBaseIndex = value.Split(",").Select(int.Parse).ToArray();
-                }
-                else
-                {
-                    value = "0";
-                    // gate.StrTargetTowers = value;
-                    gate.Config.targetBaseIndex = value.Split(",").Select(int.Parse).ToArray();
-                }
-            });
-            inpStartTime.onValueChanged.AddListener((value) =>
-            {
-                // if (float.TryParse(value, out var time)) gate.StartTime = time;
-                if (float.TryParse(value, out var time)) gate.Config.startTime = time;
-            });
-            inpDuration.onValueChanged.AddListener((value) =>
-            {
-                // if (float.TryParse(value, out var time)) gate.Duration = time;
-                if (float.TryParse(value, out var time)) gate.Config.duration = time;
-            });
-            drdEnemy.onValueChanged.AddListener((value) =>
-            {
-                // gate.SpawnType = value;
-                gate.Config.spawnType = AvailableEnemies[value];
-            });
-            inpIntervalLoop.onValueChanged.AddListener((value) =>
-            {
-                // if (float.TryParse(value, out var time)) gate.Interval = time;
-                if (float.TryParse(value, out var time)) gate.Config.intervalLoop = time;
-            });
-            inpStartTimeVisual.onValueChanged.AddListener((value) =>
-            {
-                // if (float.TryParse(value, out var time)) gate.StartTimeVisual = time;
-                if (float.TryParse(value, out var time)) gate.Config.startTimeVisual = time;
-            });
-            inpDurationVisual.onValueChanged.AddListener((value) =>
-            {
-                // if (float.TryParse(value, out var time)) gate.DurationVisual = time;
-                if (float.TryParse(value, out var time)) gate.Config.durationVisual = time;
-            });
-        }
-
-        public void UpdateGatePositionDisplay(Vector2 position)
-        {
-            txtPosition?.SetText($"X: {position.x.ToString(GameConst.FloatFormat)}\nY: {position.y.ToString(GameConst.FloatFormat)}");
         }
         
         #region Save
