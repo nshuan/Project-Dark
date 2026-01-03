@@ -58,6 +58,10 @@ namespace InGame
 
         public void SetAuto(bool active)
         {
+            // Tạm thời tawts đi
+            txtAuto.gameObject.SetActive(false);
+            return;
+            
             DOTween.Kill(txtAuto);
             if (active)
             {

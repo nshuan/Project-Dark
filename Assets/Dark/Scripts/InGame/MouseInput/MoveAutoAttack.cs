@@ -14,7 +14,7 @@ namespace InGame
         protected Camera Cam { get; set; }
         protected MonoCursor cursor;
         protected RectTransform cursorRect;
-        protected Vector3 mousePosition;
+        // protected Vector3 mousePosition;
         protected Vector3 worldMousePosition;
         
         public bool CanShoot { get; set; }
@@ -22,9 +22,16 @@ namespace InGame
         protected float ActivateDuration { get; set; } = 1f;
         protected float cdCounter;
 
+        private LevelManager levelManager;
+        private EnemyManager manager;
+        private EnemyEntity nearestEnemy;
+        private EnemyEntity forceTargetEnemy;
+        private EnemyEntity hoveringEnemy;
+        private Collider2D[] mouseHoverEnemies;
+        
         public MoveAutoAttack()
         {
-
+            
         }
 
         public MoveAutoAttack(Camera cam, MonoCursor cursor)
@@ -32,6 +39,10 @@ namespace InGame
             Cam = cam;
             this.cursor = cursor;
             cursorRect = cursor.GetComponent<RectTransform>();
+            levelManager = LevelManager.Instance;
+            manager = EnemyManager.Instance;
+
+            mouseHoverEnemies = new Collider2D[20];
         }
 
         public void Initialize(InputInGame manager, MoveChargeController chargeController)
@@ -43,12 +54,18 @@ namespace InGame
             Cooldown = LevelUtility.GetSkillCooldown(false);
             ActivateDuration = 1f;
         }
-        
+
         public virtual void OnMouseClick()
+        {
+            forceTargetEnemy = hoveringEnemy;
+            hoveringEnemy?.SetHover(false);
+        }
+        
+        private void AutoAttack()
         {
             if (!CanShoot) return;
             
-            var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
+            var tempMousePos = new Vector2(worldMousePosition.x, worldMousePosition.y);
             var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(1f);
             var critRate = LevelUtility.GetCriticalRate();
             var bulletNum = 1;
@@ -60,12 +77,14 @@ namespace InGame
             var stagger = LevelUtility.GetBulletStagger();
             
             var delayShot = InputManager.PlayerVisual.PlayShoot(worldMousePosition);
+            var targetEnemy = nearestEnemy;
             InputManager.DelayCall(delayShot, () =>
             {
                 InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(skillRange);
                 
-                LevelUtility.CurrentSkill.Shoot(
+                LevelUtility.CurrentSkill.ShootToTarget(
                     LevelUtility.CurrentSkill.projectiles[PlayerProjectileType.Normal],
+                    targetEnemy,
                     InputManager.ProjectileSpawnPos.position,
                     LevelManager.Instance.CurrentTower.GetBaseCenter(),
                     tempMousePos,
@@ -131,19 +150,60 @@ namespace InGame
         public virtual void OnUpdate(Vector2 worldMousePosition)
         {
             if (cdCounter >= 0) cdCounter -= Time.deltaTime;
-            
-            if (!CanShoot) return;
 
-            this.worldMousePosition.x = worldMousePosition.x;
-            this.worldMousePosition.y = worldMousePosition.y; 
+            if (!CanShoot)
+            {
+                InputManager.PlayerVisual.SetDirection(worldMousePosition);
+                if (nearestEnemy) nearestEnemy.SetAimed(false);
+                forceTargetEnemy?.SetAimed(false);
+                return;
+            }
             
-            mousePosition = Input.mousePosition;
+            // Check bấm vào enemy để force attack vào đó
+            var mouseOverCount = Physics2D.OverlapPointNonAlloc(worldMousePosition, mouseHoverEnemies, LayerMask.GetMask("Entity"));
+            if (mouseOverCount > 0)
+            {
+                hoveringEnemy?.SetHover(false);
+                hoveringEnemy = null;
+                for (var i = 0; i < mouseOverCount; i++)
+                {
+                    if (mouseHoverEnemies[i].TryGetComponent<EnemyEntity>(out var entity))
+                    {
+                        hoveringEnemy = entity;
+                        hoveringEnemy.SetHover(true);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                hoveringEnemy?.SetHover(false);
+                hoveringEnemy = null;
+            }
+                
+
+            // Nếu auto target thì check enemy gần nhất rồi target vào
+            var canAutoTarget = GetNearestEnemy();
+            if (canAutoTarget)
+            {
+                this.worldMousePosition.x = nearestEnemy.transform.position.x;
+                this.worldMousePosition.y = nearestEnemy.transform.position.y;
+            }
+            else
+            {
+                this.worldMousePosition.x = worldMousePosition.x;
+                this.worldMousePosition.y = worldMousePosition.y; 
+            }
+            
+            InputManager.PlayerVisual.SetDirection(this.worldMousePosition);
+            
+            var mousePosition = Input.mousePosition;
             mousePosition.z = 0; // Set z to 0 for 2D
             cursorRect.position = mousePosition;    
             
             cursor.UpdateCooldown(true, 1 - Mathf.Clamp(cdCounter / Cooldown, 0f, 1f));
             if (cdCounter <= 0)
-                OnMouseClick();
+                AutoAttack();
         }
 
         public void Deactivate()
@@ -159,6 +219,40 @@ namespace InGame
         public void Dispose()
         {
             
+        }
+        
+        private bool GetNearestEnemy()
+        {
+            if (forceTargetEnemy && !forceTargetEnemy.IsDestroyed)
+            {
+                nearestEnemy?.SetAimed(false);
+                nearestEnemy = forceTargetEnemy;
+                nearestEnemy.SetAimed(true);
+                return nearestEnemy;
+            }
+            
+            var nearestDistance = float.MaxValue;
+            EnemyEntity tempNearestEnemy = null;
+                 
+            foreach (var enemy in manager.Enemies)
+            {
+                if (manager.EnemiesAliveMap.TryGetValue(enemy.Key, out var alive) && alive && enemy.Value.Activated && enemy.Value.IsDestroyed == false)
+                {
+                    var distance = Vector2.Distance(levelManager.CurrentTower.GetBaseCenter(), enemy.Value.transform.position);
+                    if (distance < nearestDistance)
+                    {
+                        nearestDistance = distance;
+                        tempNearestEnemy = enemy.Value;
+                    }
+                }
+            }
+
+            if (nearestEnemy &&  tempNearestEnemy != nearestEnemy) nearestEnemy.SetAimed(false);
+            if (!tempNearestEnemy) return false;
+            nearestEnemy = tempNearestEnemy;
+            nearestEnemy.SetAimed(true);
+            
+            return true;
         }
     }
 }
