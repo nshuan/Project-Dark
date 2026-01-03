@@ -22,13 +22,19 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         public void InitNode()
         {
             hoverField.rectTransform = (RectTransform)transform;
-            hoverField.onDrag = () =>
+            hoverField.onDrag = (anchor, delta) =>
             {
+                manager.OnDragNode(anchor, delta);
                 manager.UpdateLine(guid);
             };
             hoverField.onClick = () =>
             {
                 manager.SelectNode(this);
+            };
+            hoverField.onEndDrag = () =>
+            {
+                manager.OnEndDrag();
+                manager.UpdateLine(guid);
             };
         }
 

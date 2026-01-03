@@ -91,7 +91,9 @@ namespace InGame
             OnHitShield?.Invoke(totalDamage - damage, dmgType);
             
             stagger = 0;
+            var lastHealth = CurrentHp;
             CurrentHp -= damage;
+            CombatActions.OnDamageReceived?.Invoke(lastHealth - CurrentHp);
             
             OnHit?.Invoke(damage, dmgType);
             OnHitAttackerPos?.Invoke(dealerPosition);
