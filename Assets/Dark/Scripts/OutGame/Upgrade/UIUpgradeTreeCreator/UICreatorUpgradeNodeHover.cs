@@ -9,8 +9,9 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
     {
         public RectTransform rectTransform;
 
-        public Action onDrag;
+        public Action<RectTransform, Vector3> onDrag;
         public Action onClick;
+        public Action onEndDrag;
 
         private bool isDrag;
 
@@ -23,13 +24,14 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         {
             if (!rectTransform) return;
             rectTransform.position += (Vector3)eventData.delta;
-            onDrag?.Invoke();
+            onDrag?.Invoke(rectTransform, eventData.delta);
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
             isDrag = false;
             Align();
+            onEndDrag?.Invoke();
         }
         public void OnPointerClick(PointerEventData eventData)
         {
