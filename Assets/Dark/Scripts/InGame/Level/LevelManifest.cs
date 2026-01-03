@@ -27,6 +27,20 @@ namespace InGame
             if (levelMap.TryGetValue(level, out var value)) return Instantiate(value);
             return null;
         }
+
+        public LevelConfig GetTrueLevel(int level)
+        {
+            if (levelMap.TryGetValue(level, out var value)) return value;
+            return null;
+        }
+
+        public LevelConfig[] GetAllLevels()
+        {
+            if (levelMap == null)
+                return null;
+            
+            return levelMap.Values.ToArray();
+        }
         
         #region SINGLETON
 
@@ -46,6 +60,7 @@ namespace InGame
         
 #if UNITY_EDITOR
         public const string LevelPath = "Assets/Dark/Config/LevelInGame";
+        public const string WavePath = "Assets/Dark/Config/LevelWaveInGame";
 
         [MenuItem("Dark/Manifest/Generate Level Manifest")]
         public static void CreateInstance()
@@ -54,7 +69,7 @@ namespace InGame
         }
         
         [Button]
-        private void Validate()
+        public void Validate()
         {
             Debug.ClearDeveloperConsole();
             
@@ -87,26 +102,6 @@ namespace InGame
             {
                 if (!levelMap.ContainsKey(i))
                     DebugUtility.LogError($"Level {i} is missing!");
-            }
-        }
-
-        [Button]
-        public void ValidateDefaultSpawnAngle()
-        {
-            foreach (var pair in levelMap)
-            {
-                foreach (var wave in pair.Value.waveInfo)
-                {
-                    foreach (var gate in wave.waveConfig.gateConfigs)
-                    {
-                        if (gate.spawnLogic is GateSpawnSingle spawnSingle) spawnSingle.randomSpanAngle = 90;
-                        else if (gate.spawnLogic is GateSpawnTriangle spawnTri) spawnTri.randomSpanAngle = 90;
-                        else if (gate.spawnLogic is GateSpawnMultiple spawnMul) spawnMul.randomSpanAngle = 120;
-                        EditorUtility.SetDirty(wave.waveConfig);
-                        AssetDatabase.SaveAssets();
-                        AssetDatabase.Refresh();
-                    }
-                }
             }
         }
 #endif
