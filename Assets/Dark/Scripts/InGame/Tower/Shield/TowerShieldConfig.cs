@@ -6,8 +6,8 @@ namespace InGame.Shield
     public class TowerShieldConfig : ScriptableObject
     {
         public int maxShield;
-        public float delayHealing;
-        public int healingAmountPerTime;
-        public float healingInterval;
+        public float healingInterval; // Thời gian liên tục ko dính dame thì bắt đầu hồi máu
+        public int healingDuration; // Thời gian để hồi từ 0 lên max shield
+        public float healingDelta; // Thời gian đợi hồi shield 1 lần
     }
 }
