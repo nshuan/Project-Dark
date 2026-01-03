@@ -251,8 +251,10 @@ namespace InGame
         {
             if (IsDestroyed) return;
             if (State == EnemyState.Invisible) return;
-            
+
+            var lastHealth = CurrentHealth;
             CurrentHealth -= damage;
+            CombatActions.OnDamageDealt?.Invoke(lastHealth - CurrentHealth);
             
             OnHit?.Invoke(damage, dmgType);
             if (stagger - config.staggerResist > 0)

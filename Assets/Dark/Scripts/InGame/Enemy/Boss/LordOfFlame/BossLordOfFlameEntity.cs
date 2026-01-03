@@ -148,8 +148,7 @@ namespace InGame.Boss
             AttackRange = lordOfFlameConfig.phase2AtkRange;
             // Mặc định rớt trong tầm đánh luôn
             var dropDistanceToTower = AttackRange - 0.1f;
-            transform.position = Target.position + 
-                                 (Quaternion.Euler(0f, 0f, RandomUtil.Range(-20f, 20f)) * (transform.position - Target.position).normalized) * dropDistanceToTower;
+            transform.position = Target.position + new Vector3(-dropDistanceToTower, -0.2f, 0f);
             attackPosition = transform.position;
             animController.transform.localScale =
                 new Vector3(Mathf.Sign(Target.position.x - transform.position.x), 1f, 1f);
