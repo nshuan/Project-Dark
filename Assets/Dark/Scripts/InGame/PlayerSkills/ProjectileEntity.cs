@@ -99,7 +99,7 @@ namespace InGame
             this.RangeCenter = rangeCenter;
             this.direction = direction;
             BoundPosition =
-                LevelUtility.GetIntersectionInRangeBound(RangeCenter, range, SpawnPosition, direction);
+                LevelUtilityV2.GetIntersectionInRangeBound(RangeCenter, range, SpawnPosition, direction);
             maxDistanceFromSpawnPosition = (BoundPosition - SpawnPosition).magnitude;
             maxDistanceFromRangeCenter = (BoundPosition - RangeCenter).magnitude;
             lifeTime = 0f;

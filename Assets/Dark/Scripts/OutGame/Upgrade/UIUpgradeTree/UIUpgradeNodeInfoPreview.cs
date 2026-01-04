@@ -9,8 +9,10 @@ using Data;
 using DG.Tweening;
 using Economic;
 using InGame;
+using InGame.AttackNormalConfig;
 using InGame.ChargeConfig;
 using InGame.ConfigManager;
+using InGame.CounterConfig;
 using InGame.Upgrade;
 using Sirenix.Serialization;
 using TMPro;
@@ -48,7 +50,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private MoveTowersConfig teleConfig;
         [SerializeField] private MoveTowersConfig flashConfig;
         [SerializeField] private MoveTowersConfig dashConfig;
-        public UpgradeBonusInfo bonusInfo = new UpgradeBonusInfo();
+        public UpgradeBonusInfoV2 bonusInfo = new UpgradeBonusInfoV2();
         
         [Serializable]
         public class RequirementInfo
@@ -69,17 +71,18 @@ namespace Dark.Scripts.OutGame.Upgrade
         private void Start()
         {
             UpgradeManager.Instance.ActivateTree(ref bonusInfo);
-            LevelUtility.BonusInfo = bonusInfo;
-            LevelUtility.PlayerStats = playerStatsConfig;
-            LevelUtility.CurrentSkill = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
-            LevelUtility.ChargeConfigMap = new Dictionary<ChargeType, PlayerChargeConfig>()
-            {
-                { ChargeType.Bullet, PlayerChargeManifest.Get(ChargeType.Bullet) },
-                { ChargeType.Size, PlayerChargeManifest.Get(ChargeType.Size) }
-            };
-            LevelUtility.DashConfig = dashConfig;
-            LevelUtility.FlashConfig = flashConfig;
-            LevelUtility.TeleConfig = teleConfig; 
+            LevelUtilityV2.BonusInfo = bonusInfo;
+            LevelUtilityV2.StatsBase = playerStatsConfig;
+            LevelUtilityV2.StatsNormalAttack = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
+            LevelUtilityV2.StatsNormalPiercing = PlayerSkillNormalManifest.Get(NormalType.Piercing);
+            LevelUtilityV2.StatsNormalBullet = PlayerSkillNormalManifest.Get(NormalType.Bullet);
+            LevelUtilityV2.StatsChargeBullet = PlayerChargeManifest.Get(ChargeType.Bullet);
+            LevelUtilityV2.StatsChargeSize = PlayerChargeManifest.Get(ChargeType.Size);
+            LevelUtilityV2.StatsDash = dashConfig;
+            LevelUtilityV2.StatsFlash = flashConfig;
+            LevelUtilityV2.StatsTele = teleConfig; 
+            LevelUtilityV2.StatsCounterPiercing = TowerCounterManifest.Get(NodeTowerCounter.CounterType.Pierce);
+            LevelUtilityV2.StatsCounterSlash = TowerCounterManifest.Get(NodeTowerCounter.CounterType.Slash);
         }
 
         public void Setup(UpgradeNodeConfig config, bool forceUpdate)

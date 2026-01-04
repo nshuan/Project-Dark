@@ -27,7 +27,7 @@ namespace InGame.UI.HitShowDamage
 
         private void OnDamaged(int damage, DamageType dmgType)
         {
-            if (dmgType == DamageType.SelfDestruct) return;
+            if (dmgType == DamageType.SelfDestruct || dmgType == DamageType.Enemy) return;
             UIHitDameTextPool.Instance.ShowDamage(damage, transform.position, dmgType);
         }
     }

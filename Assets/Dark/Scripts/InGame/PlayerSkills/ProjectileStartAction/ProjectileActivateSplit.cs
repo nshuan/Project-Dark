@@ -13,6 +13,10 @@ namespace InGame
         
         public void DoAction(ProjectileEntity parentProjectile, Vector2 direction)
         {
+            if (amount == 0) return;
+            if (angle == 0) return;
+            if (!projectile) return;
+            
             direction.Normalize();
 
             var spawnPos = new Vector2();

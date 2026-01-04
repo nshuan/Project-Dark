@@ -111,7 +111,15 @@ namespace InGame
             CurrentDamage = Mathf.RoundToInt(config.dmg * StatsScale.dmgScale);
             Exp = Mathf.RoundToInt(config.exp * levelExpRatio);
             Dark = Mathf.RoundToInt(config.dark * levelDarkRatio);
-            DarkRatio = LevelUtility.GetDropRate(config.darkRatio);
+            if (!IsBoss)
+            {
+                Exp = Mathf.RoundToInt(Exp * LevelUtilityV2.GetExpDropScale());
+                Dark = Mathf.RoundToInt(Dark * LevelUtilityV2.GetVestigeDropScale());
+                if (RandomUtil.Range(0f, 1f) < LevelUtilityV2.GetVestigeDoubleChance()) Dark *= 2;
+                if (RandomUtil.Range(0f, 1f) < LevelUtilityV2.GetVestigeTripleChance()) Dark *= 3;
+            }
+            
+            DarkRatio = 1f; // Chắc chắn rớt
             DarkUnitValue = levelDarkUnitValue;
             BossPoint = config.bossPoint;
             AttackRange = config.attackRange;
@@ -254,7 +262,8 @@ namespace InGame
 
             var lastHealth = CurrentHealth;
             CurrentHealth -= damage;
-            CombatActions.OnDamageDealt?.Invoke(lastHealth - CurrentHealth);
+            if (dmgType != DamageType.Enemy && dmgType != DamageType.SelfDestruct)
+                CombatActions.OnDamageDealt?.Invoke(lastHealth - CurrentHealth);
             
             OnHit?.Invoke(damage, dmgType);
             if (stagger - config.staggerResist > 0)
@@ -293,6 +302,9 @@ namespace InGame
                     case DamageType.TowerCritical:
                         dieReason = EnemyDieReason.TowerKill;
                         break;
+                    case DamageType.Enemy:
+                        dieReason = EnemyDieReason.EnemyKill;
+                        break;
                     case DamageType.SelfDestruct:
                         dieReason = EnemyDieReason.Suicide;
                         break;
@@ -321,7 +333,7 @@ namespace InGame
             callbackBurnComplete?.Invoke();
             callbackBurnComplete = null;
             SetAimed(false);
-            if (reason != EnemyDieReason.Suicide)
+            if (reason != EnemyDieReason.Suicide && reason != EnemyDieReason.EnemyKill)
                 DropResource();
             StartCoroutine(IEDie(.5f, reason));
         }

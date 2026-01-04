@@ -15,7 +15,7 @@ namespace InGame.Upgrade
     {
         #region Actions
 
-        public Action<UpgradeBonusInfo> OnActivated;
+        public Action<UpgradeBonusInfoV2> OnActivated;
 
         #endregion
         
@@ -88,10 +88,10 @@ namespace InGame.Upgrade
         
         #endregion
         
-        public void ActivateTree(ref UpgradeBonusInfo bonusInfo)
+        public void ActivateTree(ref UpgradeBonusInfoV2 bonusInfo)
         {
             // Init bonus infor
-            bonusInfo = new UpgradeBonusInfo();
+            bonusInfo = new UpgradeBonusInfoV2();
            
             TreeConfig.ActivateTree(Data.nodes, ref bonusInfo);
 
@@ -100,8 +100,6 @@ namespace InGame.Upgrade
             if (testBonusInfo.Item1) // enabled = true
             {
                 bonusInfo = testBonusInfo.Item2;
-                bonusInfo.skillBonus ??= new UpgradeBonusSkillInfo();
-                bonusInfo.passiveMapByTriggerType ??= new Dictionary<PassiveTriggerType, List<PassiveType>>();
             }
 #endif
             
@@ -185,7 +183,7 @@ namespace InGame.Upgrade
         }
         
 #if HOT_CHEAT
-        public void CheatUpdateBonusInfo(UpgradeBonusInfo bonusInfo)
+        public void CheatUpdateBonusInfo(UpgradeBonusInfoV2 bonusInfo)
         {
             OnActivated?.Invoke(bonusInfo);
         }

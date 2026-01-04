@@ -146,7 +146,7 @@ namespace Dark.Tools.GoogleSheetTool
                     });
                 }
    
-                config.nodeLogic = ConfigNodeLogicFactory.Generate(logicInfos);
+                config.nodeLogic = ConfigNodeLogicFactoryV2.Generate(logicInfos);
 
                 var allCost = new List<UpgradeNodeCostInfo>();
                     

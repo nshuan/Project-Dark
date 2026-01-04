@@ -20,7 +20,7 @@ namespace InGame.Upgrade
 
         public int TotalNodes => nodeMapById.Count;
         
-        public void ActivateTree(List<UpgradeNodeData> nodeData, ref UpgradeBonusInfo bonusInfo)
+        public void ActivateTree(List<UpgradeNodeData> nodeData, ref UpgradeBonusInfoV2 bonusInfo)
         {
             foreach (var node in nodeData)
             {

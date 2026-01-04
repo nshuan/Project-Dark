@@ -29,11 +29,11 @@ namespace InGame.UI.CombatSkills
             UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
         }
         
-        private void OnUpgradeBonusActivated(UpgradeBonusInfo bonusInfo)
+        private void OnUpgradeBonusActivated(UpgradeBonusInfoV2 bonusInfo)
         {
             var showIcon = false;
             
-            if (bonusInfo.skillBonus.unlockedChargeSize && bonusInfo.skillBonus.unlockedChargeBullet)
+            if (bonusInfo.bonusUnlockSkill.unlockChargeAttackSize && bonusInfo.bonusUnlockSkill.unlockChargeAttackBullet)
             {
                 showIcon = true;
                 SetSkillSprite(imgIconBaseSkill1, 1);
@@ -43,7 +43,7 @@ namespace InGame.UI.CombatSkills
                 secondSkill.SetActive(true);
                 groupPassiveAndArrow.localPosition = new Vector3(groupPassiveTwoSkillX, groupPassiveAndArrow.localPosition.y, groupPassiveAndArrow.localPosition.z);
             }
-            else if (bonusInfo.skillBonus.unlockedChargeSize)
+            else if (bonusInfo.bonusUnlockSkill.unlockChargeAttackSize)
             {
                 showIcon = true;
                 SetSkillSprite(imgIconBaseSkill1, 1);
@@ -52,7 +52,7 @@ namespace InGame.UI.CombatSkills
                 groupPassiveAndArrow.localPosition = new Vector3(groupPassiveOneSkillX, groupPassiveAndArrow.localPosition.y,
                     groupPassiveAndArrow.localPosition.z);
             }
-            else if (bonusInfo.skillBonus.unlockedChargeBullet)
+            else if (bonusInfo.bonusUnlockSkill.unlockChargeAttackBullet)
             {
                 showIcon = true;
                 SetSkillSprite(imgIconBaseSkill1, 2);
@@ -90,15 +90,15 @@ namespace InGame.UI.CombatSkills
             // Nếu mới unlock 1 loại thì dùng tên loại đó
             // Nếu đã unlock cả 2 loại thì dùng tên cả 2 loại
             var message = "";
-            if (LevelUtility.BonusInfo.skillBonus.unlockedChargeSize && LevelUtility.BonusInfo.skillBonus.unlockedChargeBullet)
+            if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockChargeAttackSize && LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockChargeAttackBullet)
             {
                 message = "Splitting Echo and Wanderfang are ready!";
             }
-            else if (LevelUtility.BonusInfo.skillBonus.unlockedChargeSize)
+            else if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockChargeAttackSize)
             {
                 message = "Splitting Echo is ready!";
             }
-            else if (LevelUtility.BonusInfo.skillBonus.unlockedChargeBullet)
+            else if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockChargeAttackBullet)
             {
                 message = "Wanderfang is ready!";
             }

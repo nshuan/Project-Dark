@@ -5,8 +5,10 @@ using Core;
 using Dark.Scripts.Utils;
 using Data;
 using Economic;
+using InGame.AttackNormalConfig;
 using InGame.ChargeConfig;
 using InGame.ConfigManager;
+using InGame.CounterConfig;
 using InGame.Upgrade;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -47,7 +49,7 @@ namespace InGame
 
         #region Upgrade
 
-        [ReadOnly, NonSerialized, OdinSerialize] private UpgradeBonusInfo bonusInfo = new UpgradeBonusInfo();
+        [ReadOnly, NonSerialized, OdinSerialize] private UpgradeBonusInfoV2 bonusInfo = new UpgradeBonusInfoV2();
         
         #endregion
         
@@ -96,17 +98,18 @@ namespace InGame
         private void InitSkillTreeBonus()
         {
             UpgradeManager.Instance.ActivateTree(ref bonusInfo);
-            LevelUtility.BonusInfo = bonusInfo;
-            LevelUtility.PlayerStats = playerStats;
-            LevelUtility.CurrentSkill = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
-            LevelUtility.ChargeConfigMap = new Dictionary<ChargeType, PlayerChargeConfig>()
-            {
-                { ChargeType.Bullet, PlayerChargeManifest.Get(ChargeType.Bullet) },
-                { ChargeType.Size, PlayerChargeManifest.Get(ChargeType.Size) }
-            };
-            LevelUtility.DashConfig = dashConfig;
-            LevelUtility.FlashConfig = flashConfig;
-            LevelUtility.TeleConfig = defaultTeleConfig; 
+            LevelUtilityV2.BonusInfo = bonusInfo;
+            LevelUtilityV2.StatsBase = playerStats;
+            LevelUtilityV2.StatsNormalAttack = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
+            LevelUtilityV2.StatsNormalPiercing = PlayerSkillNormalManifest.Get(NormalType.Piercing);
+            LevelUtilityV2.StatsNormalBullet = PlayerSkillNormalManifest.Get(NormalType.Bullet);
+            LevelUtilityV2.StatsChargeBullet = PlayerChargeManifest.Get(ChargeType.Bullet);
+            LevelUtilityV2.StatsChargeSize = PlayerChargeManifest.Get(ChargeType.Size);
+            LevelUtilityV2.StatsDash = dashConfig;
+            LevelUtilityV2.StatsFlash = flashConfig;
+            LevelUtilityV2.StatsTele = defaultTeleConfig; 
+            LevelUtilityV2.StatsCounterPiercing = TowerCounterManifest.Get(NodeTowerCounter.CounterType.Pierce);
+            LevelUtilityV2.StatsCounterSlash = TowerCounterManifest.Get(NodeTowerCounter.CounterType.Slash);
         }
         
         private void InitPlayerAndTowers()
@@ -115,7 +118,7 @@ namespace InGame
             currentTowerIndex = -1;
             
             if (Player != null) Destroy(Player.gameObject);
-            Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)LevelUtility.CurrentSkill.skillId);
+            Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)LevelUtilityV2.StatsNormalAttack.skillId);
             Player.transform.position = towers[0].transform.position + towers[0].GetTowerHeight();
             OnInitPlayer?.Invoke();
         }
@@ -244,7 +247,7 @@ namespace InGame
         {
             for (var i = 0; i < towers.Length; i++)
             {
-                towers[i].Initialize(i, LevelUtility.GetTowerHp());
+                towers[i].Initialize(i, LevelUtilityV2.GetBaseTowerHp());
                 towers[i].OnDestroyed += OnTowerDestroyed;
             }
         }

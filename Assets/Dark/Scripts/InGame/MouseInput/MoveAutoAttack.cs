@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Dark.Scripts.Utils;
 using DG.Tweening;
@@ -51,7 +52,7 @@ namespace InGame
             cursor.SetAuto(GameConst.DefaultAutoAttack);
 
             InputManager = manager;
-            Cooldown = LevelUtility.GetSkillCooldown(false);
+            Cooldown = LevelUtilityV2.GetNormalAttackCooldown();
             ActivateDuration = 1f;
         }
 
@@ -66,15 +67,13 @@ namespace InGame
             if (!CanShoot) return;
             
             var tempMousePos = new Vector2(worldMousePosition.x, worldMousePosition.y);
-            var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(1f);
-            var critRate = LevelUtility.GetCriticalRate();
+            var (damage, criticalDamage) = LevelUtilityV2.GetNormalAttackDamage();
+            var critRate = LevelUtilityV2.GetBaseCriticalRate();
             var bulletNum = 1;
-            var skillSize = LevelUtility.GetSkillSize(1f);
-            var skillRange = LevelUtility.GetSkillRange(
-                1f,
-                Vector2.right);
-            var maxHit = 1 + LevelUtility.BonusInfo.skillBonus.bulletMaxHitPlus;
-            var stagger = LevelUtility.GetBulletStagger();
+            var skillSize = 1f;
+            var skillRange = LevelUtilityV2.GetNormalAttackRange(Vector2.right);
+            var maxHit = 1 + LevelUtilityV2.GetNormalPiercingAmount();
+            var stagger = LevelUtilityV2.GetBaseStagger();
             
             var delayShot = InputManager.PlayerVisual.PlayShoot(worldMousePosition);
             var targetEnemy = nearestEnemy;
@@ -82,8 +81,8 @@ namespace InGame
             {
                 InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(skillRange);
                 
-                LevelUtility.CurrentSkill.ShootToTarget(
-                    LevelUtility.CurrentSkill.projectiles[PlayerProjectileType.Normal],
+                LevelUtilityV2.StatsNormalAttack.ShootToTarget(
+                    LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.Normal],
                     targetEnemy,
                     InputManager.ProjectileSpawnPos.position,
                     LevelManager.Instance.CurrentTower.GetBaseCenter(),
@@ -97,8 +96,13 @@ namespace InGame
                     stagger,
                     maxHit,
                     false,
-                    LevelUtility.BonusInfo.skillBonus.GetProjectileActivateActions(false),
-                    LevelUtility.BonusInfo.skillBonus.GetProjectileHitActions(false));
+                    new List<IProjectileActivate>() { new ProjectileActivateSplit()
+                    {
+                        projectile = LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.Normal],
+                        amount = LevelUtilityV2.GetNormalBulletAmount(),
+                        angle = 50f
+                    } },
+                    null);
             });
 
             CombatActions.OnAttackNormal?.Invoke(Cooldown);

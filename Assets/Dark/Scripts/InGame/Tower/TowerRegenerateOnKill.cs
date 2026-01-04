@@ -7,7 +7,8 @@ namespace InGame
     public class TowerRegenerateOnKill : MonoBehaviour
     {
         private TowerEntity tower;
-        private int regenAmount;
+        private float lifeLeechRate;
+        private float currenLifeToConvert;
         
         private Coroutine coroutineRegenerate;
         
@@ -15,25 +16,30 @@ namespace InGame
         [SerializeField] private ParticleSystemGroup vfxTowerRegenerate;
         [SerializeField] private float vfxDuration;
         
-        public void Initialize(TowerEntity targetTower, int amount)
+        public void Initialize(TowerEntity targetTower, float amount)
         {
             tower = targetTower;
-            regenAmount = amount;
+            lifeLeechRate = amount;
+            currenLifeToConvert = 0;
 
-            CombatActions.OnOneEnemyDead += OnOneEnemyKilled;
+            CombatActions.OnDamageDealt += OnDamageDealt;
         }
 
-        private void OnOneEnemyKilled(EnemyEntity enemy, EnemyDieReason reason)
+        private void OnDamageDealt(int value)
         {
-            if (reason == EnemyDieReason.Suicide) return;
-            if (regenAmount <= 0) return;
+            if (lifeLeechRate <= 0) return;
+            if (value <= 0) return;
+
+            currenLifeToConvert += lifeLeechRate * value;
+            var valueToAdd = Mathf.FloorToInt(currenLifeToConvert);
+            currenLifeToConvert -= valueToAdd;
             
             if (tower.CurrentHp < tower.MaxHp && tower.CurrentHp > 0)
             {
                 if (coroutineRegenerate != null)
                     StopCoroutine(coroutineRegenerate);
                 coroutineRegenerate = StartCoroutine(IERegenerateVfx());
-                tower.Regenerate(regenAmount);
+                tower.Regenerate(valueToAdd);
             }
         }
         

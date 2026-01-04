@@ -15,7 +15,7 @@ namespace InGame.Upgrade
         public bool hideLevelInNode;
         public string description; // Description to display
         public UpgradeNodeCostInfo[] costInfo; 
-        [NonSerialized, OdinSerialize] public INodeActivateLogic[] nodeLogic;
+        [NonSerialized, OdinSerialize] public INodeActivateLogicV2[] nodeLogic;
         
         public int MaxLevel
         {
@@ -26,7 +26,7 @@ namespace InGame.Upgrade
             }
         }
 
-        public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)
+        public void ActivateNode(int level, ref UpgradeBonusInfoV2 bonusInfo)
         {
             if (nodeLogic == null) return;
             if (level <= 0 || level > MaxLevel) return;
@@ -39,7 +39,7 @@ namespace InGame.Upgrade
             }
         }
         
-        public void ActivateLevel(int level, ref UpgradeBonusInfo bonusInfo)
+        public void ActivateLevel(int level, ref UpgradeBonusInfoV2 bonusInfo)
         {
             if (nodeLogic == null) return;
             if (level <= 0 || level > MaxLevel) return;
