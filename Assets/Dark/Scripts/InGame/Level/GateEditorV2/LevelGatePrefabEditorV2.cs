@@ -64,16 +64,41 @@ namespace InGame.GateEditorV2
 
         public void UpdateUI(GateConfig gate)
         {
+            var newTargets = new List<int>();
+            if (gate.targetBaseIndex != null)
+            {
+                newTargets.AddRange(gate.targetBaseIndex);
+            }
+
+            IGateSpawner newSpawnLogic;
+            if (gate.spawnLogic is GateSpawnSingle existingSingle)
+            {
+                newSpawnLogic = new GateSpawnSingle() { radius = existingSingle.radius, randomSpanAngle = existingSingle.randomSpanAngle };
+            }
+            else if (gate.spawnLogic is GateSpawnTriangle existingTriangle)
+            {
+                newSpawnLogic = new GateSpawnTriangle() {  radius = existingTriangle.radius, randomSpanAngle = existingTriangle.randomSpanAngle };
+            }
+            else if (gate.spawnLogic is GateSpawnMultiple existingMultiple)
+            {
+                newSpawnLogic = new GateSpawnMultiple() { amount = existingMultiple.amount, randomSpanAngle = existingMultiple.randomSpanAngle, maxRadius = existingMultiple.maxRadius };
+            }
+            else
+            {
+                newSpawnLogic = new GateSpawnCenter();
+            }
+            
+
             Config = new GateConfig()
             {
                 isBossGate = gate.isBossGate,
-                position = gate.position,
-                targetBaseIndex = gate.targetBaseIndex,
+                position = new Vector2(gate.position.x, gate.position.y),
+                targetBaseIndex = newTargets.ToArray(),
                 startTime = gate.startTime,
                 duration = gate.duration,
                 spawnType = gate.spawnType,
                 intervalLoop = gate.intervalLoop,
-                spawnLogic = gate.spawnLogic,
+                spawnLogic = newSpawnLogic,
                 startTimeVisual = gate.startTimeVisual,
                 durationVisual = gate.durationVisual,
             };
@@ -89,6 +114,7 @@ namespace InGame.GateEditorV2
             
             transform.position = camera.WorldToScreenPoint(gate.position);
             vfx.position = gate.position;
+            Position = vfx.position;
         }
 
         private void InitLines()
