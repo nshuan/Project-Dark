@@ -7,6 +7,7 @@ using Dark.Scripts.OutGame.Upgrade;
 using Data;
 using Economic;
 using Cheat;
+using Dark.Scripts.InGame.Upgrade.DynamicCost;
 using UnityEngine;
 
 namespace InGame.Upgrade
@@ -34,6 +35,7 @@ namespace InGame.Upgrade
         }
 
         private Dictionary<int, UpgradeNodeData> dataMapById;
+        private Dictionary<int, int> unlockOrderMapById;
 
         public void InitData()
         {
@@ -42,9 +44,15 @@ namespace InGame.Upgrade
             // data = new UpgradeData(TreeConfig.nodeMapById);
 #endif
             dataMapById = new Dictionary<int, UpgradeNodeData>();
+            unlockOrderMapById = new Dictionary<int, int>();
+            var index = 0;
             foreach (var node in data.nodes)
             {
                 dataMapById.TryAdd(node.id, node);
+                if (unlockOrderMapById.TryAdd(node.id, index))
+                {
+                    index += 1;
+                }
             }
         }
 
@@ -64,7 +72,7 @@ namespace InGame.Upgrade
         {
             return playerDataKey + "_UpgradeData";
         }
-
+        
         public UpgradeManager()
         {
             InitData();
@@ -106,7 +114,13 @@ namespace InGame.Upgrade
             OnActivated?.Invoke(bonusInfo);
         }
         
-        public bool UpgradeNode(int nodeId)
+        /// <summary>
+        /// nodeGroupLockOrder: unlock order comparing to other group lock node
+        /// </summary>
+        /// <param name="nodeId"></param>
+        /// <param name="nodeGroupLockId"></param>
+        /// <returns></returns>
+        public bool UpgradeNode(int nodeId, int nodeGroupUnlockOrder)
         {
             if (TreeConfig.GetNodeById(nodeId) == null) return false;
             
@@ -126,15 +140,34 @@ namespace InGame.Upgrade
             var costValueToSpend = new Dictionary<WealthType, int>();
             foreach (var cost in costInfo)
             {
-                var costValueIndex = cost.costType switch
-                {
-                    WealthType.Vestige => Data.indexVestige,
-                    WealthType.Echoes => Data.indexEchoes,
-                    WealthType.Sigils => Data.indexSigils,
-                    _ => 0
-                };
+                // var costValueIndex = cost.costType switch
+                // {
+                //     WealthType.Vestige => Data.indexVestige,
+                //     WealthType.Echoes => Data.indexEchoes,
+                //     WealthType.Sigils => Data.indexSigils,
+                //     _ => 0
+                // };
                 
-                var costValue = UpgradeRequirementConfig.Instance.GetRequirement(cost.costType, costValueIndex);
+                // var costValue = UpgradeRequirementConfig.Instance.GetRequirement(cost.costType, costValueIndex);
+                
+                var costValue = 0;
+                if (nodeConfig.dynamicVestige)
+                {
+                    if (nodeConfig.MaxLevel == 1)
+                        costValue = Mathf.RoundToInt(nodeConfig.vestigeCostRatio *
+                                                     DynamicVestigeConfig.Instance.GetCost1Stage(nodeGroupUnlockOrder));
+                    else
+                    {
+                        var listCostValue = DynamicVestigeConfig.Instance.GetCost5Stage(nodeGroupUnlockOrder);
+                        currentLevel = Math.Min(currentLevel, listCostValue.Length - 1);
+                        costValue = Mathf.RoundToInt(nodeConfig.vestigeCostRatio * listCostValue[currentLevel]);
+                    }
+                }
+                else
+                {
+                    currentLevel = Math.Min(currentLevel, cost.costValue.Length - 1);
+                    costValue = Mathf.RoundToInt(nodeConfig.vestigeCostRatio * cost.costValue[currentLevel]);
+                }
                 
                 if (!WealthManager.Instance.CanSpend(cost.costType, costValue)) 
                 {
@@ -180,6 +213,16 @@ namespace InGame.Upgrade
                 WealthType.Sigils => Data.indexSigils,
                 _ => 0
             };
+        }
+
+        /// <summary>
+        /// 999999 là chưa unlock
+        /// </summary>
+        /// <param name="nodeId"></param>
+        /// <returns></returns>
+        public int GetNodeUnlockOrder(int nodeId)
+        {
+            return unlockOrderMapById.GetValueOrDefault(nodeId, 999999);
         }
         
 #if HOT_CHEAT

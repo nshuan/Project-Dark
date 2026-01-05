@@ -17,7 +17,7 @@ namespace InGame.Upgrade
     public class UpgradeTreeConfig : SerializedScriptableObject
     {
         [NonSerialized, OdinSerialize] private Dictionary<int, UpgradeNodeConfig> nodeMapById = new Dictionary<int, UpgradeNodeConfig>();
-
+        
         public int TotalNodes => nodeMapById.Count;
         
         public void ActivateTree(List<UpgradeNodeData> nodeData, ref UpgradeBonusInfoV2 bonusInfo)

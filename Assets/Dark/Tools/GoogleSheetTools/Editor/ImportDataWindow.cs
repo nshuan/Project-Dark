@@ -108,6 +108,13 @@ public class ImportDataWindow : EditorWindow
                 ConfigNodeCostImporter.Import(data.configs[0], csvTable);
             }
         }
+        else if (tabName.ToString().ToLower().Contains("vestigedynamic"))
+        {
+            foreach (var data in listDataToUpdate)
+            {
+                ConfigDynamicImporter.Import(data.configs[0], csvTable);
+            }
+        }
         else if (tabName.ToString().ToLower().Contains("levelupconfig"))
         {
             foreach (var data in listDataToUpdate)

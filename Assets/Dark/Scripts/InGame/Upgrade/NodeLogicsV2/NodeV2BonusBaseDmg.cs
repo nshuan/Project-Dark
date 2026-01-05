@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Dark.Tools.GoogleSheetTool;
+using UnityEngine;
 
 namespace InGame.Upgrade.NodeLogicsV2
 {
@@ -79,7 +80,10 @@ namespace InGame.Upgrade.NodeLogicsV2
             }
             catch (Exception e)
             {
-                throw new Exception($"Invalid BonusBaseDmg value string: {listValue[0]}");
+                Debug.LogError($"Invalid BonusBaseDmg value string: {listValue[0]}");
+                value = Array.Empty<float>();
+                isMul = mul;
+                return this;
             }
         }
     }

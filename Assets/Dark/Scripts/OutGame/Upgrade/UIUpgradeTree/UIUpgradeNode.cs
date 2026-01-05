@@ -22,6 +22,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         public UIUpgradeTree treeRef;
         public UpgradeNodeConfig config;
         public List<UIUpgradePreRequireInfo> preRequires;
+        public int groupId;
         
         [Space]
         [Header("UI")]
@@ -225,7 +226,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                 transform.localScale = defaultScale;
                 transform.DOPunchRotation(new Vector3(0f, 0f, 10f), 0.3f, 20, 0.1f).SetTarget(transform);
                 transform.DOScale(new Vector3(0.2f, 0.2f, 0), 0.2f).SetRelative().SetEase(Ease.OutQuad);
-                UIUpgradeNodeInfoPreview.Instance.Setup(config, false);
+                UIUpgradeNodeInfoPreview.Instance.Setup(this, config, false);
                 UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), false, () => hoverField.interactable = true);
             };
             hoverField.onHoverExit = () =>
@@ -251,7 +252,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     return;
                 }
                 
-                var success = UpgradeManager.Instance.UpgradeNode(config.nodeId);
+                var success = UpgradeManager.Instance.UpgradeNode(config.nodeId, treeRef.GetGroupUnlockOrder(groupId));
                 if (success)
                 {
                     if (treeRef.IsNodeSkill(config.nodeId))
@@ -260,7 +261,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                         LogManager.Log(LogConst.EventLogActivateNode, "passive", config.nodeName);
                     
                     config.ActivateLevel(UpgradeManager.Instance.GetData(config.nodeId).level, ref UIUpgradeNodeInfoPreview.Instance.bonusInfo);
-                    UIUpgradeNodeInfoPreview.Instance.Setup(config, true);
+                    UIUpgradeNodeInfoPreview.Instance.Setup(this, config, true);
                     UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true, () => hoverField.interactable = true);
                     // UIUpgradeNodeInfoPreview.Instance.HideImmediately(true);
                     // UIUpgradeNodeInfoPreview.Instance.CanAutoShowHide = false;

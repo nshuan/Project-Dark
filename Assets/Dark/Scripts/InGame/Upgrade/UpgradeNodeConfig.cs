@@ -14,6 +14,8 @@ namespace InGame.Upgrade
         public string nodeName; // Name to display
         public bool hideLevelInNode;
         public string description; // Description to display
+        public float vestigeCostRatio; // cost will multiply to this value
+        public bool dynamicVestige; // is this node using dynamic vestige?
         public UpgradeNodeCostInfo[] costInfo; 
         [NonSerialized, OdinSerialize] public INodeActivateLogicV2[] nodeLogic;
         
@@ -54,5 +56,6 @@ namespace InGame.Upgrade
     public class UpgradeNodeCostInfo
     {
         public WealthType costType; // Type of resource needed to unlock this node
+        public int[] costValue;
     }
 }

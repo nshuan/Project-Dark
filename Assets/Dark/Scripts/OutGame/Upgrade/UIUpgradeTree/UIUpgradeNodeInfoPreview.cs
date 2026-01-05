@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Core;
 using Dark.Scripts.InGame.Upgrade;
+using Dark.Scripts.InGame.Upgrade.DynamicCost;
 using Dark.Scripts.Utils.Camera;
 using Data;
 using DG.Tweening;
@@ -61,8 +62,10 @@ namespace Dark.Scripts.OutGame.Upgrade
         }
 
         public bool CanAutoShowHide { get; set; } = true;
+        public UIUpgradeTree CacheTree { get; set; }
         private UpgradeNodeData cacheData;
         private UpgradeNodeConfig cacheConfig;
+        private UIUpgradeNode cacheNode;
         private bool isVisible;
         private Vector2 mousePos = Vector2.zero;
         private Vector2 cacheHoverNodePosition = new Vector2(0, 0);
@@ -85,10 +88,11 @@ namespace Dark.Scripts.OutGame.Upgrade
             LevelUtilityV2.StatsCounterSlash = TowerCounterManifest.Get(NodeTowerCounter.CounterType.Slash);
         }
 
-        public void Setup(UpgradeNodeConfig config, bool forceUpdate)
+        public void Setup(UIUpgradeNode node, UpgradeNodeConfig config, bool forceUpdate)
         {
             if (CanAutoShowHide == false && forceUpdate == false) return;
-            
+
+            cacheNode = node;
             cacheConfig = config;
             cacheData = UpgradeManager.Instance.GetData(config.nodeId);
             UpdateUI();
@@ -157,12 +161,47 @@ namespace Dark.Scripts.OutGame.Upgrade
                 var costSigils = 0;
                 foreach (var req in cacheConfig.costInfo)
                 {
-                    if (req.costType == WealthType.Vestige) 
-                        costVestige = UpgradeRequirementConfig.Instance.GetRequirement(WealthType.Vestige, UpgradeManager.Instance.GetRequirementIndex(WealthType.Vestige));
-                    else if (req.costType == WealthType.Echoes) 
-                        costEchoes = UpgradeRequirementConfig.Instance.GetRequirement(WealthType.Echoes, UpgradeManager.Instance.GetRequirementIndex(WealthType.Echoes));
-                    else if (req.costType == WealthType.Sigils) 
-                        costSigils = UpgradeRequirementConfig.Instance.GetRequirement(WealthType.Sigils, UpgradeManager.Instance.GetRequirementIndex(WealthType.Sigils));
+                    // if (req.costType == WealthType.Vestige) 
+                    //     costVestige = UpgradeRequirementConfig.Instance.GetRequirement(WealthType.Vestige, UpgradeManager.Instance.GetRequirementIndex(WealthType.Vestige));
+                    // else if (req.costType == WealthType.Echoes) 
+                    //     costEchoes = UpgradeRequirementConfig.Instance.GetRequirement(WealthType.Echoes, UpgradeManager.Instance.GetRequirementIndex(WealthType.Echoes));
+                    // else if (req.costType == WealthType.Sigils) 
+                    //     costSigils = UpgradeRequirementConfig.Instance.GetRequirement(WealthType.Sigils, UpgradeManager.Instance.GetRequirementIndex(WealthType.Sigils));
+                    var unlockLevel = cacheData?.level ?? 0;
+                    if (req.costType == WealthType.Vestige)
+                    {
+                        if (cacheConfig.dynamicVestige)
+                        {
+                            if (cacheConfig.MaxLevel == 1)
+                                costVestige =
+                                    DynamicVestigeConfig.Instance.GetCost1Stage(
+                                        CacheTree.GetGroupUnlockOrder(cacheNode.groupId));
+                            else
+                            {
+                                var unlockCost = DynamicVestigeConfig.Instance.GetCost5Stage(
+                                    CacheTree.GetGroupUnlockOrder(cacheNode.groupId));
+                                unlockLevel = Math.Clamp(unlockLevel, 0, unlockCost.Length - 1);
+                                costVestige = unlockCost[unlockLevel];
+                            }
+                        }
+                        else
+                        {
+                            unlockLevel = Math.Clamp(unlockLevel, 0, req.costValue.Length - 1);
+                            costVestige = req.costValue[unlockLevel];
+                        }
+                    }
+                    else if (req.costType == WealthType.Echoes)
+                    {
+                        // costEchoes = UpgradeRequirementConfig.Instance.GetRequirement(WealthType.Echoes, UpgradeManager.Instance.GetRequirementIndex(WealthType.Echoes));
+                        unlockLevel = Math.Clamp(unlockLevel, 0, req.costValue.Length - 1);
+                        costEchoes = req.costValue[unlockLevel];
+                    }
+                    else if (req.costType == WealthType.Sigils)
+                    {
+                        // costSigils = UpgradeRequirementConfig.Instance.GetRequirement(WealthType.Sigils, UpgradeManager.Instance.GetRequirementIndex(WealthType.Sigils));
+                        unlockLevel = Math.Clamp(unlockLevel, 0, req.costValue.Length - 1);
+                        costSigils = req.costValue[unlockLevel];
+                    }
                 }
 
                 var canSpend = WealthManager.Instance.CanSpend(WealthType.Vestige, costVestige);

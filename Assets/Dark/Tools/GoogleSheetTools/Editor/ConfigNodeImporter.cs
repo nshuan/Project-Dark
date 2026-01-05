@@ -48,6 +48,7 @@ namespace Dark.Tools.GoogleSheetTool
             // Header is field names
             var fields = csvData[0];
             var costTypeIndexes = new List<int>();
+            var costValueIndexes = new List<int>();
             var logicIndexes = new List<LogicImportInfo>();
 
             var isLogicCols = false;
@@ -60,6 +61,8 @@ namespace Dark.Tools.GoogleSheetTool
                 {
                     if (fields[i].ToLower().Contains("cost_type"))
                         costTypeIndexes.Add(i);
+                    if (fields[i].ToLower().Contains("cost_value"))
+                        costValueIndexes.Add(i);
                     if (fields[i].ToLower().Contains("logic_type"))
                     {
                         isLogicCols = true;
@@ -152,15 +155,35 @@ namespace Dark.Tools.GoogleSheetTool
                     
                 for (var index = 0; index < costTypeIndexes.Count; index++)
                 {
+                    if (index >= costValueIndexes.Count) break;
+                    
                     if (!Enum.TryParse<WealthType>(cols[costTypeIndexes[index]], out var costType))
                     {
                         Debug.LogWarning($"Can't import cost - Invalid cost type {cols[costTypeIndexes[index]]}, data index = {i}");
                         continue;
                     }
+
+                    var costValueStr = cols[costValueIndexes[index]].Trim(' ').Split(",");
+                    var costValue = new List<int>();
+                    var parseCostValueSuccess = true;
+                    foreach (var str in costValueStr)
+                    {
+                        if (!int.TryParse(str, out var value))
+                        {
+                            parseCostValueSuccess = false;
+                            break;
+                        }
+                        else
+                        {
+                            costValue.Add(value);
+                        }
+                    }
+                    if (!parseCostValueSuccess) Debug.LogWarning($"Can't import cost - Invalid cost value {cols[costValueIndexes[index]]}, data index = {i}");
                         
                     var costInfo = new UpgradeNodeCostInfo()
                     {
                         costType = costType,
+                        costValue = costValue.ToArray(),
                     };
                             
                     allCost.Add(costInfo);

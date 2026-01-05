@@ -74,7 +74,10 @@ namespace InGame.Upgrade.NodeLogicsV2
             }
             catch (Exception e)
             {
-                throw new Exception($"Invalid BonusNormalAttackRange value string: {listValue[0]}");
+                Debug.LogError($"Invalid BonusNormalAttackRange value string: {listValue[0]}");
+                value = Array.Empty<float>();
+                isMul = mul;
+                return this;
             }
         }
     }
