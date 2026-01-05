@@ -11,38 +11,39 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         [SerializeField] private TextMeshProUGUI txtNodeName;
         [SerializeField] private TextMeshProUGUI txtNodeLore;
         [SerializeField] private TextMeshProUGUI txtNodeLevel;
-        [SerializeField] private TextMeshProUGUI txtNodePrice;
+        // [SerializeField] private TextMeshProUGUI txtNodePrice;
         [SerializeField] private TextMeshProUGUI[] txtNodeBonus;
+        [SerializeField] private TMP_InputField inpGroup;
         
-        public void UpdateUI(UpgradeNodeData data, UpgradeNodeConfig config)
+        public void UpdateUI(UICreatorUpgradeNode node, UpgradeNodeConfig config)
         {
             txtNodeName.SetText(config.nodeName);
             txtNodeLore.SetText(config.description);
-            if (data != null)
-            {
-                txtNodeLevel.SetText($"{data.level}/{config.MaxLevel}");
-                txtNodePrice.SetText($"{0}/{1}");
-            }
-            else
-            {
-                txtNodeLevel.SetText($"{0}/{config.MaxLevel}");
-                txtNodePrice.gameObject.SetActive(false);
-            }
+            txtNodeLevel.SetText($"Max level: {config.MaxLevel}");
             
-            for (var i = 0; i < config.nodeLogic.Length; i++)
+            if (config.nodeLogic.Length > 0)
             {
-                txtNodeBonus[i].SetText(config.nodeLogic[i].GetDisplayValue(data?.level ?? 0));
-                txtNodeBonus[i].gameObject.SetActive(true);
+                var str = "";
+                for (var i = 0; i < config.nodeLogic[0].MaxLevel; i++)
+                {
+                    str += config.nodeLogic[0].GetDisplayValue(i);
+                    if (i != config.nodeLogic[0].MaxLevel - 1) str += ", ";
+                }
+
+                txtNodeBonus[0].SetText(str);
+                txtNodeBonus[0].gameObject.SetActive(true);
             }
-            for (var i = config.nodeLogic.Length; i < txtNodeBonus.Length; i++)
+
+            inpGroup.text = node.group.ToString();
+            inpGroup.onValueChanged.RemoveAllListeners();
+            inpGroup.onValueChanged.AddListener((value) =>
             {
-                txtNodeBonus[i].gameObject.SetActive(false);
-            }
+                if (int.TryParse(value, out var intValue)) node.group = intValue;
+            });
         }
         
-        public void Show(Vector2 position, Vector2 padding)
+        public void Show()
         {
-            rectInfoFrame.position = position + padding;
             rectInfoFrame.gameObject.SetActive(true);
         }
 

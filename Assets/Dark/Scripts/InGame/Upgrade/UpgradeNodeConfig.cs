@@ -16,8 +16,11 @@ namespace InGame.Upgrade
         public string description; // Description to display
         public float vestigeCostRatio; // cost will multiply to this value
         public bool dynamicVestige; // is this node using dynamic vestige?
+        public bool dynamicEchoes; // is this node using dynamic echoes?
         public UpgradeNodeCostInfo[] costInfo; 
         [NonSerialized, OdinSerialize] public INodeActivateLogicV2[] nodeLogic;
+
+        public int groupId;
         
         public int MaxLevel
         {
@@ -32,10 +35,13 @@ namespace InGame.Upgrade
         {
             if (nodeLogic == null) return;
             if (level <= 0 || level > MaxLevel) return;
+            UpgradeManager.Instance.RefreshGroupUnlockOrder();
             for (var i = 1; i <= level; i++)
             {
                 foreach (var logic in nodeLogic)
                 {
+                    if (logic is INodeDynamicBonusValueV2 { IsDynamic: true } dynamicLogic)
+                        dynamicLogic.OverrideBonusValue(UpgradeManager.Instance.GetGroupUnlockOrder(groupId, false));
                     logic.ActivateNode(i, ref bonusInfo);
                 }   
             }
@@ -47,6 +53,8 @@ namespace InGame.Upgrade
             if (level <= 0 || level > MaxLevel) return;
             foreach (var logic in nodeLogic)
             {
+                if (logic is INodeDynamicBonusValueV2 { IsDynamic: true } dynamicLogic)
+                    dynamicLogic.OverrideBonusValue(UpgradeManager.Instance.GetGroupUnlockOrder(groupId, false));
                 logic.ActivateNode(level, ref bonusInfo);
             }   
         }

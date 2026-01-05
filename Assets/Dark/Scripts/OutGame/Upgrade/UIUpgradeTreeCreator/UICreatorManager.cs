@@ -28,6 +28,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         public int idPrefab;
         public SerializableVector2 position;
         public List<Guid> preRequired;
+        public int group;
     }
 
     [Serializable]
@@ -515,8 +516,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 
                 selectingNodes = new List<UICreatorUpgradeNode>() { node };
                 node.SelectThis();
-                UICreatorNodeInfoPreview.Instance.UpdateUI(null, node.config);
-                UICreatorNodeInfoPreview.Instance.Show(node.transform.position, new Vector2(node.lineAnchorOffsetRadius, 0f));
+                UICreatorNodeInfoPreview.Instance.UpdateUI(node, node.config);
+                UICreatorNodeInfoPreview.Instance.Show();
             }
             else
             {
@@ -718,6 +719,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 var guid = CreateNewNode((NodeType)nodeData.idType, nodeData.idPrefab, nodeData.id, nodeData.guid, nodeData.preRequired);
                 nodeData.guid = guid;
                 nodesMap[guid].transform.localPosition = nodeData.position;
+                nodesMap[guid].group = nodeData.group;
             }
 
             foreach (var nodeData in newTree.nodes)
@@ -765,7 +767,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                     idType = (int)pair.Value.CreatorNodeType,
                     idPrefab = pair.Value.PrefabIndex,
                     position = pair.Value.transform.localPosition,
-                    preRequired = preRequire
+                    preRequired = preRequire,
+                    group = pair.Value.group
                 });
             }
             

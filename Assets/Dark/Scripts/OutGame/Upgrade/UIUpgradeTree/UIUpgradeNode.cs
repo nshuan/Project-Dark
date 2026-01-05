@@ -22,7 +22,6 @@ namespace Dark.Scripts.OutGame.Upgrade
         public UIUpgradeTree treeRef;
         public UpgradeNodeConfig config;
         public List<UIUpgradePreRequireInfo> preRequires;
-        public int groupId;
         
         [Space]
         [Header("UI")]
@@ -252,9 +251,10 @@ namespace Dark.Scripts.OutGame.Upgrade
                     return;
                 }
                 
-                var success = UpgradeManager.Instance.UpgradeNode(config.nodeId, treeRef.GetGroupUnlockOrder(groupId));
+                var success = UpgradeManager.Instance.UpgradeNode(config.nodeId, UpgradeManager.Instance.GetGroupUnlockOrder(config.groupId, false));
                 if (success)
                 {
+                    UpgradeManager.Instance.RefreshGroupUnlockOrder();
                     if (treeRef.IsNodeSkill(config.nodeId))
                         LogManager.Log(LogConst.EventLogActivateNode, "skill", config.nodeName);
                     else if (treeRef.IsNodePassive(config.nodeId))

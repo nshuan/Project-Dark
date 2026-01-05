@@ -17,6 +17,7 @@ namespace InGame.Upgrade
     public class UpgradeTreeConfig : SerializedScriptableObject
     {
         [NonSerialized, OdinSerialize] private Dictionary<int, UpgradeNodeConfig> nodeMapById = new Dictionary<int, UpgradeNodeConfig>();
+        public Dictionary<int, UpgradeNodeGroup> nodeGroupsMapById;
         
         public int TotalNodes => nodeMapById.Count;
         
@@ -68,6 +69,36 @@ namespace InGame.Upgrade
 
             nodeMapById = assets.Select((config) => new KeyValuePair<int,UpgradeNodeConfig>(config.nodeId, config)).ToDictionary(x => x.Key, x => x.Value);
             EditorUtility.SetDirty(this);
+        }
+
+        [Button]
+        public void Validate()
+        {
+            if (nodeMapById == null) return;
+            nodeGroupsMapById = new Dictionary<int, UpgradeNodeGroup>();
+            foreach (var pair in nodeMapById)
+            {
+                if (!nodeGroupsMapById.ContainsKey(pair.Value.groupId))
+                {
+                    var newGroup = new UpgradeNodeGroup()
+                    {
+                        groupId = pair.Value.groupId,
+                        nodeList = new List<UpgradeNodeConfig>(),
+                        lockNode = pair.Value
+                    };
+                    
+                    nodeGroupsMapById.Add(pair.Value.groupId, newGroup);
+                }
+                
+                if (!nodeGroupsMapById[pair.Value.groupId].nodeList.Contains(pair.Value))
+                    nodeGroupsMapById[pair.Value.groupId].nodeList.Add(pair.Value);
+                if (pair.Value.nodeId < nodeGroupsMapById[pair.Value.groupId].lockNode.nodeId)
+                    nodeGroupsMapById[pair.Value.groupId].lockNode = pair.Value;
+            }
+            
+            EditorUtility.SetDirty(this);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
         }
 #endif
     }

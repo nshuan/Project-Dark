@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Core;
-using Dark.Scripts.InGame.Upgrade;
 using Dark.Scripts.OutGame.Upgrade;
 using Data;
 using Economic;
 using Cheat;
-using Dark.Scripts.InGame.Upgrade.DynamicCost;
+using InGame.Upgrade.DynamicCost;
 using UnityEngine;
 
 namespace InGame.Upgrade
@@ -36,6 +35,7 @@ namespace InGame.Upgrade
 
         private Dictionary<int, UpgradeNodeData> dataMapById;
         private Dictionary<int, int> unlockOrderMapById;
+        private Dictionary<int, int> groupUnlockOrderMapById;
 
         public void InitData()
         {
@@ -45,6 +45,7 @@ namespace InGame.Upgrade
 #endif
             dataMapById = new Dictionary<int, UpgradeNodeData>();
             unlockOrderMapById = new Dictionary<int, int>();
+            RefreshGroupUnlockOrder();
             var index = 0;
             foreach (var node in data.nodes)
             {
@@ -151,22 +152,49 @@ namespace InGame.Upgrade
                 // var costValue = UpgradeRequirementConfig.Instance.GetRequirement(cost.costType, costValueIndex);
                 
                 var costValue = 0;
-                if (nodeConfig.dynamicVestige)
+                if (cost.costType == WealthType.Vestige)
                 {
-                    if (nodeConfig.MaxLevel == 1)
-                        costValue = Mathf.RoundToInt(nodeConfig.vestigeCostRatio *
-                                                     DynamicVestigeConfig.Instance.GetCost1Stage(nodeGroupUnlockOrder));
+                    if (nodeConfig.dynamicVestige)
+                    {
+                        if (nodeConfig.MaxLevel == 1)
+                            costValue = Mathf.RoundToInt(nodeConfig.vestigeCostRatio *
+                                                         DynamicVestigeConfig.Instance.GetCost1Stage(nodeGroupUnlockOrder));
+                        else
+                        {
+                            var listCostValue = DynamicVestigeConfig.Instance.GetCost5Stage(nodeGroupUnlockOrder);
+                            currentLevel = Math.Min(currentLevel, listCostValue.Length - 1);
+                            costValue = Mathf.RoundToInt(nodeConfig.vestigeCostRatio * listCostValue[currentLevel]);
+                        }
+                    }
                     else
                     {
-                        var listCostValue = DynamicVestigeConfig.Instance.GetCost5Stage(nodeGroupUnlockOrder);
-                        currentLevel = Math.Min(currentLevel, listCostValue.Length - 1);
-                        costValue = Mathf.RoundToInt(nodeConfig.vestigeCostRatio * listCostValue[currentLevel]);
+                        currentLevel = Math.Min(currentLevel, cost.costValue.Length - 1);
+                        costValue = Mathf.RoundToInt(nodeConfig.vestigeCostRatio * cost.costValue[currentLevel]);
+                    }
+                }
+                else if (cost.costType == WealthType.Echoes)
+                {
+                    if (nodeConfig.dynamicEchoes)
+                    {
+                        if (nodeConfig.MaxLevel == 1)
+                            costValue = Mathf.RoundToInt(1f * DynamicVestigeConfig.Instance.GetCost1Echoes(nodeGroupUnlockOrder));
+                        else
+                        {
+                            var listCostValue = DynamicVestigeConfig.Instance.GetCost5Echoes(nodeGroupUnlockOrder);
+                            currentLevel = Math.Min(currentLevel, listCostValue.Length - 1);
+                            costValue = Mathf.RoundToInt(1f * listCostValue[currentLevel]);
+                        }
+                    }
+                    else
+                    {
+                        currentLevel = Math.Min(currentLevel, cost.costValue.Length - 1);
+                        costValue = Mathf.RoundToInt(1f * cost.costValue[currentLevel]);
                     }
                 }
                 else
                 {
                     currentLevel = Math.Min(currentLevel, cost.costValue.Length - 1);
-                    costValue = Mathf.RoundToInt(nodeConfig.vestigeCostRatio * cost.costValue[currentLevel]);
+                    costValue = Mathf.RoundToInt(1f * cost.costValue[currentLevel]);
                 }
                 
                 if (!WealthManager.Instance.CanSpend(cost.costType, costValue)) 
@@ -225,6 +253,31 @@ namespace InGame.Upgrade
             return unlockOrderMapById.GetValueOrDefault(nodeId, 999999);
         }
         
+        public int GetGroupUnlockOrder(int groupId, bool refresh)
+        {
+            if (!TreeConfig.nodeGroupsMapById.ContainsKey(groupId)) return 999999;
+            if (refresh) RefreshGroupUnlockOrder();
+            return groupUnlockOrderMapById[groupId];;
+        }
+        
+        public void RefreshGroupUnlockOrder()
+        {
+            var groups = TreeConfig.nodeGroupsMapById.Values.ToList();
+            groupUnlockOrderMapById ??= new Dictionary<int, int>();
+            groups.Sort((group1, group2) => GetNodeUnlockOrder(group1.lockNode.nodeId)
+                .CompareTo(UpgradeManager.Instance.GetNodeUnlockOrder(group2.lockNode.nodeId)));
+            var index = 0;
+            foreach (var group in groups)
+            {
+                var nodeUnlockData = GetData(group.lockNode.nodeId);
+                groupUnlockOrderMapById[group.groupId] = index;
+                if (nodeUnlockData is { level: > 0 })
+                {
+                    index += 1;
+                };
+            }
+        }
+        
 #if HOT_CHEAT
         public void CheatUpdateBonusInfo(UpgradeBonusInfoV2 bonusInfo)
         {
@@ -257,5 +310,13 @@ namespace InGame.Upgrade
         {
             level += 1;
         }
+    }
+    
+    [Serializable]
+    public class UpgradeNodeGroup
+    {
+        public int groupId;
+        public UpgradeNodeConfig lockNode; // Node này đã unlock thì mới tính là group đã unlock
+        public List<UpgradeNodeConfig> nodeList; // Tất cả node có trong group
     }
 }

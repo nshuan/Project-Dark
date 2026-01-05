@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 using Core;
-using Dark.Scripts.InGame.Upgrade;
-using Dark.Scripts.InGame.Upgrade.DynamicCost;
-using Dark.Scripts.Utils.Camera;
+using InGame.Upgrade.DynamicCost;
 using Data;
 using DG.Tweening;
 using Economic;
@@ -62,10 +58,8 @@ namespace Dark.Scripts.OutGame.Upgrade
         }
 
         public bool CanAutoShowHide { get; set; } = true;
-        public UIUpgradeTree CacheTree { get; set; }
         private UpgradeNodeData cacheData;
         private UpgradeNodeConfig cacheConfig;
-        private UIUpgradeNode cacheNode;
         private bool isVisible;
         private Vector2 mousePos = Vector2.zero;
         private Vector2 cacheHoverNodePosition = new Vector2(0, 0);
@@ -91,8 +85,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         public void Setup(UIUpgradeNode node, UpgradeNodeConfig config, bool forceUpdate)
         {
             if (CanAutoShowHide == false && forceUpdate == false) return;
-
-            cacheNode = node;
+            
             cacheConfig = config;
             cacheData = UpgradeManager.Instance.GetData(config.nodeId);
             UpdateUI();
@@ -175,11 +168,11 @@ namespace Dark.Scripts.OutGame.Upgrade
                             if (cacheConfig.MaxLevel == 1)
                                 costVestige =
                                     DynamicVestigeConfig.Instance.GetCost1Stage(
-                                        CacheTree.GetGroupUnlockOrder(cacheNode.groupId));
+                                        UpgradeManager.Instance.GetGroupUnlockOrder(cacheConfig.groupId, false));
                             else
                             {
                                 var unlockCost = DynamicVestigeConfig.Instance.GetCost5Stage(
-                                    CacheTree.GetGroupUnlockOrder(cacheNode.groupId));
+                                    UpgradeManager.Instance.GetGroupUnlockOrder(cacheConfig.groupId, false));
                                 unlockLevel = Math.Clamp(unlockLevel, 0, unlockCost.Length - 1);
                                 costVestige = unlockCost[unlockLevel];
                             }
@@ -189,12 +182,31 @@ namespace Dark.Scripts.OutGame.Upgrade
                             unlockLevel = Math.Clamp(unlockLevel, 0, req.costValue.Length - 1);
                             costVestige = req.costValue[unlockLevel];
                         }
+
+                        costVestige = Mathf.RoundToInt(costVestige * cacheConfig.vestigeCostRatio);
                     }
                     else if (req.costType == WealthType.Echoes)
                     {
                         // costEchoes = UpgradeRequirementConfig.Instance.GetRequirement(WealthType.Echoes, UpgradeManager.Instance.GetRequirementIndex(WealthType.Echoes));
-                        unlockLevel = Math.Clamp(unlockLevel, 0, req.costValue.Length - 1);
-                        costEchoes = req.costValue[unlockLevel];
+                        if (cacheConfig.dynamicEchoes)
+                        {
+                            if (cacheConfig.MaxLevel == 1)
+                                costEchoes =
+                                    DynamicVestigeConfig.Instance.GetCost1Echoes(
+                                        UpgradeManager.Instance.GetGroupUnlockOrder(cacheConfig.groupId, false));
+                            else
+                            {
+                                var unlockCost = DynamicVestigeConfig.Instance.GetCost5Echoes(
+                                    UpgradeManager.Instance.GetGroupUnlockOrder(cacheConfig.groupId, false));
+                                unlockLevel = Math.Clamp(unlockLevel, 0, unlockCost.Length - 1);
+                                costEchoes = unlockCost[unlockLevel];
+                            }
+                        }
+                        else
+                        {
+                            unlockLevel = Math.Clamp(unlockLevel, 0, req.costValue.Length - 1);
+                            costEchoes = req.costValue[unlockLevel];
+                        }
                     }
                     else if (req.costType == WealthType.Sigils)
                     {

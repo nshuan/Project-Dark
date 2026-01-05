@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
-using Dark.Scripts.InGame.Upgrade.DynamicCost;
-using InGame;
+using InGame.Upgrade.DynamicCost;
 using UnityEditor;
 using UnityEngine;
 
@@ -24,7 +23,7 @@ namespace Dark.Tools.GoogleSheetTool
             // Header is field names
             var fields = csvData[0];
             
-            var costMap = new Dictionary<int, (int[], int)>();
+            var costMap = new Dictionary<int, (int[], int, int[], int)>();
             for (int i = 1; i < csvData.Count; i++) // Skip header
             {
                 var cols = csvData[i];
@@ -40,6 +39,8 @@ namespace Dark.Tools.GoogleSheetTool
 
                     var cost5 = new List<int>();
                     var cost1 = 0;
+                    var cost5Echoes = new List<int>();
+                    var cost1Echoes = 0;
                     
                     if (cols.Length > 1)
                     {
@@ -80,7 +81,46 @@ namespace Dark.Tools.GoogleSheetTool
                         continue;
                     }
                     
-                    costMap.Add(resultId, (cost5.ToArray(), cost1));
+                    if (cols.Length > 3)
+                    {
+                        var costValueStr = cols[3].Trim(' ').Split(",");
+                        var parseCostValueSuccess = true;
+                        foreach (var str in costValueStr)
+                        {
+                            if (!int.TryParse(str, out var value))
+                            {
+                                parseCostValueSuccess = false;
+                                break;
+                            }
+                            else
+                            {
+                                cost5Echoes.Add(value);
+                            }
+                        }
+
+                        if (!parseCostValueSuccess)
+                        {
+                            Debug.LogError($"In valid echoes by stack at line {i}");
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError($"In valid echoes by stack at line {i}");
+                        continue;
+                    }
+                        
+                    if (cols.Length > 4 && int.TryParse(cols[4], out var resultEchoes))
+                    {
+                        cost1Echoes = resultEchoes;
+                    }
+                    else
+                    {
+                        Debug.LogError($"In valid echoes for all at line {i}");
+                        continue;
+                    }
+                    
+                    costMap.Add(resultId, (cost5.ToArray(), cost1, cost5Echoes.ToArray(), cost1Echoes));
                 }
                 else
                 {
@@ -97,6 +137,8 @@ namespace Dark.Tools.GoogleSheetTool
                     index = cost.Key,
                     cost5Stages = cost.Value.Item1,
                     cost1Stage = cost.Value.Item2,
+                    cost5Echoes = cost.Value.Item3,
+                    cost1Echoes = cost.Value.Item4,
                 });
             }
             costConfig.SortByIndexAscending();
@@ -108,49 +150,6 @@ namespace Dark.Tools.GoogleSheetTool
             EditorUtility.FocusProjectWindow();
             Selection.activeObject = costConfig;
 #endif
-        }
-
-        public static void SetValue(ScriptableObject instance, string fieldName, string value)
-        {
-            Type type = instance.GetType();
-
-            // Find the field
-            FieldInfo field = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            if (field != null)
-            {
-                try
-                {
-                    // Get the field type
-                    Type fieldType = field.FieldType;
-
-                    // Parse targetValue to the field type
-                    object parsedValue;
-                    if (fieldType.IsEnum)
-                    {
-                        parsedValue = Enum.Parse(fieldType, value, ignoreCase: true);
-                    }
-                    else
-                    {
-                        if (fieldType == typeof(float))
-                            parsedValue = Convert.ChangeType(value, fieldType, format);
-                        else
-                            parsedValue = Convert.ChangeType(value, fieldType);
-                    }
-
-                    // Set the field value
-                    field.SetValue(instance, parsedValue);
-
-                    Debug.Log($"Field '{fieldName}' set to {field.GetValue(instance)} (type: {fieldType.Name})");
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogWarning($"Could not convert value to {field.FieldType.Name}: {ex.Message}");
-                }
-            }
-            else
-            {
-                Debug.LogWarning($"No field found with name '{fieldName}'");
-            }
         }
     }
 }

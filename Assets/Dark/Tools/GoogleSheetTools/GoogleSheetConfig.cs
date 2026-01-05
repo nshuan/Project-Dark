@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Dark.Scripts.InGame.Upgrade;
-using Dark.Scripts.InGame.Upgrade.DynamicCost;
+using InGame.Upgrade.DynamicCost;
 using Economic;
 using InGame;
-using InGame.Upgrade;
+using InGame.Upgrade.DynamicBonus;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEditor;
@@ -176,6 +176,21 @@ namespace Dark.Tools.GoogleSheetTool
             configs = new[]
             {
                 AssetDatabase.LoadAssetAtPath<DynamicVestigeConfig>(DynamicVestigeConfig.FilePath),
+            };
+            EditorUtility.SetDirty(AssetDatabase.LoadAssetAtPath<GoogleSheetConfig>(GoogleSheetConfig.Path));
+        }
+#endif
+    }
+    
+    [Serializable]
+    public class GoogleSheetDynamicBonusValueInfo : GoogleSheetDataInfo
+    {
+#if UNITY_EDITOR
+        public override void GetConfigsSortByName()
+        {
+            configs = new[]
+            {
+                AssetDatabase.LoadAssetAtPath<DynamicBonusValueConfig>(DynamicBonusValueConfig.FilePath),
             };
             EditorUtility.SetDirty(AssetDatabase.LoadAssetAtPath<GoogleSheetConfig>(GoogleSheetConfig.Path));
         }

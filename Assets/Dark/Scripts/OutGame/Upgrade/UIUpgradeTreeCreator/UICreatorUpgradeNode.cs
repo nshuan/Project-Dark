@@ -10,6 +10,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         public UICreatorManager manager;
         public UpgradeNodeConfig config;
         public Guid guid;
+        public int group;
 
         [Space] [Header("UI")] 
         [SerializeField] private UICreatorUpgradeNodeHover hoverField;

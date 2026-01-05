@@ -5,7 +5,7 @@ using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
 
-namespace Dark.Scripts.InGame.Upgrade.DynamicCost
+namespace InGame.Upgrade.DynamicCost
 {
     public class DynamicVestigeConfig : SerializedScriptableObject
     {
@@ -16,7 +16,7 @@ namespace Dark.Scripts.InGame.Upgrade.DynamicCost
         public int GetCost1Stage(int indexVestige)
         {
             if (costInfos == null) return 0;
-            if (costInfos?.Count <= indexVestige) return 0;
+            if (costInfos.Count <= indexVestige) return 0;
             indexVestige = Math.Clamp(indexVestige, 0, costInfos.Count - 1);
             return costInfos[indexVestige].cost1Stage;
         }
@@ -26,6 +26,21 @@ namespace Dark.Scripts.InGame.Upgrade.DynamicCost
             if (costInfos == null) return new []{ 0, 0, 0, 0, 0 };
             indexVestige = Math.Clamp(indexVestige, 0, costInfos.Count - 1);
             return costInfos[indexVestige].cost5Stages;
+        }
+        
+        public int GetCost1Echoes(int indexEchoes)
+        {
+            if (costInfos == null) return 0;
+            if (costInfos.Count <= indexEchoes) return 0;
+            indexEchoes = Math.Clamp(indexEchoes, 0, costInfos.Count - 1);
+            return costInfos[indexEchoes].cost1Echoes;
+        }
+
+        public int[] GetCost5Echoes(int indexEchoes)
+        {
+            if (costInfos == null) return new []{ 0, 0, 0, 0, 0 };
+            indexEchoes = Math.Clamp(indexEchoes, 0, costInfos.Count - 1);
+            return costInfos[indexEchoes].cost5Echoes;
         }
         
         #region SINGLETON
@@ -71,5 +86,7 @@ namespace Dark.Scripts.InGame.Upgrade.DynamicCost
         public int index;
         public int cost1Stage;
         public int[] cost5Stages;
+        public int cost1Echoes;
+        public int[] cost5Echoes;
     }
 }

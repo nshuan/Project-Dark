@@ -7,4 +7,10 @@ namespace InGame.Upgrade
         string GetDisplayValue(int level);
         int MaxLevel { get; }
     }
+
+    public interface INodeDynamicBonusValueV2
+    {
+        bool IsDynamic { get; }
+        void OverrideBonusValue(int groupUnlockOrder);
+    }
 }

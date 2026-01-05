@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Dark.Tools.GoogleSheetTool;
+using InGame.Upgrade.DynamicBonus;
 using UnityEngine;
 
 namespace InGame.Upgrade.NodeLogicsV2
 {
     [Serializable]
     [ConfigNodeLogicTypeV2(NodeBonusTypeV2.BonusBaseDmg)]
-    public class NodeV2BonusBaseDmg : INodeActivateLogicV2, INodeLogicGeneratorV2
+    public class NodeV2BonusBaseDmg : INodeActivateLogicV2, INodeLogicGeneratorV2, INodeDynamicBonusValueV2
     {
         public float[] value;
         public bool isMul;
+        public bool isDynamic;
         
         public void ActivateNode(int level, ref UpgradeBonusInfoV2 bonusInfo)
         {
@@ -64,8 +66,11 @@ namespace InGame.Upgrade.NodeLogicsV2
         public int MaxLevel => value?.Length ?? 0;
         public INodeActivateLogicV2 Generate(string subType, List<string> listValue, bool mul)
         {
+            // Trống bonus value thì lấy dynamic
             if (listValue == null || listValue.Count == 0)
             {
+                isMul = mul;
+                isDynamic = true;
                 return null;
             }
 
@@ -84,6 +89,20 @@ namespace InGame.Upgrade.NodeLogicsV2
                 value = Array.Empty<float>();
                 isMul = mul;
                 return this;
+            }
+        }
+
+        public bool IsDynamic => isDynamic;
+        public void OverrideBonusValue(int groupUnlockOrder)
+        {
+            if (MaxLevel == 1)
+            {
+                var dynamicValue = DynamicBonusValueConfig.Instance.GetBonus1Stage(NodeBonusTypeV2.BonusBaseDmg, groupUnlockOrder);
+                value = new[] { dynamicValue };
+            }
+            else
+            {
+                value = DynamicBonusValueConfig.Instance.GetBonus5Stage(NodeBonusTypeV2.BonusBaseDmg, groupUnlockOrder).ToArray();
             }
         }
     }

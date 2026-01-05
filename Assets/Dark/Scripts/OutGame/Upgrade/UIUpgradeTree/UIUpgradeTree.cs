@@ -13,15 +13,6 @@ using UnityEngine.UI;
 
 namespace Dark.Scripts.OutGame.Upgrade
 {
-    [Serializable]
-    public class UpgradeNodeGroup
-    {
-        public int groupId;
-        public int unlockOrder; // = 999999 means not unlocked
-        public UIUpgradeNode lockNode; // Node này đã unlock thì mới tính là group đã unlock
-        public List<UIUpgradeNode> nodeList; // Tất cả node có trong group
-    }
-    
     public class UIUpgradeTree : SerializedMonoBehaviour
     {
         [SerializeField] private Transform lineParent;
@@ -30,7 +21,6 @@ namespace Dark.Scripts.OutGame.Upgrade
         [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, List<UIUpgradeNode>> nodesMap; // Luu cac node co cung id
         [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, List<UIUpgradeNode>> nodeChildrenMap;
         [ReadOnly, OdinSerialize, NonSerialized] public Dictionary<int, List<UIUpgradeNode>> nodesMapByLayer;
-        public Dictionary<int, UpgradeNodeGroup> nodeGroupsMapById;
 
         [Space] [Header("Skill Node Ids")]
         public List<int> skillNodeIds = new List<int>();
@@ -91,30 +81,6 @@ namespace Dark.Scripts.OutGame.Upgrade
             return passiveNodeIds.Contains(nodeId);
         }
 
-        public int GetGroupUnlockOrder(int groupId)
-        {
-            if (!nodeGroupsMapById.ContainsKey(groupId)) return 999999;
-            RefreshNodesUnlockOrder();
-            return nodeGroupsMapById[groupId].unlockOrder;
-        }
-
-        public void RefreshNodesUnlockOrder()
-        {
-            var groups = nodeGroupsMapById.Values.ToList();
-            groups.Sort((group1, group2) => UpgradeManager.Instance.GetNodeUnlockOrder(group1.lockNode.config.nodeId)
-                .CompareTo(UpgradeManager.Instance.GetNodeUnlockOrder(group2.lockNode.config.nodeId)));
-            var index = 0;
-            foreach (var group in groups)
-            {
-                var nodeUnlockData = UpgradeManager.Instance.GetData(group.lockNode.config.nodeId);
-                group.unlockOrder = index;
-                if (nodeUnlockData is { level: > 0 })
-                {
-                    index += 1;
-                };
-            }
-        }
-
         private void Awake()
         {
             btnDeselectAll.onClick.RemoveAllListeners();
@@ -126,8 +92,7 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         private void OnEnable()
         {
-            UIUpgradeNodeInfoPreview.Instance.CacheTree = this;
-            
+            UpgradeManager.Instance.RefreshGroupUnlockOrder();
             // Auto upgrade node layer 0
             foreach (var nodeBase in nodesMapByLayer[0])
             {
