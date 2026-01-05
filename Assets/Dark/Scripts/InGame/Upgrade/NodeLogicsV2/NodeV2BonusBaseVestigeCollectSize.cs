@@ -38,7 +38,7 @@ namespace InGame.Upgrade.NodeLogicsV2
             ActivateNode(level, ref bonusInfo);
             
             var after = "";
-            after = (LevelUtilityV2.GetVestigeCollectSize() * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+            after = LevelUtilityV2.GetVestigeCollectSize().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
             
             bonusInfo.bonusBase.bonusVestigeCollectSize.mul = vestigeCollectSizeMultiply;
             bonusInfo.bonusBase.bonusVestigeCollectSize.add = vestigeCollectSizePlus;

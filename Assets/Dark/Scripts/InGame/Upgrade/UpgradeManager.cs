@@ -45,7 +45,6 @@ namespace InGame.Upgrade
 #endif
             dataMapById = new Dictionary<int, UpgradeNodeData>();
             unlockOrderMapById = new Dictionary<int, int>();
-            RefreshGroupUnlockOrder();
             var index = 0;
             foreach (var node in data.nodes)
             {
@@ -55,6 +54,7 @@ namespace InGame.Upgrade
                     index += 1;
                 }
             }
+            RefreshGroupUnlockOrder();
         }
 
         private void Save()
@@ -265,7 +265,7 @@ namespace InGame.Upgrade
             var groups = TreeConfig.nodeGroupsMapById.Values.ToList();
             groupUnlockOrderMapById ??= new Dictionary<int, int>();
             groups.Sort((group1, group2) => GetNodeUnlockOrder(group1.lockNode.nodeId)
-                .CompareTo(UpgradeManager.Instance.GetNodeUnlockOrder(group2.lockNode.nodeId)));
+                .CompareTo(GetNodeUnlockOrder(group2.lockNode.nodeId)));
             var index = 0;
             foreach (var group in groups)
             {
