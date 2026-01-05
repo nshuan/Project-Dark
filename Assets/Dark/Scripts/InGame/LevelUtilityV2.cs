@@ -120,7 +120,7 @@ namespace InGame
         // Similar to hp
         public static float GetExpDropScale()
         {
-            return (0f + BonusInfo.bonusBase.bonusExpDrop.add) * (1f + BonusInfo.bonusBase.bonusExpDrop.mul);
+            return (1f + BonusInfo.bonusBase.bonusExpDrop.mul);
         }
         
         #endregion

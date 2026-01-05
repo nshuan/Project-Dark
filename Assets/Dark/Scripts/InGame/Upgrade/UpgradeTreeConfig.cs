@@ -92,7 +92,7 @@ namespace InGame.Upgrade
                 
                 if (!nodeGroupsMapById[pair.Value.groupId].nodeList.Contains(pair.Value))
                     nodeGroupsMapById[pair.Value.groupId].nodeList.Add(pair.Value);
-                if (pair.Value.nodeId < nodeGroupsMapById[pair.Value.groupId].lockNode.nodeId)
+                if (pair.Value.isGroupLockNode)
                     nodeGroupsMapById[pair.Value.groupId].lockNode = pair.Value;
             }
             

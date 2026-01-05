@@ -2,6 +2,7 @@ using Core;
 using InGame.Upgrade;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
 {
@@ -14,10 +15,12 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         // [SerializeField] private TextMeshProUGUI txtNodePrice;
         [SerializeField] private TextMeshProUGUI[] txtNodeBonus;
         [SerializeField] private TMP_InputField inpGroup;
+        public Button btnSelectGroup;
+        public Button btnSetLockNode;
         
-        public void UpdateUI(UICreatorUpgradeNode node, UpgradeNodeConfig config)
+        public void UpdateUI(UICreatorManager manager, UICreatorUpgradeNode node, UpgradeNodeConfig config)
         {
-            txtNodeName.SetText(config.nodeName);
+            txtNodeName.SetText($"{config.nodeId} - {config.nodeName}");
             txtNodeLore.SetText(config.description);
             txtNodeLevel.SetText($"Max level: {config.MaxLevel}");
             
@@ -34,11 +37,27 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 txtNodeBonus[0].gameObject.SetActive(true);
             }
 
-            inpGroup.text = node.group.ToString();
             inpGroup.onValueChanged.RemoveAllListeners();
+            inpGroup.text = node.group.ToString();
             inpGroup.onValueChanged.AddListener((value) =>
             {
-                if (int.TryParse(value, out var intValue)) node.group = intValue;
+                if (int.TryParse(value, out var intValue))
+                {
+                    node.group = intValue;
+                    manager.RefreshGroupNodes();
+                }
+            });
+            
+            btnSelectGroup.onClick.RemoveAllListeners();
+            btnSelectGroup.onClick.AddListener(() =>
+            {
+                manager.SelectGroupNodes(node.group);
+            });
+            
+            btnSetLockNode.onClick.RemoveAllListeners();
+            btnSetLockNode.onClick.AddListener(() =>
+            {
+                manager.SetGroupLockNode(node);
             });
         }
         

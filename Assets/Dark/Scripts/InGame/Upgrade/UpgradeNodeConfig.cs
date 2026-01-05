@@ -21,6 +21,7 @@ namespace InGame.Upgrade
         [NonSerialized, OdinSerialize] public INodeActivateLogicV2[] nodeLogic;
 
         public int groupId;
+        public bool isGroupLockNode;
         
         public int MaxLevel
         {

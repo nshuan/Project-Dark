@@ -150,8 +150,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         }
 
 #if UNITY_EDITOR
-        [Space] [Header("Editor")] 
-        [SerializeField] private string spritesPath = "Assets/Dark/Config/Upgrade/Skill_Tree_Sprites";
+        private static string spritesPath = "Assets/Dark/Config/Upgrade/Skill_Tree_Sprites";
         
         [Button]
         public void ValidateNodes()
@@ -281,7 +280,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             EditorUtility.SetDirty(this);
         }
         
-        private Dictionary<int, NodeSpriteInfo> GetSpritesMapById()
+        public static Dictionary<int, NodeSpriteInfo> GetSpritesMapById()
         {
             // Get all sprites from path
             string[] guids = AssetDatabase.FindAssets("t:Sprite", new[] { spritesPath });
@@ -321,13 +320,13 @@ namespace Dark.Scripts.OutGame.Upgrade
 
             return map;
         }
-
-        [Serializable]
-        class NodeSpriteInfo
-        {
-            public Sprite normalSprite;
-            public Sprite lockedSprite;
-        }
 #endif
+    }
+    
+    [Serializable]
+    public class NodeSpriteInfo
+    {
+        public Sprite normalSprite;
+        public Sprite lockedSprite;
     }
 }

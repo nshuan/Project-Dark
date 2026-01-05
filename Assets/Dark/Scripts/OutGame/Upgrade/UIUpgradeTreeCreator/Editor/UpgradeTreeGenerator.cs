@@ -133,6 +133,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator.Editor
                 var goScript = go.GetComponent<UIUpgradeNode>();
                 goScript.config = treeConfig.GetNodeById(node.id);
                 goScript.config.groupId = node.group;
+                goScript.config.isGroupLockNode = node.isGroupLockNode;
                 EditorUtility.SetDirty(goScript.config);
             }
             
