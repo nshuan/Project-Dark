@@ -10,10 +10,12 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private UIParticle vfxUnlock;
         [SerializeField] private UIParticle vfxActivate;
         [SerializeField] private UIParticle vfxActivateMax;
+        [SerializeField] private UIParticle vfxAppear;
 
         protected Queue<UIParticle> poolUnlock = new();
         protected Queue<UIParticle> poolActivate = new();
         protected Queue<UIParticle> poolActivateMax = new();
+        protected Queue<UIParticle> poolAppear = new();
         
         public UIParticle GetVfxUnlock(Transform targetParent, bool active = true)
         {
@@ -26,6 +28,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             }
             
             obj = Instantiate(vfxUnlock, targetParent);
+            obj.transform.localPosition = Vector3.zero;
             obj.gameObject.SetActive(active);
             return obj;
         }
@@ -41,6 +44,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             }
             
             obj = Instantiate(vfxActivate, targetParent);
+            obj.transform.localPosition = Vector3.zero;
             obj.gameObject.SetActive(active);
             return obj;
         }
@@ -56,32 +60,57 @@ namespace Dark.Scripts.OutGame.Upgrade
             }
             
             obj = Instantiate(vfxActivateMax, targetParent);
+            obj.transform.localPosition = Vector3.zero;
             obj.gameObject.SetActive(active);
             return obj;
         }
 
-        public void ReleaseVfxUnlock(UIParticle vfxUnlock)
+        public UIParticle GetVfxAppear(Transform targetParent, bool active = true)
         {
-            vfxUnlock.transform.SetParent(transform);
-            vfxUnlock.gameObject.SetActive(false);
-            if (poolUnlock.Contains(vfxUnlock)) return;
-            poolUnlock.Enqueue(vfxUnlock);
+            if (poolAppear.TryDequeue(out var obj))
+            {
+                obj.transform.SetParent(targetParent);
+                obj.transform.localPosition = Vector3.zero;
+                obj.gameObject.SetActive(active);
+                return obj;
+            }
+            
+            obj = Instantiate(vfxAppear, targetParent);
+            obj.transform.localPosition = Vector3.zero;
+            obj.gameObject.SetActive(active);
+            return obj;
         }
 
-        public void ReleaseVfxActivate(UIParticle vfxActivate)
+        public void ReleaseVfxUnlock(UIParticle vfx)
         {
-            vfxActivate.transform.SetParent(transform);
-            vfxActivate.gameObject.SetActive(false);
-            if (poolActivate.Contains(vfxActivate)) return;
-            poolActivate.Enqueue(vfxActivate);
+            vfx.transform.SetParent(transform);
+            vfx.gameObject.SetActive(false);
+            if (poolUnlock.Contains(vfx)) return;
+            poolUnlock.Enqueue(vfx);
         }
 
-        public void ReleaseVfxActivateMax(UIParticle vfxActivateMax)
+        public void ReleaseVfxActivate(UIParticle vfx)
         {
-            vfxActivateMax.transform.SetParent(transform);
-            vfxActivateMax.gameObject.SetActive(false);
-            if (poolActivateMax.Contains(vfxActivateMax)) return;
-            poolActivateMax.Enqueue(vfxActivateMax);
+            vfx.transform.SetParent(transform);
+            vfx.gameObject.SetActive(false);
+            if (poolActivate.Contains(vfx)) return;
+            poolActivate.Enqueue(vfx);
+        }
+
+        public void ReleaseVfxActivateMax(UIParticle vfx)
+        {
+            vfx.transform.SetParent(transform);
+            vfx.gameObject.SetActive(false);
+            if (poolActivateMax.Contains(vfx)) return;
+            poolActivateMax.Enqueue(vfx);
+        }
+        
+        public void ReleaseVfxAppear(UIParticle vfx)
+        {
+            vfx.transform.SetParent(transform);
+            vfx.gameObject.SetActive(false);
+            if (poolAppear.Contains(vfx)) return;
+            poolAppear.Enqueue(vfx);
         }
     }
 }

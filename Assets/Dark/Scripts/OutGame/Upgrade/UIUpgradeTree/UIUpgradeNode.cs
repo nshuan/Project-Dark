@@ -384,9 +384,9 @@ namespace Dark.Scripts.OutGame.Upgrade
         {
             return nodeType switch
             {
-                UpgradeNodeType.NodeSkill => UIUpgradeNodeSkillPool.Instance.GetVfxUnlock(transform, false),
+                UpgradeNodeType.NodeSkill => UIUpgradeNodeSkillPool.Instance.GetVfxUnlock(transform, true),
                 UpgradeNodeType.NodeEffect => UIUpgradeNodeEffectPool.Instance.GetVfxUnlock(transform, true),
-                UpgradeNodeType.NodeStat => UIUpgradeNodeStatPool.Instance.GetVfxUnlock(transform, false),
+                UpgradeNodeType.NodeStat => UIUpgradeNodeStatPool.Instance.GetVfxUnlock(transform, true),
                 UpgradeNodeType.NodeStat2 => UIUpgradeNodeStat2Pool.Instance.GetVfxUnlock(transform, true),
                 _ => null
             };
@@ -396,9 +396,9 @@ namespace Dark.Scripts.OutGame.Upgrade
         {
             return nodeType switch
             {
-                UpgradeNodeType.NodeSkill => UIUpgradeNodeSkillPool.Instance.GetVfxActivate(transform, false),
+                UpgradeNodeType.NodeSkill => UIUpgradeNodeSkillPool.Instance.GetVfxActivate(transform, true),
                 UpgradeNodeType.NodeEffect => UIUpgradeNodeEffectPool.Instance.GetVfxActivate(transform, true),
-                UpgradeNodeType.NodeStat => UIUpgradeNodeStatPool.Instance.GetVfxActivate(transform, false),
+                UpgradeNodeType.NodeStat => UIUpgradeNodeStatPool.Instance.GetVfxActivate(transform, true),
                 UpgradeNodeType.NodeStat2 => UIUpgradeNodeStat2Pool.Instance.GetVfxActivate(transform, true),
                 _ => null
             };
@@ -408,9 +408,9 @@ namespace Dark.Scripts.OutGame.Upgrade
         {
             return nodeType switch
             {
-                UpgradeNodeType.NodeSkill => UIUpgradeNodeSkillPool.Instance.GetVfxActivateMax(transform, false),
+                UpgradeNodeType.NodeSkill => UIUpgradeNodeSkillPool.Instance.GetVfxActivateMax(transform, true),
                 UpgradeNodeType.NodeEffect => UIUpgradeNodeEffectPool.Instance.GetVfxActivateMax(transform, true),
-                UpgradeNodeType.NodeStat => UIUpgradeNodeStatPool.Instance.GetVfxActivateMax(transform, false),
+                UpgradeNodeType.NodeStat => UIUpgradeNodeStatPool.Instance.GetVfxActivateMax(transform, true),
                 UpgradeNodeType.NodeStat2 => UIUpgradeNodeStat2Pool.Instance.GetVfxActivateMax(transform, true),
                 _ => null
             };

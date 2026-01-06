@@ -79,8 +79,8 @@ namespace Dark.Scripts.OutGame.Upgrade
     public class NodeSpawnGlowVfx : IUpgradeNodeSpawnLogic
     {
         [SerializeField] private CanvasGroup groupNode;
-        [SerializeField] private UIParticle vfxSpawn;
         [SerializeField] private bool autoPlay = false;
+        [SerializeField] private UpgradeNodeType nodeType;
         
         public Tween DoSpawn()
         {
@@ -89,11 +89,45 @@ namespace Dark.Scripts.OutGame.Upgrade
             return DOTween.Sequence()
                 .AppendCallback(() =>
                 {
+                    var vfxSpawn = GetVfxAppear();
                     vfxSpawn.gameObject.SetActive(true);
                     groupNode.alpha = 1f;
                     if (!autoPlay) 
                         vfxSpawn.Play();
+                    
+                    DOVirtual.DelayedCall(1f, () => ReleaseVfxAppear(vfxSpawn));
                 });
+        }
+        
+        private UIParticle GetVfxAppear()
+        {
+            return nodeType switch
+            {
+                UpgradeNodeType.NodeSkill => UIUpgradeNodeSkillPool.Instance.GetVfxAppear(groupNode.transform, true),
+                UpgradeNodeType.NodeEffect => UIUpgradeNodeEffectPool.Instance.GetVfxAppear(groupNode.transform, true),
+                UpgradeNodeType.NodeStat => UIUpgradeNodeStatPool.Instance.GetVfxAppear(groupNode.transform, true),
+                UpgradeNodeType.NodeStat2 => UIUpgradeNodeStat2Pool.Instance.GetVfxAppear(groupNode.transform, true),
+                _ => null
+            };
+        }
+
+        private void ReleaseVfxAppear(UIParticle vfx)
+        {
+            switch (nodeType)
+            {
+                case UpgradeNodeType.NodeSkill:
+                    UIUpgradeNodeSkillPool.Instance.ReleaseVfxAppear(vfx);
+                    break;
+                case UpgradeNodeType.NodeEffect:
+                    UIUpgradeNodeEffectPool.Instance.ReleaseVfxAppear(vfx);
+                    break;
+                case UpgradeNodeType.NodeStat:
+                    UIUpgradeNodeStatPool.Instance.ReleaseVfxAppear(vfx);
+                    break;
+                case UpgradeNodeType.NodeStat2:
+                    UIUpgradeNodeStat2Pool.Instance.ReleaseVfxAppear(vfx);
+                    break;
+            }
         }
     }
 }

@@ -106,6 +106,10 @@ namespace Dark.Scripts.OutGame.Upgrade
                 {
                     if (i < descriptions.Length)
                     {
+                        if (cacheConfig.nodeLogic[i] is INodeDynamicBonusValueV2 { IsDynamic: true } dynamicLogic)
+                        {
+                            dynamicLogic.OverrideBonusValue(UpgradeManager.Instance.GetGroupUnlockOrder(cacheConfig.groupId, false));
+                        }
                         descriptions[i] = descriptions[i].Replace("[X]",
                             cacheConfig.nodeLogic[i].GetDisplayValue(cacheData?.level ?? 0));
                         descriptionStr += descriptions[i];
@@ -118,19 +122,22 @@ namespace Dark.Scripts.OutGame.Upgrade
 
             var bonusBeforeStr = "";
             var bonusAfterStr = "";
-            for (var i = 0; i < cacheConfig.nodeLogic.Length; i++)
+            if (cacheConfig.nodeLogic != null)
             {
-                var bonusChanged = cacheConfig.nodeLogic[i].GetBeforeAfterValueTotalStat(cacheData?.level + 1 ?? 1, ref bonusInfo);
-                if (string.IsNullOrEmpty(bonusChanged.Item1) && string.IsNullOrEmpty(bonusChanged.Item2))
-                    continue;
-                bonusAfterStr += bonusChanged.Item2;
-                if (cacheData != null && cacheData.level >= cacheConfig.MaxLevel)
-                    bonusBeforeStr += bonusChanged.Item2;    
-                else bonusBeforeStr += bonusChanged.Item1;
-                if (i < cacheConfig.nodeLogic.Length - 1)
+                for (var i = 0; i < cacheConfig.nodeLogic.Length; i++)
                 {
-                    bonusBeforeStr += "\n";
-                    bonusAfterStr += "\n";
+                    var bonusChanged = cacheConfig.nodeLogic[i].GetBeforeAfterValueTotalStat(cacheData?.level + 1 ?? 1, ref bonusInfo);
+                    if (string.IsNullOrEmpty(bonusChanged.Item1) && string.IsNullOrEmpty(bonusChanged.Item2))
+                        continue;
+                    bonusAfterStr += bonusChanged.Item2;
+                    if (cacheData != null && cacheData.level >= cacheConfig.MaxLevel)
+                        bonusBeforeStr += bonusChanged.Item2;    
+                    else bonusBeforeStr += bonusChanged.Item1;
+                    if (i < cacheConfig.nodeLogic.Length - 1)
+                    {
+                        bonusBeforeStr += "\n";
+                        bonusAfterStr += "\n";
+                    }
                 }
             }
             txtNodeBonusBefore.SetText(bonusBeforeStr);
