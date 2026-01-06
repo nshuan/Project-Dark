@@ -17,6 +17,15 @@ using UnityEngine.UI;
 
 namespace Dark.Scripts.OutGame.Upgrade
 {
+    public enum UpgradeNodeType
+    {
+        NodeClass,
+        NodeSkill,
+        NodeEffect,
+        NodeStat,
+        NodeStat2
+    }
+    
     public class UIUpgradeNode : MonoBehaviour
     {
         public UIUpgradeTree treeRef;
@@ -25,6 +34,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         
         [Space]
         [Header("UI")]
+        public UpgradeNodeType nodeType;
         [SerializeField] protected UIUpgradeNodeHoverField hoverField;
         [SerializeField] protected UIUpgradeNodeSpawnAnimation spawnAnimation;
 
@@ -39,9 +49,6 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] protected GameObject imgAvailable;
         [SerializeField] protected Image imgLock;
         [SerializeField] protected Image imgIconLock;
-        [SerializeField] protected UIParticle vfxUnlock;
-        [SerializeField] protected UIParticle vfxActivate;
-        [SerializeField] protected UIParticle vfxActivateMax;
         [SerializeField] protected AudioPlayComponentV2 sfxUnlockSuccess;
         [SerializeField] protected AudioPlayComponentV2 sfxUnlockFailure;
         [SerializeField] protected AudioPlayComponentV2 sfxHover;
@@ -312,10 +319,16 @@ namespace Dark.Scripts.OutGame.Upgrade
                     if (lineInfo.preRequireId != fromId) continue;
                     seq.AppendCallback(() =>
                         {
+                            var vfxUnlock = GetVfxUnlock();
                             DOVirtual.DelayedCall(lineInfo.line.activateDuration - 0.1f, () =>
                             {
                                 imgAvailable.gameObject.SetActive(true);
                                 vfxUnlock?.Play();
+                            });
+
+                            DOVirtual.DelayedCall(lineInfo.line.activateDuration + 1f, () =>
+                            {
+                                ReleaseVfxUnlock(vfxUnlock);
                             });
                         })
                         .Append(lineInfo.line.DoActivate());
@@ -342,24 +355,125 @@ namespace Dark.Scripts.OutGame.Upgrade
             if (UpgradeManager.Instance.GetData(config.nodeId).level >= config.MaxLevel)
             {
                 DOTween.Kill(rectActivatedMaxOutline);
+                var vfxActivateMax = GetVfxActivateMax();
                 vfxActivateMax.Play();
                 return DOTween.Sequence(rectActivatedMaxOutline)
                     .Append(rectActivatedMaxOutline.DOLocalRotate(new Vector3(0f, 0f, 180f), 0.4f).SetRelative())
                     .Join(rectActivatedMaxOutline.DOScale(1.2f, 0.4f).SetEase(Ease.OutQuad))
-                    .Append(rectActivatedMaxOutline.DOScale(1f, 0.2f).SetEase(Ease.InQuad));
+                    .Append(rectActivatedMaxOutline.DOScale(1f, 0.2f).SetEase(Ease.InQuad))
+                    .AppendCallback(() => ReleaseVfxActivateMax(vfxActivateMax));
             }
 
-            vfxActivate?.Play();
+            var vfxActivate = GetVfxActivate();
+            vfxActivate.Play();
             return DOTween.Sequence(this)
                 .Append(imgBorder.DOLocalRotate(new Vector3(0f, 0f, 180f), 0.4f).SetRelative())
                 .Join(imgBorder.DOScale(1.2f, 0.4f).SetEase(Ease.OutQuad))
-                .Append(imgBorder.DOScale(1f, 0.2f).SetEase(Ease.InQuad));
+                .Append(imgBorder.DOScale(1f, 0.2f).SetEase(Ease.InQuad))
+                .AppendCallback(() => ReleaseVfxActivate(vfxActivate));
         }
         
         public Tween DoSpawn()
         {
             return spawnAnimation.SpawnLogic.DoSpawn();
         }
+
+        #region Vfx
+        
+        public UIParticle GetVfxUnlock()
+        {
+            return nodeType switch
+            {
+                UpgradeNodeType.NodeSkill => UIUpgradeNodeSkillPool.Instance.GetVfxUnlock(transform, false),
+                UpgradeNodeType.NodeEffect => UIUpgradeNodeEffectPool.Instance.GetVfxUnlock(transform, true),
+                UpgradeNodeType.NodeStat => UIUpgradeNodeStatPool.Instance.GetVfxUnlock(transform, false),
+                UpgradeNodeType.NodeStat2 => UIUpgradeNodeStat2Pool.Instance.GetVfxUnlock(transform, true),
+                _ => null
+            };
+        }
+        
+        public UIParticle GetVfxActivate()
+        {
+            return nodeType switch
+            {
+                UpgradeNodeType.NodeSkill => UIUpgradeNodeSkillPool.Instance.GetVfxActivate(transform, false),
+                UpgradeNodeType.NodeEffect => UIUpgradeNodeEffectPool.Instance.GetVfxActivate(transform, true),
+                UpgradeNodeType.NodeStat => UIUpgradeNodeStatPool.Instance.GetVfxActivate(transform, false),
+                UpgradeNodeType.NodeStat2 => UIUpgradeNodeStat2Pool.Instance.GetVfxActivate(transform, true),
+                _ => null
+            };
+        }
+        
+        public UIParticle GetVfxActivateMax()
+        {
+            return nodeType switch
+            {
+                UpgradeNodeType.NodeSkill => UIUpgradeNodeSkillPool.Instance.GetVfxActivateMax(transform, false),
+                UpgradeNodeType.NodeEffect => UIUpgradeNodeEffectPool.Instance.GetVfxActivateMax(transform, true),
+                UpgradeNodeType.NodeStat => UIUpgradeNodeStatPool.Instance.GetVfxActivateMax(transform, false),
+                UpgradeNodeType.NodeStat2 => UIUpgradeNodeStat2Pool.Instance.GetVfxActivateMax(transform, true),
+                _ => null
+            };
+        }
+
+        public void ReleaseVfxUnlock(UIParticle vfx)
+        {
+            switch (nodeType)
+            {
+                case UpgradeNodeType.NodeSkill:
+                    UIUpgradeNodeSkillPool.Instance.ReleaseVfxUnlock(vfx);
+                    break;
+                case UpgradeNodeType.NodeEffect:
+                    UIUpgradeNodeEffectPool.Instance.ReleaseVfxUnlock(vfx);
+                    break;
+                case UpgradeNodeType.NodeStat:
+                    UIUpgradeNodeStatPool.Instance.ReleaseVfxUnlock(vfx);
+                    break;
+                case UpgradeNodeType.NodeStat2:
+                    UIUpgradeNodeStat2Pool.Instance.ReleaseVfxUnlock(vfx);
+                    break;
+            }
+        }
+        
+        public void ReleaseVfxActivate(UIParticle vfx)
+        {
+            switch (nodeType)
+            {
+                case UpgradeNodeType.NodeSkill:
+                    UIUpgradeNodeSkillPool.Instance.ReleaseVfxActivate(vfx);
+                    break;
+                case UpgradeNodeType.NodeEffect:
+                    UIUpgradeNodeEffectPool.Instance.ReleaseVfxActivate(vfx);
+                    break;
+                case UpgradeNodeType.NodeStat:
+                    UIUpgradeNodeStatPool.Instance.ReleaseVfxActivate(vfx);
+                    break;
+                case UpgradeNodeType.NodeStat2:
+                    UIUpgradeNodeStat2Pool.Instance.ReleaseVfxActivate(vfx);
+                    break;
+            }
+        }
+        
+        public void ReleaseVfxActivateMax(UIParticle vfx)
+        {
+            switch (nodeType)
+            {
+                case UpgradeNodeType.NodeSkill:
+                    UIUpgradeNodeSkillPool.Instance.ReleaseVfxActivateMax(vfx);
+                    break;
+                case UpgradeNodeType.NodeEffect:
+                    UIUpgradeNodeEffectPool.Instance.ReleaseVfxActivateMax(vfx);
+                    break;
+                case UpgradeNodeType.NodeStat:
+                    UIUpgradeNodeStatPool.Instance.ReleaseVfxActivateMax(vfx);
+                    break;
+                case UpgradeNodeType.NodeStat2:
+                    UIUpgradeNodeStat2Pool.Instance.ReleaseVfxActivateMax(vfx);
+                    break;
+            }
+        }
+
+        #endregion
 
         private void OnDrawGizmos()
         {
