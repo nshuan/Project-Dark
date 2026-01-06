@@ -6,7 +6,7 @@ namespace InGame.AttackNormalConfig
     public class PlayerSkillNormalConfig : ScriptableObject
     {
         public int id;
-        public float value;
+        public float dmgScale;
         public float amount;
     }
     

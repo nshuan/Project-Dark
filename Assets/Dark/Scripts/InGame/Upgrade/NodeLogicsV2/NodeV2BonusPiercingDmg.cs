@@ -26,7 +26,7 @@ namespace InGame.Upgrade.NodeLogicsV2
         {
             var before = "";
 
-            before = LevelUtilityV2.GetNormalPiercingDamage().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+            before = "x" + LevelUtilityV2.GetNormalPiercingDamageScale().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
 
             if (level > value.Length)
                 return (before, before);
@@ -37,7 +37,7 @@ namespace InGame.Upgrade.NodeLogicsV2
             ActivateNode(level, ref bonusInfo);
             
             var after = "";
-            after = LevelUtilityV2.GetNormalPiercingDamage().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+            after = "x" + LevelUtilityV2.GetNormalPiercingDamageScale().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
             
             bonusInfo.bonusNormalAttack.bonusPiercingDmg.mul = dmgMultiply;
             bonusInfo.bonusNormalAttack.bonusPiercingDmg.add = dmgPlus;

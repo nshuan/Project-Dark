@@ -26,6 +26,7 @@ namespace InGame
         public Vector3 RangeCenter { get; set; }
         protected float maxDistanceFromSpawnPosition;
         protected float maxDistanceFromRangeCenter;
+        public int OriginalDamage { get; set; }
         public int Damage { get; set; }
         public float Size { get; set; }
         public float SpeedScale { get; set; }
@@ -277,8 +278,8 @@ namespace InGame
             PlayVfxHit();
             PlayHitActions(hit);
                     
-            OnHit?.Invoke();
             currentHit += 1;
+            OnHit?.Invoke();
             
             if (!BlockDestroy && currentHit >= MaxHit)
             {
