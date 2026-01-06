@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using InGame.Upgrade;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,8 +12,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         public UICreatorManager manager;
         public UpgradeNodeConfig config;
         public Guid guid;
-        public int group;
-        public bool isGroupLockNode;
+        public List<int> group;
+        public Dictionary<int, bool> isGroupLockNode;
 
         [Space] [Header("UI")] 
         [SerializeField] private UICreatorUpgradeNodeHover hoverField;
@@ -79,7 +80,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
 
         public void SetAreaLock()
         {
-            objAreaLock.SetActive(isGroupLockNode);
+            objAreaLock.SetActive(isGroupLockNode != null && isGroupLockNode.Any((pair) => pair.Value));
         }
     }
 }

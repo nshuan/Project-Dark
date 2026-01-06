@@ -20,8 +20,7 @@ namespace InGame.Upgrade
         public UpgradeNodeCostInfo[] costInfo; 
         [NonSerialized, OdinSerialize] public INodeActivateLogicV2[] nodeLogic;
 
-        public int groupId;
-        public bool isGroupLockNode;
+        public UpgradeGroupIdInfo[] groupId;
         
         public int MaxLevel
         {
@@ -42,7 +41,8 @@ namespace InGame.Upgrade
                 foreach (var logic in nodeLogic)
                 {
                     if (logic is INodeDynamicBonusValueV2 { IsDynamic: true } dynamicLogic)
-                        dynamicLogic.OverrideBonusValue(UpgradeManager.Instance.GetGroupUnlockOrder(groupId, false));
+                        dynamicLogic.OverrideBonusValue(groupId.Min((info) =>
+                            UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, false)));
                     logic.ActivateNode(i, ref bonusInfo);
                 }   
             }
@@ -55,7 +55,8 @@ namespace InGame.Upgrade
             foreach (var logic in nodeLogic)
             {
                 if (logic is INodeDynamicBonusValueV2 { IsDynamic: true } dynamicLogic)
-                    dynamicLogic.OverrideBonusValue(UpgradeManager.Instance.GetGroupUnlockOrder(groupId, false));
+                    dynamicLogic.OverrideBonusValue(groupId.Min((info) =>
+                        UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, false)));
                 logic.ActivateNode(level, ref bonusInfo);
             }   
         }
@@ -66,5 +67,12 @@ namespace InGame.Upgrade
     {
         public WealthType costType; // Type of resource needed to unlock this node
         public int[] costValue;
+    }
+
+    [Serializable]
+    public class UpgradeGroupIdInfo
+    {
+        public int groupId;
+        public bool isLockNode;
     }
 }

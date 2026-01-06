@@ -28,8 +28,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         public int idPrefab;
         public SerializableVector2 position;
         public List<Guid> preRequired;
-        public int group;
-        public bool isGroupLockNode;
+        public List<UpgradeGroupIdInfo> groups;
     }
 
     [Serializable]
@@ -597,13 +596,13 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
 
         #region Group
 
-        public void SelectGroupNodes(int groupId)
+        public void SelectGroupNodes(List<int> groupId)
         {
             DeselectAll();
             forceMultiselect = true;
             foreach (var pair in nodesMap)
             {
-                if (pair.Value.group == groupId) SelectNode(pair.Value);
+                if (pair.Value.group.Any(groupId.Contains)) SelectNode(pair.Value);
             }
             forceMultiselect = false;
         }
@@ -611,12 +610,18 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         private void SetGroupIdForSelectingNodes()
         {
             if (selectingNodes == null) return;
-            if (int.TryParse(inpSetGroupId.text, out var id))
+            var listGroupStr = inpSetGroupId.text.Trim(' ').Split(',');
+            var groups = new List<int>();
+            foreach (var str in listGroupStr)
             {
-                foreach (var selectingNode in selectingNodes)
+                if (int.TryParse(str, out var intValue))
                 {
-                    selectingNode.group = id;
+                    groups.Add(intValue);
                 }
+            }
+            foreach (var selectingNode in selectingNodes)
+            {
+                selectingNode.group = new List<int>(groups);
             }
             
             RefreshGroupNodes();
@@ -628,15 +633,18 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
 
             foreach (var pair in nodesMap)
             {
-                if (groupMap.TryGetValue(pair.Value.group, out var listNode))
+                foreach (var group in pair.Value.group)
                 {
-                    if (!listNode.Contains(pair.Value)) listNode.Add(pair.Value);
-                    groupMap[pair.Value.group] = listNode;
-                }
-                else
-                {
-                    listNode = new List<UICreatorUpgradeNode>() { pair.Value };
-                    groupMap[pair.Value.group] = listNode;
+                    if (groupMap.TryGetValue(group, out var listNode))
+                    {
+                        if (!listNode.Contains(pair.Value)) listNode.Add(pair.Value);
+                        groupMap[group] = listNode;
+                    }
+                    else
+                    {
+                        listNode = new List<UICreatorUpgradeNode>() { pair.Value };
+                        groupMap[group] = listNode;
+                    }
                 }
             }
         }
@@ -645,21 +653,24 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         {
             groupMap ??= new Dictionary<int, List<UICreatorUpgradeNode>>();
 
-            if (groupMap.TryGetValue(lockNode.group, out var listNode))
+            foreach (var group in lockNode.group)
             {
-                foreach (var node in listNode)
+                if (groupMap.TryGetValue(group, out var listNode))
                 {
-                    node.isGroupLockNode = false;
-                    node.SetAreaLock();
+                    foreach (var node in listNode)
+                    {
+                        node.isGroupLockNode ??= new Dictionary<int, bool>();
+                        node.isGroupLockNode[group] = false;
+                        node.SetAreaLock();
+                    }
+                }
+                else
+                {
+                    groupMap[group] = new List<UICreatorUpgradeNode>() { lockNode };
                 }
                 
-                lockNode.isGroupLockNode = true;
-                lockNode.SetAreaLock();
-            }
-            else
-            {
-                groupMap[lockNode.group] = new List<UICreatorUpgradeNode>() { lockNode };
-                lockNode.isGroupLockNode = true;
+                lockNode.isGroupLockNode ??= new Dictionary<int, bool>();
+                lockNode.isGroupLockNode[group] = true;
                 lockNode.SetAreaLock();
             }
         }
@@ -819,8 +830,13 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 var guid = CreateNewNode((NodeType)nodeData.idType, nodeData.idPrefab, nodeData.id, nodeData.guid, nodeData.preRequired);
                 nodeData.guid = guid;
                 nodesMap[guid].transform.localPosition = nodeData.position;
-                nodesMap[guid].group = nodeData.group;
-                nodesMap[guid].isGroupLockNode = nodeData.isGroupLockNode;
+                nodeData.groups ??= new List<UpgradeGroupIdInfo>() { new UpgradeGroupIdInfo() { groupId = 0 } };
+                nodesMap[guid].group = nodeData.groups.Select((info) => info.groupId).ToList();
+                nodesMap[guid].isGroupLockNode = new Dictionary<int, bool>();
+                foreach (var group in nodeData.groups)
+                {
+                    if (group.isLockNode) nodesMap[guid].isGroupLockNode.Add(group.groupId, true);
+                }
             }
 
             RefreshGroupNodes();
@@ -863,7 +879,17 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                     preRequire = nodeParentMap[pair.Key].Select((node) => node.guid).ToList();
                 else
                     preRequire = new List<Guid>();
-                
+
+                var groupInfo = new List<UpgradeGroupIdInfo>();
+                foreach (var group in pair.Value.group)
+                {
+                    groupInfo.Add(new UpgradeGroupIdInfo()
+                    {
+                        groupId = group,
+                        isLockNode = pair.Value.isGroupLockNode != null && pair.Value.isGroupLockNode.ContainsKey(group) && pair.Value.isGroupLockNode[group]
+                    });
+                }
+                if (groupInfo.Count == 0) groupInfo.Add(new UpgradeGroupIdInfo() { groupId = 0 });
                 newTree.nodes.Add(new NodeDataStruct()
                 {
                     guid = pair.Key,
@@ -872,8 +898,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                     idPrefab = pair.Value.PrefabIndex,
                     position = pair.Value.transform.localPosition,
                     preRequired = preRequire,
-                    group = pair.Value.group,
-                    isGroupLockNode = pair.Value.isGroupLockNode
+                    groups = groupInfo,
                 });
             }
             

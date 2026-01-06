@@ -257,8 +257,9 @@ namespace Dark.Scripts.OutGame.Upgrade
                     sfxUnlockFailure?.Play();
                     return;
                 }
-                
-                var success = UpgradeManager.Instance.UpgradeNode(config.nodeId, UpgradeManager.Instance.GetGroupUnlockOrder(config.groupId, false));
+
+                var success = UpgradeManager.Instance.UpgradeNode(config.nodeId,
+                    config.groupId.Min((info) => UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, false)));
                 if (success)
                 {
                     UpgradeManager.Instance.RefreshGroupUnlockOrder();
