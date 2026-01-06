@@ -185,23 +185,27 @@ namespace InGame
             return (StatsNormalAttack.range + BonusInfo.bonusNormalAttack.bonusNormalAttackRange.add) * (1 + BonusInfo.bonusNormalAttack.bonusNormalAttackRange.mul) * ratio;
         }
 
-        public static int GetNormalPiercingDamage()
+        public static float GetNormalPiercingDamageScale()
         {
-            return GetNormalAttackDamage().Item1;
+            return (StatsNormalPiercing.dmgScale + BonusInfo.bonusNormalAttack.bonusPiercingDmg.add) *
+                        (1f + BonusInfo.bonusNormalAttack.bonusPiercingDmg.mul);
         }
 
         public static int GetNormalPiercingAmount()
         {
+            if (BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing == false) return 1;
             return Mathf.RoundToInt((StatsNormalPiercing.amount + BonusInfo.bonusNormalAttack.bonusPiercingAmount.addInt) * (1f + BonusInfo.bonusNormalAttack.bonusPiercingAmount.mul));
         }
 
-        public static int GetNormalBulletDamage()
+        public static float GetNormalBulletDamageScale()
         {
-            return GetNormalAttackDamage().Item1;
+            return (StatsNormalBullet.dmgScale + BonusInfo.bonusNormalAttack.bonusBulletDmg.add) *
+                        (1f + BonusInfo.bonusNormalAttack.bonusBulletDmg.mul);
         }
 
         public static int GetNormalBulletAmount()
         {
+            if (BonusInfo.bonusUnlockSkill.unlockNormalAttackBullet == false) return 0;
             return Mathf.RoundToInt((StatsNormalBullet.amount + BonusInfo.bonusNormalAttack.bonusBulletAmount.addInt) * (1f + BonusInfo.bonusNormalAttack.bonusBulletAmount.mul));
         }
         

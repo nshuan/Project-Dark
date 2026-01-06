@@ -10,7 +10,7 @@ namespace InGame.Shield
 
         private int currentShield;
         public int CurrentShield => currentShield;
-        public int MaxShield => config.maxShield;
+        public int MaxShield { get; private set; }
         
         public Action<int> OnRegenerate { get; set; }
         
@@ -18,7 +18,8 @@ namespace InGame.Shield
         
         public void Initialize()
         {
-            currentShield = config.maxShield;
+            MaxShield = LevelUtilityV2.GetBaseTowerShield();
+            currentShield = MaxShield;
         }
         
         // Return the amount of damage left after reducing shield
@@ -47,10 +48,10 @@ namespace InGame.Shield
         {
             yield return new WaitForSeconds(config.delayHealing);
 
-            while (currentShield < config.maxShield)
+            while (currentShield < MaxShield)
             {
                 var lastShield = currentShield;
-                currentShield = Mathf.Min(currentShield + config.healingAmountPerTime, config.maxShield);
+                currentShield = Mathf.Min(currentShield + config.healingAmountPerTime, MaxShield);
                 OnRegenerate?.Invoke(currentShield - lastShield);
                 yield return new WaitForSeconds(config.healingInterval);
             }

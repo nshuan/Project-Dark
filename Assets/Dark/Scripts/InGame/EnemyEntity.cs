@@ -259,7 +259,11 @@ namespace InGame
         {
             if (IsDestroyed) return;
             if (State == EnemyState.Invisible) return;
-
+            
+            // Scale damage on boss
+            if (IsBoss)
+                damage = Mathf.RoundToInt(damage * LevelUtilityV2.GetBossScaleDamage());
+            
             var lastHealth = CurrentHealth;
             CurrentHealth -= damage;
             if (dmgType != DamageType.Enemy && dmgType != DamageType.SelfDestruct)
