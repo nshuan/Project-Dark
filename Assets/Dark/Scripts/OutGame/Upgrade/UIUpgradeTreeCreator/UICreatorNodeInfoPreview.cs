@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Core;
 using InGame.Upgrade;
 using TMPro;
@@ -38,14 +40,24 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             }
 
             inpGroup.onValueChanged.RemoveAllListeners();
-            inpGroup.text = node.group.ToString();
+            inpGroup.text = string.Join(",", node.group);
             inpGroup.onValueChanged.AddListener((value) =>
             {
-                if (int.TryParse(value, out var intValue))
+                var listGroupStr = value.Trim(' ').Split(',');
+                var groups = new List<int>();
+                foreach (var str in listGroupStr)
                 {
-                    node.group = intValue;
-                    manager.RefreshGroupNodes();
+                    if (int.TryParse(str, out var intValue))
+                    {
+                        groups.Add(intValue);
+                    }
                 }
+                node.group = groups;
+                foreach (var pair in node.isGroupLockNode)
+                {
+                    if (!node.group.Contains(pair.Key)) node.isGroupLockNode.Remove(pair.Key);
+                }
+                manager.RefreshGroupNodes();
             });
             
             btnSelectGroup.onClick.RemoveAllListeners();

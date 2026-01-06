@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using InGame.Upgrade;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -74,8 +75,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 go.transform.localPosition = node.position;
                 var goScript = go.GetComponent<UIUpgradeNode>();
                 goScript.config = configLoader.GetNodeConfig(node.id);
-                goScript.config.groupId = node.group;
-                goScript.config.isGroupLockNode = node.isGroupLockNode;
+                node.groups ??= new List<UpgradeGroupIdInfo>() { new UpgradeGroupIdInfo() { groupId = 0 } };
+                goScript.config.groupId = node.groups.ToArray();
                 uiNodeMap.TryAdd(node.guid, goScript);
                 EditorUtility.SetDirty(goScript.config);
             }

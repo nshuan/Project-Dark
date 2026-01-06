@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Core;
 using InGame.Upgrade.DynamicCost;
@@ -108,7 +109,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     {
                         if (cacheConfig.nodeLogic[i] is INodeDynamicBonusValueV2 { IsDynamic: true } dynamicLogic)
                         {
-                            dynamicLogic.OverrideBonusValue(UpgradeManager.Instance.GetGroupUnlockOrder(cacheConfig.groupId, false));
+                            dynamicLogic.OverrideBonusValue(cacheConfig.groupId.Min((info) => UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, false)));
                         }
                         descriptions[i] = descriptions[i].Replace("[X]",
                             cacheConfig.nodeLogic[i].GetDisplayValue(cacheData?.level ?? 0));
@@ -178,11 +179,11 @@ namespace Dark.Scripts.OutGame.Upgrade
                             if (cacheConfig.MaxLevel == 1)
                                 costVestige =
                                     DynamicVestigeConfig.Instance.GetCost1Stage(
-                                        UpgradeManager.Instance.GetGroupUnlockOrder(cacheConfig.groupId, false));
+                                        cacheConfig.groupId.Min((info) => UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, false)));
                             else
                             {
                                 var unlockCost = DynamicVestigeConfig.Instance.GetCost5Stage(
-                                    UpgradeManager.Instance.GetGroupUnlockOrder(cacheConfig.groupId, false));
+                                    cacheConfig.groupId.Min((info) => UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, false)));
                                 unlockLevel = Math.Clamp(unlockLevel, 0, unlockCost.Length - 1);
                                 costVestige = unlockCost[unlockLevel];
                             }
@@ -203,11 +204,11 @@ namespace Dark.Scripts.OutGame.Upgrade
                             if (cacheConfig.MaxLevel == 1)
                                 costEchoes =
                                     DynamicVestigeConfig.Instance.GetCost1Echoes(
-                                        UpgradeManager.Instance.GetGroupUnlockOrder(cacheConfig.groupId, false));
+                                        cacheConfig.groupId.Min((info) => UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, false)));
                             else
                             {
                                 var unlockCost = DynamicVestigeConfig.Instance.GetCost5Echoes(
-                                    UpgradeManager.Instance.GetGroupUnlockOrder(cacheConfig.groupId, false));
+                                    cacheConfig.groupId.Min((info) => UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, false)));
                                 unlockLevel = Math.Clamp(unlockLevel, 0, unlockCost.Length - 1);
                                 costEchoes = unlockCost[unlockLevel];
                             }

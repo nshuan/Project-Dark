@@ -7,6 +7,7 @@ using Sirenix.Serialization;
 using UnityEditor;
 using UnityEngine;
 using System.IO;
+using System.Linq;
 using InGame.CharacterClass;
 
 namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator.Editor
@@ -132,8 +133,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator.Editor
                 go.transform.localPosition = node.position;
                 var goScript = go.GetComponent<UIUpgradeNode>();
                 goScript.config = treeConfig.GetNodeById(node.id);
-                goScript.config.groupId = node.group;
-                goScript.config.isGroupLockNode = node.isGroupLockNode;
+                node.groups ??= new List<UpgradeGroupIdInfo>() { new UpgradeGroupIdInfo() { groupId = 0 } };
+                goScript.config.groupId = node.groups.ToArray();
                 EditorUtility.SetDirty(goScript.config);
             }
             

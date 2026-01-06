@@ -78,22 +78,25 @@ namespace InGame.Upgrade
             nodeGroupsMapById = new Dictionary<int, UpgradeNodeGroup>();
             foreach (var pair in nodeMapById)
             {
-                if (!nodeGroupsMapById.ContainsKey(pair.Value.groupId))
+                foreach (var info in pair.Value.groupId)
                 {
-                    var newGroup = new UpgradeNodeGroup()
+                    if (!nodeGroupsMapById.ContainsKey(info.groupId))
                     {
-                        groupId = pair.Value.groupId,
-                        nodeList = new List<UpgradeNodeConfig>(),
-                        lockNode = pair.Value
-                    };
+                        var newGroup = new UpgradeNodeGroup()
+                        {
+                            groupId = info.groupId,
+                            nodeList = new List<UpgradeNodeConfig>(),
+                            lockNode = pair.Value
+                        };
+                        
+                        nodeGroupsMapById.Add(info.groupId, newGroup);
+                    }
                     
-                    nodeGroupsMapById.Add(pair.Value.groupId, newGroup);
+                    if (!nodeGroupsMapById[info.groupId].nodeList.Contains(pair.Value))
+                        nodeGroupsMapById[info.groupId].nodeList.Add(pair.Value);
+                    if (info.isLockNode)
+                        nodeGroupsMapById[info.groupId].lockNode = pair.Value;
                 }
-                
-                if (!nodeGroupsMapById[pair.Value.groupId].nodeList.Contains(pair.Value))
-                    nodeGroupsMapById[pair.Value.groupId].nodeList.Add(pair.Value);
-                if (pair.Value.isGroupLockNode)
-                    nodeGroupsMapById[pair.Value.groupId].lockNode = pair.Value;
             }
             
             EditorUtility.SetDirty(this);
