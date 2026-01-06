@@ -26,7 +26,7 @@ namespace InGame.Upgrade.NodeLogicsV2
         {
             var before = "";
 
-            before = LevelUtilityV2.GetNormalBulletDamage().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+            before = "x" + LevelUtilityV2.GetNormalBulletDamageScale().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
 
             if (level > value.Length)
                 return (before, before);
@@ -37,7 +37,7 @@ namespace InGame.Upgrade.NodeLogicsV2
             ActivateNode(level, ref bonusInfo);
             
             var after = "";
-            after = LevelUtilityV2.GetNormalBulletDamage().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+            after = "x" + LevelUtilityV2.GetNormalBulletDamageScale().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
             
             bonusInfo.bonusNormalAttack.bonusBulletDmg.mul = dmgMultiply;
             bonusInfo.bonusNormalAttack.bonusBulletDmg.add = dmgPlus;

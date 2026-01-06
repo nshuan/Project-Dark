@@ -77,6 +77,18 @@ namespace InGame
             
             var delayShot = InputManager.PlayerVisual.PlayShoot(worldMousePosition);
             var targetEnemy = nearestEnemy;
+            var activateSplitBullets = LevelUtilityV2.GetNormalBulletAmount();
+            var activateActions = activateSplitBullets == 0
+                ? null
+                : new List<IProjectileActivate>()
+                {
+                    new ProjectileActivateSplit()
+                    {
+                        projectile = LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.Normal],
+                        amount = activateSplitBullets,
+                        angle = 50f
+                    }
+                };
             InputManager.DelayCall(delayShot, () =>
             {
                 InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(skillRange);
@@ -96,12 +108,7 @@ namespace InGame
                     stagger,
                     maxHit,
                     false,
-                    new List<IProjectileActivate>() { new ProjectileActivateSplit()
-                    {
-                        projectile = LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.Normal],
-                        amount = LevelUtilityV2.GetNormalBulletAmount(),
-                        angle = 50f
-                    } },
+                    activateActions,
                     null);
             });
 
