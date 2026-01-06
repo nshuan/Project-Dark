@@ -6,6 +6,7 @@ using Dark.Scripts.OutGame.Upgrade;
 using Data;
 using Economic;
 using Cheat;
+using Dark.Scripts.OutGame.SaveSlot;
 using InGame.Upgrade.DynamicCost;
 using UnityEngine;
 
@@ -22,6 +23,7 @@ namespace InGame.Upgrade
         #region Data
 
         private static string DataKey => GetDataKey(PlayerDataManager.DataKey);
+        private Dictionary<string, UpgradeData> preloadedData = new Dictionary<string, UpgradeData>();
         private UpgradeData data;
 
         public UpgradeData Data
@@ -37,9 +39,29 @@ namespace InGame.Upgrade
         private Dictionary<int, int> unlockOrderMapById;
         private Dictionary<int, int> groupUnlockOrderMapById;
 
+        public void PreloadAllData()
+        {
+            preloadedData = new Dictionary<string, UpgradeData>();
+            foreach (var key in SaveSlotManager.SlotDataKeys)
+            {
+                var upgradeDataKey = GetDataKey(key);
+                preloadedData[upgradeDataKey] = DataHandler.Load<UpgradeData>(upgradeDataKey, new UpgradeData());
+            }
+        }
+        
         public void InitData()
         {
-            data = DataHandler.Load<UpgradeData>(DataKey, new UpgradeData());
+            PreloadAllData();
+            if (preloadedData != null && preloadedData.ContainsKey(DataKey))
+            {
+                data = preloadedData[DataKey];
+            }
+            else
+            {
+                data = DataHandler.Load<UpgradeData>(DataKey, new UpgradeData());
+                preloadedData ??= new Dictionary<string, UpgradeData>();
+                preloadedData[DataKey] = data;
+            }
 #if UNITY_EDITOR
             // data = new UpgradeData(TreeConfig.nodeMapById);
 #endif
@@ -60,6 +82,7 @@ namespace InGame.Upgrade
         private void Save()
         {
             DataHandler.Save(DataKey, Data);
+            preloadedData[DataKey] = data;
         }
 
         public void ClearData(string dataKey)
@@ -67,6 +90,7 @@ namespace InGame.Upgrade
             data = null;
             if (DataHandler.Exist<UpgradeData>(dataKey))
                 DataHandler.Clear(dataKey);
+            preloadedData[dataKey] = null;
         }
 
         public static string GetDataKey(string playerDataKey)
