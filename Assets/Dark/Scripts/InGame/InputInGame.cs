@@ -73,6 +73,7 @@ namespace InGame
                 CursorRangeRadius = LevelUtility.CurrentSkill.range;
                 cursor ??= ShotCursorManager.Instance.GetPrefab(LevelUtility.CurrentSkill.shootLogic.cursorType, canvas.transform);
                 cursor.gameObject.SetActive(true);
+                CombatActions.OnInitInGameCursor?.Invoke(cursor);
                 
                 teleMouseInput = new MoveToTower(cam, cursor, this, PlayerVisual, availableTeleConfigs[0], availableTeleConfigs.Count > 1 ? availableTeleConfigs[1] : null, LevelManager.Instance.Towers, 0, this.TryDelayCall);
                 
