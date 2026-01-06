@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Core;
+using Dark.Scripts.OutGame.SaveSlot;
 using UnityEngine;
 
 namespace Data
@@ -11,6 +12,8 @@ namespace Data
         public static string CurrentDataKey = "";
         public static string DataKey => string.IsNullOrEmpty(CurrentDataKey) ? DefaultDataKey : CurrentDataKey;
 
+        private Dictionary<string, PlayerData> preloadedData = new Dictionary<string, PlayerData>();
+        
         private PlayerData data;
         public PlayerData Data
         {
@@ -23,11 +26,18 @@ namespace Data
         
         public PlayerDataManager()
         {
+            PreloadAllData();
             Initialize();
         }
         
         public void Initialize()
         {
+            if (preloadedData != null && preloadedData.ContainsKey(DataKey))
+            {
+                data = preloadedData[DataKey];
+                return;
+            }
+            
             if (DataHandler.Exist<PlayerData>(DataKey))
             {
                 data = DataHandler.Load<PlayerData>(DataKey);
@@ -36,6 +46,9 @@ namespace Data
             {
                 data = new PlayerData();
             }
+            
+            preloadedData ??= new Dictionary<string, PlayerData>();
+            preloadedData[DataKey] = data;
         }
 
         public void CompleteLevel()
@@ -49,6 +62,7 @@ namespace Data
         public void Save()
         {
             DataHandler.Save(DataKey, data);
+            preloadedData[DataKey] = data;
         }
 
         public void Save(PlayerData newData)
@@ -62,6 +76,16 @@ namespace Data
             data = null;
             if (DataHandler.Exist<PlayerData>(dataKey))
                 DataHandler.Clear(dataKey);
+            preloadedData[dataKey] = null;
+        }
+
+        public void PreloadAllData()
+        {
+            preloadedData = new Dictionary<string, PlayerData>();
+            foreach (var key in SaveSlotManager.SlotDataKeys)
+            {
+                preloadedData[key] = DataHandler.Load<PlayerData>(key);
+            }
         }
         
         #endregion
