@@ -23,10 +23,13 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
         [SerializeField] private CanvasGroup btnExpand;
         [SerializeField] private Image imgLineFull;
         [SerializeField] private Image imgLineShort;
+        [SerializeField] private TextMeshProUGUI txtTotalDay;
+        [SerializeField] private RectTransform rectTotalDay;
 
         [SerializeField] private Vector3 offsetOnHideButtons = new Vector3(30f, 0f, 0f);
         [SerializeField] private float durationShowEachButton = 0.2f;
         [SerializeField] private float delayEachButton = 0.1f;
+        [SerializeField] private Vector2 rectTotalDayShowOffset;
 
         private Dictionary<GameObject, CanvasGroup> dictPointerFullButtons;
         private Dictionary<GameObject, CanvasGroup> dictPointerQuickButtons;
@@ -38,6 +41,9 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
         private void OnEnable()
         {
             SetupDayButtons();
+            
+            txtTotalDay.SetText($"{PlayerDataManager.Instance.Data.level}/{btnDaysFull.Length}");
+            rectTotalDay.localPosition = Vector3.zero;
         }
 
         private void SetupDayButtons()
@@ -296,6 +302,10 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
                 .SetEase(Ease.Unset).SetTarget(imgLineShort);
             
             groupBtnShort.SetActive(true);
+
+            DOTween.Kill(rectTotalDay);
+            rectTotalDay.DOLocalMoveX(rectTotalDayShowOffset.x, durationShowEachButton).SetEase(Ease.OutQuad)
+                .SetTarget(rectTotalDay);
         }
 
         public void HideButtons()
@@ -383,6 +393,10 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
                     .DOSizeDelta(new Vector2(cacheLineShortSize.x, 0f), (durationShowEachButton + delayEachButton * (listShowQuickButtons.Count - 1)))
                     .SetEase(Ease.Unset).SetTarget(imgLineShort).SetDelay(delayEachButton);
             }
+            
+            DOTween.Kill(rectTotalDay);
+            rectTotalDay.DOLocalMove(Vector3.zero, durationShowEachButton).SetEase(Ease.InQuad)
+                .SetTarget(rectTotalDay);
         }
     }
 }
