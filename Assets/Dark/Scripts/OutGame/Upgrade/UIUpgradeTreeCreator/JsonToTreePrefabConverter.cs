@@ -101,7 +101,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 EditorUtility.SetDirty(uiNodeMap[node.guid]);
             }
             
-            // root.GetComponent<UIUpgradeTree>().ValidateNodes();
+            root.GetComponent<UIUpgradeTree>().ValidateNodes();
     
             var outputPath = outputPrefabPath + outPutTreeName + ".prefab";
             PrefabUtility.SaveAsPrefabAsset(root, outputPath);

@@ -114,7 +114,7 @@ namespace InGame
         // Similar to hp
         public static float GetVestigeCollectSize()
         {
-            return (StatsBase.vestigeCollectSize + BonusInfo.bonusBase.bonusVestigeCollectSize.addInt) * (1f + BonusInfo.bonusBase.bonusVestigeCollectSize.mul);
+            return (StatsBase.vestigeCollectSize + BonusInfo.bonusBase.bonusVestigeCollectSize.add) * (1f + BonusInfo.bonusBase.bonusVestigeCollectSize.mul);
         }
         
         // Similar to hp

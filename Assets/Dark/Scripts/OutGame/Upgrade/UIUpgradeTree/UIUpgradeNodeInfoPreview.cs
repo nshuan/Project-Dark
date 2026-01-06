@@ -100,14 +100,17 @@ namespace Dark.Scripts.OutGame.Upgrade
 
             var descriptionStr = "";
             var descriptions = cacheConfig.description.Split("\n");
-            for (var i = 0; i < cacheConfig.nodeLogic.Length; i++)
+            if (cacheConfig.nodeLogic != null)
             {
-                if (i < descriptions.Length)
+                for (var i = 0; i < cacheConfig.nodeLogic.Length; i++)
                 {
-                    descriptions[i] = descriptions[i].Replace("[X]",
-                        cacheConfig.nodeLogic[i].GetDisplayValue(cacheData?.level ?? 0));
-                    descriptionStr += descriptions[i];
-                    if (i < descriptions.Length - 1) descriptionStr += "\n";
+                    if (i < descriptions.Length)
+                    {
+                        descriptions[i] = descriptions[i].Replace("[X]",
+                            cacheConfig.nodeLogic[i].GetDisplayValue(cacheData?.level ?? 0));
+                        descriptionStr += descriptions[i];
+                        if (i < descriptions.Length - 1) descriptionStr += "\n";
+                    }
                 }
             }
             txtNodeBonus.SetText(descriptionStr);

@@ -198,7 +198,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             
             // Cache node map by layer
             nodesMapByLayer = new Dictionary<int, List<UIUpgradeNode>>();
-            var queueCheck = new Queue<UIUpgradeNode>();
+            var checkedNodes = new List<int>();
             var currentLayerNodes = new List<UIUpgradeNode>();
             foreach (var pair in nodesMap)
             {
@@ -206,40 +206,35 @@ namespace Dark.Scripts.OutGame.Upgrade
                 {
                     foreach (var node in pair.Value)
                     {
-                        queueCheck.Enqueue(node);
+                        if (checkedNodes.Contains(node.config.nodeId)) continue;
                         currentLayerNodes.Add(node);
+                        checkedNodes.Add(node.config.nodeId);
                     }
                 }
             }
             
             nodesMapByLayer[0] = new List<UIUpgradeNode>(currentLayerNodes);
-            currentLayerNodes.Clear();
-
-            var currentLayer = 1;
-            var currentLayerCount = queueCheck.Count;
-            while (queueCheck.Count > 0)
+            while (currentLayerNodes.Count > 0)
             {
-                var node = queueCheck.Dequeue();
-                currentLayerCount--;
-                if (nodeChildrenMap.TryGetValue(node.config.nodeId, out var childrenNodes))
+                var newLayerNodes = new List<UIUpgradeNode>();
+                foreach (var node in currentLayerNodes)
                 {
+                    if (!nodeChildrenMap.TryGetValue(node.config.nodeId, out var childrenNodes)) continue;
                     foreach (var child in childrenNodes)
                     {
-                        if (!queueCheck.Contains(child))
-                        {
-                            currentLayerNodes.Add(child);
-                            queueCheck.Enqueue(child);
-                        }
+                        if (checkedNodes.Contains(child.config.nodeId)) continue;
+                        if (newLayerNodes.Contains(child)) continue;
+                        newLayerNodes.Add(child);
+                        checkedNodes.Add(child.config.nodeId);
                     }
                 }
-                if (currentLayerCount == 0)
+
+                if (newLayerNodes.Count > 0)
                 {
-                    if (currentLayerNodes.Count > 0)
-                        nodesMapByLayer[currentLayer] = new List<UIUpgradeNode>(currentLayerNodes);
-                    currentLayer++;
-                    currentLayerCount = queueCheck.Count;
-                    currentLayerNodes.Clear(); 
+                    nodesMapByLayer[nodesMapByLayer.Count] = newLayerNodes;
                 }
+
+                currentLayerNodes = newLayerNodes;
             }
             
             EditorUtility.SetDirty(this);
