@@ -88,6 +88,7 @@ namespace InGame.Upgrade.NodeLogicsV2
                 Debug.LogError($"Invalid BonusBaseDmg value string: {listValue[0]}");
                 value = Array.Empty<float>();
                 isMul = mul;
+                isDynamic = true;
                 return this;
             }
         }

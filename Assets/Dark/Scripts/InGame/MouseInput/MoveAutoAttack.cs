@@ -86,7 +86,7 @@ namespace InGame
                     {
                         projectile = LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.Normal],
                         amount = activateSplitBullets,
-                        angle = 50f
+                        angle = LevelUtilityV2.StatsNormalBullet.GetNormalBulletSpanAngle(activateSplitBullets + 1)
                     }
                 };
             InputManager.DelayCall(delayShot, () =>
