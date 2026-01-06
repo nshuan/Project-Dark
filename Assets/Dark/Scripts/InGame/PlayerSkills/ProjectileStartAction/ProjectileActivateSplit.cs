@@ -51,7 +51,7 @@ namespace InGame
                 if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing)
                     p.OnHit += () =>
                     {
-                        p.Damage = Mathf.RoundToInt(baseDamage * LevelUtilityV2.GetNormalPiercingDamageScale());
+                        p.Damage = Mathf.RoundToInt(p.Damage * LevelUtilityV2.GetNormalPiercingDamageScale());
                     };
             
                 calculatedAmount -= 1;
@@ -60,7 +60,9 @@ namespace InGame
             {
                 angleOffset = angle / calculatedAmount / 2;
             }
-            
+
+            // Đạn tỏa ra sẽ giảm dame, nếu có normal piercing thì vẫn apply
+            baseDamage = Mathf.RoundToInt(baseDamage * LevelUtilityV2.GetNormalBulletDamageScale());
             for (var i = 1; i <= calculatedAmount / 2; i++)
             {
                 var pDir = (Vector2)(Quaternion.Euler(0f, 0f, i * angle / calculatedAmount - angleOffset) * direction);
@@ -89,8 +91,8 @@ namespace InGame
                 if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing)
                     p1.OnHit += () =>
                     {
-                        p1.Damage = Mathf.RoundToInt(baseDamage *
-                                                    LevelUtilityV2.GetNormalPiercingDamageScale());
+                        p1.Damage = Mathf.RoundToInt(p1.Damage *
+                                                     LevelUtilityV2.GetNormalPiercingDamageScale());
                     };
             
                 pDir = Quaternion.Euler(0f, 0f, - i * angle / calculatedAmount + angleOffset) * direction;
@@ -113,13 +115,13 @@ namespace InGame
                     parentProjectile.MaxHit, 
                     null,
                     parentProjectile.HitActions,
-                    ProjectileType.PlayerProjectile
+                    ProjectileType.PlayerProjectile 
                 );
                 p2.Activate(0f);
                 if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing)
                     p2.OnHit += () =>
                     {
-                        p2.Damage = Mathf.RoundToInt(baseDamage *
+                        p2.Damage = Mathf.RoundToInt(p2.Damage *
                                                      LevelUtilityV2.GetNormalPiercingDamageScale());
                     };
             }

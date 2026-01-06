@@ -54,7 +54,7 @@ namespace InGame
                     if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing)
                         p.OnHit += () =>
                         {
-                            p.Damage = Mathf.RoundToInt(damagePerBullet *
+                            p.Damage = Mathf.RoundToInt(p.Damage *
                                                         LevelUtilityV2.GetNormalPiercingDamageScale());
                         };
                 }
