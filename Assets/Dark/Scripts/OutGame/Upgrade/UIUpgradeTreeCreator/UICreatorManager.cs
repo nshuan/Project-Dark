@@ -560,6 +560,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 }
                 UICreatorNodeInfoPreview.Instance.Hide();
                 btnSetGroupId.gameObject.SetActive(true);
+                inpSetGroupId.text = "";
             }
             
             if (selectingNodes == null || selectingNodes.Count == 0)
@@ -837,6 +838,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 {
                     if (group.isLockNode) nodesMap[guid].isGroupLockNode.Add(group.groupId, true);
                 }
+                nodesMap[guid].SetAreaLock();
             }
 
             RefreshGroupNodes();
@@ -845,6 +847,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             {
                 UpdateLine(nodeData.guid);
             }
+
+            inputTreeName.text = name;
         }
         
         #endregion

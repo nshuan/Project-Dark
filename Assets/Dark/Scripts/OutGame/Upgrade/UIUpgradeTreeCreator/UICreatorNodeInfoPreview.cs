@@ -14,7 +14,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         [SerializeField] private TextMeshProUGUI txtNodeName;
         [SerializeField] private TextMeshProUGUI txtNodeLore;
         [SerializeField] private TextMeshProUGUI txtNodeLevel;
-        // [SerializeField] private TextMeshProUGUI txtNodePrice;
+        [SerializeField] private TextMeshProUGUI txtGroupAsLockNode;
         [SerializeField] private TextMeshProUGUI[] txtNodeBonus;
         [SerializeField] private TMP_InputField inpGroup;
         public Button btnSelectGroup;
@@ -38,6 +38,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 txtNodeBonus[0].SetText(str);
                 txtNodeBonus[0].gameObject.SetActive(true);
             }
+            
+            txtGroupAsLockNode.SetText("Lock node of areas: " + string.Join(',', node.group.Where((group) => node.isGroupLockNode.ContainsKey(group) && node.isGroupLockNode[group])));
 
             inpGroup.onValueChanged.RemoveAllListeners();
             inpGroup.text = string.Join(",", node.group);
@@ -70,6 +72,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             btnSetLockNode.onClick.AddListener(() =>
             {
                 manager.SetGroupLockNode(node);
+                txtGroupAsLockNode.SetText("Lock node of areas: " + string.Join(',', node.group.Where((group) => node.isGroupLockNode.ContainsKey(group) && node.isGroupLockNode[group])));
             });
         }
         
