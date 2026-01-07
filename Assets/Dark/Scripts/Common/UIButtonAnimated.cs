@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using DG.Tweening;
 using UnityEngine;
@@ -10,7 +11,13 @@ namespace Dark.Scripts.Common
         [SerializeField] protected float hoverScale = 1.1f;
         [SerializeField] protected float pressScale = 1f;
         [SerializeField] protected float duration = 0.2f;
-        
+
+        private void OnDisable()
+        {
+            DOTween.Kill(this);
+            transform.localScale = Vector3.one;
+        }
+
         public void OnPointerEnter(PointerEventData eventData)
         {
             DOTween.Kill(this);
