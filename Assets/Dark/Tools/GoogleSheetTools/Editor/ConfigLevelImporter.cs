@@ -117,7 +117,8 @@ namespace Dark.Tools.GoogleSheetTool
         {
             foreach (var waveInfo in level.waveInfo)
             {
-                if (waveInfo.waveIndex == wave)
+                // Do wave trên sheet đánh số từ 1
+                if (waveInfo.waveIndex + 1 == wave)
                 {
                     waveInfo.scaleHp = scaleHp;
                     waveInfo.scaleDmg = scaleDamage;

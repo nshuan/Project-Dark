@@ -22,6 +22,23 @@ namespace InGame.GateEditorV2
         public TMP_InputField inpIntervalLoop;
         public TMP_InputField inpStartTimeVisual;
         public TMP_InputField inpDurationVisual;
+        
+        [Space] [Header("Spawn Logic")]
+        public TMP_Dropdown drdSpawnLogic;
+        
+        [Space] [Header("Spawn Logic Variables")]
+        public GameObject panelSpawnLogicVars;
+        // GateSpawnSingle & GateSpawnTriangle
+        public GameObject panelRadius;
+        public TMP_InputField inpRadius;
+        public GameObject panelRandomSpanAngle;
+        public TMP_InputField inpRandomSpanAngle;
+        // GateSpawnMultiple
+        public GameObject panelAmount;
+        public TMP_InputField inpAmount;
+        public GameObject panelMaxRadius;
+        public TMP_InputField inpMaxRadius;
+        // GateSpawnCenter - no variables
 
         public List<EnemyBehaviour> AvailableEnemies { get; set; }
         public LevelGatePrefabEditorV2 targetGate;
@@ -53,6 +70,11 @@ namespace InGame.GateEditorV2
             inpIntervalLoop.onValueChanged.RemoveAllListeners();
             inpStartTimeVisual.onValueChanged.RemoveAllListeners();
             inpDurationVisual.onValueChanged.RemoveAllListeners();
+            if (drdSpawnLogic != null) drdSpawnLogic.onValueChanged.RemoveAllListeners();
+            if (inpRadius != null) inpRadius.onValueChanged.RemoveAllListeners();
+            if (inpRandomSpanAngle != null) inpRandomSpanAngle.onValueChanged.RemoveAllListeners();
+            if (inpAmount != null) inpAmount.onValueChanged.RemoveAllListeners();
+            if (inpMaxRadius != null) inpMaxRadius.onValueChanged.RemoveAllListeners();
             
             var gateConfig = gate.Config;
             txtIsBossGate.isOn = gateConfig.isBossGate;
@@ -63,6 +85,30 @@ namespace InGame.GateEditorV2
             inpIntervalLoop.text = gateConfig.intervalLoop.ToString(GameConst.FloatFormat);
             inpStartTimeVisual.text = gateConfig.startTimeVisual.ToString(GameConst.FloatFormat);
             inpDurationVisual.text = gateConfig.durationVisual.ToString(GameConst.FloatFormat);
+            
+            // Setup spawn logic dropdown
+            if (drdSpawnLogic != null)
+            {
+                drdSpawnLogic.options = new List<TMP_Dropdown.OptionData>
+                {
+                    new TMP_Dropdown.OptionData("Single"),
+                    new TMP_Dropdown.OptionData("Triangle"),
+                    new TMP_Dropdown.OptionData("Multiple"),
+                    new TMP_Dropdown.OptionData("Center")
+                };
+                
+                // Initialize spawn logic if null
+                if (gateConfig.spawnLogic == null)
+                {
+                    gateConfig.spawnLogic = new GateSpawnSingle();
+                }
+                
+                // Set dropdown value based on current spawn logic type
+                int spawnLogicIndex = GetSpawnLogicIndex(gateConfig.spawnLogic);
+                drdSpawnLogic.value = spawnLogicIndex;
+                UpdateSpawnLogicPanels(spawnLogicIndex);
+                LoadSpawnLogicValues(gateConfig.spawnLogic);
+            }
 
             // txtIsBossGate.onValueChanged.AddListener((isOn) => gate.IsBossGate = isOn);
             txtIsBossGate.onValueChanged.AddListener((isOn) => gate.Config.isBossGate = isOn);
@@ -115,6 +161,193 @@ namespace InGame.GateEditorV2
                 // if (float.TryParse(value, out var time)) gate.DurationVisual = time;
                 if (float.TryParse(value, out var time)) gate.Config.durationVisual = time;
             });
+            
+            // Spawn logic dropdown handler
+            if (drdSpawnLogic != null)
+            {
+                drdSpawnLogic.onValueChanged.AddListener((value) =>
+                {
+                    UpdateSpawnLogicType(gate, value);
+                    UpdateSpawnLogicPanels(value);
+                    LoadSpawnLogicValues(gate.Config.spawnLogic);
+                });
+            }
+            
+            // Spawn logic variable handlers
+            if (inpRadius != null)
+            {
+                inpRadius.onValueChanged.AddListener((value) =>
+                {
+                    if (float.TryParse(value, out var radius))
+                    {
+                        if (gate.Config.spawnLogic is GateSpawnSingle single)
+                        {
+                            single.radius = Mathf.Clamp(radius, 1f, 2f);
+                        }
+                        else if (gate.Config.spawnLogic is GateSpawnTriangle triangle)
+                        {
+                            triangle.radius = Mathf.Clamp(radius, 1f, 2f);
+                        }
+                    }
+                });
+            }
+
+            if (inpRandomSpanAngle != null)
+            {
+                inpRandomSpanAngle.onValueChanged.AddListener((value) =>
+                {
+                    if (float.TryParse(value, out var angle))
+                    {
+                        if (gate.Config.spawnLogic is GateSpawnSingle single)
+                        {
+                            single.randomSpanAngle = angle;
+                        }
+                        else if (gate.Config.spawnLogic is GateSpawnTriangle triangle)
+                        {
+                            triangle.randomSpanAngle = angle;
+                        }
+                        else if (gate.Config.spawnLogic is GateSpawnMultiple multiple)
+                        {
+                            multiple.randomSpanAngle = angle;
+                        }
+                    }
+                });
+            }
+
+            if (inpAmount != null)
+            {
+                inpAmount.onValueChanged.AddListener((value) =>
+                {
+                    if (int.TryParse(value, out var amount))
+                    {
+                        if (gate.Config.spawnLogic is GateSpawnMultiple multiple)
+                        {
+                            multiple.amount = Mathf.Clamp(amount, 1, 10);
+                        }
+                    }
+                });
+            }
+
+            if (inpMaxRadius != null)
+            {
+                inpMaxRadius.onValueChanged.AddListener((value) =>
+                {
+                    if (float.TryParse(value, out var maxRadius))
+                    {
+                        if (gate.Config.spawnLogic is GateSpawnMultiple multiple)
+                        {
+                            multiple.maxRadius = Mathf.Clamp(maxRadius, 1f, 2f);
+                        }
+                    }
+                });
+            }
+        }
+        
+        private int GetSpawnLogicIndex(IGateSpawner spawnLogic)
+        {
+            if (spawnLogic is GateSpawnSingle) return 0;
+            if (spawnLogic is GateSpawnTriangle) return 1;
+            if (spawnLogic is GateSpawnMultiple) return 2;
+            if (spawnLogic is GateSpawnCenter) return 3;
+            return 0;
+        }
+        
+        private void UpdateSpawnLogicType(LevelGatePrefabEditorV2 gate, int index)
+        {
+            IGateSpawner newSpawnLogic = null;
+            
+            switch (index)
+            {
+                case 0: // Single
+                    if (gate.Config.spawnLogic is GateSpawnSingle existingSingle)
+                    {
+                        newSpawnLogic = existingSingle;
+                    }
+                    else
+                    {
+                        newSpawnLogic = new GateSpawnSingle();
+                    }
+                    break;
+                case 1: // Triangle
+                    if (gate.Config.spawnLogic is GateSpawnTriangle existingTriangle)
+                    {
+                        newSpawnLogic = existingTriangle;
+                    }
+                    else
+                    {
+                        newSpawnLogic = new GateSpawnTriangle();
+                    }
+                    break;
+                case 2: // Multiple
+                    if (gate.Config.spawnLogic is GateSpawnMultiple existingMultiple)
+                    {
+                        newSpawnLogic = existingMultiple;
+                    }
+                    else
+                    {
+                        newSpawnLogic = new GateSpawnMultiple();
+                    }
+                    break;
+                case 3: // Center
+                    newSpawnLogic = new GateSpawnCenter();
+                    break;
+            }
+            
+            gate.Config.spawnLogic = newSpawnLogic;
+        }
+        
+        private void UpdateSpawnLogicPanels(int spawnLogicIndex)
+        {
+            // Hide all panels first
+            if (panelSpawnLogicVars != null) panelSpawnLogicVars.SetActive(false);
+            if (panelRadius != null) panelRadius.SetActive(false);
+            if (panelRandomSpanAngle != null) panelRandomSpanAngle.SetActive(false);
+            if (panelAmount != null) panelAmount.SetActive(false);
+            if (panelMaxRadius != null) panelMaxRadius.SetActive(false);
+            
+            // Show relevant panels based on spawn logic type
+            if (panelSpawnLogicVars != null) panelSpawnLogicVars.SetActive(true);
+            
+            switch (spawnLogicIndex)
+            {
+                case 0: // Single
+                    if (panelRadius != null) panelRadius.SetActive(true);
+                    if (panelRandomSpanAngle != null) panelRandomSpanAngle.SetActive(true);
+                    break;
+                case 1: // Triangle
+                    if (panelRadius != null) panelRadius.SetActive(true);
+                    if (panelRandomSpanAngle != null) panelRandomSpanAngle.SetActive(true);
+                    break;
+                case 2: // Multiple
+                    if (panelAmount != null) panelAmount.SetActive(true);
+                    if (panelMaxRadius != null) panelMaxRadius.SetActive(true);
+                    if (panelRandomSpanAngle != null) panelRandomSpanAngle.SetActive(true);
+                    break;
+                case 3: // Center
+                    // No variables, keep panels hidden
+                    break;
+            }
+        }
+        
+        private void LoadSpawnLogicValues(IGateSpawner spawnLogic)
+        {
+            if (spawnLogic is GateSpawnSingle single)
+            {
+                if (inpRadius != null) inpRadius.text = single.radius.ToString(GameConst.FloatFormat);
+                if (inpRandomSpanAngle != null) inpRandomSpanAngle.text = single.randomSpanAngle.ToString(GameConst.FloatFormat);
+            }
+            else if (spawnLogic is GateSpawnTriangle triangle)
+            {
+                if (inpRadius != null) inpRadius.text = triangle.radius.ToString(GameConst.FloatFormat);
+                if (inpRandomSpanAngle != null) inpRandomSpanAngle.text = triangle.randomSpanAngle.ToString(GameConst.FloatFormat);
+            }
+            else if (spawnLogic is GateSpawnMultiple multiple)
+            {
+                if (inpAmount != null) inpAmount.text = multiple.amount.ToString();
+                if (inpMaxRadius != null) inpMaxRadius.text = multiple.maxRadius.ToString(GameConst.FloatFormat);
+                if (inpRandomSpanAngle != null) inpRandomSpanAngle.text = multiple.randomSpanAngle.ToString(GameConst.FloatFormat);
+            }
+            // GateSpawnCenter has no variables
         }
 
         public void Select()

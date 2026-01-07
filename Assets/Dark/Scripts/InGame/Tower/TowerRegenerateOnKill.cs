@@ -29,6 +29,7 @@ namespace InGame
         {
             if (lifeLeechRate <= 0) return;
             if (value <= 0) return;
+            if (tower.Id != LevelManager.Instance.CurrentTower.Id) return;
 
             currenLifeToConvert += lifeLeechRate * value;
             var valueToAdd = Mathf.FloorToInt(currenLifeToConvert);

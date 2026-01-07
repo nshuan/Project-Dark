@@ -168,21 +168,45 @@ namespace InGame.GateEditorV2
             {
                 if (gate.TryGetComponent<LevelGatePrefabEditorV2>(out var gateConfigEditor))
                 {
-                    // waveConfig.gateConfigs.Add(new GateConfig()
-                    // {
-                    //     isBossGate = gateConfigEditor.IsBossGate,
-                    //     position = gateConfigEditor.Position,
-                    //     targetBaseIndex = gateConfigEditor.StrTargetTowers.Trim(' ').Split(",").Select(int.Parse).ToArray(),
-                    //     startTime = gateConfigEditor.StartTime,
-                    //     duration = gateConfigEditor.Duration,
-                    //     spawnType = AvailableEnemies[gateConfigEditor.SpawnType],
-                    //     intervalLoop = gateConfigEditor.Interval,
-                    //     spawnLogic = gateConfigEditor.Config.spawnLogic,
-                    //     startTimeVisual = gateConfigEditor.StartTimeVisual,
-                    //     durationVisual = gateConfigEditor.DurationVisual,
-                    // });
                     gateConfigEditor.Config.position = gateConfigEditor.Position;
-                    waveConfig.gateConfigs.Add(gateConfigEditor.Config);
+                    
+                    var newTargets = new List<int>();
+                    if (gateConfigEditor.Config.targetBaseIndex != null)
+                    {
+                        newTargets.AddRange(gateConfigEditor.Config.targetBaseIndex);
+                    }
+
+                    IGateSpawner newSpawnLogic;
+                    if (gateConfigEditor.Config.spawnLogic is GateSpawnSingle existingSingle)
+                    {
+                        newSpawnLogic = new GateSpawnSingle() { radius = existingSingle.radius, randomSpanAngle = existingSingle.randomSpanAngle };
+                    }
+                    else if (gateConfigEditor.Config.spawnLogic is GateSpawnTriangle existingTriangle)
+                    {
+                        newSpawnLogic = new GateSpawnTriangle() {  radius = existingTriangle.radius, randomSpanAngle = existingTriangle.randomSpanAngle };
+                    }
+                    else if (gateConfigEditor.Config.spawnLogic is GateSpawnMultiple existingMultiple)
+                    {
+                        newSpawnLogic = new GateSpawnMultiple() { amount = existingMultiple.amount, randomSpanAngle = existingMultiple.randomSpanAngle, maxRadius = existingMultiple.maxRadius };
+                    }
+                    else
+                    {
+                        newSpawnLogic = new GateSpawnCenter();
+                    }
+                    
+                    waveConfig.gateConfigs.Add(new GateConfig()
+                    {
+                        isBossGate = gateConfigEditor.Config.isBossGate,
+                        position = gateConfigEditor.Position,
+                        targetBaseIndex = newTargets.ToArray(),
+                        startTime = gateConfigEditor.Config.startTime,
+                        duration = gateConfigEditor.Config.duration,
+                        spawnType = gateConfigEditor.Config.spawnType,
+                        intervalLoop = gateConfigEditor.Config.intervalLoop,
+                        spawnLogic = newSpawnLogic,
+                        startTimeVisual = gateConfigEditor.Config.startTimeVisual,
+                        durationVisual = gateConfigEditor.Config.durationVisual,
+                    });
                 }
             }
             

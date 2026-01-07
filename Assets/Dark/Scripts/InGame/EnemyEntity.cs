@@ -444,11 +444,21 @@ namespace InGame
         public void SetAimed(bool aimed)
         {
             aimPointer.SetActive(aimed);
+            if (IsBoss) return;
+            if (config.elite) return;
+            visual.material = aimed ? materialHighlight : cacheMaterial;
         }
 
         public void SetHover(bool hover)
         {
+            if (aimPointer.activeInHierarchy)
+            {
+                hoverPointer.SetActive(false);
+                return;
+            }
             hoverPointer.SetActive(hover);
+            if (IsBoss) return;
+            if (config.elite) return;
             visual.material = hover ? materialHighlight : cacheMaterial;
         }
 

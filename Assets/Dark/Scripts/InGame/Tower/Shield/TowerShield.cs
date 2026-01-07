@@ -46,14 +46,15 @@ namespace InGame.Shield
 
         private IEnumerator IEHealing()
         {
-            yield return new WaitForSeconds(config.delayHealing);
-
+            yield return new WaitForSeconds(config.healingInterval);
+            
+            var amountHealingPerTime = Mathf.CeilToInt(MaxShield / (config.healingDuration / config.healingDelta));
             while (currentShield < MaxShield)
             {
                 var lastShield = currentShield;
-                currentShield = Mathf.Min(currentShield + config.healingAmountPerTime, MaxShield);
+                currentShield = Mathf.Min(currentShield + amountHealingPerTime, MaxShield);
                 OnRegenerate?.Invoke(currentShield - lastShield);
-                yield return new WaitForSeconds(config.healingInterval);
+                yield return new WaitForSeconds(config.healingDelta);
             }
         }
     }

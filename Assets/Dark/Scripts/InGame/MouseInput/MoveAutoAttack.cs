@@ -122,7 +122,7 @@ namespace InGame
             cursor.UpdateCooldown(false, 0f);
             DOTween.Complete(this);
             var seq = DOTween.Sequence(this);
-            seq.Append(cursor.transform.DOPunchScale(0.3f * Vector3.one, 0.13f).SetEase(Ease.InQuad))
+            seq.Append(cursor.contentAimAndMove.transform.DOPunchScale(0.3f * Vector3.one, 0.13f).SetEase(Ease.InQuad))
                 .Join(cursor.visual.DOFade(0.3f, 0.13f).SetEase(Ease.InQuad).SetLoops(2, LoopType.Yoyo))
                 .Join(DOTween.To(() => cursor.content.transform.localScale.x - 1f, x =>
                 {

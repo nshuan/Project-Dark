@@ -55,6 +55,7 @@ namespace InGame.GateEditorV2
             {
                 AddNewWave(waveInfo);
             }
+            SelectWave(0);
             
             txtLevel?.SetText($"Level: {levelId}");
         }

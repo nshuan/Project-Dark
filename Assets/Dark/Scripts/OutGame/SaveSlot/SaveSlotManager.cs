@@ -22,6 +22,7 @@ namespace Dark.Scripts.OutGame.SaveSlot
             "playerDataSlot3",
         };
 
+        public int CurrentSlotIndex = 0;
         public void SelectSlot(int index)
         {
             index = Math.Clamp(index, 0, SlotDataKeys.Length - 1);
