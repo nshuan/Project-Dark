@@ -72,12 +72,16 @@ namespace InGame
             var bulletNum = 1;
             var skillSize = 1f;
             var skillRange = LevelUtilityV2.GetNormalAttackRange(Vector2.right);
-            var maxHit = 1 + LevelUtilityV2.GetNormalPiercingAmount();
+            var maxHit = 1;
+            if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing) 
+                maxHit += LevelUtilityV2.GetNormalPiercingAmount();
             var stagger = LevelUtilityV2.GetBaseStagger();
             
             var delayShot = InputManager.PlayerVisual.PlayShoot(worldMousePosition);
             var targetEnemy = nearestEnemy;
-            var activateSplitBullets = LevelUtilityV2.GetNormalBulletAmount();
+            var activateSplitBullets = 0;
+            if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackBullet) 
+                activateSplitBullets = LevelUtilityV2.GetNormalBulletAmount();
             var activateActions = activateSplitBullets == 0
                 ? null
                 : new List<IProjectileActivate>()

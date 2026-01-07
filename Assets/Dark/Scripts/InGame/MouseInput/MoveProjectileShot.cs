@@ -107,7 +107,9 @@ namespace InGame
             var bulletNum = 1;
             var skillSize = canChargeSize && sizeChargeAdded > 0 ? 1 + sizeChargeAdded : 1f;
             var skillRange = (canChargeRange && rangeChargeAdded > 0 ? 1 + rangeChargeAdded : 1f) * LevelUtilityV2.GetNormalAttackRange(Vector2.right);
-            var maxHit = 1 + LevelUtilityV2.GetNormalPiercingAmount();
+            var maxHit = 1;
+            if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing) 
+                maxHit += LevelUtilityV2.GetNormalPiercingAmount();
             var stagger = LevelUtilityV2.GetBaseStagger();
 
             InputManager.BlockTeleport = true;
