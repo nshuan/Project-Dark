@@ -154,9 +154,10 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
                     else groupBlock.gameObject.SetActive(true);
                 }
                 
+                // Nếu chỉ hiện duy nhất 1 nút thì không cần hiện pointer
                 if (dictPointerQuickButtons.TryGetValue(cvg.gameObject, out var groupPointer))
                 {
-                    if (a == PlayerDataManager.Instance.Data.level + 1)
+                    if (a > 1 && a == PlayerDataManager.Instance.Data.level + 1)
                     {
                         groupPointer.transform.SetParent(cvg.transform.parent.parent);
                         groupPointer.transform.SetSiblingIndex(1);
@@ -219,7 +220,7 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
 
             cacheExpandPosition = btnExpand.transform.localPosition;
             cacheLineFullSize = imgLineFull.rectTransform.sizeDelta;
-            cacheLineShortSize = imgLineShort.rectTransform.sizeDelta;
+            cacheLineShortSize = new Vector2(imgLineShort.rectTransform.sizeDelta.x, imgLineShort.rectTransform.sizeDelta.y * (listShowQuickButtons.Count - 1));
             
             imgBackground.gameObject.SetActive(false);
         }
@@ -297,9 +298,12 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
             imgLineShort.SetAlpha(0f);
             imgLineShort.rectTransform.sizeDelta = new Vector2(cacheLineShortSize.x, 0f);
             imgLineShort.DOFade(1f, durationShowEachButton + delayEachButton * (listShowQuickButtons.Count - 1)).SetTarget(imgLineShort);
-            imgLineShort.rectTransform
-                .DOSizeDelta(cacheLineShortSize, (durationShowEachButton + delayEachButton * (listShowQuickButtons.Count - 1)))
-                .SetEase(Ease.Unset).SetTarget(imgLineShort);
+            if (listShowQuickButtons.Count > 1)
+            {
+                imgLineShort.rectTransform
+                    .DOSizeDelta(cacheLineShortSize, (durationShowEachButton + delayEachButton * (listShowQuickButtons.Count - 1)))
+                    .SetEase(Ease.Unset).SetTarget(imgLineShort);
+            }
             
             groupBtnShort.SetActive(true);
 
