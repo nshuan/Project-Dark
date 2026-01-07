@@ -29,6 +29,7 @@ namespace InGame
         public GateEntity gatePrefab;
         
         [SerializeField] private TowerEntity[] towers;
+        public float delayStartLevel = 2.5f;
         public TowerEntity[] Towers => towers;
         private int currentTowerIndex;
         public TowerEntity CurrentTower
@@ -56,6 +57,7 @@ namespace InGame
         #region Action
 
         public Action OnInitPlayer { get; set; }
+        public Action<LevelConfig> OnLevelPreLoaded { get; set; }
         public Action<LevelConfig> OnLevelLoaded { get; set; }
         public Action<TowerEntity> OnChangeTower { get; set; }
 
@@ -73,6 +75,8 @@ namespace InGame
 
         [Space] public bool autoLoadLevel = true;
         public static bool isLoadFromInit;
+        private Coroutine coroutineStartLevel;
+        
         private void Start()
         {
             InitSkillTreeBonus();
@@ -140,16 +144,42 @@ namespace InGame
             
             TeleportTower(0);
             
+            // Get level boss name
+            foreach (var waveInfo in Level.waveInfo)
+            {
+                var foundedBoss = false;
+                foreach (var gate in waveInfo.waveConfig.gateConfigs)
+                {
+                    if (gate.isBossGate)
+                    {
+                        LevelBossName = gate.spawnType.displayName;
+                        foundedBoss = true;
+                        break;
+                    }
+                }
+                if (foundedBoss) break;
+            }
+            
+            // Start level
+            if (coroutineStartLevel != null) StopCoroutine(coroutineStartLevel);
+            coroutineStartLevel = StartCoroutine(IELevel());
+        }
+
+        private IEnumerator IELevel()
+        {
             // Start waves
             currentWaveIndex = 0;
             if (waveCoroutine != null) StopCoroutine(waveCoroutine);
-            waveCoroutine = StartCoroutine(IEWave(level.waveInfo));
             
+            OnLevelPreLoaded?.Invoke(Level);
+            yield return new WaitForSeconds(delayStartLevel);
+            
+            waveCoroutine = StartCoroutine(IEWave(Level.waveInfo));
             LevelStarted = true;
-            OnLevelLoaded?.Invoke(level);
+            OnLevelLoaded?.Invoke(Level);
             StartTimer();
         }
-
+        
         public void WinLevel()
         {
             if (IsEndLevel) return;

@@ -25,10 +25,7 @@ namespace InGame.Upgrade.NodeLogicsV2
         public (string, string) GetBeforeAfterValueTotalStat(int level, ref UpgradeBonusInfoV2 bonusInfo)
         {
             var before = "";
-            if (isMul)
-                before = (bonusInfo.bonusPassiveCounter.bonusLightningDmg.mul * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture) + "%";
-            else
-                before = bonusInfo.bonusPassiveCounter.bonusLightningDmg.add.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+            before = LevelUtilityV2.GetPassiveValue(PassiveTriggerType.TowerTakeDame, PassiveType.Lightning).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
 
             if (level > value.Length)
                 return (before, before);
@@ -39,10 +36,7 @@ namespace InGame.Upgrade.NodeLogicsV2
             ActivateNode(level, ref bonusInfo);
             
             var after = "";
-            if (isMul)
-                after = (bonusInfo.bonusPassiveCounter.bonusLightningDmg.mul * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture) + "%";
-            else
-                after = bonusInfo.bonusPassiveCounter.bonusLightningDmg.add.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+            after = LevelUtilityV2.GetPassiveValue(PassiveTriggerType.TowerTakeDame, PassiveType.Lightning).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
             
             bonusInfo.bonusPassiveCounter.bonusLightningDmg.mul = lightningDmgMultiply;
             bonusInfo.bonusPassiveCounter.bonusLightningDmg.add = lightningDmgPlus;

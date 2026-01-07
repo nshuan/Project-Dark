@@ -25,10 +25,7 @@ namespace InGame.Upgrade.NodeLogicsV2
         public (string, string) GetBeforeAfterValueTotalStat(int level, ref UpgradeBonusInfoV2 bonusInfo)
         {
             var before = "";
-            if (isMul)
-                before = (bonusInfo.bonusPassiveChargeAttack.bonusExplosiveDmg.mul * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture) + "%";
-            else
-                before = bonusInfo.bonusPassiveChargeAttack.bonusExplosiveDmg.add.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+            before = LevelUtilityV2.GetPassiveValue(PassiveTriggerType.DameByChargeAttack, PassiveType.Explosion).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
 
             if (level > value.Length)
                 return (before, before);
@@ -39,10 +36,7 @@ namespace InGame.Upgrade.NodeLogicsV2
             ActivateNode(level, ref bonusInfo);
             
             var after = "";
-            if (isMul)
-                after = (bonusInfo.bonusPassiveChargeAttack.bonusExplosiveDmg.mul * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture) + "%";
-            else
-                after = bonusInfo.bonusPassiveChargeAttack.bonusExplosiveDmg.add.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+            after = LevelUtilityV2.GetPassiveValue(PassiveTriggerType.DameByChargeAttack, PassiveType.Explosion).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
             
             bonusInfo.bonusPassiveChargeAttack.bonusExplosiveDmg.mul = explosiveDmgMultiply;
             bonusInfo.bonusPassiveChargeAttack.bonusExplosiveDmg.add = explosiveDmgPlus;
@@ -83,5 +77,6 @@ namespace InGame.Upgrade.NodeLogicsV2
         }
     }
 }
+
 
 

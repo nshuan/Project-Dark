@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MAT_Distortion_BGCloud
+  m_Shader: {fileID: 4800000, guid: 3012c1f80e8db2f408db03a9ecd8c101, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - UNITY_UI_ALPHACLIP
+  - _CANVAS_GROUP_COMPATIBLE
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainNoise:
+        m_Texture: {fileID: 2800000, guid: 5a5eb565e6fcfb543a93a2299584aa1b, type: 3}
+        m_Scale: {x: 0.06, y: 0.06}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex:
+        m_Texture: {fileID: 2800000, guid: 229b6e14b340cbe48837c1c3f16cc258, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Tex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - Disolve_Seed: 0.5
+    - Disolve_Value: 0.415
+    - Effect_Fade: 1
+    - Effect_Fading: 1
+    - LiquidUV_DistanceX_1: 0
+    - LiquidUV_DistanceY_1: 0
+    - LiquidUV_Speed_1: 1
+    - LiquidUV_WaveX_1: 0
+    - LiquidUV_WaveY_1: 2
+    - Pixel_Size: 19
+    - Seed: 0.5
+    - Symbiose_Distance: -0.023587085
+    - Symbiose_Position: 1
+    - _CanvasGroupCompatible: 1
+    - _ColorMask: 15
+    - _DarknessFactor: 0
+    - _DistortionFactor: 0
+    - _DstFactor: 10
+    - _NoiseValue: 1.3
+    - _Opp: 0
+    - _SpriteFade: 1
+    - _SrcFactor: 3
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 1
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _NoiseSpeed: {r: -0.005, g: -0.005, b: 0, a: 0}
+    - _Speed: {r: 0, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []

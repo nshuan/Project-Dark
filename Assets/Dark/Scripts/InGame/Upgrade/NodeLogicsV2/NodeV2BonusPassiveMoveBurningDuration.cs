@@ -25,10 +25,7 @@ namespace InGame.Upgrade.NodeLogicsV2
         public (string, string) GetBeforeAfterValueTotalStat(int level, ref UpgradeBonusInfoV2 bonusInfo)
         {
             var before = "";
-            if (isMul)
-                before = (bonusInfo.bonusPassiveMove.bonusBurningDuration.mul * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture) + "%";
-            else
-                before = bonusInfo.bonusPassiveMove.bonusBurningDuration.add.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+            before = LevelUtilityV2.GetPassiveSize(PassiveTriggerType.DameByMoveSKill, PassiveType.Burning).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
 
             if (level > value.Length)
                 return (before, before);
@@ -39,10 +36,7 @@ namespace InGame.Upgrade.NodeLogicsV2
             ActivateNode(level, ref bonusInfo);
             
             var after = "";
-            if (isMul)
-                after = (bonusInfo.bonusPassiveMove.bonusBurningDuration.mul * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture) + "%";
-            else
-                after = bonusInfo.bonusPassiveMove.bonusBurningDuration.add.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+            after = LevelUtilityV2.GetPassiveSize(PassiveTriggerType.DameByMoveSKill, PassiveType.Burning).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
             
             bonusInfo.bonusPassiveMove.bonusBurningDuration.mul = burningDurationMultiply;
             bonusInfo.bonusPassiveMove.bonusBurningDuration.add = burningDurationPlus;

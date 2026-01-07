@@ -417,7 +417,6 @@ namespace InGame
             var baseChance = 0f;
             if (PassiveConfigsMap.TryGetValue(triggerType, out var triggerDict) && triggerDict.TryGetValue(passiveType, out var config))
                 baseChance = config.chance;
-            if (!IsUnlockedPassive(triggerType, passiveType)) return baseChance;
             var bonus = GetPassiveRateBonus(triggerType, passiveType);
             return Mathf.Min((baseChance + bonus.add) * (1f + bonus.mul), 1f);
         }
@@ -427,7 +426,6 @@ namespace InGame
             var baseSize = 0f;
             if (PassiveConfigsMap.TryGetValue(triggerType, out var triggerDict) && triggerDict.TryGetValue(passiveType, out var config))
                 baseSize = config.size;
-            if (!IsUnlockedPassive(triggerType, passiveType)) return baseSize;
             var bonus = (passiveType) switch
             {
                 PassiveType.Explosion => GetPassiveExplosiveSizeBonus(triggerType),
@@ -445,11 +443,10 @@ namespace InGame
             var baseValue = 0f;
             if (PassiveConfigsMap.TryGetValue(triggerType, out var triggerDict) && triggerDict.TryGetValue(passiveType, out var config))
                 baseValue = config.value;
-            if (!IsUnlockedPassive(triggerType, passiveType)) return (baseValue + GetBaseDmg()) * (1f + GetBaseDmgRate());
-            if (passiveType != PassiveType.Thunder) baseValue += GetBaseDmg();
+            baseValue += GetBaseDmg();
             var bonus = GetPassiveDamageBonus(triggerType, passiveType);
             baseValue += bonus.add;
-            if (passiveType != PassiveType.Thunder) baseValue *= (1f + GetBaseDmgRate());
+            baseValue *= (1f + GetBaseDmgRate());
             return baseValue * (1f + bonus.mul);
         }
 

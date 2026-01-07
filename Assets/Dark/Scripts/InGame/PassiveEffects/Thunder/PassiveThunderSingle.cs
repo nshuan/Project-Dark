@@ -32,13 +32,10 @@ namespace InGame
                 if (tempTarget.TargetTransform.TryGetComponent(out triggerredEnemy))
                 {
                     VfxThunderPool.Instance.GetAndRelease(null, triggerredEnemy.transform.position, 0f, 1f);
-                    if (triggerredEnemy.PercentageHpLeft < value)
+                    triggerredEnemy.Damage(Mathf.RoundToInt(value), triggerredEnemy.transform.position, stagger, DamageType.Normal);
+                    if (!triggerredEnemy.IsDestroyed && triggerredEnemy.PercentageHpLeft < size)
                     {
                         triggerredEnemy.Kill(DamageType.Normal);
-                    }
-                    else
-                    {
-                        triggerredEnemy.Damage((int)(triggerredEnemy.MaxHealth * value), triggerredEnemy.transform.position, stagger, DamageType.Normal);
                     }
                     sfx.Play();
                 }

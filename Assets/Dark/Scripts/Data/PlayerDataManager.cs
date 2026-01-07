@@ -84,7 +84,7 @@ namespace Data
             preloadedData = new Dictionary<string, PlayerData>();
             foreach (var key in SaveSlotManager.SlotDataKeys)
             {
-                preloadedData[key] = DataHandler.Load<PlayerData>(key);
+                preloadedData[key] = DataHandler.Load<PlayerData>(key, new PlayerData());
             }
         }
         

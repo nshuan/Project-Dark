@@ -14,7 +14,7 @@ namespace InGame.Pause
 
         private void Awake()
         {
-            LevelManager.Instance.OnLevelLoaded += (level) =>
+            LevelManager.Instance.OnLevelPreLoaded += (level) =>
             {
                 LevelManager.Instance.OnLose += OnLose;
                 LevelManager.Instance.OnWin += OnWin;

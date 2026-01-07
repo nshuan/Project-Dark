@@ -68,10 +68,10 @@ namespace Economic.InGame
             if (DemoConfig.CollectLogicType == 2 && !_cam)
                 _cam = Camera.main;
 
-            LevelManager.Instance.OnLevelLoaded += OnLevelLoaded;
+            LevelManager.Instance.OnLevelPreLoaded += OnLevelPreLoaded;
         }
 
-        private void OnLevelLoaded(LevelConfig level)
+        private void OnLevelPreLoaded(LevelConfig level)
         {
             radius = LevelUtilityV2.GetVestigeCollectSize();
         }

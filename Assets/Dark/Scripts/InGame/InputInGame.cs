@@ -89,7 +89,7 @@ namespace InGame
                 mouseAutoAttack = new MoveAutoAttack(cam, cursor);
             };
             
-            LevelManager.Instance.OnLevelLoaded += (level) =>
+            LevelManager.Instance.OnLevelPreLoaded += (level) =>
             { 
                 BlockAllInput = false;
                 

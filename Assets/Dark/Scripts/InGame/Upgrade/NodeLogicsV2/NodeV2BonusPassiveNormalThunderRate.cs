@@ -25,10 +25,7 @@ namespace InGame.Upgrade.NodeLogicsV2
         public (string, string) GetBeforeAfterValueTotalStat(int level, ref UpgradeBonusInfoV2 bonusInfo)
         {
             var before = "";
-            if (isMul)
-                before = (bonusInfo.bonusPassiveNormalAttack.bonusThunderRate.mul * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture) + "%";
-            else
-                before = (bonusInfo.bonusPassiveNormalAttack.bonusThunderRate.add * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture) + "%";
+            before = (LevelUtilityV2.GetPassiveChance(PassiveTriggerType.DameByNormalAttack, PassiveType.Thunder) * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture) + "%";
 
             if (level > value.Length)
                 return (before, before);
@@ -39,10 +36,7 @@ namespace InGame.Upgrade.NodeLogicsV2
             ActivateNode(level, ref bonusInfo);
             
             var after = "";
-            if (isMul)
-                after = (bonusInfo.bonusPassiveNormalAttack.bonusThunderRate.mul * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture) + "%";
-            else
-                after = (bonusInfo.bonusPassiveNormalAttack.bonusThunderRate.add * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture) + "%";
+            after = (LevelUtilityV2.GetPassiveChance(PassiveTriggerType.DameByNormalAttack, PassiveType.Thunder) * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture) + "%";
             
             bonusInfo.bonusPassiveNormalAttack.bonusThunderRate.mul = thunderRateMultiply;
             bonusInfo.bonusPassiveNormalAttack.bonusThunderRate.add = thunderRatePlus;
