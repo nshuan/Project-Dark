@@ -90,7 +90,7 @@ namespace InGame.Upgrade
             data = null;
             if (DataHandler.Exist<UpgradeData>(dataKey))
                 DataHandler.Clear(dataKey);
-            preloadedData[dataKey] = null;
+            preloadedData[dataKey] = new UpgradeData();
         }
 
         public static string GetDataKey(string playerDataKey)

@@ -76,7 +76,7 @@ namespace Data
             data = null;
             if (DataHandler.Exist<PlayerData>(dataKey))
                 DataHandler.Clear(dataKey);
-            preloadedData[dataKey] = null;
+            preloadedData[dataKey] = new PlayerData();
         }
 
         public void PreloadAllData()
