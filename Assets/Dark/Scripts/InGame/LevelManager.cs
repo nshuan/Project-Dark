@@ -202,6 +202,10 @@ namespace InGame
             StopTimer();
             
             if (waveCoroutine != null) StopCoroutine(waveCoroutine);
+            foreach (var tower in towers)
+            {
+                tower.IsDestroyed = true;
+            }
             
             WealthManager.Instance.Save();
             

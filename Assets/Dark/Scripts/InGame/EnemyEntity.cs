@@ -262,7 +262,7 @@ namespace InGame
             
             // Scale damage on boss
             if (IsBoss)
-                damage = Mathf.RoundToInt(damage * LevelUtilityV2.GetBossScaleDamage());
+                damage = LevelUtilityV2.ToInt(LevelUtilityV2.GetBossScaleDamage() * damage);
             
             var lastHealth = CurrentHealth;
             CurrentHealth -= damage;

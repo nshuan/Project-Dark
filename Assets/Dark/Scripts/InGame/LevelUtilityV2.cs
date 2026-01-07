@@ -24,6 +24,8 @@ namespace InGame
         public static TowerCounterConfig StatsCounterSlash { get; set; }
         public static Dictionary<PassiveTriggerType, Dictionary<PassiveType, PassiveConfig>> PassiveConfigsMap { get; set; }
 
+        public static int ToInt(float value) => Mathf.CeilToInt(value);
+            
         #region Base
 
         /// <summary>
@@ -32,13 +34,13 @@ namespace InGame
         /// <returns></returns>
         public static int GetBaseTowerHp()
         {
-            return Mathf.RoundToInt((StatsBase.hp + BonusInfo.bonusBase.bonusHp.addInt) * (1f + BonusInfo.bonusBase.bonusHp.mul));
+            return ToInt((1f + BonusInfo.bonusBase.bonusHp.mul) * (StatsBase.hp + BonusInfo.bonusBase.bonusHp.addInt) );
         }
 
         // Similar to Hp
         public static int GetBaseTowerShield()
         {
-            return Mathf.RoundToInt((StatsBase.armor + BonusInfo.bonusBase.bonusShield.addInt) * (1f + BonusInfo.bonusBase.bonusShield.mul));
+            return ToInt((1f + BonusInfo.bonusBase.bonusShield.mul) * (StatsBase.armor + BonusInfo.bonusBase.bonusShield.addInt));
         }
 
         public static int GetBaseDmg()
@@ -60,7 +62,7 @@ namespace InGame
         // Similar to hp
         public static int GetBaseRegen()
         {
-            return Mathf.RoundToInt((StatsBase.regen + BonusInfo.bonusBase.bonusRegen.addInt) * (1f + BonusInfo.bonusBase.bonusRegen.mul));
+            return ToInt((1f + BonusInfo.bonusBase.bonusRegen.mul) * (StatsBase.regen + BonusInfo.bonusBase.bonusRegen.addInt));
         }
         
         // Similar to hp
@@ -140,13 +142,13 @@ namespace InGame
         /// <returns></returns>
         public static (int, int) GetNormalAttackDamage()
         {
-            var bulletDamage = Mathf.RoundToInt(
-                (StatsNormalAttack.damePerBullet + BonusInfo.bonusNormalAttack.bonusNormalAttackDmg.addInt + GetBaseDmg()) 
-                * (1f + GetBaseDmgRate())
-                * (1f + BonusInfo.bonusNormalAttack.bonusNormalAttackDmg.mul));
+            var bulletDamage = ToInt(
+                (1f + GetBaseDmgRate())
+                * (1f + BonusInfo.bonusNormalAttack.bonusNormalAttackDmg.mul)
+                * (StatsNormalAttack.damePerBullet + BonusInfo.bonusNormalAttack.bonusNormalAttackDmg.addInt + GetBaseDmg()));
             return LevelTemporaryUtility.FilterPlayerBulletDamage(
-                Mathf.RoundToInt(bulletDamage),
-                Mathf.RoundToInt(bulletDamage * GetBaseCriticalDmgScale()), 
+                ToInt(bulletDamage),
+                ToInt(GetBaseCriticalDmgScale() * bulletDamage), 
                 BonusInfo);
         }
 
@@ -245,13 +247,13 @@ namespace InGame
         /// <returns></returns>
         public static (int, int) GetChargeAttackDamage(float chargeDameMultiplier)
         {
-            var bulletDamage = Mathf.RoundToInt(
-                (StatsNormalAttack.damePerBullet + BonusInfo.bonusChargeAttack.bonusChargeDmg.addInt + GetBaseDmg()) 
-                * (1f + GetBaseDmgRate())
-                * (1f + BonusInfo.bonusChargeAttack.bonusChargeDmg.mul));
+            var bulletDamage = ToInt(
+                (1f + GetBaseDmgRate())
+                * (1f + BonusInfo.bonusChargeAttack.bonusChargeDmg.mul)
+                * (StatsNormalAttack.damePerBullet + BonusInfo.bonusChargeAttack.bonusChargeDmg.addInt + GetBaseDmg()));
             return LevelTemporaryUtility.FilterPlayerBulletDamage(
-                Mathf.RoundToInt(bulletDamage * chargeDameMultiplier),
-                Mathf.RoundToInt(bulletDamage * chargeDameMultiplier * GetBaseCriticalDmgScale()), 
+                ToInt(bulletDamage * chargeDameMultiplier),
+                ToInt(bulletDamage * chargeDameMultiplier * GetBaseCriticalDmgScale()), 
                 BonusInfo);
         }
 
@@ -264,7 +266,7 @@ namespace InGame
         // Charge size max bullet blossom
         public static int GetChargeSizeAmount()
         {
-            return Mathf.RoundToInt((StatsChargeSize.value + BonusInfo.bonusChargeAttack.bonusSizeAmount.addInt) * (1f + BonusInfo.bonusChargeAttack.bonusSizeAmount.mul));
+            return ToInt((1f + BonusInfo.bonusChargeAttack.bonusSizeAmount.mul) * (StatsChargeSize.value + BonusInfo.bonusChargeAttack.bonusSizeAmount.addInt) );
         }
 
         #endregion
@@ -278,12 +280,12 @@ namespace InGame
         
         public static int GetFlashDamage()
         {
-            return Mathf.RoundToInt((StatsFlash.damage + BonusInfo.bonusMove.bonusMoveDmg.addInt + GetBaseDmg()) * (1f + GetBaseDmgRate()) * (1f + BonusInfo.bonusMove.bonusMoveDmg.mul));
+            return ToInt((1f + GetBaseDmgRate()) * (1f + BonusInfo.bonusMove.bonusMoveDmg.mul) * (StatsFlash.damage + BonusInfo.bonusMove.bonusMoveDmg.addInt + GetBaseDmg()));
         }
 
         public static int GetDashDamage()
         {
-            return Mathf.RoundToInt((StatsDash.damage + BonusInfo.bonusMove.bonusMoveDmg.addInt + GetBaseDmg()) * (1f + GetBaseDmgRate()) * (1f + BonusInfo.bonusMove.bonusMoveDmg.mul));
+            return ToInt((1f + GetBaseDmgRate()) * (1f + BonusInfo.bonusMove.bonusMoveDmg.mul) * (StatsDash.damage + BonusInfo.bonusMove.bonusMoveDmg.addInt + GetBaseDmg()));
         }
         
         public static float GetFlashCooldown()
@@ -312,14 +314,16 @@ namespace InGame
 
         public static int GetCounterPiercingDamage()
         {
-            return Mathf.RoundToInt(
-                (StatsCounterPiercing.damage + BonusInfo.bonusCounter.bonusCounterDmg.addInt + GetBaseDmg()) * (1f + BonusInfo.bonusCounter.bonusCounterDmg.mul) * (1f + GetBaseDmgRate()));
+            return ToInt(
+                (1f + BonusInfo.bonusCounter.bonusCounterDmg.mul) * (1f + GetBaseDmgRate()) *
+                (StatsCounterPiercing.damage + BonusInfo.bonusCounter.bonusCounterDmg.addInt + GetBaseDmg()));
         }
         
         public static int GetCounterSlashDamage()
         {
-            return Mathf.RoundToInt(
-                (StatsCounterSlash.damage + BonusInfo.bonusCounter.bonusCounterDmg.addInt + GetBaseDmg()) * (1f + BonusInfo.bonusCounter.bonusCounterDmg.mul) * (1f + GetBaseDmgRate()));
+            return ToInt(
+                (1f + BonusInfo.bonusCounter.bonusCounterDmg.mul) * (1f + GetBaseDmgRate()) * 
+                (StatsCounterSlash.damage + BonusInfo.bonusCounter.bonusCounterDmg.addInt + GetBaseDmg()));
         }
 
         public static float GetCounterPiercingCooldown()
