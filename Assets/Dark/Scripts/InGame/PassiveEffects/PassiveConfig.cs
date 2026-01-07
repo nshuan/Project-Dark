@@ -14,7 +14,7 @@ namespace InGame
         public PassiveType logicType;
         public float cooldown;
         [Range(0f, 1f)] public float chance;
-        public float size; // Size chính là duration đối với effect burn
+        public float size; // duration đối với effect burn, execution chance đối với thunder
         public float value;
         public float stagger;
         public MonoPassiveEntity passivePrefab;
