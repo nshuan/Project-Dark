@@ -146,7 +146,6 @@ namespace InGame
                     foreach (var enemy in enemies)
                     {
                         enemy.Item1.IsBoss = true;
-                        LevelManager.Instance.LevelBossName = config.spawnType.displayName;
                     }
                     
                 }

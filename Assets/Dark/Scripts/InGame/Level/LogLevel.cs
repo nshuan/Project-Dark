@@ -24,11 +24,11 @@ namespace InGame
 
         private void Awake()
         {
-            LevelManager.Instance.OnLevelLoaded += OnLoadLevel;
+            LevelManager.Instance.OnLevelPreLoaded += OnLevelPreLoaded;
             LevelManager.Instance.OnChangeTower += OnChangedTower;
         }
 
-        private void OnLoadLevel(LevelConfig level)
+        private void OnLevelPreLoaded(LevelConfig level)
         {
             txtLevel.SetText($"Level: {level.name}");
 
