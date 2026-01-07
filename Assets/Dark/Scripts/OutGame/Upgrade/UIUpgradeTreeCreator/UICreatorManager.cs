@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Dark.Scripts.Common.UIWarning;
 using Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator.Grid;
+using InGame.CharacterClass;
 using InGame.Upgrade;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -916,6 +917,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
 
 #if UNITY_EDITOR
             prefabConverter.ConvertJsonToPrefab(inputTreeName.text, inputTreeName.text);
+            UpgradeTreeManifest.GetTreeConfig(CharacterClass.Archer).Validate();
 #endif
         }
 
