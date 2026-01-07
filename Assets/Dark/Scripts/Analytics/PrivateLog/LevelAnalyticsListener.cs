@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Economic;
 using InGame;
 using UnityEngine;
@@ -18,6 +19,8 @@ namespace Dark.Scripts.Analytics.PrivateLog
         private int lastVestige;
         private int lastExp;
         private int lastLoggedWave = -1;
+
+        private List<string> cacheLog;
         
         private void Awake()
         {
@@ -27,8 +30,17 @@ namespace Dark.Scripts.Analytics.PrivateLog
             CombatActions.OnDamageDealt += OnDamageDealt;
             CombatActions.OnDamageReceived += OnDamageReceived;
             CombatActions.OnDropResource += OnDropResource;
+            LevelManager.Instance.OnWin += OnLevelEnded;
+            LevelManager.Instance.OnLose += OnLevelEnded;
             
             LevelAnalyticsLogger.Initialize();
+
+            cacheLog = new List<string>();
+        }
+
+        private void OnLevelEnded()
+        {
+            LevelAnalyticsLogger.Log(cacheLog.ToArray());
         }
 
         private void OnLevelLoaded(LevelConfig level)
@@ -71,7 +83,17 @@ namespace Dark.Scripts.Analytics.PrivateLog
             expCollected = WealthManager.Instance.Exp - lastExp;
 
             lastLoggedWave = this.wave;
-            LevelAnalyticsLogger.Log(level, this.wave, vestigeDropped, vestigeCollected, expCollected, dmgDealed, dmgReceived, reason.ToString());
+
+            var cacheLevel = level;
+            var cacheWave = this.wave;
+            var cacheVestige = vestigeDropped;
+            var cacheVestigeCollected = vestigeCollected;
+            var cacheExp = expCollected;
+            var cacheDmgDealt = dmgDealed;
+            var cacheDmgReceived = dmgReceived;
+            var cacheReason = reason.ToString();
+            cacheLog.Add(string.Join(',', cacheLevel, cacheWave, cacheVestige, cacheVestigeCollected, cacheExp,
+                cacheDmgDealt, cacheDmgReceived, cacheReason));
         }
     }
 }
