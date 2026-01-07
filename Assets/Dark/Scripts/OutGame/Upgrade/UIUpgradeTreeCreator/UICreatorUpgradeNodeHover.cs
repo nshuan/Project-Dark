@@ -11,6 +11,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
 
         public Action<RectTransform, Vector3> onDrag;
         public Action onClick;
+        public Action onClickRight;
         public Action onEndDrag;
 
         private bool isDrag;
@@ -36,7 +37,10 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         public void OnPointerClick(PointerEventData eventData)
         {
             if (isDrag) return;
-            onClick?.Invoke();
+            if (eventData.button == PointerEventData.InputButton.Left)
+                onClick?.Invoke();
+            else if (eventData.button == PointerEventData.InputButton.Right)
+                onClickRight?.Invoke();
         }
         
         private RaycastHit2D[] hits;

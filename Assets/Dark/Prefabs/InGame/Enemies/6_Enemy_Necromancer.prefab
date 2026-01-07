@@ -153,6 +153,7 @@ MonoBehaviour:
   visual: {fileID: 2164173735719195637}
   materialNormal: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   materialElite: {fileID: 2100000, guid: 9cc43911995a5cd4b80f150967a2a7f4, type: 2}
+  materialHighlight: {fileID: 2100000, guid: ba0bb9557f10ac04a9aa840b2a3d1df8, type: 2}
 --- !u!70 &8131059031516112919
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -569,6 +570,7 @@ MonoBehaviour:
     frameRate: 0.1
     scale: 1
     autoExit: 1
+    followers: []
   runAnim:
     frames:
     - {fileID: -1753413594, guid: 288b465902999474a996a9aaaa0b8dbb, type: 3}
@@ -582,6 +584,7 @@ MonoBehaviour:
     frameRate: 0.1
     scale: 1
     autoExit: 1
+    followers: []
   attackAnim:
     frames:
     - {fileID: 1312812376, guid: 288b465902999474a996a9aaaa0b8dbb, type: 3}
@@ -599,6 +602,7 @@ MonoBehaviour:
     frameRate: 0.1
     scale: 1
     autoExit: 1
+    followers: []
   hitAnim:
     frames:
     - {fileID: -1051296391, guid: 288b465902999474a996a9aaaa0b8dbb, type: 3}
@@ -609,6 +613,7 @@ MonoBehaviour:
     frameRate: 0.1
     scale: 1
     autoExit: 1
+    followers: []
   dieAnim:
     frames:
     - {fileID: 105132951, guid: 288b465902999474a996a9aaaa0b8dbb, type: 3}
@@ -620,6 +625,7 @@ MonoBehaviour:
     frameRate: 0.1
     scale: 1
     autoExit: 0
+    followers: []
   spawnAnim:
     frames:
     - {fileID: 979488032, guid: 288b465902999474a996a9aaaa0b8dbb, type: 3}
@@ -634,6 +640,7 @@ MonoBehaviour:
     frameRate: 0.1
     scale: 1
     autoExit: 1
+    followers: []
   spawnEffect: {fileID: 2013485699235664079}
   spriteRenderer: {fileID: 0}
   isDefaultRun: 1
@@ -931,11 +938,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2332015460568313477, guid: 400ddee2c1a3a2d42a0b17f68b934e02, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.058
+      value: -0.033
       objectReference: {fileID: 0}
     - target: {fileID: 2332015460568313477, guid: 400ddee2c1a3a2d42a0b17f68b934e02, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.262
+      value: 1.187
       objectReference: {fileID: 0}
     - target: {fileID: 2332015460568313477, guid: 400ddee2c1a3a2d42a0b17f68b934e02, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1014,7 +1021,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2929624716812603795, guid: 03d66a249720d4a4a9fb9c3a7e3aba82, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.009
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2929624716812603795, guid: 03d66a249720d4a4a9fb9c3a7e3aba82, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1063,6 +1070,14 @@ PrefabInstance:
     - target: {fileID: 3868130653336878572, guid: 03d66a249720d4a4a9fb9c3a7e3aba82, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4096642549376769608, guid: 03d66a249720d4a4a9fb9c3a7e3aba82, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.009
+      objectReference: {fileID: 0}
+    - target: {fileID: 4570445093353829357, guid: 03d66a249720d4a4a9fb9c3a7e3aba82, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.187
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

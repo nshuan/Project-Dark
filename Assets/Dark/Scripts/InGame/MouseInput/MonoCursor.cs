@@ -27,6 +27,10 @@ namespace InGame
         public CanvasGroup contentMove;
         [SerializeField] private TextMeshProUGUI txtMoveInstruction;
 
+        [Header("Collect cursor")] 
+        public CanvasGroup contentAimAndMove;
+        [SerializeField] private CanvasGroup contentCollect;
+
         public void UpdateCooldown(bool active, float value)
         {
             groupCooldown.SetActive(active);
@@ -120,6 +124,27 @@ namespace InGame
                 
                 txtMoveInstruction.gameObject.SetActive(false);
             }
+        }
+
+        public void SetCollectCursor(bool active)
+        {
+            if (active)
+            {
+                contentAimAndMove.alpha = 0f;
+                contentCollect.alpha = 1f;
+            }
+            else
+            {
+                contentAimAndMove.alpha = 1f;
+                contentCollect.alpha = 0f;
+            }
+        }
+
+        public void PunchCollectCursor()
+        {
+            DOTween.Kill(contentCollect, true);
+            contentCollect.transform.DOPunchScale(0.3f * Vector3.one, 0.13f).SetEase(Ease.InQuad)
+                .SetTarget(contentCollect);
         }
     }
 }

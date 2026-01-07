@@ -174,6 +174,7 @@ MonoBehaviour:
     frameRate: 0.1
     scale: 1
     autoExit: 0
+    followers: []
   jumpDownAnim:
     frames:
     - {fileID: 2029893738, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
@@ -190,6 +191,8 @@ MonoBehaviour:
     frameRate: 0.1
     scale: 1
     autoExit: 1
+    followers: []
+  delayAttackAnim: 0.4
 --- !u!114 &7383520355259516268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -466,6 +469,7 @@ MonoBehaviour:
     frameRate: 0.1
     scale: 1
     autoExit: 1
+    followers: []
   runAnim:
     frames:
     - {fileID: -1452893391, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
@@ -483,6 +487,7 @@ MonoBehaviour:
     frameRate: 0.1
     scale: 1
     autoExit: 1
+    followers: []
   attackAnim:
     frames:
     - {fileID: 1950874616, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
@@ -507,6 +512,7 @@ MonoBehaviour:
     frameRate: 0.1
     scale: 1
     autoExit: 1
+    followers: []
   hitAnim:
     frames:
     - {fileID: 335116418, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
@@ -515,6 +521,7 @@ MonoBehaviour:
     frameRate: 0.1
     scale: 1
     autoExit: 1
+    followers: []
   dieAnim:
     frames:
     - {fileID: 335116418, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
@@ -534,6 +541,7 @@ MonoBehaviour:
     frameRate: 0.1
     scale: 1
     autoExit: 0
+    followers: []
   spawnAnim:
     frames:
     - {fileID: -39562633, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
@@ -549,6 +557,7 @@ MonoBehaviour:
     frameRate: 0.1
     scale: 1
     autoExit: 1
+    followers: []
   spawnEffect: {fileID: 0}
   spriteRenderer: {fileID: 0}
   isDefaultRun: 1
@@ -860,11 +869,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2332015460568313477, guid: 400ddee2c1a3a2d42a0b17f68b934e02, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.35999998
+      value: -0.37
       objectReference: {fileID: 0}
     - target: {fileID: 2332015460568313477, guid: 400ddee2c1a3a2d42a0b17f68b934e02, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.21
+      value: 2.038
       objectReference: {fileID: 0}
     - target: {fileID: 2332015460568313477, guid: 400ddee2c1a3a2d42a0b17f68b934e02, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1034,7 +1043,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2929624716812603795, guid: 03d66a249720d4a4a9fb9c3a7e3aba82, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.009000003
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2929624716812603795, guid: 03d66a249720d4a4a9fb9c3a7e3aba82, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1081,6 +1090,18 @@ PrefabInstance:
       value: EnemyAimPointer
       objectReference: {fileID: 0}
     - target: {fileID: 3868130653336878572, guid: 03d66a249720d4a4a9fb9c3a7e3aba82, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4570445093353829357, guid: 03d66a249720d4a4a9fb9c3a7e3aba82, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4570445093353829357, guid: 03d66a249720d4a4a9fb9c3a7e3aba82, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.038
+      objectReference: {fileID: 0}
+    - target: {fileID: 5908687289270174008, guid: 03d66a249720d4a4a9fb9c3a7e3aba82, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}

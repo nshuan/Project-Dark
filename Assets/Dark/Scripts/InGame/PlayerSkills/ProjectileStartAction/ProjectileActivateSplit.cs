@@ -13,16 +13,20 @@ namespace InGame
         
         public void DoAction(ProjectileEntity parentProjectile, Vector2 direction)
         {
+            if (amount == 0) return;
+            if (angle == 0) return;
+            if (!projectile) return;
+            
             direction.Normalize();
 
             var spawnPos = new Vector2();
             var calculatedAmount = amount + 1; // +1 đạn chính
             var angleOffset = 0f;
             
-            ProjectileEntity p = null;
+            var baseDamage = parentProjectile.Damage;
             if (calculatedAmount % 2 == 1)
             {
-                p = ProjectilePool.Instance.Get(projectile, null, false);
+                var p = ProjectilePool.Instance.Get(projectile, null, false);
                 spawnPos.x = parentProjectile.transform.position.x;
                 spawnPos.y = parentProjectile.transform.position.y;
                 p.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
@@ -33,7 +37,7 @@ namespace InGame
                     parentProjectile.Range, 
                     parentProjectile.Size, 
                     parentProjectile.SpeedScale, 
-                    parentProjectile.Damage, 
+                    baseDamage, 
                     parentProjectile.CriticalDamage, 
                     parentProjectile.CriticalRate, 
                     parentProjectile.Stagger, 
@@ -44,6 +48,11 @@ namespace InGame
                     ProjectileType.PlayerProjectile
                     );
                 p.Activate(0f);
+                if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing)
+                    p.OnHit += () =>
+                    {
+                        p.Damage = Mathf.RoundToInt(p.Damage * LevelUtilityV2.GetNormalPiercingDamageScale());
+                    };
             
                 calculatedAmount -= 1;
             }
@@ -51,22 +60,24 @@ namespace InGame
             {
                 angleOffset = angle / calculatedAmount / 2;
             }
-            
+
+            // Đạn tỏa ra sẽ giảm dame, nếu có normal piercing thì vẫn apply
+            baseDamage = Mathf.RoundToInt(baseDamage * LevelUtilityV2.GetNormalBulletDamageScale());
             for (var i = 1; i <= calculatedAmount / 2; i++)
             {
                 var pDir = (Vector2)(Quaternion.Euler(0f, 0f, i * angle / calculatedAmount - angleOffset) * direction);
-                p = ProjectilePool.Instance.Get(projectile, null, false);
+                var p1 = ProjectilePool.Instance.Get(projectile, null, false);
                 spawnPos.x = parentProjectile.transform.position.x;
                 spawnPos.y = parentProjectile.transform.position.y;
-                p.transform.position = spawnPos;
-                p.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(pDir.y, pDir.x) * Mathf.Rad2Deg);
-                p.Init(
+                p1.transform.position = spawnPos;
+                p1.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(pDir.y, pDir.x) * Mathf.Rad2Deg);
+                p1.Init(
                     parentProjectile.RangeCenter, 
                     pDir, 
                     parentProjectile.Range, 
                     parentProjectile.Size, 
                     parentProjectile.SpeedScale, 
-                    parentProjectile.Damage, 
+                    baseDamage, 
                     parentProjectile.CriticalDamage, 
                     parentProjectile.CriticalRate, 
                     parentProjectile.Stagger, 
@@ -76,21 +87,27 @@ namespace InGame
                     parentProjectile.HitActions,
                     ProjectileType.PlayerProjectile
                 );
-                p.Activate(0f);
+                p1.Activate(0f);
+                if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing)
+                    p1.OnHit += () =>
+                    {
+                        p1.Damage = Mathf.RoundToInt(p1.Damage *
+                                                     LevelUtilityV2.GetNormalPiercingDamageScale());
+                    };
             
                 pDir = Quaternion.Euler(0f, 0f, - i * angle / calculatedAmount + angleOffset) * direction;
-                p = ProjectilePool.Instance.Get(projectile, null, false);
+                var p2 = ProjectilePool.Instance.Get(projectile, null, false);
                 spawnPos.x = parentProjectile.transform.position.x;
                 spawnPos.y = parentProjectile.transform.position.y;
-                p.transform.position = spawnPos;
-                p.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(pDir.y, pDir.x) * Mathf.Rad2Deg);
-                p.Init(
+                p2.transform.position = spawnPos;
+                p2.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(pDir.y, pDir.x) * Mathf.Rad2Deg);
+                p2.Init(
                     parentProjectile.RangeCenter, 
                     pDir, 
                     parentProjectile.Range, 
                     parentProjectile.Size, 
                     parentProjectile.SpeedScale, 
-                    parentProjectile.Damage, 
+                    baseDamage, 
                     parentProjectile.CriticalDamage, 
                     parentProjectile.CriticalRate, 
                     parentProjectile.Stagger, 
@@ -98,9 +115,15 @@ namespace InGame
                     parentProjectile.MaxHit, 
                     null,
                     parentProjectile.HitActions,
-                    ProjectileType.PlayerProjectile
+                    ProjectileType.PlayerProjectile 
                 );
-                p.Activate(0f);
+                p2.Activate(0f);
+                if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing)
+                    p2.OnHit += () =>
+                    {
+                        p2.Damage = Mathf.RoundToInt(p2.Damage *
+                                                     LevelUtilityV2.GetNormalPiercingDamageScale());
+                    };
             }
         }
 

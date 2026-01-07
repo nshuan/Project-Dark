@@ -1,6 +1,9 @@
 using System;
 using Dark.Scripts.ForDemo;
+using Dark.Scripts.OutGame.SaveSlot;
 using Dark.Scripts.Settings;
+using Data;
+using InGame.Upgrade;
 
 namespace Dark.Scripts.Common.Init
 {
@@ -25,6 +28,16 @@ namespace Dark.Scripts.Common.Init
         public void Initialize()
         {
             GameSettings.Initialize();
+        }
+    }
+    
+    [Serializable]
+    public class DataInitializer : IEarlyInitialize
+    {
+        public void Initialize()
+        {
+            _ = PlayerDataManager.Instance;
+            _ = UpgradeManager.Instance;
         }
     }
 }

@@ -54,10 +54,31 @@ namespace Economic.InGame
         [SerializeField] private Camera _cam;
         [SerializeField] private Transform mouseFollower;
 
+        private MonoCursor cursor;
+        private float maxDelayHideCursor = 0.5f;
+        private float delayHideCursorCounter;
+
+        private void Awake()
+        {
+            CombatActions.OnInitInGameCursor += OnInitCursor;
+        }
+
         private void Start()
         {
             if (DemoConfig.CollectLogicType == 2 && !_cam)
                 _cam = Camera.main;
+
+            LevelManager.Instance.OnLevelLoaded += OnLevelLoaded;
+        }
+
+        private void OnLevelLoaded(LevelConfig level)
+        {
+            radius = LevelUtilityV2.GetVestigeCollectSize();
+        }
+
+        private void OnInitCursor(MonoCursor value)
+        {
+            cursor = value;
         }
 
         private void LateUpdate()
@@ -120,6 +141,7 @@ namespace Economic.InGame
                 _updateBuffer.Add(kvp.Key);
             }
 
+            var isCollecting = false;
             foreach (var tr in _updateBuffer)
             {
                 if (!tr)
@@ -165,6 +187,7 @@ namespace Economic.InGame
                         float moveDistance = Mathf.Min(distanceToMouse, maxMoveSpeed * dt);
                         current += toMouse.normalized * moveDistance;
                         tr.position = current;
+                        isCollecting = true;
                     }
                     else
                     {
@@ -191,8 +214,22 @@ namespace Economic.InGame
                     toClear.Add(tr);
                 }
             }
+            
+            // Update cursor
+            if (count > 0 || isCollecting)
+            {
+                cursor?.SetCollectCursor(true);
+                delayHideCursorCounter = maxDelayHideCursor;
+            }
+            else
+            {
+                delayHideCursorCounter -= Time.deltaTime;
+                if (delayHideCursorCounter <= 0f)
+                    cursor?.SetCollectCursor(false);
+            }
 
             // 3. Cleanup finished / null transforms.
+            var isClaim = false;
             for (int i = 0; i < toClear.Count; i++)
             {
                 _active.Remove(toClear[i]);
@@ -202,11 +239,13 @@ namespace Economic.InGame
                     item.DoClaimedVisual(mouseFollower);
                     EItemDropManager.Instance.Claim(item);
                     EItemDropPool.Instance.Release(item);
+                    isClaim = true;
                 }
             }
+            if (isClaim)
+                cursor.PunchCollectCursor();
         }
-
-
+        
         private void OnDrawGizmosSelected()
         {
             if (!_cam) return;

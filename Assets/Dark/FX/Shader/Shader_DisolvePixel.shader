@@ -33,7 +33,7 @@ Tags {"Queue" = "Transparent" "IgnoreProjector" = "true" "RenderType" = "Transpa
 ZWrite Off
 Blend [_SrcFactor] [_DstFactor]
 BlendOp [_Opp]
-Cull Off
+Cull Back
 
 // required for UI.Mask
 Stencil

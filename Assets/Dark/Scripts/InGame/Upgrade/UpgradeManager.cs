@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Core;
-using Dark.Scripts.InGame.Upgrade;
 using Dark.Scripts.OutGame.Upgrade;
 using Data;
 using Economic;
 using Cheat;
+using Dark.Scripts.OutGame.SaveSlot;
+using InGame.Upgrade.DynamicCost;
 using UnityEngine;
 
 namespace InGame.Upgrade
@@ -15,13 +16,14 @@ namespace InGame.Upgrade
     {
         #region Actions
 
-        public Action<UpgradeBonusInfo> OnActivated;
+        public Action<UpgradeBonusInfoV2> OnActivated;
 
         #endregion
         
         #region Data
 
         private static string DataKey => GetDataKey(PlayerDataManager.DataKey);
+        private Dictionary<string, UpgradeData> preloadedData = new Dictionary<string, UpgradeData>();
         private UpgradeData data;
 
         public UpgradeData Data
@@ -34,23 +36,53 @@ namespace InGame.Upgrade
         }
 
         private Dictionary<int, UpgradeNodeData> dataMapById;
+        private Dictionary<int, int> unlockOrderMapById;
+        private Dictionary<int, int> groupUnlockOrderMapById;
 
+        public void PreloadAllData()
+        {
+            preloadedData = new Dictionary<string, UpgradeData>();
+            foreach (var key in SaveSlotManager.SlotDataKeys)
+            {
+                var upgradeDataKey = GetDataKey(key);
+                preloadedData[upgradeDataKey] = DataHandler.Load<UpgradeData>(upgradeDataKey, new UpgradeData());
+            }
+        }
+        
         public void InitData()
         {
-            data = DataHandler.Load<UpgradeData>(DataKey, new UpgradeData());
+            PreloadAllData();
+            if (preloadedData != null && preloadedData.ContainsKey(DataKey))
+            {
+                data = preloadedData[DataKey];
+            }
+            else
+            {
+                data = DataHandler.Load<UpgradeData>(DataKey, new UpgradeData());
+                preloadedData ??= new Dictionary<string, UpgradeData>();
+                preloadedData[DataKey] = data;
+            }
 #if UNITY_EDITOR
             // data = new UpgradeData(TreeConfig.nodeMapById);
 #endif
             dataMapById = new Dictionary<int, UpgradeNodeData>();
+            unlockOrderMapById = new Dictionary<int, int>();
+            var index = 0;
             foreach (var node in data.nodes)
             {
                 dataMapById.TryAdd(node.id, node);
+                if (unlockOrderMapById.TryAdd(node.id, index))
+                {
+                    index += 1;
+                }
             }
+            RefreshGroupUnlockOrder();
         }
 
         private void Save()
         {
             DataHandler.Save(DataKey, Data);
+            preloadedData[DataKey] = data;
         }
 
         public void ClearData(string dataKey)
@@ -58,13 +90,14 @@ namespace InGame.Upgrade
             data = null;
             if (DataHandler.Exist<UpgradeData>(dataKey))
                 DataHandler.Clear(dataKey);
+            preloadedData[dataKey] = null;
         }
 
         public static string GetDataKey(string playerDataKey)
         {
             return playerDataKey + "_UpgradeData";
         }
-
+        
         public UpgradeManager()
         {
             InitData();
@@ -88,10 +121,10 @@ namespace InGame.Upgrade
         
         #endregion
         
-        public void ActivateTree(ref UpgradeBonusInfo bonusInfo)
+        public void ActivateTree(ref UpgradeBonusInfoV2 bonusInfo)
         {
             // Init bonus infor
-            bonusInfo = new UpgradeBonusInfo();
+            bonusInfo = new UpgradeBonusInfoV2();
            
             TreeConfig.ActivateTree(Data.nodes, ref bonusInfo);
 
@@ -100,15 +133,19 @@ namespace InGame.Upgrade
             if (testBonusInfo.Item1) // enabled = true
             {
                 bonusInfo = testBonusInfo.Item2;
-                bonusInfo.skillBonus ??= new UpgradeBonusSkillInfo();
-                bonusInfo.passiveMapByTriggerType ??= new Dictionary<PassiveTriggerType, List<PassiveType>>();
             }
 #endif
             
             OnActivated?.Invoke(bonusInfo);
         }
         
-        public bool UpgradeNode(int nodeId)
+        /// <summary>
+        /// nodeGroupLockOrder: unlock order comparing to other group lock node
+        /// </summary>
+        /// <param name="nodeId"></param>
+        /// <param name="nodeGroupLockId"></param>
+        /// <returns></returns>
+        public bool UpgradeNode(int nodeId, int nodeGroupUnlockOrder)
         {
             if (TreeConfig.GetNodeById(nodeId) == null) return false;
             
@@ -128,15 +165,61 @@ namespace InGame.Upgrade
             var costValueToSpend = new Dictionary<WealthType, int>();
             foreach (var cost in costInfo)
             {
-                var costValueIndex = cost.costType switch
-                {
-                    WealthType.Vestige => Data.indexVestige,
-                    WealthType.Echoes => Data.indexEchoes,
-                    WealthType.Sigils => Data.indexSigils,
-                    _ => 0
-                };
+                // var costValueIndex = cost.costType switch
+                // {
+                //     WealthType.Vestige => Data.indexVestige,
+                //     WealthType.Echoes => Data.indexEchoes,
+                //     WealthType.Sigils => Data.indexSigils,
+                //     _ => 0
+                // };
                 
-                var costValue = UpgradeRequirementConfig.Instance.GetRequirement(cost.costType, costValueIndex);
+                // var costValue = UpgradeRequirementConfig.Instance.GetRequirement(cost.costType, costValueIndex);
+                
+                var costValue = 0;
+                if (cost.costType == WealthType.Vestige)
+                {
+                    if (nodeConfig.dynamicVestige)
+                    {
+                        if (nodeConfig.MaxLevel == 1)
+                            costValue = Mathf.RoundToInt(nodeConfig.vestigeCostRatio *
+                                                         DynamicVestigeConfig.Instance.GetCost1Stage(nodeGroupUnlockOrder));
+                        else
+                        {
+                            var listCostValue = DynamicVestigeConfig.Instance.GetCost5Stage(nodeGroupUnlockOrder);
+                            currentLevel = Math.Min(currentLevel, listCostValue.Length - 1);
+                            costValue = Mathf.RoundToInt(nodeConfig.vestigeCostRatio * listCostValue[currentLevel]);
+                        }
+                    }
+                    else
+                    {
+                        currentLevel = Math.Min(currentLevel, cost.costValue.Length - 1);
+                        costValue = Mathf.RoundToInt(nodeConfig.vestigeCostRatio * cost.costValue[currentLevel]);
+                    }
+                }
+                else if (cost.costType == WealthType.Echoes)
+                {
+                    if (nodeConfig.dynamicEchoes)
+                    {
+                        if (nodeConfig.MaxLevel == 1)
+                            costValue = Mathf.RoundToInt(1f * DynamicVestigeConfig.Instance.GetCost1Echoes(nodeGroupUnlockOrder));
+                        else
+                        {
+                            var listCostValue = DynamicVestigeConfig.Instance.GetCost5Echoes(nodeGroupUnlockOrder);
+                            currentLevel = Math.Min(currentLevel, listCostValue.Length - 1);
+                            costValue = Mathf.RoundToInt(1f * listCostValue[currentLevel]);
+                        }
+                    }
+                    else
+                    {
+                        currentLevel = Math.Min(currentLevel, cost.costValue.Length - 1);
+                        costValue = Mathf.RoundToInt(1f * cost.costValue[currentLevel]);
+                    }
+                }
+                else
+                {
+                    currentLevel = Math.Min(currentLevel, cost.costValue.Length - 1);
+                    costValue = Mathf.RoundToInt(1f * cost.costValue[currentLevel]);
+                }
                 
                 if (!WealthManager.Instance.CanSpend(cost.costType, costValue)) 
                 {
@@ -183,9 +266,44 @@ namespace InGame.Upgrade
                 _ => 0
             };
         }
+
+        /// <summary>
+        /// 999999 là chưa unlock
+        /// </summary>
+        /// <param name="nodeId"></param>
+        /// <returns></returns>
+        public int GetNodeUnlockOrder(int nodeId)
+        {
+            return unlockOrderMapById.GetValueOrDefault(nodeId, 999999);
+        }
+        
+        public int GetGroupUnlockOrder(int groupId, bool refresh)
+        {
+            if (!TreeConfig.nodeGroupsMapById.ContainsKey(groupId)) return 999999;
+            if (refresh) RefreshGroupUnlockOrder();
+            return groupUnlockOrderMapById[groupId];;
+        }
+        
+        public void RefreshGroupUnlockOrder()
+        {
+            var groups = TreeConfig.nodeGroupsMapById.Values.ToList();
+            groupUnlockOrderMapById ??= new Dictionary<int, int>();
+            groups.Sort((group1, group2) => GetNodeUnlockOrder(group1.lockNode.nodeId)
+                .CompareTo(GetNodeUnlockOrder(group2.lockNode.nodeId)));
+            var index = 0;
+            foreach (var group in groups)
+            {
+                var nodeUnlockData = GetData(group.lockNode.nodeId);
+                groupUnlockOrderMapById[group.groupId] = index;
+                if (nodeUnlockData is { level: > 0 })
+                {
+                    index += 1;
+                };
+            }
+        }
         
 #if HOT_CHEAT
-        public void CheatUpdateBonusInfo(UpgradeBonusInfo bonusInfo)
+        public void CheatUpdateBonusInfo(UpgradeBonusInfoV2 bonusInfo)
         {
             OnActivated?.Invoke(bonusInfo);
         }
@@ -216,5 +334,13 @@ namespace InGame.Upgrade
         {
             level += 1;
         }
+    }
+    
+    [Serializable]
+    public class UpgradeNodeGroup
+    {
+        public int groupId;
+        public UpgradeNodeConfig lockNode; // Node này đã unlock thì mới tính là group đã unlock
+        public List<UpgradeNodeConfig> nodeList; // Tất cả node có trong group
     }
 }

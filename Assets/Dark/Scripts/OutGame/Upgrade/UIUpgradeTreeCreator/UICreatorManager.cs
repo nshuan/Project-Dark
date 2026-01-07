@@ -28,6 +28,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         public int idPrefab;
         public SerializableVector2 position;
         public List<Guid> preRequired;
+        public List<UpgradeGroupIdInfo> groups;
     }
 
     [Serializable]
@@ -62,6 +63,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         [SerializeField] private Button[] btnToggleNodes;
         [SerializeField] private Transform[] nodeButtonGroups;
         [OdinSerialize, NonSerialized] private Dictionary<NodeType, List<NodeButtonInfo>> btnInfo;
+        public Button btnSetGroupId;
+        public TMP_InputField inpSetGroupId;
 
         [Space] [Header("Create and Load tree")] 
         [SerializeField] private GameObject groupBtnLoadTree;
@@ -81,8 +84,10 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         private Dictionary<Guid, Dictionary<Guid, RectTransform>> linesMap;
         private Dictionary<Guid, List<UICreatorUpgradeNode>> nodeChildMap;
         private Dictionary<Guid, List<UICreatorUpgradeNode>> nodeParentMap;
+        private Dictionary<int, NodeSpriteInfo> cacheSpriteMap;
+        private Dictionary<int, List<UICreatorUpgradeNode>> groupMap;
 
-        private bool isLinkMode;
+        public bool isLinkMode;
         
         private void Awake()
         {
@@ -138,6 +143,9 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             
             btnDeleteAll.onClick.RemoveAllListeners();
             btnDeleteAll.onClick.AddListener(ClearAll);
+            
+            btnSetGroupId.onClick.RemoveAllListeners();
+            btnSetGroupId.onClick.AddListener(SetGroupIdForSelectingNodes);
         }
 
         public void ToggleNodeGroup(int index)
@@ -159,6 +167,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             {
                 HideAllNodeGroup();
                 UICreatorNodeInfoPreview.Instance.Hide();
+                btnSetGroupId.gameObject.SetActive(false);
                 // Destroy all nodes
                 var children = new GameObject[treeParent.childCount];
                 for (int i = 0; i < treeParent.childCount; i++)
@@ -226,6 +235,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             groupBtnLoadTree.SetActive(false);
             HideAllNodeGroup();
             UICreatorNodeInfoPreview.Instance.Hide();
+            btnSetGroupId.gameObject.SetActive(false);
             // Destroy all nodes
             var children = new GameObject[treeParent.childCount];
             for (int i = 0; i < treeParent.childCount; i++)
@@ -265,6 +275,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         {
             HideAllNodeGroup();
             UICreatorNodeInfoPreview.Instance.Hide();
+            btnSetGroupId.gameObject.SetActive(false);
             if (newTree == null)
             {
                 DebugUtility.LogError("Create a tree first!");
@@ -343,6 +354,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             UpdateLine(node.guid);
             
             node.InitNode();
+            
+            UpdateNodeSprites(node);
 
             return node.guid;
         }
@@ -406,8 +419,20 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             selectingNodes = null;
             btnDeleteNode.gameObject.SetActive(false);
             UICreatorNodeInfoPreview.Instance.Hide();
+            btnSetGroupId.gameObject.SetActive(false);
         }
 
+        public void UpdateNodeSprites(UICreatorUpgradeNode node)
+        {
+            cacheSpriteMap ??= UIUpgradeTree.GetSpritesMapById();
+            
+            var id = node.config.nodeId;
+            if (cacheSpriteMap.TryGetValue(id, out var spriteInfo))
+            {
+                node.SetIcon(spriteInfo.normalSprite);
+            }
+        }
+        
         public void ChangeMode()
         {
             HideAllNodeGroup();
@@ -491,6 +516,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         [SerializeField] private Button btnDeselectAll;
         [SerializeField] private KeyCode keyMultiselect = KeyCode.LeftShift;
 
+        private bool forceMultiselect = false;
         private bool keyMultiselectDown;
         private List<UICreatorUpgradeNode> selectingNodes;
 
@@ -503,7 +529,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 return;
             }
 
-            if (keyMultiselectDown == false)
+            if (keyMultiselectDown == false && forceMultiselect == false)
             {
                 if (selectingNodes != null)
                 {
@@ -515,8 +541,9 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 
                 selectingNodes = new List<UICreatorUpgradeNode>() { node };
                 node.SelectThis();
-                UICreatorNodeInfoPreview.Instance.UpdateUI(null, node.config);
-                UICreatorNodeInfoPreview.Instance.Show(node.transform.position, new Vector2(node.lineAnchorOffsetRadius, 0f));
+                UICreatorNodeInfoPreview.Instance.UpdateUI(this, node, node.config);
+                UICreatorNodeInfoPreview.Instance.Show();
+                btnSetGroupId.gameObject.SetActive(false);
             }
             else
             {
@@ -532,6 +559,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                     node.SelectThis();
                 }
                 UICreatorNodeInfoPreview.Instance.Hide();
+                btnSetGroupId.gameObject.SetActive(true);
+                inpSetGroupId.text = "";
             }
             
             if (selectingNodes == null || selectingNodes.Count == 0)
@@ -553,6 +582,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             selectingNodes= null;
             btnDeleteNode.gameObject.SetActive(false);
             UICreatorNodeInfoPreview.Instance.Hide();
+            btnSetGroupId.gameObject.SetActive(false);
         }
 
         private void Update()
@@ -565,6 +595,89 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
 
         #endregion
 
+        #region Group
+
+        public void SelectGroupNodes(List<int> groupId)
+        {
+            DeselectAll();
+            forceMultiselect = true;
+            foreach (var pair in nodesMap)
+            {
+                if (pair.Value.group.Any(groupId.Contains)) SelectNode(pair.Value);
+            }
+            forceMultiselect = false;
+        }
+
+        private void SetGroupIdForSelectingNodes()
+        {
+            if (selectingNodes == null) return;
+            var listGroupStr = inpSetGroupId.text.Trim(' ').Split(',');
+            var groups = new List<int>();
+            foreach (var str in listGroupStr)
+            {
+                if (int.TryParse(str, out var intValue))
+                {
+                    groups.Add(intValue);
+                }
+            }
+            foreach (var selectingNode in selectingNodes)
+            {
+                selectingNode.group = new List<int>(groups);
+            }
+            
+            RefreshGroupNodes();
+        }
+
+        public void RefreshGroupNodes()
+        {
+            groupMap ??= new Dictionary<int, List<UICreatorUpgradeNode>>();
+
+            foreach (var pair in nodesMap)
+            {
+                foreach (var group in pair.Value.group)
+                {
+                    if (groupMap.TryGetValue(group, out var listNode))
+                    {
+                        if (!listNode.Contains(pair.Value)) listNode.Add(pair.Value);
+                        groupMap[group] = listNode;
+                    }
+                    else
+                    {
+                        listNode = new List<UICreatorUpgradeNode>() { pair.Value };
+                        groupMap[group] = listNode;
+                    }
+                }
+            }
+        }
+
+        public void SetGroupLockNode(UICreatorUpgradeNode lockNode)
+        {
+            groupMap ??= new Dictionary<int, List<UICreatorUpgradeNode>>();
+
+            foreach (var group in lockNode.group)
+            {
+                if (groupMap.TryGetValue(group, out var listNode))
+                {
+                    foreach (var node in listNode)
+                    {
+                        node.isGroupLockNode ??= new Dictionary<int, bool>();
+                        node.isGroupLockNode[group] = false;
+                        node.SetAreaLock();
+                    }
+                }
+                else
+                {
+                    groupMap[group] = new List<UICreatorUpgradeNode>() { lockNode };
+                }
+                
+                lockNode.isGroupLockNode ??= new Dictionary<int, bool>();
+                lockNode.isGroupLockNode[group] = true;
+                lockNode.SetAreaLock();
+            }
+        }
+
+        #endregion
+        
         #region Edit node links
 
         public void SelectNodeLink(UICreatorUpgradeNode node)
@@ -718,12 +831,24 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 var guid = CreateNewNode((NodeType)nodeData.idType, nodeData.idPrefab, nodeData.id, nodeData.guid, nodeData.preRequired);
                 nodeData.guid = guid;
                 nodesMap[guid].transform.localPosition = nodeData.position;
+                nodeData.groups ??= new List<UpgradeGroupIdInfo>() { new UpgradeGroupIdInfo() { groupId = 0 } };
+                nodesMap[guid].group = nodeData.groups.Select((info) => info.groupId).ToList();
+                nodesMap[guid].isGroupLockNode = new Dictionary<int, bool>();
+                foreach (var group in nodeData.groups)
+                {
+                    if (group.isLockNode) nodesMap[guid].isGroupLockNode.Add(group.groupId, true);
+                }
+                nodesMap[guid].SetAreaLock();
             }
 
+            RefreshGroupNodes();
+            
             foreach (var nodeData in newTree.nodes)
             {
                 UpdateLine(nodeData.guid);
             }
+
+            inputTreeName.text = name;
         }
         
         #endregion
@@ -736,6 +861,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         
         public void SaveTreeData()
         {
+            RefreshGroupNodes();
             HideAllNodeGroup();
             if (newTree == null)
             {
@@ -757,7 +883,17 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                     preRequire = nodeParentMap[pair.Key].Select((node) => node.guid).ToList();
                 else
                     preRequire = new List<Guid>();
-                
+
+                var groupInfo = new List<UpgradeGroupIdInfo>();
+                foreach (var group in pair.Value.group)
+                {
+                    groupInfo.Add(new UpgradeGroupIdInfo()
+                    {
+                        groupId = group,
+                        isLockNode = pair.Value.isGroupLockNode != null && pair.Value.isGroupLockNode.ContainsKey(group) && pair.Value.isGroupLockNode[group]
+                    });
+                }
+                if (groupInfo.Count == 0) groupInfo.Add(new UpgradeGroupIdInfo() { groupId = 0 });
                 newTree.nodes.Add(new NodeDataStruct()
                 {
                     guid = pair.Key,
@@ -765,7 +901,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                     idType = (int)pair.Value.CreatorNodeType,
                     idPrefab = pair.Value.PrefabIndex,
                     position = pair.Value.transform.localPosition,
-                    preRequired = preRequire
+                    preRequired = preRequire,
+                    groups = groupInfo,
                 });
             }
             

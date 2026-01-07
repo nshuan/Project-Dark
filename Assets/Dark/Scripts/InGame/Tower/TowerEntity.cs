@@ -62,8 +62,8 @@ namespace InGame
             towerBaseAnim.PlayIdle(currentState);
             towerAnim.SetActiveOutline(false);
             towerBaseAnim.SetActiveOutline(false);
-            autoRegenerate.Initialize(this, LevelUtility.GetTowerAutoRegen(MaxHp));
-            regenerateOnKill.Initialize(this, LevelUtility.GetTowerRegenOnKill(MaxHp));
+            autoRegenerate.Initialize(this, LevelUtilityV2.GetBaseRegen());
+            regenerateOnKill.Initialize(this, LevelUtilityV2.GetBaseLifeLeech());
         }
         
         public void EnterTower()
