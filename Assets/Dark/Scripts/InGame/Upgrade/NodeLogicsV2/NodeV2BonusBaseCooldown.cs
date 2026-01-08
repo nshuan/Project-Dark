@@ -29,7 +29,7 @@ namespace InGame.Upgrade.NodeLogicsV2
         {
             var before = "";
 
-            before = LevelUtilityV2.GetBaseCooldown().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture) + "s";
+            before = "-" + (LevelUtilityV2.GetBaseCooldown() * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture) + "%";
 
             if (level > value.Length)
                 return (before, before);
@@ -40,7 +40,7 @@ namespace InGame.Upgrade.NodeLogicsV2
             ActivateNode(level, ref bonusInfo);
             
             var after = "";
-            after = LevelUtilityV2.GetBaseCooldown().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture) + "s";
+            after = "-" + (LevelUtilityV2.GetBaseCooldown() * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture) + "%";
             
             bonusInfo.bonusBase.bonusCooldown.mul = cooldownMultiply;
             bonusInfo.bonusBase.bonusCooldown.add = cooldownPlus;

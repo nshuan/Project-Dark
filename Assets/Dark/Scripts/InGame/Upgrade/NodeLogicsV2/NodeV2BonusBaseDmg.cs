@@ -30,9 +30,9 @@ namespace InGame.Upgrade.NodeLogicsV2
             var before = "";
 
             if (isMul)
-                before = (100 + LevelUtilityV2.GetBaseDmgRate() * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture) + "%";
+                before = "+" + (LevelUtilityV2.GetBaseDmgRate() * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture) + "%";
             else
-                before = LevelUtilityV2.GetBaseDmg().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+                before =  "+" + LevelUtilityV2.GetBaseDmg().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
 
             if (level > value.Length)
                 return (before, before);
@@ -44,9 +44,9 @@ namespace InGame.Upgrade.NodeLogicsV2
             
             var after = "";
             if (isMul)
-                after = (100 + LevelUtilityV2.GetBaseDmgRate() * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture) + "%";
+                after = "+" + (LevelUtilityV2.GetBaseDmgRate() * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture) + "%";
             else
-                after = LevelUtilityV2.GetBaseDmg().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+                after = "+" + LevelUtilityV2.GetBaseDmg().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
             
             bonusInfo.bonusBase.bonusDmg.mul = dmgMultiply;
             bonusInfo.bonusBase.bonusDmg.add = dmgPlus;
