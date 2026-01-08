@@ -38,7 +38,7 @@ namespace InGame
                     parentProjectile.Size, 
                     parentProjectile.SpeedScale, 
                     baseDamage, 
-                    parentProjectile.CriticalDamage, 
+                    LevelUtilityV2.ToInt(baseDamage * LevelUtilityV2.GetBaseCriticalDmgScale()), 
                     parentProjectile.CriticalRate, 
                     parentProjectile.Stagger, 
                     parentProjectile.IsCharge, 
@@ -51,7 +51,9 @@ namespace InGame
                 if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing)
                     p.OnHit += () =>
                     {
-                        p.Damage = Mathf.RoundToInt(p.Damage * LevelUtilityV2.GetNormalPiercingDamageScale());
+                        p.Damage = LevelUtilityV2.ToInt(p.Damage * LevelUtilityV2.GetNormalPiercingDamageScale());
+                        p.CriticalDamage =
+                            LevelUtilityV2.ToInt(p.Damage * LevelUtilityV2.GetNormalPiercingDamageScale());
                     };
             
                 calculatedAmount -= 1;
@@ -62,7 +64,7 @@ namespace InGame
             }
 
             // Đạn tỏa ra sẽ giảm dame, nếu có normal piercing thì vẫn apply
-            baseDamage = Mathf.RoundToInt(baseDamage * LevelUtilityV2.GetNormalBulletDamageScale());
+            baseDamage = LevelUtilityV2.ToInt(baseDamage * LevelUtilityV2.GetNormalBulletDamageScale());
             for (var i = 1; i <= calculatedAmount / 2; i++)
             {
                 var pDir = (Vector2)(Quaternion.Euler(0f, 0f, i * angle / calculatedAmount - angleOffset) * direction);
@@ -78,7 +80,7 @@ namespace InGame
                     parentProjectile.Size, 
                     parentProjectile.SpeedScale, 
                     baseDamage, 
-                    parentProjectile.CriticalDamage, 
+                    LevelUtilityV2.ToInt(baseDamage * LevelUtilityV2.GetBaseCriticalDmgScale()), 
                     parentProjectile.CriticalRate, 
                     parentProjectile.Stagger, 
                     parentProjectile.IsCharge, 
@@ -91,8 +93,10 @@ namespace InGame
                 if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing)
                     p1.OnHit += () =>
                     {
-                        p1.Damage = Mathf.RoundToInt(p1.Damage *
+                        p1.Damage = LevelUtilityV2.ToInt(p1.Damage *
                                                      LevelUtilityV2.GetNormalPiercingDamageScale());
+                        p1.CriticalDamage = LevelUtilityV2.ToInt(p1.CriticalDamage *
+                                                                 LevelUtilityV2.GetNormalPiercingDamageScale());
                     };
             
                 pDir = Quaternion.Euler(0f, 0f, - i * angle / calculatedAmount + angleOffset) * direction;
@@ -108,7 +112,7 @@ namespace InGame
                     parentProjectile.Size, 
                     parentProjectile.SpeedScale, 
                     baseDamage, 
-                    parentProjectile.CriticalDamage, 
+                    LevelUtilityV2.ToInt(baseDamage * LevelUtilityV2.GetBaseCriticalDmgScale()), 
                     parentProjectile.CriticalRate, 
                     parentProjectile.Stagger, 
                     parentProjectile.IsCharge, 
