@@ -89,10 +89,12 @@ namespace Dark.Scripts.OutGame.Upgrade
             
             cacheConfig = config;
             cacheData = UpgradeManager.Instance.GetData(config.nodeId);
-            UpdateUI();
+            var isNodeLocked = node.preRequires is { Count: > 0 } && node.preRequires.All((preRequire) =>
+                preRequire.node.CurrentState != UIUpgradeNodeState.Activated);
+            UpdateUI(isNodeLocked);
         }
 
-        public void UpdateUI()
+        public void UpdateUI(bool isLocked)
         {
             if (cacheConfig == null) return;
             txtNodeName.SetText(cacheConfig.nodeName);
@@ -156,9 +158,16 @@ namespace Dark.Scripts.OutGame.Upgrade
             }
             else
             {
-                groupStillAvailable.alpha = 1f;
-                groupStillAvailable.gameObject.SetActive(true);
                 groupMax.SetActive(false);
+                if (isLocked)
+                {
+                    groupStillAvailable.gameObject.SetActive(false);
+                }
+                else
+                {
+                    groupStillAvailable.alpha = 1f;
+                    groupStillAvailable.gameObject.SetActive(true);
+                }
                 
                 var costVestige = 0;
                 var costEchoes = 0;
