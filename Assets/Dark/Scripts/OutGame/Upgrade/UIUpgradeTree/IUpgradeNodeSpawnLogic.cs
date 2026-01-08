@@ -29,16 +29,13 @@ namespace Dark.Scripts.OutGame.Upgrade
         public Tween DoSpawn()
         {
             groupNode.alpha = 0f;
-            
+            imgFlash.gameObject.SetActive(true);
+            imgFlash.SetAlpha(1f);
+            groupNode.alpha = 1f;
+
             return DOTween.Sequence()
-                .AppendCallback(() =>
-                {
-                    imgFlash.gameObject.SetActive(true);
-                    imgFlash.SetAlpha(1f);
-                    groupNode.alpha = 1f;
-                })
-                .Append(imgFlash.DOFade(0f, 0.3f).SetEase(Ease.OutQuad))
-                .AppendCallback(() => imgFlash.gameObject.SetActive(false));
+                .Append(imgFlash.DOFade(0f, 0.3f).SetEase(Ease.OutQuad));
+            // .AppendCallback(() => imgFlash.gameObject.SetActive(false));
         }
     }
     
@@ -85,18 +82,17 @@ namespace Dark.Scripts.OutGame.Upgrade
         public Tween DoSpawn()
         {
             groupNode.alpha = 0f;
+            var vfxSpawn = GetVfxAppear();
             
             return DOTween.Sequence()
                 .AppendCallback(() =>
                 {
-                    var vfxSpawn = GetVfxAppear();
-                    vfxSpawn.gameObject.SetActive(true);
                     groupNode.alpha = 1f;
                     if (!autoPlay) 
                         vfxSpawn.Play();
-                    
-                    DOVirtual.DelayedCall(1f, () => ReleaseVfxAppear(vfxSpawn));
-                });
+                })
+                .AppendInterval(1f)
+                .AppendCallback(() => vfxSpawn.Stop());
         }
         
         private UIParticle GetVfxAppear()
