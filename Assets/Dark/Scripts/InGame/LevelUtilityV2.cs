@@ -52,11 +52,10 @@ namespace InGame
         {
             return StatsBase.damageRate + BonusInfo.bonusBase.bonusDmg.mul;
         }
-
-        // Similar to hp
+        
         public static float GetBaseCooldown()
         {
-            return (StatsBase.cooldown + BonusInfo.bonusBase.bonusCooldown.add) *  (1f + BonusInfo.bonusBase.bonusCooldown.mul);
+            return StatsBase.cooldown + BonusInfo.bonusBase.bonusCooldown.mul;
         }
 
         // Similar to hp
@@ -143,8 +142,7 @@ namespace InGame
         public static (int, int) GetNormalAttackDamage()
         {
             var bulletDamage = ToInt(
-                (1f + GetBaseDmgRate())
-                * (1f + BonusInfo.bonusNormalAttack.bonusNormalAttackDmg.mul)
+                (1f + BonusInfo.bonusNormalAttack.bonusNormalAttackDmg.mul + GetBaseDmgRate())
                 * (StatsNormalAttack.damePerBullet + BonusInfo.bonusNormalAttack.bonusNormalAttackDmg.addInt + GetBaseDmg()));
             return LevelTemporaryUtility.FilterPlayerBulletDamage(
                 ToInt(bulletDamage),
@@ -162,8 +160,7 @@ namespace InGame
             var baseCooldown = StatsNormalAttack.cooldown;
             return LevelTemporaryUtility.FilterSkillCooldown(Mathf.Max(0.001f,
                 (baseCooldown - BonusInfo.bonusNormalAttack.bonusNormalAttackCooldown.add) 
-                    * Mathf.Clamp(1 - BonusInfo.bonusNormalAttack.bonusNormalAttackCooldown.mul, 0f, 1f)
-                    * Mathf.Clamp(1 - GetBaseCooldown(), 0f, 1f)), 
+                    * Mathf.Clamp01(1 - BonusInfo.bonusNormalAttack.bonusNormalAttackCooldown.mul - GetBaseCooldown())), 
                 BonusInfo);
         }
 
@@ -223,8 +220,7 @@ namespace InGame
             var baseCooldown = StatsNormalAttack.chargeCooldown;
             return LevelTemporaryUtility.FilterSkillCooldown(Mathf.Max(0.001f,
                     (baseCooldown - BonusInfo.bonusChargeAttack.bonusChargeCooldown.add) 
-                    * Mathf.Clamp(1 - BonusInfo.bonusChargeAttack.bonusChargeCooldown.mul, 0f, 1f)
-                    * Mathf.Clamp(1 - GetBaseCooldown(), 0f, 1f)), 
+                    * Mathf.Clamp01(1 - BonusInfo.bonusChargeAttack.bonusChargeCooldown.mul - GetBaseCooldown())), 
                 BonusInfo);
         }
         
@@ -248,8 +244,7 @@ namespace InGame
         public static (int, int) GetChargeAttackDamage(float chargeDameMultiplier)
         {
             var bulletDamage = ToInt(
-                (1f + GetBaseDmgRate())
-                * (1f + BonusInfo.bonusChargeAttack.bonusChargeDmg.mul)
+                (1f + BonusInfo.bonusChargeAttack.bonusChargeDmg.mul + GetBaseDmgRate())
                 * (StatsNormalAttack.damePerBullet + BonusInfo.bonusChargeAttack.bonusChargeDmg.addInt + GetBaseDmg()));
             return LevelTemporaryUtility.FilterPlayerBulletDamage(
                 ToInt(bulletDamage * chargeDameMultiplier),
@@ -275,27 +270,27 @@ namespace InGame
 
         public static float GetTeleCooldown()
         {
-            return Mathf.Max((StatsTele.cooldown - BonusInfo.bonusMove.bonusMoveCooldown.add) * (1f - Mathf.Clamp01(BonusInfo.bonusMove.bonusMoveCooldown.mul)) * (1f - Mathf.Clamp01(GetBaseCooldown())), 0f);
+            return Mathf.Max((StatsTele.cooldown - BonusInfo.bonusMove.bonusMoveCooldown.add) * Mathf.Clamp01(1f - BonusInfo.bonusMove.bonusMoveCooldown.mul - GetBaseCooldown()), 0f);
         }
         
         public static int GetFlashDamage()
         {
-            return ToInt((1f + GetBaseDmgRate()) * (1f + BonusInfo.bonusMove.bonusMoveDmg.mul) * (StatsFlash.damage + BonusInfo.bonusMove.bonusMoveDmg.addInt + GetBaseDmg()));
+            return ToInt((1f + BonusInfo.bonusMove.bonusMoveDmg.mul + GetBaseDmgRate()) * (StatsFlash.damage + BonusInfo.bonusMove.bonusMoveDmg.addInt + GetBaseDmg()));
         }
 
         public static int GetDashDamage()
         {
-            return ToInt((1f + GetBaseDmgRate()) * (1f + BonusInfo.bonusMove.bonusMoveDmg.mul) * (StatsDash.damage + BonusInfo.bonusMove.bonusMoveDmg.addInt + GetBaseDmg()));
+            return ToInt((1f + BonusInfo.bonusMove.bonusMoveDmg.mul + GetBaseDmgRate()) * (StatsDash.damage + BonusInfo.bonusMove.bonusMoveDmg.addInt + GetBaseDmg()));
         }
         
         public static float GetFlashCooldown()
         {
-            return Mathf.Max((StatsFlash.cooldown - BonusInfo.bonusMove.bonusMoveCooldown.add) * (1f - Mathf.Clamp01(BonusInfo.bonusMove.bonusMoveCooldown.mul)) * (1f - Mathf.Clamp01(GetBaseCooldown())), 0f);
+            return Mathf.Max((StatsFlash.cooldown - BonusInfo.bonusMove.bonusMoveCooldown.add) * Mathf.Clamp01(1f - BonusInfo.bonusMove.bonusMoveCooldown.mul - GetBaseCooldown()), 0f);
         }
 
         public static float GetDashCooldown()
         {
-            return Mathf.Max((StatsDash.cooldown - BonusInfo.bonusMove.bonusMoveCooldown.add) * (1f - Mathf.Clamp01(BonusInfo.bonusMove.bonusMoveCooldown.mul)) * (1f - Mathf.Clamp01(GetBaseCooldown())), 0f);
+            return Mathf.Max((StatsDash.cooldown - BonusInfo.bonusMove.bonusMoveCooldown.add) * Mathf.Clamp01(1f - BonusInfo.bonusMove.bonusMoveCooldown.mul - GetBaseCooldown()), 0f);
         }
 
         public static float GetFlashSize()
@@ -315,14 +310,14 @@ namespace InGame
         public static int GetCounterPiercingDamage()
         {
             return ToInt(
-                (1f + BonusInfo.bonusCounter.bonusCounterDmg.mul) * (1f + GetBaseDmgRate()) *
+                (1f + BonusInfo.bonusCounter.bonusCounterDmg.mul + GetBaseDmgRate()) *
                 (StatsCounterPiercing.damage + BonusInfo.bonusCounter.bonusCounterDmg.addInt + GetBaseDmg()));
         }
         
         public static int GetCounterSlashDamage()
         {
             return ToInt(
-                (1f + BonusInfo.bonusCounter.bonusCounterDmg.mul) * (1f + GetBaseDmgRate()) * 
+                (1f + BonusInfo.bonusCounter.bonusCounterDmg.mul + GetBaseDmgRate()) * 
                 (StatsCounterSlash.damage + BonusInfo.bonusCounter.bonusCounterDmg.addInt + GetBaseDmg()));
         }
 
@@ -330,16 +325,14 @@ namespace InGame
         {
             return Mathf.Max(
                 (StatsCounterPiercing.cooldown - BonusInfo.bonusCounter.bonusCounterCooldown.add) *
-                (1f - Mathf.Clamp01(BonusInfo.bonusCounter.bonusCounterCooldown.mul)) *
-                (1f - Mathf.Clamp01(GetBaseCooldown())), 0.001f);
+                Mathf.Clamp01(1f - BonusInfo.bonusCounter.bonusCounterCooldown.mul - GetBaseCooldown()), 0.001f);
         }
         
         public static float GetCounterSlashCooldown()
         {
             return Mathf.Max(
                 (StatsCounterSlash.cooldown - BonusInfo.bonusCounter.bonusCounterCooldown.add) *
-                (1f - Mathf.Clamp01(BonusInfo.bonusCounter.bonusCounterCooldown.mul)) *
-                (1f - Mathf.Clamp01(GetBaseCooldown())), 0.001f);
+                Mathf.Clamp01(1f - BonusInfo.bonusCounter.bonusCounterCooldown.mul - GetBaseCooldown()), 0.001f);
         }
 
         public static int GetCounterPiercingAmount()
@@ -448,8 +441,7 @@ namespace InGame
             baseValue += GetBaseDmg();
             var bonus = GetPassiveDamageBonus(triggerType, passiveType);
             baseValue += bonus.add;
-            baseValue *= (1f + GetBaseDmgRate());
-            return baseValue * (1f + bonus.mul);
+            return baseValue * (1f + bonus.mul + GetBaseDmgRate());
         }
 
         public static float GetPassiveStagger(PassiveTriggerType triggerType, PassiveType passiveType)

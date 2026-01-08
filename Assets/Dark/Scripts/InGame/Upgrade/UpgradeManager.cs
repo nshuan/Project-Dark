@@ -143,7 +143,7 @@ namespace InGame.Upgrade
         /// nodeGroupLockOrder: unlock order comparing to other group lock node
         /// </summary>
         /// <param name="nodeId"></param>
-        /// <param name="nodeGroupLockId"></param>
+        /// <param name="nodeGroupUnlockOrder"></param>
         /// <returns></returns>
         public bool UpgradeNode(int nodeId, int nodeGroupUnlockOrder)
         {
@@ -248,6 +248,7 @@ namespace InGame.Upgrade
             }
             dataMapById[nodeId].Upgrade();
             Save();
+            RefreshGroupUnlockOrder();
             return true;
         }
 

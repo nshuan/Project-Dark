@@ -54,8 +54,10 @@ namespace InGame
                     if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing)
                         p.OnHit += () =>
                         {
-                            p.Damage = Mathf.RoundToInt(p.Damage *
-                                                        LevelUtilityV2.GetNormalPiercingDamageScale());
+                            p.Damage = LevelUtilityV2.ToInt(p.Damage *
+                                                            LevelUtilityV2.GetNormalPiercingDamageScale());
+                            p.CriticalDamage = LevelUtilityV2.ToInt(p.CriticalDamage *
+                                                                    LevelUtilityV2.GetNormalPiercingDamageScale());
                         };
                 }
                 else
