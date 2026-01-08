@@ -16,6 +16,7 @@ namespace InGame
             
             targetDirection.x = direction.x;
             targetDirection.y = direction.y;
+            targetDirection.Normalize();
         }
 
         protected override void FixedUpdate()
@@ -38,9 +39,9 @@ namespace InGame
 
             if (TargetToChase && TargetToChase.Activated && !TargetToChase.IsDestroyed)
             {
-                targetDirection.x = TargetToChase.transform.position.x - transform.position.x;
-                targetDirection.y = TargetToChase.transform.position.y - transform.position.y;
-                targetDirection.Normalize();
+                // targetDirection.x = TargetToChase.transform.position.x - transform.position.x;
+                // targetDirection.y = TargetToChase.transform.position.y - transform.position.y;
+                // targetDirection.Normalize();
 
                 if ((TargetToChase.transform.position.x - transform.position.x) *
                     (TargetToChase.transform.position.x - (transform.position.x + moveDirection.x)) <= 0)
@@ -57,6 +58,7 @@ namespace InGame
                             deadProjectile.gameObject.SetActive(false);
                         };
                         ProjectileHit(TargetToChase);
+                        TargetToChase = null;
                         return;
                     }
                 }
