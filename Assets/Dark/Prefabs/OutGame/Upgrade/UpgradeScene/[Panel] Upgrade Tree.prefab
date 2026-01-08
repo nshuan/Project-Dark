@@ -1020,6 +1020,7 @@ RectTransform:
   m_Children:
   - {fileID: 7670020479555916867}
   - {fileID: 4154718533555534904}
+  - {fileID: 6384261068803378355}
   - {fileID: 2271267573961882439}
   - {fileID: 4025601030614126105}
   - {fileID: 1166053651738438774}
@@ -1591,6 +1592,7 @@ MonoBehaviour:
   vfxActivate: {fileID: 8311216204877935231}
   vfxActivateMax: {fileID: 7481120734362092987}
   vfxAppear: {fileID: 8169387140140823356}
+  canvasForVfxAppear: {fileID: 1976912091401411524}
 --- !u!1 &1508436369428197085
 GameObject:
   m_ObjectHideFlags: 0
@@ -2007,6 +2009,65 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1852935257301037990}
   m_CullTransparentMesh: 1
+--- !u!1 &1899610606311339127
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6384261068803378355}
+  - component: {fileID: 1976912091401411524}
+  m_Layer: 5
+  m_Name: CanvasUIVfxAppear
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &6384261068803378355
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1899610606311339127}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7079232438700300705}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 500.8501}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!223 &1976912091401411524
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1899610606311339127}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!1 &2039541236455692957
 GameObject:
   m_ObjectHideFlags: 0
@@ -2104,7 +2165,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.01
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 0
   m_Viewport: {fileID: 8843949603755170906}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 0}
@@ -2189,7 +2250,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -3594,7 +3655,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -4098,7 +4159,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -4726,6 +4787,7 @@ MonoBehaviour:
   vfxActivate: {fileID: 3120747310497873130}
   vfxActivateMax: {fileID: 7745605452650479672}
   vfxAppear: {fileID: 3146152025247990528}
+  canvasForVfxAppear: {fileID: 1976912091401411524}
 --- !u!1 &4540215054995530066
 GameObject:
   m_ObjectHideFlags: 0
@@ -4963,7 +5025,7 @@ GameObject:
   - component: {fileID: 4261618111960107438}
   - component: {fileID: 5994766684603363156}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: imgFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5010,7 +5072,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -5086,7 +5148,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.6754716, g: 0.6754716, b: 0.6754716, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -5691,7 +5753,7 @@ GameObject:
   - component: {fileID: 3221116176394722002}
   - component: {fileID: 7031085934764937574}
   m_Layer: 5
-  m_Name: GameObject (2)
+  m_Name: txtMouse
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5738,7 +5800,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -7275,7 +7337,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -7556,6 +7618,7 @@ MonoBehaviour:
   vfxActivate: {fileID: 8675318838503919712}
   vfxActivateMax: {fileID: 7064255416517339293}
   vfxAppear: {fileID: 8638366252420766845}
+  canvasForVfxAppear: {fileID: 1976912091401411524}
 --- !u!1 &7614834571279323242
 GameObject:
   m_ObjectHideFlags: 0
@@ -8217,6 +8280,7 @@ MonoBehaviour:
   vfxActivate: {fileID: 3261255216246639997}
   vfxActivateMax: {fileID: 2644399596098275971}
   vfxAppear: {fileID: 7686559455896907495}
+  canvasForVfxAppear: {fileID: 1976912091401411524}
 --- !u!1 &8045725068909746993
 GameObject:
   m_ObjectHideFlags: 0
@@ -8249,7 +8313,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.0009765625, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 9369, y: 10017}
   m_Pivot: {x: 0.5, y: 0.45}
 --- !u!1 &8068672312699927803
@@ -8914,7 +8978,7 @@ GameObject:
   - component: {fileID: 2393700200437822574}
   - component: {fileID: 5640138236875030287}
   m_Layer: 5
-  m_Name: GameObject (1)
+  m_Name: imgMouse
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8961,7 +9025,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

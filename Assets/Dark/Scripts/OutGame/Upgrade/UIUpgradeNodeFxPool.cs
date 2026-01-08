@@ -11,6 +11,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private UIParticle vfxActivate;
         [SerializeField] private UIParticle vfxActivateMax;
         [SerializeField] private UIParticle vfxAppear;
+        [SerializeField] private Canvas canvasForVfxAppear;
 
         protected Queue<UIParticle> poolUnlock = new();
         protected Queue<UIParticle> poolActivate = new();
@@ -69,45 +70,43 @@ namespace Dark.Scripts.OutGame.Upgrade
         {
             if (poolAppear.TryDequeue(out var obj))
             {
-                obj.transform.SetParent(targetParent);
-                obj.transform.localPosition = Vector3.zero;
+                obj.transform.position = targetParent.position;
                 obj.gameObject.SetActive(active);
                 return obj;
             }
             
-            obj = Instantiate(vfxAppear, targetParent);
-            obj.transform.localPosition = Vector3.zero;
+            obj = Instantiate(vfxAppear, canvasForVfxAppear.transform);
+            obj.transform.position = targetParent.position;
             obj.gameObject.SetActive(active);
             return obj;
         }
 
         public void ReleaseVfxUnlock(UIParticle vfx)
         {
-            vfx.transform.SetParent(transform);
             vfx.gameObject.SetActive(false);
+            vfx.transform.SetParent(transform);
             if (poolUnlock.Contains(vfx)) return;
             poolUnlock.Enqueue(vfx);
         }
 
         public void ReleaseVfxActivate(UIParticle vfx)
         {
-            vfx.transform.SetParent(transform);
             vfx.gameObject.SetActive(false);
+            vfx.transform.SetParent(transform);
             if (poolActivate.Contains(vfx)) return;
             poolActivate.Enqueue(vfx);
         }
 
         public void ReleaseVfxActivateMax(UIParticle vfx)
         {
-            vfx.transform.SetParent(transform);
             vfx.gameObject.SetActive(false);
+            vfx.transform.SetParent(transform);
             if (poolActivateMax.Contains(vfx)) return;
             poolActivateMax.Enqueue(vfx);
         }
         
         public void ReleaseVfxAppear(UIParticle vfx)
         {
-            vfx.transform.SetParent(transform);
             vfx.gameObject.SetActive(false);
             if (poolAppear.Contains(vfx)) return;
             poolAppear.Enqueue(vfx);
