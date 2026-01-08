@@ -187,7 +187,8 @@ namespace InGame
             StopTimer();
             
             WealthManager.Instance.Save();
-            PlayerDataManager.Instance.CompleteLevel();
+            if (Level.level > PlayerDataManager.Instance.Data.level + 1)
+                PlayerDataManager.Instance.CompleteLevel();
             
             DebugUtility.LogError($"Level {Level.level + 1} is ended: WIN");
             IsEndLevel = true;
@@ -265,7 +266,8 @@ namespace InGame
             // if (reason == WaveEndReason.EndTime)
             onWaveEnded?.Invoke(currentWaveIndex - 1, reason);
             
-            winLoseManager.CheckWin(this);
+            if (!IsEndLevel)
+                winLoseManager.CheckWin(this);
                 
             if (waveIndex == currentWaveIndex - 1)
             {

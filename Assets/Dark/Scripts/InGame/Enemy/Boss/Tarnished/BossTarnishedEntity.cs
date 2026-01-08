@@ -37,6 +37,11 @@ namespace InGame.Boss
             EnemyPool.Instance.Release(this, config.enemyId);
         }
 
+        protected override void DropResource()
+        {
+           
+        }
+
         protected override IEnumerator IEAttack()
         {
             while (true)

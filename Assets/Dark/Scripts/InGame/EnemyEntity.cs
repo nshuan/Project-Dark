@@ -322,6 +322,8 @@ namespace InGame
 
         private void OnDie(EnemyDieReason reason)
         {
+            if (IsDestroyed) return;
+            
             if (attackCoroutine != null)
                 StopCoroutine(attackCoroutine);
             
