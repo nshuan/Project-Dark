@@ -45,17 +45,20 @@ namespace InGame
                 if ((TargetToChase.transform.position.x - transform.position.x) *
                     (TargetToChase.transform.position.x - (transform.position.x + moveDirection.x)) <= 0)
                 {
-                    DebugUtility.Log($"Hit enemy {TargetToChase}");
-                    var deadProjectile = ProjectileDeadOnEnemyPool.Instance.Get(targetDirection);
-                    deadProjectile.position = TargetToChase.transform.position;
-                    TargetToChase.body.SetupProjectileHit(deadProjectile.transform, targetDirection);
-                    deadProjectile.SetParent(TargetToChase.transform);
-                    TargetToChase.OnStartDead += () =>
+                    if (collider.TryHit(TargetToChase.transform))
                     {
-                        deadProjectile.gameObject.SetActive(false);
-                    };
-                    ProjectileHit(TargetToChase);
-                    return;
+                        DebugUtility.Log($"Hit enemy {TargetToChase}");
+                        var deadProjectile = ProjectileDeadOnEnemyPool.Instance.Get(targetDirection);
+                        deadProjectile.position = TargetToChase.transform.position;
+                        TargetToChase.body.SetupProjectileHit(deadProjectile.transform, targetDirection);
+                        deadProjectile.SetParent(TargetToChase.transform);
+                        TargetToChase.OnStartDead += () =>
+                        {
+                            deadProjectile.gameObject.SetActive(false);
+                        };
+                        ProjectileHit(TargetToChase);
+                        return;
+                    }
                 }
             }
  

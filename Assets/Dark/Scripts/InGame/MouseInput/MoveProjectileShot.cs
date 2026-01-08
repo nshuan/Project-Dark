@@ -141,6 +141,20 @@ namespace InGame
 
                 if (!isChargeBullet || isChargeSize)
                 {
+                    var blossomAmount = 0;
+                    if (canChargeSize)
+                        blossomAmount = LevelUtilityV2.GetChargeSizeAmount();
+                    var blossomAction = blossomAmount == 0
+                        ? null
+                        : new List<IProjectileHit>()
+                        {
+                            new ProjectileHitBlossom()
+                            {
+                                projectile = LevelUtilityV2.StatsNormalAttack.projectiles[projectileType],
+                                bulletAmount = blossomAmount,
+                                blossomSize = LevelUtilityV2.StatsChargeSize.range
+                            }
+                        };
                     LevelUtilityV2.StatsNormalAttack.Shoot(
                         LevelUtilityV2.StatsNormalAttack.projectiles[projectileType],
                         InputManager.ProjectileSpawnPos.position,
@@ -156,12 +170,8 @@ namespace InGame
                         maxHit,
                         isCharge,
                         null,
-                        new List<IProjectileHit>() { new ProjectileHitBlossom()
-                        {
-                            projectile = LevelUtilityV2.StatsNormalAttack.projectiles[projectileType],
-                            bulletAmount = LevelUtilityV2.GetChargeSizeAmount(),
-                            blossomSize = LevelUtilityV2.StatsChargeSize.range
-                        }});
+                        blossomAction
+                        );
                 }
 
                 if (isCharge)
@@ -173,6 +183,21 @@ namespace InGame
                     
                     ChargeController.Attack((projectile, direction, delay) =>
                     {
+                        var blossomAmount = 0;
+                        if (canChargeSize)
+                            blossomAmount = LevelUtilityV2.GetChargeSizeAmount();
+                        var blossomAction = blossomAmount == 0
+                            ? null
+                            : new List<IProjectileHit>()
+                            {
+                                new ProjectileHitBlossom()
+                                {
+                                    projectile = LevelUtilityV2.StatsNormalAttack.projectiles[projectileType],
+                                    bulletAmount = blossomAmount,
+                                    blossomSize = LevelUtilityV2.StatsChargeSize.range
+                                }
+                            };
+                        
                         projectile.Init(
                             LevelManager.Instance.CurrentTower.GetBaseCenter(), 
                             direction.normalized, 
@@ -186,12 +211,7 @@ namespace InGame
                             true, 
                             maxHit, 
                             null, 
-                            new List<IProjectileHit>() { new ProjectileHitBlossom()
-                            {
-                                projectile = LevelUtilityV2.StatsNormalAttack.projectiles[projectileType],
-                                bulletAmount = LevelUtilityV2.GetChargeSizeAmount(),
-                                blossomSize = 3f
-                            }},
+                            blossomAction,
                             ProjectileType.PlayerProjectile);
                         
                         projectile.Activate(delay);
