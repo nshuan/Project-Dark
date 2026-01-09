@@ -187,7 +187,7 @@ namespace InGame
             StopTimer();
             
             WealthManager.Instance.Save();
-            if (Level.level > PlayerDataManager.Instance.Data.level + 1)
+            if (Level.level >= PlayerDataManager.Instance.Data.level + 1)
                 PlayerDataManager.Instance.CompleteLevel();
             
             DebugUtility.LogError($"Level {Level.level + 1} is ended: WIN");
