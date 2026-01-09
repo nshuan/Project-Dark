@@ -12,6 +12,7 @@ using InGame.ChargeConfig;
 using InGame.ConfigManager;
 using InGame.CounterConfig;
 using InGame.Upgrade;
+using OutGame.Upgrade.Tooltip;
 using Sirenix.Serialization;
 using TMPro;
 using UnityEngine;
@@ -33,6 +34,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private TextMeshProUGUI txtNodeBonusBefore;
         [SerializeField] private TextMeshProUGUI txtNodeBonusAfter;
         [SerializeField] private RectTransform rectInfoBonusChanged;
+        [SerializeField] private UITooltip tooltip;
 
         [Space] [Header("Requirement")] 
         [SerializeField] private RequirementInfo infoReqVestige;
@@ -91,6 +93,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             cacheData = UpgradeManager.Instance.GetData(config.nodeId);
             var isNodeLocked = node.preRequires is { Count: > 0 } && node.preRequires.All((preRequire) =>
                 preRequire.node.CurrentState != UIUpgradeNodeState.Activated);
+            tooltip.gameObject.SetActive(false);
             UpdateUI(isNodeLocked);
         }
 
@@ -279,7 +282,11 @@ namespace Dark.Scripts.OutGame.Upgrade
             cacheHoverNodePadding.y = padding.y;
             if (CanAutoShowHide == false && forceShow == false) return;
             isVisible = true;
-            DoShow().OnComplete(() => onShow?.Invoke());
+            DoShow().OnComplete(() =>
+            {
+                tooltip.Show(cacheConfig.description, rectInfoFrameContent, new Vector2(10f, 0f));
+                onShow?.Invoke();
+            });
         }
 
         public void ShowImmediately(Vector2 position, Vector2 padding, bool forceShow, Action onShow)

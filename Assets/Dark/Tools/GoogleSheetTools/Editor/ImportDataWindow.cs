@@ -129,6 +129,13 @@ public class ImportDataWindow : EditorWindow
                 ConfigNodeLevelUpImporter.Import(data.configs[0], csvTable);
             }
         }
+        else if (tabName.ToString().ToLower().Contains("tooltip"))
+        {
+            foreach (var data in listDataToUpdate)
+            {
+                TooltipImporter.Import(data.configs[0], csvTable);
+            }
+        }
         else
         {
             foreach (var data in listDataToUpdate)

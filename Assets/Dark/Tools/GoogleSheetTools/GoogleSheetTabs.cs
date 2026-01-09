@@ -16,6 +16,7 @@ namespace Dark.Tools.GoogleSheetTool
         LevelUpConfig = 468570559, // "LevelUpConfig"
         VestigeDynamic = 1180815186, // "VestigeDynamic"
         BonusValueDynamic = 2141350917, // "BonusValueDynamic"
+        Tooltip = 1442243015, // "Tooltip"
         Wave = 230897661, // "Wave"
         LevelConfig = 992670229, // "LevelConfig"
         BossConfig = 181237602, // "BossConfig"
