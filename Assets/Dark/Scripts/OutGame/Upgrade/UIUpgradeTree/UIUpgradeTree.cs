@@ -96,7 +96,9 @@ namespace Dark.Scripts.OutGame.Upgrade
             // Auto upgrade node layer 0
             foreach (var nodeBase in nodesMapByLayer[0])
             {
-                UpgradeManager.Instance.UpgradeNode(nodeBase.config.nodeId, 0);
+                // Do area 0 được đánh id là 1
+                UpgradeManager.Instance.UpgradeNode(nodeBase.config.nodeId,
+                    new[] { new UpgradeGroupIdInfo() { groupId = 1, isLockNode = true } });
             }
             
             // Do Spawn Animation
