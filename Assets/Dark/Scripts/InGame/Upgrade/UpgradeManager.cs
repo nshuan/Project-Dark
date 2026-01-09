@@ -36,7 +36,6 @@ namespace InGame.Upgrade
         }
 
         private Dictionary<int, UpgradeNodeData> dataMapById;
-        private Dictionary<int, int> unlockOrderMapById;
         private Dictionary<int, int> groupUnlockOrderMapById;
 
         public void PreloadAllData()
@@ -66,15 +65,10 @@ namespace InGame.Upgrade
             // data = new UpgradeData(TreeConfig.nodeMapById);
 #endif
             dataMapById = new Dictionary<int, UpgradeNodeData>();
-            unlockOrderMapById = new Dictionary<int, int>();
             var index = 0;
             foreach (var node in data.nodes)
             {
                 dataMapById.TryAdd(node.id, node);
-                if (unlockOrderMapById.TryAdd(node.id, index))
-                {
-                    index += 1;
-                }
             }
             RefreshGroupUnlockOrder();
         }
@@ -143,15 +137,15 @@ namespace InGame.Upgrade
         /// nodeGroupLockOrder: unlock order comparing to other group lock node
         /// </summary>
         /// <param name="nodeId"></param>
-        /// <param name="nodeGroupUnlockOrder"></param>
+        /// <param name="groupIds"></param>
         /// <returns></returns>
-        public bool UpgradeNode(int nodeId, int nodeGroupUnlockOrder)
+        public bool UpgradeNode(int nodeId, UpgradeGroupIdInfo[] groupIds)
         {
             if (TreeConfig.GetNodeById(nodeId) == null) return false;
             
             if (!dataMapById.ContainsKey(nodeId))
             {
-                var newNodeData = new UpgradeNodeData() { id = nodeId, level = 0 };
+                var newNodeData = new UpgradeNodeData() { id = nodeId, level = 0, unlockOrder = 999999 };
                 Data.nodes.Add(newNodeData);
                 dataMapById.Add(nodeId, newNodeData);
             }
@@ -174,7 +168,8 @@ namespace InGame.Upgrade
                 // };
                 
                 // var costValue = UpgradeRequirementConfig.Instance.GetRequirement(cost.costType, costValueIndex);
-                
+
+                var nodeGroupUnlockOrder = groupIds.Min((groupId) => GetGroupUnlockOrder(groupId.groupId, false));
                 var costValue = 0;
                 if (cost.costType == WealthType.Vestige)
                 {
@@ -247,6 +242,17 @@ namespace InGame.Upgrade
                 }
             }
             dataMapById[nodeId].Upgrade();
+            if (dataMapById[nodeId].level == 1)
+            {
+                foreach (var groupId in groupIds)
+                {
+                    if (!groupUnlockOrderMapById.ContainsKey(groupId.groupId) && groupId.isLockNode)
+                    {
+                        groupUnlockOrderMapById.Add(groupId.groupId, groupUnlockOrderMapById.Count);
+                    }
+                }
+            }
+
             Save();
             RefreshGroupUnlockOrder();
             return true;
@@ -275,7 +281,8 @@ namespace InGame.Upgrade
         /// <returns></returns>
         public int GetNodeUnlockOrder(int nodeId)
         {
-            return unlockOrderMapById.GetValueOrDefault(nodeId, 999999);
+            if (!dataMapById.ContainsKey(nodeId)) return 999999;
+            return dataMapById.GetValueOrDefault(nodeId).unlockOrder;
         }
         
         public int GetGroupUnlockOrder(int groupId, bool refresh)
@@ -330,6 +337,7 @@ namespace InGame.Upgrade
     {
         public int id;
         public int level;
+        public int unlockOrder = 999999;
 
         public void Upgrade()
         {

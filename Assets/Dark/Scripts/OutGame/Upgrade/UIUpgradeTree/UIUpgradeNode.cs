@@ -258,8 +258,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     return;
                 }
 
-                var success = UpgradeManager.Instance.UpgradeNode(config.nodeId,
-                    config.groupId.Min((info) => UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, false)));
+                var success = UpgradeManager.Instance.UpgradeNode(config.nodeId, config.groupId);
                 if (success)
                 {
                     UpgradeManager.Instance.RefreshGroupUnlockOrder();
