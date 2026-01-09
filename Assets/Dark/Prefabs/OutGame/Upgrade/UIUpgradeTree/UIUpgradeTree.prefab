@@ -50,7 +50,7 @@ Canvas:
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
-  m_OverrideSorting: 1
+  m_OverrideSorting: 0
   m_OverridePixelPerfect: 1
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
@@ -69,6 +69,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6335794263807908846}
   - component: {fileID: 3488650017965269547}
+  - component: {fileID: 2483857716174668738}
   m_Layer: 5
   m_Name: UIUpgradeTree
   m_TagString: Untagged
@@ -135,6 +136,18 @@ MonoBehaviour:
   btnDeselectAll: {fileID: 4089355765938411482}
   nodeSpawnDelayStep: 0.1
   firstNodeDelayStep: 0.5
+--- !u!225 &2483857716174668738
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4764350853636704849}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &5206467839397320985
 GameObject:
   m_ObjectHideFlags: 0
@@ -186,7 +199,7 @@ Canvas:
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
-  m_OverrideSorting: 1
+  m_OverrideSorting: 0
   m_OverridePixelPerfect: 1
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
