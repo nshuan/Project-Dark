@@ -20,6 +20,7 @@ namespace InGame.Boss
         [Space] [Header("Config")]
         [Tooltip("Config that store exclusive variable for this boss")] 
         [SerializeField] private BossLordOfFlameConfig lordOfFlameConfig;
+        private float damageScale = 1f;
         
         [Tooltip("After play attack animation, delay these seconds before doing attack logic")]
         [SerializeField] private float delayAttackAnim = 0.4f;
@@ -28,10 +29,6 @@ namespace InGame.Boss
         [Tooltip("Delay before recovering animation and recovering logic")] 
         [SerializeField] private float delayRecover = 1f;
         
-        // Attack [X] lần thì đổi anim attack
-        private int minAttackTurnToSwitchType = 1;
-        private int maxAttackTurnToSwitchType = 2;
-        private int currentAttackCountdown = 2;
         private bool hasRecoverOnce = false;
         private bool isRecovering = false;
         private bool isAttacking = false;
@@ -41,8 +38,7 @@ namespace InGame.Boss
             float levelDarkRatio, int levelDarkUnitValue)
         {
             base.Init(eConfig, target, statsScale, levelExpRatio, levelDarkRatio, levelDarkUnitValue);
-
-            currentAttackCountdown = maxAttackTurnToSwitchType;
+            
             hasRecoverOnce = false;
             isRecovering = false;
             isAttacking = false;
@@ -59,31 +55,36 @@ namespace InGame.Boss
                     var attackDuration = 0f;
                     var delayAttack = 0f;
                     isAttacking = true;
-                    if (currentAttackCountdown > 0)
+
+                    var allSkill = hasRecoverOnce
+                        ? lordOfFlameConfig.attackPhase2Info
+                        : lordOfFlameConfig.attackPhase1Info;
+
+                    var attackSkillId = RandomUtil.RangeWithOwnRate(allSkill
+                        .Select((skill) => skill.chance).ToArray());
+                    damageScale = allSkill[attackSkillId].dmgScale;
+
+                    switch (attackSkillId)
                     {
-                        currentAttackCountdown -= 1;
-                        // phase 1 dùng attack thường, phase 2 dùng spear
-                        if (hasRecoverOnce)
-                        {
+                        // Normal attack 2
+                        case 1:
+                            attackDuration = animController.PlayCustomAnim(attack2Anim);
+                            delayAttack = Mathf.Min(delayAttack2Anim, 1 / config.attackSpeed);
+                            break;
+                        // Spear attack
+                        case 2:
                             attackDuration = animController.PlayCustomAnim(spearAttackAnim);
                             delayAttack = Mathf.Min(delayAttack2Anim, 1 / config.attackSpeed); // số frame delay attack của spear bằng attack2
-                        }
-                        else
-                        {
+                            break;
+                        // Normal attack 1
+                        case 0:
+                        default:
                             attackDuration = animController.PlayAttack();
                             delayAttack = Mathf.Min(delayAttackAnim, 1 / config.attackSpeed);
-                        }
-                        if (delayAttack > attackDuration) delayAttack = attackDuration;
+                            break;
                     }
-                    else
-                    {
-                        // phase 1 dùng attack thường, phase 2 dùng spear
-                        if (hasRecoverOnce) attackDuration = animController.PlayCustomAnim(spearAttackAnim);
-                        else attackDuration = animController.PlayCustomAnim(attack2Anim);
-                        currentAttackCountdown = RandomUtil.Range(minAttackTurnToSwitchType, maxAttackTurnToSwitchType + 1);
-                        delayAttack = Mathf.Min(delayAttack2Anim, 1 / config.attackSpeed);
-                        if (delayAttack > attackDuration) delayAttack = attackDuration;
-                    }
+                        
+                    if (delayAttack > attackDuration) delayAttack = attackDuration;
                     
                     yield return new WaitForSeconds(delayAttack);
                     Attack();
@@ -99,7 +100,7 @@ namespace InGame.Boss
         protected override void Attack()
         {
             if  (TargetTower.IsDestroyed) return;
-            config.attackBehaviour.Attack(this, TargetTower, transform.position, CurrentDamage);
+            config.attackBehaviour.Attack(this, TargetTower, transform.position, LevelUtilityV2.ToInt(CurrentDamage * damageScale));
         }
 
         public override void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
