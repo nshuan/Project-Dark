@@ -45,4 +45,38 @@ public static class RandomUtil
     {
         return InsideUnitSpan((Vector2)spanDirection, spanAngle);
     }
+
+    // Shouldn't spam
+    public static int RangeWithOwnRate(params float[] rates)
+    {
+        if (rates == null || rates.Length == 0)
+            return 0;
+        
+        // Calculate total sum of all rates
+        float total = 0f;
+        foreach (var rate in rates)
+        {
+            total += rate;
+        }
+        
+        // If total is zero or negative, return 0
+        if (total <= 0f)
+            return 0;
+        
+        // Generate a random number between 0 and total
+        var random = new Random();
+        float randomValue = (float)random.NextDouble() * total;
+        
+        // Find the index where accumulated rate exceeds random value
+        float accumulated = 0f;
+        for (int i = 0; i < rates.Length; i++)
+        {
+            accumulated += rates[i];
+            if (randomValue < accumulated)
+                return i;
+        }
+        
+        // Fallback: return last index (shouldn't happen, but safety check)
+        return rates.Length - 1;
+    }
 }

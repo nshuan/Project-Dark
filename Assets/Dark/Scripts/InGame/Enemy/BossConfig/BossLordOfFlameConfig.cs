@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace InGame.BossConfig
@@ -13,5 +14,18 @@ namespace InGame.BossConfig
         public int phase2TowerId = 2;
         [Tooltip("Attack range in phase 2")] 
         public float phase2AtkRange = 3f;
+
+        [Space] 
+        [Header("Skill config")] 
+        public LordOfFlameAttackInfo[] attackPhase1Info;
+        public LordOfFlameAttackInfo[] attackPhase2Info; 
+            
+        [Serializable]
+        public struct LordOfFlameAttackInfo
+        {
+            public int id;
+            public float dmgScale;
+            public float chance;
+        }
     }
 }
