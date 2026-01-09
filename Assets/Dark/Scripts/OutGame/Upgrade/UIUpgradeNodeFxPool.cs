@@ -11,7 +11,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private UIParticle vfxActivate;
         [SerializeField] private UIParticle vfxActivateMax;
         [SerializeField] private UIParticle vfxAppear;
-        [SerializeField] private Canvas canvasForVfxAppear;
+        public Transform canvasForVfxAppear;
 
         protected Queue<UIParticle> poolUnlock = new();
         protected Queue<UIParticle> poolActivate = new();
@@ -75,7 +75,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                 return obj;
             }
             
-            obj = Instantiate(vfxAppear, canvasForVfxAppear.transform);
+            obj = Instantiate(vfxAppear, canvasForVfxAppear);
             obj.transform.position = targetParent.position;
             obj.gameObject.SetActive(active);
             return obj;

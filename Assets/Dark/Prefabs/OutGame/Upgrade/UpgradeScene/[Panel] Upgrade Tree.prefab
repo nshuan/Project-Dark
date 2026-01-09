@@ -1046,7 +1046,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d76a7b825924b6983c19e111bb67340, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scrollView: {fileID: 7949871149163442355}
   btnBack: {fileID: 5346821268493134739}
   btnWishlist: {fileID: 2092450072590532412}
   btnFeedback: {fileID: 3620645152916887927}
@@ -1592,7 +1591,7 @@ MonoBehaviour:
   vfxActivate: {fileID: 8311216204877935231}
   vfxActivateMax: {fileID: 7481120734362092987}
   vfxAppear: {fileID: 8169387140140823356}
-  canvasForVfxAppear: {fileID: 1976912091401411524}
+  canvasForVfxAppear: {fileID: 6384261068803378355}
 --- !u!1 &1508436369428197085
 GameObject:
   m_ObjectHideFlags: 0
@@ -2035,14 +2034,14 @@ RectTransform:
   m_GameObject: {fileID: 1899610606311339127}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 7079232438700300705}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 500.8501}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &1976912091401411524
@@ -2059,14 +2058,14 @@ Canvas:
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 1
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!1 &2039541236455692957
 GameObject:
@@ -2081,6 +2080,7 @@ GameObject:
   - component: {fileID: 1803273796590748178}
   - component: {fileID: 7065613613848463204}
   - component: {fileID: 7949871149163442355}
+  - component: {fileID: 2719058655210395339}
   m_Layer: 5
   m_Name: Scroll View
   m_TagString: Untagged
@@ -2103,10 +2103,10 @@ RectTransform:
   - {fileID: 8843949603755170906}
   m_Father: {fileID: 7079232438700300705}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 200}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3300631054546661986
 CanvasRenderer:
@@ -2191,6 +2191,20 @@ MonoBehaviour:
   zoom: {fileID: 6075770563660438773}
   content: {fileID: 3140676803429804954}
   focusDuration: 0.5
+--- !u!114 &2719058655210395339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2039541236455692957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd71b5bd75c0411aabc3b4694edd33cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panelUpgradeTree: {fileID: 3559080216052072644}
+  content: {fileID: 3140676803429804954}
 --- !u!1 &2126843667422946875
 GameObject:
   m_ObjectHideFlags: 0
@@ -3344,7 +3358,6 @@ GameObject:
   - component: {fileID: 8843949603755170906}
   - component: {fileID: 8563561760075508428}
   - component: {fileID: 857825616264064176}
-  - component: {fileID: 2965661220765374409}
   - component: {fileID: 6075770563660438773}
   m_Layer: 5
   m_Name: Viewport
@@ -3411,19 +3424,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2965661220765374409
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2895318761864295767}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ShowMaskGraphic: 0
 --- !u!114 &6075770563660438773
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4787,7 +4787,7 @@ MonoBehaviour:
   vfxActivate: {fileID: 3120747310497873130}
   vfxActivateMax: {fileID: 7745605452650479672}
   vfxAppear: {fileID: 3146152025247990528}
-  canvasForVfxAppear: {fileID: 1976912091401411524}
+  canvasForVfxAppear: {fileID: 6384261068803378355}
 --- !u!1 &4540215054995530066
 GameObject:
   m_ObjectHideFlags: 0
@@ -7618,7 +7618,7 @@ MonoBehaviour:
   vfxActivate: {fileID: 8675318838503919712}
   vfxActivateMax: {fileID: 7064255416517339293}
   vfxAppear: {fileID: 8638366252420766845}
-  canvasForVfxAppear: {fileID: 1976912091401411524}
+  canvasForVfxAppear: {fileID: 6384261068803378355}
 --- !u!1 &7614834571279323242
 GameObject:
   m_ObjectHideFlags: 0
@@ -8280,7 +8280,7 @@ MonoBehaviour:
   vfxActivate: {fileID: 3261255216246639997}
   vfxActivateMax: {fileID: 2644399596098275971}
   vfxAppear: {fileID: 7686559455896907495}
-  canvasForVfxAppear: {fileID: 1976912091401411524}
+  canvasForVfxAppear: {fileID: 6384261068803378355}
 --- !u!1 &8045725068909746993
 GameObject:
   m_ObjectHideFlags: 0
@@ -9225,14 +9225,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
-    SerializedBytes: 0101180000006e006f0064006500500072006500760069006500770050006f0073006900740069006f006e004c006f006700690063002f0000000001430000004400610072006b002e0053006300720069007000740073002e004f0075007400470061006d0065002e0055007000670072006100640065002e004e006f006400650050007200650076006900650077004e0065007800740054006f004e006f00640065002c00200041007300730065006d0062006c0079002d004300530068006100720070000000000005
+    SerializedFormat: 2
+    SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: nodePreviewPositionLogic
+      Entry: 7
+      Data: 0|Dark.Scripts.OutGame.Upgrade.NodePreviewNextToNode, Assembly-CSharp
+    - Name: 
+      Entry: 8
+      Data: 
   rectInfoFramePadding: {x: 0, y: 0}
   rectInfoFrame: {fileID: 3762938501256758209}
   rectInfoFrameContent: {fileID: 6887789458024658343}
@@ -14677,18 +14683,18 @@ PrefabInstance:
     - target: {fileID: 1265759723720302876, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.Prefab
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1265759723720302876, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
     - target: {fileID: 1265759723720302876, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.SerializedFormat
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1265759723720302876, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.SerializedBytes.Array.size
-      value: 211
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1265759723720302876, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.SerializationNodes.Array.size
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1265759723720302876, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.SerializedBytes.Array.data[0]
@@ -15185,18 +15191,18 @@ PrefabInstance:
     - target: {fileID: 3114456304537767582, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.Prefab
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 3114456304537767582, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
     - target: {fileID: 3114456304537767582, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.SerializedFormat
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3114456304537767582, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.SerializedBytes.Array.size
-      value: 211
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3114456304537767582, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.SerializationNodes.Array.size
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3114456304537767582, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.SerializedBytes.Array.data[0]
@@ -15613,18 +15619,18 @@ PrefabInstance:
     - target: {fileID: 8292420133448199274, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.Prefab
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 8292420133448199274, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
     - target: {fileID: 8292420133448199274, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.SerializedFormat
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8292420133448199274, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.SerializedBytes.Array.size
-      value: 211
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8292420133448199274, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.SerializationNodes.Array.size
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8292420133448199274, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.SerializedBytes.Array.data[0]
@@ -16088,18 +16094,18 @@ PrefabInstance:
     - target: {fileID: 5004152788838160709, guid: ef541b4d9468f5a42b4d172b3dc69dab, type: 3}
       propertyPath: serializationData.Prefab
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 5004152788838160709, guid: ef541b4d9468f5a42b4d172b3dc69dab, type: 3}
     - target: {fileID: 5004152788838160709, guid: ef541b4d9468f5a42b4d172b3dc69dab, type: 3}
       propertyPath: serializationData.SerializedFormat
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5004152788838160709, guid: ef541b4d9468f5a42b4d172b3dc69dab, type: 3}
       propertyPath: serializationData.SerializedBytes.Array.size
-      value: 2118
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5004152788838160709, guid: ef541b4d9468f5a42b4d172b3dc69dab, type: 3}
       propertyPath: serializationData.SerializationNodes.Array.size
-      value: 0
+      value: 107
       objectReference: {fileID: 0}
     - target: {fileID: 5004152788838160709, guid: ef541b4d9468f5a42b4d172b3dc69dab, type: 3}
       propertyPath: serializationData.SerializedBytes.Array.data[0]
