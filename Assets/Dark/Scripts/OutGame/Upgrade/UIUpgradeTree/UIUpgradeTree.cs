@@ -144,9 +144,17 @@ namespace Dark.Scripts.OutGame.Upgrade
 
                 if (pair.Key == 0) seq.AppendInterval(firstNodeDelayStep);
                 else seq.AppendInterval(nodeSpawnDelayStep);
+                
+                if (pair.Key >= 5) break;
             }
 
-            seq.SetDelay(Loading.Instance.CurrentTotalDurationAfterSceneLoaded);
+            seq.SetDelay(Loading.Instance.CurrentTotalDurationAfterSceneLoaded)
+                .AppendInterval(2f)
+                .OnComplete(() =>
+                {
+                    if (UIUpgradeNodeSkillPool.Instance.canvasForVfxAppear)
+                        Destroy(UIUpgradeNodeSkillPool.Instance.canvasForVfxAppear.gameObject);
+                });
         }
 
 #if UNITY_EDITOR
