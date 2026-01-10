@@ -62,8 +62,8 @@ namespace InGame
                     availableTeleConfigs.Add(LevelManager.Instance.defaultTeleConfig);
                 else
                 {
+                    if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockMoveDash) availableTeleConfigs.Add(LevelManager.Instance.dashConfig);
                     if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockMoveFlash) availableTeleConfigs.Add(LevelManager.Instance.flashConfig);
-                    else if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockMoveDash) availableTeleConfigs.Add(LevelManager.Instance.dashConfig);
                 }
                 
                 // Setup skill config and mouse input
@@ -228,7 +228,7 @@ namespace InGame
                 {
                     if (!BlockTeleport)
                     {
-                        teleMouseInput?.OnMouseClick(false);
+                        teleMouseInput?.OnMouseClick();
                         teleMouseInput?.OnDeactivated();
                     }
                     
