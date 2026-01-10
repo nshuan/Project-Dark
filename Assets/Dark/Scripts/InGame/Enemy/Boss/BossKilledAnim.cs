@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Dark.Scripts.Utils;
+using Data;
 using DG.Tweening;
 using Economic.InGame.DropItems;
 using InGame.EnemyEffect;
@@ -60,7 +61,8 @@ namespace InGame.Boss
             DropFakeVestige(deadBoss);
             yield return new WaitForSeconds(0.2f);
             Time.timeScale = 1f;
-            DropFakeSigils(deadBoss);
+            if (LevelManager.Instance.Level.level == PlayerDataManager.Instance.Data.level + 1)
+                DropFakeSigils(deadBoss);
         }
 
         private void DropFakeVestige(GameObject deadBoss)

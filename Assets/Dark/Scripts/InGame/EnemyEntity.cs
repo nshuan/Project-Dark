@@ -30,7 +30,7 @@ namespace InGame
         public int Dark { get; private set; }
         public int DarkUnitValue { get; private set; }
         public float DarkRatio { get; private set; }
-        public int BossPoint { get; private set; }
+        public int BossPoint { get; protected set; }
         public float AttackRange { get; set; }
 
         #endregion
