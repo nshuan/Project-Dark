@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Data;
 using InGame.BossConfig;
 using InGame.CameraController;
 using InGame.EnemyEffect;
@@ -13,6 +14,15 @@ namespace InGame.Boss
     {
         private bool isAttacking = false;
         private bool isChangingTower = false;
+
+        public override void Init(EnemyBehaviour eConfig, TowerEntity target, WaveStatsScale statsScale, float levelExpRatio,
+            float levelDarkRatio, int levelDarkUnitValue)
+        {
+            base.Init(eConfig, target, statsScale, levelExpRatio, levelDarkRatio, levelDarkUnitValue);
+
+            if (LevelManager.Instance.Level.level != PlayerDataManager.Instance.Data.level + 1)
+                BossPoint = 0;
+        }
 
         public override void ActivateELite(bool active)
         {

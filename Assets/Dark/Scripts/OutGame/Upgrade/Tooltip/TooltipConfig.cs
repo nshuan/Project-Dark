@@ -19,19 +19,19 @@ namespace OutGame.Upgrade.Tooltip
             return tooltipMap.TryGetValue(key, out var tooltip) ? tooltip : string.Empty;
         }
 
-        public string TryGetTooltip(string message)
+        public (string, string) TryGetTooltip(string message)
         {
-            if (tooltipMap == null) return string.Empty;
+            if (tooltipMap == null) return (string.Empty, string.Empty);
             
             ReadOnlySpan<char> msgSpan = message.ToLower().AsSpan();
             foreach (var pair in tooltipMap)
             {
                 ReadOnlySpan<char> keySpan = pair.Key.ToLower().AsSpan();
                 if (msgSpan.Contains(keySpan, StringComparison.CurrentCulture))
-                    return pair.Value;
+                    return (pair.Key, pair.Value);
             }
             
-            return string.Empty;
+            return (string.Empty, string.Empty);
         }
         
         #region SINGLETON
