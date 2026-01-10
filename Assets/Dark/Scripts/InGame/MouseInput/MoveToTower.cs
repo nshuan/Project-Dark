@@ -62,10 +62,9 @@ namespace InGame
             actionTowerChanged = null;
         }
         
-        public void OnMouseClick(bool isLongTele)
+        public void OnMouseClick()
         {
             if (!CanMove) return;
-            if (isLongTele && !CanMoveLong) return;
             if (selectingTower > -1)
             {
                 CanMove = false;
@@ -192,7 +191,7 @@ namespace InGame
                     if (Input.GetKeyDown(GameSettings.KeyMoveTower0) && CurrentTowerIndex != 0)
                     {
                         selectingTower = 0;
-                        OnMouseClick(false);
+                        OnMouseClick();
                         if (UITutorialStepMoveTowers.ShouldShowHotKeyInstruction)
                         {
                             UITutorialStepMoveTowers.HideHotKeyInstruction();
@@ -202,7 +201,7 @@ namespace InGame
                     else if (Input.GetKeyDown(GameSettings.KeyMoveTower1) && CurrentTowerIndex != 1)
                     {
                         selectingTower = 1;
-                        OnMouseClick(false);
+                        OnMouseClick();
                         if (UITutorialStepMoveTowers.ShouldShowHotKeyInstruction)
                         {
                             UITutorialStepMoveTowers.HideHotKeyInstruction();
@@ -212,7 +211,7 @@ namespace InGame
                     else if (Input.GetKeyDown(GameSettings.KeyMoveTower2) && CurrentTowerIndex != 2)
                     {
                         selectingTower = 2;
-                        OnMouseClick(false);
+                        OnMouseClick();
                         if (UITutorialStepMoveTowers.ShouldShowHotKeyInstruction)
                         {
                             UITutorialStepMoveTowers.HideHotKeyInstruction();
