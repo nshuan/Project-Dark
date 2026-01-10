@@ -79,8 +79,8 @@ namespace Dark.Scripts.Tutorial
         {
              if (objInstruction.activeInHierarchy && targetNode) 
                  objInstruction.transform.position = targetNode.position;
-             if (objTreeInstruction.activeInHierarchy && panelUpgradeTree.Tree)
-                 objTreeInstruction.transform.position = panelUpgradeTree.Tree.transform.position;
+             // if (objTreeInstruction.activeInHierarchy && panelUpgradeTree.Tree)
+             //     objTreeInstruction.transform.position = panelUpgradeTree.Tree.transform.position;
         }
     }
 }
