@@ -37,7 +37,9 @@ namespace InGame.Upgrade
 
         private Dictionary<int, UpgradeNodeData> dataMapById;
         private Dictionary<int, int> groupUnlockOrderMapById;
-
+        private int currentGroupUnlockOrder;
+        private int currentNodeUnlockOrder;
+        
         public void PreloadAllData()
         {
             preloadedData = new Dictionary<string, UpgradeData>();
@@ -69,6 +71,7 @@ namespace InGame.Upgrade
             foreach (var node in data.nodes)
             {
                 dataMapById.TryAdd(node.id, node);
+                if (node.unlockOrder > currentNodeUnlockOrder) currentNodeUnlockOrder = node.unlockOrder;
             }
             RefreshGroupUnlockOrder();
         }
@@ -253,8 +256,11 @@ namespace InGame.Upgrade
                 }
             }
 
-            Save();
             RefreshGroupUnlockOrder();
+            dataMapById[nodeId].unlockOrder = currentNodeUnlockOrder;
+            currentNodeUnlockOrder += 1;
+                
+            Save();
             return true;
         }
 
@@ -294,6 +300,8 @@ namespace InGame.Upgrade
         
         public void RefreshGroupUnlockOrder()
         {
+            RefreshGroupUnlockOrder1();
+            return;
             var groups = TreeConfig.nodeGroupsMapById.Values.ToList();
             groupUnlockOrderMapById ??= new Dictionary<int, int>();
             groups.Sort((group1, group2) => GetNodeUnlockOrder(group1.lockNode.nodeId)
@@ -309,6 +317,34 @@ namespace InGame.Upgrade
                 };
             }
         }
+        
+        public void RefreshGroupUnlockOrder1()
+        {
+            var groups = TreeConfig.nodeGroupsMapById.Values.ToList();
+            var unlockedData = Data.nodes.Where(node => node.level >= 1).ToDictionary(d => d.id);
+            var unlockedGroup = new List<UpgradeNodeGroup>();
+            var lockedGroup = new List<UpgradeNodeGroup>();
+            foreach (var group in groups)
+            {
+                if (unlockedData.ContainsKey(group.lockNode.nodeId)) unlockedGroup.Add(group);
+                else lockedGroup.Add(group);
+            }
+            unlockedGroup.Sort((group1, group2) => unlockedData[group1.lockNode.nodeId].unlockOrder
+                .CompareTo(unlockedData[group2.lockNode.nodeId].unlockOrder));
+            groupUnlockOrderMapById ??= new Dictionary<int, int>();
+            for (var i = 0; i < unlockedGroup.Count; i++)
+            {
+                groupUnlockOrderMapById[unlockedGroup[i].groupId] = i;
+            }
+
+            currentGroupUnlockOrder = unlockedGroup.Count;
+            
+            foreach (var group in lockedGroup)
+            {
+                groupUnlockOrderMapById[group.groupId] = currentGroupUnlockOrder;
+            }
+        }
+
         
 #if HOT_CHEAT
         public void CheatUpdateBonusInfo(UpgradeBonusInfoV2 bonusInfo)
