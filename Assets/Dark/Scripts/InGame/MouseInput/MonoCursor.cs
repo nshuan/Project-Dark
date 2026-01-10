@@ -33,7 +33,6 @@ namespace InGame
 
         public void UpdateCooldown(bool active, float value)
         {
-            return;
             groupCooldown.SetActive(active);
             cooldown.fillAmount = value;
             cooldown.color = Color.white;

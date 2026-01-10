@@ -216,7 +216,7 @@ namespace InGame
             mousePosition.z = 0; // Set z to 0 for 2D
             cursorRect.position = mousePosition;    
             
-            cursor.UpdateCooldown(true, 1 - Mathf.Clamp(cdCounter / Cooldown, 0f, 1f));
+            // cursor.UpdateCooldown(true, 1 - Mathf.Clamp(cdCounter / Cooldown, 0f, 1f));
             if (cdCounter <= 0)
                 AutoAttack();
         }
