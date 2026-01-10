@@ -8,6 +8,7 @@ namespace OutGame.Upgrade.Tooltip
 {
     public class UITooltip : MonoBehaviour
     {
+        [SerializeField] private TextMeshProUGUI txtKeyword;
         [SerializeField] private TextMeshProUGUI txtTooltip;
         [SerializeField] private RectTransform rectToolTip;
         [SerializeField] private RectTransform rectTransform;
@@ -16,7 +17,7 @@ namespace OutGame.Upgrade.Tooltip
         {
             if (!DemoConfig.ShowTooltip) return;
             var tooltip = TooltipConfig.Instance.TryGetTooltip(fullText);
-            if (string.IsNullOrEmpty(tooltip))
+            if (string.IsNullOrEmpty(tooltip.Item2))
             {
                 rectToolTip.gameObject.SetActive(false);
                 return;
@@ -34,7 +35,8 @@ namespace OutGame.Upgrade.Tooltip
             }
                 
             rectToolTip.anchoredPosition = new Vector2(positionX, positionY);
-            txtTooltip.SetText(tooltip);
+            txtKeyword.SetText(tooltip.Item1);
+            txtTooltip.SetText(tooltip.Item2);
             rectToolTip.gameObject.SetActive(true);
         }
     }
