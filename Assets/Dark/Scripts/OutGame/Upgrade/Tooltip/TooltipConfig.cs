@@ -24,10 +24,28 @@ namespace OutGame.Upgrade.Tooltip
             if (tooltipMap == null) return (string.Empty, string.Empty);
             
             ReadOnlySpan<char> msgSpan = message.ToLower().AsSpan();
+            var msgLength = msgSpan.Length;
             foreach (var pair in tooltipMap)
             {
                 ReadOnlySpan<char> keySpan = pair.Key.ToLower().AsSpan();
-                if (msgSpan.Contains(keySpan, StringComparison.CurrentCulture))
+                if (msgLength < keySpan.Length) continue;
+                if (msgLength == keySpan.Length)
+                {
+                    if (msgSpan.SequenceEqual(keySpan)) return (pair.Key, pair.Value);
+                }
+                
+                if (msgSpan.Slice(0, keySpan.Length).SequenceEqual(keySpan) && msgSpan[keySpan.Length] == ' ')
+                {
+                    return (pair.Key, pair.Value);
+                }
+                
+                if (msgSpan.Slice(msgLength - keySpan.Length, keySpan.Length).SequenceEqual(keySpan) && msgSpan[msgLength - keySpan.Length - 1] == ' ')
+                {
+                    return (pair.Key, pair.Value);
+                }
+                    
+                ReadOnlySpan<char> keySpanWithSpace = (' ' + pair.Key.ToLower() + ' ').AsSpan();
+                if (msgSpan.Contains(keySpanWithSpace, StringComparison.CurrentCulture))
                     return (pair.Key, pair.Value);
             }
             
