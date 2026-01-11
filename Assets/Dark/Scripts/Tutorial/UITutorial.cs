@@ -80,8 +80,8 @@ namespace Dark.Scripts.Tutorial
                             currentStep.Hide();
                         });
                     }
-                    imgCover.gameObject.SetActive(true);
-                    Time.timeScale = 0.2f;
+                    // imgCover.gameObject.SetActive(true);
+                    // Time.timeScale = 0.2f;
                 });
                 
                 break;

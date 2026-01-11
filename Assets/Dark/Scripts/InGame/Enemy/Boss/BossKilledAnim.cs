@@ -24,6 +24,8 @@ namespace InGame.Boss
         [SerializeField] private ParticleSystem vfxSpawnFakeSigils;
 
         private List<EItemDrop> fakeVestige = new List<EItemDrop>();
+
+        private bool shouldShowSigil = false;
         
         private void Awake()
         {
@@ -39,6 +41,7 @@ namespace InGame.Boss
         {
             BackgroundInGame.Instance.SetActiveBlackAll(true);
             if (bossAnimDict == null || !bossAnimDict.TryGetValue(bossConfig.enemyId, out var deadBoss)) return;
+            if (LevelManager.Instance.Level.level == PlayerDataManager.Instance.Data.level + 1) shouldShowSigil = true;
             StartCoroutine(IEBossAnim(deadBoss, position));
         }
 
@@ -61,7 +64,7 @@ namespace InGame.Boss
             DropFakeVestige(deadBoss);
             yield return new WaitForSeconds(0.2f);
             Time.timeScale = 1f;
-            if (LevelManager.Instance.Level.level == PlayerDataManager.Instance.Data.level + 1)
+            if (shouldShowSigil)
                 DropFakeSigils(deadBoss);
         }
 

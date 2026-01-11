@@ -20,6 +20,9 @@ namespace Dark.Scripts.Tutorial
         [SerializeField] private float delay;
 
         private Transform targetNode;
+        private bool staredInstruction;
+        private float instructionTime = 2f;
+        private float instructionTimeCounter;
         
         public override bool IsValid()
         {
@@ -54,6 +57,8 @@ namespace Dark.Scripts.Tutorial
                 
                 panelUpgradeTree.Tree.OnNodeUpgraded += OnNodeUpgraded;
             });
+
+            staredInstruction = false;
         }
 
         public override void Setup(Action<Vector2, Vector2, float, bool, bool> actionUpdateFocus)
@@ -73,12 +78,24 @@ namespace Dark.Scripts.Tutorial
             objPointToResource.SetActive(false);
             objInstruction.SetActive(false);
             btnCloseTreeInstruction.gameObject.SetActive(true);
+            instructionTimeCounter = instructionTime;
+            staredInstruction = true;
         }
 
         private void Update()
         {
              if (objInstruction.activeInHierarchy && targetNode) 
                  objInstruction.transform.position = targetNode.position;
+
+             if (staredInstruction)
+             {
+                 instructionTimeCounter -= Time.deltaTime;
+                 if (instructionTimeCounter <= 0f)
+                 {
+                     OnComplete?.Invoke();
+                     OnComplete = null;
+                 }
+             }
              // if (objTreeInstruction.activeInHierarchy && panelUpgradeTree.Tree)
              //     objTreeInstruction.transform.position = panelUpgradeTree.Tree.transform.position;
         }
