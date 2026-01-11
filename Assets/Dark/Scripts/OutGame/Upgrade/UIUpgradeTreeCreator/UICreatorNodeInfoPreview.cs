@@ -1,7 +1,10 @@
+using System.Collections.Generic;
+using System.Linq;
 using Core;
 using InGame.Upgrade;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
 {
@@ -11,38 +14,70 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         [SerializeField] private TextMeshProUGUI txtNodeName;
         [SerializeField] private TextMeshProUGUI txtNodeLore;
         [SerializeField] private TextMeshProUGUI txtNodeLevel;
-        [SerializeField] private TextMeshProUGUI txtNodePrice;
+        [SerializeField] private TextMeshProUGUI txtGroupAsLockNode;
         [SerializeField] private TextMeshProUGUI[] txtNodeBonus;
+        [SerializeField] private TMP_InputField inpGroup;
+        public Button btnSelectGroup;
+        public Button btnSetLockNode;
         
-        public void UpdateUI(UpgradeNodeData data, UpgradeNodeConfig config)
+        public void UpdateUI(UICreatorManager manager, UICreatorUpgradeNode node, UpgradeNodeConfig config)
         {
-            txtNodeName.SetText(config.nodeName);
+            txtNodeName.SetText($"{config.nodeId} - {config.nodeName}");
             txtNodeLore.SetText(config.description);
-            if (data != null)
+            txtNodeLevel.SetText($"Max level: {config.MaxLevel}");
+            
+            if (config.nodeLogic.Length > 0)
             {
-                txtNodeLevel.SetText($"{data.level}/{config.MaxLevel}");
-                txtNodePrice.SetText($"{0}/{1}");
-            }
-            else
-            {
-                txtNodeLevel.SetText($"{0}/{config.MaxLevel}");
-                txtNodePrice.gameObject.SetActive(false);
+                var str = "";
+                for (var i = 0; i < config.nodeLogic[0].MaxLevel; i++)
+                {
+                    str += config.nodeLogic[0].GetDisplayValue(i);
+                    if (i != config.nodeLogic[0].MaxLevel - 1) str += ", ";
+                }
+
+                txtNodeBonus[0].SetText(str);
+                txtNodeBonus[0].gameObject.SetActive(true);
             }
             
-            for (var i = 0; i < config.nodeLogic.Length; i++)
+            txtGroupAsLockNode.SetText("Lock node of areas: " + string.Join(',', node.group.Where((group) => node.isGroupLockNode.ContainsKey(group) && node.isGroupLockNode[group])));
+
+            inpGroup.onValueChanged.RemoveAllListeners();
+            inpGroup.text = string.Join(",", node.group);
+            inpGroup.onValueChanged.AddListener((value) =>
             {
-                txtNodeBonus[i].SetText(config.nodeLogic[i].GetDisplayValue(data?.level ?? 0));
-                txtNodeBonus[i].gameObject.SetActive(true);
-            }
-            for (var i = config.nodeLogic.Length; i < txtNodeBonus.Length; i++)
+                var listGroupStr = value.Trim(' ').Split(',');
+                var groups = new List<int>();
+                foreach (var str in listGroupStr)
+                {
+                    if (int.TryParse(str, out var intValue))
+                    {
+                        groups.Add(intValue);
+                    }
+                }
+                node.group = groups;
+                foreach (var pair in node.isGroupLockNode)
+                {
+                    if (!node.group.Contains(pair.Key)) node.isGroupLockNode.Remove(pair.Key);
+                }
+                manager.RefreshGroupNodes();
+            });
+            
+            btnSelectGroup.onClick.RemoveAllListeners();
+            btnSelectGroup.onClick.AddListener(() =>
             {
-                txtNodeBonus[i].gameObject.SetActive(false);
-            }
+                manager.SelectGroupNodes(node.group);
+            });
+            
+            btnSetLockNode.onClick.RemoveAllListeners();
+            btnSetLockNode.onClick.AddListener(() =>
+            {
+                manager.SetGroupLockNode(node);
+                txtGroupAsLockNode.SetText("Lock node of areas: " + string.Join(',', node.group.Where((group) => node.isGroupLockNode.ContainsKey(group) && node.isGroupLockNode[group])));
+            });
         }
         
-        public void Show(Vector2 position, Vector2 padding)
+        public void Show()
         {
-            rectInfoFrame.position = position + padding;
             rectInfoFrame.gameObject.SetActive(true);
         }
 

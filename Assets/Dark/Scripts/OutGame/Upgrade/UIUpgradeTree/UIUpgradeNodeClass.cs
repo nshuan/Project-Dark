@@ -30,7 +30,7 @@ namespace Dark.Scripts.OutGame.Upgrade
 
             hoverField.onHover = () =>
             {
-                UIUpgradeNodeInfoPreview.Instance.Setup(config, false);
+                UIUpgradeNodeInfoPreview.Instance.Setup(this, config, false);
                 UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), false, () => hoverField.interactable = true);
                 nodeVisual.transform.localScale = defaultScale;
                 nodeVisual.transform.DOScale(new Vector3(0.08f, 0.08f, 0), 0.2f).SetRelative().SetEase(Ease.OutQuad);

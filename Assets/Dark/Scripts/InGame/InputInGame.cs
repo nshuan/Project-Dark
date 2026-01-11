@@ -58,20 +58,17 @@ namespace InGame
                 PlayerVisual = LevelManager.Instance.Player;
                 
                 availableTeleConfigs = new List<MoveTowersConfig>();
-                if (LevelUtility.BonusInfo.unlockedMoveToTower == null || LevelUtility.BonusInfo.unlockedMoveToTower.Count == 0)
+                if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockMoveFlash == false && LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockMoveDash == false)
                     availableTeleConfigs.Add(LevelManager.Instance.defaultTeleConfig);
                 else
                 {
-                    foreach (var moveId in LevelUtility.BonusInfo.unlockedMoveToTower)
-                    {
-                        if (moveId == 1) availableTeleConfigs.Add(LevelManager.Instance.flashConfig);
-                        else if (moveId == 2) availableTeleConfigs.Add(LevelManager.Instance.dashConfig);
-                    }
+                    if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockMoveDash) availableTeleConfigs.Add(LevelManager.Instance.dashConfig);
+                    if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockMoveFlash) availableTeleConfigs.Add(LevelManager.Instance.flashConfig);
                 }
                 
                 // Setup skill config and mouse input
-                CursorRangeRadius = LevelUtility.CurrentSkill.range;
-                cursor ??= ShotCursorManager.Instance.GetPrefab(LevelUtility.CurrentSkill.shootLogic.cursorType, canvas.transform);
+                CursorRangeRadius = LevelUtilityV2.StatsNormalAttack.range;
+                cursor ??= ShotCursorManager.Instance.GetPrefab(LevelUtilityV2.StatsNormalAttack.shootLogic.cursorType, canvas.transform);
                 cursor.gameObject.SetActive(true);
                 CombatActions.OnInitInGameCursor?.Invoke(cursor);
                 
@@ -82,7 +79,7 @@ namespace InGame
                     mouseInput.Dispose();
                     mouseInput = null;
                 }
-                mouseInput = ShotCursorManager.Instance.GetCursorMoveLogic(LevelUtility.CurrentSkill.shootLogic.cursorType, cam, cursor);
+                mouseInput = ShotCursorManager.Instance.GetCursorMoveLogic(LevelUtilityV2.StatsNormalAttack.shootLogic.cursorType, cam, cursor);
                 
                 if (mouseAutoAttack != null)
                 {
@@ -92,7 +89,7 @@ namespace InGame
                 mouseAutoAttack = new MoveAutoAttack(cam, cursor);
             };
             
-            LevelManager.Instance.OnLevelLoaded += (level) =>
+            LevelManager.Instance.OnLevelPreLoaded += (level) =>
             { 
                 BlockAllInput = false;
                 
@@ -231,7 +228,7 @@ namespace InGame
                 {
                     if (!BlockTeleport)
                     {
-                        teleMouseInput?.OnMouseClick(false);
+                        teleMouseInput?.OnMouseClick();
                         teleMouseInput?.OnDeactivated();
                     }
                     

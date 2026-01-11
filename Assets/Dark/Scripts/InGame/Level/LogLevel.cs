@@ -24,17 +24,17 @@ namespace InGame
 
         private void Awake()
         {
-            LevelManager.Instance.OnLevelLoaded += OnLoadLevel;
+            LevelManager.Instance.OnLevelPreLoaded += OnLevelPreLoaded;
             LevelManager.Instance.OnChangeTower += OnChangedTower;
         }
 
-        private void OnLoadLevel(LevelConfig level)
+        private void OnLevelPreLoaded(LevelConfig level)
         {
             txtLevel.SetText($"Level: {level.name}");
 
-            var skillConfig = LevelUtility.CurrentSkill;
+            var skillConfig = LevelUtilityV2.StatsNormalAttack;
             txtSkill.SetText($"Skill: {skillConfig.name}");
-            txtBulletDamage.SetText($"Base dmg per bullet: {LevelUtility.PlayerStats.damage + skillConfig.damePerBullet}");
+            txtBulletDamage.SetText($"Base dmg per bullet: {LevelUtilityV2.GetNormalAttackDamage()}");
             txtSkillCooldown.SetText($"Skill cooldown: {skillConfig.cooldown}");
             txtAttackRange.SetText($"Attack range: {skillConfig.range}");
         }

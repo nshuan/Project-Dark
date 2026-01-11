@@ -62,10 +62,9 @@ namespace InGame
             actionTowerChanged = null;
         }
         
-        public void OnMouseClick(bool isLongTele)
+        public void OnMouseClick()
         {
             if (!CanMove) return;
-            if (isLongTele && !CanMoveLong) return;
             if (selectingTower > -1)
             {
                 CanMove = false;
@@ -76,9 +75,7 @@ namespace InGame
                 Action callbackComplete = () =>
                 {
                     Character.ShowShotRadius(LevelManager.Instance.CurrentTower.GetBaseCenter(),
-                        LevelUtility.GetSkillRange(
-                            1f,
-                            Vector2.right));
+                        LevelUtilityV2.GetNormalAttackRange(Vector2.right));
                     Cooldown = GetCooldown(ShortConfig);
                     cdCounter = Cooldown;
                     CanCountdown = true;
@@ -194,7 +191,7 @@ namespace InGame
                     if (Input.GetKeyDown(GameSettings.KeyMoveTower0) && CurrentTowerIndex != 0)
                     {
                         selectingTower = 0;
-                        OnMouseClick(false);
+                        OnMouseClick();
                         if (UITutorialStepMoveTowers.ShouldShowHotKeyInstruction)
                         {
                             UITutorialStepMoveTowers.HideHotKeyInstruction();
@@ -204,7 +201,7 @@ namespace InGame
                     else if (Input.GetKeyDown(GameSettings.KeyMoveTower1) && CurrentTowerIndex != 1)
                     {
                         selectingTower = 1;
-                        OnMouseClick(false);
+                        OnMouseClick();
                         if (UITutorialStepMoveTowers.ShouldShowHotKeyInstruction)
                         {
                             UITutorialStepMoveTowers.HideHotKeyInstruction();
@@ -214,7 +211,7 @@ namespace InGame
                     else if (Input.GetKeyDown(GameSettings.KeyMoveTower2) && CurrentTowerIndex != 2)
                     {
                         selectingTower = 2;
-                        OnMouseClick(false);
+                        OnMouseClick();
                         if (UITutorialStepMoveTowers.ShouldShowHotKeyInstruction)
                         {
                             UITutorialStepMoveTowers.HideHotKeyInstruction();
@@ -251,25 +248,25 @@ namespace InGame
         private float GetCooldown(MoveTowersConfig config)
         {
             var cooldown = config.cooldown;
-            if (config.moveLogic is MoveDashToTower or MoveDashFuseToTower) cooldown = LevelUtility.GetDashCooldown();
-            else if (config.moveLogic is MoveFlashToTower or MoveFlashFuseToTower) cooldown = LevelUtility.GetFlashCooldown();
-            else if (config.moveLogic is MoveTeleToTower) cooldown = LevelUtility.GetTeleCooldown();
+            if (config.moveLogic is MoveDashToTower or MoveDashFuseToTower) cooldown = LevelUtilityV2.GetDashCooldown();
+            else if (config.moveLogic is MoveFlashToTower or MoveFlashFuseToTower) cooldown = LevelUtilityV2.GetFlashCooldown();
+            else if (config.moveLogic is MoveTeleToTower) cooldown = LevelUtilityV2.GetTeleCooldown();
             return cooldown;
         }
 
         private float GetSize(MoveTowersConfig config)
         {
             var size = config.size;
-            if (config.moveLogic is MoveDashToTower or MoveDashFuseToTower) size = LevelUtility.GetDashSize();
-            else if (config.moveLogic is MoveFlashToTower or MoveFlashFuseToTower) size = LevelUtility.GetFlashSize();
+            if (config.moveLogic is MoveDashToTower or MoveDashFuseToTower) size = LevelUtilityV2.GetDashSize();
+            else if (config.moveLogic is MoveFlashToTower or MoveFlashFuseToTower) size = LevelUtilityV2.GetFlashSize();
             return size;
         }
 
         private int GetDamage(MoveTowersConfig config)
         {
             var damage = config.damage;
-            if (config.moveLogic is MoveDashToTower or MoveDashFuseToTower) damage = LevelUtility.GetDashDamage();
-            else if (config.moveLogic is MoveFlashToTower or MoveFlashFuseToTower) damage = LevelUtility.GetFlashDamage();
+            if (config.moveLogic is MoveDashToTower or MoveDashFuseToTower) damage = LevelUtilityV2.GetDashDamage();
+            else if (config.moveLogic is MoveFlashToTower or MoveFlashFuseToTower) damage = LevelUtilityV2.GetFlashDamage();
             return damage;
         }
 

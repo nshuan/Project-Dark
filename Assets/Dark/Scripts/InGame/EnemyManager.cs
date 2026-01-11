@@ -70,6 +70,7 @@ namespace InGame
     {
         PlayerKill,
         TowerKill,
-        Suicide
+        Suicide,
+        EnemyKill
     }
 }

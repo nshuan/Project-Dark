@@ -17,7 +17,7 @@ namespace Economic.UI
         private void Awake()
         {
             CombatActions.OnResourceCollectorDamaged += OnCollectEntityDamaged;
-            LevelManager.Instance.OnLevelLoaded += OnLevelLoaded;
+            LevelManager.Instance.OnLevelPreLoaded += OnLevelPreLoaded;
             LevelManager.Instance.OnWin += OnWin;
             LevelManager.Instance.OnLose += OnLose;
             // LevelManager.Instance.onWaveEnded += OnWaveEnded;
@@ -34,7 +34,7 @@ namespace Economic.UI
             CombatActions.OnDropResource -= OnDropResource;
         }
 
-        private void OnLevelLoaded(LevelConfig levelConfig)
+        private void OnLevelPreLoaded(LevelConfig levelConfig)
         {
             player = LevelManager.Instance.Player;
             droppedEnsureVestige = PlayerDataManager.Instance.Data.passedDay == 1 ? 0 : EnsureVestige;

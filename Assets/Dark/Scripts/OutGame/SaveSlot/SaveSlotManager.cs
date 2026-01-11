@@ -14,7 +14,7 @@ namespace Dark.Scripts.OutGame.SaveSlot
 
         private const string TotalDataCreatedKey = "totalDataSlotsCreated";
         
-        private readonly string[] SlotDataKeys = new[]
+        public static string[] SlotDataKeys = new[]
         {
             "playerDataSlot0",
             "playerDataSlot1",

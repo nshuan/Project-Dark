@@ -19,10 +19,9 @@ namespace InGame
 
         [Space] [Header("Config")] 
         public bool canCounter;
-        protected TowerCounterConfig config;
 
-        protected int Damage => LevelUtility.GetTowerCounterDamage(config.damage);
-        protected float Cooldown => LevelUtility.GetTowerCounterCooldown(counterType, config.cooldown);
+        protected int Damage => GetCounterDamage();
+        protected float Cooldown => GetCounterCooldown();
         
         protected static event Action<NodeTowerCounter.CounterType, Vector2> OnOneTowerHit;
         
@@ -35,8 +34,6 @@ namespace InGame
             tower.OnHitAttackerPos += OnTowerHit;
             OnOneTowerHit += OnCounter;
             tower.OnDestroyed += OnTowerDestroyed;
-
-            config = TowerCounterManifest.Get(counterType);
         }
 
         private void OnDestroy()
@@ -45,10 +42,32 @@ namespace InGame
             OnOneTowerHit -= OnCounter;
         }
 
-        private void OnUpgradeBonusActivated(UpgradeBonusInfo bonusInfo)
+        private int GetCounterDamage()
         {
-            canCounter = bonusInfo.unlockedTowerCounter != null && bonusInfo.unlockedTowerCounter.ContainsKey(counterType) && bonusInfo.unlockedTowerCounter[counterType];
-            // canCounter = true;
+            return counterType switch
+            {
+                NodeTowerCounter.CounterType.Pierce => LevelUtilityV2.GetCounterPiercingDamage(),
+                NodeTowerCounter.CounterType.Slash => LevelUtilityV2.GetCounterSlashDamage(),
+                _ => 1
+            };
+        }
+
+        private float GetCounterCooldown()
+        {
+            return counterType switch
+            {
+                NodeTowerCounter.CounterType.Pierce => LevelUtilityV2.GetCounterPiercingCooldown(),
+                NodeTowerCounter.CounterType.Slash => LevelUtilityV2.GetCounterSlashCooldown(),
+                _ => 1
+            };
+        }
+        
+        private void OnUpgradeBonusActivated(UpgradeBonusInfoV2 bonusInfo)
+        {
+            if (counterType == NodeTowerCounter.CounterType.Pierce)
+                canCounter = bonusInfo.bonusUnlockSkill.unlockCounterPiercing;
+            else if (counterType == NodeTowerCounter.CounterType.Slash)
+                canCounter = bonusInfo.bonusUnlockSkill.unlockCounterSlash;
         }
 
         private void OnTowerHit(Vector2 attackerPos)
@@ -95,9 +114,16 @@ namespace InGame
         public virtual void Counter(Vector2 towerAttackPos, Vector2 direction, int damage, float speedScale)
         {
             var projectile = ProjectilePool.Instance.Get(projectilePrefab, null, false);
+            var stagger = counterType switch
+            {
+                NodeTowerCounter.CounterType.Pierce => LevelUtilityV2.StatsCounterPiercing.stagger,
+                NodeTowerCounter.CounterType.Slash => LevelUtilityV2.StatsCounterSlash.stagger,
+                _ => 1
+            };
+            var maxHit = LevelUtilityV2.GetCounterPiercingAmount();
             projectile.transform.position = towerAttackPos;
             projectile.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
-            projectile.Init(towerAttackPos, direction.normalized, 8, 5, speedScale, damage, damage, 0f, config.stagger, false, 10, null, null, ProjectileType.TowerProjectile);
+            projectile.Init(towerAttackPos, direction.normalized, 8, 5, speedScale, damage, damage, 0f, stagger, false, maxHit, null, null, ProjectileType.TowerProjectile);
             projectile.BlockDestroy = true;
             projectile.Activate(0f);
         }

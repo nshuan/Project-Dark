@@ -8,7 +8,6 @@ namespace InGame
 {
     public class PassiveThunderSingle : MonoPassiveEntity
     {
-        [SerializeField] private bool randomEnemy;
         [SerializeField] private AudioPlayComponentV2 sfx;
         
         private EnemyEntity triggerredEnemy;
@@ -25,64 +24,28 @@ namespace InGame
         public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool)
         {
             gameObject.SetActive(true);
-            if (randomEnemy)
+            
+            tempTarget = target;
+            StartCoroutine(IEThunder(() =>
             {
-                StartCoroutine(IEThunder(() =>
+                VfxThunderPool.Instance.GetAndRelease(null, tempTarget.Position, 0f, 1f);
+                if (tempTarget.TargetTransform.TryGetComponent(out triggerredEnemy))
                 {
-                    // Check hit target
-                    var count = Physics2D.CircleCastNonAlloc(transform.position, size, Vector2.zero, hits, 0f,
-                        targetLayer);
-                    if (count > 0)
+                    VfxThunderPool.Instance.GetAndRelease(null, triggerredEnemy.transform.position, 0f, 1f);
+                    triggerredEnemy.Damage(Mathf.RoundToInt(value), triggerredEnemy.transform.position, stagger, DamageType.Normal);
+                    if (!triggerredEnemy.IsDestroyed && triggerredEnemy.PercentageHpLeft < size)
                     {
-                        if (hits[RandomUtil.Range(0, count)].transform.TryGetComponent(out triggerredEnemy))
-                        {
-                            VfxThunderPool.Instance.GetAndRelease(null, triggerredEnemy.transform.position, 0f, 1f);
-                            if (triggerredEnemy.PercentageHpLeft < value)
-                            {
-                                triggerredEnemy.Kill(DamageType.Normal);
-                            }
-                            else
-                            {
-                                triggerredEnemy.Damage((int)(triggerredEnemy.MaxHealth * value), triggerredEnemy.transform.position, stagger, DamageType.Normal);
-                            }
-                            sfx.Play();
-                        }
-                        
-                        cameraShakeEffect.Duration = 0.3f;
-                        VisualEffectHelper.Instance.PlayEffect(cameraShakeEffect);
+                        triggerredEnemy.Kill(DamageType.Normal);
                     }
-                }, () =>
-                {
-                    pool.Release(this, effectId);
-                }));
-            }
-            else
-            {
-                tempTarget = target;
-                StartCoroutine(IEThunder(() =>
-                {
-                    VfxThunderPool.Instance.GetAndRelease(null, tempTarget.Position, 0f, 1f);
-                    if (tempTarget.TargetTransform.TryGetComponent(out triggerredEnemy))
-                    {
-                        VfxThunderPool.Instance.GetAndRelease(null, triggerredEnemy.transform.position, 0f, 1f);
-                        if (triggerredEnemy.PercentageHpLeft < value)
-                        {
-                            triggerredEnemy.Kill(DamageType.Normal);
-                        }
-                        else
-                        {
-                            triggerredEnemy.Damage((int)(triggerredEnemy.MaxHealth * value), triggerredEnemy.transform.position, stagger, DamageType.Normal);
-                        }
-                        sfx.Play();
-                    }
+                    sfx.Play();
+                }
                     
-                    cameraShakeEffect.Duration = 0.3f;
-                    VisualEffectHelper.Instance.PlayEffect(cameraShakeEffect);
-                }, () =>
-                {
-                    pool.Release(this, effectId);
-                }));
-            }
+                cameraShakeEffect.Duration = 0.3f;
+                VisualEffectHelper.Instance.PlayEffect(cameraShakeEffect);
+            }, () =>
+            {
+                pool.Release(this, effectId);
+            }));
         }
         
         private IEnumerator IEThunder(Action actionDamage, Action actionComplete)

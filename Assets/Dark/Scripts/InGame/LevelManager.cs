@@ -5,8 +5,10 @@ using Core;
 using Dark.Scripts.Utils;
 using Data;
 using Economic;
+using InGame.AttackNormalConfig;
 using InGame.ChargeConfig;
 using InGame.ConfigManager;
+using InGame.CounterConfig;
 using InGame.Upgrade;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -27,6 +29,7 @@ namespace InGame
         public GateEntity gatePrefab;
         
         [SerializeField] private TowerEntity[] towers;
+        public float delayStartLevel = 2.5f;
         public TowerEntity[] Towers => towers;
         private int currentTowerIndex;
         public TowerEntity CurrentTower
@@ -47,13 +50,14 @@ namespace InGame
 
         #region Upgrade
 
-        [ReadOnly, NonSerialized, OdinSerialize] private UpgradeBonusInfo bonusInfo = new UpgradeBonusInfo();
+        [ReadOnly, NonSerialized, OdinSerialize] private UpgradeBonusInfoV2 bonusInfo = new UpgradeBonusInfoV2();
         
         #endregion
         
         #region Action
 
         public Action OnInitPlayer { get; set; }
+        public Action<LevelConfig> OnLevelPreLoaded { get; set; }
         public Action<LevelConfig> OnLevelLoaded { get; set; }
         public Action<TowerEntity> OnChangeTower { get; set; }
 
@@ -71,6 +75,8 @@ namespace InGame
 
         [Space] public bool autoLoadLevel = true;
         public static bool isLoadFromInit;
+        private Coroutine coroutineStartLevel;
+        
         private void Start()
         {
             InitSkillTreeBonus();
@@ -96,17 +102,18 @@ namespace InGame
         private void InitSkillTreeBonus()
         {
             UpgradeManager.Instance.ActivateTree(ref bonusInfo);
-            LevelUtility.BonusInfo = bonusInfo;
-            LevelUtility.PlayerStats = playerStats;
-            LevelUtility.CurrentSkill = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
-            LevelUtility.ChargeConfigMap = new Dictionary<ChargeType, PlayerChargeConfig>()
-            {
-                { ChargeType.Bullet, PlayerChargeManifest.Get(ChargeType.Bullet) },
-                { ChargeType.Size, PlayerChargeManifest.Get(ChargeType.Size) }
-            };
-            LevelUtility.DashConfig = dashConfig;
-            LevelUtility.FlashConfig = flashConfig;
-            LevelUtility.TeleConfig = defaultTeleConfig; 
+            LevelUtilityV2.BonusInfo = bonusInfo;
+            LevelUtilityV2.StatsBase = playerStats;
+            LevelUtilityV2.StatsNormalAttack = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
+            LevelUtilityV2.StatsNormalPiercing = PlayerSkillNormalManifest.Get(NormalType.Piercing);
+            LevelUtilityV2.StatsNormalBullet = PlayerSkillNormalManifest.Get(NormalType.Bullet);
+            LevelUtilityV2.StatsChargeBullet = PlayerChargeManifest.Get(ChargeType.Bullet);
+            LevelUtilityV2.StatsChargeSize = PlayerChargeManifest.Get(ChargeType.Size);
+            LevelUtilityV2.StatsDash = dashConfig;
+            LevelUtilityV2.StatsFlash = flashConfig;
+            LevelUtilityV2.StatsTele = defaultTeleConfig; 
+            LevelUtilityV2.StatsCounterPiercing = TowerCounterManifest.Get(NodeTowerCounter.CounterType.Pierce);
+            LevelUtilityV2.StatsCounterSlash = TowerCounterManifest.Get(NodeTowerCounter.CounterType.Slash);
         }
         
         private void InitPlayerAndTowers()
@@ -115,7 +122,7 @@ namespace InGame
             currentTowerIndex = -1;
             
             if (Player != null) Destroy(Player.gameObject);
-            Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)LevelUtility.CurrentSkill.skillId);
+            Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)LevelUtilityV2.StatsNormalAttack.skillId);
             Player.transform.position = towers[0].transform.position + towers[0].GetTowerHeight();
             OnInitPlayer?.Invoke();
         }
@@ -137,16 +144,42 @@ namespace InGame
             
             TeleportTower(0);
             
+            // Get level boss name
+            foreach (var waveInfo in Level.waveInfo)
+            {
+                var foundedBoss = false;
+                foreach (var gate in waveInfo.waveConfig.gateConfigs)
+                {
+                    if (gate.isBossGate)
+                    {
+                        LevelBossName = gate.spawnType.displayName;
+                        foundedBoss = true;
+                        break;
+                    }
+                }
+                if (foundedBoss) break;
+            }
+            
+            // Start level
+            if (coroutineStartLevel != null) StopCoroutine(coroutineStartLevel);
+            coroutineStartLevel = StartCoroutine(IELevel());
+        }
+
+        private IEnumerator IELevel()
+        {
             // Start waves
             currentWaveIndex = 0;
             if (waveCoroutine != null) StopCoroutine(waveCoroutine);
-            waveCoroutine = StartCoroutine(IEWave(level.waveInfo));
             
+            OnLevelPreLoaded?.Invoke(Level);
+            yield return new WaitForSeconds(delayStartLevel);
+            
+            waveCoroutine = StartCoroutine(IEWave(Level.waveInfo));
             LevelStarted = true;
-            OnLevelLoaded?.Invoke(level);
+            OnLevelLoaded?.Invoke(Level);
             StartTimer();
         }
-
+        
         public void WinLevel()
         {
             if (IsEndLevel) return;
@@ -154,7 +187,8 @@ namespace InGame
             StopTimer();
             
             WealthManager.Instance.Save();
-            PlayerDataManager.Instance.CompleteLevel();
+            if (Level.level >= PlayerDataManager.Instance.Data.level + 1)
+                PlayerDataManager.Instance.CompleteLevel();
             
             DebugUtility.LogError($"Level {Level.level + 1} is ended: WIN");
             IsEndLevel = true;
@@ -169,6 +203,10 @@ namespace InGame
             StopTimer();
             
             if (waveCoroutine != null) StopCoroutine(waveCoroutine);
+            foreach (var tower in towers)
+            {
+                tower.IsDestroyed = true;
+            }
             
             WealthManager.Instance.Save();
             
@@ -228,7 +266,8 @@ namespace InGame
             // if (reason == WaveEndReason.EndTime)
             onWaveEnded?.Invoke(currentWaveIndex - 1, reason);
             
-            winLoseManager.CheckWin(this);
+            if (!IsEndLevel)
+                winLoseManager.CheckWin(this);
                 
             if (waveIndex == currentWaveIndex - 1)
             {
@@ -244,7 +283,7 @@ namespace InGame
         {
             for (var i = 0; i < towers.Length; i++)
             {
-                towers[i].Initialize(i, LevelUtility.GetTowerHp());
+                towers[i].Initialize(i, LevelUtilityV2.GetBaseTowerHp());
                 towers[i].OnDestroyed += OnTowerDestroyed;
             }
         }

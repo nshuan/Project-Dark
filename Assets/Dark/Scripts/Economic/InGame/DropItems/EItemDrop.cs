@@ -46,7 +46,7 @@ namespace Economic.InGame.DropItems
                 if (Vector2.Distance(tower.transform.position, position) < minDistanceToTower + dropRange)
                 {
                     targetPos = position + RandomUtil.InsideUnitSpan(position - (Vector2)tower.transform.position, dropSpanAngleToExcludeTower) * dropRange;
-                    targetPos *= LevelUtility.GetRelativeRange(dropRange, targetPos - position) / dropRange;
+                    targetPos *= LevelUtilityV2.GetRelativeRange(dropRange, targetPos - position) / dropRange;
                     calculatedTargetPosition = true;
                     break;
                 }
@@ -74,7 +74,7 @@ namespace Economic.InGame.DropItems
             visual.gameObject.SetActive(true);
             
             var targetPos = position + RandomUtil.InsideUnitSpan(direction, span) * (dropRange * scaleRange);
-            targetPos *= LevelUtility.GetRelativeRange(dropRange, targetPos - position) / dropRange;
+            targetPos *= LevelUtilityV2.GetRelativeRange(dropRange, targetPos - position) / dropRange;
             
             var dropJumps = RandomUtil.Range(1, 4);
             var dropDuration = Mathf.Max(dropJumps * 0.2f, 0.36f);

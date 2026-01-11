@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Dark.Scripts.Utils;
 using DG.Tweening;
@@ -51,7 +52,7 @@ namespace InGame
             cursor.SetAuto(GameConst.DefaultAutoAttack);
 
             InputManager = manager;
-            Cooldown = LevelUtility.GetSkillCooldown(false);
+            Cooldown = LevelUtilityV2.GetNormalAttackCooldown();
             ActivateDuration = 1f;
         }
 
@@ -66,24 +67,38 @@ namespace InGame
             if (!CanShoot) return;
             
             var tempMousePos = new Vector2(worldMousePosition.x, worldMousePosition.y);
-            var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(1f);
-            var critRate = LevelUtility.GetCriticalRate();
+            var (damage, criticalDamage) = LevelUtilityV2.GetNormalAttackDamage();
+            var critRate = LevelUtilityV2.GetBaseCriticalRate();
             var bulletNum = 1;
-            var skillSize = LevelUtility.GetSkillSize(1f);
-            var skillRange = LevelUtility.GetSkillRange(
-                1f,
-                Vector2.right);
-            var maxHit = 1 + LevelUtility.BonusInfo.skillBonus.bulletMaxHitPlus;
-            var stagger = LevelUtility.GetBulletStagger();
+            var skillSize = 1f;
+            var skillRange = LevelUtilityV2.GetNormalAttackRange(Vector2.right);
+            var maxHit = 1;
+            if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing) 
+                maxHit += LevelUtilityV2.GetNormalPiercingAmount();
+            var stagger = LevelUtilityV2.GetBaseStagger();
             
             var delayShot = InputManager.PlayerVisual.PlayShoot(worldMousePosition);
             var targetEnemy = nearestEnemy;
+            var activateSplitBullets = 0;
+            if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackBullet) 
+                activateSplitBullets = LevelUtilityV2.GetNormalBulletAmount();
+            var activateActions = activateSplitBullets == 0
+                ? null
+                : new List<IProjectileActivate>()
+                {
+                    new ProjectileActivateSplit()
+                    {
+                        projectile = LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.Normal],
+                        amount = activateSplitBullets,
+                        angle = LevelUtilityV2.StatsNormalBullet.GetNormalBulletSpanAngle(activateSplitBullets + 1)
+                    }
+                };
             InputManager.DelayCall(delayShot, () =>
             {
                 InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(skillRange);
                 
-                LevelUtility.CurrentSkill.ShootToTarget(
-                    LevelUtility.CurrentSkill.projectiles[PlayerProjectileType.Normal],
+                LevelUtilityV2.StatsNormalAttack.ShootToTarget(
+                    LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.Normal],
                     targetEnemy,
                     InputManager.ProjectileSpawnPos.position,
                     LevelManager.Instance.CurrentTower.GetBaseCenter(),
@@ -97,8 +112,8 @@ namespace InGame
                     stagger,
                     maxHit,
                     false,
-                    LevelUtility.BonusInfo.skillBonus.GetProjectileActivateActions(false),
-                    LevelUtility.BonusInfo.skillBonus.GetProjectileHitActions(false));
+                    activateActions,
+                    null);
             });
 
             CombatActions.OnAttackNormal?.Invoke(Cooldown);
@@ -201,7 +216,7 @@ namespace InGame
             mousePosition.z = 0; // Set z to 0 for 2D
             cursorRect.position = mousePosition;    
             
-            cursor.UpdateCooldown(true, 1 - Mathf.Clamp(cdCounter / Cooldown, 0f, 1f));
+            // cursor.UpdateCooldown(true, 1 - Mathf.Clamp(cdCounter / Cooldown, 0f, 1f));
             if (cdCounter <= 0)
                 AutoAttack();
         }
