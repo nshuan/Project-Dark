@@ -27,11 +27,16 @@ namespace OutGame.Upgrade.Tooltip
             var positionY = parentRect.anchoredPosition.y;
             
             // Check if the panel is outside the screen
-            if (parentRect.position.x + parentRect.sizeDelta.x + rectTransform.sizeDelta.x + padding.x >
+            if (parentRect.position.x + parentRect.sizeDelta.x / 2 + rectTransform.sizeDelta.x + padding.x >
                 SafeScaler.ScreenWidth)
             {
                 positionX = parentRect.anchoredPosition.x;
-                positionY = parentRect.anchoredPosition.y - ((RectTransform)parentRect.parent).sizeDelta.y / 2 - rectTransform.sizeDelta.y / 2 - padding.x;    
+                positionY = parentRect.anchoredPosition.y - ((RectTransform)parentRect.parent).sizeDelta.y / 2 - rectTransform.sizeDelta.y / 2 - padding.x;
+                
+                if (parentRect.position.y - ((RectTransform)parentRect.parent).sizeDelta.y / 2 - rectTransform.sizeDelta.y - padding.x < 0)
+                {
+                    positionY = parentRect.anchoredPosition.y + ((RectTransform)parentRect.parent).sizeDelta.y / 2 + rectTransform.sizeDelta.y / 2 + padding.x + 15;    
+                }
             }
                 
             rectToolTip.anchoredPosition = new Vector2(positionX, positionY);
