@@ -425,6 +425,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
 
         public void UpdateNodeSprites(UICreatorUpgradeNode node)
         {
+#if UNITY_EDITOR
             cacheSpriteMap ??= UIUpgradeTree.GetSpritesMapById();
             
             var id = node.config.nodeId;
@@ -432,6 +433,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             {
                 node.SetIcon(spriteInfo.normalSprite);
             }
+            
+#endif
         }
         
         public void ChangeMode()
