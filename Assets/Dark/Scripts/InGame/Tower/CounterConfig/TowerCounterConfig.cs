@@ -11,6 +11,6 @@ namespace InGame.CounterConfig
         public float cooldown;
         public float stagger;
         public float range;
-        public float size;
+        public float size; // Amount của piercing
     }
 }

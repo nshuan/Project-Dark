@@ -15,7 +15,7 @@ namespace Dark.Scripts.ForDemo
         [SerializeField] protected GameObject hiddenButton;
         [SerializeField] protected bool hideOnExit = false;
         
-        private Canvas parentCanvas;
+        protected Canvas parentCanvas;
         protected UIDemoPopupBlock cachePopupWishlist;
 
         private void Awake()

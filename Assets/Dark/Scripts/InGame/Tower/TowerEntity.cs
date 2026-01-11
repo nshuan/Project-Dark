@@ -1,5 +1,6 @@
 using System;
 using Dark.Scripts.AudioV2;
+using InGame.Shield;
 using InGame.UI;
 using UnityEngine;
 
@@ -21,7 +22,10 @@ namespace InGame
         public Transform[] itemCollectorPositions;
         [SerializeField] private AudioPlayComponentV2 sfxHit;
 
-        [Header("Config")]
+        [Space] [Header("Shield")] 
+        [SerializeField] public TowerShield shield;
+        
+        [Space] [Header("Config")]
         [SerializeField] private string normalSortingLayerName;
         [SerializeField] private int normalSortingOrder;
         [SerializeField] private string hoverSortingLayerName;
@@ -38,6 +42,7 @@ namespace InGame
         public bool IsDestroyed { get; set; }
         
         public Action<int, DamageType> OnHit { get; set; }
+        public Action<int, DamageType> OnHitShield { get; set; }
         public Action<int> OnRegenerate { get; set; }
         public Action<Vector2> OnHitAttackerPos { get; set; }
         public Action<TowerEntity> OnDestroyed;
@@ -48,6 +53,7 @@ namespace InGame
             Id = id;
             MaxHp = hp;
             CurrentHp = MaxHp;
+            shield.Initialize();
             IsDestroyed = false;
 
             OnDestroyed = null;
@@ -56,8 +62,8 @@ namespace InGame
             towerBaseAnim.PlayIdle(currentState);
             towerAnim.SetActiveOutline(false);
             towerBaseAnim.SetActiveOutline(false);
-            autoRegenerate.Initialize(this, LevelUtility.GetTowerAutoRegen(MaxHp));
-            regenerateOnKill.Initialize(this, LevelUtility.GetTowerRegenOnKill(MaxHp));
+            autoRegenerate.Initialize(this, LevelUtilityV2.GetBaseRegen());
+            regenerateOnKill.Initialize(this, LevelUtilityV2.GetBaseLifeLeech());
         }
         
         public void EnterTower()
@@ -79,8 +85,15 @@ namespace InGame
         {
             if (IsDestroyed) return;
             
+            // Reduce shield before applying to tower health
+            var totalDamage = damage;
+            damage = shield.Damage(damage);
+            OnHitShield?.Invoke(totalDamage - damage, dmgType);
+            
             stagger = 0;
+            var lastHealth = CurrentHp;
             CurrentHp -= damage;
+            CombatActions.OnDamageReceived?.Invoke(lastHealth - CurrentHp);
             
             OnHit?.Invoke(damage, dmgType);
             OnHitAttackerPos?.Invoke(dealerPosition);

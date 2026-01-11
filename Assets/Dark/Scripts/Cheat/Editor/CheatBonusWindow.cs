@@ -15,7 +15,7 @@ public class CheatBonusWindow : OdinEditorWindow
     [Title("Cheat Upgrade Bonus")] 
     [OdinSerialize, NonSerialized] public bool enable;
     [InlineProperty, HideLabel] 
-    [OdinSerialize, NonSerialized] public UpgradeBonusInfo data = new UpgradeBonusInfo();
+    [OdinSerialize, NonSerialized] public UpgradeBonusInfoV2 data = new UpgradeBonusInfoV2();
 
     [MenuItem("Dark/Cheat/Cheat Bonus Window")]
     private static void Open()

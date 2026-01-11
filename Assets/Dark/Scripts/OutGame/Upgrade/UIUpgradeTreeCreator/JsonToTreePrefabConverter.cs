@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using InGame.Upgrade;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -72,8 +73,12 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 GameObject go = (GameObject)PrefabUtility.InstantiatePrefab(prefabList[node.idPrefab]);
                 go.transform.SetParent(root.transform.Find("Nodes"));
                 go.transform.localPosition = node.position;
-                go.GetComponent<UIUpgradeNode>().config = configLoader.GetNodeConfig(node.id);
-                uiNodeMap.TryAdd(node.guid, go.GetComponent<UIUpgradeNode>());
+                var goScript = go.GetComponent<UIUpgradeNode>();
+                goScript.config = configLoader.GetNodeConfig(node.id);
+                node.groups ??= new List<UpgradeGroupIdInfo>() { new UpgradeGroupIdInfo() { groupId = 0 } };
+                goScript.config.groupId = node.groups.ToArray();
+                uiNodeMap.TryAdd(node.guid, goScript);
+                EditorUtility.SetDirty(goScript.config);
             }
             
             // Set prerequire node by guid
@@ -103,6 +108,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             PrefabUtility.SaveAsPrefabAsset(root, outputPath);
             DestroyImmediate(root);
     
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
             Debug.Log("Prefab saved to: " + outputPath);
         }
     #endif

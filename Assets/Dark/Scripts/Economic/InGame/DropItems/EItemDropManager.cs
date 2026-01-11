@@ -39,20 +39,30 @@ namespace Economic.InGame.DropItems
             base.OnDestroy();
         }
 
-        public void CollectAll(Transform target)
+        public void CollectAll(Transform target, bool isAutoCollect)
         {
-            if (listItemToCollect.Count == 0)
+            CollectItems(listItemToCollect, target, isAutoCollect);
+            
+            listItemToCollect.Clear();
+        }
+
+        public void CollectItems(List<EItemDrop> itemsToCollect, Transform target, bool isAutoCollect,
+            bool ignoreMarkedNotCollectedByManager = false)
+        {
+            if (itemsToCollect == null || itemsToCollect.Count == 0)
             {
-                CombatActions.OnCollectAllResourceDrop?.Invoke(0, 0f);
+                CombatActions.OnCollectAllResourceDrop?.Invoke(isAutoCollect, 0, 0f);
                 return;
             }
             
             var delay = 0f;
             var maxDelay = 0f;
             var minDelay = 0f;
-            var index = 0;
-            foreach (var item in listItemToCollect)
+            var totalCollected = 0;
+            foreach (var item in itemsToCollect)
             {
+                if (!ignoreMarkedNotCollectedByManager && item.MarkedNotCollectedByManager) continue;
+                
                 switch (item.kind)
                 {
                     case WealthType.Vestige:
@@ -64,8 +74,8 @@ namespace Economic.InGame.DropItems
                 }
                 
                 // 5 cái đầu ko nên delay random
-                if (index < 5)
-                    delay = 0.02f * index;
+                if (totalCollected < 5)
+                    delay = 0.02f * totalCollected;
                 else
                     delay = RandomUtil.Range(0f, 0.2f);
                 
@@ -74,10 +84,10 @@ namespace Economic.InGame.DropItems
                     
                 item.Collect(target, delay);
 
-                index += 1;
+                totalCollected += 1;
             }
             
-            CombatActions.OnCollectAllResourceDrop?.Invoke(listItemToCollect.Count, maxDelay + 0.2f);
+            CombatActions.OnCollectAllResourceDrop?.Invoke(isAutoCollect, totalCollected, maxDelay + 0.2f);
             
             this.DelayCall(minDelay + collectDuration, () =>
             {
@@ -91,8 +101,21 @@ namespace Economic.InGame.DropItems
             });
             
             collectedData.Claim();
+        }
+
+        public void Claim(EItemDrop item)
+        {
+            switch (item.kind)
+            {
+                case WealthType.Vestige:
+                    collectedData.AddVestige(item.Quantity);
+                    break;
+                case WealthType.Sigils:
+                    collectedData.AddSigils(item.Quantity);
+                    break;
+            }
             
-            listItemToCollect.Clear();
+            collectedData.Claim();
         }
         
         public void DropOne(WealthType kind, int quantity, Vector3 position)

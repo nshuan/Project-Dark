@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Dark.Scripts.Common.UIWarning;
+using Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator.Grid;
+using InGame.CharacterClass;
 using InGame.Upgrade;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -27,6 +29,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         public int idPrefab;
         public SerializableVector2 position;
         public List<Guid> preRequired;
+        public List<UpgradeGroupIdInfo> groups;
     }
 
     [Serializable]
@@ -61,6 +64,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         [SerializeField] private Button[] btnToggleNodes;
         [SerializeField] private Transform[] nodeButtonGroups;
         [OdinSerialize, NonSerialized] private Dictionary<NodeType, List<NodeButtonInfo>> btnInfo;
+        public Button btnSetGroupId;
+        public TMP_InputField inpSetGroupId;
 
         [Space] [Header("Create and Load tree")] 
         [SerializeField] private GameObject groupBtnLoadTree;
@@ -80,8 +85,10 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         private Dictionary<Guid, Dictionary<Guid, RectTransform>> linesMap;
         private Dictionary<Guid, List<UICreatorUpgradeNode>> nodeChildMap;
         private Dictionary<Guid, List<UICreatorUpgradeNode>> nodeParentMap;
+        private Dictionary<int, NodeSpriteInfo> cacheSpriteMap;
+        private Dictionary<int, List<UICreatorUpgradeNode>> groupMap;
 
-        private bool isLinkMode;
+        public bool isLinkMode;
         
         private void Awake()
         {
@@ -137,6 +144,9 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             
             btnDeleteAll.onClick.RemoveAllListeners();
             btnDeleteAll.onClick.AddListener(ClearAll);
+            
+            btnSetGroupId.onClick.RemoveAllListeners();
+            btnSetGroupId.onClick.AddListener(SetGroupIdForSelectingNodes);
         }
 
         public void ToggleNodeGroup(int index)
@@ -158,6 +168,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             {
                 HideAllNodeGroup();
                 UICreatorNodeInfoPreview.Instance.Hide();
+                btnSetGroupId.gameObject.SetActive(false);
                 // Destroy all nodes
                 var children = new GameObject[treeParent.childCount];
                 for (int i = 0; i < treeParent.childCount; i++)
@@ -205,7 +216,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 linesMap = new Dictionary<Guid, Dictionary<Guid, RectTransform>>();
                 nodeChildMap = new Dictionary<Guid, List<UICreatorUpgradeNode>>();
                 nodeParentMap = new Dictionary<Guid, List<UICreatorUpgradeNode>>();
-                selectingNode = null;
+                selectingNodes = null;
             };
             
             popupConfirm.Setup(
@@ -225,6 +236,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             groupBtnLoadTree.SetActive(false);
             HideAllNodeGroup();
             UICreatorNodeInfoPreview.Instance.Hide();
+            btnSetGroupId.gameObject.SetActive(false);
             // Destroy all nodes
             var children = new GameObject[treeParent.childCount];
             for (int i = 0; i < treeParent.childCount; i++)
@@ -257,13 +269,14 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             linesMap = new Dictionary<Guid, Dictionary<Guid, RectTransform>>();
             nodeChildMap =  new Dictionary<Guid, List<UICreatorUpgradeNode>>();
             nodeParentMap = new Dictionary<Guid, List<UICreatorUpgradeNode>>();
-            selectingNode = null;
+            selectingNodes = null;
         }
 
         public Guid CreateNewNode(NodeType nodeType, int prefabIndex, int id, Guid guid, List<Guid> preRequire = null)
         {
             HideAllNodeGroup();
             UICreatorNodeInfoPreview.Instance.Hide();
+            btnSetGroupId.gameObject.SetActive(false);
             if (newTree == null)
             {
                 DebugUtility.LogError("Create a tree first!");
@@ -342,6 +355,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             UpdateLine(node.guid);
             
             node.InitNode();
+            
+            UpdateNodeSprites(node);
 
             return node.guid;
         }
@@ -349,60 +364,79 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         public void DeleteNode()
         {
             HideAllNodeGroup();
-            if (selectingNode == null)
+            if (selectingNodes == null || selectingNodes.Count == 0)
             {
                 DebugUtility.LogWarning("You are not selecting any node!");
                 return;
             }
 
-            // Delete lines
-            if (linesMap.ContainsKey(selectingNode.guid))
+            foreach (var selectingNode in selectingNodes)
             {
-                foreach (var pair in linesMap[selectingNode.guid])
+                // Delete lines
+                if (linesMap.ContainsKey(selectingNode.guid))
                 {
-                    Destroy(pair.Value.gameObject);
+                    foreach (var pair in linesMap[selectingNode.guid])
+                    {
+                        Destroy(pair.Value.gameObject);
+                    }
+                    linesMap.Remove(selectingNode.guid);
                 }
-                linesMap.Remove(selectingNode.guid);
-            }
-            foreach (var pair in linesMap)
-            {
-                if (pair.Value != null && pair.Value.ContainsKey(selectingNode.guid))
+                foreach (var pair in linesMap)
                 {
-                    Destroy(pair.Value[selectingNode.guid].gameObject);
-                    pair.Value.Remove(selectingNode.guid);
+                    if (pair.Value != null && pair.Value.ContainsKey(selectingNode.guid))
+                    {
+                        Destroy(pair.Value[selectingNode.guid].gameObject);
+                        pair.Value.Remove(selectingNode.guid);
+                    }
                 }
+                
+                // Delete node references
+                if (nodeChildMap.ContainsKey(selectingNode.guid))
+                {
+                    foreach (var child in nodeChildMap[selectingNode.guid])
+                    {
+                        if (nodeParentMap.ContainsKey(child.guid) &&
+                            nodeParentMap[child.guid].Contains(selectingNode))
+                            nodeParentMap[child.guid].Remove(selectingNode);
+                    }
+                    nodeChildMap.Remove(selectingNode.guid);
+                }
+                if (nodeParentMap.ContainsKey(selectingNode.guid))
+                {
+                    foreach (var parent in nodeParentMap[selectingNode.guid])
+                    {
+                        if (nodeChildMap.ContainsKey(parent.guid) &&
+                            nodeChildMap[parent.guid].Contains(selectingNode))
+                            nodeChildMap[parent.guid].Remove(selectingNode);
+                    }
+                    nodeParentMap.Remove(selectingNode.guid);
+                }
+                if (nodesMap.ContainsKey(selectingNode.guid))
+                    nodesMap.Remove(selectingNode.guid);
+                
+                Destroy(selectingNode.gameObject);
             }
             
-            // Delete node references
-            if (nodeChildMap.ContainsKey(selectingNode.guid))
-            {
-                foreach (var child in nodeChildMap[selectingNode.guid])
-                {
-                    if (nodeParentMap.ContainsKey(child.guid) &&
-                        nodeParentMap[child.guid].Contains(selectingNode))
-                        nodeParentMap[child.guid].Remove(selectingNode);
-                }
-                nodeChildMap.Remove(selectingNode.guid);
-            }
-            if (nodeParentMap.ContainsKey(selectingNode.guid))
-            {
-                foreach (var parent in nodeParentMap[selectingNode.guid])
-                {
-                    if (nodeChildMap.ContainsKey(parent.guid) &&
-                        nodeChildMap[parent.guid].Contains(selectingNode))
-                        nodeChildMap[parent.guid].Remove(selectingNode);
-                }
-                nodeParentMap.Remove(selectingNode.guid);
-            }
-            if (nodesMap.ContainsKey(selectingNode.guid))
-                nodesMap.Remove(selectingNode.guid);
-            
-            Destroy(selectingNode.gameObject);
-            selectingNode = null;
+            selectingNodes = null;
             btnDeleteNode.gameObject.SetActive(false);
             UICreatorNodeInfoPreview.Instance.Hide();
+            btnSetGroupId.gameObject.SetActive(false);
         }
 
+        public void UpdateNodeSprites(UICreatorUpgradeNode node)
+        {
+#if UNITY_EDITOR
+            cacheSpriteMap ??= UIUpgradeTree.GetSpritesMapById();
+            
+            var id = node.config.nodeId;
+            if (cacheSpriteMap.TryGetValue(id, out var spriteInfo))
+            {
+                node.SetIcon(spriteInfo.normalSprite);
+            }
+            
+#endif
+        }
+        
         public void ChangeMode()
         {
             HideAllNodeGroup();
@@ -484,8 +518,11 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         [Space]
         [Header("Select Node")]
         [SerializeField] private Button btnDeselectAll;
-        
-        private UICreatorUpgradeNode selectingNode;
+        [SerializeField] private KeyCode keyMultiselect = KeyCode.LeftShift;
+
+        private bool forceMultiselect = false;
+        private bool keyMultiselectDown;
+        private List<UICreatorUpgradeNode> selectingNodes;
 
         public void SelectNode(UICreatorUpgradeNode node)
         {
@@ -495,107 +532,282 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 SelectNodeLink(node);
                 return;
             }
+
+            if (keyMultiselectDown == false && forceMultiselect == false)
+            {
+                if (selectingNodes != null)
+                {
+                    foreach (var selecting in selectingNodes)
+                    {
+                        selecting.DeselectThis();
+                    }
+                }
+                
+                selectingNodes = new List<UICreatorUpgradeNode>() { node };
+                node.SelectThis();
+                UICreatorNodeInfoPreview.Instance.UpdateUI(this, node, node.config);
+                UICreatorNodeInfoPreview.Instance.Show();
+                btnSetGroupId.gameObject.SetActive(false);
+            }
+            else
+            {
+                selectingNodes ??= new List<UICreatorUpgradeNode>();
+                if (selectingNodes.Contains(node))
+                {
+                    selectingNodes.Remove(node);
+                    node.DeselectThis();
+                }
+                else
+                {
+                    selectingNodes.Add(node);
+                    node.SelectThis();
+                }
+                UICreatorNodeInfoPreview.Instance.Hide();
+                btnSetGroupId.gameObject.SetActive(true);
+                inpSetGroupId.text = "";
+            }
             
-            if (selectingNode != null) selectingNode.DeselectThis();
-            selectingNode = node;
-            btnDeleteNode.gameObject.SetActive(true);
-            node.SelectThis();
-            UICreatorNodeInfoPreview.Instance.UpdateUI(null, node.config);
-            UICreatorNodeInfoPreview.Instance.Show(node.transform.position, new Vector2(node.lineAnchorOffsetRadius, 0f));
+            if (selectingNodes == null || selectingNodes.Count == 0)
+                btnDeleteNode.gameObject.SetActive(false);
+            else 
+                btnDeleteNode.gameObject.SetActive(true);
         }
 
         public void DeselectAll()
         {
             HideAllNodeGroup();
-            if  (selectingNode != null) selectingNode.DeselectThis();
-            selectingNode = null;
+            if (selectingNodes != null)
+            {
+                foreach (var node in selectingNodes)
+                {
+                    node.DeselectThis();
+                }
+            }
+            selectingNodes= null;
             btnDeleteNode.gameObject.SetActive(false);
             UICreatorNodeInfoPreview.Instance.Hide();
+            btnSetGroupId.gameObject.SetActive(false);
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(keyMultiselect))
+                keyMultiselectDown = true;
+            if (Input.GetKeyUp(keyMultiselect))
+                keyMultiselectDown = false;
         }
 
         #endregion
 
-        #region Edit node links
+        #region Group
 
-        public void SelectNodeLink(UICreatorUpgradeNode node)
+        public void SelectGroupNodes(List<int> groupId)
         {
-            if (selectingNode == null)
+            DeselectAll();
+            forceMultiselect = true;
+            foreach (var pair in nodesMap)
             {
-                selectingNode = node;
-                node.SelectThis();
+                if (pair.Value.group.Any(groupId.Contains)) SelectNode(pair.Value);
             }
-            else
+            forceMultiselect = false;
+        }
+
+        private void SetGroupIdForSelectingNodes()
+        {
+            if (selectingNodes == null) return;
+            var listGroupStr = inpSetGroupId.text.Trim(' ').Split(',');
+            var groups = new List<int>();
+            foreach (var str in listGroupStr)
             {
-                // Add or remove link node
-                if (nodeParentMap.ContainsKey(selectingNode.guid) && nodeParentMap[selectingNode.guid].Contains(node))
+                if (int.TryParse(str, out var intValue))
                 {
-                    // Update data
-                    var newPreRequire = nodeParentMap[selectingNode.guid].Where((preNode) => !ReferenceEquals(preNode, node))
-                        .ToList();
-                    nodeParentMap[selectingNode.guid] = newPreRequire;
-// #if UNITY_EDITOR
-//                     EditorUtility.SetDirty(selectingNode.config);
-//                     AssetDatabase.SaveAssets();
-//                     AssetDatabase.Refresh();
-//                     Debug.Log("ScriptableObject changes saved to asset.");
-// #endif
-                    
-                    if (linesMap.ContainsKey(node.guid))
+                    groups.Add(intValue);
+                }
+            }
+            foreach (var selectingNode in selectingNodes)
+            {
+                selectingNode.group = new List<int>(groups);
+            }
+            
+            RefreshGroupNodes();
+        }
+
+        public void RefreshGroupNodes()
+        {
+            groupMap ??= new Dictionary<int, List<UICreatorUpgradeNode>>();
+
+            foreach (var pair in nodesMap)
+            {
+                foreach (var group in pair.Value.group)
+                {
+                    if (groupMap.TryGetValue(group, out var listNode))
                     {
-                        if (linesMap[node.guid].ContainsKey(selectingNode.guid))
-                        {
-                            Destroy(linesMap[node.guid][selectingNode.guid].gameObject);
-                            linesMap[node.guid].Remove(selectingNode.guid);
-                        }
+                        if (!listNode.Contains(pair.Value)) listNode.Add(pair.Value);
+                        groupMap[group] = listNode;
                     }
-                    if (nodeParentMap.ContainsKey(selectingNode.guid))
+                    else
                     {
-                        if (nodeParentMap[selectingNode.guid].Contains(node))
-                            nodeParentMap[selectingNode.guid].Remove(node);
+                        listNode = new List<UICreatorUpgradeNode>() { pair.Value };
+                        groupMap[group] = listNode;
                     }
-                    if (nodeChildMap.ContainsKey(node.guid))
+                }
+            }
+        }
+
+        public void SetGroupLockNode(UICreatorUpgradeNode lockNode)
+        {
+            groupMap ??= new Dictionary<int, List<UICreatorUpgradeNode>>();
+
+            foreach (var group in lockNode.group)
+            {
+                if (groupMap.TryGetValue(group, out var listNode))
+                {
+                    foreach (var node in listNode)
                     {
-                        if (nodeChildMap[node.guid].Contains(selectingNode))
-                            nodeChildMap[node.guid].Remove(selectingNode);
+                        node.isGroupLockNode ??= new Dictionary<int, bool>();
+                        node.isGroupLockNode[group] = false;
+                        node.SetAreaLock();
                     }
                 }
                 else
                 {
-                    // Check loop
-                    // TODO check loop
-                    
-//                     // Update data
-//                     var newPreRequire = selectingNode.config.preRequire.ToList();
-//                     newPreRequire.Add(node.config);
-//                     selectingNode.config.preRequire = newPreRequire.ToArray();
-// #if UNITY_EDITOR
-//                     EditorUtility.SetDirty(selectingNode.config);
-//                     AssetDatabase.SaveAssets();
-//                     AssetDatabase.Refresh();
-//                     Debug.Log("ScriptableObject changes saved to asset.");
-// #endif
-
-                    linesMap.TryAdd(node.guid, new Dictionary<Guid, RectTransform>());
-                    if (!linesMap[node.guid].ContainsKey(selectingNode.guid))
-                    {
-                        var line = Instantiate(linePrefab, lineParent);
-                        linesMap[node.guid].Add(selectingNode.guid, line);
-                    }
-                    nodeParentMap.TryAdd(selectingNode.guid, new List<UICreatorUpgradeNode>());
-                    if (!nodeParentMap[selectingNode.guid].Contains(node))
-                        nodeParentMap[selectingNode.guid].Add(node);
-                    nodeChildMap.TryAdd(node.guid, new List<UICreatorUpgradeNode>());
-                    if (!nodeChildMap[node.guid].Contains(selectingNode))
-                        nodeChildMap[node.guid].Add(selectingNode);
-                    
-                    UpdateLine(node.guid);
+                    groupMap[group] = new List<UICreatorUpgradeNode>() { lockNode };
                 }
                 
-                selectingNode.DeselectThis();
-                selectingNode = null;
+                lockNode.isGroupLockNode ??= new Dictionary<int, bool>();
+                lockNode.isGroupLockNode[group] = true;
+                lockNode.SetAreaLock();
             }
         }
 
+        #endregion
+        
+        #region Edit node links
+
+        public void SelectNodeLink(UICreatorUpgradeNode node)
+        {
+            if (keyMultiselectDown)
+            {
+                selectingNodes ??= new List<UICreatorUpgradeNode>();
+                if (selectingNodes.Contains(node))
+                {
+                    selectingNodes.Remove(node);
+                    node.DeselectThis();
+                }
+                else
+                {
+                    selectingNodes.Add(node);
+                    node.SelectThis();
+                }
+            }
+            else
+            {
+                if (selectingNodes == null || selectingNodes.Count == 0)
+                {
+                    selectingNodes = new List<UICreatorUpgradeNode>() { node };
+                    node.SelectThis();
+                }
+                else
+                {
+                    foreach (var selectingNode in selectingNodes)
+                    {
+                        // Add or remove link node
+                        if (nodeParentMap.ContainsKey(selectingNode.guid) && nodeParentMap[selectingNode.guid].Contains(node))
+                        {
+                            // Update data
+                            var newPreRequire = nodeParentMap[selectingNode.guid].Where((preNode) => !ReferenceEquals(preNode, node))
+                                .ToList();
+                            nodeParentMap[selectingNode.guid] = newPreRequire;
+        // #if UNITY_EDITOR
+        //                     EditorUtility.SetDirty(selectingNode.config);
+        //                     AssetDatabase.SaveAssets();
+        //                     AssetDatabase.Refresh();
+        //                     Debug.Log("ScriptableObject changes saved to asset.");
+        // #endif
+                            
+                            if (linesMap.ContainsKey(node.guid))
+                            {
+                                if (linesMap[node.guid].ContainsKey(selectingNode.guid))
+                                {
+                                    Destroy(linesMap[node.guid][selectingNode.guid].gameObject);
+                                    linesMap[node.guid].Remove(selectingNode.guid);
+                                }
+                            }
+                            if (nodeParentMap.ContainsKey(selectingNode.guid))
+                            {
+                                if (nodeParentMap[selectingNode.guid].Contains(node))
+                                    nodeParentMap[selectingNode.guid].Remove(node);
+                            }
+                            if (nodeChildMap.ContainsKey(node.guid))
+                            {
+                                if (nodeChildMap[node.guid].Contains(selectingNode))
+                                    nodeChildMap[node.guid].Remove(selectingNode);
+                            }
+                        }
+                        else
+                        {
+                            // Check loop
+                            // TODO check loop
+                            
+        //                     // Update data
+        //                     var newPreRequire = selectingNode.config.preRequire.ToList();
+        //                     newPreRequire.Add(node.config);
+        //                     selectingNode.config.preRequire = newPreRequire.ToArray();
+        // #if UNITY_EDITOR
+        //                     EditorUtility.SetDirty(selectingNode.config);
+        //                     AssetDatabase.SaveAssets();
+        //                     AssetDatabase.Refresh();
+        //                     Debug.Log("ScriptableObject changes saved to asset.");
+        // #endif
+
+                            linesMap.TryAdd(node.guid, new Dictionary<Guid, RectTransform>());
+                            if (!linesMap[node.guid].ContainsKey(selectingNode.guid))
+                            {
+                                var line = Instantiate(linePrefab, lineParent);
+                                linesMap[node.guid].Add(selectingNode.guid, line);
+                            }
+                            nodeParentMap.TryAdd(selectingNode.guid, new List<UICreatorUpgradeNode>());
+                            if (!nodeParentMap[selectingNode.guid].Contains(node))
+                                nodeParentMap[selectingNode.guid].Add(node);
+                            nodeChildMap.TryAdd(node.guid, new List<UICreatorUpgradeNode>());
+                            if (!nodeChildMap[node.guid].Contains(selectingNode))
+                                nodeChildMap[node.guid].Add(selectingNode);
+                            
+                            UpdateLine(node.guid);
+                        }
+                        
+                        selectingNode.DeselectThis();
+                    }
+                    
+                    selectingNodes = null;
+                }
+            }
+        }
+
+        public void OnDragNode(RectTransform anchor, Vector3 delta)
+        {
+            if (selectingNodes == null || selectingNodes.Count == 0) return;
+            if (selectingNodes.All((node) => (RectTransform)node.transform != anchor)) return;
+
+            foreach (var selectingNode in selectingNodes)
+            {
+                if ((RectTransform)selectingNode.transform == anchor) continue;
+                selectingNode.transform.position += delta;
+                UpdateLine(selectingNode.guid);
+            }
+        }
+
+        public void OnEndDrag()
+        {
+            if (selectingNodes == null || selectingNodes.Count == 0) return;
+            
+            foreach (var selectingNode in selectingNodes)
+            {
+                UIAlignManager.Instance.Align((RectTransform)selectingNode.transform);
+                UpdateLine(selectingNode.guid);
+            }
+        }
+        
         #endregion
 
         #region Load from saved JSON
@@ -623,12 +835,24 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 var guid = CreateNewNode((NodeType)nodeData.idType, nodeData.idPrefab, nodeData.id, nodeData.guid, nodeData.preRequired);
                 nodeData.guid = guid;
                 nodesMap[guid].transform.localPosition = nodeData.position;
+                nodeData.groups ??= new List<UpgradeGroupIdInfo>() { new UpgradeGroupIdInfo() { groupId = 0 } };
+                nodesMap[guid].group = nodeData.groups.Select((info) => info.groupId).ToList();
+                nodesMap[guid].isGroupLockNode = new Dictionary<int, bool>();
+                foreach (var group in nodeData.groups)
+                {
+                    if (group.isLockNode) nodesMap[guid].isGroupLockNode.Add(group.groupId, true);
+                }
+                nodesMap[guid].SetAreaLock();
             }
 
+            RefreshGroupNodes();
+            
             foreach (var nodeData in newTree.nodes)
             {
                 UpdateLine(nodeData.guid);
             }
+
+            inputTreeName.text = name;
         }
         
         #endregion
@@ -641,6 +865,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         
         public void SaveTreeData()
         {
+            RefreshGroupNodes();
             HideAllNodeGroup();
             if (newTree == null)
             {
@@ -662,7 +887,17 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                     preRequire = nodeParentMap[pair.Key].Select((node) => node.guid).ToList();
                 else
                     preRequire = new List<Guid>();
-                
+
+                var groupInfo = new List<UpgradeGroupIdInfo>();
+                foreach (var group in pair.Value.group)
+                {
+                    groupInfo.Add(new UpgradeGroupIdInfo()
+                    {
+                        groupId = group,
+                        isLockNode = pair.Value.isGroupLockNode != null && pair.Value.isGroupLockNode.ContainsKey(group) && pair.Value.isGroupLockNode[group]
+                    });
+                }
+                if (groupInfo.Count == 0) groupInfo.Add(new UpgradeGroupIdInfo() { groupId = 0 });
                 newTree.nodes.Add(new NodeDataStruct()
                 {
                     guid = pair.Key,
@@ -670,7 +905,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                     idType = (int)pair.Value.CreatorNodeType,
                     idPrefab = pair.Value.PrefabIndex,
                     position = pair.Value.transform.localPosition,
-                    preRequired = preRequire
+                    preRequired = preRequire,
+                    groups = groupInfo,
                 });
             }
             
@@ -684,6 +920,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
 
 #if UNITY_EDITOR
             prefabConverter.ConvertJsonToPrefab(inputTreeName.text, inputTreeName.text);
+            UpgradeTreeManifest.GetTreeConfig(CharacterClass.Archer).Validate();
 #endif
         }
 

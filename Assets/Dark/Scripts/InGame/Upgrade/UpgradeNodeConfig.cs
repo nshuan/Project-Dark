@@ -14,8 +14,13 @@ namespace InGame.Upgrade
         public string nodeName; // Name to display
         public bool hideLevelInNode;
         public string description; // Description to display
+        public float vestigeCostRatio; // cost will multiply to this value
+        public bool dynamicVestige; // is this node using dynamic vestige?
+        public bool dynamicEchoes; // is this node using dynamic echoes?
         public UpgradeNodeCostInfo[] costInfo; 
-        [NonSerialized, OdinSerialize] public INodeActivateLogic[] nodeLogic;
+        [NonSerialized, OdinSerialize] public INodeActivateLogicV2[] nodeLogic;
+
+        public UpgradeGroupIdInfo[] groupId;
         
         public int MaxLevel
         {
@@ -26,25 +31,32 @@ namespace InGame.Upgrade
             }
         }
 
-        public void ActivateNode(int level, ref UpgradeBonusInfo bonusInfo)
+        public void ActivateNode(int level, ref UpgradeBonusInfoV2 bonusInfo)
         {
             if (nodeLogic == null) return;
             if (level <= 0 || level > MaxLevel) return;
+            UpgradeManager.Instance.RefreshGroupUnlockOrder();
             for (var i = 1; i <= level; i++)
             {
                 foreach (var logic in nodeLogic)
                 {
+                    if (logic is INodeDynamicBonusValueV2 { IsDynamic: true } dynamicLogic)
+                        dynamicLogic.OverrideBonusValue(groupId.Min((info) =>
+                            UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, false)));
                     logic.ActivateNode(i, ref bonusInfo);
                 }   
             }
         }
         
-        public void ActivateLevel(int level, ref UpgradeBonusInfo bonusInfo)
+        public void ActivateLevel(int level, ref UpgradeBonusInfoV2 bonusInfo)
         {
             if (nodeLogic == null) return;
             if (level <= 0 || level > MaxLevel) return;
             foreach (var logic in nodeLogic)
             {
+                if (logic is INodeDynamicBonusValueV2 { IsDynamic: true } dynamicLogic)
+                    dynamicLogic.OverrideBonusValue(groupId.Min((info) =>
+                        UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, false)));
                 logic.ActivateNode(level, ref bonusInfo);
             }   
         }
@@ -54,5 +66,13 @@ namespace InGame.Upgrade
     public class UpgradeNodeCostInfo
     {
         public WealthType costType; // Type of resource needed to unlock this node
+        public int[] costValue;
+    }
+
+    [Serializable]
+    public class UpgradeGroupIdInfo
+    {
+        public int groupId;
+        public bool isLockNode;
     }
 }

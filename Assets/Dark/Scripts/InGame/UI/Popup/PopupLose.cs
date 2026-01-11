@@ -82,12 +82,13 @@ namespace InGame.UI
             {
                 btnReplay.interactable = false;
                 btnBackToTree.interactable = false;
+                var levelToLoad = LevelManager.Instance.Level.level;
                 Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame, () =>
                 {
-                    LevelManager.Instance.LoadLevel(PlayerDataManager.Instance.Data.level + 1);
+                    LevelManager.Instance.LoadLevel(levelToLoad);
                 });
                 
-                LogManager.Log(LogConst.EventLogStartLevel, $"level_{PlayerDataManager.Instance.Data.level + 1}", "from popup lose");
+                LogManager.Log(LogConst.EventLogStartLevel, $"level_{LevelManager.Instance.Level.level}", "from popup lose");
             });
         }
 

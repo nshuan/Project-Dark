@@ -94,6 +94,8 @@ namespace Dark.Scripts.Recording
             var timePlayed = DateTime.Now - currentStartTime;
             currentStartTime = DateTime.Now;
             var data = PlayerDataManager.Instance.Data;
+            // Data chưa initialize thì ko lưu
+            if (!data.initialized) return;
             data.timePlayedMilli += timePlayed.TotalMilliseconds;
             PlayerDataManager.Instance.Save(data);
         }

@@ -16,8 +16,7 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 11400000, guid: ff66082d35a8786429078ae8cc5e9433, type: 2}
-    - {fileID: 11400000, guid: bfd0b90c58376274fa2a63998fec8aa5, type: 2}
+    - {fileID: 11400000, guid: a6e7b19182615cd49b494bab621fa0b0, type: 2}
     - {fileID: 11400000, guid: 638a80d19db776f47a900dc9376e05ca, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
@@ -30,7 +29,7 @@ MonoBehaviour:
         mscorlib
     - Name: 
       Entry: 12
-      Data: 3
+      Data: 2
     - Name: 
       Entry: 7
       Data: 1|InGame.GateConfig, Assembly-CSharp
@@ -42,10 +41,10 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: 4.65
+      Data: 5.91082954
     - Name: 
       Entry: 4
-      Data: 2.42
+      Data: 0.815286636
     - Name: 
       Entry: 8
       Data: 
@@ -54,10 +53,13 @@ MonoBehaviour:
       Data: 2|System.Int32[], mscorlib
     - Name: 
       Entry: 14
+      Data: 2
+    - Name: 
+      Entry: 3
       Data: 1
     - Name: 
       Entry: 3
-      Data: 0
+      Data: 2
     - Name: 
       Entry: 13
       Data: 
@@ -69,7 +71,7 @@ MonoBehaviour:
       Data: 0
     - Name: duration
       Entry: 4
-      Data: 6
+      Data: 4
     - Name: spawnType
       Entry: 10
       Data: 0
@@ -78,10 +80,13 @@ MonoBehaviour:
       Data: 3
     - Name: spawnLogic
       Entry: 7
-      Data: 3|InGame.GateSpawnSingle, Assembly-CSharp
+      Data: 3|InGame.GateSpawnTriangle, Assembly-CSharp
     - Name: radius
       Entry: 4
       Data: 1.5
+    - Name: randomSpanAngle
+      Entry: 4
+      Data: 60
     - Name: 
       Entry: 8
       Data: 
@@ -90,7 +95,7 @@ MonoBehaviour:
       Data: 0
     - Name: durationVisual
       Entry: 4
-      Data: 9
+      Data: 8
     - Name: 
       Entry: 8
       Data: 
@@ -105,10 +110,10 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: 5.8
+      Data: 1.04458618
     - Name: 
       Entry: 4
-      Data: 1.42
+      Data: -0.3821659
     - Name: 
       Entry: 8
       Data: 
@@ -129,85 +134,28 @@ MonoBehaviour:
       Data: 
     - Name: startTime
       Entry: 4
-      Data: 0
+      Data: 3
     - Name: duration
       Entry: 4
-      Data: 6
+      Data: 3
     - Name: spawnType
       Entry: 10
       Data: 1
     - Name: intervalLoop
       Entry: 4
-      Data: 3
+      Data: 4
     - Name: spawnLogic
       Entry: 7
-      Data: 6|InGame.GateSpawnSingle, Assembly-CSharp
-    - Name: radius
-      Entry: 4
-      Data: 1.5
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: startTimeVisual
-      Entry: 4
-      Data: 0
-    - Name: durationVisual
-      Entry: 4
-      Data: 9
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 7|InGame.GateConfig, Assembly-CSharp
-    - Name: isBossGate
-      Entry: 5
-      Data: false
-    - Name: position
-      Entry: 7
-      Data: UnityEngine.Vector2, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 6.89
-    - Name: 
-      Entry: 4
-      Data: -0.42
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: targetBaseIndex
-      Entry: 7
-      Data: 8|System.Int32[], mscorlib
-    - Name: 
-      Entry: 14
-      Data: 1
-    - Name: 
+      Data: 6|InGame.GateSpawnMultiple, Assembly-CSharp
+    - Name: amount
       Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: startTime
+      Data: 4
+    - Name: maxRadius
       Entry: 4
-      Data: 0
-    - Name: duration
+      Data: 1.8
+    - Name: randomSpanAngle
       Entry: 4
-      Data: 6
-    - Name: spawnType
-      Entry: 10
-      Data: 2
-    - Name: intervalLoop
-      Entry: 4
-      Data: 3
-    - Name: spawnLogic
-      Entry: 7
-      Data: 9|InGame.GateSpawnSingle, Assembly-CSharp
-    - Name: radius
-      Entry: 4
-      Data: 1.5
+      Data: 90
     - Name: 
       Entry: 8
       Data: 
@@ -216,7 +164,7 @@ MonoBehaviour:
       Data: 0
     - Name: durationVisual
       Entry: 4
-      Data: 9
+      Data: 7
     - Name: 
       Entry: 8
       Data: 

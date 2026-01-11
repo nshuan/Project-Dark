@@ -18,7 +18,7 @@ namespace InGame
         NormalCritical,
         Tower,
         TowerCritical,
-        Enemy,
+        Enemy, // Enemy dealt damage
         SelfDestruct,
     }
 }

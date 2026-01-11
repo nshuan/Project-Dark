@@ -7,6 +7,7 @@ using Sirenix.Serialization;
 using UnityEditor;
 using UnityEngine;
 using System.IO;
+using System.Linq;
 using InGame.CharacterClass;
 
 namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator.Editor
@@ -130,7 +131,11 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator.Editor
                 GameObject go = (GameObject)PrefabUtility.InstantiatePrefab(prefabList[node.idPrefab]);
                 go.transform.SetParent(root.transform.Find("Nodes"));
                 go.transform.localPosition = node.position;
-                go.GetComponent<UIUpgradeNode>().config = treeConfig.GetNodeById(node.id);
+                var goScript = go.GetComponent<UIUpgradeNode>();
+                goScript.config = treeConfig.GetNodeById(node.id);
+                node.groups ??= new List<UpgradeGroupIdInfo>() { new UpgradeGroupIdInfo() { groupId = 0 } };
+                goScript.config.groupId = node.groups.ToArray();
+                EditorUtility.SetDirty(goScript.config);
             }
             
             root.GetComponent<UIUpgradeTree>().ValidateNodes();
@@ -140,6 +145,9 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator.Editor
             DestroyImmediate(root);
             DestroyImmediate(canvas.gameObject);
     
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            
             Debug.Log("Prefab saved to: " + outputPath);
             return prefab;
         }

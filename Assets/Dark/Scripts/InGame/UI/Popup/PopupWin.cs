@@ -69,8 +69,10 @@ namespace InGame.UI
                 LogManager.Log(LogConst.EventLogStartLevel, $"level_{PlayerDataManager.Instance.Data.level + 1}", "from popup win");
             });
         }
-        
+
         [Space] [Header("UI Tween")] 
+        
+        private string txtBossDown = "[BOSS] was down";
         
         [SerializeField] private Image imgTitle;
         [SerializeField] private Image imgTitleBg;
@@ -91,6 +93,7 @@ namespace InGame.UI
         {
             imgTitle.SetAlpha(0f);
             imgTitleBg.SetAlpha(0f);
+            txtDescription.SetText(txtBossDown.Replace("[BOSS]", LevelManager.Instance.LevelBossName));
             txtDescription.SetAlpha(0f);
             txtTitleResourceCollected.SetAlpha(0f);
             groupResourceCollected.alpha = 0f;
