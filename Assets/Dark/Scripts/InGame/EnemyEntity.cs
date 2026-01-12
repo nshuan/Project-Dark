@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Dark.Scripts.AudioV2;
+using Dark.Scripts.Utils;
 using DG.Tweening;
 using InGame.EnemyEffect;
 using InGame.EnemyVisualBody;
@@ -249,7 +250,10 @@ namespace InGame
         {
             if (TargetTower.IsDestroyed) return;
             animController.PlayAttack();
-            config.attackBehaviour.Attack(this, TargetTower, transform.position, CurrentDamage);
+            this.DelayCall(animController.GetAttackDelayTrigger(), () =>
+            {
+                config.attackBehaviour.Attack(this, TargetTower, transform.position, CurrentDamage);
+            });
         }
 
         public float HitDirectionX { get; set; }
