@@ -64,8 +64,8 @@ namespace Economic.InGame
             }
         }
 
-#if UNITY_EDITOR
         private bool enableAutoCollect = true;
+#if UNITY_EDITOR
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.I))

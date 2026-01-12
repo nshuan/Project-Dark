@@ -117,7 +117,9 @@ namespace InGame.GateEditorV2
                                 if (levelItem.Selecting)
                                 {
                                     Destroy(levelItem.gameObject);
+#if UNITY_EDITOR
                                     DeleteLevel(levelItem.Config);
+#endif
                                 }
                             }
                         }
@@ -131,17 +133,17 @@ namespace InGame.GateEditorV2
             popupConfirm.gameObject.SetActive(true);
         }
         
+#if UNITY_EDITOR
         public void DeleteLevel(LevelConfig level)
         {
             var wavePath = Path.Combine(LevelManifest.WavePath, $"Level {level.level}");
             var levelPath = Path.Combine(LevelManifest.LevelPath, $"Level {level.level}.asset");
-#if UNITY_EDITOR
             AssetDatabase.DeleteAsset(wavePath);
             AssetDatabase.DeleteAsset(levelPath);
             AssetDatabase.Refresh();
             
             LevelManifest.Instance.Validate();
-#endif
         }
+#endif
     }
 }
