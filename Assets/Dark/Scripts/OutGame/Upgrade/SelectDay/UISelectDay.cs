@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Dark.Scripts.Analytics;
+using Dark.Scripts.ForDemo;
 using Dark.Scripts.SceneNavigation;
 using Dark.Scripts.Utils;
 using Data;
@@ -30,6 +31,7 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
         [SerializeField] private float durationShowEachButton = 0.2f;
         [SerializeField] private float delayEachButton = 0.1f;
         [SerializeField] private Vector2 rectTotalDayShowOffset;
+        [SerializeField] private DemoBlockLevelButton btnWishlist;
 
         private Dictionary<GameObject, CanvasGroup> dictPointerFullButtons;
         private Dictionary<GameObject, CanvasGroup> dictPointerQuickButtons;
@@ -73,6 +75,12 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
                 {
                     if (a >= 1 && a <= PlayerDataManager.Instance.Data.level + 1)
                     {
+                        if (a > DemoConfig.MaxDemoLevel)
+                        {
+                            btnWishlist?.CheckShowDemoPopup();
+                            return;
+                        }
+                        
                         RemoveAllButtonActions();
     #if UNITY_EDITOR
                         LevelManager.isLoadFromInit = true;
@@ -174,6 +182,12 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
                     {
                         if (a >= 1 && a <= PlayerDataManager.Instance.Data.level + 1)
                         {
+                            if (a > DemoConfig.MaxDemoLevel)
+                            {
+                                btnWishlist?.CheckShowDemoPopup();
+                                return;
+                            }
+                            
                             RemoveAllButtonActions();
     #if UNITY_EDITOR
                             LevelManager.isLoadFromInit = true;

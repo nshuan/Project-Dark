@@ -6089,7 +6089,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -9376,7 +9376,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -9937,14 +9937,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
-    SerializedBytes: 0101180000006e006f0064006500500072006500760069006500770050006f0073006900740069006f006e004c006f006700690063002f0000000001430000004400610072006b002e0053006300720069007000740073002e004f0075007400470061006d0065002e0055007000670072006100640065002e004e006f006400650050007200650076006900650077004e0065007800740054006f004e006f00640065002c00200041007300730065006d0062006c0079002d004300530068006100720070000000000005
+    SerializedFormat: 2
+    SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: nodePreviewPositionLogic
+      Entry: 7
+      Data: 0|Dark.Scripts.OutGame.Upgrade.NodePreviewNextToNode, Assembly-CSharp
+    - Name: 
+      Entry: 8
+      Data: 
   rectInfoFramePadding: {x: 0, y: 0}
   rectInfoFrame: {fileID: 3762938501256758209}
   rectInfoFrameContent: {fileID: 6887789458024658343}
@@ -10599,6 +10605,7 @@ MonoBehaviour:
   durationShowEachButton: 0.3
   delayEachButton: 0.05
   rectTotalDayShowOffset: {x: -118, y: 0}
+  btnWishlist: {fileID: 1935476351702392213}
 --- !u!1 &8851155766557068397
 GameObject:
   m_ObjectHideFlags: 0
@@ -12084,8 +12091,72 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6547868019389992703, guid: 19a446dc128d193488746f8819e4a4e8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6285682430735584991}
   m_SourcePrefab: {fileID: 100100000, guid: 19a446dc128d193488746f8819e4a4e8, type: 3}
+--- !u!114 &1935476351702392213 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 990566699656505838, guid: 19a446dc128d193488746f8819e4a4e8, type: 3}
+  m_PrefabInstance: {fileID: 1685193258205492347}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5601828208809425540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a18b208debef4dfd95301233a3d85361, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &5601828208809425540 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6547868019389992703, guid: 19a446dc128d193488746f8819e4a4e8, type: 3}
+  m_PrefabInstance: {fileID: 1685193258205492347}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6285682430735584991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5601828208809425540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1933dab3c2134c6ab695d8425373511e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rectCheckHoverOut: {fileID: 1913735691895686845}
+  actionHoverIn:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7911461413268065661}
+        m_TargetAssemblyTypeName: Dark.Scripts.OutGame.Upgrade.SelectDay.UISelectDay,
+          Assembly-CSharp
+        m_MethodName: ShowButtons
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  actionHoverOut:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7911461413268065661}
+        m_TargetAssemblyTypeName: Dark.Scripts.OutGame.Upgrade.SelectDay.UISelectDay,
+          Assembly-CSharp
+        m_MethodName: HideButtons
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!224 &7283626425816556948 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8248239303948833263, guid: 19a446dc128d193488746f8819e4a4e8, type: 3}
@@ -15391,18 +15462,18 @@ PrefabInstance:
     - target: {fileID: 1265759723720302876, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.Prefab
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1265759723720302876, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
     - target: {fileID: 1265759723720302876, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.SerializedFormat
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1265759723720302876, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.SerializedBytes.Array.size
-      value: 211
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1265759723720302876, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.SerializationNodes.Array.size
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1265759723720302876, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.SerializedBytes.Array.data[0]
@@ -15899,18 +15970,18 @@ PrefabInstance:
     - target: {fileID: 3114456304537767582, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.Prefab
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 3114456304537767582, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
     - target: {fileID: 3114456304537767582, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.SerializedFormat
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3114456304537767582, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.SerializedBytes.Array.size
-      value: 211
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3114456304537767582, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.SerializationNodes.Array.size
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3114456304537767582, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.SerializedBytes.Array.data[0]
@@ -16327,18 +16398,18 @@ PrefabInstance:
     - target: {fileID: 8292420133448199274, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.Prefab
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 8292420133448199274, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
     - target: {fileID: 8292420133448199274, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.SerializedFormat
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8292420133448199274, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.SerializedBytes.Array.size
-      value: 211
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8292420133448199274, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.SerializationNodes.Array.size
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8292420133448199274, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.SerializedBytes.Array.data[0]
@@ -16802,18 +16873,18 @@ PrefabInstance:
     - target: {fileID: 5004152788838160709, guid: ef541b4d9468f5a42b4d172b3dc69dab, type: 3}
       propertyPath: serializationData.Prefab
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 5004152788838160709, guid: ef541b4d9468f5a42b4d172b3dc69dab, type: 3}
     - target: {fileID: 5004152788838160709, guid: ef541b4d9468f5a42b4d172b3dc69dab, type: 3}
       propertyPath: serializationData.SerializedFormat
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5004152788838160709, guid: ef541b4d9468f5a42b4d172b3dc69dab, type: 3}
       propertyPath: serializationData.SerializedBytes.Array.size
-      value: 2118
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5004152788838160709, guid: ef541b4d9468f5a42b4d172b3dc69dab, type: 3}
       propertyPath: serializationData.SerializationNodes.Array.size
-      value: 0
+      value: 107
       objectReference: {fileID: 0}
     - target: {fileID: 5004152788838160709, guid: ef541b4d9468f5a42b4d172b3dc69dab, type: 3}
       propertyPath: serializationData.SerializedBytes.Array.data[0]
