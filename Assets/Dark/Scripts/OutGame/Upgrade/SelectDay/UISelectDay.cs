@@ -377,7 +377,7 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
                 {
                     DOTween.Kill(btn);
                     
-                    if (index - 1 == PlayerDataManager.Instance.Data.level)
+                    if (index == listShowQuickButtons.Count)
                     {
                         if (dictPointerQuickButtons.TryGetValue(btn.gameObject, out var groupPointer))
                         {
