@@ -29,16 +29,13 @@ namespace Dark.Scripts.OutGame.Upgrade
         public Tween DoSpawn()
         {
             groupNode.alpha = 0f;
-            
+            imgFlash.gameObject.SetActive(true);
+            imgFlash.SetAlpha(1f);
+            groupNode.alpha = 1f;
+
             return DOTween.Sequence()
-                .AppendCallback(() =>
-                {
-                    imgFlash.gameObject.SetActive(true);
-                    imgFlash.SetAlpha(1f);
-                    groupNode.alpha = 1f;
-                })
-                .Append(imgFlash.DOFade(0f, 0.3f).SetEase(Ease.OutQuad))
-                .AppendCallback(() => imgFlash.gameObject.SetActive(false));
+                .Append(imgFlash.DOFade(0f, 0.3f).SetEase(Ease.OutQuad));
+            // .AppendCallback(() => imgFlash.gameObject.SetActive(false));
         }
     }
     
@@ -79,21 +76,54 @@ namespace Dark.Scripts.OutGame.Upgrade
     public class NodeSpawnGlowVfx : IUpgradeNodeSpawnLogic
     {
         [SerializeField] private CanvasGroup groupNode;
-        [SerializeField] private UIParticle vfxSpawn;
         [SerializeField] private bool autoPlay = false;
+        [SerializeField] private UpgradeNodeType nodeType;
         
         public Tween DoSpawn()
         {
             groupNode.alpha = 0f;
+            var vfxSpawn = GetVfxAppear();
             
             return DOTween.Sequence()
                 .AppendCallback(() =>
                 {
-                    vfxSpawn.gameObject.SetActive(true);
                     groupNode.alpha = 1f;
                     if (!autoPlay) 
                         vfxSpawn.Play();
-                });
+                })
+                .AppendInterval(1f)
+                .AppendCallback(() => vfxSpawn.Stop());
+        }
+        
+        private UIParticle GetVfxAppear()
+        {
+            return nodeType switch
+            {
+                UpgradeNodeType.NodeSkill => UIUpgradeNodeSkillPool.Instance.GetVfxAppear(groupNode.transform, true),
+                UpgradeNodeType.NodeEffect => UIUpgradeNodeEffectPool.Instance.GetVfxAppear(groupNode.transform, true),
+                UpgradeNodeType.NodeStat => UIUpgradeNodeStatPool.Instance.GetVfxAppear(groupNode.transform, true),
+                UpgradeNodeType.NodeStat2 => UIUpgradeNodeStat2Pool.Instance.GetVfxAppear(groupNode.transform, true),
+                _ => null
+            };
+        }
+
+        private void ReleaseVfxAppear(UIParticle vfx)
+        {
+            switch (nodeType)
+            {
+                case UpgradeNodeType.NodeSkill:
+                    UIUpgradeNodeSkillPool.Instance.ReleaseVfxAppear(vfx);
+                    break;
+                case UpgradeNodeType.NodeEffect:
+                    UIUpgradeNodeEffectPool.Instance.ReleaseVfxAppear(vfx);
+                    break;
+                case UpgradeNodeType.NodeStat:
+                    UIUpgradeNodeStatPool.Instance.ReleaseVfxAppear(vfx);
+                    break;
+                case UpgradeNodeType.NodeStat2:
+                    UIUpgradeNodeStat2Pool.Instance.ReleaseVfxAppear(vfx);
+                    break;
+            }
         }
     }
 }

@@ -25,5 +25,24 @@ namespace InGame
             bool isCharge,
             List<IProjectileActivate> activateActions,
             List<IProjectileHit> hitEffects);
+        
+        public abstract void ShootWithTarget(
+            ProjectileEntity projectilePrefab,
+            EnemyEntity targetEnemy,
+            Vector2 spawnPos, 
+            Vector2 rangeCenter,
+            Vector2 target,
+            int damagePerBullet, 
+            int criticalDamagePerBullet,
+            float criticalRatePerBullet,
+            int numberOfBullets,
+            float skillSize,
+            float skillRange,
+            float bulletSpeedScale,
+            float stagger,
+            int maxHit,
+            bool isCharge,
+            List<IProjectileActivate> activateActions,
+            List<IProjectileHit> hitEffects);
     }
 }

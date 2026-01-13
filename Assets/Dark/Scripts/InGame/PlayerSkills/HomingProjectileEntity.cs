@@ -40,10 +40,10 @@ namespace InGame
             canChase = true;
         }
         
-        protected override void Update()
+        protected override void FixedUpdate()
         {
             if (!activated) return;
-            if (Vector2.Distance(transform.position, RangeCenter) > LevelUtility.GetRelativeRange(Range, transform.position - RangeCenter))
+            if (Vector2.Distance(transform.position, RangeCenter) > LevelUtilityV2.GetRelativeRange(Range, transform.position - RangeCenter))
             {
                 if (!BlockSpawnDeadBody)
                 {

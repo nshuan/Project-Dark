@@ -19,7 +19,7 @@ namespace Dark.Scripts.RuntimeCheat
             UpgradeManager.Instance.OnActivated -= OnUpgradeActivated;
         }
 
-        private void OnUpgradeActivated(UpgradeBonusInfo bonusInfo)
+        private void OnUpgradeActivated(UpgradeBonusInfoV2 bonusInfo)
         {
             inspector.selected = bonusInfo;
         }

@@ -29,21 +29,29 @@ namespace InGame.UI.CombatSkills
             CombatActions.OnMoveTowerComplete -= OnSkillUsed;
         }
 
-        private void OnUpgradeBonusActivated(UpgradeBonusInfo bonusInfo)
+        private void OnUpgradeBonusActivated(UpgradeBonusInfoV2 bonusInfo)
         {
-            if (bonusInfo.unlockedMoveToTower is { Count: 2 })
+            if (bonusInfo.bonusUnlockSkill.unlockMoveDash && bonusInfo.bonusUnlockSkill.unlockMoveFlash)
             {
-                SetSkillSprite(imgIconBaseSkill1, bonusInfo.unlockedMoveToTower[0]);
-                SetSkillSprite(imgIconBaseSkill2, bonusInfo.unlockedMoveToTower[1]);
-                SetSkillSprite(imgFillCooldown, bonusInfo.unlockedMoveToTower[0]);
-                SetSkillSprite(imgFillCooldown2nd, bonusInfo.unlockedMoveToTower[1]);
+                SetSkillSprite(imgIconBaseSkill1, 2);
+                SetSkillSprite(imgIconBaseSkill2, 1);
+                SetSkillSprite(imgFillCooldown, 2);
+                SetSkillSprite(imgFillCooldown2nd, 1);
                 secondSkill.SetActive(true);
                 groupPassiveAndArrow.localPosition = new Vector3(groupPassiveTwoSkillX, groupPassiveAndArrow.localPosition.y, groupPassiveAndArrow.localPosition.z);
             }
-            else if (bonusInfo.unlockedMoveToTower is { Count: 1 })
+            else if (bonusInfo.bonusUnlockSkill.unlockMoveFlash)
             {
-                SetSkillSprite(imgIconBaseSkill1, bonusInfo.unlockedMoveToTower[0]);
-                SetSkillSprite(imgFillCooldown, bonusInfo.unlockedMoveToTower[0]);
+                SetSkillSprite(imgIconBaseSkill1, 1);
+                SetSkillSprite(imgFillCooldown, 1);
+                secondSkill.SetActive(false);
+                groupPassiveAndArrow.localPosition = new Vector3(groupPassiveOneSkillX, groupPassiveAndArrow.localPosition.y,
+                    groupPassiveAndArrow.localPosition.z);
+            }
+            else if (bonusInfo.bonusUnlockSkill.unlockMoveDash)
+            {
+                SetSkillSprite(imgIconBaseSkill1, 2);
+                SetSkillSprite(imgFillCooldown, 2);
                 secondSkill.SetActive(false);
                 groupPassiveAndArrow.localPosition = new Vector3(groupPassiveOneSkillX, groupPassiveAndArrow.localPosition.y,
                     groupPassiveAndArrow.localPosition.z);
@@ -68,15 +76,15 @@ namespace InGame.UI.CombatSkills
             // Nếu mới unlock 1 loại thì dùng tên loại đó
             // Nếu đã unlock cả 2 loại thì dùng tên loại unlock trước
             var message = "";
-            if (LevelUtility.BonusInfo.unlockedMoveToTower == null || LevelUtility.BonusInfo.unlockedMoveToTower.Count == 0)
+            if (!LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockMoveFlash && !LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockMoveDash)
             {
                 message = "Ready to move!";
             }
             else
             {
-                if (LevelUtility.BonusInfo.unlockedMoveToTower[0] == 1)
+                if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockMoveFlash)
                     message = "Echofall is ready!";
-                else if (LevelUtility.BonusInfo.unlockedMoveToTower[0] == 2)
+                else if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockMoveDash)
                     message = "Vanguard’s Line is ready";
             }
             

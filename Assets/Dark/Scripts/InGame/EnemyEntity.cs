@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Dark.Scripts.AudioV2;
+using Dark.Scripts.Utils;
 using DG.Tweening;
 using InGame.EnemyEffect;
 using InGame.EnemyVisualBody;
@@ -25,12 +26,13 @@ namespace InGame
         #region Stats
         public int MaxHealth { get; set; }
         protected int CurrentHealth { get; set; }
-        private int CurrentDamage { get; set; }
+        protected int CurrentDamage { get; set; }
         public int Exp { get; private set; }
         public int Dark { get; private set; }
         public int DarkUnitValue { get; private set; }
         public float DarkRatio { get; private set; }
-        public int BossPoint { get; private set; }
+        public int BossPoint { get; protected set; }
+        public float AttackRange { get; set; }
 
         #endregion
 
@@ -49,6 +51,7 @@ namespace InGame
         public Action OnStartDead { get; set; }
         public Action<EnemyDieReason> OnDead { get; set; }
         public EnemyState State { get; set; }
+        public bool Activated { get; set; }
         public int UniqueId { get; set; }
         private Vector3 direction = new Vector3();
         private Vector2 directionAddition = new Vector2();
@@ -60,8 +63,10 @@ namespace InGame
         [SerializeField] private Transform uiHealth;
         public EnemyAnimController animController;
         [SerializeField] protected GameObject shadow;
+        [SerializeField] protected GameObject aimPointer;
+        [SerializeField] protected GameObject hoverPointer;
         
-        private bool inAttackRange;
+        protected bool inAttackRange;
         private Coroutine attackCoroutine;
 
         protected Vector2 attackPosition;
@@ -97,7 +102,7 @@ namespace InGame
             var myPos = transform.position;
             var targetPos = Target.position;
             attackPosition = ((Quaternion.Euler(0f, 0f, RandomUtil.Range(-75f, 75f)) *
-                               (Vector2)(myPos - targetPos).normalized) * (0.9f * config.attackRange)
+                               (Vector2)(myPos - targetPos).normalized) * (0.9f * AttackRange)
                               + targetPos);
             animController.transform.localScale =
                 new Vector3(Mathf.Sign(attackPosition.x - myPos.x), 1f, 1f);
@@ -107,9 +112,18 @@ namespace InGame
             CurrentDamage = Mathf.RoundToInt(config.dmg * StatsScale.dmgScale);
             Exp = Mathf.RoundToInt(config.exp * levelExpRatio);
             Dark = Mathf.RoundToInt(config.dark * levelDarkRatio);
-            DarkRatio = LevelUtility.GetDropRate(config.darkRatio);
+            if (!IsBoss)
+            {
+                Exp = Mathf.RoundToInt(Exp * LevelUtilityV2.GetExpDropScale());
+                Dark = Mathf.RoundToInt(Dark * LevelUtilityV2.GetVestigeDropScale());
+                if (RandomUtil.Range(0f, 1f) < LevelUtilityV2.GetVestigeDoubleChance()) Dark *= 2;
+                if (RandomUtil.Range(0f, 1f) < LevelUtilityV2.GetVestigeTripleChance()) Dark *= 3;
+            }
+            
+            DarkRatio = 1f; // Chắc chắn rớt
             DarkUnitValue = levelDarkUnitValue;
             BossPoint = config.bossPoint;
+            AttackRange = config.attackRange;
             
             State = EnemyState.Spawn;
             inAttackRange = false;
@@ -117,8 +131,11 @@ namespace InGame
             config.Init(this);
             
             shadow.SetActive(true);
+            SetAimed(false);
             
             delayDieAnimation = 0f;
+
+            Activated = false;
             
             ActivateELite(config.elite);
         }
@@ -141,6 +158,7 @@ namespace InGame
                 animController.PlayRun();
                 boidAgent.IsActive = true;
                 collider2d.enabled = true;
+                Activated = true;
             });
         }
 
@@ -185,7 +203,7 @@ namespace InGame
         
         private void MoveTo(Transform target)
         {
-            if (Vector3.Distance(transform.position, target.position) < config.attackRange)
+            if (Vector3.Distance(transform.position, target.position) < AttackRange)
             {
                 inAttackRange = true;
                 animController.SetDefaultRun(false);
@@ -194,7 +212,7 @@ namespace InGame
             }
             else
             {
-                config.moveBehaviour.MoveNonAlloc(transform, attackPosition, directionAddition, config.attackRange, config.moveSpeed * StatsScale.speScale, ref direction);
+                config.moveBehaviour.MoveNonAlloc(transform, attackPosition, directionAddition, AttackRange, config.moveSpeed * StatsScale.speScale, ref direction);
                 animController.SetDefaultRun(true);
             }
         }
@@ -228,11 +246,14 @@ namespace InGame
             }
         }
 
-        private void Attack()
+        protected virtual void Attack()
         {
             if (TargetTower.IsDestroyed) return;
             animController.PlayAttack();
-            config.attackBehaviour.Attack(this, TargetTower, transform.position, CurrentDamage);
+            this.DelayCall(animController.GetAttackDelayTrigger(), () =>
+            {
+                config.attackBehaviour.Attack(this, TargetTower, transform.position, CurrentDamage);
+            });
         }
 
         public float HitDirectionX { get; set; }
@@ -243,7 +264,14 @@ namespace InGame
             if (IsDestroyed) return;
             if (State == EnemyState.Invisible) return;
             
+            // Scale damage on boss
+            if (IsBoss)
+                damage = LevelUtilityV2.ToInt(LevelUtilityV2.GetBossScaleDamage() * damage);
+            
+            var lastHealth = CurrentHealth;
             CurrentHealth -= damage;
+            if (dmgType != DamageType.Enemy && dmgType != DamageType.SelfDestruct)
+                CombatActions.OnDamageDealt?.Invoke(lastHealth - CurrentHealth);
             
             OnHit?.Invoke(damage, dmgType);
             if (stagger - config.staggerResist > 0)
@@ -282,6 +310,9 @@ namespace InGame
                     case DamageType.TowerCritical:
                         dieReason = EnemyDieReason.TowerKill;
                         break;
+                    case DamageType.Enemy:
+                        dieReason = EnemyDieReason.EnemyKill;
+                        break;
                     case DamageType.SelfDestruct:
                         dieReason = EnemyDieReason.Suicide;
                         break;
@@ -295,6 +326,8 @@ namespace InGame
 
         private void OnDie(EnemyDieReason reason)
         {
+            if (IsDestroyed) return;
+            
             if (attackCoroutine != null)
                 StopCoroutine(attackCoroutine);
             
@@ -309,7 +342,8 @@ namespace InGame
             if (coroutineBurn != null) StopCoroutine(coroutineBurn);
             callbackBurnComplete?.Invoke();
             callbackBurnComplete = null;
-            if (reason != EnemyDieReason.Suicide)
+            SetAimed(false);
+            if (reason != EnemyDieReason.Suicide && reason != EnemyDieReason.EnemyKill)
                 DropResource();
             StartCoroutine(IEDie(.5f, reason));
         }
@@ -387,19 +421,51 @@ namespace InGame
         [SerializeField] private SpriteRenderer visual;
         [SerializeField] private Material materialNormal;
         [SerializeField] private Material materialElite;
+
+        private Material cacheMaterial;
         
         public virtual void ActivateELite(bool active)
         {
             if (active)
             {
                 visual.material = materialElite;
+                cacheMaterial = materialElite;
                 transform.localScale = GameConst.EnemyEliteScale * Vector3.one;
             }
             else
             {
                 visual.material = materialNormal;
+                cacheMaterial = materialNormal;
                 transform.localScale = Vector3.one;
             }
+        }
+
+        #endregion
+
+        #region Highlight
+
+        [Space] [Header("Highlight")] 
+        [SerializeField] private Material materialHighlight;
+        
+        public void SetAimed(bool aimed)
+        {
+            aimPointer.SetActive(aimed);
+            if (IsBoss) return;
+            if (config.elite) return;
+            visual.material = aimed ? materialHighlight : cacheMaterial;
+        }
+
+        public void SetHover(bool hover)
+        {
+            if (aimPointer.activeInHierarchy)
+            {
+                hoverPointer.SetActive(false);
+                return;
+            }
+            hoverPointer.SetActive(hover);
+            if (IsBoss) return;
+            if (config.elite) return;
+            visual.material = hover ? materialHighlight : cacheMaterial;
         }
 
         #endregion

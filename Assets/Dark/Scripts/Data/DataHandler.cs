@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using UnityEngine;
 using Newtonsoft.Json;
+using UnityEditor;
 
 namespace Data
 {
@@ -65,6 +66,12 @@ namespace Data
             string filePath = DataPath + "/" + key + ".json";
             if (File.Exists(filePath))
             {
+#if UNITY_EDITOR
+                filePath = "Assets/_DataTest/" + key + ".json";
+                AssetDatabase.DeleteAsset(filePath);
+                AssetDatabase.Refresh();
+                return;
+#endif
                 File.Delete(filePath);
             }
         }

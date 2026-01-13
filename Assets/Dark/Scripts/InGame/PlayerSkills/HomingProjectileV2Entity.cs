@@ -74,7 +74,7 @@ namespace InGame
             }
         }
         
-        protected override void Update()
+        protected override void FixedUpdate()
         {
             if (!activated && !canRotate) return;
 
@@ -112,7 +112,6 @@ namespace InGame
                             var deadProjectile = ProjectileDeadOnEnemyPool.Instance.Get(moveDirection);
                             deadProjectile.position = hitEnemyInfo.hit.point;
                             hitEnemyInfo.hitEnemy.body.SetupProjectileHit(deadProjectile.transform, moveDirection);
-                            deadProjectile.SetParent(hitEnemyInfo.hitEnemy.transform);
                             hitEnemyInfo.hitEnemy.OnStartDead += () =>
                             {
                                 deadProjectile.gameObject.SetActive(false);
@@ -122,7 +121,7 @@ namespace InGame
                     }
                     else
                     {
-                        if (Vector2.Distance(transform.position + moveDirection, RangeCenter) > LevelUtility.GetRelativeRange(Range, transform.position - RangeCenter))
+                        if (Vector2.Distance(transform.position + moveDirection, RangeCenter) > LevelUtilityV2.GetRelativeRange(Range, transform.position - RangeCenter))
                         {
                             if (!BlockSpawnDeadBody)
                                 ProjectileHomingDeadPool.Instance.Get(transform.position, direction);
@@ -139,7 +138,7 @@ namespace InGame
                     moveDirection = homingController.GetProjectileNextPosition(BoundPosition) - transform.position;
                     transform.rotation = homingController.GetProjectileNextRotation();
                     
-                    if (Vector2.Distance(transform.position + moveDirection, RangeCenter) > LevelUtility.GetRelativeRange(Range, transform.position - RangeCenter))
+                    if (Vector2.Distance(transform.position + moveDirection, RangeCenter) > LevelUtilityV2.GetRelativeRange(Range, transform.position - RangeCenter))
                     {
                         if (!BlockSpawnDeadBody)
                             ProjectileHomingDeadPool.Instance.Get(transform.position, direction);

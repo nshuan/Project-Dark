@@ -20,14 +20,23 @@ namespace Economic.InGame.DropItems
         [SerializeField] private Transform shadow;
         [SerializeField] private float minDistanceToTower = 1.5f;
         [SerializeField] private float dropSpanAngleToExcludeTower = 240f;
+        [SerializeField] private float dropRangeMin = 0.6f;
         [SerializeField] private float dropRange = 0.8f;
         
         public WealthType kind;
         public int Quantity { get; set; }
+        public bool MarkedNotCollectedByManager { get; set; }
+        public bool Collectible { get; set; }
         [NonSerialized] public Vector3 vfxPositionOffset;
-        
+
+        private void OnDisable()
+        {
+            Collectible = false;
+        }
+
         public void Drop(Vector2 position)
         {
+            Collectible = false;
             visual.gameObject.SetActive(true);
 
             var calculatedTargetPosition = false;
@@ -37,13 +46,17 @@ namespace Economic.InGame.DropItems
                 if (Vector2.Distance(tower.transform.position, position) < minDistanceToTower + dropRange)
                 {
                     targetPos = position + RandomUtil.InsideUnitSpan(position - (Vector2)tower.transform.position, dropSpanAngleToExcludeTower) * dropRange;
-                    targetPos *= LevelUtility.GetRelativeRange(dropRange, targetPos - position) / dropRange;
+                    targetPos *= LevelUtilityV2.GetRelativeRange(dropRange, targetPos - position) / dropRange;
                     calculatedTargetPosition = true;
                     break;
                 }
             }
+
             if (!calculatedTargetPosition)
-                targetPos = position + Random.insideUnitCircle * dropRange;
+            {
+                var dropPos = RandomUtil.InsideUnitSpan(Vector2.right, 360f);
+                targetPos = position + dropPos * (dropRange - dropRangeMin) + dropPos.normalized * dropRangeMin;
+            }
             
             var dropJumps = RandomUtil.Range(1, 4);
             var dropDuration = Mathf.Max(dropJumps * 0.2f, 0.36f);
@@ -52,14 +65,16 @@ namespace Economic.InGame.DropItems
             transform.DOJump(targetPos, 0.16f, dropJumps, dropDuration).SetTarget(this)
                 .OnComplete(() => shadow.SetParent(transform));
             shadow.DOMove((Vector3)targetPos - transform.position + shadow.position, dropDuration);
+            this.DelayCall(dropDuration, () => Collectible = true);
         }
         
         public void Drop(Vector2 position, Vector2 direction, float span, float scaleRange)
         {
+            Collectible = false;
             visual.gameObject.SetActive(true);
             
             var targetPos = position + RandomUtil.InsideUnitSpan(direction, span) * (dropRange * scaleRange);
-            targetPos *= LevelUtility.GetRelativeRange(dropRange, targetPos - position) / dropRange;
+            targetPos *= LevelUtilityV2.GetRelativeRange(dropRange, targetPos - position) / dropRange;
             
             var dropJumps = RandomUtil.Range(1, 4);
             var dropDuration = Mathf.Max(dropJumps * 0.2f, 0.36f);
@@ -68,6 +83,7 @@ namespace Economic.InGame.DropItems
             transform.DOJump(targetPos, 0.16f, dropJumps, dropDuration).SetTarget(this)
                 .OnComplete(() => shadow.SetParent(transform));
             shadow.DOMove((Vector3)targetPos - transform.position + shadow.position, dropDuration);
+            this.DelayCall(dropDuration, () => Collectible = true);
         }
         
         public void Collect(Transform target, float delay)
@@ -93,7 +109,7 @@ namespace Economic.InGame.DropItems
         }
 
         private Vector2 nextPosition;
-        private void Update()
+        private void FixedUpdate()
         {
             if (!isCollecting) return;
 
@@ -134,6 +150,15 @@ namespace Economic.InGame.DropItems
                 transform.position = targetPosition;
             else
                 transform.position = nextPosition;
+        }
+
+        public void DoClaimedVisual(Transform target)
+        {
+            vfxClaim.SetActive(false);
+            vfxClaim.transform.position = target.position;
+            vfxClaim.transform.SetParent(target);
+            vfxClaim.SetActive(true);
+            sfx.Play();
         }
     }
 }

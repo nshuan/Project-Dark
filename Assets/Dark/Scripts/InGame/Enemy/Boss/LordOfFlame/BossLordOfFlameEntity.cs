@@ -1,0 +1,164 @@
+using System.Collections;
+using System.Linq;
+using Dark.Scripts.Utils;
+using InGame.BossConfig;
+using InGame.EnemyEffect;
+using UnityEngine;
+
+namespace InGame.Boss
+{
+    public class BossLordOfFlameEntity : EnemyEntity
+    {
+        [Space] [Header("Customize boss")]
+        [SerializeField] protected EnemySpritesAnimationInfo attack2Anim;
+        [SerializeField] protected EnemySpritesAnimationInfo recoverAnim;
+        [SerializeField] protected EnemySpritesAnimationInfo disappearAnim;
+        [SerializeField] protected EnemySpritesAnimationInfo appearAnim;
+        [SerializeField] protected EnemySpritesAnimationInfo spearAttackAnim;
+        [SerializeField] public EnemySpritesAnimationInfo comboAttackAnim;
+
+        [Space] [Header("Config")]
+        [Tooltip("Config that store exclusive variable for this boss")] 
+        [SerializeField] private BossLordOfFlameConfig lordOfFlameConfig;
+        private float damageScale = 1f;
+        
+        [Tooltip("After play attack animation, delay these seconds before doing attack logic")]
+        [SerializeField] private float delayAttackAnim = 0.4f;
+        [Tooltip("After play attack animation, delay these seconds before doing attack logic")]
+        [SerializeField] private float delayAttack2Anim = 0.5f;
+        [Tooltip("Delay before recovering animation and recovering logic")] 
+        [SerializeField] private float delayRecover = 1f;
+        
+        private bool hasRecoverOnce = false;
+        private bool isRecovering = false;
+        private bool isAttacking = false;
+        private Coroutine coroutineRecover;
+        
+        public override void Init(EnemyBehaviour eConfig, TowerEntity target, WaveStatsScale statsScale, float levelExpRatio,
+            float levelDarkRatio, int levelDarkUnitValue)
+        {
+            base.Init(eConfig, target, statsScale, levelExpRatio, levelDarkRatio, levelDarkUnitValue);
+            
+            hasRecoverOnce = false;
+            isRecovering = false;
+            isAttacking = false;
+        }
+
+        protected override IEnumerator IEAttack()
+        {
+            // Đợi qua vài frame của anim attack rồi mới xử lý logic để cho đẹp
+            while (true)
+            {
+                if (inAttackRange)
+                {
+                    if (isRecovering) yield return new WaitUntil(() => !isRecovering);
+                    var attackDuration = 0f;
+                    var delayAttack = 0f;
+                    isAttacking = true;
+
+                    var allSkill = hasRecoverOnce
+                        ? lordOfFlameConfig.attackPhase2Info
+                        : lordOfFlameConfig.attackPhase1Info;
+
+                    var attackSkillId = RandomUtil.RangeWithOwnRate(allSkill
+                        .Select((skill) => skill.chance).ToArray());
+                    damageScale = allSkill[attackSkillId].dmgScale;
+
+                    switch (attackSkillId)
+                    {
+                        // Normal attack 2
+                        case 1:
+                            attackDuration = animController.PlayCustomAnim(attack2Anim);
+                            delayAttack = Mathf.Min(delayAttack2Anim, 1 / config.attackSpeed);
+                            break;
+                        // Spear attack
+                        case 2:
+                            attackDuration = animController.PlayCustomAnim(spearAttackAnim);
+                            delayAttack = Mathf.Min(delayAttack2Anim, 1 / config.attackSpeed); // số frame delay attack của spear bằng attack2
+                            break;
+                        // Normal attack 1
+                        case 0:
+                        default:
+                            attackDuration = animController.PlayAttack();
+                            delayAttack = Mathf.Min(delayAttackAnim, 1 / config.attackSpeed);
+                            break;
+                    }
+                        
+                    if (delayAttack > attackDuration) delayAttack = attackDuration;
+                    
+                    yield return new WaitForSeconds(delayAttack);
+                    Attack();
+                    yield return new WaitForSeconds(attackDuration - delayAttack);
+                    isAttacking = false;
+                    yield return new WaitForSeconds(1 / config.attackSpeed - attackDuration);
+                }
+                else
+                    yield return new WaitUntil(() => inAttackRange);
+            }
+        }
+
+        protected override void Attack()
+        {
+            if  (TargetTower.IsDestroyed) return;
+            config.attackBehaviour.Attack(this, TargetTower, transform.position, LevelUtilityV2.ToInt(CurrentDamage * damageScale));
+        }
+
+        public override void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
+        {
+            if (isRecovering) return;
+            base.Damage(damage, dealerPosition, stagger, dmgType);
+             
+            if (IsDestroyed) return;
+            if (!hasRecoverOnce && PercentageHpLeft < lordOfFlameConfig.percentageToHeal)
+            {
+                isRecovering = true;
+                hasRecoverOnce = true;
+                StartCoroutine(IERecover(0.5f));
+            }
+        }
+
+        private IEnumerator IERecover(float delay)
+        {
+            State = EnemyState.Freeze;
+            animController.PlayIdle();
+            yield return new WaitUntil(() => isAttacking == false);
+            yield return new WaitForSeconds(delay);
+            yield return new WaitForSeconds(0.5f);
+            CurrentHealth += (int)(MaxHealth * lordOfFlameConfig.percentageHealed);
+            var animDuration = animController.PlayCustomAnim(recoverAnim);
+            yield return new WaitForSeconds(animDuration);
+            yield return StartCoroutine(IEChangeTower(0f));
+            animController.PlayRun();
+            isRecovering = false;
+            State = EnemyState.Move;
+        }
+
+        private IEnumerator IEChangeTower(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            
+            // disappear
+            var teleDuration = animController.PlayCustomAnim(disappearAnim);
+            yield return new WaitForSeconds(teleDuration);
+            
+            yield return new WaitForEndOfFrame();
+            // Change tower
+            TargetTower = LevelManager.Instance.Towers.FirstOrDefault((t) => t.Id == lordOfFlameConfig.phase2TowerId);
+            if (!TargetTower) TargetTower = LevelManager.Instance.CurrentTower;
+            Target = TargetTower.transform;
+            AttackRange = lordOfFlameConfig.phase2AtkRange;
+            // Mặc định rớt trong tầm đánh luôn
+            var dropDistanceToTower = AttackRange - 0.1f;
+            transform.position = Target.position + new Vector3(-dropDistanceToTower, -0.2f, 0f);
+            attackPosition = transform.position;
+            animController.transform.localScale =
+                new Vector3(Mathf.Sign(Target.position.x - transform.position.x), 1f, 1f);
+            
+            // appear
+            teleDuration = animController.PlayCustomAnim(appearAnim);
+            yield return new WaitForSeconds(teleDuration);
+            yield return new WaitForEndOfFrame();
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+}
