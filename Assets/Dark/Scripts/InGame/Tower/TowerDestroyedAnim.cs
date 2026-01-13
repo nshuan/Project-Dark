@@ -51,14 +51,8 @@ namespace InGame
             mainSkeleton.AnimationState.Update(0f);
             mainSkeleton.Update(0f); // Render first frame
             
-            foreach (var tower in LevelManager.Instance.Towers)
-            {
-                if (tower.IsDestroyed)
-                {
-                    transform.position = tower.transform.position;
-                    break;
-                }
-            }
+            var targetTower = LevelManager.Instance.FirstDestroyedTower ? LevelManager.Instance.FirstDestroyedTower : LevelManager.Instance.Towers[0];
+            transform.position = targetTower.transform.position;
 
             yield return DOTween.Sequence(mainSkeletonHolder)
                 .Append(mainSkeletonHolder.DOMove(new Vector3(0f, -1.5f, 0f), durationFocusTower).SetEase(Ease.OutQuad))
