@@ -25,6 +25,7 @@ namespace InGame.GateEditorV2
         
         [Space] [Header("Spawn Logic")]
         public TMP_Dropdown drdSpawnLogic;
+        public TMP_Dropdown drdGatePrefab;
         
         [Space] [Header("Spawn Logic Variables")]
         public GameObject panelSpawnLogicVars;
@@ -41,6 +42,7 @@ namespace InGame.GateEditorV2
         // GateSpawnCenter - no variables
 
         public List<EnemyBehaviour> AvailableEnemies { get; set; }
+        public Dictionary<int, GateEntity> GateMap { get; set; }
         public LevelGatePrefabEditorV2 targetGate;
 
         public void Setup(LevelGatePrefabEditorV2 gate)
@@ -62,6 +64,11 @@ namespace InGame.GateEditorV2
             drdEnemy.options = AvailableEnemies.Select(enemy => 
                 new TMP_Dropdown.OptionData($"{enemy.enemyId} - {enemy.displayName}")).ToList();
             
+            drdGatePrefab.ClearOptions();
+            drdGatePrefab.options = GateMap.Select(pair => 
+                new TMP_Dropdown.OptionData($"{pair.Key} - {pair.Value.name}")).ToList();
+            drdGatePrefab.onValueChanged.RemoveAllListeners();
+            
             txtIsBossGate.onValueChanged.RemoveAllListeners();
             inpTargetTower.onValueChanged.RemoveAllListeners();
             inpStartTime.onValueChanged.RemoveAllListeners();
@@ -70,11 +77,11 @@ namespace InGame.GateEditorV2
             inpIntervalLoop.onValueChanged.RemoveAllListeners();
             inpStartTimeVisual.onValueChanged.RemoveAllListeners();
             inpDurationVisual.onValueChanged.RemoveAllListeners();
-            if (drdSpawnLogic != null) drdSpawnLogic.onValueChanged.RemoveAllListeners();
-            if (inpRadius != null) inpRadius.onValueChanged.RemoveAllListeners();
-            if (inpRandomSpanAngle != null) inpRandomSpanAngle.onValueChanged.RemoveAllListeners();
-            if (inpAmount != null) inpAmount.onValueChanged.RemoveAllListeners();
-            if (inpMaxRadius != null) inpMaxRadius.onValueChanged.RemoveAllListeners();
+            if (drdSpawnLogic) drdSpawnLogic.onValueChanged.RemoveAllListeners();
+            if (inpRadius) inpRadius.onValueChanged.RemoveAllListeners();
+            if (inpRandomSpanAngle) inpRandomSpanAngle.onValueChanged.RemoveAllListeners();
+            if (inpAmount) inpAmount.onValueChanged.RemoveAllListeners();
+            if (inpMaxRadius) inpMaxRadius.onValueChanged.RemoveAllListeners();
             
             var gateConfig = gate.Config;
             txtIsBossGate.isOn = gateConfig.isBossGate;
@@ -82,6 +89,7 @@ namespace InGame.GateEditorV2
             inpStartTime.text = gateConfig.startTime.ToString(GameConst.FloatFormat);
             inpDuration.text = gateConfig.duration.ToString(GameConst.FloatFormat);
             drdEnemy.value = gateConfig.spawnType.enemyId;
+            drdGatePrefab.value = gate.gatePrefabId;
             inpIntervalLoop.text = gateConfig.intervalLoop.ToString(GameConst.FloatFormat);
             inpStartTimeVisual.text = gateConfig.startTimeVisual.ToString(GameConst.FloatFormat);
             inpDurationVisual.text = gateConfig.durationVisual.ToString(GameConst.FloatFormat);
@@ -145,6 +153,10 @@ namespace InGame.GateEditorV2
             {
                 // gate.SpawnType = value;
                 gate.Config.spawnType = AvailableEnemies[value];
+            });
+            drdGatePrefab.onValueChanged.AddListener((value) =>
+            {
+                gate.UpdateGateType(value);
             });
             inpIntervalLoop.onValueChanged.AddListener((value) =>
             {

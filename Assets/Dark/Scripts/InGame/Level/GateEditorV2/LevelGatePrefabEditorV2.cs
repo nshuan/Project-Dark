@@ -33,13 +33,16 @@ namespace InGame.GateEditorV2
         private Camera camera;
         private RectTransform rectTransform;
         private GameObject objSelect;
+        public Transform vfxParticlePrefabHolder;
         private List<RectTransform> lines;
         private List<TextMeshProUGUI> txtLines;
+        public int gatePrefabId;
         
         private void Awake()
         {
             vfx = Instantiate(parentVfx, null).transform;
             objSelect = vfx.Find("SpriteSelect").gameObject;
+            vfxParticlePrefabHolder = vfx.Find("Vfx");
             camera = Camera.main;
             rectTransform = GetComponent<RectTransform>();
         }
@@ -62,7 +65,7 @@ namespace InGame.GateEditorV2
             }
         }
 
-        public void UpdateUI(GateConfig gate)
+        public void UpdateUI(GateConfig gate, int gatePrefabId)
         {
             var newTargets = new List<int>();
             if (gate.targetBaseIndex != null)
@@ -101,19 +104,12 @@ namespace InGame.GateEditorV2
                 spawnLogic = newSpawnLogic,
                 startTimeVisual = gate.startTimeVisual,
                 durationVisual = gate.durationVisual,
+                gatePrefab = GateManifest.Get(gatePrefabId)
             };
-            // Position = gate.position;
-            // IsBossGate = gate.isBossGate;
-            // StrTargetTowers = string.Join(", ", gate.targetBaseIndex);
-            // StartTime = gate.startTime;
-            // Duration = gate.duration;
-            // SpawnType = gate.spawnType.enemyId;
-            // Interval = gate.intervalLoop;
-            // StartTimeVisual = gate.startTimeVisual;
-            // DurationVisual = gate.durationVisual;
             
             transform.position = camera.WorldToScreenPoint(gate.position);
             vfx.position = gate.position;
+            UpdateGateType(gatePrefabId);
             Position = vfx.position;
         }
 
@@ -135,6 +131,16 @@ namespace InGame.GateEditorV2
                 txtLine.transform.rotation = Quaternion.identity;
                 txtLine.SetText($"{((Vector2)camera.ScreenToWorldPoint(TargetPositions[i]) - Position).magnitude.ToString(GameConst.FloatFormat)}");
                 txtLines.Add(txtLine);
+            }
+        }
+
+        public void UpdateGateType(int prefabId)
+        {
+            gatePrefabId = prefabId;
+            Config.gatePrefab = GateManifest.Get(gatePrefabId);
+            foreach (Transform child in vfxParticlePrefabHolder)
+            {
+                child.gameObject.SetActive(child.GetSiblingIndex() == prefabId);
             }
         }
         
