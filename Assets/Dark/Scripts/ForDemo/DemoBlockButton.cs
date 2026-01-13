@@ -50,12 +50,7 @@ namespace Dark.Scripts.ForDemo
 
         public virtual void OnPointerClick(PointerEventData eventData)
         {
-            if (!DemoConfig.IsDemo) return;
-
-            parentCanvas ??= GetComponentInParent<Canvas>();
-            cachePopupWishlist ??= Instantiate(popupWishlist, parentCanvas.transform);
-            cachePopupWishlist.transform.SetAsLastSibling();
-            cachePopupWishlist.gameObject.SetActive(true);
+            CheckShowDemoPopup();
         }
 
         public virtual void OnPointerEnter(PointerEventData eventData)
@@ -79,6 +74,16 @@ namespace Dark.Scripts.ForDemo
                 hiddenButton?.SetActive(true);
                 buttonVisual.DOFade(0f, 0.2f).SetEase(Ease.InQuad).SetTarget(this);
             }
+        }
+
+        public void CheckShowDemoPopup()
+        {
+            if (!DemoConfig.IsDemo) return;
+
+            parentCanvas ??= GetComponentInParent<Canvas>();
+            cachePopupWishlist ??= Instantiate(popupWishlist, parentCanvas.transform);
+            cachePopupWishlist.transform.SetAsLastSibling();
+            cachePopupWishlist.gameObject.SetActive(true);
         }
     }
 }

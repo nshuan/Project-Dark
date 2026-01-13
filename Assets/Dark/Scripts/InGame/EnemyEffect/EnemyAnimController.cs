@@ -54,6 +54,7 @@ namespace InGame.EnemyEffect
             return spritesAnim.PlayAttack();
         }
 
+        public float GetAttackDelayTrigger() => spritesAnim.GetAttackDelayTrigger();
         public float GetAttackDuration() => spritesAnim.GetAttackDuration();
 
         [Button]
