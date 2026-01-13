@@ -29,6 +29,7 @@ namespace InGame
         public GateEntity gatePrefab;
         
         [SerializeField] private TowerEntity[] towers;
+        public TowerEntity FirstDestroyedTower { get; set; }
         public float delayStartLevel = 2.5f;
         public TowerEntity[] Towers => towers;
         private int currentTowerIndex;
@@ -291,6 +292,7 @@ namespace InGame
         private void OnTowerDestroyed(TowerEntity tower)
         {
             Debug.LogError($"Tower {tower.name} is destroyed");
+            FirstDestroyedTower = tower;
             winLoseManager.CheckLose(this);
         }
         
