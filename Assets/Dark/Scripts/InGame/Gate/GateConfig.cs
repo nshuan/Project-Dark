@@ -21,5 +21,6 @@ namespace InGame
         [Space] [Header("Visual")] 
         public float startTimeVisual;
         public float durationVisual;
+        public bool hideOrb;
     }
 }

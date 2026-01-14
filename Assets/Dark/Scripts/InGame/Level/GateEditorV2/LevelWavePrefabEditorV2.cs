@@ -18,6 +18,8 @@ namespace InGame.GateEditorV2
         public Button btnDeleteGate;
         public Button btnAddGate;
         public TMP_Dropdown drdGateType;
+        public Button btnEditGateSpawnPosition;
+        public LevelGateSpawnPositionEditorV2 spawnPositionEditor;
 
 #if UNITY_EDITOR
         [FolderOnly] public DefaultAsset configFolderPath;
@@ -70,6 +72,9 @@ namespace InGame.GateEditorV2
             btnAddGate.onClick.AddListener(() => AddGate(
                 new GateConfig() { targetBaseIndex = Array.Empty<int>(), spawnType = AvailableEnemies[0], spawnLogic = new GateSpawnSingle() },
                 currentGateType));
+            
+            btnEditGateSpawnPosition.onClick.RemoveAllListeners();
+            btnEditGateSpawnPosition.onClick.AddListener(OpenSpawnPositionEditor);
             
             drdGateType.ClearOptions();
             drdGateType.options = gateMap.Select(pair => 
@@ -148,6 +153,21 @@ namespace InGame.GateEditorV2
             gate.SelectGate();
         }
 
+        private void OpenSpawnPositionEditor()
+        {
+            foreach (Transform child in parentGateConfig)
+            {
+                if (child.TryGetComponent<LevelGateConfigEditorV2>(out var childGateConfig))
+                {
+                    if (childGateConfig.targetGate.Selecting)
+                    {
+                        spawnPositionEditor.Setup(childGateConfig.targetGate);
+                        return;
+                    }
+                }
+            }
+        }
+        
         private void DeleteSelectingGate()
         {
             foreach (Transform child in parentGateConfig)
@@ -200,6 +220,22 @@ namespace InGame.GateEditorV2
                     {
                         newSpawnLogic = new GateSpawnMultiple() { amount = existingMultiple.amount, randomSpanAngle = existingMultiple.randomSpanAngle, maxRadius = existingMultiple.maxRadius };
                     }
+                    else if (gateConfigEditor.Config.spawnLogic is GateSpawnPositions existingPositions)
+                    {
+                        newSpawnLogic = new GateSpawnPositions() { amount = existingPositions.amount };
+                
+                        if (gateConfigEditor.SpawnPositions != null)
+                        {
+                            var newSpawnPositions = new List<Vector2>();
+                            
+                            foreach (var position in gateConfigEditor.SpawnPositions)
+                            {
+                                newSpawnPositions.Add(position);
+                            }
+                    
+                            newSpawnLogic = new GateSpawnPositions() { amount = existingPositions.amount, spawnPositions = newSpawnPositions.ToArray() };
+                        }
+                    }
                     else
                     {
                         newSpawnLogic = new GateSpawnCenter();
@@ -218,6 +254,7 @@ namespace InGame.GateEditorV2
                         startTimeVisual = gateConfigEditor.Config.startTimeVisual,
                         durationVisual = gateConfigEditor.Config.durationVisual,
                         gatePrefab = gateConfigEditor.Config.gatePrefab,
+                        hideOrb = gateConfigEditor.Config.hideOrb
                     });
                 }
             }

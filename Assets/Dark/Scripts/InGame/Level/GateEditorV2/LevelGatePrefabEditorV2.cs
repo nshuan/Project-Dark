@@ -21,16 +21,10 @@ namespace InGame.GateEditorV2
         
         // public bool IsBossGate { get; set; }
         public Vector2 Position { get; set; }
-        // public string StrTargetTowers { get; set; }
-        // public float StartTime { get; set; }
-        // public float Duration { get; set; }
-        // public int SpawnType { get; set; }
-        // public float Interval { get; set; }
-        // public float StartTimeVisual { get; set; }
-        // public float DurationVisual { get; set; }
+        public List<Vector2> SpawnPositions { get; set; }
 
         public Transform vfx;
-        private Camera camera;
+        public Camera camera;
         private RectTransform rectTransform;
         private GameObject objSelect;
         public Transform vfxParticlePrefabHolder;
@@ -73,6 +67,7 @@ namespace InGame.GateEditorV2
                 newTargets.AddRange(gate.targetBaseIndex);
             }
 
+            SpawnPositions = new List<Vector2>();
             IGateSpawner newSpawnLogic;
             if (gate.spawnLogic is GateSpawnSingle existingSingle)
             {
@@ -85,6 +80,20 @@ namespace InGame.GateEditorV2
             else if (gate.spawnLogic is GateSpawnMultiple existingMultiple)
             {
                 newSpawnLogic = new GateSpawnMultiple() { amount = existingMultiple.amount, randomSpanAngle = existingMultiple.randomSpanAngle, maxRadius = existingMultiple.maxRadius };
+            }
+            else if (gate.spawnLogic is GateSpawnPositions existingPositions)
+            {
+                newSpawnLogic = new GateSpawnPositions() { amount = existingPositions.amount };
+                
+                if (existingPositions.spawnPositions != null)
+                {
+                    foreach (var position in existingPositions.spawnPositions)
+                    {
+                        SpawnPositions.Add(position);
+                    }
+                    
+                    newSpawnLogic = new GateSpawnPositions() { amount = existingPositions.amount, spawnPositions = SpawnPositions.ToArray() };
+                }
             }
             else
             {
@@ -104,7 +113,8 @@ namespace InGame.GateEditorV2
                 spawnLogic = newSpawnLogic,
                 startTimeVisual = gate.startTimeVisual,
                 durationVisual = gate.durationVisual,
-                gatePrefab = GateManifest.Get(gatePrefabId)
+                gatePrefab = GateManifest.Get(gatePrefabId),
+                hideOrb = gate.hideOrb
             };
             
             transform.position = camera.WorldToScreenPoint(gate.position);

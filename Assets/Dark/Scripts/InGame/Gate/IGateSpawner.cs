@@ -111,9 +111,47 @@ namespace InGame
             TowerEntity target = null;
             
             target = targetTower[RandomUtil.Range(0, targetTower.Length)];
-            enemy.transform.position = gate.transform.position;
+            var totalPossibleSpawnPosition = gate.OrbSpawnPositions?.Length ?? 0;
+            if (totalPossibleSpawnPosition > 0)
+            {
+                enemy.transform.position = gate.OrbSpawnPositions[RandomUtil.Range(0, totalPossibleSpawnPosition)]
+                    .position;
+            }
+            else
+            {
+                enemy.transform.position = gate.transform.position;
+            }
             
             return new [] { (enemy, target) };
+        }
+    }
+
+    [Serializable]
+    public class GateSpawnPositions : IGateSpawner
+    {
+        [Range(1, 10)] public int amount = 1;
+        public Vector2[] spawnPositions;
+        
+        public (EnemyEntity, TowerEntity)[] Spawn(GateEntity gate, int enemyId, EnemyEntity enemyPrefab, TowerEntity[] targetTower)
+        {
+            var enemies = new EnemyEntity[amount];
+            var targets = new TowerEntity[amount];
+            var result = new (EnemyEntity, TowerEntity)[amount];
+
+            for (var i = 0; i < amount; i++)
+            {
+                enemies[i] = EnemyPool.Instance.Get(enemyPrefab, enemyId,null, false);
+                targets[i] = targetTower[RandomUtil.Range(0, targetTower.Length)];
+                if (spawnPositions == null || spawnPositions.Length == 0)
+                    enemies[i].transform.position = gate.transform.position;
+                else
+                {
+                    enemies[i].transform.position = spawnPositions[RandomUtil.Range(0, spawnPositions.Length)];
+                }
+                result[i] = (enemies[i], targets[i]);
+            }
+            
+            return result;
         }
     }
 }
