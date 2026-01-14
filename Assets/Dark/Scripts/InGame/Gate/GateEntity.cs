@@ -15,6 +15,9 @@ namespace InGame
         [SerializeField] private AnimationCurve orbYCurve;
         [SerializeField] private float orbSpawnDuration;
         [SerializeField] private EnemyBoidObstacle obstacle;
+        [SerializeField] private Transform[] orbSpawnPositions;
+        
+        public Transform[] OrbSpawnPositions => orbSpawnPositions;
         
         [ReadOnly] public TowerEntity[] target;
         private WaveStatsScale StatsScale { get; set; }
@@ -40,7 +43,6 @@ namespace InGame
         [SerializeField] private float vfxAppearDuration = 0.5f; // duration of vfxOpen
         [SerializeField] private float vfxCloseDuration = 6f; // duration of vfxClose
         [SerializeField] private float visualRadius = 2f;
-        [SerializeField] private bool spawnOrb;
 
         private ParticleSystem.MainModule vfxIdle;
         
@@ -158,7 +160,7 @@ namespace InGame
                 }
                 
                 // Không phải boss thì spawn orb
-                if (!config.isBossGate && spawnOrb)
+                if (!config.isBossGate && !config.hideOrb)
                 {
                     var orbs = new Transform[enemies.Length];
                     var orbShadows = new Transform[enemies.Length];
@@ -166,8 +168,18 @@ namespace InGame
                     for (var i = 0; i < enemies.Length; i++)
                     {
                         orbs[i] = EnemyOrbPool.Instance.Get(null, false);
-                        orbs[i].position = transform.position;
-                        orbs[i].gameObject.SetActive(true);
+                        var totalPossibleSpawnPosition = orbSpawnPositions?.Length ?? 0;
+                        if (totalPossibleSpawnPosition > 0)
+                        {
+                            orbs[i].position = orbSpawnPositions[RandomUtil.Range(0, totalPossibleSpawnPosition)]
+                                .position;
+                        }
+                        else
+                        {
+                            orbs[i].position = transform.position;
+                        }
+                        orbs[i].localScale = 0.35f * Vector3.one;
+                                             orbs[i].gameObject.SetActive(true);
                         
                         orbShadows[i] = EnemyOrbShadowPool.Instance.Get(null, false);
                         orbShadows[i].position = transform.position;
@@ -197,6 +209,8 @@ namespace InGame
                             horizontalPos.y += curveY;
 
                             orbs[i].position = horizontalPos;
+                            orbs[i].localScale = (horizontalPos.x - transform.position.x) /
+                                                 (enemies[i].Item1.transform.position.x - transform.position.x) * Vector3.one;
                         }
 
                         yield return new WaitForEndOfFrame();
