@@ -29,7 +29,7 @@ namespace InGame
         public bool WaveEndedCompletely { get; set; }
         private int currentGateIndex = 0;
         
-        public void SetupWave(GateEntity gatePrefab, TowerEntity[] towers, Action<int, WaveEndReason> onWaveForceEnded)
+        public void SetupWave(TowerEntity[] towers, Action<int, WaveEndReason> onWaveForceEnded)
         {
             if (isRandomWaveConfig)
                 waveConfig = randomWaveConfigs[RandomUtil.Range(0, randomWaveConfigs.Length)];
@@ -44,7 +44,7 @@ namespace InGame
             for (var i = 0; i < waveConfig.gateConfigs.Count; i++)
             {
                 var gateCfg = waveConfig.gateConfigs[i];
-                Gates[i] = Object.Instantiate(gatePrefab, gateCfg.position, quaternion.identity, null);
+                Gates[i] = Object.Instantiate(gateCfg.gatePrefab ? gateCfg.gatePrefab : GateManifest.Get(0), gateCfg.position, quaternion.identity, null);
                 Gates[i].Initialize(gateCfg, gateCfg.targetBaseIndex.Select((index) => towers[index]).ToArray(), waveStatsScale, expRatio, darkRatio, darkUnitValue);
             }
             

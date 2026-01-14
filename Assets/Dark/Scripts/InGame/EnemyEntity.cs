@@ -53,7 +53,7 @@ namespace InGame
         public EnemyState State { get; set; }
         public bool Activated { get; set; }
         public int UniqueId { get; set; }
-        private Vector3 direction = new Vector3();
+        protected Vector3 direction = new Vector3();
         private Vector2 directionAddition = new Vector2();
         private float staggerDuration;
         private Vector2 staggerTargetPos;
@@ -252,6 +252,7 @@ namespace InGame
             animController.PlayAttack();
             this.DelayCall(animController.GetAttackDelayTrigger(), () =>
             {
+                if (TargetTower.IsDestroyed) return;
                 config.attackBehaviour.Attack(this, TargetTower, transform.position, CurrentDamage);
             });
         }
