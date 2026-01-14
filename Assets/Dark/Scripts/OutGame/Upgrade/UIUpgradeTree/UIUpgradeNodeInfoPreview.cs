@@ -35,6 +35,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private TextMeshProUGUI txtNodeBonusAfter;
         [SerializeField] private RectTransform rectInfoBonusChanged;
         [SerializeField] private UITooltip tooltip;
+        [SerializeField] private UITooltipSkillVideo tooltipSkillVideo;
 
         [Space] [Header("Requirement")] 
         [SerializeField] private RequirementInfo infoReqVestige;
@@ -93,6 +94,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             cacheData = UpgradeManager.Instance.GetData(config.nodeId);
             var isNodeLocked = node.preRequires is { Count: > 0 } && node.preRequires.All((preRequire) =>
                 preRequire.node.CurrentState != UIUpgradeNodeState.Activated);
+            tooltipSkillVideo.gameObject.gameObject.SetActive(false);
             tooltip.gameObject.SetActive(false);
             UpdateUI(isNodeLocked);
         }
@@ -284,7 +286,10 @@ namespace Dark.Scripts.OutGame.Upgrade
             isVisible = true;
             DoShow().OnComplete(() =>
             {
-                tooltip.Show(cacheConfig.description, rectInfoFrameContent, new Vector2(10f, 0f));
+                if (!tooltipSkillVideo.Show(cacheConfig, rectInfoFrameContent, new Vector2(10f, 0f)))
+                {
+                    tooltip.Show(cacheConfig.description, rectInfoFrameContent, new Vector2(10f, 0f));
+                }
                 onShow?.Invoke();
             });
         }
