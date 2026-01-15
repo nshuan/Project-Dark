@@ -25,6 +25,7 @@ namespace InGame.Boss
             if (LevelManager.Instance.Level.level != PlayerDataManager.Instance.Data.level + 1)
                 BossPoint = 0;
             
+            shadowSprite = shadow.GetComponent<SpriteRenderer>();
             shadowOriginalAlpha = shadowSprite.color.a;
         }
 
