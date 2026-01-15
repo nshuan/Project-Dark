@@ -254,6 +254,30 @@ namespace Dark.Scripts.OutGame.Upgrade
             UpdateNodeSprites();
         }
         
+        [Button]
+        public void ValidateNodeRequireItself()
+        {
+            foreach (var pair in nodesMap)
+            {
+                foreach (var node in pair.Value)
+                {
+                    if (node.preRequires != null)
+                    {
+                        var newPreRequires = new List<UIUpgradePreRequireInfo>();
+                        foreach (var pre in node.preRequires)
+                        {
+                            if (pre.preRequireId != node.config.nodeId)
+                                newPreRequires.Add(pre);
+                        }
+
+                        node.preRequires = newPreRequires;
+                    }
+                    
+                    EditorUtility.SetDirty(node);
+                }
+            }
+        }
+        
         private UIUpgradeLine ShowPreRequiredLine(Vector2 from, float fromOffsetRadius, Vector2 to, float toOffsetRadius)
         {
             var line = ((GameObject)PrefabUtility.InstantiatePrefab(linePrefab.gameObject)).transform;

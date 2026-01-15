@@ -298,6 +298,7 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         public Tween DoUnlockVfx(int fromId)
         {
+            DOTween.Kill(this);
             var seq = DOTween.Sequence(this);
             if (preRequires != null)
             {
@@ -311,12 +312,12 @@ namespace Dark.Scripts.OutGame.Upgrade
                             {
                                 imgAvailable.gameObject.SetActive(true);
                                 vfxUnlock?.Play();
-                            });
+                            }).SetTarget(this);
 
                             DOVirtual.DelayedCall(lineInfo.line.activateDuration + 1f, () =>
                             {
                                 ReleaseVfxUnlock(vfxUnlock);
-                            });
+                            }).SetTarget(this);
                         })
                         .Append(lineInfo.line.DoActivate());
                     break;
