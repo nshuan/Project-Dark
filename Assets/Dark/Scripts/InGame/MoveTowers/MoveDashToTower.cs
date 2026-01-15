@@ -70,9 +70,13 @@ namespace InGame
                 //     enemyLayer);
                 var lastPos = character.transform.position;
                 character.transform.position = Vector2.Lerp(startPos, endPos, speed);
-                var movePath = character.transform.position - lastPos;
+                var lastPosOnGround = fromTower.GetBaseCenter() + (lastPos.x - startPos.x) / (endPos.x - startPos.x) *
+                    (toTower.GetBaseCenter() - fromTower.GetBaseCenter());
+                var currentPosOnGround = fromTower.GetBaseCenter() + (character.transform.position.x - startPos.x) /
+                    (endPos.x - startPos.x) * (toTower.GetBaseCenter() - fromTower.GetBaseCenter());
+                var movePath = currentPosOnGround - lastPosOnGround;
                 var count = Physics2D.CircleCastNonAlloc(
-                    lastPos, 
+                    lastPosOnGround, 
                     hitRadius, movePath, hits,
                     movePath.magnitude,
                     enemyLayer);

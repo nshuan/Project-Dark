@@ -193,6 +193,7 @@ namespace InGame
         private void OnDrawGizmos()
         {
             mouseInput?.OnDrawGizmos();
+            teleMouseInput?.OnDrawGizmos();
         }
 
         public void OnPointerDown(PointerEventData eventData)
