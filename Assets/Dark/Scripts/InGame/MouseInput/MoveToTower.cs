@@ -118,6 +118,9 @@ namespace InGame
                 {
                     tower.Hover(false);
                 }
+                
+                var dashLine = MoveTowerHelper.Instance.GetTowerLine(Towers[tempCurrentTower], Towers[selectingTower]);
+                dashLine?.gameObject.SetActive(false);
                 cursor.SetMoveCursor(false, selectingTower);
                 PlaySlowMotion(false);
             }
@@ -159,6 +162,15 @@ namespace InGame
                             {
                                 tower.Hover(true, true);
                                 
+                                // Show dash line
+                                if (ShortConfig.moveLogic is MoveDashToTower)
+                                {
+                                    var dashLine = MoveTowerHelper.Instance.GetTowerLine(Towers[CurrentTowerIndex], Towers[selectingTower]);
+                                    DOTween.Kill(dashLine.transform);
+                                    dashLine.transform.DOScaleY(2 * GetSize(ShortConfig), 0.1f).SetEase(Ease.InQuad)
+                                        .SetUpdate(true).SetTarget(dashLine.transform);
+                                }
+                                
                                 PlaySlowMotion(true);
                             }
                             else
@@ -179,6 +191,8 @@ namespace InGame
                         hovering = false;
                         Towers[selectingTower].Hover(false);
                         cursor.SetMoveCursor(false, selectingTower);
+                        var dashLine = MoveTowerHelper.Instance.GetTowerLine(Towers[CurrentTowerIndex], Towers[selectingTower]);
+                        dashLine?.gameObject.SetActive(false);
                         PlaySlowMotion(false);
                         CombatActions.OnTowerHoverOut?.Invoke(Towers[selectingTower]);
                         selectingTower = -1;
@@ -287,6 +301,15 @@ namespace InGame
             }
 
             seq.Play();
+        }
+        
+        public void OnDrawGizmos()
+        {
+            if (Towers == null || Towers.Length < 3) return;
+            if (!Character) return;
+            if (ShortConfig.moveLogic is not MoveDashToTower) return;
+            
+            Gizmos.DrawWireSphere(Character.transform.position - Towers[CurrentTowerIndex].GetTowerHeight(), GetSize(ShortConfig));
         }
     }
 }
