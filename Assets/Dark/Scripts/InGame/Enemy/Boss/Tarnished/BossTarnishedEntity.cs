@@ -20,6 +20,7 @@ namespace InGame.Boss
         {
             base.Init(eConfig, target, statsScale, levelExpRatio, levelDarkRatio, levelDarkUnitValue);
 
+            configCasted = (EnemyBossTarnishedBehaviour)config;
             if (LevelManager.Instance.Level.level != PlayerDataManager.Instance.Data.level + 1)
                 BossPoint = 0;
         }
@@ -28,8 +29,8 @@ namespace InGame.Boss
         {
             base.ActivateELite(active);
 
-            thresholdChangeTower = tarnishedConfig.GetHpThreshold();
-            startDistanceEachPhase = tarnishedConfig.GetStartDistance();
+            thresholdChangeTower = configCasted.tarnishedConfig.GetHpThreshold();
+            startDistanceEachPhase = configCasted.tarnishedConfig.GetStartDistance();
         }
 
         protected override IEnumerator IEDie(float delayRelease, EnemyDieReason reason)
@@ -125,7 +126,6 @@ namespace InGame.Boss
         #region Change tower
 
         [Space] [Header("Elite boss behaviour")] 
-        [SerializeField] private BossTarnishedConfig tarnishedConfig;
         [SerializeField] protected EnemySpritesAnimationInfo jumpUpAnim;
         [SerializeField] protected EnemySpritesAnimationInfo jumpDownAnim;
         [Tooltip("After play attack animation, delay these seconds before doing attack logic")]
@@ -135,6 +135,7 @@ namespace InGame.Boss
         private List<int> orderChangeTower = new List<int>() { }; // Nếu null hoặc ko có phần tử thì random
         private List<float> startDistanceEachPhase = new List<float>();
         private int currentThresholdChangeTowerIndex = 0;
+        public EnemyBossTarnishedBehaviour configCasted;
 
         private IEnumerator IEChangeTower(float delay)
         {

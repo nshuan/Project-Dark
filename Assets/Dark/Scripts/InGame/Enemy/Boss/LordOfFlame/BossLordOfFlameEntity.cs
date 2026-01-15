@@ -19,7 +19,6 @@ namespace InGame.Boss
 
         [Space] [Header("Config")]
         [Tooltip("Config that store exclusive variable for this boss")] 
-        [SerializeField] private BossLordOfFlameConfig lordOfFlameConfig;
         private float damageScale = 1f;
         
         [Tooltip("After play attack animation, delay these seconds before doing attack logic")]
@@ -33,12 +32,14 @@ namespace InGame.Boss
         private bool isRecovering = false;
         private bool isAttacking = false;
         private Coroutine coroutineRecover;
+        private EnemyBossLordOfFlameBehaviour configCasted;
         
         public override void Init(EnemyBehaviour eConfig, TowerEntity target, WaveStatsScale statsScale, float levelExpRatio,
             float levelDarkRatio, int levelDarkUnitValue)
         {
             base.Init(eConfig, target, statsScale, levelExpRatio, levelDarkRatio, levelDarkUnitValue);
-            
+
+            configCasted = (EnemyBossLordOfFlameBehaviour)config;
             hasRecoverOnce = false;
             isRecovering = false;
             isAttacking = false;
@@ -57,8 +58,8 @@ namespace InGame.Boss
                     isAttacking = true;
 
                     var allSkill = hasRecoverOnce
-                        ? lordOfFlameConfig.attackPhase2Info
-                        : lordOfFlameConfig.attackPhase1Info;
+                        ? configCasted.lordOfFlameConfig.attackPhase2Info
+                        : configCasted.lordOfFlameConfig.attackPhase1Info;
 
                     var attackSkillId = RandomUtil.RangeWithOwnRate(allSkill
                         .Select((skill) => skill.chance).ToArray());
@@ -109,7 +110,7 @@ namespace InGame.Boss
             base.Damage(damage, dealerPosition, stagger, dmgType);
              
             if (IsDestroyed) return;
-            if (!hasRecoverOnce && PercentageHpLeft < lordOfFlameConfig.percentageToHeal)
+            if (!hasRecoverOnce && PercentageHpLeft < configCasted.lordOfFlameConfig.percentageToHeal)
             {
                 isRecovering = true;
                 hasRecoverOnce = true;
@@ -124,7 +125,7 @@ namespace InGame.Boss
             yield return new WaitUntil(() => isAttacking == false);
             yield return new WaitForSeconds(delay);
             yield return new WaitForSeconds(0.5f);
-            CurrentHealth += (int)(MaxHealth * lordOfFlameConfig.percentageHealed);
+            CurrentHealth += (int)(MaxHealth * configCasted.lordOfFlameConfig.percentageHealed);
             var animDuration = animController.PlayCustomAnim(recoverAnim);
             yield return new WaitForSeconds(animDuration);
             yield return StartCoroutine(IEChangeTower(0f));
@@ -143,10 +144,10 @@ namespace InGame.Boss
             
             yield return new WaitForEndOfFrame();
             // Change tower
-            TargetTower = LevelManager.Instance.Towers.FirstOrDefault((t) => t.Id == lordOfFlameConfig.phase2TowerId);
+            TargetTower = LevelManager.Instance.Towers.FirstOrDefault((t) => t.Id == configCasted.lordOfFlameConfig.phase2TowerId);
             if (!TargetTower) TargetTower = LevelManager.Instance.CurrentTower;
             Target = TargetTower.transform;
-            AttackRange = lordOfFlameConfig.phase2AtkRange;
+            AttackRange = configCasted.lordOfFlameConfig.phase2AtkRange;
             // Mặc định rớt trong tầm đánh luôn
             var dropDistanceToTower = AttackRange - 0.1f;
             transform.position = Target.position + new Vector3(-dropDistanceToTower, -0.2f, 0f);
