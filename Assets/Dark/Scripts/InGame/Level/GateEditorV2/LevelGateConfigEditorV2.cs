@@ -14,6 +14,7 @@ namespace InGame.GateEditorV2
         [Space] [Header("Gate info")] 
         public TMP_InputField inpGateLabel;
         public Toggle txtIsBossGate;
+        public Toggle txtIsSpawnOrb;
         public TextMeshProUGUI txtPosition;
         public TMP_InputField inpTargetTower;
         public TMP_InputField inpStartTime;
@@ -25,6 +26,7 @@ namespace InGame.GateEditorV2
         
         [Space] [Header("Spawn Logic")]
         public TMP_Dropdown drdSpawnLogic;
+        public TMP_Dropdown drdGatePrefab;
         
         [Space] [Header("Spawn Logic Variables")]
         public GameObject panelSpawnLogicVars;
@@ -41,11 +43,13 @@ namespace InGame.GateEditorV2
         // GateSpawnCenter - no variables
 
         public List<EnemyBehaviour> AvailableEnemies { get; set; }
+        public Dictionary<int, GateEntity> GateMap { get; set; }
         public LevelGatePrefabEditorV2 targetGate;
 
         public void Setup(LevelGatePrefabEditorV2 gate)
         {
             targetGate = gate;
+            txtPosition?.SetText( $"X: {gate.Position.x.ToString(GameConst.FloatFormat)}\nY: {gate.Position.y.ToString(GameConst.FloatFormat)}");
             gate.OnDragging += (position) =>
             {
                 txtPosition?.SetText(
@@ -62,7 +66,13 @@ namespace InGame.GateEditorV2
             drdEnemy.options = AvailableEnemies.Select(enemy => 
                 new TMP_Dropdown.OptionData($"{enemy.enemyId} - {enemy.displayName}")).ToList();
             
+            drdGatePrefab.ClearOptions();
+            drdGatePrefab.options = GateMap.Select(pair => 
+                new TMP_Dropdown.OptionData($"{pair.Key} - {pair.Value.name}")).ToList();
+            drdGatePrefab.onValueChanged.RemoveAllListeners();
+            
             txtIsBossGate.onValueChanged.RemoveAllListeners();
+            txtIsSpawnOrb.onValueChanged.RemoveAllListeners();
             inpTargetTower.onValueChanged.RemoveAllListeners();
             inpStartTime.onValueChanged.RemoveAllListeners();
             inpDuration.onValueChanged.RemoveAllListeners();
@@ -70,18 +80,20 @@ namespace InGame.GateEditorV2
             inpIntervalLoop.onValueChanged.RemoveAllListeners();
             inpStartTimeVisual.onValueChanged.RemoveAllListeners();
             inpDurationVisual.onValueChanged.RemoveAllListeners();
-            if (drdSpawnLogic != null) drdSpawnLogic.onValueChanged.RemoveAllListeners();
-            if (inpRadius != null) inpRadius.onValueChanged.RemoveAllListeners();
-            if (inpRandomSpanAngle != null) inpRandomSpanAngle.onValueChanged.RemoveAllListeners();
-            if (inpAmount != null) inpAmount.onValueChanged.RemoveAllListeners();
-            if (inpMaxRadius != null) inpMaxRadius.onValueChanged.RemoveAllListeners();
+            if (drdSpawnLogic) drdSpawnLogic.onValueChanged.RemoveAllListeners();
+            if (inpRadius) inpRadius.onValueChanged.RemoveAllListeners();
+            if (inpRandomSpanAngle) inpRandomSpanAngle.onValueChanged.RemoveAllListeners();
+            if (inpAmount) inpAmount.onValueChanged.RemoveAllListeners();
+            if (inpMaxRadius) inpMaxRadius.onValueChanged.RemoveAllListeners();
             
             var gateConfig = gate.Config;
             txtIsBossGate.isOn = gateConfig.isBossGate;
+            txtIsSpawnOrb.isOn = !gateConfig.hideOrb;
             inpTargetTower.text = string.Join(", ", gateConfig.targetBaseIndex);
             inpStartTime.text = gateConfig.startTime.ToString(GameConst.FloatFormat);
             inpDuration.text = gateConfig.duration.ToString(GameConst.FloatFormat);
             drdEnemy.value = gateConfig.spawnType.enemyId;
+            drdGatePrefab.value = gate.gatePrefabId;
             inpIntervalLoop.text = gateConfig.intervalLoop.ToString(GameConst.FloatFormat);
             inpStartTimeVisual.text = gateConfig.startTimeVisual.ToString(GameConst.FloatFormat);
             inpDurationVisual.text = gateConfig.durationVisual.ToString(GameConst.FloatFormat);
@@ -91,10 +103,11 @@ namespace InGame.GateEditorV2
             {
                 drdSpawnLogic.options = new List<TMP_Dropdown.OptionData>
                 {
+                    new TMP_Dropdown.OptionData("Center"),
+                    new TMP_Dropdown.OptionData("Multiple"),
+                    new TMP_Dropdown.OptionData("Position"),
                     new TMP_Dropdown.OptionData("Single"),
                     new TMP_Dropdown.OptionData("Triangle"),
-                    new TMP_Dropdown.OptionData("Multiple"),
-                    new TMP_Dropdown.OptionData("Center")
                 };
                 
                 // Initialize spawn logic if null
@@ -112,6 +125,7 @@ namespace InGame.GateEditorV2
 
             // txtIsBossGate.onValueChanged.AddListener((isOn) => gate.IsBossGate = isOn);
             txtIsBossGate.onValueChanged.AddListener((isOn) => gate.Config.isBossGate = isOn);
+            txtIsSpawnOrb.onValueChanged.AddListener((isOn) => gate.Config.hideOrb = !isOn);
             inpTargetTower.onValueChanged.AddListener((value) =>
             {
                 value = value.Trim(' ');
@@ -145,6 +159,10 @@ namespace InGame.GateEditorV2
             {
                 // gate.SpawnType = value;
                 gate.Config.spawnType = AvailableEnemies[value];
+            });
+            drdGatePrefab.onValueChanged.AddListener((value) =>
+            {
+                gate.UpdateGateType(value);
             });
             inpIntervalLoop.onValueChanged.AddListener((value) =>
             {
@@ -224,6 +242,10 @@ namespace InGame.GateEditorV2
                         {
                             multiple.amount = Mathf.Clamp(amount, 1, 10);
                         }
+                        else if (gate.Config.spawnLogic is GateSpawnPositions positions)
+                        {
+                            positions.amount = Mathf.Clamp(amount, 1, 10);
+                        }
                     }
                 });
             }
@@ -245,10 +267,11 @@ namespace InGame.GateEditorV2
         
         private int GetSpawnLogicIndex(IGateSpawner spawnLogic)
         {
-            if (spawnLogic is GateSpawnSingle) return 0;
-            if (spawnLogic is GateSpawnTriangle) return 1;
-            if (spawnLogic is GateSpawnMultiple) return 2;
-            if (spawnLogic is GateSpawnCenter) return 3;
+            if (spawnLogic is GateSpawnCenter) return 0;
+            if (spawnLogic is GateSpawnMultiple) return 1;
+            if (spawnLogic is GateSpawnPositions) return 2;
+            if (spawnLogic is GateSpawnSingle) return 3;
+            if (spawnLogic is GateSpawnTriangle) return 4;
             return 0;
         }
         
@@ -258,7 +281,7 @@ namespace InGame.GateEditorV2
             
             switch (index)
             {
-                case 0: // Single
+                case 3: // Single
                     if (gate.Config.spawnLogic is GateSpawnSingle existingSingle)
                     {
                         newSpawnLogic = existingSingle;
@@ -268,7 +291,7 @@ namespace InGame.GateEditorV2
                         newSpawnLogic = new GateSpawnSingle();
                     }
                     break;
-                case 1: // Triangle
+                case 4: // Triangle
                     if (gate.Config.spawnLogic is GateSpawnTriangle existingTriangle)
                     {
                         newSpawnLogic = existingTriangle;
@@ -278,7 +301,7 @@ namespace InGame.GateEditorV2
                         newSpawnLogic = new GateSpawnTriangle();
                     }
                     break;
-                case 2: // Multiple
+                case 1: // Multiple
                     if (gate.Config.spawnLogic is GateSpawnMultiple existingMultiple)
                     {
                         newSpawnLogic = existingMultiple;
@@ -288,8 +311,18 @@ namespace InGame.GateEditorV2
                         newSpawnLogic = new GateSpawnMultiple();
                     }
                     break;
-                case 3: // Center
+                case 0: // Center
                     newSpawnLogic = new GateSpawnCenter();
+                    break;
+                case 2: // Positions
+                    if (gate.Config.spawnLogic is GateSpawnPositions existingPositions)
+                    {
+                        newSpawnLogic = existingPositions;
+                    }
+                    else
+                    {
+                        newSpawnLogic = new GateSpawnPositions();
+                    }
                     break;
             }
             
@@ -299,32 +332,35 @@ namespace InGame.GateEditorV2
         private void UpdateSpawnLogicPanels(int spawnLogicIndex)
         {
             // Hide all panels first
-            if (panelSpawnLogicVars != null) panelSpawnLogicVars.SetActive(false);
-            if (panelRadius != null) panelRadius.SetActive(false);
-            if (panelRandomSpanAngle != null) panelRandomSpanAngle.SetActive(false);
-            if (panelAmount != null) panelAmount.SetActive(false);
-            if (panelMaxRadius != null) panelMaxRadius.SetActive(false);
+            if (panelSpawnLogicVars) panelSpawnLogicVars.SetActive(false);
+            if (panelRadius) panelRadius.SetActive(false);
+            if (panelRandomSpanAngle) panelRandomSpanAngle.SetActive(false);
+            if (panelAmount) panelAmount.SetActive(false);
+            if (panelMaxRadius) panelMaxRadius.SetActive(false);
             
             // Show relevant panels based on spawn logic type
-            if (panelSpawnLogicVars != null) panelSpawnLogicVars.SetActive(true);
+            if (panelSpawnLogicVars) panelSpawnLogicVars.SetActive(true);
             
             switch (spawnLogicIndex)
             {
-                case 0: // Single
-                    if (panelRadius != null) panelRadius.SetActive(true);
-                    if (panelRandomSpanAngle != null) panelRandomSpanAngle.SetActive(true);
-                    break;
-                case 1: // Triangle
-                    if (panelRadius != null) panelRadius.SetActive(true);
-                    if (panelRandomSpanAngle != null) panelRandomSpanAngle.SetActive(true);
-                    break;
-                case 2: // Multiple
-                    if (panelAmount != null) panelAmount.SetActive(true);
-                    if (panelMaxRadius != null) panelMaxRadius.SetActive(true);
-                    if (panelRandomSpanAngle != null) panelRandomSpanAngle.SetActive(true);
-                    break;
-                case 3: // Center
+                case 0: // Center
                     // No variables, keep panels hidden
+                    break;
+                case 1: // Multiple
+                    if (panelAmount) panelAmount.SetActive(true);
+                    if (panelMaxRadius) panelMaxRadius.SetActive(true);
+                    if (panelRandomSpanAngle) panelRandomSpanAngle.SetActive(true);
+                    break;
+                case 2: // Positions
+                    if (panelAmount) panelAmount.SetActive(true);
+                    break;
+                case 3: // Single
+                    if (panelRadius) panelRadius.SetActive(true);
+                    if (panelRandomSpanAngle) panelRandomSpanAngle.SetActive(true);
+                    break;
+                case 4: // Triangle
+                    if (panelRadius) panelRadius.SetActive(true);
+                    if (panelRandomSpanAngle) panelRandomSpanAngle.SetActive(true);
                     break;
             }
         }
@@ -333,19 +369,23 @@ namespace InGame.GateEditorV2
         {
             if (spawnLogic is GateSpawnSingle single)
             {
-                if (inpRadius != null) inpRadius.text = single.radius.ToString(GameConst.FloatFormat);
-                if (inpRandomSpanAngle != null) inpRandomSpanAngle.text = single.randomSpanAngle.ToString(GameConst.FloatFormat);
+                if (inpRadius) inpRadius.text = single.radius.ToString(GameConst.FloatFormat);
+                if (inpRandomSpanAngle) inpRandomSpanAngle.text = single.randomSpanAngle.ToString(GameConst.FloatFormat);
             }
             else if (spawnLogic is GateSpawnTriangle triangle)
             {
-                if (inpRadius != null) inpRadius.text = triangle.radius.ToString(GameConst.FloatFormat);
-                if (inpRandomSpanAngle != null) inpRandomSpanAngle.text = triangle.randomSpanAngle.ToString(GameConst.FloatFormat);
+                if (inpRadius) inpRadius.text = triangle.radius.ToString(GameConst.FloatFormat);
+                if (inpRandomSpanAngle) inpRandomSpanAngle.text = triangle.randomSpanAngle.ToString(GameConst.FloatFormat);
             }
             else if (spawnLogic is GateSpawnMultiple multiple)
             {
-                if (inpAmount != null) inpAmount.text = multiple.amount.ToString();
-                if (inpMaxRadius != null) inpMaxRadius.text = multiple.maxRadius.ToString(GameConst.FloatFormat);
-                if (inpRandomSpanAngle != null) inpRandomSpanAngle.text = multiple.randomSpanAngle.ToString(GameConst.FloatFormat);
+                if (inpAmount) inpAmount.text = multiple.amount.ToString();
+                if (inpMaxRadius) inpMaxRadius.text = multiple.maxRadius.ToString(GameConst.FloatFormat);
+                if (inpRandomSpanAngle) inpRandomSpanAngle.text = multiple.randomSpanAngle.ToString(GameConst.FloatFormat);
+            }
+            else if (spawnLogic is GateSpawnPositions positions)
+            {
+                if (inpAmount) inpAmount.text = positions.amount.ToString();
             }
             // GateSpawnCenter has no variables
         }

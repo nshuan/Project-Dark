@@ -17,6 +17,7 @@ namespace Dark.Scripts.OutGame.Upgrade
 {
     public class UIPanelUpgradeTree : MonoBehaviour
     {
+        [SerializeField] private UIHighlightNodeByCost nodeHighlight;
         [SerializeField] private Button btnBack;
         [SerializeField] private CanvasGroup btnWishlist;
         [SerializeField] private CanvasGroup btnFeedback;
@@ -92,6 +93,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             else
                 TreeCvg = tree.AddComponent<CanvasGroup>();
             // tree.OnNodeUpgraded += (node) => scrollView.FocusTo((RectTransform)node.transform);
+            nodeHighlight.InitNodesByCost(tree);
         }
 
         public void ShowDemoButtons()

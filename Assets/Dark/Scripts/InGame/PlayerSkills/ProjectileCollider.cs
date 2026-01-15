@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dark.Scripts.ForDemo;
 using Economic.InGame;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -123,6 +124,8 @@ namespace InGame
 
         public bool CheckCollectibleOnWay(Vector2 direction)
         {
+            if (DemoConfig.CollectLogicType == 2) return false;
+            
 #if UNITY_EDITOR
             gizmosDirection = direction;
 #endif

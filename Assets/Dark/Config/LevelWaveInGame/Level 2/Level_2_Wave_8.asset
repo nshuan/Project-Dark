@@ -17,6 +17,7 @@ MonoBehaviour:
     SerializedBytes: 
     ReferencedUnityObjects:
     - {fileID: 11400000, guid: 069b975ce94f01440bd5ab708829c966, type: 2}
+    - {fileID: 3134462521366388888, guid: 95af54fc898b08949b1ad7b3115feaaf, type: 3}
     - {fileID: 11400000, guid: a6e7b19182615cd49b494bab621fa0b0, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
@@ -80,25 +81,28 @@ MonoBehaviour:
       Data: 2
     - Name: spawnLogic
       Entry: 7
-      Data: 3|InGame.GateSpawnMultiple, Assembly-CSharp
-    - Name: amount
-      Entry: 3
-      Data: 1
-    - Name: maxRadius
+      Data: 3|InGame.GateSpawnSingle, Assembly-CSharp
+    - Name: radius
       Entry: 4
-      Data: 1
+      Data: 1.5
     - Name: randomSpanAngle
       Entry: 4
       Data: 60
     - Name: 
       Entry: 8
       Data: 
+    - Name: gatePrefab
+      Entry: 10
+      Data: 1
     - Name: startTimeVisual
       Entry: 4
       Data: 0
     - Name: durationVisual
       Entry: 4
       Data: 9
+    - Name: hideOrb
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -113,7 +117,7 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: 6.051
+      Data: 6.0510006
     - Name: 
       Entry: 4
       Data: 0.7045374
@@ -146,17 +150,14 @@ MonoBehaviour:
       Data: 6
     - Name: spawnType
       Entry: 10
-      Data: 1
+      Data: 2
     - Name: intervalLoop
       Entry: 4
       Data: 2
     - Name: spawnLogic
       Entry: 7
-      Data: 6|InGame.GateSpawnMultiple, Assembly-CSharp
-    - Name: amount
-      Entry: 3
-      Data: 1
-    - Name: maxRadius
+      Data: 6|InGame.GateSpawnSingle, Assembly-CSharp
+    - Name: radius
       Entry: 4
       Data: 1.5
     - Name: randomSpanAngle
@@ -165,12 +166,18 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: gatePrefab
+      Entry: 10
+      Data: 1
     - Name: startTimeVisual
       Entry: 4
       Data: 0
     - Name: durationVisual
       Entry: 4
       Data: 0
+    - Name: hideOrb
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
