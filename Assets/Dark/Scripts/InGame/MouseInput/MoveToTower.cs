@@ -316,11 +316,15 @@ namespace InGame
         
         public void OnDrawGizmos()
         {
+#if UNITY_EDITOR
             if (Towers == null || Towers.Length < 3) return;
             if (!Character) return;
-            if (ShortConfig.moveLogic is not MoveDashToTower) return;
             
             Gizmos.DrawWireSphere(Character.transform.position - Towers[CurrentTowerIndex].GetTowerHeight(), GetSize(ShortConfig));
+            Gizmos.DrawWireSphere(Towers[0].GetBaseCenter(), GetSize(ShortConfig));
+            Gizmos.DrawWireSphere(Towers[1].GetBaseCenter(), GetSize(ShortConfig));
+            Gizmos.DrawWireSphere(Towers[2].GetBaseCenter(), GetSize(ShortConfig));
+#endif
         }
     }
 }
