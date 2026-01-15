@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Data;
+using DG.Tweening;
 using InGame.BossConfig;
 using InGame.CameraController;
 using InGame.EnemyEffect;
@@ -23,6 +24,9 @@ namespace InGame.Boss
             configCasted = (EnemyBossTarnishedBehaviour)config;
             if (LevelManager.Instance.Level.level != PlayerDataManager.Instance.Data.level + 1)
                 BossPoint = 0;
+            
+            shadowSprite = shadow.GetComponent<SpriteRenderer>();
+            shadowOriginalAlpha = shadowSprite.color.a;
         }
 
         public override void ActivateELite(bool active)
@@ -136,6 +140,8 @@ namespace InGame.Boss
         private List<float> startDistanceEachPhase = new List<float>();
         private int currentThresholdChangeTowerIndex = 0;
         public EnemyBossTarnishedBehaviour configCasted;
+        private SpriteRenderer shadowSprite;
+        private float shadowOriginalAlpha;
 
         private IEnumerator IEChangeTower(float delay)
         {
@@ -147,6 +153,8 @@ namespace InGame.Boss
             // Jump up
             var jumpDuration = animController.PlayCustomAnim(jumpUpAnim);
             animController.Resume();
+            DOTween.Kill(shadowSprite);
+            shadowSprite?.DOFade(0f, jumpDuration).SetEase(Ease.InQuad).SetTarget(shadowSprite);
             BurnVfxParent.gameObject.SetActive(false);
             yield return new WaitForSeconds(jumpDuration);
             
@@ -190,6 +198,8 @@ namespace InGame.Boss
             
             // Jump down
             jumpDuration = animController.PlayCustomAnim(jumpDownAnim);
+            DOTween.Kill(shadowSprite);
+            shadowSprite?.DOFade(shadowOriginalAlpha, 0.5f).SetEase(Ease.InQuad).SetTarget(shadowSprite);
             yield return new WaitForSeconds(jumpDuration);
             BurnVfxParent.gameObject.SetActive(true);
             State = EnemyState.Move;

@@ -270,20 +270,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     config.ActivateLevel(UpgradeManager.Instance.GetData(config.nodeId).level, ref UIUpgradeNodeInfoPreview.Instance.bonusInfo);
                     UIUpgradeNodeInfoPreview.Instance.Setup(this, config, true);
                     UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true, () => hoverField.interactable = true);
-                    // UIUpgradeNodeInfoPreview.Instance.HideImmediately(true);
-                    // UIUpgradeNodeInfoPreview.Instance.CanAutoShowHide = false;
-                    // this.DelayCall(0.5f, () =>
-                    // {
-                    //     UIUpgradeNodeInfoPreview.Instance.Setup(config, true);
-                    //     UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true, () =>
-                    //     {
-                    //         hoverField.interactable = true;
-                    //         UIUpgradeNodeInfoPreview.Instance.CanAutoShowHide = true;
-                    //     });
-                    //     // UIUpgradeNodeInfoPreview.Instance.ShowImmediately(transform.position,
-                    //     //     new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true,
-                    //     //     () => UIUpgradeNodeInfoPreview.Instance.CanAutoShowHide = true);
-                    // });
+
                     treeRef.LastUpgradeNodeId = config.nodeId;
                     treeRef.InvokeNodeUpgraded(this);
                     treeRef.UpgradeAllNodesWithId(config.nodeId);
@@ -311,6 +298,7 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         public Tween DoUnlockVfx(int fromId)
         {
+            DOTween.Kill(this);
             var seq = DOTween.Sequence(this);
             if (preRequires != null)
             {
@@ -324,12 +312,12 @@ namespace Dark.Scripts.OutGame.Upgrade
                             {
                                 imgAvailable.gameObject.SetActive(true);
                                 vfxUnlock?.Play();
-                            });
+                            }).SetTarget(this);
 
                             DOVirtual.DelayedCall(lineInfo.line.activateDuration + 1f, () =>
                             {
                                 ReleaseVfxUnlock(vfxUnlock);
-                            });
+                            }).SetTarget(this);
                         })
                         .Append(lineInfo.line.DoActivate());
                     break;
@@ -475,6 +463,37 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         #endregion
 
+        #region Highlight
+
+        [Space] [Header("Highlight")] 
+        public Image imgHighlight;
+        
+        public void Highlight(bool highlight)
+        {
+            if (highlight)
+            {
+                if (GameConst.HideLockedNode) return;
+
+                groupNode.alpha = 1f;
+                imgHighlight.gameObject.SetActive(true);
+            }
+            else
+            {
+                groupNode.alpha = 0.02f;
+                imgHighlight.gameObject.SetActive(false);
+            }
+        }
+
+        public void HideHighlight()
+        {
+            imgHighlight.gameObject.SetActive(false);
+            if (GameConst.HideLockedNode) return;
+
+            groupNode.alpha = 1f;
+        }
+
+        #endregion
+        
         private void OnDrawGizmos()
         {
             Gizmos.DrawWireSphere(transform.position, lineAnchorOffsetRadius);

@@ -186,7 +186,7 @@ namespace InGame
                 DOTween.Kill(flashSize.transform);
                 flashSize.transform.localScale = Vector3.zero;
                 flashSize.gameObject.SetActive(true);
-                flashSize.transform.DOScale(2 * size, 0.25f).SetEase(Ease.OutQuad)
+                flashSize.transform.DOScale(size, 0.25f).SetEase(Ease.OutQuad)
                     .SetUpdate(true).SetTarget(flashSize.transform);
             }
         }

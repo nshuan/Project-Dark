@@ -22,6 +22,8 @@ namespace Dark.Scripts.OutGame.Upgrade
         [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, List<UIUpgradeNode>> nodeChildrenMap;
         [ReadOnly, OdinSerialize, NonSerialized] public Dictionary<int, List<UIUpgradeNode>> nodesMapByLayer;
 
+        public Dictionary<int, List<UIUpgradeNode>> NodesMap => nodesMap;
+        
         [Space] [Header("Skill Node Ids")]
         public List<int> skillNodeIds = new List<int>();
         
@@ -250,6 +252,30 @@ namespace Dark.Scripts.OutGame.Upgrade
             EditorUtility.SetDirty(this);
             
             UpdateNodeSprites();
+        }
+        
+        [Button]
+        public void ValidateNodeRequireItself()
+        {
+            foreach (var pair in nodesMap)
+            {
+                foreach (var node in pair.Value)
+                {
+                    if (node.preRequires != null)
+                    {
+                        var newPreRequires = new List<UIUpgradePreRequireInfo>();
+                        foreach (var pre in node.preRequires)
+                        {
+                            if (pre.preRequireId != node.config.nodeId)
+                                newPreRequires.Add(pre);
+                        }
+
+                        node.preRequires = newPreRequires;
+                    }
+                    
+                    EditorUtility.SetDirty(node);
+                }
+            }
         }
         
         private UIUpgradeLine ShowPreRequiredLine(Vector2 from, float fromOffsetRadius, Vector2 to, float toOffsetRadius)

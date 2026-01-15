@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using DG.Tweening;
 using UnityEngine;
@@ -9,6 +10,9 @@ namespace Economic.UI
     {
         [SerializeField] private bool showInstruction = false;
         [SerializeField] private GameObject panelInstruction;
+
+        public static Action<WealthType> OnEconomicIconHoverIn { get; set; }
+        public static Action OnEconomicIconHoverOut { get; set; }
         
         protected int current;
         protected int target;
@@ -85,7 +89,7 @@ namespace Economic.UI
             return seq;
         }
 
-        public void OnPointerEnter(PointerEventData eventData)
+        public virtual void OnPointerEnter(PointerEventData eventData)
         {
             if (!showInstruction) return;
             panelInstruction.SetActive(true);
@@ -95,6 +99,7 @@ namespace Economic.UI
         {
              if (!showInstruction) return;
             panelInstruction.SetActive(false);
+            OnEconomicIconHoverOut?.Invoke();
        }
     }
 }
