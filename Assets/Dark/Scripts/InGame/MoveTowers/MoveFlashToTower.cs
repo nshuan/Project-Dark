@@ -48,14 +48,14 @@ namespace InGame
                 cameraShake ??= new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera, Magnitude = 0.05f};
                 VisualEffectHelper.Instance.PlayEffect(cameraShake);
                 
-                var count = Physics2D.CircleCastNonAlloc(character.FlashExplodeCenter, explodeSize, Vector2.zero, hits,
+                var count = Physics2D.CircleCastNonAlloc(toTower.GetBaseCenter(), explodeSize, Vector2.zero, hits,
                     0f,
                     enemyLayer);
                 if (count > 0)
                 {
                     for (int i = 0; i < count; i++)
                     {
-                        FlashHit(hits[i].transform, damage);
+                        FlashHit(hits[i].transform, damage, toTower);
                     }
                 }
             }).WaitForCompletion();
@@ -64,15 +64,23 @@ namespace InGame
             onComplete?.Invoke();
         }
         
-        protected void FlashHit(Transform hitTransform, float value)
+        protected void FlashHit(Transform hitTransform, float value, TowerEntity hitTower)
         {
             if (hitTransform)
             {
                 if (hitTransform.TryGetComponent(out hitTarget))
                 {
-                    hitTarget.HitDirectionX = hitTransform.position.x - characterRef.FlashExplodeCenter.x;
-                    hitTarget.HitDirectionY = hitTransform.position.y - characterRef.FlashExplodeCenter.y;
-                    hitTarget.Damage((int)value, characterRef.FlashExplodeCenter, stagger, DamageType.Normal);
+                    if (Vector2.Distance(hitTransform.position, hitTower.transform.position) >
+                        LevelUtilityV2.GetRelativeRange(explodeSize,
+                            hitTransform.position - hitTransform.transform.position))
+                    {
+                        return;
+                    }
+                    
+                    var aoeCenter = hitTower.GetBaseCenter();
+                    hitTarget.HitDirectionX = hitTransform.position.x - aoeCenter.x;
+                    hitTarget.HitDirectionY = hitTransform.position.y - aoeCenter.y;
+                    hitTarget.Damage((int)value, aoeCenter, stagger, DamageType.Normal);
                 }
             }
         }

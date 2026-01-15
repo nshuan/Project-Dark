@@ -116,7 +116,8 @@ namespace InGame
                 
                 foreach (var tower in Towers)
                 {
-                    tower.Hover(false);
+                    tower.Hover(false, true);
+                    tower.ShowFlashSize(false, 0f);
                 }
                 
                 var dashLine = MoveTowerHelper.Instance.GetTowerLine(Towers[tempCurrentTower], Towers[selectingTower]);
@@ -161,6 +162,14 @@ namespace InGame
                             if (CanMove)
                             {
                                 tower.Hover(true, true);
+                                if (ShortConfig.moveLogic is MoveFlashToTower)
+                                {
+                                    tower.ShowFlashSize(true, GetSize(ShortConfig));
+                                }
+                                else if (LongConfig && LongConfig.moveLogic is MoveFlashToTower)
+                                {
+                                    tower.ShowFlashSize(true, GetSize(LongConfig));
+                                }
                                 
                                 // Show dash line
                                 if (ShortConfig.moveLogic is MoveDashToTower)
@@ -176,6 +185,7 @@ namespace InGame
                             else
                             {
                                 tower.Hover(true, false);
+                                tower.ShowFlashSize(false, 0f);
                             }
                             cursor.SetMoveCursor(true, selectingTower);
                             CombatActions.OnTowerHoverIn?.Invoke(tower);
@@ -189,7 +199,8 @@ namespace InGame
                     if (Vector2.Distance(this.worldMousePosition, hoveringCenter) >= HoverRadius)
                     {
                         hovering = false;
-                        Towers[selectingTower].Hover(false);
+                        Towers[selectingTower].Hover(false, true);
+                        Towers[selectingTower].ShowFlashSize(false, 0f);
                         cursor.SetMoveCursor(false, selectingTower);
                         var dashLine = MoveTowerHelper.Instance.GetTowerLine(Towers[CurrentTowerIndex], Towers[selectingTower]);
                         dashLine?.gameObject.SetActive(false);

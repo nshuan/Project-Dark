@@ -84,7 +84,7 @@ namespace InGame
                 {
                     for (int i = 0; i < count; i++)
                     {
-                        DashHit(hits[i].transform, damage);
+                        DashHit(hits[i].transform, damage, lastPosOnGround);
                     }
                 }
                 
@@ -98,7 +98,7 @@ namespace InGame
             onComplete?.Invoke();
         }
         
-        protected void DashHit(Transform hitTransform, float value)
+        protected void DashHit(Transform hitTransform, float value, Vector2 hitCenter)
         {
             if (hitTransform)
             {
@@ -113,7 +113,7 @@ namespace InGame
                     currentHitHistoryIndex += 1;
                     hitTarget.HitDirectionX = direction.x;
                     hitTarget.HitDirectionY = direction.y;
-                    hitTarget.Damage((int)value, characterRef.FlashExplodeCenter, stagger, DamageType.Normal);
+                    hitTarget.Damage((int)value, hitCenter, stagger, DamageType.Normal);
                 }
             }
         }
