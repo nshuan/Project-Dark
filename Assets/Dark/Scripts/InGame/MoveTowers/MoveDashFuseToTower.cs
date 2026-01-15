@@ -57,9 +57,13 @@ namespace InGame
                 
                 var lastPos = character.transform.position;
                 character.transform.position = Vector2.Lerp(startPos, endPos, speed);
-                var movePath = character.transform.position - lastPos;
+                var lastPosOnGround = fromTower.GetBaseCenter() + (lastPos.x - startPos.x) / (endPos.x - startPos.x) *
+                    (toTower.GetBaseCenter() - fromTower.GetBaseCenter());
+                var currentPosOnGround = fromTower.GetBaseCenter() + (character.transform.position.x - startPos.x) /
+                    (endPos.x - startPos.x) * (toTower.GetBaseCenter() - fromTower.GetBaseCenter());
+                var movePath = currentPosOnGround - lastPosOnGround;
                 count = Physics2D.CircleCastNonAlloc(
-                    lastPos, 
+                    lastPosOnGround, 
                     hitRadius, movePath, hits,
                     movePath.magnitude,
                     enemyLayer);
@@ -68,7 +72,7 @@ namespace InGame
                 {
                     for (int i = 0; i < count; i++)
                     {
-                        DashHit(hits[i].transform, damage);
+                        DashHit(hits[i].transform, damage, lastPosOnGround);
                     }
                 }
                 
@@ -83,14 +87,14 @@ namespace InGame
             cameraShake ??= new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera, Magnitude = 0.08f };
             VisualEffectHelper.Instance.PlayEffect(cameraShake);
                 
-            count = Physics2D.CircleCastNonAlloc(character.FlashExplodeCenter, aoeSize, Vector2.zero, hits,
+            count = Physics2D.CircleCastNonAlloc(toTower.GetBaseCenter(), aoeSize, Vector2.zero, hits,
                 0f,
                 enemyLayer);
             if (count > 0)
             {
                 for (int i = 0; i < count; i++)
                 {
-                    AoeHit(hits[i].transform, damageAoe);
+                    AoeHit(hits[i].transform, damageAoe, toTower);
                 }
             }
             
@@ -100,7 +104,7 @@ namespace InGame
             onComplete?.Invoke();
         }
         
-        private void AoeHit(Transform hitTransform, float value)
+        private void AoeHit(Transform hitTransform, float value, TowerEntity targetTower)
         {
             if (hitTransform)
             {
@@ -112,10 +116,11 @@ namespace InGame
                         hitHistory.Add(hitTransform);
                     else
                         hitHistory[currentHitHistoryIndex] = hitTransform;
-                    
-                    hitTarget.HitDirectionX = hitTransform.position.x - characterRef.FlashExplodeCenter.x;
-                    hitTarget.HitDirectionY = hitTransform.position.y - characterRef.FlashExplodeCenter.y;
-                    hitTarget.Damage((int)value, characterRef.FlashExplodeCenter, aoeStagger, DamageType.Normal);
+
+                    var aoeCenter = targetTower.GetBaseCenter();
+                    hitTarget.HitDirectionX = hitTransform.position.x - aoeCenter.x;
+                    hitTarget.HitDirectionY = hitTransform.position.y - aoeCenter.y;
+                    hitTarget.Damage((int)value, aoeCenter, aoeStagger, DamageType.Normal);
                 }
             }
         }

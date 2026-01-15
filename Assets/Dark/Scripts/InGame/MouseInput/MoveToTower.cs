@@ -116,8 +116,12 @@ namespace InGame
                 
                 foreach (var tower in Towers)
                 {
-                    tower.Hover(false);
+                    tower.Hover(false, true);
+                    tower.ShowFlashSize(false, 0f);
                 }
+                
+                var dashLine = MoveTowerHelper.Instance.GetTowerLine(Towers[tempCurrentTower], Towers[selectingTower]);
+                dashLine?.gameObject.SetActive(false);
                 cursor.SetMoveCursor(false, selectingTower);
                 PlaySlowMotion(false);
             }
@@ -158,12 +162,30 @@ namespace InGame
                             if (CanMove)
                             {
                                 tower.Hover(true, true);
+                                if (ShortConfig.moveLogic is MoveFlashToTower)
+                                {
+                                    tower.ShowFlashSize(true, GetSize(ShortConfig));
+                                }
+                                else if (LongConfig && LongConfig.moveLogic is MoveFlashToTower)
+                                {
+                                    tower.ShowFlashSize(true, GetSize(LongConfig));
+                                }
+                                
+                                // Show dash line
+                                if (ShortConfig.moveLogic is MoveDashToTower)
+                                {
+                                    var dashLine = MoveTowerHelper.Instance.GetTowerLine(Towers[CurrentTowerIndex], Towers[selectingTower]);
+                                    DOTween.Kill(dashLine.transform);
+                                    dashLine.transform.DOScaleY(2 * GetSize(ShortConfig), 0.1f).SetEase(Ease.InQuad)
+                                        .SetUpdate(true).SetTarget(dashLine.transform);
+                                }
                                 
                                 PlaySlowMotion(true);
                             }
                             else
                             {
                                 tower.Hover(true, false);
+                                tower.ShowFlashSize(false, 0f);
                             }
                             cursor.SetMoveCursor(true, selectingTower);
                             CombatActions.OnTowerHoverIn?.Invoke(tower);
@@ -177,8 +199,11 @@ namespace InGame
                     if (Vector2.Distance(this.worldMousePosition, hoveringCenter) >= HoverRadius)
                     {
                         hovering = false;
-                        Towers[selectingTower].Hover(false);
+                        Towers[selectingTower].Hover(false, true);
+                        Towers[selectingTower].ShowFlashSize(false, 0f);
                         cursor.SetMoveCursor(false, selectingTower);
+                        var dashLine = MoveTowerHelper.Instance.GetTowerLine(Towers[CurrentTowerIndex], Towers[selectingTower]);
+                        dashLine?.gameObject.SetActive(false);
                         PlaySlowMotion(false);
                         CombatActions.OnTowerHoverOut?.Invoke(Towers[selectingTower]);
                         selectingTower = -1;
@@ -287,6 +312,19 @@ namespace InGame
             }
 
             seq.Play();
+        }
+        
+        public void OnDrawGizmos()
+        {
+#if UNITY_EDITOR
+            if (Towers == null || Towers.Length < 3) return;
+            if (!Character) return;
+            
+            Gizmos.DrawWireSphere(Character.transform.position - Towers[CurrentTowerIndex].GetTowerHeight(), GetSize(ShortConfig));
+            Gizmos.DrawWireSphere(Towers[0].GetBaseCenter(), GetSize(ShortConfig));
+            Gizmos.DrawWireSphere(Towers[1].GetBaseCenter(), GetSize(ShortConfig));
+            Gizmos.DrawWireSphere(Towers[2].GetBaseCenter(), GetSize(ShortConfig));
+#endif
         }
     }
 }

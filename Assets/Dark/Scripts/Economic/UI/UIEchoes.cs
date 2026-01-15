@@ -1,4 +1,5 @@
 using TMPro;
+using UnityEngine.EventSystems;
 
 namespace Economic.UI
 {
@@ -29,6 +30,12 @@ namespace Economic.UI
         public override void UpdateUI()
         {
             txtEchoes.SetText($"{current}");
+        }
+        
+        public override void OnPointerEnter(PointerEventData eventData)
+        {
+            base.OnPointerEnter(eventData);
+            OnEconomicIconHoverIn?.Invoke(WealthType.Echoes);
         }
     }
 }

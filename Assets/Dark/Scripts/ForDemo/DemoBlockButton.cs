@@ -14,6 +14,7 @@ namespace Dark.Scripts.ForDemo
         [SerializeField] protected CanvasGroup buttonVisual;
         [SerializeField] protected GameObject hiddenButton;
         [SerializeField] protected bool hideOnExit = false;
+        public bool defaultShow;
         
         protected Canvas parentCanvas;
         protected UIDemoPopupBlock cachePopupWishlist;
@@ -38,8 +39,8 @@ namespace Dark.Scripts.ForDemo
         {
             if (!DemoConfig.IsDemo) return;
             
-            buttonVisual.alpha = 0f;
-            hiddenButton?.SetActive(true);
+            buttonVisual.alpha = defaultShow ? 1f : 0f;
+            hiddenButton?.SetActive(!defaultShow);
         }
 
         protected virtual bool ShouldShowButton()
