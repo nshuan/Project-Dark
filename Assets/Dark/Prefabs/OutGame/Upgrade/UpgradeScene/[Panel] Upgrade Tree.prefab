@@ -1071,6 +1071,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7079232438700300705}
   - component: {fileID: 3559080216052072644}
+  - component: {fileID: 5195143994852943245}
   m_Layer: 5
   m_Name: '[Panel] Upgrade Tree'
   m_TagString: Untagged
@@ -1118,6 +1119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d76a7b825924b6983c19e111bb67340, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nodeHighlight: {fileID: 5195143994852943245}
   btnBack: {fileID: 5346821268493134739}
   btnWishlist: {fileID: 2092450072590532412}
   btnFeedback: {fileID: 3620645152916887927}
@@ -1129,6 +1131,18 @@ MonoBehaviour:
   cueSpawnTree: upgrade_spawn_tree
   cueSpawnNodes: upgrade_spawn_nodes
   popupSettings: {fileID: 6635461610057027154}
+--- !u!114 &5195143994852943245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1021400808244738277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6241c7279824e4f967f2498ae44f9ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1051455340605831098
 GameObject:
   m_ObjectHideFlags: 0

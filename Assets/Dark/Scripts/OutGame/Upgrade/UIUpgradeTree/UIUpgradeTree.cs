@@ -22,6 +22,8 @@ namespace Dark.Scripts.OutGame.Upgrade
         [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, List<UIUpgradeNode>> nodeChildrenMap;
         [ReadOnly, OdinSerialize, NonSerialized] public Dictionary<int, List<UIUpgradeNode>> nodesMapByLayer;
 
+        public Dictionary<int, List<UIUpgradeNode>> NodesMap => nodesMap;
+        
         [Space] [Header("Skill Node Ids")]
         public List<int> skillNodeIds = new List<int>();
         
