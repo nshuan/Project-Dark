@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Dark.Scripts.AudioV2;
+using Dark.Scripts.Utils;
 using DG.Tweening;
 using InGame.EnemyEffect;
 using InGame.EnemyVisualBody;
@@ -52,7 +53,7 @@ namespace InGame
         public EnemyState State { get; set; }
         public bool Activated { get; set; }
         public int UniqueId { get; set; }
-        private Vector3 direction = new Vector3();
+        protected Vector3 direction = new Vector3();
         private Vector2 directionAddition = new Vector2();
         private float staggerDuration;
         private Vector2 staggerTargetPos;
@@ -249,7 +250,11 @@ namespace InGame
         {
             if (TargetTower.IsDestroyed) return;
             animController.PlayAttack();
-            config.attackBehaviour.Attack(this, TargetTower, transform.position, CurrentDamage);
+            this.DelayCall(animController.GetAttackDelayTrigger(), () =>
+            {
+                if (TargetTower.IsDestroyed) return;
+                config.attackBehaviour.Attack(this, TargetTower, transform.position, CurrentDamage);
+            });
         }
 
         public float HitDirectionX { get; set; }

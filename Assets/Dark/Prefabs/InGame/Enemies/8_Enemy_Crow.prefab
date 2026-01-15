@@ -47,7 +47,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2026576607495002774}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c79df9005ed54b8f8e38f907d951a72d, type: 3}
+  m_Script: {fileID: 11500000, guid: fecf44a2d1284d8f9f168848178e7306, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   collider2d: {fileID: 1535701088654476495}
@@ -65,6 +65,9 @@ MonoBehaviour:
   materialNormal: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   materialElite: {fileID: 2100000, guid: 9cc43911995a5cd4b80f150967a2a7f4, type: 2}
   materialHighlight: {fileID: 2100000, guid: e6432522274541a4daf86e0d89d04ea2, type: 2}
+  attackMoveSpeed: 1.5
+  distanceToExplode: 1
+  delayExplode: 0
 --- !u!114 &4689114910165060341
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -415,7 +418,7 @@ MonoBehaviour:
     scale: 1
     autoExit: 1
     followers: []
-  attackAnim:
+  atkAnim:
     frames:
     - {fileID: 163054722, guid: d6d11b1576d06b2438e5c6d70d34787d, type: 3}
     - {fileID: 2113494683, guid: d6d11b1576d06b2438e5c6d70d34787d, type: 3}
@@ -423,11 +426,12 @@ MonoBehaviour:
     - {fileID: -1626949611, guid: d6d11b1576d06b2438e5c6d70d34787d, type: 3}
     - {fileID: 249097118, guid: d6d11b1576d06b2438e5c6d70d34787d, type: 3}
     - {fileID: 1649088717, guid: d6d11b1576d06b2438e5c6d70d34787d, type: 3}
-    isLoop: 0
+    isLoop: 1
     frameRate: 0.1
     scale: 1
     autoExit: 1
     followers: []
+    attackTriggerFrame: 0
   hitAnim:
     frames: []
     isLoop: 0

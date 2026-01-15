@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using CustomAnimations;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace InGame.EnemyEffect
     {
         [SerializeField] private EnemySpritesAnimationInfo idleAnim;
         [SerializeField] private EnemySpritesAnimationInfo runAnim;
-        [SerializeField] private EnemySpritesAnimationInfo attackAnim;
+        [SerializeField] private EnemySpritesAnimationAttackInfo atkAnim;
         [SerializeField] private EnemySpritesAnimationInfo hitAnim;
         [SerializeField] private EnemySpritesAnimationInfo dieAnim;
         [SerializeField] private EnemySpritesAnimationInfo spawnAnim;
@@ -90,16 +91,17 @@ namespace InGame.EnemyEffect
 
         public float PlayAttack()
         {
-            currentAnim = attackAnim;
+            currentAnim = atkAnim;
             currentFrame = 0;
             spriteRenderer.transform.localScale = originalScale * currentAnim.scale;
             spriteRenderer.sprite = currentAnim.frames[0];
             UpdateFollowerPosition();
             timer = 0f;
-            return attackAnim.frames.Length * attackAnim.frameRate;
+            return atkAnim.frames.Length * atkAnim.frameRate;
         }
-        
-        public float GetAttackDuration() => attackAnim.frames.Length * attackAnim.frameRate;
+
+        public float GetAttackDelayTrigger() => atkAnim.GetDelayAttackTrigger();
+        public float GetAttackDuration() => atkAnim.frames.Length * atkAnim.frameRate;
         
         public void PlayHit()
         {
@@ -192,7 +194,6 @@ namespace InGame.EnemyEffect
         {
             isPause = false;
         }
-        
     }
 
     [Serializable]
@@ -234,6 +235,17 @@ namespace InGame.EnemyEffect
         [Header("Follow objects")]
         [TableList]
         public List<EnemySpritesObjectFollow> followers;
+    }
+
+    [Serializable]
+    public class EnemySpritesAnimationAttackInfo : EnemySpritesAnimationInfo
+    {
+        public int attackTriggerFrame;
+
+        public float GetDelayAttackTrigger()
+        {
+            return attackTriggerFrame * frameRate;
+        }
     }
 
     [Serializable]
