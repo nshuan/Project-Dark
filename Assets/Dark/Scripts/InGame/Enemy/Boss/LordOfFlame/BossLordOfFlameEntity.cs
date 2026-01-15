@@ -158,6 +158,9 @@ namespace InGame.Boss
             AttackRange = configCasted.lordOfFlameConfig.phase2AtkRange;
             // Mặc định rớt trong tầm đánh luôn
             var dropDistanceToTower = AttackRange - 0.1f;
+            // Nêu tele vào trụ 1 thì đổi hướng vị trí tele
+            if (TargetTower.Id == 0)
+                dropDistanceToTower = -dropDistanceToTower;
             transform.position = Target.position + new Vector3(-dropDistanceToTower, -0.2f, 0f);
             attackPosition = transform.position;
             animController.transform.localScale =
