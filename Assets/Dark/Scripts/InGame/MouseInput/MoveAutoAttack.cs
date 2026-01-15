@@ -217,7 +217,7 @@ namespace InGame
             cursorRect.position = mousePosition;    
             
             // cursor.UpdateCooldown(true, 1 - Mathf.Clamp(cdCounter / Cooldown, 0f, 1f));
-            if (cdCounter <= 0)
+            if (cdCounter <= 0 && canAutoTarget)
                 AutoAttack();
         }
 
@@ -253,7 +253,11 @@ namespace InGame
             {
                 if (manager.EnemiesAliveMap.TryGetValue(enemy.Key, out var alive) && alive && enemy.Value.Activated && enemy.Value.IsDestroyed == false)
                 {
-                    var distance = Vector2.Distance(levelManager.CurrentTower.GetBaseCenter(), enemy.Value.transform.position);
+                    var direction = enemy.Value.transform.position - levelManager.CurrentTower.GetBaseCenter();
+                    var distance = direction.magnitude;
+                    if (distance > LevelUtilityV2.GetNormalAttackRange(direction))
+                        continue;
+                    
                     if (distance < nearestDistance)
                     {
                         nearestDistance = distance;

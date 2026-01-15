@@ -1,5 +1,6 @@
 using System;
 using Dark.Scripts.AudioV2;
+using DG.Tweening;
 using InGame.Shield;
 using InGame.UI;
 using UnityEngine;
@@ -21,6 +22,7 @@ namespace InGame
         [SerializeField] private TowerRegenerateOnKill regenerateOnKill;
         public Transform[] itemCollectorPositions;
         [SerializeField] private AudioPlayComponentV2 sfxHit;
+        [SerializeField] private Transform flashSize;
 
         [Space] [Header("Shield")] 
         [SerializeField] public TowerShield shield;
@@ -170,6 +172,23 @@ namespace InGame
             }
             towerAnim.SetActiveOutline(hovering);
             towerBaseAnim.SetActiveOutline(hovering);
+        }
+
+        public void ShowFlashSize(bool show, float size)
+        {
+            if (!show)
+            {
+                DOTween.Kill(flashSize.transform);
+                flashSize.gameObject.SetActive(false);
+            }
+            else
+            {
+                DOTween.Kill(flashSize.transform);
+                flashSize.transform.localScale = Vector3.zero;
+                flashSize.gameObject.SetActive(true);
+                flashSize.transform.DOScale(size, 0.25f).SetEase(Ease.OutQuad)
+                    .SetUpdate(true).SetTarget(flashSize.transform);
+            }
         }
         
         public void OnMotionBlur()

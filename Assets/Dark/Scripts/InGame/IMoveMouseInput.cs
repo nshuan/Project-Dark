@@ -7,6 +7,7 @@ namespace InGame
         void OnMouseClick();
         void OnActivated();
         void OnDeactivated();
+        void OnDrawGizmos();
     }
 
     public interface IMoveMouseInput

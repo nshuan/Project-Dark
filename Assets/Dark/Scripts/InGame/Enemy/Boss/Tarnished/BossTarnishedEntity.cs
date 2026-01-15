@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Data;
+using DG.Tweening;
 using InGame.BossConfig;
 using InGame.CameraController;
 using InGame.EnemyEffect;
@@ -20,16 +21,22 @@ namespace InGame.Boss
         {
             base.Init(eConfig, target, statsScale, levelExpRatio, levelDarkRatio, levelDarkUnitValue);
 
+            configCasted = (EnemyBossTarnishedBehaviour)config;
             if (LevelManager.Instance.Level.level != PlayerDataManager.Instance.Data.level + 1)
                 BossPoint = 0;
+            
+            shadowSprite = shadow.GetComponent<SpriteRenderer>();
+            shadowOriginalAlpha = shadowSprite.color.a;
         }
 
         public override void ActivateELite(bool active)
         {
             base.ActivateELite(active);
 
-            thresholdChangeTower = tarnishedConfig.GetHpThreshold();
-            startDistanceEachPhase = tarnishedConfig.GetStartDistance();
+            configCasted ??= (EnemyBossTarnishedBehaviour)config;
+            thresholdChangeTower = configCasted.tarnishedConfig.GetHpThreshold();
+            startDistanceEachPhase = configCasted.tarnishedConfig.GetStartDistance();
+            orderChangeTower = configCasted.tarnishedConfig.GetTargetIdOrder();
         }
 
         protected override IEnumerator IEDie(float delayRelease, EnemyDieReason reason)
@@ -92,8 +99,6 @@ namespace InGame.Boss
 
         private bool IsChangeTower()
         {
-            if (!config.elite) return false;
-                
             if (CurrentHealth <= 0) return false;
 
             for (var i = thresholdChangeTower.Count - 1; i > currentThresholdChangeTowerIndex; i--)
@@ -125,7 +130,6 @@ namespace InGame.Boss
         #region Change tower
 
         [Space] [Header("Elite boss behaviour")] 
-        [SerializeField] private BossTarnishedConfig tarnishedConfig;
         [SerializeField] protected EnemySpritesAnimationInfo jumpUpAnim;
         [SerializeField] protected EnemySpritesAnimationInfo jumpDownAnim;
         [Tooltip("After play attack animation, delay these seconds before doing attack logic")]
@@ -135,6 +139,9 @@ namespace InGame.Boss
         private List<int> orderChangeTower = new List<int>() { }; // Nếu null hoặc ko có phần tử thì random
         private List<float> startDistanceEachPhase = new List<float>();
         private int currentThresholdChangeTowerIndex = 0;
+        public EnemyBossTarnishedBehaviour configCasted;
+        private SpriteRenderer shadowSprite;
+        private float shadowOriginalAlpha;
 
         private IEnumerator IEChangeTower(float delay)
         {
@@ -146,6 +153,8 @@ namespace InGame.Boss
             // Jump up
             var jumpDuration = animController.PlayCustomAnim(jumpUpAnim);
             animController.Resume();
+            DOTween.Kill(shadowSprite);
+            shadowSprite?.DOFade(0f, jumpDuration).SetEase(Ease.InQuad).SetTarget(shadowSprite);
             BurnVfxParent.gameObject.SetActive(false);
             yield return new WaitForSeconds(jumpDuration);
             
@@ -189,6 +198,8 @@ namespace InGame.Boss
             
             // Jump down
             jumpDuration = animController.PlayCustomAnim(jumpDownAnim);
+            DOTween.Kill(shadowSprite);
+            shadowSprite?.DOFade(shadowOriginalAlpha, 0.5f).SetEase(Ease.InQuad).SetTarget(shadowSprite);
             yield return new WaitForSeconds(jumpDuration);
             BurnVfxParent.gameObject.SetActive(true);
             State = EnemyState.Move;

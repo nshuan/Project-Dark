@@ -33,6 +33,8 @@ namespace InGame.UI.WarningWave
 
         private void OnBossWaveStart()
         {
+            // Tạm thời tắt
+            return;
             WarnBossWave();
         }
         

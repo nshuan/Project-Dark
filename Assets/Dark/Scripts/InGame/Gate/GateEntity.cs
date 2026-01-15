@@ -149,7 +149,6 @@ namespace InGame
                     {
                         enemy.Item1.IsBoss = true;
                     }
-                    
                 }
                 else
                 {

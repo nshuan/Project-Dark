@@ -128,8 +128,7 @@ namespace InGame
         #endregion
 
         #region Flash
-
-        public Vector2 FlashExplodeCenter => flashEffect.explodeCenter.position;
+        
         private Sequence flashSequence;
         public Tween PLayFlashEffect()
         {
