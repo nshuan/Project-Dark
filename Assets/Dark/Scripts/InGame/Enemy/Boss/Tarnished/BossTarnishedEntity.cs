@@ -29,6 +29,7 @@ namespace InGame.Boss
         {
             base.ActivateELite(active);
 
+            configCasted ??= (EnemyBossTarnishedBehaviour)config;
             thresholdChangeTower = configCasted.tarnishedConfig.GetHpThreshold();
             startDistanceEachPhase = configCasted.tarnishedConfig.GetStartDistance();
         }
