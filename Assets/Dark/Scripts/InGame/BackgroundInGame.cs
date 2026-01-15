@@ -14,6 +14,7 @@ namespace InGame
         [SerializeField] private GameObject groupBgBlack;
         [SerializeField] private GameObject groupBlackAll;
         [SerializeField] private GameObject vfxBgBoss;
+        [SerializeField] private GameObject[] groupBgBossObj;
         [SerializeField] private Material matBgBoss;
 
         private void Start()
@@ -25,6 +26,10 @@ namespace InGame
         {
             matBgBoss.SetFloat(MatDisolveValue, 1f);
             vfxBgBoss.SetActive(false);
+            foreach (var obj in groupBgBossObj)
+            {
+                obj.SetActive(false);
+            }
             groupBgBoss.SetActive(true);
             DOTween.Sequence(this).SetDelay(1.2f)
                 .Append(DOTween.To(() => 1f, (x) => matBgBoss.SetFloat(MatDisolveValue, x), 0f, 2f))
@@ -32,6 +37,10 @@ namespace InGame
                 {
                     groupBgNormal.SetActive(false);
                     vfxBgBoss.SetActive(true);
+                    foreach (var obj in groupBgBossObj)
+                    {
+                        obj.SetActive(true);
+                    }
                 });
         }
 
@@ -52,6 +61,10 @@ namespace InGame
                     {
                         groupBgNormal.SetActive(false);
                         vfxBgBoss.SetActive(true);
+                        foreach (var obj in groupBgBossObj)
+                        {
+                            obj.SetActive(true);
+                        }
                     });
             }
             else
