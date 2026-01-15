@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Linq;
 using Dark.Scripts.Utils;
+using DG.Tweening;
 using InGame.BossConfig;
 using InGame.EnemyEffect;
 using InGame.UI;
@@ -34,6 +35,8 @@ namespace InGame.Boss
         private bool isAttacking = false;
         private Coroutine coroutineRecover;
         private EnemyBossLordOfFlameBehaviour configCasted;
+        private SpriteRenderer shadowSprite;
+        private float shadowOriginalAlpha;
         
         public override void Init(EnemyBehaviour eConfig, TowerEntity target, WaveStatsScale statsScale, float levelExpRatio,
             float levelDarkRatio, int levelDarkUnitValue)
@@ -44,6 +47,8 @@ namespace InGame.Boss
             hasRecoverOnce = false;
             isRecovering = false;
             isAttacking = false;
+            shadowSprite = shadow.GetComponent<SpriteRenderer>();
+            shadowOriginalAlpha = shadowSprite.color.a;
         }
 
         protected override IEnumerator IEAttack()
@@ -141,6 +146,8 @@ namespace InGame.Boss
             
             // disappear
             var teleDuration = animController.PlayCustomAnim(disappearAnim);
+            DOTween.Kill(shadowSprite);
+            shadowSprite?.DOFade(0f, teleDuration).SetEase(Ease.InQuad).SetTarget(shadowSprite);
             yield return new WaitForSeconds(teleDuration);
             
             yield return new WaitForEndOfFrame();
@@ -158,6 +165,8 @@ namespace InGame.Boss
             
             // appear
             teleDuration = animController.PlayCustomAnim(appearAnim);
+            DOTween.Kill(shadowSprite);
+            shadowSprite?.DOFade(shadowOriginalAlpha, 0.5f).SetEase(Ease.InQuad).SetTarget(shadowSprite);
             yield return new WaitForSeconds(teleDuration);
             yield return new WaitForEndOfFrame();
             yield return new WaitForSeconds(0.5f);
