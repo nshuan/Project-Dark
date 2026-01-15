@@ -32,6 +32,7 @@ namespace InGame.Boss
             configCasted ??= (EnemyBossTarnishedBehaviour)config;
             thresholdChangeTower = configCasted.tarnishedConfig.GetHpThreshold();
             startDistanceEachPhase = configCasted.tarnishedConfig.GetStartDistance();
+            orderChangeTower = configCasted.tarnishedConfig.GetTargetIdOrder();
         }
 
         protected override IEnumerator IEDie(float delayRelease, EnemyDieReason reason)
@@ -94,8 +95,6 @@ namespace InGame.Boss
 
         private bool IsChangeTower()
         {
-            if (!config.elite) return false;
-                
             if (CurrentHealth <= 0) return false;
 
             for (var i = thresholdChangeTower.Count - 1; i > currentThresholdChangeTowerIndex; i--)
