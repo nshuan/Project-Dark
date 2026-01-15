@@ -83,20 +83,9 @@ namespace Dark.Tools.GoogleSheetTool
         }
     }
 
-    /// <summary>
-    /// Key = Logic type key, should match the key in enum LogicType
-    /// value = values to set, 1st item should be the subtype of logic. If there isn't, it should be an empty string
-    /// </summary>
-    public struct NodeLogicInfo
-    {
-        public string key;
-        public List<string> value;
-        public string isMul;
-    }
-
     public interface INodeLogicGenerator
     {
-        public INodeActivateLogic Generate(string subType, List<string> value, bool isMul);
+        public INodeActivateLogic Generate(string subType, List<string> listValue, bool mul);
     }
     
     public enum LogicType

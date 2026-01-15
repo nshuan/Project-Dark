@@ -45,14 +45,18 @@ namespace InGame
                 cameraShake ??= new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera, Magnitude = 0.08f};
                 VisualEffectHelper.Instance.PlayEffect(cameraShake);
                 
-                var count = Physics2D.CircleCastNonAlloc(character.FlashExplodeCenter, explodeSize, Vector2.zero, hits,
+                var count = Physics2D.CircleCastNonAlloc(toTower.GetBaseCenter(), explodeSize, Vector2.zero, hits,
                     0f,
                     enemyLayer);
                 if (count > 0)
                 {
                     for (int i = 0; i < count; i++)
                     {
-                        FlashHit(hits[i].transform, damage);
+                        var dir = hits[i].point - (Vector2)toTower.transform.position;
+                        if (dir.magnitude > LevelUtilityV2.GetRelativeRange(explodeSize, dir))
+                            continue;
+                        
+                        FlashHit(hits[i].transform, damage, toTower);
                     }
                 }
             }).WaitForCompletion();
@@ -69,7 +73,7 @@ namespace InGame
             {
                 for (int i = 0; i < count; i++)
                 {
-                    DashHit(hits[i].transform, dashDamage);
+                    DashHit(hits[i].transform, dashDamage, fromTower.GetBaseCenter());
                 }
             }
             VisualEffectHelper.Instance.PlayEffect(cameraShake);
@@ -81,7 +85,7 @@ namespace InGame
             onComplete?.Invoke();
         }
         
-        private void DashHit(Transform hitTransform, float value)
+        private void DashHit(Transform hitTransform, float value, Vector2 hitCenter)
         {
             if (hitTransform)
             {
@@ -89,7 +93,7 @@ namespace InGame
                 {
                     hitTarget.HitDirectionX = dashDirection.x;
                     hitTarget.HitDirectionY = dashDirection.y;
-                    hitTarget.Damage((int)value, characterRef.FlashExplodeCenter, dashStagger, DamageType.Normal);
+                    hitTarget.Damage((int)value, hitCenter, dashStagger, DamageType.Normal);
                 }
             }
         }

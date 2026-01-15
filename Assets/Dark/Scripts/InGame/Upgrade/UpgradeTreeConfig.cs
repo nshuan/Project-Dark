@@ -17,10 +17,11 @@ namespace InGame.Upgrade
     public class UpgradeTreeConfig : SerializedScriptableObject
     {
         [NonSerialized, OdinSerialize] private Dictionary<int, UpgradeNodeConfig> nodeMapById = new Dictionary<int, UpgradeNodeConfig>();
-
+        public Dictionary<int, UpgradeNodeGroup> nodeGroupsMapById;
+        
         public int TotalNodes => nodeMapById.Count;
         
-        public void ActivateTree(List<UpgradeNodeData> nodeData, ref UpgradeBonusInfo bonusInfo)
+        public void ActivateTree(List<UpgradeNodeData> nodeData, ref UpgradeBonusInfoV2 bonusInfo)
         {
             foreach (var node in nodeData)
             {
@@ -39,6 +40,11 @@ namespace InGame.Upgrade
         public UpgradeNodeConfig GetNodeByName(string name)
         {
             return nodeMapById.FirstOrDefault((pair) => pair.Value.nodeName.Replace(" ", "") == name).Value;
+        }
+
+        public List<UpgradeNodeConfig> GetAllNodes()
+        {
+            return nodeMapById.Values.ToList();
         }
 
 #if UNITY_EDITOR
@@ -63,6 +69,39 @@ namespace InGame.Upgrade
 
             nodeMapById = assets.Select((config) => new KeyValuePair<int,UpgradeNodeConfig>(config.nodeId, config)).ToDictionary(x => x.Key, x => x.Value);
             EditorUtility.SetDirty(this);
+        }
+
+        [Button]
+        public void Validate()
+        {
+            if (nodeMapById == null) return;
+            nodeGroupsMapById = new Dictionary<int, UpgradeNodeGroup>();
+            foreach (var pair in nodeMapById)
+            {
+                foreach (var info in pair.Value.groupId)
+                {
+                    if (!nodeGroupsMapById.ContainsKey(info.groupId))
+                    {
+                        var newGroup = new UpgradeNodeGroup()
+                        {
+                            groupId = info.groupId,
+                            nodeList = new List<UpgradeNodeConfig>(),
+                            lockNode = pair.Value
+                        };
+                        
+                        nodeGroupsMapById.Add(info.groupId, newGroup);
+                    }
+                    
+                    if (!nodeGroupsMapById[info.groupId].nodeList.Contains(pair.Value))
+                        nodeGroupsMapById[info.groupId].nodeList.Add(pair.Value);
+                    if (info.isLockNode)
+                        nodeGroupsMapById[info.groupId].lockNode = pair.Value;
+                }
+            }
+            
+            EditorUtility.SetDirty(this);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
         }
 #endif
     }

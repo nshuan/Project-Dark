@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Dark.Scripts.InGame.Upgrade;
+using InGame.Upgrade.DynamicCost;
 using Economic;
 using InGame;
-using InGame.Upgrade;
+using InGame.Upgrade.DynamicBonus;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEditor;
@@ -133,6 +134,63 @@ namespace Dark.Tools.GoogleSheetTool
             configs = new[]
             {
                 AssetDatabase.LoadAssetAtPath<GradeConfig>(GradeConfig.FilePath),
+            };
+            EditorUtility.SetDirty(AssetDatabase.LoadAssetAtPath<GoogleSheetConfig>(GoogleSheetConfig.Path));
+        }
+#endif
+    }
+    
+    [Serializable]
+    public class GoogleSheetLevelInfo : GoogleSheetDataInfo
+    {
+#if UNITY_EDITOR
+        public override void GetConfigsSortByName()
+        {
+            var folderPath = LevelManifest.LevelPath;
+            string[] guids = UnityEditor.AssetDatabase.FindAssets("t:" + nameof(ScriptableObject), new[] { folderPath });
+            List<ScriptableObject> assets = new List<ScriptableObject>();
+
+            foreach (string guid in guids)
+            {
+                string path = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
+                ScriptableObject asset = UnityEditor.AssetDatabase.LoadAssetAtPath<ScriptableObject>(path);
+                if (asset == null) continue;
+
+                assets.Add(asset);
+            }
+            
+            // Sort by name
+            assets.Sort((asset1, asset2) => String.Compare(asset1.name, asset2.name, StringComparison.Ordinal));
+            configs = assets.ToArray();
+            EditorUtility.SetDirty(AssetDatabase.LoadAssetAtPath<GoogleSheetConfig>(GoogleSheetConfig.Path));
+        }
+#endif
+    }
+    
+    [Serializable]
+    public class GoogleSheetDynamicVestigeInfo : GoogleSheetDataInfo
+    {
+#if UNITY_EDITOR
+        public override void GetConfigsSortByName()
+        {
+            configs = new[]
+            {
+                AssetDatabase.LoadAssetAtPath<DynamicVestigeConfig>(DynamicVestigeConfig.FilePath),
+            };
+            EditorUtility.SetDirty(AssetDatabase.LoadAssetAtPath<GoogleSheetConfig>(GoogleSheetConfig.Path));
+        }
+#endif
+    }
+    
+    [Serializable]
+    public class GoogleSheetDynamicBonusValueInfo : GoogleSheetDataInfo
+    {
+#if UNITY_EDITOR
+        public override void GetConfigsSortByName()
+        {
+            configs = new[]
+            {
+                AssetDatabase.LoadAssetAtPath<DynamicBonusValueConfig>(DynamicBonusValueConfig.FilePath),
             };
             EditorUtility.SetDirty(AssetDatabase.LoadAssetAtPath<GoogleSheetConfig>(GoogleSheetConfig.Path));
         }

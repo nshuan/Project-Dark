@@ -85,7 +85,14 @@ public class ImportDataWindow : EditorWindow
             return;
         }
 
-        if (tabName.ToString().ToLower().Contains("nodeconfig"))
+        if (tabName.ToString().ToLower().Contains("levelconfig"))
+        {
+            foreach (var data in listDataToUpdate)
+            {
+                ConfigLevelImporter.Import(data.configs, csvTable);
+            }
+        }
+        else if (tabName.ToString().ToLower().Contains("nodeconfig"))
         {
             foreach (var data in listDataToUpdate)
             {
@@ -101,11 +108,32 @@ public class ImportDataWindow : EditorWindow
                 ConfigNodeCostImporter.Import(data.configs[0], csvTable);
             }
         }
+        else if (tabName.ToString().ToLower().Contains("vestigedynamic"))
+        {
+            foreach (var data in listDataToUpdate)
+            {
+                ConfigDynamicImporter.Import(data.configs[0], csvTable);
+            }
+        }
+        else if (tabName.ToString().ToLower().Contains("bonusvaluedynamic"))
+        {
+            foreach (var data in listDataToUpdate)
+            {
+                ConfigDynamicBonusValueImporter.Import(data.configs[0], csvTable);
+            }
+        }
         else if (tabName.ToString().ToLower().Contains("levelupconfig"))
         {
             foreach (var data in listDataToUpdate)
             {
                 ConfigNodeLevelUpImporter.Import(data.configs[0], csvTable);
+            }
+        }
+        else if (tabName.ToString().ToLower().Contains("tooltip"))
+        {
+            foreach (var data in listDataToUpdate)
+            {
+                TooltipImporter.Import(data.configs[0], csvTable);
             }
         }
         else

@@ -23,13 +23,13 @@ namespace InGame
             base.Awake();
             
             // Setup passive config map in LevelUtility
-            LevelUtility.EffectConfigsMap = new Dictionary<PassiveTriggerType, Dictionary<PassiveType, PassiveConfig>>();
+            LevelUtilityV2.PassiveConfigsMap = new Dictionary<PassiveTriggerType, Dictionary<PassiveType, PassiveConfig>>();
             foreach (var pair in effectConfigsMap)
             {
                 var subDict = new Dictionary<PassiveType, PassiveConfig>();
                 foreach (var subPair in pair.Value)
                     subDict.Add(subPair.Key, subPair.Value);
-                LevelUtility.EffectConfigsMap.Add(pair.Key, subDict);
+                LevelUtilityV2.PassiveConfigsMap.Add(pair.Key, subDict);
             }
             
             cooldownEffectMap = new Dictionary<PassiveTriggerType, Dictionary<PassiveType, bool>>();
@@ -52,7 +52,7 @@ namespace InGame
             base.OnDestroy();
         }
 
-        private void OnBonusActivated(UpgradeBonusInfo bonusInfo)
+        private void OnBonusActivated(UpgradeBonusInfoV2 bonusInfo)
         {
             possibleEffectMap = new Dictionary<PassiveTriggerType, List<PassiveType>>()
             {
@@ -62,13 +62,22 @@ namespace InGame
                 { PassiveTriggerType.TowerTakeDame , new List<PassiveType>() }
             };
             
-            foreach (var pair in bonusInfo.passiveMapByTriggerType)
-            {
-                foreach (var effect in pair.Value)
-                {
-                    possibleEffectMap[pair.Key].Add(effect);
-                }
-            }
+            if (bonusInfo.bonusUnlockSkill.unlockPassiveNormalLightning) possibleEffectMap[PassiveTriggerType.DameByNormalAttack].Add(PassiveType.Lightning);
+            if (bonusInfo.bonusUnlockSkill.unlockPassiveNormalExplosive) possibleEffectMap[PassiveTriggerType.DameByNormalAttack].Add(PassiveType.Explosion);
+            if (bonusInfo.bonusUnlockSkill.unlockPassiveNormalBurning) possibleEffectMap[PassiveTriggerType.DameByNormalAttack].Add(PassiveType.Burning);
+            if (bonusInfo.bonusUnlockSkill.unlockPassiveNormalThunder) possibleEffectMap[PassiveTriggerType.DameByNormalAttack].Add(PassiveType.Thunder);
+            if (bonusInfo.bonusUnlockSkill.unlockPassiveChargeLightning) possibleEffectMap[PassiveTriggerType.DameByChargeAttack].Add(PassiveType.Lightning);
+            if (bonusInfo.bonusUnlockSkill.unlockPassiveChargeExplosive) possibleEffectMap[PassiveTriggerType.DameByChargeAttack].Add(PassiveType.Explosion);
+            if (bonusInfo.bonusUnlockSkill.unlockPassiveChargeBurning) possibleEffectMap[PassiveTriggerType.DameByChargeAttack].Add(PassiveType.Burning);
+            if (bonusInfo.bonusUnlockSkill.unlockPassiveChargeThunder) possibleEffectMap[PassiveTriggerType.DameByChargeAttack].Add(PassiveType.Thunder);
+            if (bonusInfo.bonusUnlockSkill.unlockPassiveMoveLightning) possibleEffectMap[PassiveTriggerType.DameByMoveSKill].Add(PassiveType.Lightning);
+            if (bonusInfo.bonusUnlockSkill.unlockPassiveMoveExplosive) possibleEffectMap[PassiveTriggerType.DameByMoveSKill].Add(PassiveType.Explosion);
+            if (bonusInfo.bonusUnlockSkill.unlockPassiveMoveBurning) possibleEffectMap[PassiveTriggerType.DameByMoveSKill].Add(PassiveType.Burning);
+            if (bonusInfo.bonusUnlockSkill.unlockPassiveMoveThunder) possibleEffectMap[PassiveTriggerType.DameByMoveSKill].Add(PassiveType.Thunder);
+            if (bonusInfo.bonusUnlockSkill.unlockPassiveCounterLightning) possibleEffectMap[PassiveTriggerType.TowerTakeDame].Add(PassiveType.Lightning);
+            if (bonusInfo.bonusUnlockSkill.unlockPassiveCounterExplosive) possibleEffectMap[PassiveTriggerType.TowerTakeDame].Add(PassiveType.Explosion);
+            if (bonusInfo.bonusUnlockSkill.unlockPassiveCounterBurning) possibleEffectMap[PassiveTriggerType.TowerTakeDame].Add(PassiveType.Burning);
+            if (bonusInfo.bonusUnlockSkill.unlockPassiveCounterThunder) possibleEffectMap[PassiveTriggerType.TowerTakeDame].Add(PassiveType.Thunder);
         }
 
         #region Trigger
@@ -82,17 +91,17 @@ namespace InGame
                 if (cooldownEffectMap[triggerType][effectConfig.logicType]) continue;
                 
                 // Calculate chance
-                if (RandomUtil.Range(0f, 1f) <= LevelUtility.GetPassiveChance(triggerType, effectConfig.logicType))
+                if (RandomUtil.Range(0f, 1f) <= LevelUtilityV2.GetPassiveChance(triggerType, effectConfig.logicType))
                 {
                     pool.Get(effectConfig.passivePrefab, effectConfig.passiveId, null, false)
                         .TriggerEffect(effectConfig.passiveId, target, 
-                            LevelUtility.GetPassiveSize(triggerType, effectConfig.logicType), 
-                            LevelUtility.GetPassiveValue(triggerType, effectConfig.logicType), 
-                            LevelUtility.GetPassiveStagger(triggerType, effectConfig.logicType), 
+                            LevelUtilityV2.GetPassiveSize(triggerType, effectConfig.logicType), 
+                            LevelUtilityV2.GetPassiveValue(triggerType, effectConfig.logicType), 
+                            LevelUtilityV2.GetPassiveStagger(triggerType, effectConfig.logicType), 
                             pool);
 
                     cooldownEffectMap[triggerType][effectConfig.logicType] = true;
-                    var cooldown = LevelUtility.GetPassiveCooldown(triggerType, effectConfig.logicType);
+                    var cooldown = LevelUtilityV2.GetPassiveCooldown(triggerType, effectConfig.logicType);
                     StartCoroutine(IECooldown(cooldown, () => cooldownEffectMap[triggerType][effectConfig.logicType] = false));
                     
                     CombatActions.OnEffectTriggered?.Invoke(triggerType, effectConfig.logicType, cooldown);
@@ -105,9 +114,9 @@ namespace InGame
             var passiveConfig = effectConfigsMap[triggerType][passiveType];
             pool.Get(passiveConfig.passivePrefab, passiveConfig.passiveId, null, false)
                 .TriggerEffect(passiveConfig.passiveId, target, 
-                    LevelUtility.GetPassiveSize(triggerType, passiveType), 
-                    LevelUtility.GetPassiveValue(triggerType, passiveType), 
-                    LevelUtility.GetPassiveStagger(triggerType, passiveType), 
+                    LevelUtilityV2.GetPassiveSize(triggerType, passiveType), 
+                    LevelUtilityV2.GetPassiveValue(triggerType, passiveType), 
+                    LevelUtilityV2.GetPassiveStagger(triggerType, passiveType), 
                     pool);
         }
 

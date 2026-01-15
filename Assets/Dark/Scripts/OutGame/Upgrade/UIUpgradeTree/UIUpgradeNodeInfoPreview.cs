@@ -1,17 +1,18 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Core;
-using Dark.Scripts.InGame.Upgrade;
-using Dark.Scripts.Utils.Camera;
+using InGame.Upgrade.DynamicCost;
 using Data;
 using DG.Tweening;
 using Economic;
 using InGame;
+using InGame.AttackNormalConfig;
 using InGame.ChargeConfig;
 using InGame.ConfigManager;
+using InGame.CounterConfig;
 using InGame.Upgrade;
+using OutGame.Upgrade.Tooltip;
 using Sirenix.Serialization;
 using TMPro;
 using UnityEngine;
@@ -33,6 +34,8 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private TextMeshProUGUI txtNodeBonusBefore;
         [SerializeField] private TextMeshProUGUI txtNodeBonusAfter;
         [SerializeField] private RectTransform rectInfoBonusChanged;
+        [SerializeField] private UITooltip tooltip;
+        [SerializeField] private UITooltipSkillVideo tooltipSkillVideo;
 
         [Space] [Header("Requirement")] 
         [SerializeField] private RequirementInfo infoReqVestige;
@@ -48,7 +51,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private MoveTowersConfig teleConfig;
         [SerializeField] private MoveTowersConfig flashConfig;
         [SerializeField] private MoveTowersConfig dashConfig;
-        public UpgradeBonusInfo bonusInfo = new UpgradeBonusInfo();
+        public UpgradeBonusInfoV2 bonusInfo = new UpgradeBonusInfoV2();
         
         [Serializable]
         public class RequirementInfo
@@ -69,29 +72,34 @@ namespace Dark.Scripts.OutGame.Upgrade
         private void Start()
         {
             UpgradeManager.Instance.ActivateTree(ref bonusInfo);
-            LevelUtility.BonusInfo = bonusInfo;
-            LevelUtility.PlayerStats = playerStatsConfig;
-            LevelUtility.CurrentSkill = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
-            LevelUtility.ChargeConfigMap = new Dictionary<ChargeType, PlayerChargeConfig>()
-            {
-                { ChargeType.Bullet, PlayerChargeManifest.Get(ChargeType.Bullet) },
-                { ChargeType.Size, PlayerChargeManifest.Get(ChargeType.Size) }
-            };
-            LevelUtility.DashConfig = dashConfig;
-            LevelUtility.FlashConfig = flashConfig;
-            LevelUtility.TeleConfig = teleConfig; 
+            LevelUtilityV2.BonusInfo = bonusInfo;
+            LevelUtilityV2.StatsBase = playerStatsConfig;
+            LevelUtilityV2.StatsNormalAttack = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
+            LevelUtilityV2.StatsNormalPiercing = PlayerSkillNormalManifest.Get(NormalType.Piercing);
+            LevelUtilityV2.StatsNormalBullet = PlayerSkillNormalManifest.Get(NormalType.Bullet);
+            LevelUtilityV2.StatsChargeBullet = PlayerChargeManifest.Get(ChargeType.Bullet);
+            LevelUtilityV2.StatsChargeSize = PlayerChargeManifest.Get(ChargeType.Size);
+            LevelUtilityV2.StatsDash = dashConfig;
+            LevelUtilityV2.StatsFlash = flashConfig;
+            LevelUtilityV2.StatsTele = teleConfig; 
+            LevelUtilityV2.StatsCounterPiercing = TowerCounterManifest.Get(NodeTowerCounter.CounterType.Pierce);
+            LevelUtilityV2.StatsCounterSlash = TowerCounterManifest.Get(NodeTowerCounter.CounterType.Slash);
         }
 
-        public void Setup(UpgradeNodeConfig config, bool forceUpdate)
+        public void Setup(UIUpgradeNode node, UpgradeNodeConfig config, bool forceUpdate)
         {
             if (CanAutoShowHide == false && forceUpdate == false) return;
             
             cacheConfig = config;
             cacheData = UpgradeManager.Instance.GetData(config.nodeId);
-            UpdateUI();
+            var isNodeLocked = node.preRequires is { Count: > 0 } && node.preRequires.All((preRequire) =>
+                preRequire.node.CurrentState != UIUpgradeNodeState.Activated);
+            tooltipSkillVideo.gameObject.gameObject.SetActive(false);
+            tooltip.gameObject.SetActive(false);
+            UpdateUI(isNodeLocked);
         }
 
-        public void UpdateUI()
+        public void UpdateUI(bool isLocked)
         {
             if (cacheConfig == null) return;
             txtNodeName.SetText(cacheConfig.nodeName);
@@ -100,14 +108,21 @@ namespace Dark.Scripts.OutGame.Upgrade
 
             var descriptionStr = "";
             var descriptions = cacheConfig.description.Split("\n");
-            for (var i = 0; i < cacheConfig.nodeLogic.Length; i++)
+            if (cacheConfig.nodeLogic != null)
             {
-                if (i < descriptions.Length)
+                for (var i = 0; i < cacheConfig.nodeLogic.Length; i++)
                 {
-                    descriptions[i] = descriptions[i].Replace("[X]",
-                        cacheConfig.nodeLogic[i].GetDisplayValue(cacheData?.level ?? 0));
-                    descriptionStr += descriptions[i];
-                    if (i < descriptions.Length - 1) descriptionStr += "\n";
+                    if (i < descriptions.Length)
+                    {
+                        if (cacheConfig.nodeLogic[i] is INodeDynamicBonusValueV2 { IsDynamic: true } dynamicLogic)
+                        {
+                            dynamicLogic.OverrideBonusValue(cacheConfig.groupId.Min((info) => UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, false)));
+                        }
+                        descriptions[i] = descriptions[i].Replace("[X]",
+                            cacheConfig.nodeLogic[i].GetDisplayValue(cacheData?.level ?? 0));
+                        descriptionStr += descriptions[i];
+                        if (i < descriptions.Length - 1) descriptionStr += "\n";
+                    }
                 }
             }
             txtNodeBonus.SetText(descriptionStr);
@@ -115,19 +130,22 @@ namespace Dark.Scripts.OutGame.Upgrade
 
             var bonusBeforeStr = "";
             var bonusAfterStr = "";
-            for (var i = 0; i < cacheConfig.nodeLogic.Length; i++)
+            if (cacheConfig.nodeLogic != null)
             {
-                var bonusChanged = cacheConfig.nodeLogic[i].GetBeforeAfterValueTotalStat(cacheData?.level + 1 ?? 1, ref bonusInfo);
-                if (string.IsNullOrEmpty(bonusChanged.Item1) && string.IsNullOrEmpty(bonusChanged.Item2))
-                    continue;
-                bonusAfterStr += bonusChanged.Item2;
-                if (cacheData != null && cacheData.level >= cacheConfig.MaxLevel)
-                    bonusBeforeStr += bonusChanged.Item2;    
-                else bonusBeforeStr += bonusChanged.Item1;
-                if (i < cacheConfig.nodeLogic.Length - 1)
+                for (var i = 0; i < cacheConfig.nodeLogic.Length; i++)
                 {
-                    bonusBeforeStr += "\n";
-                    bonusAfterStr += "\n";
+                    var bonusChanged = cacheConfig.nodeLogic[i].GetBeforeAfterValueTotalStat(cacheData?.level + 1 ?? 1, ref bonusInfo);
+                    if (string.IsNullOrEmpty(bonusChanged.Item1) && string.IsNullOrEmpty(bonusChanged.Item2))
+                        continue;
+                    bonusAfterStr += bonusChanged.Item2;
+                    if (cacheData != null && cacheData.level >= cacheConfig.MaxLevel)
+                        bonusBeforeStr += bonusChanged.Item2;    
+                    else bonusBeforeStr += bonusChanged.Item1;
+                    if (i < cacheConfig.nodeLogic.Length - 1)
+                    {
+                        bonusBeforeStr += "\n";
+                        bonusAfterStr += "\n";
+                    }
                 }
             }
             txtNodeBonusBefore.SetText(bonusBeforeStr);
@@ -145,21 +163,82 @@ namespace Dark.Scripts.OutGame.Upgrade
             }
             else
             {
-                groupStillAvailable.alpha = 1f;
-                groupStillAvailable.gameObject.SetActive(true);
                 groupMax.SetActive(false);
+                if (isLocked)
+                {
+                    groupStillAvailable.gameObject.SetActive(false);
+                }
+                else
+                {
+                    groupStillAvailable.alpha = 1f;
+                    groupStillAvailable.gameObject.SetActive(true);
+                }
                 
                 var costVestige = 0;
                 var costEchoes = 0;
                 var costSigils = 0;
                 foreach (var req in cacheConfig.costInfo)
                 {
-                    if (req.costType == WealthType.Vestige) 
-                        costVestige = UpgradeRequirementConfig.Instance.GetRequirement(WealthType.Vestige, UpgradeManager.Instance.GetRequirementIndex(WealthType.Vestige));
-                    else if (req.costType == WealthType.Echoes) 
-                        costEchoes = UpgradeRequirementConfig.Instance.GetRequirement(WealthType.Echoes, UpgradeManager.Instance.GetRequirementIndex(WealthType.Echoes));
-                    else if (req.costType == WealthType.Sigils) 
-                        costSigils = UpgradeRequirementConfig.Instance.GetRequirement(WealthType.Sigils, UpgradeManager.Instance.GetRequirementIndex(WealthType.Sigils));
+                    // if (req.costType == WealthType.Vestige) 
+                    //     costVestige = UpgradeRequirementConfig.Instance.GetRequirement(WealthType.Vestige, UpgradeManager.Instance.GetRequirementIndex(WealthType.Vestige));
+                    // else if (req.costType == WealthType.Echoes) 
+                    //     costEchoes = UpgradeRequirementConfig.Instance.GetRequirement(WealthType.Echoes, UpgradeManager.Instance.GetRequirementIndex(WealthType.Echoes));
+                    // else if (req.costType == WealthType.Sigils) 
+                    //     costSigils = UpgradeRequirementConfig.Instance.GetRequirement(WealthType.Sigils, UpgradeManager.Instance.GetRequirementIndex(WealthType.Sigils));
+                    var unlockLevel = cacheData?.level ?? 0;
+                    if (req.costType == WealthType.Vestige)
+                    {
+                        if (cacheConfig.dynamicVestige)
+                        {
+                            if (cacheConfig.MaxLevel == 1)
+                                costVestige =
+                                    DynamicVestigeConfig.Instance.GetCost1Stage(
+                                        cacheConfig.groupId.Min((info) => UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, false)));
+                            else
+                            {
+                                var unlockCost = DynamicVestigeConfig.Instance.GetCost5Stage(
+                                    cacheConfig.groupId.Min((info) => UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, false)));
+                                unlockLevel = Math.Clamp(unlockLevel, 0, unlockCost.Length - 1);
+                                costVestige = unlockCost[unlockLevel];
+                            }
+                        }
+                        else
+                        {
+                            unlockLevel = Math.Clamp(unlockLevel, 0, req.costValue.Length - 1);
+                            costVestige = req.costValue[unlockLevel];
+                        }
+
+                        costVestige = Mathf.RoundToInt(costVestige * cacheConfig.vestigeCostRatio);
+                    }
+                    else if (req.costType == WealthType.Echoes)
+                    {
+                        // costEchoes = UpgradeRequirementConfig.Instance.GetRequirement(WealthType.Echoes, UpgradeManager.Instance.GetRequirementIndex(WealthType.Echoes));
+                        if (cacheConfig.dynamicEchoes)
+                        {
+                            if (cacheConfig.MaxLevel == 1)
+                                costEchoes =
+                                    DynamicVestigeConfig.Instance.GetCost1Echoes(
+                                        cacheConfig.groupId.Min((info) => UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, false)));
+                            else
+                            {
+                                var unlockCost = DynamicVestigeConfig.Instance.GetCost5Echoes(
+                                    cacheConfig.groupId.Min((info) => UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, false)));
+                                unlockLevel = Math.Clamp(unlockLevel, 0, unlockCost.Length - 1);
+                                costEchoes = unlockCost[unlockLevel];
+                            }
+                        }
+                        else
+                        {
+                            unlockLevel = Math.Clamp(unlockLevel, 0, req.costValue.Length - 1);
+                            costEchoes = req.costValue[unlockLevel];
+                        }
+                    }
+                    else if (req.costType == WealthType.Sigils)
+                    {
+                        // costSigils = UpgradeRequirementConfig.Instance.GetRequirement(WealthType.Sigils, UpgradeManager.Instance.GetRequirementIndex(WealthType.Sigils));
+                        unlockLevel = Math.Clamp(unlockLevel, 0, req.costValue.Length - 1);
+                        costSigils = req.costValue[unlockLevel];
+                    }
                 }
 
                 var canSpend = WealthManager.Instance.CanSpend(WealthType.Vestige, costVestige);
@@ -205,7 +284,14 @@ namespace Dark.Scripts.OutGame.Upgrade
             cacheHoverNodePadding.y = padding.y;
             if (CanAutoShowHide == false && forceShow == false) return;
             isVisible = true;
-            DoShow().OnComplete(() => onShow?.Invoke());
+            DoShow().OnComplete(() =>
+            {
+                if (!tooltipSkillVideo.Show(cacheConfig, rectInfoFrameContent, new Vector2(10f, 0f)))
+                {
+                    tooltip.Show(cacheConfig.description, rectInfoFrameContent, new Vector2(10f, 0f));
+                }
+                onShow?.Invoke();
+            });
         }
 
         public void ShowImmediately(Vector2 position, Vector2 padding, bool forceShow, Action onShow)

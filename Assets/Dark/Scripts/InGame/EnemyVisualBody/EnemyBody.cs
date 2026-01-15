@@ -32,6 +32,7 @@ namespace InGame.EnemyVisualBody
                                  (targetPosition - nearestSpot.transform.position).normalized * nearestSpot.range;
 
             projectile.position = targetPosition;
+            projectile.SetParent(nearestSpot.transform);
         }
 
         #region Math

@@ -31,9 +31,9 @@ namespace InGame.UI.CombatSkills
             CombatActions.OnTowerCounter -= OnTowerCounter;
         }
 
-        private void OnUpgradeBonusActivated(UpgradeBonusInfo bonusInfo)
+        private void OnUpgradeBonusActivated(UpgradeBonusInfoV2 bonusInfo)
         {
-            if (bonusInfo.unlockedTowerCounter == null)
+            if (bonusInfo.bonusUnlockSkill.unlockCounterPiercing == false && bonusInfo.bonusUnlockSkill.unlockCounterSlash == false)
             {
                 available = false;
                 callbackHideSkill?.Invoke();
@@ -42,11 +42,9 @@ namespace InGame.UI.CombatSkills
             
             var showIcon = false;
             var unlockedPierce =
-                bonusInfo.unlockedTowerCounter.TryGetValue(NodeTowerCounter.CounterType.Pierce,
-                    out var unlocked) && unlocked;
+                bonusInfo.bonusUnlockSkill.unlockCounterPiercing;
             var unlockedSlash =
-                bonusInfo.unlockedTowerCounter.TryGetValue(NodeTowerCounter.CounterType.Slash,
-                    out unlocked) && unlocked;
+                bonusInfo.bonusUnlockSkill.unlockCounterSlash;
             if (unlockedPierce && unlockedSlash)
             {
                 showIcon = true;
@@ -109,9 +107,7 @@ namespace InGame.UI.CombatSkills
                 // Mặc định counter piercing là skill số 1, check nếu đã unlock thì counter slash là skill số 2,
                 // không thì counter slash là skill số 1
                 case NodeTowerCounter.CounterType.Slash:
-                    var unlockedPierce =
-                        LevelUtility.BonusInfo.unlockedTowerCounter.TryGetValue(NodeTowerCounter.CounterType.Pierce,
-                            out var unlocked) && unlocked;
+                    var unlockedPierce = LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockCounterPiercing;
                     if (unlockedPierce)
                         On2ndSkillUsed(cooldown);
                     else
@@ -122,13 +118,11 @@ namespace InGame.UI.CombatSkills
         
         protected override void ShowToast()
         {
-            if (LevelUtility.BonusInfo.unlockedTowerCounter == null) return;
+            if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockCounterPiercing == false && LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockCounterSlash == false) return;
             var unlockedPierce =
-                LevelUtility.BonusInfo.unlockedTowerCounter.TryGetValue(NodeTowerCounter.CounterType.Pierce,
-                    out var unlocked) && unlocked;
+                LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockCounterPiercing;
             var unlockedSlash =
-                LevelUtility.BonusInfo.unlockedTowerCounter.TryGetValue(NodeTowerCounter.CounterType.Slash,
-                    out unlocked) && unlocked;
+                LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockCounterSlash;
             
             // Nếu mới unlock 1 loại thì dùng tên loại đó
             // Nếu đã unlock cả 2 loại thì dùng tên cả 2 loại

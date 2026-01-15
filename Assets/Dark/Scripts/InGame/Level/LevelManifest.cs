@@ -27,6 +27,20 @@ namespace InGame
             if (levelMap.TryGetValue(level, out var value)) return Instantiate(value);
             return null;
         }
+
+        public LevelConfig GetTrueLevel(int level)
+        {
+            if (levelMap.TryGetValue(level, out var value)) return value;
+            return null;
+        }
+
+        public LevelConfig[] GetAllLevels()
+        {
+            if (levelMap == null)
+                return null;
+            
+            return levelMap.Values.ToArray();
+        }
         
         #region SINGLETON
 
@@ -45,7 +59,8 @@ namespace InGame
         #endregion
         
 #if UNITY_EDITOR
-        private const string LevelPath = "Assets/Dark/Config/LevelInGame";
+        public const string LevelPath = "Assets/Dark/Config/LevelInGame";
+        public const string WavePath = "Assets/Dark/Config/LevelWaveInGame";
 
         [MenuItem("Dark/Manifest/Generate Level Manifest")]
         public static void CreateInstance()
@@ -54,7 +69,7 @@ namespace InGame
         }
         
         [Button]
-        private void Validate()
+        public void Validate()
         {
             Debug.ClearDeveloperConsole();
             

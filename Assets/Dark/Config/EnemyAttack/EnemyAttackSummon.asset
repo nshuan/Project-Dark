@@ -12,11 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6370396e8a04d0a99d3e909735692be, type: 3}
   m_Name: EnemyAttackSummon
   m_EditorClassIdentifier: 
-  summonInfos:
-  - enemyConfig: {fileID: 11400000, guid: 069b975ce94f01440bd5ab708829c966, type: 2}
-    amount: 5
-  - enemyConfig: {fileID: 11400000, guid: 069b975ce94f01440bd5ab708829c966, type: 2}
-    amount: 3
-  - enemyConfig: {fileID: 11400000, guid: 069b975ce94f01440bd5ab708829c966, type: 2}
-    amount: 4
-  randomize: 1
+  spawnableEnemies:
+  - {fileID: 11400000, guid: ff66082d35a8786429078ae8cc5e9433, type: 2}
+  - {fileID: 11400000, guid: a6e7b19182615cd49b494bab621fa0b0, type: 2}
+  - {fileID: 11400000, guid: bfd0b90c58376274fa2a63998fec8aa5, type: 2}
+  - {fileID: 11400000, guid: 069b975ce94f01440bd5ab708829c966, type: 2}
+  - {fileID: 11400000, guid: ec29898f2a33a734a9bf2c79f156f36d, type: 2}
+  - {fileID: 11400000, guid: 519bd7a08d13d904c90827d4110f1af2, type: 2}
+  - {fileID: 11400000, guid: 638a80d19db776f47a900dc9376e05ca, type: 2}
+  - {fileID: 11400000, guid: 4194e46c117a7ef4f9e1a7229293c5ba, type: 2}
+  - {fileID: 11400000, guid: 2bfa92c94f94ea048b4f6427a3babf0a, type: 2}
+  summonSpanAngle: 80
+  creepDelayAttack: 0.5

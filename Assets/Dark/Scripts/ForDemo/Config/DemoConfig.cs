@@ -17,12 +17,16 @@ namespace Dark.Scripts.ForDemo
         [SerializeField] private string feedbackURL = "https://forms.gle/3f5XtYzSyrJen8yW8";
         [SerializeField] private int maxDemoLevel = 3; // Tester can only play 3 levels in demo version
         [SerializeField] private List<int> lockedNodes;
+        [SerializeField] private int collectLogicType = 0; // 0 = original, 1 = auto collect, 2 = mouse
+        [SerializeField] private bool showTooltip = true;
         
         public static string SteamWishlistURL { get; private set; }
         public static string FeedbackURL { get; private set; }
         public static int MaxDemoLevel { get; private set; }
         public static List<int> LockedNodes { get; private set; }
         public static bool IsLockedNode(int nodeId) => IsDemo && LockedNodes != null && LockedNodes.Contains(nodeId);
+        public static int CollectLogicType { get; private set; }
+        public static bool ShowTooltip { get; private set; }
 
         public void InitPublicProperties()
         {
@@ -30,6 +34,8 @@ namespace Dark.Scripts.ForDemo
             FeedbackURL = feedbackURL;
             MaxDemoLevel = maxDemoLevel;
             LockedNodes = lockedNodes;
+            CollectLogicType = collectLogicType;
+            ShowTooltip = showTooltip;
         }
         
         #region SINGLETON

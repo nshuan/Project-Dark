@@ -89,10 +89,17 @@ namespace Dark.Scripts.ForDemo
             
             if (coroutinePointerDown != null) StopCoroutine(coroutinePointerDown);
             
+            parentCanvas ??= UIUpgradeScene.Instance.GetComponentInParent<Canvas>();
+            cachePopupWishlist ??= Instantiate(popupWishlist, parentCanvas.transform);
+            cachePopupWishlist.gameObject.SetActive(false);
+            cachePopupWishlist.transform.SetAsLastSibling();
             DOTween.Kill(this);
             DOTween.Sequence(this).SetUpdate(true)
                 .Append(node.transform.DOPunchScale(new Vector3(-0.1f, -0.1f, -0.1f), 0.2f))
-                .OnComplete(() => base.OnPointerClick(eventData));
+                .OnComplete(() =>
+                {
+                    cachePopupWishlist.gameObject.SetActive(true);
+                });
         }
 
         public void OnPointerDown(PointerEventData eventData)

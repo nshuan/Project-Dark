@@ -16,9 +16,11 @@ namespace InGame
         public EnemyBehaviour spawnType;
         public float intervalLoop = 4f; // duration between 2 spawns
         [NonSerialized, OdinSerialize] public IGateSpawner spawnLogic; // pattern for enemy appearance
+        public GateEntity gatePrefab;
 
         [Space] [Header("Visual")] 
         public float startTimeVisual;
         public float durationVisual;
+        public bool hideOrb;
     }
 }

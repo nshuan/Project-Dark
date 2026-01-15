@@ -15,10 +15,12 @@ namespace InGame
         [SerializeField] private AnimationCurve orbYCurve;
         [SerializeField] private float orbSpawnDuration;
         [SerializeField] private EnemyBoidObstacle obstacle;
+        [SerializeField] private Transform[] orbSpawnPositions;
+        
+        public Transform[] OrbSpawnPositions => orbSpawnPositions;
         
         [ReadOnly] public TowerEntity[] target;
-        private float WaveHpMultiplier { get; set; }
-        private float WaveDmgMultiplier { get; set; }
+        private WaveStatsScale StatsScale { get; set; }
         private float LevelExpRatio { get; set; }
         private float LevelDarkRatio { get; set; }
         private int LevelDarkUnitValue { get; set; }
@@ -92,12 +94,11 @@ namespace InGame
             obstacle.gameObject.SetActive(false);
         }
         
-        public void Initialize(GateConfig cfg, TowerEntity[] targetBase, float waveHpMultiplier, float waveDmgMultiplier, float levelExpRatio, float levelDarkRatio, int levelDarkUnitValue)
+        public void Initialize(GateConfig cfg, TowerEntity[] targetBase, WaveStatsScale statsScale, float levelExpRatio, float levelDarkRatio, int levelDarkUnitValue)
         {
             config = cfg;
             target = targetBase;
-            WaveHpMultiplier = waveHpMultiplier;
-            WaveDmgMultiplier = waveDmgMultiplier;
+            StatsScale = statsScale;
             LevelExpRatio = levelExpRatio;
             LevelDarkRatio = levelDarkRatio;
             LevelDarkUnitValue = levelDarkUnitValue;
@@ -137,11 +138,11 @@ namespace InGame
             visualCoroutine = StartCoroutine(IEVisual());
         }
         
-        private IEnumerator IESpawn()
+        protected virtual IEnumerator IESpawn()
         {
             while (TotalSpawnTurn == -1 || currentSpawnTurn < TotalSpawnTurn)
             {
-                var enemies = config.spawnLogic.Spawn(transform.position, config.spawnType.enemyId, config.spawnType.enemyPrefab, target);
+                var enemies = config.spawnLogic.Spawn(this, config.spawnType.enemyId, config.spawnType.enemyPrefab, target);
                 if (config.isBossGate)
                 {
                     foreach (var enemy in enemies)
@@ -158,15 +159,31 @@ namespace InGame
                 }
                 
                 // Không phải boss thì spawn orb
-                if (!config.isBossGate)
+                if (!config.isBossGate && !config.hideOrb)
                 {
                     var orbs = new Transform[enemies.Length];
+                    var orbShadows = new Transform[enemies.Length];
 
                     for (var i = 0; i < enemies.Length; i++)
                     {
                         orbs[i] = EnemyOrbPool.Instance.Get(null, false);
-                        orbs[i].position = transform.position;
-                        orbs[i].gameObject.SetActive(true);
+                        var totalPossibleSpawnPosition = orbSpawnPositions?.Length ?? 0;
+                        if (totalPossibleSpawnPosition > 0)
+                        {
+                            orbs[i].position = orbSpawnPositions[RandomUtil.Range(0, totalPossibleSpawnPosition)]
+                                .position;
+                        }
+                        else
+                        {
+                            orbs[i].position = transform.position;
+                        }
+                        orbs[i].localScale = 0.35f * Vector3.one;
+                                             orbs[i].gameObject.SetActive(true);
+                        
+                        orbShadows[i] = EnemyOrbShadowPool.Instance.Get(null, false);
+                        orbShadows[i].position = transform.position;
+                        orbShadows[i].localScale = Vector3.one;
+                        orbShadows[i].gameObject.SetActive(true);
                     }
 
                     while (orbSpawnTimer < orbSpawnDuration)
@@ -182,26 +199,33 @@ namespace InGame
 
                             // height offset using curve
                             var curveY = orbYCurve.Evaluate(t) * 3f;
+                            var shadowScale = 1f - curveY / 3f * 0.8f;
 
+                            orbShadows[i].position = horizontalPos;
+                            orbShadows[i].localScale = shadowScale * Vector3.one;
+                            
                             // final position
                             horizontalPos.y += curveY;
 
                             orbs[i].position = horizontalPos;
+                            orbs[i].localScale = (horizontalPos.x - transform.position.x) /
+                                                 (enemies[i].Item1.transform.position.x - transform.position.x) * Vector3.one;
                         }
 
                         yield return new WaitForEndOfFrame();
                     }
 
-                    foreach (var orb in orbs)
+                    for (var i = 0; i < orbs.Length; i++)
                     {
-                        EnemyOrbPool.Instance.Release(orb);
+                        EnemyOrbPool.Instance.Release(orbs[i]);
+                        EnemyOrbShadowPool.Instance.Release(orbShadows[i]);
                     }
                 }
                 
                 for (var i = 0; i < enemies.Length; i++)
                 {
                     var enemy = enemies[i];
-                    enemy.Item1.Init(config.spawnType, enemy.Item2, WaveHpMultiplier, WaveDmgMultiplier, LevelExpRatio, LevelDarkRatio, LevelDarkUnitValue);
+                    enemy.Item1.Init(config.spawnType, enemy.Item2, StatsScale, LevelExpRatio, LevelDarkRatio, LevelDarkUnitValue);
                     enemy.Item1.Activate();
                     enemy.Item1.UniqueId = EnemyManager.Instance.CurrentEnemyIndex;
                     AliveEnemyCount += 1;

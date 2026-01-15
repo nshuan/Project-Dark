@@ -18,7 +18,7 @@ namespace TestVfxInGame
         [SerializeField] private Button btnUnlockBurning;
         [SerializeField] private Button btnUnlockThunder;
 
-        private UpgradeBonusInfo tempBonusInfo;
+        private UpgradeBonusInfoV2 tempBonusInfo;
         
         private void Awake()
         {

@@ -274,8 +274,7 @@ namespace Dark.Scripts.RuntimeCheat.CheatLevel
                     
                     newEnemy.Init(enemyBehaviour,
                         nearestTower,
-                        1f,
-                        1f,
+                        new WaveStatsScale(),
                         1f,
                         1f,
                         1);

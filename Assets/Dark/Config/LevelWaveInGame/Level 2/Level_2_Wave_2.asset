@@ -16,6 +16,8 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 069b975ce94f01440bd5ab708829c966, type: 2}
+    - {fileID: 3134462521366388888, guid: dc75b18e4a8f0214eb7fe1b2dfab158a, type: 3}
     - {fileID: 11400000, guid: bfd0b90c58376274fa2a63998fec8aa5, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
@@ -28,7 +30,7 @@ MonoBehaviour:
         mscorlib
     - Name: 
       Entry: 12
-      Data: 3
+      Data: 2
     - Name: 
       Entry: 7
       Data: 1|InGame.GateConfig, Assembly-CSharp
@@ -40,10 +42,10 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: -4.03
+      Data: -0.1723358
     - Name: 
       Entry: 4
-      Data: 3.11
+      Data: -2.96172142
     - Name: 
       Entry: 8
       Data: 
@@ -67,28 +69,37 @@ MonoBehaviour:
       Data: 0
     - Name: duration
       Entry: 4
-      Data: 3
+      Data: 5
     - Name: spawnType
       Entry: 10
       Data: 0
     - Name: intervalLoop
       Entry: 4
-      Data: 1
+      Data: 1.5
     - Name: spawnLogic
       Entry: 7
       Data: 3|InGame.GateSpawnSingle, Assembly-CSharp
     - Name: radius
       Entry: 4
-      Data: 1.5
+      Data: 1.3
+    - Name: randomSpanAngle
+      Entry: 4
+      Data: 30
     - Name: 
       Entry: 8
       Data: 
+    - Name: gatePrefab
+      Entry: 10
+      Data: 1
     - Name: startTimeVisual
       Entry: 4
       Data: 0
     - Name: durationVisual
       Entry: 4
-      Data: 6
+      Data: 12
+    - Name: hideOrb
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -103,10 +114,10 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: 6.4
+      Data: -0.145668879
     - Name: 
       Entry: 4
-      Data: 1.25
+      Data: -2.96172047
     - Name: 
       Entry: 8
       Data: 
@@ -118,7 +129,7 @@ MonoBehaviour:
       Data: 1
     - Name: 
       Entry: 3
-      Data: 0
+      Data: 1
     - Name: 
       Entry: 13
       Data: 
@@ -127,94 +138,73 @@ MonoBehaviour:
       Data: 
     - Name: startTime
       Entry: 4
-      Data: 0
+      Data: 5
     - Name: duration
       Entry: 4
       Data: 3
     - Name: spawnType
       Entry: 10
-      Data: 0
+      Data: 2
     - Name: intervalLoop
       Entry: 4
-      Data: 1
+      Data: 1.5
     - Name: spawnLogic
       Entry: 7
-      Data: 6|InGame.GateSpawnSingle, Assembly-CSharp
-    - Name: radius
-      Entry: 4
-      Data: 1.5
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: startTimeVisual
-      Entry: 4
-      Data: 0
-    - Name: durationVisual
-      Entry: 4
-      Data: 6
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
+      Data: 6|InGame.GateSpawnPositions, Assembly-CSharp
+    - Name: amount
+      Entry: 3
+      Data: 1
+    - Name: spawnPositions
       Entry: 7
-      Data: 7|InGame.GateConfig, Assembly-CSharp
-    - Name: isBossGate
-      Entry: 5
-      Data: false
-    - Name: position
+      Data: 7|UnityEngine.Vector2[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
       Entry: 7
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: -0.83
+      Data: 0.0133329947
     - Name: 
       Entry: 4
-      Data: -2.76
+      Data: -1.65333319
     - Name: 
       Entry: 8
       Data: 
-    - Name: targetBaseIndex
+    - Name: 
       Entry: 7
-      Data: 8|System.Int32[], mscorlib
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
-      Entry: 14
-      Data: 1
+      Entry: 4
+      Data: 0.9733332
     - Name: 
-      Entry: 3
-      Data: 1
+      Entry: 4
+      Data: -1.94666672
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 
     - Name: 
       Entry: 8
       Data: 
-    - Name: startTime
-      Entry: 4
-      Data: 0
-    - Name: duration
-      Entry: 4
-      Data: 3
-    - Name: spawnType
-      Entry: 10
-      Data: 0
-    - Name: intervalLoop
-      Entry: 4
-      Data: 1
-    - Name: spawnLogic
-      Entry: 7
-      Data: 9|InGame.GateSpawnSingle, Assembly-CSharp
-    - Name: radius
-      Entry: 4
-      Data: 1.5
     - Name: 
       Entry: 8
       Data: 
+    - Name: gatePrefab
+      Entry: 10
+      Data: 1
     - Name: startTimeVisual
       Entry: 4
       Data: 0
     - Name: durationVisual
       Entry: 4
-      Data: 6
+      Data: 0
+    - Name: hideOrb
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 

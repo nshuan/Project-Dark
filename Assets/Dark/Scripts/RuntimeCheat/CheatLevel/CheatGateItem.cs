@@ -61,7 +61,7 @@ namespace Dark.Scripts.RuntimeCheat.CheatLevel
                 };
                 
                 var gate = Instantiate(LevelManager.Instance.gatePrefab, newGateConfig.position, quaternion.identity, null);
-                gate.Initialize(newGateConfig, newGateConfig.targetBaseIndex.Select((index) => LevelManager.Instance.Towers[index]).ToArray(), 1f, 1f, 1f, 1f, 1);
+                gate.Initialize(newGateConfig, newGateConfig.targetBaseIndex.Select((index) => LevelManager.Instance.Towers[index]).ToArray(), new WaveStatsScale(), 1f, 1f, 1);
                 gate.Activate();
             }
             

@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using CustomAnimations;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace InGame.EnemyEffect
@@ -9,7 +12,7 @@ namespace InGame.EnemyEffect
     {
         [SerializeField] private EnemySpritesAnimationInfo idleAnim;
         [SerializeField] private EnemySpritesAnimationInfo runAnim;
-        [SerializeField] private EnemySpritesAnimationInfo attackAnim;
+        [SerializeField] private EnemySpritesAnimationAttackInfo atkAnim;
         [SerializeField] private EnemySpritesAnimationInfo hitAnim;
         [SerializeField] private EnemySpritesAnimationInfo dieAnim;
         [SerializeField] private EnemySpritesAnimationInfo spawnAnim;
@@ -24,19 +27,34 @@ namespace InGame.EnemyEffect
         private bool isSpawningEffect = false;
         private float spawningTimer;
         private Vector3 originalScale;
-
+        private bool isPause;
+        
         private void Awake()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
             originalScale = spriteRenderer.transform.localScale;
         }
 
+        public float PlayCustomAnim(EnemySpritesAnimationInfo anim)
+        {
+            currentAnim = anim;
+            currentFrame = 0;
+            spriteRenderer.transform.localScale = originalScale * currentAnim.scale;
+            spriteRenderer.sprite = currentAnim.frames[0];
+            UpdateFollowerPosition();
+            timer = 0f;
+            return anim.frames.Length * anim.frameRate;
+        }
+
+        public float GetCustomAnimDuration(EnemySpritesAnimationInfo anim) => anim.frames.Length * anim.frameRate;
+        
         public float PlaySpawn()
         {
             currentAnim = spawnAnim;
             currentFrame = 0;
             spriteRenderer.transform.localScale = originalScale * currentAnim.scale;
             spriteRenderer.sprite = currentAnim.frames[0];
+            UpdateFollowerPosition();
             timer = 0;
             spawningTimer = 0f;
             if (spawnEffect)
@@ -49,12 +67,15 @@ namespace InGame.EnemyEffect
             return spawningTimer + spawnAnim.frames.Length * spawnAnim.frameRate;
         }
         
+        public float GetSpawnDuration() => spawnAnim.frames.Length * spawnAnim.frameRate;
+        
         public void PlayIdle()
         {
             currentAnim = idleAnim;
             currentFrame = 0;
             spriteRenderer.transform.localScale = originalScale * currentAnim.scale;
             spriteRenderer.sprite = currentAnim.frames[0];
+            UpdateFollowerPosition();
             timer = 0f;
         }
         
@@ -64,17 +85,23 @@ namespace InGame.EnemyEffect
             currentFrame = 0;
             spriteRenderer.transform.localScale = originalScale * currentAnim.scale;
             spriteRenderer.sprite = currentAnim.frames[0];
+            UpdateFollowerPosition();
             timer = 0f;
         }
 
-        public void PlayAttack()
+        public float PlayAttack()
         {
-            currentAnim = attackAnim;
+            currentAnim = atkAnim;
             currentFrame = 0;
             spriteRenderer.transform.localScale = originalScale * currentAnim.scale;
             spriteRenderer.sprite = currentAnim.frames[0];
+            UpdateFollowerPosition();
             timer = 0f;
+            return atkAnim.frames.Length * atkAnim.frameRate;
         }
+
+        public float GetAttackDelayTrigger() => atkAnim.GetDelayAttackTrigger();
+        public float GetAttackDuration() => atkAnim.frames.Length * atkAnim.frameRate;
         
         public void PlayHit()
         {
@@ -82,6 +109,7 @@ namespace InGame.EnemyEffect
             currentFrame = 0;
             spriteRenderer.transform.localScale = originalScale * currentAnim.scale;
             spriteRenderer.sprite = currentAnim.frames[0];
+            UpdateFollowerPosition();
             timer = 0f;
         }
 
@@ -91,12 +119,16 @@ namespace InGame.EnemyEffect
             currentFrame = 0;
             spriteRenderer.transform.localScale = originalScale * currentAnim.scale;
             spriteRenderer.sprite = currentAnim.frames[0];
+            UpdateFollowerPosition();
             timer = 0f;
             return dieAnim.frames.Length * dieAnim.frameRate;
         }
+        
+        public float GetDieDuration() => dieAnim.frames.Length * dieAnim.frameRate;
 
         private void Update()
         {
+            if (isPause) return;
             if (isSpawningEffect)
             {
                 if (spawningTimer > 0)
@@ -133,8 +165,34 @@ namespace InGame.EnemyEffect
                     }
                 }
                 spriteRenderer.sprite = currentAnim.frames[currentFrame];
+                UpdateFollowerPosition();
                 timer -= currentAnim.frameRate; // subtract instead of reset to avoid drift
             }
+        }
+
+        private void UpdateFollowerPosition()
+        {
+            // Update position of follow objects
+            if (currentAnim.followers is { Count: > 0 }
+                && currentAnim.followers[0].localPositions is { Count: > 0 })
+            {
+                foreach (var follower in currentAnim.followers)
+                {
+                    if (currentFrame < follower.localPositions.Count)
+                        follower.follower.localPosition = follower.localPositions[currentFrame];
+                    else follower.follower.localPosition = follower.localPositions[^1];
+                }
+            }
+        }
+
+        public void Pause()
+        {
+            isPause = true;
+        }
+
+        public void Resume()
+        {
+            isPause = false;
         }
     }
 
@@ -146,5 +204,54 @@ namespace InGame.EnemyEffect
         public float frameRate = 0.1f;
         public float scale = 1f;
         public bool autoExit = true;
+
+        [Button]
+        public void AddFollowerPosition()
+        {
+            if (followers == null) return;
+            foreach (var follower in followers)
+            {
+                follower.localPositions ??= new List<Vector2>();
+                follower.localPositions.Add(new Vector2(follower.follower.localPosition.x, follower.follower.localPosition.y));
+            }
+        }
+
+        [Button]
+        public void Inverse()
+        {
+            if (followers == null) return;
+            for (var i = 0; i < followers.Count; i++)
+            {
+                var temp = new List<Vector2>();
+                for (var positionIndex = followers[i].localPositions.Count - 1; positionIndex >= 0; positionIndex--)
+                {
+                    temp.Add(followers[i].localPositions[positionIndex]);
+                }
+                followers[i].localPositions = temp;
+            }
+        }
+        
+        [Space]
+        [Header("Follow objects")]
+        [TableList]
+        public List<EnemySpritesObjectFollow> followers;
+    }
+
+    [Serializable]
+    public class EnemySpritesAnimationAttackInfo : EnemySpritesAnimationInfo
+    {
+        public int attackTriggerFrame;
+
+        public float GetDelayAttackTrigger()
+        {
+            return attackTriggerFrame * frameRate;
+        }
+    }
+
+    [Serializable]
+    public class EnemySpritesObjectFollow
+    {
+        public Transform follower;
+        public List<Vector2> localPositions;
     }
 }

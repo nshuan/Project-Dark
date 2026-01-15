@@ -4,9 +4,10 @@ namespace InGame
 {
     public interface IMoveTowerMouseInput : IMoveMouseInput
     {
-        void OnMouseClick(bool isLongTele);
+        void OnMouseClick();
         void OnActivated();
         void OnDeactivated();
+        void OnDrawGizmos();
     }
 
     public interface IMoveMouseInput

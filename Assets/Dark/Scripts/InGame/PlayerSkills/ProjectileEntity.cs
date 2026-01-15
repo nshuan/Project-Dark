@@ -26,6 +26,7 @@ namespace InGame
         public Vector3 RangeCenter { get; set; }
         protected float maxDistanceFromSpawnPosition;
         protected float maxDistanceFromRangeCenter;
+        public int OriginalDamage { get; set; }
         public int Damage { get; set; }
         public float Size { get; set; }
         public float SpeedScale { get; set; }
@@ -99,7 +100,7 @@ namespace InGame
             this.RangeCenter = rangeCenter;
             this.direction = direction;
             BoundPosition =
-                LevelUtility.GetIntersectionInRangeBound(RangeCenter, range, SpawnPosition, direction);
+                LevelUtilityV2.GetIntersectionInRangeBound(RangeCenter, range, SpawnPosition, direction);
             maxDistanceFromSpawnPosition = (BoundPosition - SpawnPosition).magnitude;
             maxDistanceFromRangeCenter = (BoundPosition - RangeCenter).magnitude;
             lifeTime = 0f;
@@ -151,7 +152,7 @@ namespace InGame
             // }
         }
 
-        protected virtual void Update()
+        protected virtual void FixedUpdate()
         {
             if (!activated) return;
             if (!BlockAutoDestroyOutRange)
@@ -195,7 +196,6 @@ namespace InGame
                         var deadProjectile = ProjectileDeadOnEnemyPool.Instance.Get(moveDirection);
                         deadProjectile.position = hitEnemyInfo.hit.point;
                         hitEnemyInfo.hitEnemy.body.SetupProjectileHit(deadProjectile.transform, moveDirection);
-                        deadProjectile.SetParent(hitEnemyInfo.hitEnemy.transform);
                         hitEnemyInfo.hitEnemy.OnStartDead += () =>
                         {
                             deadProjectile.gameObject.SetActive(false);
@@ -278,8 +278,8 @@ namespace InGame
             PlayVfxHit();
             PlayHitActions(hit);
                     
-            OnHit?.Invoke();
             currentHit += 1;
+            OnHit?.Invoke();
             
             if (!BlockDestroy && currentHit >= MaxHit)
             {

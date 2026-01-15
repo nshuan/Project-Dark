@@ -29,9 +29,9 @@ namespace InGame.UI.CombatSkills
             UpgradeManager.Instance.OnActivated += OnUpgradeBonusActivated;
         }
         
-        private void OnUpgradeBonusActivated(UpgradeBonusInfo bonusInfo)
+        private void OnUpgradeBonusActivated(UpgradeBonusInfoV2 bonusInfo)
         {
-            if (bonusInfo.skillBonus.unlockedNormalDame && bonusInfo.skillBonus.unlockedNormalAtkSpe)
+            if (bonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing && bonusInfo.bonusUnlockSkill.unlockNormalAttackBullet)
             {
                 SetSkillSprite(imgIconBaseSkill1, 1);
                 SetSkillSprite(imgIconBaseSkill2, 2);
@@ -40,7 +40,7 @@ namespace InGame.UI.CombatSkills
                 secondSkill.SetActive(true);
                 groupPassiveAndArrow.localPosition = new Vector3(groupPassiveTwoSkillX, groupPassiveAndArrow.localPosition.y, groupPassiveAndArrow.localPosition.z);
             }
-            else if (bonusInfo.skillBonus.unlockedNormalDame)
+            else if (bonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing)
             {
                 SetSkillSprite(imgIconBaseSkill1, 1);
                 SetSkillSprite(imgFillCooldown, 1);
@@ -48,7 +48,7 @@ namespace InGame.UI.CombatSkills
                 groupPassiveAndArrow.localPosition = new Vector3(groupPassiveOneSkillX, groupPassiveAndArrow.localPosition.y,
                     groupPassiveAndArrow.localPosition.z);
             }
-            else if (bonusInfo.skillBonus.unlockedNormalAtkSpe)
+            else if (bonusInfo.bonusUnlockSkill.unlockNormalAttackBullet)
             {
                 SetSkillSprite(imgIconBaseSkill1, 2);
                 SetSkillSprite(imgFillCooldown, 2);

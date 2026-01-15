@@ -17,6 +17,8 @@ MonoBehaviour:
     SerializedBytes: 
     ReferencedUnityObjects:
     - {fileID: 11400000, guid: 638a80d19db776f47a900dc9376e05ca, type: 2}
+    - {fileID: 3134462521366388888, guid: dc75b18e4a8f0214eb7fe1b2dfab158a, type: 3}
+    - {fileID: 11400000, guid: bfd0b90c58376274fa2a63998fec8aa5, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -40,10 +42,10 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: 4.85
+      Data: 0.967029631
     - Name: 
       Entry: 4
-      Data: 2.27
+      Data: -0.293287277
     - Name: 
       Entry: 8
       Data: 
@@ -55,7 +57,7 @@ MonoBehaviour:
       Data: 1
     - Name: 
       Entry: 3
-      Data: 0
+      Data: 2
     - Name: 
       Entry: 13
       Data: 
@@ -67,7 +69,7 @@ MonoBehaviour:
       Data: 0
     - Name: duration
       Entry: 4
-      Data: 6
+      Data: 3
     - Name: spawnType
       Entry: 10
       Data: 0
@@ -76,28 +78,103 @@ MonoBehaviour:
       Data: 3
     - Name: spawnLogic
       Entry: 7
-      Data: 3|InGame.GateSpawnMultiple, Assembly-CSharp
+      Data: 3|InGame.GateSpawnPositions, Assembly-CSharp
     - Name: amount
       Entry: 3
       Data: 2
-    - Name: maxRadius
-      Entry: 4
-      Data: 1.8
+    - Name: spawnPositions
+      Entry: 7
+      Data: 4|UnityEngine.Vector2[], UnityEngine.CoreModule
     - Name: 
-      Entry: 8
-      Data: 
-    - Name: startTimeVisual
+      Entry: 12
+      Data: 5
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
       Entry: 4
-      Data: 0
-    - Name: durationVisual
+      Data: 2.458405
+    - Name: 
       Entry: 4
-      Data: 9
+      Data: -0.366723061
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 4|InGame.GateConfig, Assembly-CSharp
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 2.2682507
+    - Name: 
+      Entry: 4
+      Data: -0.910017
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 1.697792
+    - Name: 
+      Entry: 4
+      Data: -1.61629868
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 2.92020345
+    - Name: 
+      Entry: 4
+      Data: -0.8828521
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 2.64855719
+    - Name: 
+      Entry: 4
+      Data: -1.48047543
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: gatePrefab
+      Entry: 10
+      Data: 1
+    - Name: startTimeVisual
+      Entry: 4
+      Data: 0
+    - Name: durationVisual
+      Entry: 4
+      Data: 10
+    - Name: hideOrb
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 5|InGame.GateConfig, Assembly-CSharp
     - Name: isBossGate
       Entry: 5
       Data: false
@@ -106,16 +183,16 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: 6.02
+      Data: 0.9670277
     - Name: 
       Entry: 4
-      Data: 0.66
+      Data: -0.293287277
     - Name: 
       Entry: 8
       Data: 
     - Name: targetBaseIndex
       Entry: 7
-      Data: 5|System.Int32[], mscorlib
+      Data: 6|System.Int32[], mscorlib
     - Name: 
       Entry: 14
       Data: 1
@@ -130,34 +207,85 @@ MonoBehaviour:
       Data: 
     - Name: startTime
       Entry: 4
-      Data: 0
+      Data: 4
     - Name: duration
       Entry: 4
-      Data: 6
+      Data: 3
     - Name: spawnType
       Entry: 10
-      Data: 0
+      Data: 2
     - Name: intervalLoop
       Entry: 4
-      Data: 3
+      Data: 4
     - Name: spawnLogic
       Entry: 7
-      Data: 6|InGame.GateSpawnMultiple, Assembly-CSharp
+      Data: 7|InGame.GateSpawnPositions, Assembly-CSharp
     - Name: amount
       Entry: 3
       Data: 2
-    - Name: maxRadius
+    - Name: spawnPositions
+      Entry: 7
+      Data: 8|UnityEngine.Vector2[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
       Entry: 4
-      Data: 1.8
+      Data: -0.828522563
+    - Name: 
+      Entry: 4
+      Data: -0.176570415
     - Name: 
       Entry: 8
       Data: 
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: -1.45331049
+    - Name: 
+      Entry: 4
+      Data: -0.8285227
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: -0.882852733
+    - Name: 
+      Entry: 4
+      Data: -1.34465218
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: gatePrefab
+      Entry: 10
+      Data: 1
     - Name: startTimeVisual
       Entry: 4
       Data: 0
     - Name: durationVisual
       Entry: 4
-      Data: 9
+      Data: 0
+    - Name: hideOrb
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 

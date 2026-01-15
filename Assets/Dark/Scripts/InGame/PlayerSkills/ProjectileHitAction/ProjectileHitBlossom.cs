@@ -17,12 +17,14 @@ namespace InGame
         
         public void DoAction(ProjectileEntity parentProjectile, Vector2 position, Action<ProjectileEntity> callbackLateInit)
         {
-            var amount = LevelUtility.GetChargeSizeExplodeBullet(bulletAmount);
+            if (bulletAmount == 0) return;
+            if (blossomSize == 0) return;
+            if (!projectile) return;
             
             var dir = Random.insideUnitCircle.normalized;
-            var angle = 360f / amount;
+            var angle = 360f / bulletAmount;
             
-            for (var i = 0; i < amount; i++)
+            for (var i = 0; i < bulletAmount; i++)
             {
                 var pDir = (Vector2)(Quaternion.Euler(0f, 0f, angle * i) * dir);
                 var p = ProjectilePool.Instance.Get(projectile, null, false);
@@ -33,7 +35,7 @@ namespace InGame
                     pDir.normalized, 
                     blossomSize, 
                     parentProjectile.Size, 
-                    LevelUtility.CurrentSkill.speedScale, 
+                    LevelUtilityV2.StatsNormalAttack.speedScale, 
                     parentProjectile.Damage, 
                     parentProjectile.CriticalDamage, 
                     parentProjectile.CriticalRate,

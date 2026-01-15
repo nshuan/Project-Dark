@@ -21,7 +21,7 @@ namespace InGame
             gameObject.name = "Enemy Boid Manager With Obstacles";
             
             grid = new EnemySpatialGridWithObstacles(100, 100, 5);
-            LevelManager.Instance.OnLevelLoaded += (level) =>
+            LevelManager.Instance.OnLevelPreLoaded += (level) =>
             {
                 grid.Clear();
                 allObstacles.Clear();
