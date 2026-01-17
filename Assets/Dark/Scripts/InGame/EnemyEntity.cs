@@ -212,6 +212,7 @@ namespace InGame
             }
             else
             {
+                inAttackRange = false;
                 config.moveBehaviour.MoveNonAlloc(transform, attackPosition, directionAddition, AttackRange, config.moveSpeed * StatsScale.speScale, ref direction);
                 animController.SetDefaultRun(true);
             }
