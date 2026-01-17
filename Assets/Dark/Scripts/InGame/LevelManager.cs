@@ -29,6 +29,7 @@ namespace InGame
         public GateEntity gatePrefab;
         
         [SerializeField] private TowerEntity[] towers;
+        public TowerEntity FirstDestroyedTower { get; set; }
         public float delayStartLevel = 2.5f;
         public TowerEntity[] Towers => towers;
         private int currentTowerIndex;
@@ -245,7 +246,7 @@ namespace InGame
             while (currentWaveIndex < waves.Length)
             {
                 var currentWave = waves[currentWaveIndex];
-                currentWave.SetupWave(gatePrefab, Towers, OnWaveForceStop);
+                currentWave.SetupWave(Towers, OnWaveForceStop);
                 OnWaveStart?.Invoke(currentWaveIndex, currentWave.timeToEnd);
                 if (currentWave.IsBossWave) OnBossWaveStart?.Invoke();
                 currentWaveIndex += 1;
@@ -291,6 +292,7 @@ namespace InGame
         private void OnTowerDestroyed(TowerEntity tower)
         {
             Debug.LogError($"Tower {tower.name} is destroyed");
+            FirstDestroyedTower = tower;
             winLoseManager.CheckLose(this);
         }
         
