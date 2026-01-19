@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Dark.Tools.Language.Runtime
 {
     [RequireComponent(typeof(TextMeshProUGUI))]
-    public class LanguageTMP : SerializedMonoBehaviour
+    public class LanguageTMPComponent : SerializedMonoBehaviour
     {
         public string key;
 
@@ -28,12 +28,17 @@ namespace Dark.Tools.Language.Runtime
 
         public void UpdateText()
         {
+            var currentLanguage = LanguageManager.Instance.CurrentLanguage;
+            UpdateText(currentLanguage);
+        }
+
+        public void UpdateText(LanguageType language)
+        {
             if (valueMap == null) return;
             if (fontMap == null) return;
             
-            var currentLanguage = LanguageManager.Instance.CurrentLanguage;
-            txt.font = fontMap[currentLanguage];
-            txt.SetText(valueMap[currentLanguage]);
+            txt.font = fontMap[language];
+            txt.SetText(valueMap[language]);
         }
         
 #if UNITY_EDITOR
@@ -51,6 +56,13 @@ namespace Dark.Tools.Language.Runtime
                 valueMap.Add(item.Key, item.Value);
                 fontMap.Add(item.Key, LanguageData.GetFontAsset(item.Key));
             }
+        }
+
+        [Button]
+        public void SetLanguage(LanguageType language)
+        {
+            txt = GetComponent<TextMeshProUGUI>();
+            UpdateText(language);
         }
 #endif
     }

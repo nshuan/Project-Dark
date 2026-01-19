@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2320754, g: 0.9131096, b: 1, a: 1}
+  m_Color: {r: 0.64002424, g: 1, b: 0.390566, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -86,9 +86,9 @@ GameObject:
   - component: {fileID: 2168299330800228350}
   - component: {fileID: 8168191469260341938}
   - component: {fileID: 7121884253229340477}
-  - component: {fileID: 9079174151129151424}
+  - component: {fileID: 2844684665838679868}
   m_Layer: 5
-  m_Name: SpawnPosition
+  m_Name: AttackPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -135,7 +135,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.3754716, b: 0.3754716, a: 1}
+  m_Color: {r: 1, g: 0.8659806, b: 0.37647057, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -152,7 +152,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &9079174151129151424
+--- !u!114 &2844684665838679868
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -161,10 +161,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 5367449198363059625}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ac3bc2f0b2e42f486e9e97d61aa36bf, type: 3}
+  m_Script: {fileID: 11500000, guid: 6b67e71f30834ff481b20c46f6b372fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   imgSelected: {fileID: 9167341386584875235}
   manager: {fileID: 0}
-  attackPositions: []
-  attackPosPrefab: {fileID: 2844684665838679868, guid: 1086f226d57273444bbcafebe806bf80, type: 3}

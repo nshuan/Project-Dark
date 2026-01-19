@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace InGame.GateEditorV2
 {
-    public class LevelGateConfigEditorV2 : MonoBehaviour
+    public class LevelGateConfigEditorV2 : MonoBehaviour, IPointerClickHandler
     {
         public GameObject objSelected;
 
@@ -398,6 +399,11 @@ namespace InGame.GateEditorV2
         public void Deselect()
         {
             objSelected.SetActive(false);
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            targetGate?.OnClick?.Invoke(targetGate);
         }
     }
 }
