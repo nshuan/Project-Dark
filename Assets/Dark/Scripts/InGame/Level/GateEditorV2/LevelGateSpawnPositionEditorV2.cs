@@ -109,12 +109,18 @@ namespace InGame.GateEditorV2
             });
         }
 
+        public int currentSelectingId;
+
         public void Select(LevelGateSpawnPositionItemV2 selected, bool forceSelectOne = false)
         {
             if (Input.GetKey(KeyCode.LeftShift) && !forceSelectOne)
             {
                 if (selected.Selecting) selected.Deselect();
-                else selected.Select();
+                else
+                {
+                    selected.Select(currentSelectingId);
+                    currentSelectingId += 1;
+                }
             }
             else
             {
@@ -126,7 +132,8 @@ namespace InGame.GateEditorV2
                     }
                 }
                 
-                selected.Select();
+                selected.Select(0);
+                currentSelectingId = 1;
             }
         }
 

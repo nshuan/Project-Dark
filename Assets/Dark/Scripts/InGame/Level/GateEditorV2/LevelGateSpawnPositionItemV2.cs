@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -13,17 +14,21 @@ namespace InGame.GateEditorV2
         public Guid guid;
         public List<LevelGateAttackPositionItemV2> attackPositions;
         public LevelGateAttackPositionItemV2 attackPosPrefab;
+        public TextMeshProUGUI txtSpawnId;
         
         public bool Selecting { get; set; }
 
-        public void Select()
+        public void Select(int id)
         {
             Selecting = true;
+            txtSpawnId.SetText(id.ToString());
+            txtSpawnId.transform.parent.gameObject.SetActive(true);
             imgSelected.gameObject.SetActive(true);
             if (attackPositions != null)
                 foreach (var position in attackPositions)
                 {
                     position.gameObject.SetActive(true);
+                    position.SetSpawnId(id);
                 }
         }
 
@@ -31,6 +36,7 @@ namespace InGame.GateEditorV2
         {
             Selecting = false;
             imgSelected.gameObject.SetActive(false);
+            txtSpawnId.transform.parent.gameObject.SetActive(false);
             if (attackPositions != null)
                 foreach (var position in attackPositions)
                 {
