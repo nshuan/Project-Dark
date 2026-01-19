@@ -138,10 +138,11 @@ namespace InGame.GateEditorV2
                 var item = Instantiate(positionPrefab, positionParent);
                 item.attackPositions = new List<LevelGateAttackPositionItemV2>();
                 item.manager = this;
+                item.guid = Guid.NewGuid();
                 item.transform.position = eventData.position;
                 Select(item, true);
                 cacheGate.SpawnPositions ??= new Dictionary<Guid, GateSpawnPositionInfo>();
-                cacheGate.SpawnPositions.Add(Guid.NewGuid(),
+                cacheGate.SpawnPositions.Add(item.guid,
                     new GateSpawnPositionInfo()
                         { spawnPosition = cacheGate.camera.ScreenToWorldPoint(eventData.position) });
             }
