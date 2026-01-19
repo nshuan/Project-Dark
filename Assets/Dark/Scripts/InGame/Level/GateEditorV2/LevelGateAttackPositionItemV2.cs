@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ namespace InGame.GateEditorV2
         public Image imgSelected;
         public LevelGateSpawnPositionEditorV2 manager;
         public LevelGateSpawnPositionItemV2 spawnPosition;
+        public TextMeshProUGUI txtSpawnId;
         
         public bool Selecting { get; set; }
 
@@ -42,6 +44,11 @@ namespace InGame.GateEditorV2
             // Dùng chuột trái
             if (eventData.button != PointerEventData.InputButton.Left) return;
             transform.position += new Vector3(eventData.delta.x, eventData.delta.y, 0);
+        }
+
+        public void SetSpawnId(int spawnId)
+        {
+            txtSpawnId.SetText(spawnId.ToString());
         }
     }
 }
