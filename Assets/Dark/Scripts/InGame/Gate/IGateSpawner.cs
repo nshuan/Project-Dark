@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 namespace InGame
@@ -118,7 +119,7 @@ namespace InGame
             }
             else
             {
-                enemy.transform.position = gate.transform.position;
+                enemy.transform.position = gate.transform.position + new Vector3(0.1f, 0f, 0f);
             }
 
             return new[] { (enemy, target, true, target.transform.position) };
@@ -138,6 +139,15 @@ namespace InGame
             var targets = new TowerEntity[amount];
             var result = new (EnemyEntity, TowerEntity, bool, Vector3)[amount];
 
+            if (spawnPositionInfos == null || spawnPositionInfos.Length == 0)
+            {
+                if (spawnPositions != null)
+                {
+                    spawnPositionInfos = spawnPositions.Select((pos) => new GateSpawnPositionInfo()
+                        { spawnPosition = pos }).ToArray();
+                }   
+            }
+            
             var spawnPositionIndex = spawnPositionInfos is { Length: > 0 }
                 ? RandomUtil.ShuffleIndex(0, spawnPositionInfos.Length - 1)
                 : new int[] { };
@@ -147,9 +157,10 @@ namespace InGame
             {
                 enemies[i] = EnemyPool.Instance.Get(enemyPrefab, enemyId,null, false);
                 targets[i] = targetTower[RandomUtil.Range(0, targetTower.Length)];
+                
                 if (spawnPositionInfos == null || spawnPositionInfos.Length == 0)
                 {
-                    enemies[i].transform.position = gate.transform.position;
+                    enemies[i].transform.position = gate.transform.position + new Vector3(0.1f, 0f, 0f);
                     result[i] = (enemies[i], targets[i], true, targets[i].transform.position);
                 }
                 else
