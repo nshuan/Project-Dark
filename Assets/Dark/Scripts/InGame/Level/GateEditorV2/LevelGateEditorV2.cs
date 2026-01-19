@@ -3,6 +3,9 @@ using System.IO;
 using System.Linq;
 using Core;
 using Dark.Scripts.Common.UIWarning;
+using Dark.Scripts.SceneNavigation;
+using Dark.Scripts.Utils;
+using Data;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -21,6 +24,7 @@ namespace InGame.GateEditorV2
         public Button btnAddWave;
         public Button btnDeleteWave;
         public UIPopupWarning popupConfirm;
+        public Button btnPlayLevel;
 
         [Space] [Header("Display")] 
         public TextMeshProUGUI txtLevel;
@@ -39,6 +43,8 @@ namespace InGame.GateEditorV2
             btnAddWave.onClick.AddListener(AddNewWave);
             btnDeleteWave.onClick.RemoveAllListeners();
             btnDeleteWave.onClick.AddListener(DeleteSelectingWave);
+            btnPlayLevel.onClick.RemoveAllListeners();
+            btnPlayLevel.onClick.AddListener(PlaySelectingLevel);
         }
         
         public void LoadLevel(int levelId)
@@ -60,6 +66,22 @@ namespace InGame.GateEditorV2
             txtLevel?.SetText($"Level: {levelId}");
         }
 
+        public void PlaySelectingLevel()
+        {
+            if (!currentLevel) return;
+            
+#if UNITY_EDITOR
+            LevelManager.isLoadFromInit = true;
+#endif
+            this.DelayCall(0.5f, () =>
+            {
+                Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame, () =>
+                {
+                    LevelManager.Instance.LoadLevel(currentLevel);
+                });
+            });
+        }
+        
         #region Waves
 
         public void ClearAllWaves()
