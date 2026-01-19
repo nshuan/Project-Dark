@@ -34,6 +34,9 @@ namespace InGame.GateEditorV2
         private void RefreshLevels()
         {
             if (!levelManifest) return;
+#if UNITY_EDITOR
+            levelManifest.Validate();
+#endif
             var allLevels = levelManifest.GetAllLevels();
             if (allLevels == null) return;
 
