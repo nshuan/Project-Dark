@@ -23,6 +23,10 @@ namespace Dark.Scripts.Settings
         public static KeyCode KeyMoveTower0;
         public static KeyCode KeyMoveTower1;
         public static KeyCode KeyMoveTower2;
+
+        [Header("In-game settings")] 
+        public static bool ShowEnemyHealth;
+        public static bool ShowBossHealth;
         
         public static event Action OnSettingUpdated;
         public static event Action OnSettingInitialized;
@@ -41,6 +45,8 @@ namespace Dark.Scripts.Settings
             KeyMoveTower0 = _settings.keyMoveTower0;
             KeyMoveTower1 = _settings.keyMoveTower1;
             KeyMoveTower2 = _settings.keyMoveTower2;
+            ShowEnemyHealth = _settings.showEnemyHealth;
+            ShowBossHealth = _settings.showBossHealth;
             
             OnSettingInitialized?.Invoke();
         }
@@ -57,6 +63,8 @@ namespace Dark.Scripts.Settings
             _settings.keyMoveTower0 = KeyMoveTower0;
             _settings.keyMoveTower1 = KeyMoveTower1;
             _settings.keyMoveTower2 = KeyMoveTower2;
+            _settings.showEnemyHealth = ShowEnemyHealth;
+            _settings.showBossHealth = ShowBossHealth;
         }
 
         public static void Save()
@@ -79,6 +87,9 @@ namespace Dark.Scripts.Settings
             public KeyCode keyMoveTower0 = KeyCode.Alpha1;
             public KeyCode keyMoveTower1 = KeyCode.Alpha2;
             public KeyCode keyMoveTower2 = KeyCode.Alpha3;
+
+            public bool showEnemyHealth = true;
+            public bool showBossHealth = true;
         }
     }
 }
