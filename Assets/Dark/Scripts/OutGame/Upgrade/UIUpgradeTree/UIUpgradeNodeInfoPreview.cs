@@ -110,15 +110,6 @@ namespace Dark.Scripts.OutGame.Upgrade
         public void UpdateUI(bool isLocked)
         {
             if (cacheConfig == null) return;
-            txtNodeName.SetText(cacheConfig.nodeName);
-            txtNodeLore.SetText(cacheConfig.description);
-            txtNodeLevel.SetText($"{cacheData?.level ?? 0}/{cacheConfig.MaxLevel}");
-            DOTween.Kill(imgLevelProgress);
-            imgLevelProgress.DOFillAmount((cacheData?.level ?? 0f) / cacheConfig.MaxLevel, 0.3f).SetEase(Ease.OutQuad)
-                .SetTarget(imgLevelProgress);
-            if ((cacheData?.level ?? 0) <= 0) SetVfxBackgroundNotUpgraded();
-            else if ((cacheData?.level ?? 0) < cacheConfig.MaxLevel) SetVfxBackgroundUpgraded();
-            else SetVfxBackgroundMax();
 
             var descriptionStr = "";
             var descriptions = cacheConfig.description.Split("\n");
@@ -141,6 +132,16 @@ namespace Dark.Scripts.OutGame.Upgrade
             }
             txtNodeBonus.SetText(descriptionStr);
             txtNodeBonus.gameObject.SetActive(true);
+            
+            txtNodeName.SetText(cacheConfig.nodeName);
+            txtNodeLore.SetText(cacheConfig.description);
+            txtNodeLevel.SetText($"{cacheData?.level ?? 0}/{cacheConfig.MaxLevel}");
+            DOTween.Kill(imgLevelProgress);
+            imgLevelProgress.DOFillAmount((cacheData?.level ?? 0f) / cacheConfig.MaxLevel, 0.3f).SetEase(Ease.OutQuad)
+                .SetTarget(imgLevelProgress);
+            if ((cacheData?.level ?? 0) <= 0) SetVfxBackgroundNotUpgraded();
+            else if ((cacheData?.level ?? 0) < cacheConfig.MaxLevel) SetVfxBackgroundUpgraded();
+            else SetVfxBackgroundMax();
 
             var bonusBeforeStr = "";
             var bonusAfterStr = "";
