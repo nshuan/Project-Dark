@@ -14,7 +14,7 @@ namespace Dark.Scripts.Common.UIWarning
         [SerializeField] private Button btnYes;
         [SerializeField] private Button btnNo;
 
-        public void Setup(string title, string content, Action callbackYes, Action callbackNo = null)
+        public virtual void Setup(string title, string content, Action callbackYes, Action callbackNo = null)
         {
             btnYes.interactable = true;
             btnNo.interactable = true;
