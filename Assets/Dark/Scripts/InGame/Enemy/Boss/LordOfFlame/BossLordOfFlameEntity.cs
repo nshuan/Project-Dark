@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Linq;
 using Dark.Scripts.Utils;
+using Data;
 using DG.Tweening;
 using InGame.BossConfig;
 using InGame.EnemyEffect;
@@ -43,6 +44,9 @@ namespace InGame.Boss
         {
             base.Init(eConfig, target, statsScale, levelExpRatio, levelDarkRatio, levelDarkUnitValue);
 
+            if (LevelManager.Instance.Level.level != PlayerDataManager.Instance.Data.level + 1)
+                BossPoint = 0;
+            
             configCasted = (EnemyBossLordOfFlameBehaviour)config;
             hasRecoverOnce = false;
             isRecovering = false;

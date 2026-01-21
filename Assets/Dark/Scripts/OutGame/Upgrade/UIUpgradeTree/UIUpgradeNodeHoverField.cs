@@ -40,6 +40,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         public void OnPointerClick(PointerEventData eventData)
         {
             if (!interactable) return;
+            if (eventData.button != PointerEventData.InputButton.Left) return;
             if (canShowIconHovering)
             {
                 DOTween.Kill(imgIconHovering);

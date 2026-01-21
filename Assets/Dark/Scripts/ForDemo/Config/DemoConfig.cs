@@ -32,7 +32,7 @@ namespace Dark.Scripts.ForDemo
         {
             SteamWishlistURL = steamWishlistURL;
             FeedbackURL = feedbackURL;
-            MaxDemoLevel = maxDemoLevel;
+            MaxDemoLevel = IsDemo ? maxDemoLevel : 100;
             LockedNodes = lockedNodes;
             CollectLogicType = collectLogicType;
             ShowTooltip = showTooltip;

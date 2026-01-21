@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -21,7 +22,7 @@ namespace InGame.GateEditorV2
         
         // public bool IsBossGate { get; set; }
         public Vector2 Position { get; set; }
-        public List<Vector2> SpawnPositions { get; set; }
+        public Dictionary<Guid, GateSpawnPositionInfo> SpawnPositions { get; set; }
 
         public Transform vfx;
         public Camera camera;
@@ -59,7 +60,7 @@ namespace InGame.GateEditorV2
             }
         }
 
-        public void UpdateUI(GateConfig gate, int gatePrefabId)
+        public void UpdateUI(GateConfig gate, int gatePrfId)
         {
             var newTargets = new List<int>();
             if (gate.targetBaseIndex != null)
@@ -67,7 +68,7 @@ namespace InGame.GateEditorV2
                 newTargets.AddRange(gate.targetBaseIndex);
             }
 
-            SpawnPositions = new List<Vector2>();
+            SpawnPositions = new Dictionary<Guid, GateSpawnPositionInfo>();
             IGateSpawner newSpawnLogic;
             if (gate.spawnLogic is GateSpawnSingle existingSingle)
             {
@@ -84,15 +85,41 @@ namespace InGame.GateEditorV2
             else if (gate.spawnLogic is GateSpawnPositions existingPositions)
             {
                 newSpawnLogic = new GateSpawnPositions() { amount = existingPositions.amount };
-                
-                if (existingPositions.spawnPositions != null)
+
+                if (existingPositions.spawnPositionInfos != null)
+                {
+                    foreach (var position in existingPositions.spawnPositionInfos)
+                    {
+                        SpawnPositions.Add(Guid.NewGuid(), new GateSpawnPositionInfo()
+                        {
+                            spawnPosition = position.spawnPosition,
+                            attackPositions = position.attackPositions.ToArray()
+                        });
+                    }
+
+                    newSpawnLogic = new GateSpawnPositions()
+                    {
+                        amount = existingPositions.amount,
+                        spawnPositions = SpawnPositions.Values.Select((p) => p.spawnPosition).ToArray(),
+                        spawnPositionInfos = SpawnPositions.Values.ToArray()
+                    };
+                }
+                else if (existingPositions.spawnPositions != null)
                 {
                     foreach (var position in existingPositions.spawnPositions)
                     {
-                        SpawnPositions.Add(position);
+                        SpawnPositions.Add(Guid.NewGuid(), new GateSpawnPositionInfo()
+                        {
+                            spawnPosition = position,
+                        });
                     }
-                    
-                    newSpawnLogic = new GateSpawnPositions() { amount = existingPositions.amount, spawnPositions = SpawnPositions.ToArray() };
+
+                    newSpawnLogic = new GateSpawnPositions()
+                    {
+                        amount = existingPositions.amount,
+                        spawnPositions = SpawnPositions.Values.Select((p) => p.spawnPosition).ToArray(),
+                        spawnPositionInfos = SpawnPositions.Values.ToArray()
+                    };
                 }
             }
             else
@@ -113,13 +140,13 @@ namespace InGame.GateEditorV2
                 spawnLogic = newSpawnLogic,
                 startTimeVisual = gate.startTimeVisual,
                 durationVisual = gate.durationVisual,
-                gatePrefab = GateManifest.Get(gatePrefabId),
+                gatePrefab = GateManifest.Get(gatePrfId),
                 hideOrb = gate.hideOrb
             };
             
             transform.position = camera.WorldToScreenPoint(gate.position);
             vfx.position = gate.position;
-            UpdateGateType(gatePrefabId);
+            UpdateGateType(gatePrfId);
             Position = vfx.position;
         }
 

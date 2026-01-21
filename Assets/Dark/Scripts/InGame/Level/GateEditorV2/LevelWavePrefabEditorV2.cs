@@ -125,7 +125,11 @@ namespace InGame.GateEditorV2
             newGate.OnClick = SelectGate;
             newGate.OnDragging = null;
             var newGateConfig = Instantiate(prefabGateConfig, parentGateConfig);
-            newGateConfig.AvailableEnemies = AvailableEnemies;
+            newGateConfig.AvailableEnemies = new Dictionary<int, EnemyBehaviour>();
+            foreach (var enemy in AvailableEnemies)
+            {
+                newGateConfig.AvailableEnemies[enemy.enemyId] = enemy;
+            }
             newGateConfig.GateMap = gateMap;
             newGateConfig.Setup(newGate);
         }
@@ -227,13 +231,32 @@ namespace InGame.GateEditorV2
                         if (gateConfigEditor.SpawnPositions != null)
                         {
                             var newSpawnPositions = new List<Vector2>();
+                            var newSpawnPositionInfos = new List<GateSpawnPositionInfo>();
                             
                             foreach (var position in gateConfigEditor.SpawnPositions)
                             {
-                                newSpawnPositions.Add(position);
+                                newSpawnPositions.Add(position.Value.spawnPosition);
+                                var attackPos = new List<Vector2>();
+                                if (position.Value.attackPositions != null)
+                                {
+                                    foreach (var pos in position.Value.attackPositions)
+                                    {
+                                        attackPos.Add(pos);
+                                    }
+                                }
+                                newSpawnPositionInfos.Add(new GateSpawnPositionInfo()
+                                {
+                                    spawnPosition = position.Value.spawnPosition,
+                                    attackPositions = attackPos.ToArray()
+                                });
                             }
                     
-                            newSpawnLogic = new GateSpawnPositions() { amount = existingPositions.amount, spawnPositions = newSpawnPositions.ToArray() };
+                            newSpawnLogic = new GateSpawnPositions()
+                            {
+                                amount = existingPositions.amount, 
+                                spawnPositions = newSpawnPositions.ToArray(),
+                                spawnPositionInfos = newSpawnPositionInfos.ToArray()
+                            };
                         }
                     }
                     else

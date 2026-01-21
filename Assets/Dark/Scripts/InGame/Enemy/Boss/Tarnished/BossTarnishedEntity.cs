@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Dark.Scripts.Utils;
 using Data;
 using DG.Tweening;
 using InGame.BossConfig;
@@ -65,36 +66,28 @@ namespace InGame.Boss
             {
                 if (inAttackRange)
                 {
-                    var delayAttack = 0f;
                     isAttacking = true;
-                    delayAttack = Mathf.Min(delayAttackAnim, 1 / config.attackSpeed);
-                    var attackDuration = animController.PlayAttack();
-                    yield return new WaitForSeconds(delayAttack);
                     Attack();
-                    if (IsChangeTower())
-                    {
-                        currentThresholdChangeTowerIndex += 1;
-                        State = EnemyState.Freeze;
-                        yield return new WaitForSeconds(Mathf.Max(attackDuration - delayAttack, 0f));
-                        isAttacking = false;
-                        yield return StartCoroutine(IEChangeTower(0f));
-                    }
-                    else
-                    {
-                        isAttacking = false;
-                        yield return new WaitForSeconds(1 / config.attackSpeed - delayAttack);
-                    }
-
+                    yield return new WaitForSeconds(1 / config.attackSpeed);
+                    isAttacking = false;
+                    if (isChangingTower) yield return new WaitUntil(() => !isChangingTower);
                 }
                 else
+                {
                     yield return new WaitUntil(() => inAttackRange);
+                }
             }
         }
 
         protected override void Attack()
         {
             if (TargetTower.IsDestroyed) return;
-            config.attackBehaviour.Attack(this, TargetTower, transform.position, CurrentDamage);
+            animController.PlayAttack();
+            this.DelayCall(animController.GetAttackDelayTrigger(), () =>
+            {
+                if (TargetTower.IsDestroyed) return;
+                config.attackBehaviour.Attack(this, TargetTower, transform.position, CurrentDamage);
+            });
         }
 
         private bool IsChangeTower()
@@ -116,13 +109,13 @@ namespace InGame.Boss
 
         public override void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
         {
-            if (State == EnemyState.Freeze) return;
+            if (isChangingTower) return;
             base.Damage(damage, dealerPosition, stagger, dmgType);
 
-            if (!isAttacking && !isChangingTower && IsChangeTower())
+            if (IsChangeTower())
             {
+                isChangingTower = true;
                 currentThresholdChangeTowerIndex += 1;
-                State = EnemyState.Freeze;
                 StartCoroutine(IEChangeTower(0f));
             }
         }
@@ -145,7 +138,8 @@ namespace InGame.Boss
 
         private IEnumerator IEChangeTower(float delay)
         {
-            isChangingTower = true;
+            yield return new WaitUntil(() => isAttacking == false);
+            State = EnemyState.Freeze;
             yield return new WaitForSeconds(delay);
             animController.Pause();
             yield return new WaitForEndOfFrame();
@@ -202,6 +196,7 @@ namespace InGame.Boss
             shadowSprite?.DOFade(shadowOriginalAlpha, 0.5f).SetEase(Ease.InQuad).SetTarget(shadowSprite);
             yield return new WaitForSeconds(jumpDuration);
             BurnVfxParent.gameObject.SetActive(true);
+            animController.PlayRun();
             State = EnemyState.Move;
             isChangingTower = false;
         }
