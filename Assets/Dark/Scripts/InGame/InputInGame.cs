@@ -13,6 +13,7 @@ namespace InGame
     {
         [SerializeField] private Camera cam;
         [SerializeField] private Canvas canvas;
+        [SerializeField] private Canvas canvasCursor;
 		[SerializeField] private CanvasGroup motionBlur;
         public float holdThreshold = 0.5f;
         public PlayerCharacter PlayerVisual { get; set; }
@@ -68,7 +69,7 @@ namespace InGame
                 
                 // Setup skill config and mouse input
                 CursorRangeRadius = LevelUtilityV2.StatsNormalAttack.range;
-                cursor ??= ShotCursorManager.Instance.GetPrefab(LevelUtilityV2.StatsNormalAttack.shootLogic.cursorType, canvas.transform);
+                cursor ??= ShotCursorManager.Instance.GetPrefab(LevelUtilityV2.StatsNormalAttack.shootLogic.cursorType, canvasCursor.transform);
                 cursor.gameObject.SetActive(true);
                 CombatActions.OnInitInGameCursor?.Invoke(cursor);
                 
