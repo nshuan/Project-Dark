@@ -56,7 +56,20 @@ namespace InGame.GateEditorV2
             
             gameObject.SetActive(true);
             btnClose.onClick.RemoveAllListeners();
-            btnClose.onClick.AddListener(() => gameObject.SetActive(false));
+            btnClose.onClick.AddListener(() =>
+            {
+                foreach (Transform child in positionParent)
+                {
+                    Destroy(child.gameObject);
+                }
+
+                foreach (Transform child in atkPositionParent)
+                {
+                    Destroy(child.gameObject);
+                }
+                
+                gameObject.SetActive(false);
+            });
             btnDelete.onClick.RemoveAllListeners();
             btnDelete.onClick.AddListener(() =>
             {
