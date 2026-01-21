@@ -18,12 +18,12 @@ namespace Dark.Scripts.AudioV2
                 AudioManagerV2.Instance.PlayMusicIntroThenLoop(introCueKey, loopCueKey, fadeDuration);
             }
 
-            AudioSettingController.OnMusicSettingChanged += OnMusicSettingChanged;
+            // AudioSettingController.OnMusicSettingChanged += OnMusicSettingChanged;
         }
 
         private void OnDestroy()
         {
-            AudioSettingController.OnMusicSettingChanged -= OnMusicSettingChanged;
+            // AudioSettingController.OnMusicSettingChanged -= OnMusicSettingChanged;
         }
 
         private void OnMusicSettingChanged()

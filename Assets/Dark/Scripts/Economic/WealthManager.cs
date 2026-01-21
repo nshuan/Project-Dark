@@ -127,6 +127,9 @@ namespace Economic
             levelPoint = data.levelPoint;
             vestige = data.dark;
             bossPoint = data.bossPoint;
+            hasShowInstructionVestige = data.hasShowInstructionVestige;
+            hasShowInstructionEchoes = data.hasShowInstructionEchoes;
+            hasShowInstructionSigils = data.hasShowInstructionSigils;
         }
 
         public void Save()
@@ -137,6 +140,9 @@ namespace Economic
             data.levelPoint = levelPoint;
             data.dark = vestige;
             data.bossPoint = bossPoint;
+            data.hasShowInstructionVestige = hasShowInstructionVestige;
+            data.hasShowInstructionEchoes = hasShowInstructionEchoes;
+            data.hasShowInstructionSigils = hasShowInstructionSigils;
             
             PlayerDataManager.Instance.Save(data);
         }
@@ -171,6 +177,32 @@ namespace Economic
                     break;
             }    
         }
+        
+        #region Resource Instruction
+
+        public bool hasShowInstructionVestige;
+        public bool hasShowInstructionEchoes;
+        public bool hasShowInstructionSigils;
+        
+        public void SetShownInstruction(WealthType type)
+        {
+            switch (type)
+            {
+                case WealthType.Vestige:
+                    hasShowInstructionVestige = true;
+                    break;
+                case WealthType.Echoes:
+                    hasShowInstructionEchoes = true;
+                    break;
+                case WealthType.Sigils:
+                    hasShowInstructionSigils = true;
+                    break;
+            }
+            
+            Save();
+        }
+
+        #endregion
     }
 
     public enum WealthType

@@ -6,10 +6,10 @@ using UnityEngine.EventSystems;
 
 namespace Economic.UI
 {
-    public class UIEconomic : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public class UIEconomic : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
-        [SerializeField] private bool showInstruction = false;
-        [SerializeField] private GameObject panelInstruction;
+        [SerializeField] protected bool showInstruction = false;
+        [SerializeField] protected GameObject panelInstruction;
 
         public static Action<WealthType> OnEconomicIconHoverIn { get; set; }
         public static Action OnEconomicIconHoverOut { get; set; }
@@ -91,8 +91,7 @@ namespace Economic.UI
 
         public virtual void OnPointerEnter(PointerEventData eventData)
         {
-            if (!showInstruction) return;
-            panelInstruction.SetActive(true);
+            
         }
 
         public void OnPointerExit(PointerEventData eventData)
@@ -101,5 +100,13 @@ namespace Economic.UI
             panelInstruction.SetActive(false);
             OnEconomicIconHoverOut?.Invoke();
        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (showInstruction)
+            {
+                panelInstruction.SetActive(!panelInstruction.gameObject.activeSelf);
+            }
+        }
     }
 }
