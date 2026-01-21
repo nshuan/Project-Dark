@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Dark.Scripts.AudioV2;
+using Dark.Scripts.Settings;
 using Dark.Scripts.Utils;
 using DG.Tweening;
 using InGame.EnemyEffect;
@@ -13,6 +14,7 @@ namespace InGame
     public class EnemyEntity : MonoBehaviour, IDamageable, IEffectTarget
     {
         [SerializeField] private Collider2D collider2d;
+        [SerializeField] private EnemyHealthBar healthBar;
         [SerializeField] private Transform burnVfxParent;
         public EnemyBody body;
 
@@ -106,9 +108,14 @@ namespace InGame
                               + targetPos);
             animController.transform.localScale =
                 new Vector3(Mathf.Sign(attackPosition.x - myPos.x), 1f, 1f);
+            healthBar.transform.localScale = new Vector3(animController.transform.localScale.x,
+                healthBar.transform.localScale.y, healthBar.transform.localScale.z);
             
             MaxHealth = (int)(config.hp * StatsScale.hpScale);
             CurrentHealth = MaxHealth;
+            healthBar.gameObject.SetActive(false);
+            healthBar.MaxHp = MaxHealth;
+            healthBar.UpdateHp(CurrentHealth);
             CurrentDamage = Mathf.RoundToInt(config.dmg * StatsScale.dmgScale);
             Exp = Mathf.RoundToInt(config.exp * levelExpRatio);
             Dark = Mathf.RoundToInt(config.dark * levelDarkRatio);
@@ -159,6 +166,7 @@ namespace InGame
                 boidAgent.IsActive = true;
                 collider2d.enabled = true;
                 Activated = true;
+                healthBar.gameObject.SetActive(!IsBoss ? GameSettings.ShowEnemyHealth : GameSettings.ShowBossHealth);
             });
         }
 
@@ -209,9 +217,12 @@ namespace InGame
                 animController.SetDefaultRun(false);
                 animController.transform.localScale =
                     new Vector3(Mathf.Sign(Target.position.x - transform.position.x), 1f, 1f);
+                healthBar.transform.localScale = new Vector3(animController.transform.localScale.x,
+                    healthBar.transform.localScale.y, healthBar.transform.localScale.z);
             }
             else
             {
+                inAttackRange = false;
                 config.moveBehaviour.MoveNonAlloc(transform, attackPosition, directionAddition, AttackRange, config.moveSpeed * StatsScale.speScale, ref direction);
                 animController.SetDefaultRun(true);
             }
@@ -271,6 +282,7 @@ namespace InGame
             
             var lastHealth = CurrentHealth;
             CurrentHealth -= damage;
+            healthBar.UpdateHp(CurrentHealth);
             if (dmgType != DamageType.Enemy && dmgType != DamageType.SelfDestruct)
                 CombatActions.OnDamageDealt?.Invoke(lastHealth - CurrentHealth);
             
@@ -432,12 +444,14 @@ namespace InGame
                 visual.material = materialElite;
                 cacheMaterial = materialElite;
                 transform.localScale = GameConst.EnemyEliteScale * Vector3.one;
+                healthBar.transform.localScale = new Vector3(healthBar.transform.localScale.x, 1f / GameConst.EnemyEliteScale, healthBar.transform.localScale.z);
             }
             else
             {
                 visual.material = materialNormal;
                 cacheMaterial = materialNormal;
                 transform.localScale = Vector3.one;
+                healthBar.transform.localScale = new Vector3(healthBar.transform.localScale.x, 1f, 1f);
             }
         }
 
