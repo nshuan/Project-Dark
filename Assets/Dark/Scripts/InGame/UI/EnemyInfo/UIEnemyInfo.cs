@@ -8,17 +8,16 @@ namespace InGame.UI.EnemyInfo
         [SerializeField] private TextMeshProUGUI txtEnemyName;
         [SerializeField] private TextMeshProUGUI txtDamage;
         [SerializeField] private TextMeshProUGUI txtHp;
-        
-        public int EnemyId { get; set; }
-        
-        public void UpdateUI(EnemyEntity enemy)
+        [SerializeField] private TextMeshProUGUI txtSpeed;
+        [SerializeField] private TextMeshProUGUI txtAmount;
+
+        public void UpdateUI(string enemyName, int hp, int atk, float speed, int amount)
         {
-            if (!enemy || !enemy.config) return;
-            EnemyId = enemy.config.enemyId;
-            
-            txtEnemyName.SetText(enemy.config.displayName);
-            txtDamage.SetText($"Dmg: {enemy.CurrentDamage}");
-            txtHp.SetText($"Hp: {enemy.MaxHealth}");
+            txtEnemyName.SetText(enemyName);
+            txtDamage.SetText($"Dmg: {atk}");
+            txtHp.SetText($"Hp: {hp}");
+            txtSpeed.SetText($"Spe: {speed}");
+            txtAmount.SetText($"Amount: {amount}");
         }
     }
 }

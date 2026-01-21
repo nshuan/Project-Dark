@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -43,7 +44,7 @@ namespace InGame.GateEditorV2
         public TMP_InputField inpMaxRadius;
         // GateSpawnCenter - no variables
 
-        public List<EnemyBehaviour> AvailableEnemies { get; set; }
+        public Dictionary<int, EnemyBehaviour> AvailableEnemies { get; set; }
         public Dictionary<int, GateEntity> GateMap { get; set; }
         public LevelGatePrefabEditorV2 targetGate;
 
@@ -63,8 +64,10 @@ namespace InGame.GateEditorV2
             {
                 gate.txtGateLabel.SetText(value);
             });
-            
-            drdEnemy.options = AvailableEnemies.Select(enemy => 
+
+            var enemies = AvailableEnemies.Values.ToArray();
+            enemies.Sort((e1, e2) => e1.enemyId.CompareTo(e2.enemyId));
+            drdEnemy.options = enemies.Select(enemy => 
                 new TMP_Dropdown.OptionData($"{enemy.enemyId} - {enemy.displayName}")).ToList();
             
             drdGatePrefab.ClearOptions();
