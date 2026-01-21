@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using Dark.Scripts.Audio;
 using Dark.Scripts.AudioV2;
+using Dark.Scripts.Settings.Resolution;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,6 +33,16 @@ namespace Dark.Scripts.Settings.UI
         {
             
         }
+
+        public void Save()
+        {
+            
+        }
+
+        public void UpdateValue(bool onEnable)
+        {
+
+        }
     }
     
     [Serializable]
@@ -47,7 +59,12 @@ namespace Dark.Scripts.Settings.UI
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(OnClick);
             
-            UpdateText();
+            UpdateValue(true);
+        }
+
+        public void Save()
+        {
+            
         }
 
         public void OnClick()
@@ -68,11 +85,11 @@ namespace Dark.Scripts.Settings.UI
                     break;
             }
             
-            UpdateText();
+            UpdateValue(false);
             GameSettings.Save();
         }
 
-        private void UpdateText()
+        public void UpdateValue(bool onEnable)
         {
             switch (settingType)
             {
@@ -89,6 +106,155 @@ namespace Dark.Scripts.Settings.UI
                     if (DisplayText) DisplayText.SetText(GameSettings.EnableOutGameSound ? "On" : "Off");
                     break;
             }
+        }
+    }
+
+    [Serializable]
+    public class SettingFullScreen : ISettingItemButton
+    {
+        public Button Button { get; set; }
+        public TextMeshProUGUI DisplayText { get; set; }
+
+        private bool isWindowedMode;
+        
+        public void Initialize(Button button)
+        {
+            Button = button;
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(OnClick);
+            
+            UpdateValue(true);
+        }
+
+        public void Save()
+        {
+            GameSettings.WindowedMode = isWindowedMode;
+            GameSettings.Save();
+            ResolutionSettings.SetFullscreen(!isWindowedMode, apply: true);
+        }
+
+        public void OnClick()
+        {
+            isWindowedMode = !isWindowedMode;
+            UpdateValue(false);
+        }
+
+        public void UpdateValue(bool onEnable)
+        {
+            if (onEnable) isWindowedMode = GameSettings.WindowedMode;
+            DisplayText.SetText(isWindowedMode ? "Off" : "On");
+        }
+    }
+
+    [Serializable]
+    public class SettingResolution : ISettingItemButton
+    {
+        public Button Button { get; set; }
+        public TextMeshProUGUI DisplayText { get; set; }
+
+        private int width;
+        private int height;
+        private int selectedIndex;
+        
+        public void Initialize(Button button)
+        {
+            Button = button;
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(OnClick);
+            
+            selectedIndex = ResolutionSettings.GetSelectedResolutionIndex();
+            
+            UpdateValue(true);
+        }
+        
+        public void Save()
+        {
+            GameSettings.ResolutionWidth = width;
+            GameSettings.ResolutionHeight = height;
+            GameSettings.Save();
+            ResolutionSettings.SetResolutionByIndex(selectedIndex, apply: true);
+        }
+
+        public void OnClick()
+        {
+            if (selectedIndex == -1) return;
+
+            selectedIndex += 1;
+            if (selectedIndex >= ResolutionSettings.SupportedResolutions.Count)
+                selectedIndex = 0;
+            
+            var selectedEntry = ResolutionSettings.SupportedResolutions[selectedIndex];
+            width = selectedEntry.width;
+            height = selectedEntry.height;
+            UpdateValue(false);
+        }
+        
+        public void UpdateValue(bool onEnable)
+        {
+            if (onEnable)
+            {
+                width = GameSettings.ResolutionWidth;
+                height = GameSettings.ResolutionHeight;
+            }
+            DisplayText.SetText($"{width}x{height}");
+        }
+    }
+    
+    [Serializable]
+    public class SettingVSync : ISettingItemButton
+    {
+        public Button Button { get; set; }
+        public TextMeshProUGUI DisplayText { get; set; }
+
+        private bool vSync;
+
+        public void Initialize(Button button)
+        {
+            Button = button;
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(OnClick);
+        }
+        
+        public void OnClick()
+        {
+            vSync = !vSync;
+            UpdateValue(false);
+        }
+
+        public void Save()
+        {
+            
+        }
+
+        public void UpdateValue(bool onEnable)
+        {
+            if (onEnable)
+            {
+                vSync = GameSettings.EnableVSync;
+            }
+
+            DisplayText.SetText(vSync ? "On" : "Off");
+        }
+    }
+    
+    [Serializable]
+    public class SettingFrameRateCap : ISettingItemButton
+    {
+        public void Save()
+        {
+            
+        }
+
+        public void UpdateValue(bool onEnable)
+        {
+            
+        }
+
+        public Button Button { get; set; }
+        public TextMeshProUGUI DisplayText { get; set; }
+        public void OnClick()
+        {
+            
         }
     }
 }

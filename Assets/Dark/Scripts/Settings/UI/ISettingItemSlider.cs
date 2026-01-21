@@ -40,7 +40,12 @@ namespace Dark.Scripts.Settings.UI
             InitSlider();
             slider.onValueChanged.AddListener(OnValueChanged);
             
-            UpdateText();
+            UpdateValue(false);
+        }
+
+        public void Save()
+        {
+            
         }
 
         private void InitSlider()
@@ -79,11 +84,11 @@ namespace Dark.Scripts.Settings.UI
                     break;
             }
             
-            UpdateText();
+            UpdateValue(false);
             GameSettings.Save();
         }
         
-        private void UpdateText()
+        public void UpdateValue(bool onEnable)
         {
             DisplayValue.SetText(Mathf.RoundToInt(Slider.value).ToString());
         }

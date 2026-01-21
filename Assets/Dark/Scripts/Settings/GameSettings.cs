@@ -32,6 +32,13 @@ namespace Dark.Scripts.Settings
         public static bool ShowEnemyHealth;
         public static bool ShowBossHealth;
         
+        [Header("Video settings")]
+        public static int ResolutionWidth;
+        public static int ResolutionHeight;
+        public static bool WindowedMode;
+        public static bool EnableVSync;
+        public static int FrameRateCap;
+        
         public static event Action OnSettingUpdated;
         public static event Action OnSettingInitialized;
         
@@ -45,7 +52,7 @@ namespace Dark.Scripts.Settings
             EnableUISound = _settings.enableUISound;
             EnableInGameSound = _settings.enableInGameSound;
             EnableOutGameSound = _settings.enableOutGameSound;
-            EnableMusic = _settings.enableMusic;
+            EnableMusic = true;
             VolumeUI = _settings.volumeUI;
             VolumeInGame = _settings.volumeInGame;
             VolumeOutGame = _settings.volumeOutGame;
@@ -55,6 +62,11 @@ namespace Dark.Scripts.Settings
             KeyMoveTower2 = _settings.keyMoveTower2;
             ShowEnemyHealth = _settings.showEnemyHealth;
             ShowBossHealth = _settings.showBossHealth;
+            ResolutionWidth = _settings.resolutionWidth;
+            ResolutionHeight = _settings.resolutionHeight;
+            WindowedMode = _settings.windowedMode;
+            EnableVSync = _settings.enableVSync;
+            FrameRateCap = _settings.frameRateCap;
             
             OnSettingInitialized?.Invoke();
         }
@@ -77,6 +89,11 @@ namespace Dark.Scripts.Settings
             _settings.keyMoveTower2 = KeyMoveTower2;
             _settings.showEnemyHealth = ShowEnemyHealth;
             _settings.showBossHealth = ShowBossHealth;
+            _settings.resolutionWidth = ResolutionWidth;
+            _settings.resolutionHeight = ResolutionHeight;
+            _settings.windowedMode = WindowedMode;
+            _settings.enableVSync = EnableVSync;
+            _settings.frameRateCap = FrameRateCap;
         }
 
         public static void Save()
@@ -106,6 +123,12 @@ namespace Dark.Scripts.Settings
 
             public bool showEnemyHealth = true;
             public bool showBossHealth = true;
+
+            public int resolutionWidth = 1920;
+            public int resolutionHeight = 1080;
+            public bool windowedMode = false;
+            public bool enableVSync = false;
+            public int frameRateCap = 120;
         }
     }
 }
