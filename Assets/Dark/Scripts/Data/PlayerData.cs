@@ -24,6 +24,11 @@ namespace Data
         public int passedDay;
         public double timePlayedMilli;
         
+        // Instruction
+        public bool hasShowInstructionVestige;
+        public bool hasShowInstructionEchoes;
+        public bool hasShowInstructionSigils;
+        
         public PlayerData()
         {
             level = 0;

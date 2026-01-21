@@ -7,6 +7,7 @@ using Dark.Scripts.Audio;
 using Dark.Scripts.AudioV2;
 using Dark.Scripts.Utils;
 using DG.Tweening;
+using Economic;
 using InGame;
 using InGame.Upgrade;
 using TMPro;
@@ -243,21 +244,33 @@ namespace Dark.Scripts.OutGame.Upgrade
                 transform.DOScale(defaultScale, 0.2f).SetEase(Ease.InQuad);
                 UIUpgradeNodeInfoPreview.Instance.Hide(false);
             };
-            hoverField.onPointerClick = () =>
-            {
-                if (GameConst.HideLockedNode && CurrentState == UIUpgradeNodeState.Locked)
-                    return;
-                // treeRef.SelectNode(this);
-                if (preRequires != null && preRequires.Select((node) => node.preRequireId)
-                        .All((id) =>
-                            UpgradeManager.Instance.GetData(id) == null ||
-                            UpgradeManager.Instance.GetData(id).level == 0))
-                {
-                    UIUpgradeNodeInfoPreview.Instance.Shake();
-                    sfxUnlockFailure?.Play();
-                    return;
-                }
+            hoverField.onPointerClick = GetActionNodeClick;
+        }
 
+        protected virtual void GetActionNodeClick()
+        {
+            if (GameConst.HideLockedNode && CurrentState == UIUpgradeNodeState.Locked)
+                return;
+
+            if (preRequires != null && preRequires.Select((node) => node.preRequireId)
+                    .All((id) =>
+                        UpgradeManager.Instance.GetData(id) == null ||
+                        UpgradeManager.Instance.GetData(id).level == 0))
+            {
+                UIUpgradeNodeInfoPreview.Instance.Shake();
+                sfxUnlockFailure?.Play();
+                return;
+            }
+
+            if (!UpgradeManager.Instance.CanUpgrade(config.nodeId, config.groupId))
+            {
+                UIUpgradeNodeInfoPreview.Instance.Shake();
+                sfxUnlockFailure?.Play();
+                return;
+            }
+            
+            Action actionUpgrade = () =>
+            {
                 var success = UpgradeManager.Instance.UpgradeNode(config.nodeId, config.groupId);
                 if (success)
                 {
@@ -266,24 +279,41 @@ namespace Dark.Scripts.OutGame.Upgrade
                         LogManager.Log(LogConst.EventLogActivateNode, "skill", config.nodeName);
                     else if (treeRef.IsNodePassive(config.nodeId))
                         LogManager.Log(LogConst.EventLogActivateNode, "passive", config.nodeName);
-                    
-                    config.ActivateLevel(UpgradeManager.Instance.GetData(config.nodeId).level, ref UIUpgradeNodeInfoPreview.Instance.bonusInfo);
+
+                    config.ActivateLevel(UpgradeManager.Instance.GetData(config.nodeId).level,
+                        ref UIUpgradeNodeInfoPreview.Instance.bonusInfo);
                     UIUpgradeNodeInfoPreview.Instance.Setup(this, config, true);
-                    UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true, () => hoverField.interactable = true);
+                    UIUpgradeNodeInfoPreview.Instance.Show(transform.position,
+                        new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true,
+                        () => hoverField.interactable = true);
 
                     treeRef.LastUpgradeNodeId = config.nodeId;
                     treeRef.InvokeNodeUpgraded(this);
                     treeRef.UpgradeAllNodesWithId(config.nodeId);
                     sfxUnlockSuccess?.Play();
                 }
-                else
-                {
-                    UIUpgradeNodeInfoPreview.Instance.Shake();
-                    sfxUnlockFailure?.Play();
-                }
             };
+            
+            // Nếu node có dùng sigil thì phải bật popup confirm
+            if (config.costInfo.Any((cost) => cost.costType == WealthType.Sigils))
+            {
+                var displayCost = UIUpgradeNodeInfoPreview.Instance.GetDisplayCost();
+                UIUpgradeScene.Instance.PopupConfirmExchange.Setup(
+                    displayCost.Item1,
+                    displayCost.Item2,
+                    displayCost.Item3,
+                    "And you will receive",
+                    "Confirm exchange",
+                    config.nodeName, 
+                    actionUpgrade);
+                UIUpgradeScene.Instance.PopupConfirmExchange.DoOpenFadeIn();
+            }
+            else
+            {
+                actionUpgrade?.Invoke();   
+            }
         }
-
+        
         public void Upgrade()
         {
             UpdateUI();

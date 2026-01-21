@@ -222,7 +222,9 @@ namespace Dark.Scripts.AudioV2
             channelVolumes[channel] = Mathf.Clamp01(volume);
             if (channel == AudioChannel.Music)
             {
-                ActiveMusicSource().volume = currentMusicKey == null ? 0f : GetMusicTargetVolume();
+                var activeSource = ActiveMusicSource();
+                if (activeSource != null)
+                    ActiveMusicSource().volume = currentMusicKey == null ? 0f : GetMusicTargetVolume();
             }
         }
 
@@ -369,6 +371,8 @@ namespace Dark.Scripts.AudioV2
         // Coroutine that handles intro + transition to loop
         private IEnumerator PlayIntroThenLoopRoutine(AudioCuePool introPool, AudioCuePool loopPool, float fadeDuration)
         {
+            currentMusicKey = loopPool.Cue.key;
+            
             fadeDuration = Mathf.Max(0.01f, fadeDuration);
 
             var incoming = IdleMusicSource();
@@ -408,8 +412,7 @@ namespace Dark.Scripts.AudioV2
             incoming.loop = true;
             incoming.volume = loopTarget;
             incoming.Play();
-
-            currentMusicKey = loopPool.Cue.key;
+            
             musicRoutine = null;
         }
 
