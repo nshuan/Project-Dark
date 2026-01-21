@@ -65,7 +65,7 @@ namespace InGame
         public void OnMouseClick()
         {
             if (!CanMove) return;
-            if (selectingTower > -1)
+            if (selectingTower > -1 && selectingTower != CurrentTowerIndex)
             {
                 CanMove = false;
                 CanCountdown = false;

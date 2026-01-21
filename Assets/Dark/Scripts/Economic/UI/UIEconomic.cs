@@ -105,7 +105,7 @@ namespace Economic.UI
         {
             if (showInstruction)
             {
-                panelInstruction.SetActive(panelInstruction.gameObject.activeSelf);
+                panelInstruction.SetActive(!panelInstruction.gameObject.activeSelf);
             }
         }
     }
