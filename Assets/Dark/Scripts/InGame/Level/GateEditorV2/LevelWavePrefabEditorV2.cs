@@ -125,7 +125,11 @@ namespace InGame.GateEditorV2
             newGate.OnClick = SelectGate;
             newGate.OnDragging = null;
             var newGateConfig = Instantiate(prefabGateConfig, parentGateConfig);
-            newGateConfig.AvailableEnemies = AvailableEnemies;
+            newGateConfig.AvailableEnemies = new Dictionary<int, EnemyBehaviour>();
+            foreach (var enemy in AvailableEnemies)
+            {
+                newGateConfig.AvailableEnemies[enemy.enemyId] = enemy;
+            }
             newGateConfig.GateMap = gateMap;
             newGateConfig.Setup(newGate);
         }
