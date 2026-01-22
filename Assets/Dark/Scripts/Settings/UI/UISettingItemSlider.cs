@@ -13,15 +13,10 @@ namespace Dark.Scripts.Settings.UI
         [SerializeField] private Slider slider;
         [SerializeField] private TextMeshProUGUI txtDisplayValue;
 
-        private void Start()
+        private void OnEnable()
         {
             _settingItemLogic.DisplayValue = txtDisplayValue;
             _settingItemLogic.Initialize(slider); 
-        }
-
-        private void OnEnable()
-        {
-            _settingItemLogic.UpdateValue(true);
         }
 
         public override void Save()

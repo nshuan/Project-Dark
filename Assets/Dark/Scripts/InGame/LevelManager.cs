@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Core;
+using Dark.Scripts.Settings;
 using Dark.Scripts.Utils;
 using Data;
 using Economic;
@@ -174,7 +175,11 @@ namespace InGame
             
             OnLevelPreLoaded?.Invoke(Level);
             yield return new WaitForSeconds(delayStartLevel);
-            
+
+            foreach (var waveInfo in Level.waveInfo)
+            {
+                waveInfo.SetupWave(Towers, OnWaveForceStop);
+            }
             waveCoroutine = StartCoroutine(IEWave(Level.waveInfo));
             LevelStarted = true;
             OnLevelLoaded?.Invoke(Level);
@@ -246,10 +251,11 @@ namespace InGame
             while (currentWaveIndex < waves.Length)
             {
                 var currentWave = waves[currentWaveIndex];
-                currentWave.SetupWave(Towers, OnWaveForceStop);
                 OnWaveStart?.Invoke(currentWaveIndex, currentWave.timeToEnd);
                 if (currentWave.IsBossWave) OnBossWaveStart?.Invoke();
                 currentWaveIndex += 1;
+                if (GameSettings.ShowGateWarning && currentWaveIndex < waves.Length)
+                    waves[currentWaveIndex].PreOpen();
                 yield return currentWave.IEActivateWave();
                 onWaveEnded?.Invoke(currentWaveIndex - 1, WaveEndReason.EndTime);
             }

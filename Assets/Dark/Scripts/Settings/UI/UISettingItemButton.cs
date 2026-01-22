@@ -22,7 +22,8 @@ namespace Dark.Scripts.Settings.UI
 
         private void OnEnable()
         {
-            _settingItemLogic.UpdateValue(true);
+            _settingItemLogic.DisplayText = txtDisplay;
+            _settingItemLogic.Initialize(button); 
         }
 
         public override void Save()
