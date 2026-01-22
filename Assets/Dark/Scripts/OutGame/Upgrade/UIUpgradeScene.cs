@@ -1,6 +1,7 @@
 using System;
 using Core;
 using Dark.Scripts.Analytics;
+using Dark.Scripts.Common.UIWarning;
 using Dark.Scripts.OutGame.SaveSlot;
 using Dark.Scripts.SceneNavigation;
 using Dark.Scripts.Utils;
@@ -19,6 +20,11 @@ namespace Dark.Scripts.OutGame.Upgrade
         [Space] [Header("Select class")] 
         [SerializeField] private GameObject panelSelectClass;
 
+        [Space] [Header("Confirm")] 
+        [SerializeField] private UIPopupConfirmExchange popupConfirmExchange;
+        
+        public UIPopupConfirmExchange PopupConfirmExchange => popupConfirmExchange;
+        
         protected override void Awake()
         {
             if (PlayerDataManager.Instance.Data.initialized == false)
