@@ -87,10 +87,11 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
     #endif
                         this.DelayCall(0.5f, () =>
                         {
-                            Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame, () =>
+                            Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame);
+                            Loading.Instance.onSceneLoaded += () =>
                             {
                                 LevelManager.Instance.LoadLevel(a);
-                            });
+                            };
                         });
                 
                         LogManager.Log(LogConst.EventLogStartLevel, $"level_{a}", "from upgrade");
@@ -194,10 +195,11 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
     #endif
                             this.DelayCall(0.5f, () =>
                             {
-                                Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame, () =>
+                                Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame);
+                                Loading.Instance.onSceneLoaded += () =>
                                 {
                                     LevelManager.Instance.LoadLevel(a);
-                                });
+                                };
                             });
                 
                             LogManager.Log(LogConst.EventLogStartLevel, $"level_{a}", "from upgrade");
