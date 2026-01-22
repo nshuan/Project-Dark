@@ -31,6 +31,7 @@ namespace Dark.Scripts.Settings
         [Header("In-game settings")] 
         public static bool ShowEnemyHealth;
         public static bool ShowBossHealth;
+        public static bool ShowGateWarning;
         
         [Header("Video settings")]
         public static int ResolutionWidth;
@@ -62,6 +63,7 @@ namespace Dark.Scripts.Settings
             KeyMoveTower2 = _settings.keyMoveTower2;
             ShowEnemyHealth = _settings.showEnemyHealth;
             ShowBossHealth = _settings.showBossHealth;
+            ShowGateWarning = _settings.showGateWarning;
             ResolutionWidth = _settings.resolutionWidth;
             ResolutionHeight = _settings.resolutionHeight;
             WindowedMode = _settings.windowedMode;
@@ -89,6 +91,7 @@ namespace Dark.Scripts.Settings
             _settings.keyMoveTower2 = KeyMoveTower2;
             _settings.showEnemyHealth = ShowEnemyHealth;
             _settings.showBossHealth = ShowBossHealth;
+            _settings.showGateWarning = ShowGateWarning;
             _settings.resolutionWidth = ResolutionWidth;
             _settings.resolutionHeight = ResolutionHeight;
             _settings.windowedMode = WindowedMode;
@@ -123,6 +126,7 @@ namespace Dark.Scripts.Settings
 
             public bool showEnemyHealth = true;
             public bool showBossHealth = true;
+            public bool showGateWarning = true;
 
             public int resolutionWidth = 1920;
             public int resolutionHeight = 1080;

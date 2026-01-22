@@ -1,12 +1,9 @@
 using System;
 using System.Collections;
-using System.Linq;
 using Dark.Scripts.Utils;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
-using UnityEngine.Serialization;
-using Random = UnityEngine.Random;
 
 namespace InGame
 {
@@ -43,6 +40,7 @@ namespace InGame
         [SerializeField] private float vfxAppearDuration = 0.5f; // duration of vfxOpen
         [SerializeField] private float vfxCloseDuration = 6f; // duration of vfxClose
         [SerializeField] private float visualRadius = 2f;
+        public GameObject vfxPreOpen;
 
         private ParticleSystem.MainModule vfxIdle;
         
@@ -74,7 +72,8 @@ namespace InGame
 
             IsActive = false;
             obstacle.gameObject.SetActive(false);
-            this.DelayCall(vfxCloseDuration, () => gameObject.SetActive(false));
+            if (gameObject.activeInHierarchy)
+                this.DelayCall(vfxCloseDuration, () => gameObject.SetActive(false));
         }
         
         public void Deactivate(bool hideVisual)
@@ -119,6 +118,7 @@ namespace InGame
             vfxClose.SetActive(false);
             vfxPortal.gameObject.SetActive(false);
             orbSpawnTimer = 0f;
+            vfxPreOpen.gameObject.SetActive(false);
             
             LevelManager.Instance.OnWin += Deactivate;
             LevelManager.Instance.OnLose += OnLose;
@@ -263,7 +263,8 @@ namespace InGame
 
         private IEnumerator IEVisual()
         {
-            yield return new WaitForSeconds(Mathf.Max(config.startTimeVisual - vfxAppearDuration, 0f));
+            var delayVisual = Mathf.Max(config.startTimeVisual - vfxAppearDuration, 0f);
+            yield return new WaitForSeconds(delayVisual);
             visual.SetActive(true);
 
             vfxOpen.SetActive(true);
@@ -275,6 +276,7 @@ namespace InGame
             vfxPortal.gameObject.SetActive(true);
             yield return new WaitForEndOfFrame();
             vfxOpen.SetActive(false);
+            vfxPreOpen.SetActive(false);
 
             yield return new WaitForSeconds(config.durationVisual);
             
