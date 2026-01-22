@@ -285,7 +285,7 @@ namespace InGame
         public virtual void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
         {
             if (IsDestroyed) return;
-            if (State == EnemyState.Invisible) return;
+            if (dmgType != DamageType.Enemy && dmgType != DamageType.SelfDestruct && State == EnemyState.Invisible) return;
             
             // Scale damage on boss
             if (IsBoss)

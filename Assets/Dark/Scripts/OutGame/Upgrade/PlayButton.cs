@@ -23,10 +23,11 @@ namespace Dark.Scripts.OutGame.Upgrade
 #endif
             this.DelayCall(0.5f, () =>
             {
-                Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame, () =>
+                Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame);
+                Loading.Instance.onSceneLoaded += () =>
                 {
                     LevelManager.Instance.LoadLevel(PlayerDataManager.Instance.Data.level + 1);
-                });
+                };
             });
             
             LogManager.Log(LogConst.EventLogStartLevel, $"level_{PlayerDataManager.Instance.Data.level + 1}", "from upgrade");
