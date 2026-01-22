@@ -28,7 +28,7 @@ namespace InGame.GateEditorV2
         public Dictionary<int, GateEntity> gateMap;
 
         public WaveConfig waveConfig;
-        private Vector2[] targetPositions;
+        private Transform[] targetPositions;
         public bool Selecting { get; set; }
         public int currentGateType;
 
@@ -58,7 +58,7 @@ namespace InGame.GateEditorV2
         private void Awake()
         {
             if (Camera.main)
-                targetPositions = FindObjectsOfType<TowerEntity>().Select((tower) => (Vector2)Camera.main.WorldToScreenPoint(tower.transform.position)).ToArray();
+                targetPositions = FindObjectsByType<TowerEntity>(FindObjectsInactive.Include, FindObjectsSortMode.None).Select((tower) => tower.transform).ToArray();
         }
 
         private void Start()
