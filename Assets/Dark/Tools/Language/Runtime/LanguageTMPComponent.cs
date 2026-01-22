@@ -34,27 +34,35 @@ namespace Dark.Tools.Language.Runtime
 
         public void UpdateText(LanguageType language)
         {
-            if (valueMap == null) return;
-            if (fontMap == null) return;
-            
-            txt.font = fontMap[language];
-            txt.SetText(valueMap[language]);
+            if (fontMap != null)
+            {
+                txt.font = fontMap[language];
+            }
+
+            if (valueMap != null)
+            {
+                if (!valueMap.ContainsKey(language)) txt.SetText(valueMap[LanguageType.english]);
+                else txt.SetText(valueMap[language]);
+            }
         }
         
 #if UNITY_EDITOR
         [Button]
         public void Validate()
         {
+            fontMap = new Dictionary<LanguageType, TMP_FontAsset>();
+            foreach (LanguageType language in Enum.GetValues(typeof(LanguageType)))
+            {
+                fontMap.Add(language, LanguageData.GetFontAsset(language));
+            }
             
             var data = LanguageData.GetLanguageItem(key);
             if (data == null) return;
             
             valueMap = new Dictionary<LanguageType, string>();
-            fontMap = new Dictionary<LanguageType, TMP_FontAsset>();
             foreach (var item in data.languageMap)
             {
                 valueMap.Add(item.Key, item.Value);
-                fontMap.Add(item.Key, LanguageData.GetFontAsset(item.Key));
             }
         }
 

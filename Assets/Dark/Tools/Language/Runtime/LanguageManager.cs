@@ -25,7 +25,8 @@ namespace Dark.Tools.Language.Runtime
         private LanguageManager()
         {
             Load();
-            CurrentLanguage = settings.defaultLanguage;
+            // CurrentLanguage = settings.defaultLanguage;
+            CurrentLanguage = LanguageType.vietnamese;
         }
 
         #endregion
