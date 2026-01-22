@@ -18,6 +18,7 @@ using Sirenix.Serialization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 namespace Dark.Scripts.OutGame.Upgrade
 {
@@ -41,6 +42,11 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private UIParticle vfxBackgroundNotUpgrade;
         [SerializeField] private UIParticle vfxBackgroundUpgraded;
         [SerializeField] private UIParticle vfxBackgroundMax;
+        [SerializeField] private List<UIParticle> vfxClaimNotEnoughs;
+        [SerializeField] private List<UIParticle> vfxClaimEnoughs;
+        [SerializeField] private List<UIParticle> vfxClaimMaxs;
+
+
 
         [Space] [Header("Requirement")] 
         [SerializeField] private RequirementInfo infoReqVestige;
