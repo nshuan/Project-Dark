@@ -77,7 +77,7 @@ namespace InGame.GateEditorV2
             {
                 Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame, () =>
                 {
-                    LevelManager.Instance.LoadLevel(currentLevel);
+                    LevelManager.Instance.LoadLevel(currentLevel.level);
                 });
             });
         }

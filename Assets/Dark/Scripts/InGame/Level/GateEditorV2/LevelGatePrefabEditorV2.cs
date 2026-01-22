@@ -93,7 +93,7 @@ namespace InGame.GateEditorV2
                         SpawnPositions.Add(Guid.NewGuid(), new GateSpawnPositionInfo()
                         {
                             spawnPosition = position.spawnPosition,
-                            attackPositions = position.attackPositions.ToArray()
+                            attackPositions = position.attackPositions?.ToArray()
                         });
                     }
 
