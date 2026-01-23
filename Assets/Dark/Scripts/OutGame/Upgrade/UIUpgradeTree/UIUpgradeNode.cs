@@ -258,6 +258,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                         UpgradeManager.Instance.GetData(id).level == 0))
             {
                 UIUpgradeNodeInfoPreview.Instance.Shake();
+                UIUpgradeNodeInfoPreview.Instance.PlayVfxUpgrade();;
                 sfxUnlockFailure?.Play();
                 return;
             }
@@ -265,6 +266,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             if (!UpgradeManager.Instance.CanUpgrade(config.nodeId, config.groupId))
             {
                 UIUpgradeNodeInfoPreview.Instance.Shake();
+                UIUpgradeNodeInfoPreview.Instance.PlayVfxUpgrade();;
                 sfxUnlockFailure?.Play();
                 return;
             }
@@ -286,6 +288,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     UIUpgradeNodeInfoPreview.Instance.Show(transform.position,
                         new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true,
                         () => hoverField.interactable = true);
+                    UIUpgradeNodeInfoPreview.Instance.PlayVfxUpgrade();;
 
                     treeRef.LastUpgradeNodeId = config.nodeId;
                     treeRef.InvokeNodeUpgraded(this);

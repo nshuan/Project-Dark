@@ -18,6 +18,7 @@ using Sirenix.Serialization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 namespace Dark.Scripts.OutGame.Upgrade
 {
@@ -41,6 +42,11 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private UIParticle vfxBackgroundNotUpgrade;
         [SerializeField] private UIParticle vfxBackgroundUpgraded;
         [SerializeField] private UIParticle vfxBackgroundMax;
+        [SerializeField] private List<UIParticle> vfxClaimNotEnoughs;
+        [SerializeField] private List<UIParticle> vfxClaimEnoughs;
+        [SerializeField] private List<UIParticle> vfxClaimMaxs;
+
+
 
         [Space] [Header("Requirement")] 
         [SerializeField] private RequirementInfo infoReqVestige;
@@ -372,6 +378,37 @@ namespace Dark.Scripts.OutGame.Upgrade
             if (vfxBackgroundUpgraded.gameObject.activeSelf) return vfxBackgroundUpgraded;
             if (vfxBackgroundMax.gameObject.activeSelf) return vfxBackgroundMax;
             return vfxBackgroundNotUpgrade;
+        }
+
+        public void PlayVfxUpgrade()
+        {
+            if (imgMax.gameObject.activeSelf)
+            {
+                foreach (var vfx in vfxClaimMaxs)
+                {
+                    vfx.Play();
+                }
+                
+                return;
+            }
+            
+            if (imgNotEnoughResource.gameObject.activeSelf)
+            {
+                foreach (var vfx in vfxClaimNotEnoughs)
+                {
+                    vfx.Play();
+                }
+                return;
+            }
+            
+            if (imgEnoughResource.gameObject.activeSelf)
+            {
+                foreach (var vfx in vfxClaimEnoughs)
+                {
+                    vfx.Play();
+                }
+                return;
+            }
         }
 
         // (vestige, echoes, sigils)

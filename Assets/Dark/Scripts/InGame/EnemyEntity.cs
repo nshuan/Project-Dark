@@ -13,8 +13,8 @@ namespace InGame
 {
     public class EnemyEntity : MonoBehaviour, IDamageable, IEffectTarget
     {
-        [SerializeField] private Collider2D collider2d;
-        [SerializeField] private EnemyHealthBar healthBar;
+        [SerializeField] protected Collider2D collider2d;
+        [SerializeField] protected EnemyHealthBar healthBar;
         [SerializeField] private Transform burnVfxParent;
         public EnemyBody body;
 
@@ -61,7 +61,7 @@ namespace InGame
         private Vector2 staggerTargetPos;
 
         [Space, Header("Visual")] 
-        [SerializeField] private EnemyBoidAgentWithObstacles boidAgent;
+        [SerializeField] protected EnemyBoidAgentWithObstacles boidAgent;
         [SerializeField] private Transform uiHealth;
         public EnemyAnimController animController;
         [SerializeField] protected GameObject shadow;
@@ -153,7 +153,7 @@ namespace InGame
 
         #region Core function
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             DOTween.Kill(this);
         }
@@ -246,7 +246,7 @@ namespace InGame
                 StopCoroutine(attackCoroutine);
         }
         
-        private void StartAttackCoroutine()
+        protected void StartAttackCoroutine()
         {
             if (attackCoroutine != null)
                 StopCoroutine(attackCoroutine);
