@@ -136,7 +136,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2026576607495002774}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c79df9005ed54b8f8e38f907d951a72d, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fb5184469174792b3ab57bb9e12f97e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   collider2d: {fileID: 8131059031516112919}
@@ -151,10 +151,12 @@ MonoBehaviour:
   shadow: {fileID: 6146576754246497612}
   aimPointer: {fileID: 7236056780258392261}
   hoverPointer: {fileID: 8413609001707539375}
+  attackPosition: {x: 0, y: 0}
   visual: {fileID: 2164173735719195637}
   materialNormal: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   materialElite: {fileID: 2100000, guid: 9cc43911995a5cd4b80f150967a2a7f4, type: 2}
   materialHighlight: {fileID: 2100000, guid: ba0bb9557f10ac04a9aa840b2a3d1df8, type: 2}
+  delayMove: 1.6
 --- !u!70 &8131059031516112919
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
