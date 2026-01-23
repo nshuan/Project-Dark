@@ -85,6 +85,7 @@ namespace Dark.Scripts.OutGame.SaveSlot
             interactable = false;
             DoCLick(0.3f);
             base.OnPointerClick(eventData);
+            SaveSlotManager.Instance.CurrentSlotIndex = slotIndex;
             SaveSlotManager.Instance.SelectSlot(slotIndex);
             this.DelayCall(0.5f, () =>
             {

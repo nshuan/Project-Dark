@@ -14,9 +14,9 @@ namespace Cheat
         public static string FilePath = "Assets/Dark/Resources/CheatBonusData.asset";
 
         public bool enabled = false;
-        [OdinSerialize, NonSerialized] public UpgradeBonusInfo bonus;
+        [OdinSerialize, NonSerialized] public UpgradeBonusInfoV2 bonus;
 
-        public static (bool, UpgradeBonusInfo) GetBonus()
+        public static (bool, UpgradeBonusInfoV2) GetBonus()
         {
             var instance = Resources.Load(Path) as CheatBonusData;
             return (instance.enabled, instance?.bonus);
@@ -25,7 +25,7 @@ namespace Cheat
         [Button]
         public void Reset()
         {
-            bonus = new UpgradeBonusInfo();
+            bonus = new UpgradeBonusInfoV2();
         }
         
 #if UNITY_EDITOR

@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d52e84704c4b4f10a350f6e61b3442d1, type: 3}
+  m_Name: 4_Boss_Tarnished
+  m_EditorClassIdentifier: 
+  enemyId: 4
+  displayName: The Tarnished
+  elite: 0
+  enemyPrefab: {fileID: 1367309541428699416, guid: c6a51f7ff1ac0c544a08592ef8343b6e, type: 3}
+  spawnBehaviour: {fileID: 11400000, guid: f8f0eb9c52c0d9843a34a292cb6e5b75, type: 2}
+  moveBehaviour: {fileID: 11400000, guid: 738ca797e8485a64793469f09f59a9cb, type: 2}
+  attackBehaviour: {fileID: 11400000, guid: 0c4293ad5ce164a4a8160cf870bbd2fe, type: 2}
+  attackRange: 1.6
+  attackSpeed: 0.5
+  hp: 300
+  dmg: 23
+  moveSpeed: 0.6
+  staggerResist: 2
+  staggerVelocity: 10
+  invisibleDuration: 0
+  exp: 3000
+  dark: 100
+  darkRatio: 1
+  bossPoint: 1
+  tarnishedConfig: {fileID: 11400000, guid: 16ec82c6baebbef4ca3e3d58ee828044, type: 2}

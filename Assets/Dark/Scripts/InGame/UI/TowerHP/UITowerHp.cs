@@ -34,7 +34,7 @@ namespace InGame.UI
         
         private void OnHit(int damage, DamageType dmgType)
         {
-            OnTowerHpChanged(damage);    
+            OnTowerHpChanged(-damage);    
         }
 
         private void OnTowerHpChanged(int valueChanged)
@@ -42,7 +42,7 @@ namespace InGame.UI
             var fill = Mathf.Clamp((float)tower.CurrentHp / tower.MaxHp, 0f, 1f);
             hpFill.fillAmount = fill;
 
-            if (fill <= warningThreshold)
+            if (valueChanged < 0 && fill <= warningThreshold)
             {
                 var c = Color.Lerp(Color.white, warningColor,
                     (warningThreshold - fill) / warningThreshold);

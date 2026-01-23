@@ -7,14 +7,17 @@ using Dark.Scripts.SceneNavigation;
 using Data;
 using DG.Tweening;
 using InGame.CharacterClass;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
+using Button = UnityEngine.UI.Button;
 
 namespace Dark.Scripts.OutGame.Upgrade
 {
     public class UIPanelUpgradeTree : MonoBehaviour
     {
-        [SerializeField] private UIUpgradeScrollView scrollView;
+        [SerializeField] private UIHighlightNodeByCost nodeHighlight;
         [SerializeField] private Button btnBack;
         [SerializeField] private CanvasGroup btnWishlist;
         [SerializeField] private CanvasGroup btnFeedback;
@@ -32,6 +35,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         private bool treeSpawned;
         private UIUpgradeTree tree;
         public UIUpgradeTree Tree => tree;
+        public CanvasGroup TreeCvg { get;private set; }
         private Vector3 offsetOnHideDemoButtons = new Vector3(30f, 0f, 0f);
         private float durationShowEachDemoButtons = 0.2f;
         private float delayEachDemoButtons = 0.1f;
@@ -69,7 +73,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             var delaySpawn = Loading.Instance.CurrentTotalDurationAfterSceneLoaded;
             groupUIHiddenOnSpawn.alpha = 0f;
             vfxSpawn.gameObject.SetActive(false);
-            treeZoom.SetZoom(1f);
+            treeZoom.SetZoom(0.7f);
             yield return new WaitForSeconds(delaySpawn);
             AudioManagerV2.Instance.PlayInGame(cueSpawnTree);
             AudioManagerV2.Instance.PlayInGame(cueSpawnNodes);
@@ -84,7 +88,12 @@ namespace Dark.Scripts.OutGame.Upgrade
         public void SpawnTree()
         {
             tree = Instantiate(UpgradeTreeManifest.GetTreePrefab((CharacterClass)PlayerDataManager.Instance.Data.characterClass), treeParent);
+            if (Tree.TryGetComponent<CanvasGroup>(out var cvg))
+                TreeCvg = cvg;
+            else
+                TreeCvg = tree.AddComponent<CanvasGroup>();
             // tree.OnNodeUpgraded += (node) => scrollView.FocusTo((RectTransform)node.transform);
+            nodeHighlight.InitNodesByCost(tree);
         }
 
         public void ShowDemoButtons()

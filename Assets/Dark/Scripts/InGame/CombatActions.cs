@@ -25,6 +25,7 @@ namespace InGame
         public static Action<bool, int, float> OnCollectAllResourceDrop { get; set; } // <isAutoCollect, amount, duration>
         public static Action<int> OnDamageDealt { get; set; }
         public static Action<int> OnDamageReceived { get; set; }
+        public static Action<MonoCursor> OnInitInGameCursor { get; set; }
 
         public static void Clear()
         {
@@ -43,6 +44,9 @@ namespace InGame
             OnDropResource = null;
             OnResourceCollectorInitialized = null;
             OnResourceCollectorDamaged = null;
+            OnDamageDealt = null;
+            OnDamageReceived = null;
+            OnInitInGameCursor = null;
         }
     }
 }

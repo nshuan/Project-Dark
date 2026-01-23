@@ -7,6 +7,7 @@ using Dark.Scripts.Audio;
 using Dark.Scripts.AudioV2;
 using Dark.Scripts.Utils;
 using DG.Tweening;
+using Economic;
 using InGame;
 using InGame.Upgrade;
 using TMPro;
@@ -17,6 +18,15 @@ using UnityEngine.UI;
 
 namespace Dark.Scripts.OutGame.Upgrade
 {
+    public enum UpgradeNodeType
+    {
+        NodeClass,
+        NodeSkill,
+        NodeEffect,
+        NodeStat,
+        NodeStat2
+    }
+    
     public class UIUpgradeNode : MonoBehaviour
     {
         public UIUpgradeTree treeRef;
@@ -25,6 +35,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         
         [Space]
         [Header("UI")]
+        public UpgradeNodeType nodeType;
         [SerializeField] protected UIUpgradeNodeHoverField hoverField;
         [SerializeField] protected UIUpgradeNodeSpawnAnimation spawnAnimation;
 
@@ -39,9 +50,6 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] protected GameObject imgAvailable;
         [SerializeField] protected Image imgLock;
         [SerializeField] protected Image imgIconLock;
-        [SerializeField] protected UIParticle vfxUnlock;
-        [SerializeField] protected UIParticle vfxActivate;
-        [SerializeField] protected UIParticle vfxActivateMax;
         [SerializeField] protected AudioPlayComponentV2 sfxUnlockSuccess;
         [SerializeField] protected AudioPlayComponentV2 sfxUnlockFailure;
         [SerializeField] protected AudioPlayComponentV2 sfxHover;
@@ -225,7 +233,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                 transform.localScale = defaultScale;
                 transform.DOPunchRotation(new Vector3(0f, 0f, 10f), 0.3f, 20, 0.1f).SetTarget(transform);
                 transform.DOScale(new Vector3(0.2f, 0.2f, 0), 0.2f).SetRelative().SetEase(Ease.OutQuad);
-                UIUpgradeNodeInfoPreview.Instance.Setup(config, false);
+                UIUpgradeNodeInfoPreview.Instance.Setup(this, config, false);
                 UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), false, () => hoverField.interactable = true);
             };
             hoverField.onHoverExit = () =>
@@ -236,59 +244,76 @@ namespace Dark.Scripts.OutGame.Upgrade
                 transform.DOScale(defaultScale, 0.2f).SetEase(Ease.InQuad);
                 UIUpgradeNodeInfoPreview.Instance.Hide(false);
             };
-            hoverField.onPointerClick = () =>
+            hoverField.onPointerClick = GetActionNodeClick;
+        }
+
+        protected virtual void GetActionNodeClick()
+        {
+            if (GameConst.HideLockedNode && CurrentState == UIUpgradeNodeState.Locked)
+                return;
+
+            if (preRequires != null && preRequires.Select((node) => node.preRequireId)
+                    .All((id) =>
+                        UpgradeManager.Instance.GetData(id) == null ||
+                        UpgradeManager.Instance.GetData(id).level == 0))
             {
-                if (GameConst.HideLockedNode && CurrentState == UIUpgradeNodeState.Locked)
-                    return;
-                // treeRef.SelectNode(this);
-                if (preRequires != null && preRequires.Select((node) => node.preRequireId)
-                        .All((id) =>
-                            UpgradeManager.Instance.GetData(id) == null ||
-                            UpgradeManager.Instance.GetData(id).level == 0))
-                {
-                    UIUpgradeNodeInfoPreview.Instance.Shake();
-                    sfxUnlockFailure?.Play();
-                    return;
-                }
-                
-                var success = UpgradeManager.Instance.UpgradeNode(config.nodeId);
+                UIUpgradeNodeInfoPreview.Instance.Shake();
+                sfxUnlockFailure?.Play();
+                return;
+            }
+
+            if (!UpgradeManager.Instance.CanUpgrade(config.nodeId, config.groupId))
+            {
+                UIUpgradeNodeInfoPreview.Instance.Shake();
+                sfxUnlockFailure?.Play();
+                return;
+            }
+            
+            Action actionUpgrade = () =>
+            {
+                var success = UpgradeManager.Instance.UpgradeNode(config.nodeId, config.groupId);
                 if (success)
                 {
+                    UpgradeManager.Instance.RefreshGroupUnlockOrder();
                     if (treeRef.IsNodeSkill(config.nodeId))
                         LogManager.Log(LogConst.EventLogActivateNode, "skill", config.nodeName);
                     else if (treeRef.IsNodePassive(config.nodeId))
                         LogManager.Log(LogConst.EventLogActivateNode, "passive", config.nodeName);
-                    
-                    config.ActivateLevel(UpgradeManager.Instance.GetData(config.nodeId).level, ref UIUpgradeNodeInfoPreview.Instance.bonusInfo);
-                    UIUpgradeNodeInfoPreview.Instance.Setup(config, true);
-                    UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true, () => hoverField.interactable = true);
-                    // UIUpgradeNodeInfoPreview.Instance.HideImmediately(true);
-                    // UIUpgradeNodeInfoPreview.Instance.CanAutoShowHide = false;
-                    // this.DelayCall(0.5f, () =>
-                    // {
-                    //     UIUpgradeNodeInfoPreview.Instance.Setup(config, true);
-                    //     UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true, () =>
-                    //     {
-                    //         hoverField.interactable = true;
-                    //         UIUpgradeNodeInfoPreview.Instance.CanAutoShowHide = true;
-                    //     });
-                    //     // UIUpgradeNodeInfoPreview.Instance.ShowImmediately(transform.position,
-                    //     //     new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true,
-                    //     //     () => UIUpgradeNodeInfoPreview.Instance.CanAutoShowHide = true);
-                    // });
+
+                    config.ActivateLevel(UpgradeManager.Instance.GetData(config.nodeId).level,
+                        ref UIUpgradeNodeInfoPreview.Instance.bonusInfo);
+                    UIUpgradeNodeInfoPreview.Instance.Setup(this, config, true);
+                    UIUpgradeNodeInfoPreview.Instance.Show(transform.position,
+                        new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true,
+                        () => hoverField.interactable = true);
+
                     treeRef.LastUpgradeNodeId = config.nodeId;
                     treeRef.InvokeNodeUpgraded(this);
                     treeRef.UpgradeAllNodesWithId(config.nodeId);
                     sfxUnlockSuccess?.Play();
                 }
-                else
-                {
-                    UIUpgradeNodeInfoPreview.Instance.Shake();
-                    sfxUnlockFailure?.Play();
-                }
             };
+            
+            // Nếu node có dùng sigil thì phải bật popup confirm
+            if (config.costInfo.Any((cost) => cost.costType == WealthType.Sigils))
+            {
+                var displayCost = UIUpgradeNodeInfoPreview.Instance.GetDisplayCost();
+                UIUpgradeScene.Instance.PopupConfirmExchange.Setup(
+                    displayCost.Item1,
+                    displayCost.Item2,
+                    displayCost.Item3,
+                    "And you will receive",
+                    "Confirm exchange",
+                    config.nodeName, 
+                    actionUpgrade);
+                UIUpgradeScene.Instance.PopupConfirmExchange.DoOpenFadeIn();
+            }
+            else
+            {
+                actionUpgrade?.Invoke();   
+            }
         }
-
+        
         public void Upgrade()
         {
             UpdateUI();
@@ -303,6 +328,7 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         public Tween DoUnlockVfx(int fromId)
         {
+            DOTween.Kill(this);
             var seq = DOTween.Sequence(this);
             if (preRequires != null)
             {
@@ -311,11 +337,17 @@ namespace Dark.Scripts.OutGame.Upgrade
                     if (lineInfo.preRequireId != fromId) continue;
                     seq.AppendCallback(() =>
                         {
+                            var vfxUnlock = GetVfxUnlock();
                             DOVirtual.DelayedCall(lineInfo.line.activateDuration - 0.1f, () =>
                             {
                                 imgAvailable.gameObject.SetActive(true);
                                 vfxUnlock?.Play();
-                            });
+                            }).SetTarget(this);
+
+                            DOVirtual.DelayedCall(lineInfo.line.activateDuration + 1f, () =>
+                            {
+                                ReleaseVfxUnlock(vfxUnlock);
+                            }).SetTarget(this);
                         })
                         .Append(lineInfo.line.DoActivate());
                     break;
@@ -341,18 +373,22 @@ namespace Dark.Scripts.OutGame.Upgrade
             if (UpgradeManager.Instance.GetData(config.nodeId).level >= config.MaxLevel)
             {
                 DOTween.Kill(rectActivatedMaxOutline);
+                var vfxActivateMax = GetVfxActivateMax();
                 vfxActivateMax.Play();
                 return DOTween.Sequence(rectActivatedMaxOutline)
                     .Append(rectActivatedMaxOutline.DOLocalRotate(new Vector3(0f, 0f, 180f), 0.4f).SetRelative())
                     .Join(rectActivatedMaxOutline.DOScale(1.2f, 0.4f).SetEase(Ease.OutQuad))
-                    .Append(rectActivatedMaxOutline.DOScale(1f, 0.2f).SetEase(Ease.InQuad));
+                    .Append(rectActivatedMaxOutline.DOScale(1f, 0.2f).SetEase(Ease.InQuad))
+                    .AppendCallback(() => ReleaseVfxActivateMax(vfxActivateMax));
             }
 
-            vfxActivate?.Play();
+            var vfxActivate = GetVfxActivate();
+            vfxActivate.Play();
             return DOTween.Sequence(this)
                 .Append(imgBorder.DOLocalRotate(new Vector3(0f, 0f, 180f), 0.4f).SetRelative())
                 .Join(imgBorder.DOScale(1.2f, 0.4f).SetEase(Ease.OutQuad))
-                .Append(imgBorder.DOScale(1f, 0.2f).SetEase(Ease.InQuad));
+                .Append(imgBorder.DOScale(1f, 0.2f).SetEase(Ease.InQuad))
+                .AppendCallback(() => ReleaseVfxActivate(vfxActivate));
         }
         
         public Tween DoSpawn()
@@ -360,6 +396,134 @@ namespace Dark.Scripts.OutGame.Upgrade
             return spawnAnimation.SpawnLogic.DoSpawn();
         }
 
+        #region Vfx
+        
+        public UIParticle GetVfxUnlock()
+        {
+            return nodeType switch
+            {
+                UpgradeNodeType.NodeSkill => UIUpgradeNodeSkillPool.Instance.GetVfxUnlock(transform, true),
+                UpgradeNodeType.NodeEffect => UIUpgradeNodeEffectPool.Instance.GetVfxUnlock(transform, true),
+                UpgradeNodeType.NodeStat => UIUpgradeNodeStatPool.Instance.GetVfxUnlock(transform, true),
+                UpgradeNodeType.NodeStat2 => UIUpgradeNodeStat2Pool.Instance.GetVfxUnlock(transform, true),
+                _ => null
+            };
+        }
+        
+        public UIParticle GetVfxActivate()
+        {
+            return nodeType switch
+            {
+                UpgradeNodeType.NodeSkill => UIUpgradeNodeSkillPool.Instance.GetVfxActivate(transform, true),
+                UpgradeNodeType.NodeEffect => UIUpgradeNodeEffectPool.Instance.GetVfxActivate(transform, true),
+                UpgradeNodeType.NodeStat => UIUpgradeNodeStatPool.Instance.GetVfxActivate(transform, true),
+                UpgradeNodeType.NodeStat2 => UIUpgradeNodeStat2Pool.Instance.GetVfxActivate(transform, true),
+                _ => null
+            };
+        }
+        
+        public UIParticle GetVfxActivateMax()
+        {
+            return nodeType switch
+            {
+                UpgradeNodeType.NodeSkill => UIUpgradeNodeSkillPool.Instance.GetVfxActivateMax(transform, true),
+                UpgradeNodeType.NodeEffect => UIUpgradeNodeEffectPool.Instance.GetVfxActivateMax(transform, true),
+                UpgradeNodeType.NodeStat => UIUpgradeNodeStatPool.Instance.GetVfxActivateMax(transform, true),
+                UpgradeNodeType.NodeStat2 => UIUpgradeNodeStat2Pool.Instance.GetVfxActivateMax(transform, true),
+                _ => null
+            };
+        }
+
+        public void ReleaseVfxUnlock(UIParticle vfx)
+        {
+            switch (nodeType)
+            {
+                case UpgradeNodeType.NodeSkill:
+                    UIUpgradeNodeSkillPool.Instance.ReleaseVfxUnlock(vfx);
+                    break;
+                case UpgradeNodeType.NodeEffect:
+                    UIUpgradeNodeEffectPool.Instance.ReleaseVfxUnlock(vfx);
+                    break;
+                case UpgradeNodeType.NodeStat:
+                    UIUpgradeNodeStatPool.Instance.ReleaseVfxUnlock(vfx);
+                    break;
+                case UpgradeNodeType.NodeStat2:
+                    UIUpgradeNodeStat2Pool.Instance.ReleaseVfxUnlock(vfx);
+                    break;
+            }
+        }
+        
+        public void ReleaseVfxActivate(UIParticle vfx)
+        {
+            switch (nodeType)
+            {
+                case UpgradeNodeType.NodeSkill:
+                    UIUpgradeNodeSkillPool.Instance.ReleaseVfxActivate(vfx);
+                    break;
+                case UpgradeNodeType.NodeEffect:
+                    UIUpgradeNodeEffectPool.Instance.ReleaseVfxActivate(vfx);
+                    break;
+                case UpgradeNodeType.NodeStat:
+                    UIUpgradeNodeStatPool.Instance.ReleaseVfxActivate(vfx);
+                    break;
+                case UpgradeNodeType.NodeStat2:
+                    UIUpgradeNodeStat2Pool.Instance.ReleaseVfxActivate(vfx);
+                    break;
+            }
+        }
+        
+        public void ReleaseVfxActivateMax(UIParticle vfx)
+        {
+            switch (nodeType)
+            {
+                case UpgradeNodeType.NodeSkill:
+                    UIUpgradeNodeSkillPool.Instance.ReleaseVfxActivateMax(vfx);
+                    break;
+                case UpgradeNodeType.NodeEffect:
+                    UIUpgradeNodeEffectPool.Instance.ReleaseVfxActivateMax(vfx);
+                    break;
+                case UpgradeNodeType.NodeStat:
+                    UIUpgradeNodeStatPool.Instance.ReleaseVfxActivateMax(vfx);
+                    break;
+                case UpgradeNodeType.NodeStat2:
+                    UIUpgradeNodeStat2Pool.Instance.ReleaseVfxActivateMax(vfx);
+                    break;
+            }
+        }
+
+        #endregion
+
+        #region Highlight
+
+        [Space] [Header("Highlight")] 
+        public Image imgHighlight;
+        
+        public void Highlight(bool highlight)
+        {
+            if (highlight)
+            {
+                if (GameConst.HideLockedNode) return;
+
+                groupNode.alpha = 1f;
+                imgHighlight.gameObject.SetActive(true);
+            }
+            else
+            {
+                groupNode.alpha = 0.02f;
+                imgHighlight.gameObject.SetActive(false);
+            }
+        }
+
+        public void HideHighlight()
+        {
+            imgHighlight.gameObject.SetActive(false);
+            if (GameConst.HideLockedNode) return;
+
+            groupNode.alpha = 1f;
+        }
+
+        #endregion
+        
         private void OnDrawGizmos()
         {
             Gizmos.DrawWireSphere(transform.position, lineAnchorOffsetRadius);

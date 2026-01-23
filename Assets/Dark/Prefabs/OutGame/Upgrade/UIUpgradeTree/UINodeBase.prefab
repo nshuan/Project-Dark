@@ -212,8 +212,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -1.0297}
+  m_SizeDelta: {x: 9.1531, y: -2.0595}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7301969629046803224
 CanvasRenderer:
@@ -270,10 +270,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 11.95
-  m_fontSizeBase: 36
+  m_fontSize: 12
+  m_fontSizeBase: 12
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 5.8
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -419,6 +419,7 @@ RectTransform:
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 6981257481610826913}
   - {fileID: 7796629413729799221}
   - {fileID: 6333717422501908432}
   - {fileID: 8946132844991316391}
@@ -459,6 +460,7 @@ MonoBehaviour:
   treeRef: {fileID: 0}
   config: {fileID: 0}
   preRequires: []
+  nodeType: 0
   hoverField: {fileID: 3059954444044083529}
   spawnAnimation: {fileID: 8120552272346022950}
   groupNode: {fileID: 479148875687171241}
@@ -471,15 +473,13 @@ MonoBehaviour:
   imgAvailable: {fileID: 5855699267659595104}
   imgLock: {fileID: 4766365177489947650}
   imgIconLock: {fileID: 3393964630583679806}
-  vfxUnlock: {fileID: 0}
-  vfxActivate: {fileID: 0}
-  vfxActivateMax: {fileID: 0}
   sfxUnlockSuccess: {fileID: 1812099148059265451}
   sfxUnlockFailure: {fileID: 8590563397688390172}
   sfxHover: {fileID: 889147290431021967}
   txtNodeLevel: {fileID: 4030001140250285308}
   txtNodeMaxLevel: {fileID: 3954616260629225610}
   lineAnchorOffsetRadius: 0
+  imgHighlight: {fileID: 8589564340570064793}
 --- !u!114 &8120552272346022950
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -594,6 +594,81 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: a2f1febc2150fa947b8533efcbb61b0c, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!1 &4227916274334376937
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6981257481610826913}
+  - component: {fileID: 3069966514286238870}
+  - component: {fileID: 8589564340570064793}
+  m_Layer: 5
+  m_Name: iconNodeHighlight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &6981257481610826913
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4227916274334376937}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 7122618173943808181}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 145, y: 139}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &3069966514286238870
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4227916274334376937}
+  m_CullTransparentMesh: 1
+--- !u!114 &8589564340570064793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4227916274334376937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.6509804, g: 0.9254902, b: 0.9490196, a: 0.3764706}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 1ab5e282a4fd16040b1d4d604d207893, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -864,10 +939,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10.05
-  m_fontSizeBase: 36
+  m_fontSize: 10
+  m_fontSizeBase: 10
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 5.8
   m_fontSizeMax: 72
   m_fontStyle: 16
@@ -1834,6 +1909,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6333717422501908432}
     m_Modifications:
+    - target: {fileID: 3003226791124799209, guid: 0674e88fc87e1f94eacc5a4a5577da91, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4291095091977262575, guid: 0674e88fc87e1f94eacc5a4a5577da91, type: 3}
+      propertyPath: m_ResetScaleOnEnable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4874668543854982110, guid: 0674e88fc87e1f94eacc5a4a5577da91, type: 3}
       propertyPath: m_Name
       value: FX_UI_SkillTree_NodeIdle_Blue
@@ -2018,6 +2101,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3949679437770734108, guid: 72f59e9b7cbc9ab4eacbabb6cebd9824, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4464538520891555444, guid: 72f59e9b7cbc9ab4eacbabb6cebd9824, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4464538520891555444, guid: 72f59e9b7cbc9ab4eacbabb6cebd9824, type: 3}
+      propertyPath: m_SortingLayer
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

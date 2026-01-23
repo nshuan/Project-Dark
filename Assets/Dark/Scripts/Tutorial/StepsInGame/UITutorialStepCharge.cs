@@ -10,7 +10,7 @@ namespace Dark.Scripts.Tutorial
         
         public override bool IsValid()
         {
-            return LevelUtility.BonusInfo.skillBonus.unlockedChargeBullet || LevelUtility.BonusInfo.skillBonus.unlockedChargeSize;
+            return LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockChargeAttackBullet || LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockChargeAttackSize;
         }
 
         public override void Setup()

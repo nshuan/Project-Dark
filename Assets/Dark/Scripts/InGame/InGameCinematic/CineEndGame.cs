@@ -16,13 +16,13 @@ namespace InGame.InGameCinematic
         private void Awake()
         {
             // return;
-            LevelManager.Instance.OnLevelLoaded += OnLevelLoaded;
+            LevelManager.Instance.OnLevelPreLoaded += OnLevelPreLoaded;
             LevelManager.Instance.OnLose += OnGameOver;
             
             vfxEndGame.SetActive(false);
         }
 
-        private void OnLevelLoaded(LevelConfig level)
+        private void OnLevelPreLoaded(LevelConfig level)
         {
             towers = LevelManager.Instance.Towers.Select((tower) => tower.transform).ToArray();
             character = LevelManager.Instance.Player.transform;

@@ -17,26 +17,20 @@ namespace InGame.GateEditorV2
         public LevelGateConfigEditorV2 prefabGateConfig;
         public Button btnDeleteGate;
         public Button btnAddGate;
+        public TMP_Dropdown drdGateType;
+        public Button btnEditGateSpawnPosition;
+        public LevelGateSpawnPositionEditorV2 spawnPositionEditor;
 
 #if UNITY_EDITOR
         [FolderOnly] public DefaultAsset configFolderPath;
 #endif
         public List<EnemyBehaviour> availableEnemies;
-        // [Space] [Header("Gate info")]
-        // public GameObject panelGateInfo;
-        // public Toggle txtIsBossGate;
-        // public TextMeshProUGUI txtPosition;
-        // public InputField inpTargetTower;
-        // public InputField inpStartTime;
-        // public InputField inpDuration;
-        // public Dropdown drdEnemy;
-        // public InputField inpIntervalLoop;
-        // public InputField inpStartTimeVisual;
-        // public InputField inpDurationVisual;
+        public Dictionary<int, GateEntity> gateMap;
 
         public WaveConfig waveConfig;
         private Vector2[] targetPositions;
         public bool Selecting { get; set; }
+        public int currentGateType;
 
         private List<EnemyBehaviour> AvailableEnemies
         {
@@ -75,7 +69,18 @@ namespace InGame.GateEditorV2
             btnDeleteGate.onClick.AddListener(DeleteSelectingGate);
             
             btnAddGate.onClick.RemoveAllListeners();
-            btnAddGate.onClick.AddListener(() => AddGate(new GateConfig() { targetBaseIndex = Array.Empty<int>(), spawnType = AvailableEnemies[0], spawnLogic = new GateSpawnSingle() }));
+            btnAddGate.onClick.AddListener(() => AddGate(
+                new GateConfig() { targetBaseIndex = Array.Empty<int>(), spawnType = AvailableEnemies[0], spawnLogic = new GateSpawnSingle() },
+                currentGateType));
+            
+            btnEditGateSpawnPosition.onClick.RemoveAllListeners();
+            btnEditGateSpawnPosition.onClick.AddListener(OpenSpawnPositionEditor);
+            
+            drdGateType.ClearOptions();
+            drdGateType.options = gateMap.Select(pair => 
+                new TMP_Dropdown.OptionData($"{pair.Key} - {pair.Value.name}")).ToList();
+            drdGateType.onValueChanged.RemoveAllListeners();
+            drdGateType.onValueChanged.AddListener((value) => currentGateType = value);
         }
 
         private void Update()
@@ -88,6 +93,8 @@ namespace InGame.GateEditorV2
 
         public void UpdateUI(WaveConfig waveInfo)
         {
+            gateMap ??= GateManifest.GetAll();
+            
             waveConfig = waveInfo;
             if (!waveInfo) return;
             
@@ -98,19 +105,28 @@ namespace InGame.GateEditorV2
             if (waveInfo.gateConfigs == null) return;
             foreach (var gateConfig in waveInfo.gateConfigs)
             {
-                AddGate(gateConfig);
+                AddGate(gateConfig, GetGatePrefabId(gateConfig.gatePrefab));
             }
         }
 
-        public void AddGate(GateConfig gateConfig)
+        public int GetGatePrefabId(GateEntity gatePrefab)
+        {
+            if (gateMap == null) return 0;
+            if (!gatePrefab) return 0;
+            
+            return gateMap.FirstOrDefault((pair) => pair.Value == gatePrefab).Key;
+        }
+        
+        public void AddGate(GateConfig gateConfig, int gatePrefabId)
         {
             var newGate = Instantiate(prefabGate, parentGates);
-            newGate.UpdateUI(gateConfig);
+            newGate.UpdateUI(gateConfig, gatePrefabId);
             newGate.TargetPositions = targetPositions;
             newGate.OnClick = SelectGate;
             newGate.OnDragging = null;
             var newGateConfig = Instantiate(prefabGateConfig, parentGateConfig);
             newGateConfig.AvailableEnemies = AvailableEnemies;
+            newGateConfig.GateMap = gateMap;
             newGateConfig.Setup(newGate);
         }
         
@@ -137,6 +153,21 @@ namespace InGame.GateEditorV2
             gate.SelectGate();
         }
 
+        private void OpenSpawnPositionEditor()
+        {
+            foreach (Transform child in parentGateConfig)
+            {
+                if (child.TryGetComponent<LevelGateConfigEditorV2>(out var childGateConfig))
+                {
+                    if (childGateConfig.targetGate.Selecting)
+                    {
+                        spawnPositionEditor.Setup(childGateConfig.targetGate);
+                        return;
+                    }
+                }
+            }
+        }
+        
         private void DeleteSelectingGate()
         {
             foreach (Transform child in parentGateConfig)
@@ -168,21 +199,63 @@ namespace InGame.GateEditorV2
             {
                 if (gate.TryGetComponent<LevelGatePrefabEditorV2>(out var gateConfigEditor))
                 {
-                    // waveConfig.gateConfigs.Add(new GateConfig()
-                    // {
-                    //     isBossGate = gateConfigEditor.IsBossGate,
-                    //     position = gateConfigEditor.Position,
-                    //     targetBaseIndex = gateConfigEditor.StrTargetTowers.Trim(' ').Split(",").Select(int.Parse).ToArray(),
-                    //     startTime = gateConfigEditor.StartTime,
-                    //     duration = gateConfigEditor.Duration,
-                    //     spawnType = AvailableEnemies[gateConfigEditor.SpawnType],
-                    //     intervalLoop = gateConfigEditor.Interval,
-                    //     spawnLogic = gateConfigEditor.Config.spawnLogic,
-                    //     startTimeVisual = gateConfigEditor.StartTimeVisual,
-                    //     durationVisual = gateConfigEditor.DurationVisual,
-                    // });
                     gateConfigEditor.Config.position = gateConfigEditor.Position;
-                    waveConfig.gateConfigs.Add(gateConfigEditor.Config);
+                    
+                    var newTargets = new List<int>();
+                    if (gateConfigEditor.Config.targetBaseIndex != null)
+                    {
+                        newTargets.AddRange(gateConfigEditor.Config.targetBaseIndex);
+                    }
+
+                    IGateSpawner newSpawnLogic;
+                    if (gateConfigEditor.Config.spawnLogic is GateSpawnSingle existingSingle)
+                    {
+                        newSpawnLogic = new GateSpawnSingle() { radius = existingSingle.radius, randomSpanAngle = existingSingle.randomSpanAngle };
+                    }
+                    else if (gateConfigEditor.Config.spawnLogic is GateSpawnTriangle existingTriangle)
+                    {
+                        newSpawnLogic = new GateSpawnTriangle() {  radius = existingTriangle.radius, randomSpanAngle = existingTriangle.randomSpanAngle };
+                    }
+                    else if (gateConfigEditor.Config.spawnLogic is GateSpawnMultiple existingMultiple)
+                    {
+                        newSpawnLogic = new GateSpawnMultiple() { amount = existingMultiple.amount, randomSpanAngle = existingMultiple.randomSpanAngle, maxRadius = existingMultiple.maxRadius };
+                    }
+                    else if (gateConfigEditor.Config.spawnLogic is GateSpawnPositions existingPositions)
+                    {
+                        newSpawnLogic = new GateSpawnPositions() { amount = existingPositions.amount };
+                
+                        if (gateConfigEditor.SpawnPositions != null)
+                        {
+                            var newSpawnPositions = new List<Vector2>();
+                            
+                            foreach (var position in gateConfigEditor.SpawnPositions)
+                            {
+                                newSpawnPositions.Add(position);
+                            }
+                    
+                            newSpawnLogic = new GateSpawnPositions() { amount = existingPositions.amount, spawnPositions = newSpawnPositions.ToArray() };
+                        }
+                    }
+                    else
+                    {
+                        newSpawnLogic = new GateSpawnCenter();
+                    }
+                    
+                    waveConfig.gateConfigs.Add(new GateConfig()
+                    {
+                        isBossGate = gateConfigEditor.Config.isBossGate,
+                        position = gateConfigEditor.Position,
+                        targetBaseIndex = newTargets.ToArray(),
+                        startTime = gateConfigEditor.Config.startTime,
+                        duration = gateConfigEditor.Config.duration,
+                        spawnType = gateConfigEditor.Config.spawnType,
+                        intervalLoop = gateConfigEditor.Config.intervalLoop,
+                        spawnLogic = newSpawnLogic,
+                        startTimeVisual = gateConfigEditor.Config.startTimeVisual,
+                        durationVisual = gateConfigEditor.Config.durationVisual,
+                        gatePrefab = gateConfigEditor.Config.gatePrefab,
+                        hideOrb = gateConfigEditor.Config.hideOrb
+                    });
                 }
             }
             

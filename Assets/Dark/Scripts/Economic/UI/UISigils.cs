@@ -1,4 +1,5 @@
 using TMPro;
+using UnityEngine.EventSystems;
 
 namespace Economic.UI
 {
@@ -29,6 +30,16 @@ namespace Economic.UI
         public override void UpdateUI()
         {
             txtSigils.SetText($"{current}");
+        }
+        
+        public override void OnPointerEnter(PointerEventData eventData)
+        {
+            if (showInstruction && !WealthManager.Instance.hasShowInstructionSigils)
+            {
+                panelInstruction.SetActive(true);
+                WealthManager.Instance.SetShownInstruction(WealthType.Sigils);
+            }
+            OnEconomicIconHoverIn?.Invoke(WealthType.Sigils);
         }
     }
 }

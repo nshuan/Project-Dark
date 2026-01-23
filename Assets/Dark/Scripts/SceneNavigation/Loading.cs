@@ -26,7 +26,7 @@ namespace Dark.Scripts.SceneNavigation
         private float quickLoadHideBlankDuration = 0.5f;
         
         public Action onStartLoading;
-        private Action onSceneLoaded;
+        public Action onSceneLoaded;
         private Action onLoadingComplete;
         private bool isQuickLoad;
         private float currentCloseDuration;

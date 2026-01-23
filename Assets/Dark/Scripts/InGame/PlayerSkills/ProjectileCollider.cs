@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dark.Scripts.ForDemo;
 using Economic.InGame;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -27,26 +28,6 @@ namespace InGame
         private RaycastHit2D[] hits = new RaycastHit2D[10];
         private List<Transform> allHitEnemiesInCurrentShot;
         private int totalHitCountInCurrentShot;
-        
-        // private void OnTriggerEnter2D(Collider2D other)
-        // {
-        //     if (other.CompareTag("Tower"))
-        //     {
-        //         Projectile.ProjectileHit(null);    
-        //     }
-        //     
-        //     if (other.CompareTag("InGameBoundary"))
-        //     {
-        //         Projectile.BlockSpawnDeadBody = true;
-        //         return;
-        //     }
-        //     
-        //     if (other.TryGetComponent<EnemyEntity>(out hitEnemy))
-        //     {
-        //         Projectile.ProjectileHit(hitEnemy);
-        //         DebugUtility.Log($"Hit enemy {hitEnemy.name}");
-        //     }
-        // }
 
         private void Awake()
         {
@@ -122,6 +103,19 @@ namespace InGame
 
             return ProjectileHitStatus.None;
         }
+
+        public bool TryHit(Transform hitToCache)
+        {
+            if (allHitEnemiesInCurrentShot.Any((hit) => ReferenceEquals(hit, hitToCache))) return false;
+            
+            if (totalHitCountInCurrentShot < allHitEnemiesInCurrentShot.Count)
+                allHitEnemiesInCurrentShot[totalHitCountInCurrentShot] = hitToCache;
+            else
+                allHitEnemiesInCurrentShot.Add(hitToCache);
+            totalHitCountInCurrentShot += 1;
+
+            return true;
+        }
         
         public void CheckHitEnemiesOnInit(float radius = 1f)
         {
@@ -130,6 +124,8 @@ namespace InGame
 
         public bool CheckCollectibleOnWay(Vector2 direction)
         {
+            if (DemoConfig.CollectLogicType == 2) return false;
+            
 #if UNITY_EDITOR
             gizmosDirection = direction;
 #endif

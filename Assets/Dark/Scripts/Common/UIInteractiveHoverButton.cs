@@ -29,10 +29,10 @@ namespace Dark.Scripts.Common
             if (!flagCheckHoverOut) return;
             
             var mousePos = Input.mousePosition;
-            if (mousePos.x < rectCheckHoverOut.position.x - rectCheckHoverOut.sizeDelta.x / 2f
-                || mousePos.x > rectCheckHoverOut.position.x + rectCheckHoverOut.sizeDelta.x / 2f
-                || mousePos.y < rectCheckHoverOut.position.y - rectCheckHoverOut.sizeDelta.y / 2f
-                || mousePos.y > rectCheckHoverOut.position.y + rectCheckHoverOut.sizeDelta.y / 2f)
+            if (mousePos.x < rectCheckHoverOut.position.x - rectCheckHoverOut.sizeDelta.x * UICanvasGetScaleFactor.scaleFactor / 2f
+                || mousePos.x > rectCheckHoverOut.position.x + rectCheckHoverOut.sizeDelta.x * UICanvasGetScaleFactor.scaleFactor / 2f
+                || mousePos.y < rectCheckHoverOut.position.y - rectCheckHoverOut.sizeDelta.y * UICanvasGetScaleFactor.scaleFactor / 2f
+                || mousePos.y > rectCheckHoverOut.position.y + rectCheckHoverOut.sizeDelta.y * UICanvasGetScaleFactor.scaleFactor / 2f)
             {
                 actionHoverOut?.Invoke();
                 flagCheckHoverOut = false;

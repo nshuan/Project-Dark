@@ -62,11 +62,10 @@ namespace InGame
             actionTowerChanged = null;
         }
         
-        public void OnMouseClick(bool isLongTele)
+        public void OnMouseClick()
         {
             if (!CanMove) return;
-            if (isLongTele && !CanMoveLong) return;
-            if (selectingTower > -1)
+            if (selectingTower > -1 && selectingTower != CurrentTowerIndex)
             {
                 CanMove = false;
                 CanCountdown = false;
@@ -76,9 +75,7 @@ namespace InGame
                 Action callbackComplete = () =>
                 {
                     Character.ShowShotRadius(LevelManager.Instance.CurrentTower.GetBaseCenter(),
-                        LevelUtility.GetSkillRange(
-                            1f,
-                            Vector2.right));
+                        LevelUtilityV2.GetNormalAttackRange(Vector2.right));
                     Cooldown = GetCooldown(ShortConfig);
                     cdCounter = Cooldown;
                     CanCountdown = true;
@@ -119,8 +116,12 @@ namespace InGame
                 
                 foreach (var tower in Towers)
                 {
-                    tower.Hover(false);
+                    tower.Hover(false, true);
+                    tower.ShowFlashSize(false, 0f);
                 }
+                
+                var dashLine = MoveTowerHelper.Instance.GetTowerLine(Towers[tempCurrentTower], Towers[selectingTower]);
+                dashLine?.gameObject.SetActive(false);
                 cursor.SetMoveCursor(false, selectingTower);
                 PlaySlowMotion(false);
             }
@@ -161,12 +162,30 @@ namespace InGame
                             if (CanMove)
                             {
                                 tower.Hover(true, true);
+                                if (ShortConfig.moveLogic is MoveFlashToTower)
+                                {
+                                    tower.ShowFlashSize(true, GetSize(ShortConfig));
+                                }
+                                else if (LongConfig && LongConfig.moveLogic is MoveFlashToTower)
+                                {
+                                    tower.ShowFlashSize(true, GetSize(LongConfig));
+                                }
+                                
+                                // Show dash line
+                                if (ShortConfig.moveLogic is MoveDashToTower)
+                                {
+                                    var dashLine = MoveTowerHelper.Instance.GetTowerLine(Towers[CurrentTowerIndex], Towers[selectingTower]);
+                                    DOTween.Kill(dashLine.transform);
+                                    dashLine.transform.DOScaleY(2 * GetSize(ShortConfig), 0.1f).SetEase(Ease.InQuad)
+                                        .SetUpdate(true).SetTarget(dashLine.transform);
+                                }
                                 
                                 PlaySlowMotion(true);
                             }
                             else
                             {
                                 tower.Hover(true, false);
+                                tower.ShowFlashSize(false, 0f);
                             }
                             cursor.SetMoveCursor(true, selectingTower);
                             CombatActions.OnTowerHoverIn?.Invoke(tower);
@@ -180,8 +199,11 @@ namespace InGame
                     if (Vector2.Distance(this.worldMousePosition, hoveringCenter) >= HoverRadius)
                     {
                         hovering = false;
-                        Towers[selectingTower].Hover(false);
+                        Towers[selectingTower].Hover(false, true);
+                        Towers[selectingTower].ShowFlashSize(false, 0f);
                         cursor.SetMoveCursor(false, selectingTower);
+                        var dashLine = MoveTowerHelper.Instance.GetTowerLine(Towers[CurrentTowerIndex], Towers[selectingTower]);
+                        dashLine?.gameObject.SetActive(false);
                         PlaySlowMotion(false);
                         CombatActions.OnTowerHoverOut?.Invoke(Towers[selectingTower]);
                         selectingTower = -1;
@@ -194,7 +216,7 @@ namespace InGame
                     if (Input.GetKeyDown(GameSettings.KeyMoveTower0) && CurrentTowerIndex != 0)
                     {
                         selectingTower = 0;
-                        OnMouseClick(false);
+                        OnMouseClick();
                         if (UITutorialStepMoveTowers.ShouldShowHotKeyInstruction)
                         {
                             UITutorialStepMoveTowers.HideHotKeyInstruction();
@@ -204,7 +226,7 @@ namespace InGame
                     else if (Input.GetKeyDown(GameSettings.KeyMoveTower1) && CurrentTowerIndex != 1)
                     {
                         selectingTower = 1;
-                        OnMouseClick(false);
+                        OnMouseClick();
                         if (UITutorialStepMoveTowers.ShouldShowHotKeyInstruction)
                         {
                             UITutorialStepMoveTowers.HideHotKeyInstruction();
@@ -214,7 +236,7 @@ namespace InGame
                     else if (Input.GetKeyDown(GameSettings.KeyMoveTower2) && CurrentTowerIndex != 2)
                     {
                         selectingTower = 2;
-                        OnMouseClick(false);
+                        OnMouseClick();
                         if (UITutorialStepMoveTowers.ShouldShowHotKeyInstruction)
                         {
                             UITutorialStepMoveTowers.HideHotKeyInstruction();
@@ -251,25 +273,25 @@ namespace InGame
         private float GetCooldown(MoveTowersConfig config)
         {
             var cooldown = config.cooldown;
-            if (config.moveLogic is MoveDashToTower or MoveDashFuseToTower) cooldown = LevelUtility.GetDashCooldown();
-            else if (config.moveLogic is MoveFlashToTower or MoveFlashFuseToTower) cooldown = LevelUtility.GetFlashCooldown();
-            else if (config.moveLogic is MoveTeleToTower) cooldown = LevelUtility.GetTeleCooldown();
+            if (config.moveLogic is MoveDashToTower or MoveDashFuseToTower) cooldown = LevelUtilityV2.GetDashCooldown();
+            else if (config.moveLogic is MoveFlashToTower or MoveFlashFuseToTower) cooldown = LevelUtilityV2.GetFlashCooldown();
+            else if (config.moveLogic is MoveTeleToTower) cooldown = LevelUtilityV2.GetTeleCooldown();
             return cooldown;
         }
 
         private float GetSize(MoveTowersConfig config)
         {
             var size = config.size;
-            if (config.moveLogic is MoveDashToTower or MoveDashFuseToTower) size = LevelUtility.GetDashSize();
-            else if (config.moveLogic is MoveFlashToTower or MoveFlashFuseToTower) size = LevelUtility.GetFlashSize();
+            if (config.moveLogic is MoveDashToTower or MoveDashFuseToTower) size = LevelUtilityV2.GetDashSize();
+            else if (config.moveLogic is MoveFlashToTower or MoveFlashFuseToTower) size = LevelUtilityV2.GetFlashSize();
             return size;
         }
 
         private int GetDamage(MoveTowersConfig config)
         {
             var damage = config.damage;
-            if (config.moveLogic is MoveDashToTower or MoveDashFuseToTower) damage = LevelUtility.GetDashDamage();
-            else if (config.moveLogic is MoveFlashToTower or MoveFlashFuseToTower) damage = LevelUtility.GetFlashDamage();
+            if (config.moveLogic is MoveDashToTower or MoveDashFuseToTower) damage = LevelUtilityV2.GetDashDamage();
+            else if (config.moveLogic is MoveFlashToTower or MoveFlashFuseToTower) damage = LevelUtilityV2.GetFlashDamage();
             return damage;
         }
 
@@ -290,6 +312,19 @@ namespace InGame
             }
 
             seq.Play();
+        }
+        
+        public void OnDrawGizmos()
+        {
+#if UNITY_EDITOR
+            if (Towers == null || Towers.Length < 3) return;
+            if (!Character) return;
+            
+            Gizmos.DrawWireSphere(Character.transform.position - Towers[CurrentTowerIndex].GetTowerHeight(), GetSize(ShortConfig));
+            Gizmos.DrawWireSphere(Towers[0].GetBaseCenter(), GetSize(ShortConfig));
+            Gizmos.DrawWireSphere(Towers[1].GetBaseCenter(), GetSize(ShortConfig));
+            Gizmos.DrawWireSphere(Towers[2].GetBaseCenter(), GetSize(ShortConfig));
+#endif
         }
     }
 }

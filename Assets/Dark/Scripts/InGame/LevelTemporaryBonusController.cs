@@ -23,7 +23,7 @@ namespace InGame
 
         private void OnEnemyKilled(EnemyEntity enemy, EnemyDieReason reason)
         {
-            if (reason == EnemyDieReason.Suicide) return;
+            if (reason == EnemyDieReason.Suicide || reason == EnemyDieReason.EnemyKill) return;
             
             if (LevelTemporaryUtility.activatedTemporaryDamageOnKill == false && 
                 LevelUtility.BonusInfo.tempDamageBonusOnKill != null && 

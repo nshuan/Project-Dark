@@ -21,25 +21,22 @@ namespace InGame.GateEditorV2
         
         // public bool IsBossGate { get; set; }
         public Vector2 Position { get; set; }
-        // public string StrTargetTowers { get; set; }
-        // public float StartTime { get; set; }
-        // public float Duration { get; set; }
-        // public int SpawnType { get; set; }
-        // public float Interval { get; set; }
-        // public float StartTimeVisual { get; set; }
-        // public float DurationVisual { get; set; }
+        public List<Vector2> SpawnPositions { get; set; }
 
         public Transform vfx;
-        private Camera camera;
+        public Camera camera;
         private RectTransform rectTransform;
         private GameObject objSelect;
+        public Transform vfxParticlePrefabHolder;
         private List<RectTransform> lines;
         private List<TextMeshProUGUI> txtLines;
+        public int gatePrefabId;
         
         private void Awake()
         {
             vfx = Instantiate(parentVfx, null).transform;
             objSelect = vfx.Find("SpriteSelect").gameObject;
+            vfxParticlePrefabHolder = vfx.Find("Vfx");
             camera = Camera.main;
             rectTransform = GetComponent<RectTransform>();
         }
@@ -62,33 +59,68 @@ namespace InGame.GateEditorV2
             }
         }
 
-        public void UpdateUI(GateConfig gate)
+        public void UpdateUI(GateConfig gate, int gatePrefabId)
         {
+            var newTargets = new List<int>();
+            if (gate.targetBaseIndex != null)
+            {
+                newTargets.AddRange(gate.targetBaseIndex);
+            }
+
+            SpawnPositions = new List<Vector2>();
+            IGateSpawner newSpawnLogic;
+            if (gate.spawnLogic is GateSpawnSingle existingSingle)
+            {
+                newSpawnLogic = new GateSpawnSingle() { radius = existingSingle.radius, randomSpanAngle = existingSingle.randomSpanAngle };
+            }
+            else if (gate.spawnLogic is GateSpawnTriangle existingTriangle)
+            {
+                newSpawnLogic = new GateSpawnTriangle() {  radius = existingTriangle.radius, randomSpanAngle = existingTriangle.randomSpanAngle };
+            }
+            else if (gate.spawnLogic is GateSpawnMultiple existingMultiple)
+            {
+                newSpawnLogic = new GateSpawnMultiple() { amount = existingMultiple.amount, randomSpanAngle = existingMultiple.randomSpanAngle, maxRadius = existingMultiple.maxRadius };
+            }
+            else if (gate.spawnLogic is GateSpawnPositions existingPositions)
+            {
+                newSpawnLogic = new GateSpawnPositions() { amount = existingPositions.amount };
+                
+                if (existingPositions.spawnPositions != null)
+                {
+                    foreach (var position in existingPositions.spawnPositions)
+                    {
+                        SpawnPositions.Add(position);
+                    }
+                    
+                    newSpawnLogic = new GateSpawnPositions() { amount = existingPositions.amount, spawnPositions = SpawnPositions.ToArray() };
+                }
+            }
+            else
+            {
+                newSpawnLogic = new GateSpawnCenter();
+            }
+            
+
             Config = new GateConfig()
             {
                 isBossGate = gate.isBossGate,
-                position = gate.position,
-                targetBaseIndex = gate.targetBaseIndex,
+                position = new Vector2(gate.position.x, gate.position.y),
+                targetBaseIndex = newTargets.ToArray(),
                 startTime = gate.startTime,
                 duration = gate.duration,
                 spawnType = gate.spawnType,
                 intervalLoop = gate.intervalLoop,
-                spawnLogic = gate.spawnLogic,
+                spawnLogic = newSpawnLogic,
                 startTimeVisual = gate.startTimeVisual,
                 durationVisual = gate.durationVisual,
+                gatePrefab = GateManifest.Get(gatePrefabId),
+                hideOrb = gate.hideOrb
             };
-            // Position = gate.position;
-            // IsBossGate = gate.isBossGate;
-            // StrTargetTowers = string.Join(", ", gate.targetBaseIndex);
-            // StartTime = gate.startTime;
-            // Duration = gate.duration;
-            // SpawnType = gate.spawnType.enemyId;
-            // Interval = gate.intervalLoop;
-            // StartTimeVisual = gate.startTimeVisual;
-            // DurationVisual = gate.durationVisual;
             
             transform.position = camera.WorldToScreenPoint(gate.position);
             vfx.position = gate.position;
+            UpdateGateType(gatePrefabId);
+            Position = vfx.position;
         }
 
         private void InitLines()
@@ -109,6 +141,16 @@ namespace InGame.GateEditorV2
                 txtLine.transform.rotation = Quaternion.identity;
                 txtLine.SetText($"{((Vector2)camera.ScreenToWorldPoint(TargetPositions[i]) - Position).magnitude.ToString(GameConst.FloatFormat)}");
                 txtLines.Add(txtLine);
+            }
+        }
+
+        public void UpdateGateType(int prefabId)
+        {
+            gatePrefabId = prefabId;
+            Config.gatePrefab = GateManifest.Get(gatePrefabId);
+            foreach (Transform child in vfxParticlePrefabHolder)
+            {
+                child.gameObject.SetActive(child.GetSiblingIndex() == prefabId);
             }
         }
         

@@ -25,19 +25,16 @@ namespace InGame.UI.CombatSkills
             UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
         }
 
-        private void OnUpgradeBonusActivated(UpgradeBonusInfo bonusInfo)
+        private void OnUpgradeBonusActivated(UpgradeBonusInfoV2 bonusInfo)
         {
-            if (bonusInfo.passiveMapByTriggerType.TryGetValue(triggerType, out var effectTypes))
-            {
-                if (effectTypes == null || effectIcons.Length == 0) return;
+            if (effectIcons == null || effectIcons.Length == 0) return;
                 
-                foreach (var icon in effectIcons)
+            foreach (var icon in effectIcons)
+            {
+                icon.gameObject.SetActive(false);
+                if (LevelUtilityV2.IsUnlockedPassive(triggerType, icon.passiveType))
                 {
-                    icon.gameObject.SetActive(false);
-                    if (effectTypes.Any(effectType => icon.passiveType == effectType))
-                    {
-                        icon.gameObject.SetActive(true);
-                    }
+                    icon.gameObject.SetActive(true);
                 }
             }
         }

@@ -20,7 +20,7 @@ namespace InGame
                     dirY + directionAdder.y * magnitude,
                     0f);
                 // Remove normalized to make it similar to Vector3.Lerp
-                var ratio = LevelUtility.GetRelativeRange(1f, calculatedDir) / 1f;
+                var ratio = LevelUtilityV2.GetRelativeRange(1f, calculatedDir) / 1f;
                 enemy.position = enemyPos + calculatedDir.normalized * (ratio * Time.deltaTime * speed);
             }
         }
@@ -37,9 +37,12 @@ namespace InGame
                 direction.x = dirX + directionAdder.x * magnitude;
                 direction.y = dirY + directionAdder.y * magnitude;
                 direction.z = 0;
-                // Remove normalized to make it similar to Vector3.Lerp
-                var ratio = LevelUtility.GetRelativeRange(1f, direction) / 1f;
-                enemy.position += direction.normalized * (ratio * (Time.deltaTime * speed));
+                if (direction.sqrMagnitude > 0.0001f)
+                {
+                    // Remove normalized to make it similar to Vector3.Lerp
+                    var ratio = LevelUtilityV2.GetRelativeRange(1f, direction) / 1f;
+                    enemy.position += direction.normalized * (ratio * (Time.deltaTime * speed));
+                }
             }
         }
     }

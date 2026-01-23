@@ -1,12 +1,9 @@
 using System;
 using System.Collections;
-using System.Linq;
 using Dark.Scripts.Utils;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
-using UnityEngine.Serialization;
-using Random = UnityEngine.Random;
 
 namespace InGame
 {
@@ -15,7 +12,10 @@ namespace InGame
         [SerializeField] private AnimationCurve orbYCurve;
         [SerializeField] private float orbSpawnDuration;
         [SerializeField] private EnemyBoidObstacle obstacle;
+        [SerializeField] private Transform[] orbSpawnPositions;
         
+        public Transform[] OrbSpawnPositions => orbSpawnPositions;
+        private Transform[] orbs;
         [ReadOnly] public TowerEntity[] target;
         private WaveStatsScale StatsScale { get; set; }
         private float LevelExpRatio { get; set; }
@@ -40,7 +40,7 @@ namespace InGame
         [SerializeField] private float vfxAppearDuration = 0.5f; // duration of vfxOpen
         [SerializeField] private float vfxCloseDuration = 6f; // duration of vfxClose
         [SerializeField] private float visualRadius = 2f;
-        [SerializeField] private bool spawnOrb;
+        public GameObject vfxPreOpen;
 
         private ParticleSystem.MainModule vfxIdle;
         
@@ -72,7 +72,8 @@ namespace InGame
 
             IsActive = false;
             obstacle.gameObject.SetActive(false);
-            this.DelayCall(vfxCloseDuration, () => gameObject.SetActive(false));
+            if (gameObject.activeInHierarchy)
+                this.DelayCall(vfxCloseDuration, () => gameObject.SetActive(false));
         }
         
         public void Deactivate(bool hideVisual)
@@ -117,6 +118,7 @@ namespace InGame
             vfxClose.SetActive(false);
             vfxPortal.gameObject.SetActive(false);
             orbSpawnTimer = 0f;
+            vfxPreOpen.gameObject.SetActive(false);
             
             LevelManager.Instance.OnWin += Deactivate;
             LevelManager.Instance.OnLose += OnLose;
@@ -146,9 +148,7 @@ namespace InGame
                     foreach (var enemy in enemies)
                     {
                         enemy.Item1.IsBoss = true;
-                        LevelManager.Instance.LevelBossName = config.spawnType.displayName;
                     }
-                    
                 }
                 else
                 {
@@ -159,15 +159,31 @@ namespace InGame
                 }
                 
                 // Không phải boss thì spawn orb
-                if (!config.isBossGate && spawnOrb)
+                if (!config.isBossGate && !config.hideOrb)
                 {
-                    var orbs = new Transform[enemies.Length];
+                    orbs = new Transform[enemies.Length];
+                    var orbShadows = new Transform[enemies.Length];
 
                     for (var i = 0; i < enemies.Length; i++)
                     {
                         orbs[i] = EnemyOrbPool.Instance.Get(null, false);
-                        orbs[i].position = transform.position;
-                        orbs[i].gameObject.SetActive(true);
+                        var totalPossibleSpawnPosition = orbSpawnPositions?.Length ?? 0;
+                        if (totalPossibleSpawnPosition > 0)
+                        {
+                            orbs[i].position = orbSpawnPositions[RandomUtil.Range(0, totalPossibleSpawnPosition)]
+                                .position;
+                        }
+                        else
+                        {
+                            orbs[i].position = transform.position;
+                        }
+                        orbs[i].localScale = 0.35f * Vector3.one;
+                                             orbs[i].gameObject.SetActive(true);
+                        
+                        orbShadows[i] = EnemyOrbShadowPool.Instance.Get(null, false);
+                        orbShadows[i].position = transform.position;
+                        orbShadows[i].localScale = Vector3.one;
+                        orbShadows[i].gameObject.SetActive(true);
                     }
 
                     while (orbSpawnTimer < orbSpawnDuration)
@@ -183,19 +199,26 @@ namespace InGame
 
                             // height offset using curve
                             var curveY = orbYCurve.Evaluate(t) * 3f;
+                            var shadowScale = 1f - curveY / 3f * 0.8f;
 
+                            orbShadows[i].position = horizontalPos;
+                            orbShadows[i].localScale = shadowScale * Vector3.one;
+                            
                             // final position
                             horizontalPos.y += curveY;
 
                             orbs[i].position = horizontalPos;
+                            orbs[i].localScale = (horizontalPos.x - transform.position.x) /
+                                                 (enemies[i].Item1.transform.position.x - transform.position.x) * Vector3.one;
                         }
 
                         yield return new WaitForEndOfFrame();
                     }
 
-                    foreach (var orb in orbs)
+                    for (var i = 0; i < orbs.Length; i++)
                     {
-                        EnemyOrbPool.Instance.Release(orb);
+                        EnemyOrbPool.Instance.Release(orbs[i]);
+                        EnemyOrbShadowPool.Instance.Release(orbShadows[i]);
                     }
                 }
                 
@@ -240,7 +263,8 @@ namespace InGame
 
         private IEnumerator IEVisual()
         {
-            yield return new WaitForSeconds(Mathf.Max(config.startTimeVisual - vfxAppearDuration, 0f));
+            var delayVisual = Mathf.Max(config.startTimeVisual - vfxAppearDuration, 0f);
+            yield return new WaitForSeconds(delayVisual);
             visual.SetActive(true);
 
             vfxOpen.SetActive(true);
@@ -252,6 +276,7 @@ namespace InGame
             vfxPortal.gameObject.SetActive(true);
             yield return new WaitForEndOfFrame();
             vfxOpen.SetActive(false);
+            vfxPreOpen.SetActive(false);
 
             yield return new WaitForSeconds(config.durationVisual);
             
@@ -295,6 +320,13 @@ namespace InGame
 
         private void OnLose()
         {
+            if (orbs != null)
+            {
+                foreach (var orb in orbs)
+                {
+                    EnemyOrbPool.Instance.Release(orb);
+                }
+            }
             Deactivate();
             gameObject.SetActive(false);
         }

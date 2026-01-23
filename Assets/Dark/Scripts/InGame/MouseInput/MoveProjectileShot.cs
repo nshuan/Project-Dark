@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Dark.Scripts.Utils;
 using DG.Tweening;
@@ -71,24 +72,21 @@ namespace InGame
         {
             InputManager = manager;
             ChargeController = chargeController;
-            CooldownNormal = LevelUtility.GetSkillCooldown(false);
-            CooldownCharge = LevelUtility.GetSkillCooldown(true);
-
-            var skillBonusInfo = LevelUtility.BonusInfo.skillBonus;
-            canChargeBullet = skillBonusInfo.unlockedChargeBullet;
-            canChargeSize = skillBonusInfo.unlockedChargeSize;
+            CooldownNormal = LevelUtilityV2.GetNormalAttackCooldown();
+            CooldownCharge = LevelUtilityV2.GetChargeAttackCooldown();
+            
+            canChargeBullet = LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockChargeAttackBullet;
+            canChargeSize = LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockChargeAttackSize;
             canChargeDame = canChargeSize || canChargeBullet;
             canChargeRange = canChargeSize || canChargeBullet;
             
-            ChargeController.SetProjectile(LevelUtility.CurrentSkill.projectiles[PlayerProjectileType.ChargeBullet]);
+            ChargeController.SetProjectile(LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.ChargeBullet]);
             ChargeController.Cam = Cam;
             
             // Setup shot radius
             InputManager.PlayerVisual.ShowShotRadius(
                 LevelManager.Instance.CurrentTower.GetBaseCenter(),
-                LevelUtility.GetSkillRange(
-                    1f,
-                    Vector2.right));
+                LevelUtilityV2.GetNormalAttackRange(Vector2.right));
         }
         
         public virtual void OnMouseClick()
@@ -103,17 +101,16 @@ namespace InGame
             else CanShootNormal = false;
             
             var tempMousePos = Cam.ScreenToWorldPoint(mousePosition);
-            var (damage, criticalDamage) = LevelUtility.GetPlayerBulletDamage(
+            var (damage, criticalDamage) = LevelUtilityV2.GetChargeAttackDamage(
                 canChargeDame && dameChargeAdded > 0 ? 1 + dameChargeAdded : 1f);
-            var critRate = LevelUtility.GetCriticalRate();
-            var bulletNum = LevelUtility.GetNumberOfBulletsCharge(bulletChargeAdded);
-            var skillSize = LevelUtility.GetSkillSize(
-                canChargeSize && sizeChargeAdded > 0 ? 1 + sizeChargeAdded : 1f);
-            var skillRange = LevelUtility.GetSkillRange(
-                canChargeRange && rangeChargeAdded > 0 ? 1 + rangeChargeAdded : 1f,
-                Vector2.right);
-            var maxHit = 1 + LevelUtility.BonusInfo.skillBonus.bulletMaxHitPlus;
-            var stagger = LevelUtility.GetBulletStagger();
+            var critRate = LevelUtilityV2.GetBaseCriticalRate();
+            var bulletNum = 1;
+            var skillSize = canChargeSize && sizeChargeAdded > 0 ? 1 + sizeChargeAdded : 1f;
+            var skillRange = (canChargeRange && rangeChargeAdded > 0 ? 1 + rangeChargeAdded : 1f) * LevelUtilityV2.GetNormalAttackRange(Vector2.right);
+            var maxHit = 1;
+            if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing) 
+                maxHit += LevelUtilityV2.GetNormalPiercingAmount();
+            var stagger = LevelUtilityV2.GetBaseStagger();
 
             InputManager.BlockTeleport = true;
             var delayShot = 0f;
@@ -144,8 +141,22 @@ namespace InGame
 
                 if (!isChargeBullet || isChargeSize)
                 {
-                    LevelUtility.CurrentSkill.Shoot(
-                        LevelUtility.CurrentSkill.projectiles[projectileType],
+                    var blossomAmount = 0;
+                    if (canChargeSize)
+                        blossomAmount = LevelUtilityV2.GetChargeSizeAmount();
+                    var blossomAction = blossomAmount == 0
+                        ? null
+                        : new List<IProjectileHit>()
+                        {
+                            new ProjectileHitBlossom()
+                            {
+                                projectile = LevelUtilityV2.StatsNormalAttack.projectiles[projectileType],
+                                bulletAmount = blossomAmount,
+                                blossomSize = LevelUtilityV2.StatsChargeSize.range
+                            }
+                        };
+                    LevelUtilityV2.StatsNormalAttack.Shoot(
+                        LevelUtilityV2.StatsNormalAttack.projectiles[projectileType],
                         InputManager.ProjectileSpawnPos.position,
                         LevelManager.Instance.CurrentTower.GetBaseCenter(),
                         tempMousePos,
@@ -158,34 +169,49 @@ namespace InGame
                         stagger,
                         maxHit,
                         isCharge,
-                        LevelUtility.BonusInfo.skillBonus.GetProjectileActivateActions(isCharge),
-                        LevelUtility.BonusInfo.skillBonus.GetProjectileHitActions(isCharge));
+                        null,
+                        blossomAction
+                        );
                 }
 
                 if (isCharge)
                 {
-                    var chargeRange = LevelUtility.GetSkillRange(
-                        canChargeRange && rangeChargeAdded > 0 ? 1 + rangeChargeAdded : 1f,
-                        Vector2.right);
+                    var chargeRange = (canChargeRange && rangeChargeAdded > 0 ? 1 + rangeChargeAdded : 1f) *
+                                      LevelUtilityV2.GetNormalAttackRange(Vector2.right);
                     // Không check trong range charge nữa, check trên toàn map luôn
                     InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(15f); 
                     
                     ChargeController.Attack((projectile, direction, delay) =>
                     {
+                        var blossomAmount = 0;
+                        if (canChargeSize)
+                            blossomAmount = LevelUtilityV2.GetChargeSizeAmount();
+                        var blossomAction = blossomAmount == 0
+                            ? null
+                            : new List<IProjectileHit>()
+                            {
+                                new ProjectileHitBlossom()
+                                {
+                                    projectile = LevelUtilityV2.StatsNormalAttack.projectiles[projectileType],
+                                    bulletAmount = blossomAmount,
+                                    blossomSize = LevelUtilityV2.StatsChargeSize.range
+                                }
+                            };
+                        
                         projectile.Init(
                             LevelManager.Instance.CurrentTower.GetBaseCenter(), 
                             direction.normalized, 
                             chargeRange,
                             skillSize, 
-                            LevelUtility.CurrentSkill.speedScale,
+                            LevelUtilityV2.StatsNormalAttack.speedScale,
                             damage,
                             criticalDamage, 
                             critRate, 
-                            LevelUtility.CurrentSkill.stagger, 
+                            stagger, 
                             true, 
                             maxHit, 
                             null, 
-                            LevelUtility.BonusInfo.skillBonus.GetProjectileHitActions(true),
+                            blossomAction,
                             ProjectileType.PlayerProjectile);
                         
                         projectile.Activate(delay);
@@ -195,8 +221,8 @@ namespace InGame
                 InputManager.BlockTeleport = false;
             });
 
-            CooldownNormal = LevelUtility.GetSkillCooldown(false);
-            CooldownCharge = LevelUtility.GetSkillCooldown(true);
+            CooldownNormal = LevelUtilityV2.GetNormalAttackCooldown();
+            CooldownCharge = LevelUtilityV2.GetChargeAttackCooldown();
 
             if (isCharge)
             {
@@ -214,9 +240,7 @@ namespace InGame
 
             // Reset range
             InputManager.PlayerVisual.UpdateShotRadius(
-                LevelUtility.GetSkillRange(
-                    1f,
-                    Vector2.right), false);
+                LevelUtilityV2.GetNormalAttackRange(Vector2.right), false);
             
             // Do cursor effect
             cursor.UpdateScale(0f);
@@ -259,23 +283,23 @@ namespace InGame
 
         public void ResetChargeVariable()
         {
-            chargeStepTime = LevelUtility.GetChargeStepTime();
+            chargeStepTime = LevelUtilityV2.GetChargeStepTime();
             
             bulletChargeAdded = 0;
-            bulletPerStep = LevelUtility.GetChargeBulletPerStep();
-            bulletChargeMaxStep = LevelUtility.GetChargeBulletMaxStep();
+            bulletPerStep = LevelUtilityV2.StatsNormalAttack.chargeBulletStep;
+            bulletChargeMaxStep = Math.Max(LevelUtilityV2.StatsNormalAttack.chargeBulletMaxStep, Mathf.RoundToInt(LevelUtilityV2.GetChargeBulletAmount() / bulletPerStep));
 
             dameChargeAdded = 0f;
-            damePerStep = LevelUtility.GetChargeDamePerStep();
-            dameChargeMaxStep = LevelUtility.GetChargeDameMaxStep();
+            damePerStep = LevelUtilityV2.StatsNormalAttack.chargeDameStep;
+            dameChargeMaxStep = LevelUtilityV2.StatsNormalAttack.chargeDameMaxStep;
 
             sizeChargeAdded = 0f;
-            sizePerStep = LevelUtility.GetChargeSizePerStep();
-            sizeChargeMaxStep = LevelUtility.GetChargeSizeMaxStep();
+            sizePerStep = LevelUtilityV2.StatsNormalAttack.chargeSizeStep;
+            sizeChargeMaxStep = LevelUtilityV2.StatsNormalAttack.chargeSizeMaxStep;
             
             rangeChargeAdded = 0f;
-            rangePerStep = LevelUtility.GetChargeRangePerStep();
-            rangeChargeMaxStep = LevelUtility.GetChargeRangeMaxStep();
+            rangePerStep = LevelUtilityV2.StatsNormalAttack.chargeRangeStep;
+            rangeChargeMaxStep = LevelUtilityV2.StatsNormalAttack.chargeRangeMaxStep;
 
             isCharging = false;
             chargeStep = 0;
@@ -356,6 +380,7 @@ namespace InGame
                         if (canChargeBullet && bulletChargeMaxStep > 0)
                         {
                             bulletChargeAdded = (int)(bulletPerStep * Math.Min(chargeStep, bulletChargeMaxStep));
+                            bulletChargeAdded = Math.Min(bulletChargeAdded, LevelUtilityV2.GetChargeBulletAmount());
                             for (int i = 0; i < bulletChargeAdded - ChargeController.TotalBulletAdded; i++)
                             {
                                 ChargeController.AddBullet(InputManager.PlayerVisual.transform.position,
@@ -371,8 +396,7 @@ namespace InGame
                         if (canChargeSize && sizeChargeMaxStep > 0)
                         {
                             sizeChargeAdded = sizePerStep * Math.Min(chargeStep, sizeChargeMaxStep);
-                            ChargeController.AddSize(LevelUtility.GetSkillSize(
-                                sizeChargeMaxStep > 0 ? 1 + sizeChargeAdded : 1f));
+                            ChargeController.AddSize(sizeChargeAdded > 0 ? 1 + sizeChargeAdded : 1f);
                             InputManager.PlayerVisual.UpdateChargeScale(1f + Math.Min(chargeStep, sizeChargeMaxStep) * 0.15f);
                         }
 
@@ -380,9 +404,7 @@ namespace InGame
                         {
                             rangeChargeAdded = rangePerStep * Math.Min(chargeStep, rangeChargeMaxStep);
                             InputManager.PlayerVisual.UpdateShotRadius(
-                                LevelUtility.GetSkillRange(
-                                    canChargeRange && rangeChargeAdded > 0 ? 1 + rangeChargeAdded : 1f,
-                                    Vector2.right));
+                                (rangeChargeAdded > 0 ? 1 + rangeChargeAdded : 1f) * LevelUtilityV2.GetNormalAttackRange(Vector2.right));
                         }
                     }
                 }

@@ -10,7 +10,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator.Grid
         public UIMultiLineRenderer uiLineRenderer;
         public RectTransform parentRect;         // The parent container (e.g., Content of a ScrollView)
         
-        private Vector2 spacing = new Vector2(8f, 8f);   // distance between NEAREST edges (x,y)
+        public Vector2 spacing = new Vector2(8f, 8f);   // distance between NEAREST edges (x,y)
 
         private void Start()
         {

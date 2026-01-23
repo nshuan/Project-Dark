@@ -14,7 +14,7 @@ namespace InGame
             gameObject.name = "Enemy Boid Manager";
             
             grid = new EnemySpatialGrid(100, 100, 5);
-            LevelManager.Instance.OnLevelLoaded += (level) =>
+            LevelManager.Instance.OnLevelPreLoaded += (level) =>
             {
                 grid.Clear();
             };
