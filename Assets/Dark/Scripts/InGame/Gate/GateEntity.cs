@@ -15,7 +15,7 @@ namespace InGame
         [SerializeField] private Transform[] orbSpawnPositions;
         
         public Transform[] OrbSpawnPositions => orbSpawnPositions;
-        
+        private Transform[] orbs;
         [ReadOnly] public TowerEntity[] target;
         private WaveStatsScale StatsScale { get; set; }
         private float LevelExpRatio { get; set; }
@@ -161,7 +161,7 @@ namespace InGame
                 // Không phải boss thì spawn orb
                 if (!config.isBossGate && !config.hideOrb)
                 {
-                    var orbs = new Transform[enemies.Length];
+                    orbs = new Transform[enemies.Length];
                     var orbShadows = new Transform[enemies.Length];
 
                     for (var i = 0; i < enemies.Length; i++)
@@ -320,6 +320,13 @@ namespace InGame
 
         private void OnLose()
         {
+            if (orbs != null)
+            {
+                foreach (var orb in orbs)
+                {
+                    EnemyOrbPool.Instance.Release(orb);
+                }
+            }
             Deactivate();
             gameObject.SetActive(false);
         }
