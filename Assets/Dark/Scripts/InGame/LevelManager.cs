@@ -330,6 +330,8 @@ namespace InGame
             towers.Sort((t1, t2) => t1.transform.GetSiblingIndex().CompareTo(t2.transform.GetSiblingIndex()));
             for (var i = 0; i < towers.Length; i++)
             {
+                if (Level.towerPositions != null && i < Level.towerPositions.Length)
+                    towers[i].transform.position = Level.towerPositions[i];
                 towers[i].Initialize(i, LevelUtilityV2.GetBaseTowerHp());
                 towers[i].OnDestroyed += OnTowerDestroyed;
             }

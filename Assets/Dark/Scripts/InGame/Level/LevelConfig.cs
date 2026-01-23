@@ -8,6 +8,7 @@ namespace InGame
     {
         public int level; // Start from 1
         public LevelMapType mapType;
+        public Vector2[] towerPositions;
         public WaveInfo[] waveInfo;
 
         private void OnValidate()
