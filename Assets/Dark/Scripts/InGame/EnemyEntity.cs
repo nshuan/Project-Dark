@@ -284,6 +284,7 @@ namespace InGame
 
         public virtual void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
         {
+            if (!Activated) return;
             if (IsDestroyed) return;
             if (dmgType != DamageType.Enemy && dmgType != DamageType.SelfDestruct && State == EnemyState.Invisible) return;
             
