@@ -17,6 +17,7 @@ public class GameConst
     
     public static bool HideLockedNode = false; // Hide locked nodes in skill tree
     public static bool HideLaserWaveOnSpawnTree = true; // Hide laser wave on tree spawn animation
+    public static bool HideLockedNodeByCloud = true; // Clouds cover locked nodes
 
     public const string FloatFormat = "0.##";
 }

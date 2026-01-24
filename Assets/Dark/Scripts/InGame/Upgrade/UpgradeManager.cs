@@ -365,26 +365,6 @@ namespace InGame.Upgrade
         
         public void RefreshGroupUnlockOrder()
         {
-            RefreshGroupUnlockOrder1();
-            return;
-            var groups = TreeConfig.nodeGroupsMapById.Values.ToList();
-            groupUnlockOrderMapById ??= new Dictionary<int, int>();
-            groups.Sort((group1, group2) => GetNodeUnlockOrder(group1.lockNode.nodeId)
-                .CompareTo(GetNodeUnlockOrder(group2.lockNode.nodeId)));
-            var index = 0;
-            foreach (var group in groups)
-            {
-                var nodeUnlockData = GetData(group.lockNode.nodeId);
-                groupUnlockOrderMapById[group.groupId] = index;
-                if (nodeUnlockData is { level: > 0 })
-                {
-                    index += 1;
-                };
-            }
-        }
-        
-        public void RefreshGroupUnlockOrder1()
-        {
             var groups = TreeConfig.nodeGroupsMapById.Values.ToList();
             var unlockedData = Data.nodes.Where(node => node.level >= 1).ToDictionary(d => d.id);
             var unlockedGroup = new List<UpgradeNodeGroup>();

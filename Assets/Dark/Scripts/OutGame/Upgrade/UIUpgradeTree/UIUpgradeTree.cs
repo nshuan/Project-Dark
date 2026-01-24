@@ -39,7 +39,14 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         public int LastUpgradeNodeId { get; set; } = -1;
         public Action<UIUpgradeNode> OnNodeUpgraded { get; set; }
-        
+        public Action OnTreeSpawned { get; set; }
+
+        private void OnDestroy()
+        {
+            OnNodeUpgraded = null;
+            OnTreeSpawned = null;
+        }
+
         public void UpdateChildren(int id, bool isUnlock)
         {
             if (nodeChildrenMap.TryGetValue(id, out var children))
@@ -121,6 +128,8 @@ namespace Dark.Scripts.OutGame.Upgrade
                 
                 currentLayerNodes.Clear(); 
             }
+            
+            OnTreeSpawned?.Invoke();
             
             DOTween.Kill(this);
             var seq = DOTween.Sequence(this);
