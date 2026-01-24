@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MAT_Crack_Blink
+  m_Name: MAT_Portal_Core_PreOpen
   m_Shader: {fileID: -6465566751694194690, guid: e3ec96ff1a295534fb48bd1e7f7659e4, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -23,20 +23,44 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _MainNoise:
+        m_Texture: {fileID: 2800000, guid: c3ba872455e7c6540b3ad3698f2bd544, type: 3}
+        m_Scale: {x: 0, y: 0.14}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 25d29282f8c1f0f4a92d736d441e338a, type: 3}
+        m_Texture: {fileID: 2800000, guid: 38466d60d7ca082479b62e061797466a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex:
+        m_Texture: {fileID: 2800000, guid: 229b6e14b340cbe48837c1c3f16cc258, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _BUILTIN_QueueControl: 0
     - _BUILTIN_QueueOffset: 0
-    - _GlowValue: 0.5
+    - _ColorMask: 15
+    - _DarknessFactor: 0
+    - _DistortionFactor: 0
+    - _DstFactor: 8
+    - _GlowValue: 0
+    - _NoiseValue: 1
+    - _Opp: 4
+    - _Speed: 0.1
+    - _SrcFactor: 3
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 1
     m_Colors:
-    - _Color: {r: 0.23584908, g: 0, b: 0, a: 1}
-    - _Speed: {r: 0.02, g: 0.02, b: 0, a: 0}
+    - _Color: {r: 0, g: 0, b: 0, a: 1}
+    - _NoiseSpeed: {r: 0, g: 0, b: 0, a: 0}
+    - _PreColor: {r: 1, g: 0, b: 0, a: 0}
+    - _Speed: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
---- !u!114 &1751135474488594898
+--- !u!114 &2569371367946506329
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
