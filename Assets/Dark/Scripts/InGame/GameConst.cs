@@ -21,4 +21,5 @@ public class GameConst
     public static bool HideLockedAreaByCloud = true; // Clouds cover locked nodes
 
     public const string FloatFormat = "0.##";
+    public const string FloatFormat1 = "0.#";
 }
