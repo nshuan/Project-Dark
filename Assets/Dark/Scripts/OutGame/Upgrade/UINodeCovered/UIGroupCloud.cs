@@ -18,7 +18,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UINodeCovered
         
         private void Awake()
         {
-            if (!GameConst.HideLockedNodeByCloud)
+            if (!GameConst.HideLockedAreaByCloud)
             {
                 gameObject.SetActive(false);
                 return;

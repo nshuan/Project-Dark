@@ -362,6 +362,12 @@ namespace InGame.Upgrade
             if (refresh) RefreshGroupUnlockOrder();
             return groupUnlockOrderMapById[groupId];;
         }
+
+        public bool IsGroupUnlocked(int groupId)
+        {
+            if (!TreeConfig.nodeGroupsMapById.ContainsKey(groupId)) return false;
+            return groupUnlockOrderMapById[groupId] < 999999;
+        }
         
         public void RefreshGroupUnlockOrder()
         {

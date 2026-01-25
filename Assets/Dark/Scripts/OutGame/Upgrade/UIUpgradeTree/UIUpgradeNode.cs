@@ -227,8 +227,25 @@ namespace Dark.Scripts.OutGame.Upgrade
             {
                 if (GameConst.HideLockedNode && CurrentState == UIUpgradeNodeState.Locked)
                     return;
-                if(GameConst.HideLockedNodeByCloud && CurrentState == UIUpgradeNodeState.Locked)
+                if (GameConst.HideLockedAreaByCloud && config.groupId.All((id) =>
+                    {
+                        if (id.isLockNode) return false;
+                        
+                        if (UpgradeManager.Instance.TreeConfig &&
+                            UpgradeManager.Instance.TreeConfig.nodeGroupsMapById.TryGetValue(id.groupId,
+                                out var nodeGroup))
+                        {
+                            if (UpgradeManager.Instance.GetData(nodeGroup.lockNode.nodeId) is { level: > 0 })
+                                return false;
+                        }
+
+                        ;
+
+                        return true;
+                    }))
+                {
                     return;
+                }
                 
                 DOTween.Kill(transform);
                 sfxHover.Play();
