@@ -362,28 +362,14 @@ namespace InGame.Upgrade
             if (refresh) RefreshGroupUnlockOrder();
             return groupUnlockOrderMapById[groupId];;
         }
-        
-        public void RefreshGroupUnlockOrder()
+
+        public bool IsGroupUnlocked(int groupId)
         {
-            RefreshGroupUnlockOrder1();
-            return;
-            var groups = TreeConfig.nodeGroupsMapById.Values.ToList();
-            groupUnlockOrderMapById ??= new Dictionary<int, int>();
-            groups.Sort((group1, group2) => GetNodeUnlockOrder(group1.lockNode.nodeId)
-                .CompareTo(GetNodeUnlockOrder(group2.lockNode.nodeId)));
-            var index = 0;
-            foreach (var group in groups)
-            {
-                var nodeUnlockData = GetData(group.lockNode.nodeId);
-                groupUnlockOrderMapById[group.groupId] = index;
-                if (nodeUnlockData is { level: > 0 })
-                {
-                    index += 1;
-                };
-            }
+            if (!TreeConfig.nodeGroupsMapById.ContainsKey(groupId)) return false;
+            return groupUnlockOrderMapById[groupId] < 999999;
         }
         
-        public void RefreshGroupUnlockOrder1()
+        public void RefreshGroupUnlockOrder()
         {
             var groups = TreeConfig.nodeGroupsMapById.Values.ToList();
             var unlockedData = Data.nodes.Where(node => node.level >= 1).ToDictionary(d => d.id);
