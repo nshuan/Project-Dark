@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Coffee.UIExtensions;
 using DG.Tweening;
+using InGame.UI.InGameToast;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +17,7 @@ namespace InGame.UI.Waves
         [SerializeField] private Image currentWave;
         [SerializeField] private UIParticle vfxCurrentWave;
         [SerializeField] private TextMeshProUGUI txtWave;
+        [SerializeField] private int waveLeftToNotifyBoss = 2;
 
         [Space] [Header("Config")] 
         public float gapDuration = 0.2f;
@@ -70,6 +72,14 @@ namespace InGame.UI.Waves
                 0f, 0f);
             
             waveItems[waveIndex].DoPassed();
+            
+            var waveLeft = totalWave - 1 - waveIndex; 
+            if (waveLeft <= waveLeftToNotifyBoss && waveLeft > 0)
+            {
+                var message = $"Boss incoming in {waveLeft} waves!";
+                ToastInGameManager.Instance.Register(message: message, icon: null);
+            }
+            
             if (!isLevelStarted) isLevelStarted = true;
         }
 
@@ -81,7 +91,8 @@ namespace InGame.UI.Waves
             
             txtWave.SetText("Completed");
 
-            DOTween.Sequence()
+            DOTween.Kill(this);
+            DOTween.Sequence().SetTarget(this)
                 .AppendCallback(() =>
                 {
                     txtWave.transform.DOPunchScale(0.2f * Vector3.one, 0.2f);
