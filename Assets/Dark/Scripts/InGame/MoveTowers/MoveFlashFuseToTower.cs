@@ -94,6 +94,7 @@ namespace InGame
                     hitTarget.HitDirectionX = dashDirection.x;
                     hitTarget.HitDirectionY = dashDirection.y;
                     hitTarget.Damage((int)value, hitCenter, dashStagger, DamageType.Normal);
+                    PassiveEffectManager.Instance.TriggerEffect(PassiveTriggerType.DameByMoveSKill, hitTarget);
                 }
             }
         }
