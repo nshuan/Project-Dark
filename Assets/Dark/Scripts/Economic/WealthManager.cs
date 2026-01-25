@@ -135,11 +135,17 @@ namespace Economic
         public void Save()
         {
             var data = PlayerDataManager.Instance.Data;
+            var changedDark = vestige - data.dark;
+            var changedBossPoint = bossPoint - data.bossPoint;
+            var changedLevelPoint = levelPoint - data.levelPoint;
             data.grade = grade;
             data.exp = exp;
             data.levelPoint = levelPoint;
             data.dark = vestige;
             data.bossPoint = bossPoint;
+            data.totalDarkClaimed += Math.Max(changedDark, 0);
+            data.totalBossPointClaimed += Math.Max(changedBossPoint, 0);
+            data.totalLevelPointClaimed += Math.Max(changedLevelPoint, 0);
             data.hasShowInstructionVestige = hasShowInstructionVestige;
             data.hasShowInstructionEchoes = hasShowInstructionEchoes;
             data.hasShowInstructionSigils = hasShowInstructionSigils;
