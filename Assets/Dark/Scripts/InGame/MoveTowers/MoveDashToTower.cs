@@ -22,7 +22,7 @@ namespace InGame
         protected List<Transform> hitHistory = new List<Transform>();
         protected int currentHitHistoryIndex;
         protected RaycastHit2D[] hits = new RaycastHit2D[10];
-        protected IDamageable hitTarget;
+        protected EnemyEntity hitTarget;
         protected Vector2 direction;
         protected PlayerCharacter characterRef;
 
@@ -114,6 +114,7 @@ namespace InGame
                     hitTarget.HitDirectionX = direction.x;
                     hitTarget.HitDirectionY = direction.y;
                     hitTarget.Damage((int)value, hitCenter, stagger, DamageType.Normal);
+                    PassiveEffectManager.Instance.TriggerEffect(PassiveTriggerType.DameByMoveSKill, hitTarget);
                 }
             }
         }

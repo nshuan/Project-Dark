@@ -43,6 +43,11 @@ namespace InGame.UI.CombatSkills
             imgFillCooldown.fillAmount = 1f;
             imgFillCooldown2nd.fillAmount = 1f;
             SetupPassive();
+            if (GameConst.DefaultShowPassiveIcon == false)
+                DoHidePassive().OnComplete(() =>
+                {
+                    btnTogglePassive.interactable = true;
+                });
         }
 
         public abstract void CheckShowSkill(Action callbackShow, Action callbackHide);

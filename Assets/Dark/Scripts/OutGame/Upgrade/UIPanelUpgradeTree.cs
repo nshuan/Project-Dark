@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using Coffee.UIExtensions;
 using Dark.Scripts.AudioV2;
@@ -9,8 +8,6 @@ using DG.Tweening;
 using InGame.CharacterClass;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
 using Button = UnityEngine.UI.Button;
 
 namespace Dark.Scripts.OutGame.Upgrade
