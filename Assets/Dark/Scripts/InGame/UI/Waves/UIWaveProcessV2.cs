@@ -12,6 +12,7 @@ namespace InGame.UI.Waves
     {
         [SerializeField] private List<UIWaveProcessItemV2> waveItems;
         [SerializeField] private Image waveLineActive;
+        [SerializeField] private Image waveLineActiveGradient;
         [SerializeField] private Image waveLineInactive;
         [SerializeField] private Transform currentWaveGroup;
         [SerializeField] private Image currentWave;
@@ -72,6 +73,7 @@ namespace InGame.UI.Waves
                 0f, 0f);
             
             waveItems[waveIndex].DoPassed();
+            UpdateGradient((float)waveIndex / (totalWave - 1 - waveLeftToNotifyBoss));
             
             var waveLeft = totalWave - 1 - waveIndex; 
             if (waveLeft <= waveLeftToNotifyBoss && waveLeft > 0)
@@ -92,17 +94,18 @@ namespace InGame.UI.Waves
             txtWave.SetText("Completed");
 
             DOTween.Kill(this);
+            txtWave.transform.localRotation = Quaternion.identity;
             DOTween.Sequence().SetTarget(this)
                 .AppendCallback(() =>
                 {
-                    txtWave.transform.DOPunchScale(0.2f * Vector3.one, 0.2f);
-                    txtWave.transform.DOShakeRotation(0.15f, new Vector3(0f, 0f, 15f), 10, fadeOut: false);
+                    txtWave.transform.DOPunchScale(0.2f * Vector3.one, 0.2f).SetTarget(this);
+                    txtWave.transform.DOShakeRotation(0.15f, new Vector3(0f, 0f, 15f), 10, fadeOut: false).SetTarget(this);
                 })
                 .AppendInterval(0.2f)
                 .AppendCallback(() =>
                 {
-                    currentWave.transform.DOScale(0f, 0.2f).SetEase(Ease.InQuad);
-                    txtWave.transform.DOScale(0f, 0.2f).SetEase(Ease.InQuad).SetDelay(0.1f);
+                    currentWave.transform.DOScale(0f, 0.2f).SetEase(Ease.InQuad).SetTarget(this);
+                    txtWave.transform.DOScale(0f, 0.2f).SetEase(Ease.InQuad).SetDelay(0.1f).SetTarget(this);
                 })
                 .AppendInterval(0.2f)
                 .AppendCallback(() =>
@@ -114,10 +117,24 @@ namespace InGame.UI.Waves
                         txtWave.transform.position.y - currentWave.transform.position.y, 0f);
                     txtWave.SetText($"wave {waveIndex + 1 + 1}");
 
-                    currentWave.transform.DOScale(1f, 0.2f).SetEase(Ease.OutBack);
+                    currentWave.transform.DOScale(1f, 0.2f).SetEase(Ease.OutBack).SetTarget(this);
                     vfxCurrentWave.Play();
-                    txtWave.transform.DOScale(1f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.1f);
+                    txtWave.transform.DOScale(1f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.1f).SetTarget(this);
                 }).Play();
+        }
+
+        private Tween UpdateGradient(float value)
+        {
+            value = Mathf.Clamp01(value);
+            DOTween.Kill(waveLineActiveGradient);
+            var seq = DOTween.Sequence(waveLineActiveGradient);
+            seq.Join(waveLineActiveGradient.DOFade(value, 0.2f));
+            foreach (var item in waveItems)
+            {
+                seq.Join(item.DoUpdateGradient(value, 0.2f));
+            }
+
+            return seq;
         }
         
         private Tween DoShowAllNodes()
@@ -141,6 +158,7 @@ namespace InGame.UI.Waves
                 item.gameObject.SetActive(true);
             }
             waveLineActive.fillAmount = 0f;
+            waveLineActiveGradient.SetAlpha(0f);
             waveLineInactive.fillAmount = 0f;
             waveLineActive.gameObject.SetActive(true);
             waveLineInactive.gameObject.SetActive(true);
