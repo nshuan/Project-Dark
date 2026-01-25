@@ -121,6 +121,7 @@ namespace InGame
                     hitTarget.HitDirectionX = hitTransform.position.x - aoeCenter.x;
                     hitTarget.HitDirectionY = hitTransform.position.y - aoeCenter.y;
                     hitTarget.Damage((int)value, aoeCenter, aoeStagger, DamageType.Normal);
+                    PassiveEffectManager.Instance.TriggerEffect(PassiveTriggerType.DameByMoveSKill, hitTarget);
                 }
             }
         }

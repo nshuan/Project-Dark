@@ -17,7 +17,7 @@ namespace InGame
         public float stagger;
         
         protected RaycastHit2D[] hits = new RaycastHit2D[50];
-        protected IDamageable hitTarget;
+        protected EnemyEntity hitTarget;
         protected PlayerCharacter characterRef;
         protected CameraShake cameraShake;
 
@@ -85,6 +85,7 @@ namespace InGame
                     hitTarget.HitDirectionX = hitTransform.position.x - aoeCenter.x;
                     hitTarget.HitDirectionY = hitTransform.position.y - aoeCenter.y;
                     hitTarget.Damage((int)value, aoeCenter, stagger, DamageType.Normal);
+                    PassiveEffectManager.Instance.TriggerEffect(PassiveTriggerType.DameByMoveSKill, hitTarget);
                 }
             }
         }

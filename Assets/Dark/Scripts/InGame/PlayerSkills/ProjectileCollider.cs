@@ -60,14 +60,17 @@ namespace InGame
                     if (allHitEnemiesInCurrentShot.Any((hit) => ReferenceEquals(hit, hits[i].transform))) continue;
                     if (hits[i].transform.TryGetComponent<EnemyEntity>(out hitEnemyInfo.hitEnemy))
                     {
-                        hitEnemyInfo.hit = hits[i];
-                        if (totalHitCountInCurrentShot < allHitEnemiesInCurrentShot.Count)
-                            allHitEnemiesInCurrentShot[totalHitCountInCurrentShot] = hits[i].transform;
-                        else
-                            allHitEnemiesInCurrentShot.Add(hits[i].transform);
-                        totalHitCountInCurrentShot += 1;
-                        
-                        return ProjectileHitStatus.Enemy;
+                        if (hitEnemyInfo.hitEnemy.Activated)
+                        {
+                            hitEnemyInfo.hit = hits[i];
+                            if (totalHitCountInCurrentShot < allHitEnemiesInCurrentShot.Count)
+                                allHitEnemiesInCurrentShot[totalHitCountInCurrentShot] = hits[i].transform;
+                            else
+                                allHitEnemiesInCurrentShot.Add(hits[i].transform);
+                            totalHitCountInCurrentShot += 1;
+                            
+                            return ProjectileHitStatus.Enemy;
+                        }
                     }
 
                     if (hits[i].transform.CompareTag("Collectible"))

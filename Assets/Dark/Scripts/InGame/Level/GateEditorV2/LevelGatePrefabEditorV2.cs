@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -17,11 +18,11 @@ namespace InGame.GateEditorV2
         public Action<LevelGatePrefabEditorV2> OnClick { get; set; }
         public Action<Vector2> OnDragging { get; set; }
         public GateConfig Config { get; set; }
-        public Vector2[] TargetPositions { get; set; }
+        public Transform[] TargetPositions { get; set; }
         
         // public bool IsBossGate { get; set; }
         public Vector2 Position { get; set; }
-        public List<Vector2> SpawnPositions { get; set; }
+        public Dictionary<Guid, GateSpawnPositionInfo> SpawnPositions { get; set; }
 
         public Transform vfx;
         public Camera camera;
@@ -47,19 +48,29 @@ namespace InGame.GateEditorV2
             if (lines == null) InitLines();
             for (var i = 0; i < TargetPositions.Length; i++)
             {
+                var towerPosition = (Vector2)camera.WorldToScreenPoint(TargetPositions[i].position);
                 var line = lines[i];
-                var direction = TargetPositions[i] - (Vector2)transform.position;
+                if (!TargetPositions[i].gameObject.activeInHierarchy)
+                {
+                    line.gameObject.SetActive(false);
+                    continue;
+                }
+                else
+                {
+                    line.gameObject.SetActive(true);
+                }
+                var direction = towerPosition - (Vector2)transform.position;
                 line.sizeDelta = new Vector2(5f, direction.magnitude);
                 line.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f);
 
                 var txtLine = txtLines[i];
-                txtLine.transform.position = (TargetPositions[i] + (Vector2)transform.position) / 2;
+                txtLine.transform.position = (towerPosition + (Vector2)transform.position) / 2;
                 txtLine.transform.rotation = Quaternion.identity;
-                txtLine.SetText($"{((Vector2)camera.ScreenToWorldPoint(TargetPositions[i]) - Position).magnitude.ToString(GameConst.FloatFormat)}");
+                txtLine.SetText($"{((Vector2)TargetPositions[i].position - Position).magnitude.ToString(GameConst.FloatFormat)}");
             }
         }
 
-        public void UpdateUI(GateConfig gate, int gatePrefabId)
+        public void UpdateUI(GateConfig gate, int gatePrfId)
         {
             var newTargets = new List<int>();
             if (gate.targetBaseIndex != null)
@@ -67,7 +78,7 @@ namespace InGame.GateEditorV2
                 newTargets.AddRange(gate.targetBaseIndex);
             }
 
-            SpawnPositions = new List<Vector2>();
+            SpawnPositions = new Dictionary<Guid, GateSpawnPositionInfo>();
             IGateSpawner newSpawnLogic;
             if (gate.spawnLogic is GateSpawnSingle existingSingle)
             {
@@ -84,15 +95,41 @@ namespace InGame.GateEditorV2
             else if (gate.spawnLogic is GateSpawnPositions existingPositions)
             {
                 newSpawnLogic = new GateSpawnPositions() { amount = existingPositions.amount };
-                
-                if (existingPositions.spawnPositions != null)
+
+                if (existingPositions.spawnPositionInfos != null)
+                {
+                    foreach (var position in existingPositions.spawnPositionInfos)
+                    {
+                        SpawnPositions.Add(Guid.NewGuid(), new GateSpawnPositionInfo()
+                        {
+                            spawnPosition = position.spawnPosition,
+                            attackPositions = position.attackPositions?.ToArray()
+                        });
+                    }
+
+                    newSpawnLogic = new GateSpawnPositions()
+                    {
+                        amount = existingPositions.amount,
+                        spawnPositions = SpawnPositions.Values.Select((p) => p.spawnPosition).ToArray(),
+                        spawnPositionInfos = SpawnPositions.Values.ToArray()
+                    };
+                }
+                else if (existingPositions.spawnPositions != null)
                 {
                     foreach (var position in existingPositions.spawnPositions)
                     {
-                        SpawnPositions.Add(position);
+                        SpawnPositions.Add(Guid.NewGuid(), new GateSpawnPositionInfo()
+                        {
+                            spawnPosition = position,
+                        });
                     }
-                    
-                    newSpawnLogic = new GateSpawnPositions() { amount = existingPositions.amount, spawnPositions = SpawnPositions.ToArray() };
+
+                    newSpawnLogic = new GateSpawnPositions()
+                    {
+                        amount = existingPositions.amount,
+                        spawnPositions = SpawnPositions.Values.Select((p) => p.spawnPosition).ToArray(),
+                        spawnPositionInfos = SpawnPositions.Values.ToArray()
+                    };
                 }
             }
             else
@@ -113,13 +150,13 @@ namespace InGame.GateEditorV2
                 spawnLogic = newSpawnLogic,
                 startTimeVisual = gate.startTimeVisual,
                 durationVisual = gate.durationVisual,
-                gatePrefab = GateManifest.Get(gatePrefabId),
+                gatePrefab = GateManifest.Get(gatePrfId),
                 hideOrb = gate.hideOrb
             };
             
             transform.position = camera.WorldToScreenPoint(gate.position);
             vfx.position = gate.position;
-            UpdateGateType(gatePrefabId);
+            UpdateGateType(gatePrfId);
             Position = vfx.position;
         }
 
@@ -129,17 +166,18 @@ namespace InGame.GateEditorV2
             txtLines = new List<TextMeshProUGUI>();
             for (var i = 0; i < TargetPositions.Length; i++)
             {
+                var towerPosition = (Vector2)camera.WorldToScreenPoint(TargetPositions[i].position);
                 var line = Instantiate(linePrefab, transform);
-                var direction = TargetPositions[i] - (Vector2)transform.position;
+                var direction = towerPosition - (Vector2)transform.position;
                 line.localPosition = Vector3.zero;
                 line.sizeDelta = new Vector2(5f, direction.magnitude);
                 line.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f);
                 lines.Add(line);
                 
                 var txtLine = Instantiate(txtLineDistancePrefab, line.transform);
-                txtLine.transform.position = (TargetPositions[i] + (Vector2)transform.position) / 2;
+                txtLine.transform.position = (towerPosition + (Vector2)transform.position) / 2;
                 txtLine.transform.rotation = Quaternion.identity;
-                txtLine.SetText($"{((Vector2)camera.ScreenToWorldPoint(TargetPositions[i]) - Position).magnitude.ToString(GameConst.FloatFormat)}");
+                txtLine.SetText($"{((Vector2)camera.ScreenToWorldPoint(towerPosition) - Position).magnitude.ToString(GameConst.FloatFormat)}");
                 txtLines.Add(txtLine);
             }
         }

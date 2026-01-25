@@ -227,6 +227,26 @@ namespace Dark.Scripts.OutGame.Upgrade
             {
                 if (GameConst.HideLockedNode && CurrentState == UIUpgradeNodeState.Locked)
                     return;
+                if (GameConst.HideLockedAreaByCloud && config.groupId.All((id) =>
+                    {
+                        if (id.isLockNode) return false;
+                        
+                        if (UpgradeManager.Instance.TreeConfig &&
+                            UpgradeManager.Instance.TreeConfig.nodeGroupsMapById.TryGetValue(id.groupId,
+                                out var nodeGroup))
+                        {
+                            if (UpgradeManager.Instance.GetData(nodeGroup.lockNode.nodeId) is { level: > 0 })
+                                return false;
+                        }
+
+                        ;
+
+                        return true;
+                    }))
+                {
+                    return;
+                }
+                
                 DOTween.Kill(transform);
                 sfxHover.Play();
                 transform.localRotation = Quaternion.identity;
@@ -258,6 +278,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                         UpgradeManager.Instance.GetData(id).level == 0))
             {
                 UIUpgradeNodeInfoPreview.Instance.Shake();
+                UIUpgradeNodeInfoPreview.Instance.PlayVfxUpgrade();;
                 sfxUnlockFailure?.Play();
                 return;
             }
@@ -265,6 +286,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             if (!UpgradeManager.Instance.CanUpgrade(config.nodeId, config.groupId))
             {
                 UIUpgradeNodeInfoPreview.Instance.Shake();
+                UIUpgradeNodeInfoPreview.Instance.PlayVfxUpgrade();;
                 sfxUnlockFailure?.Play();
                 return;
             }
@@ -274,7 +296,6 @@ namespace Dark.Scripts.OutGame.Upgrade
                 var success = UpgradeManager.Instance.UpgradeNode(config.nodeId, config.groupId);
                 if (success)
                 {
-                    UpgradeManager.Instance.RefreshGroupUnlockOrder();
                     if (treeRef.IsNodeSkill(config.nodeId))
                         LogManager.Log(LogConst.EventLogActivateNode, "skill", config.nodeName);
                     else if (treeRef.IsNodePassive(config.nodeId))
@@ -286,6 +307,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     UIUpgradeNodeInfoPreview.Instance.Show(transform.position,
                         new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true,
                         () => hoverField.interactable = true);
+                    UIUpgradeNodeInfoPreview.Instance.PlayVfxUpgrade();;
 
                     treeRef.LastUpgradeNodeId = config.nodeId;
                     treeRef.InvokeNodeUpgraded(this);

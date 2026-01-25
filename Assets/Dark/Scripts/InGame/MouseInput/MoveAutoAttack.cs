@@ -251,7 +251,7 @@ namespace InGame
                  
             foreach (var enemy in manager.Enemies)
             {
-                if (manager.EnemiesAliveMap.TryGetValue(enemy.Key, out var alive) && alive && enemy.Value.Activated && enemy.Value.IsDestroyed == false)
+                if (enemy.Value.gameObject.activeInHierarchy && enemy.Value.Activated && enemy.Value.IsDestroyed == false)
                 {
                     var direction = enemy.Value.transform.position - levelManager.CurrentTower.GetBaseCenter();
                     var distance = direction.magnitude;

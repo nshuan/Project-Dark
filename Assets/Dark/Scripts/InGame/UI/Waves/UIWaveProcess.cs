@@ -1,4 +1,5 @@
 using System;
+using InGame.UI.InGameToast;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -9,7 +10,8 @@ namespace InGame.UI.Waves
         [SerializeField] private UIWaveProcessItem[] waveItems;
         [SerializeField] private Vector2 anchor;
         [SerializeField] private float spacing;
-
+        [SerializeField] private int waveLeftToNotifyBoss = 2;
+        
         private int totalWave = 10;
         
         private void Awake()
@@ -29,6 +31,12 @@ namespace InGame.UI.Waves
 
         private void OnWaveStart(int waveIndex, float waveDuration)
         {
+            var waveLeft = totalWave - 1 - waveIndex; 
+            if (waveLeft <= waveLeftToNotifyBoss && waveLeft > 0)
+            {
+                var message = $"Boss incoming in {waveLeft} waves!";
+                ToastInGameManager.Instance.Register(message: message, icon: null);
+            }
             UpdateUI(waveIndex);
         }
 

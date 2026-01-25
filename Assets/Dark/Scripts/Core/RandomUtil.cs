@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Random = System.Random;
 
@@ -78,5 +79,77 @@ public static class RandomUtil
         
         // Fallback: return last index (shouldn't happen, but safety check)
         return rates.Length - 1;
+    }
+
+    public static int[] ShuffleIndex(int start, int end)
+    {
+        if (end < start)
+            return Array.Empty<int>();
+
+        if (end == start)
+            return new int[] { start };
+        
+        int length = end - start + 1;
+        int[] indices = new int[length];
+        
+        // Initialize array with sequential indices
+        for (int i = 0; i < length; i++)
+        {
+            indices[i] = start + i;
+        }
+        
+        // Fisher-Yates shuffle algorithm
+        var random = new Random();
+        for (int i = length - 1; i > 0; i--)
+        {
+            int j = random.Next(0, i + 1);
+            (indices[i], indices[j]) = (indices[j], indices[i]);
+        }
+        
+        return indices;
+    }
+    
+    public static void ShuffleIndexNonAlloc(int[] buffer, int start)
+    {
+        if (buffer == null || buffer.Length < 1)
+        {
+            return;
+        }
+
+        int length = buffer.Length;
+
+        // Initialize buffer with sequential indices
+        for (int i = 0; i < length; i++)
+        {
+            buffer[i] = start + i;
+        }
+
+        // Fisher-Yates shuffle algorithm
+        var random = new Random();
+        for (int i = length - 1; i > 0; i--)
+        {
+            int j = random.Next(0, i + 1);
+            (buffer[i], buffer[j]) = (buffer[j], buffer[i]);
+        }
+    }
+    
+    public static T[] Shuffle<T>(ReadOnlySpan<T> span)
+    {
+        if (span.IsEmpty)
+            return Array.Empty<T>();
+        
+        // Create a copy of the span as an array
+        T[] result = new T[span.Length];
+        span.CopyTo(result);
+        
+        // Fisher-Yates shuffle algorithm
+        var random = new Random();
+        for (int i = result.Length - 1; i > 0; i--)
+        {
+            int j = random.Next(0, i + 1);
+            (result[i], result[j]) = (result[j], result[i]);
+        }
+        
+        return result;
     }
 }
