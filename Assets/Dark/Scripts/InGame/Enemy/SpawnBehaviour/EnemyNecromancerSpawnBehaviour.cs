@@ -28,18 +28,19 @@ namespace InGame.SpawnBehaviour
                 var summonIndex = RandomUtil.Range(0, enemyConfig.listSummonAmountOnSpawned.Count);
                 if (summonIndex >= 0 && summonIndex < enemyConfig.listSummonAmountOnSpawned.Count && enemyConfig.listSummonAmountOnSpawned[summonIndex] > 0)
                 {
-                    seq.AppendCallback(() =>
+                    DOTween.Sequence().SetTarget(enemy).AppendInterval(spawnTime)
+                        .AppendCallback(() =>
                         {
                             enemy.animController.PlayAttack();
-                            
                         })
                         .AppendInterval(0.5f)
                         .AppendCallback(() =>
                         {
-                            summonBehaviour.Summon(enemy, enemy.TargetTower, enemyConfig.listSummonIdsOnSpawned[summonIndex],
+                            summonBehaviour.Summon(enemy, enemy.TargetTower,
+                                enemyConfig.listSummonIdsOnSpawned[summonIndex],
                                 enemyConfig.listSummonAmountOnSpawned[summonIndex]);
-                        })
-                        .AppendInterval(firstCreepSpawnDuration - 0.5f);
+                        });
+                    // .AppendInterval(firstCreepSpawnDuration - 0.5f);
                 }
                 
                 return seq;

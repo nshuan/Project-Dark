@@ -493,6 +493,7 @@ GameObject:
   - component: {fileID: 3694113476457233760}
   - component: {fileID: 1104470785324054604}
   - component: {fileID: 5357615455786347145}
+  - component: {fileID: 5663363046105833257}
   m_Layer: 5
   m_Name: VfxCameraRender - Layer 1
   m_TagString: Untagged
@@ -554,6 +555,29 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
+--- !u!223 &5663363046105833257
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 526791444247859935}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 105866733
+  m_SortingOrder: 2000
+  m_TargetDisplay: 0
 --- !u!1 &567952468222505705
 GameObject:
   m_ObjectHideFlags: 0
@@ -20638,6 +20662,10 @@ PrefabInstance:
     - target: {fileID: 1656408429706309395, guid: bce8ff7dc09d8dc47a55f4ad0a3692e6, type: 3}
       propertyPath: m_Name
       value: EnemyInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 1656408429706309395, guid: bce8ff7dc09d8dc47a55f4ad0a3692e6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7606514042572407106, guid: bce8ff7dc09d8dc47a55f4ad0a3692e6, type: 3}
       propertyPath: m_Pivot.x

@@ -380,6 +380,37 @@ namespace Dark.Scripts.OutGame.Upgrade
             return vfxBackgroundNotUpgrade;
         }
 
+        public void PlayVfxUpgrade()
+        {
+            if (imgMax.gameObject.activeSelf)
+            {
+                foreach (var vfx in vfxClaimMaxs)
+                {
+                    vfx.Play();
+                }
+                
+                return;
+            }
+            
+            if (imgNotEnoughResource.gameObject.activeSelf)
+            {
+                foreach (var vfx in vfxClaimNotEnoughs)
+                {
+                    vfx.Play();
+                }
+                return;
+            }
+            
+            if (imgEnoughResource.gameObject.activeSelf)
+            {
+                foreach (var vfx in vfxClaimEnoughs)
+                {
+                    vfx.Play();
+                }
+                return;
+            }
+        }
+
         // (vestige, echoes, sigils)
         public (int, int, int) GetDisplayCost()
         {
