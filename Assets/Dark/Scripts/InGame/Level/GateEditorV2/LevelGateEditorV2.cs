@@ -1,8 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Core;
 using Dark.Scripts.Common.UIWarning;
+using Dark.Scripts.SceneNavigation;
+using Dark.Scripts.Utils;
+using Data;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -21,12 +25,15 @@ namespace InGame.GateEditorV2
         public Button btnAddWave;
         public Button btnDeleteWave;
         public UIPopupWarning popupConfirm;
+        public Button btnPlayLevel;
+        public TMP_Dropdown drdMapType;
 
         [Space] [Header("Display")] 
         public TextMeshProUGUI txtLevel;
         
         private LevelManifest levelManifest;
         private LevelConfig currentLevel;
+        private LevelMapType currentMapType;
         
         protected override void Awake()
         {
@@ -39,6 +46,17 @@ namespace InGame.GateEditorV2
             btnAddWave.onClick.AddListener(AddNewWave);
             btnDeleteWave.onClick.RemoveAllListeners();
             btnDeleteWave.onClick.AddListener(DeleteSelectingWave);
+            btnPlayLevel.onClick.RemoveAllListeners();
+            btnPlayLevel.onClick.AddListener(PlaySelectingLevel);
+            drdMapType.onValueChanged.RemoveAllListeners();
+            var options = new List<LevelMapType>();
+            foreach (LevelMapType mapType in Enum.GetValues(typeof(LevelMapType)))
+            {
+                options.Add(mapType);
+            }
+            drdMapType.options = options.Select(mt => 
+                new TMP_Dropdown.OptionData(mt.ToString())).ToList();
+            drdMapType.onValueChanged.AddListener(ChangeMapType);
         }
         
         public void LoadLevel(int levelId)
@@ -46,7 +64,9 @@ namespace InGame.GateEditorV2
             if (!levelManifest) return;
             currentLevel = levelManifest.GetTrueLevel(levelId);
             if (!currentLevel) return;
-            
+
+            currentMapType = currentLevel.mapType;
+            drdMapType.value = (int)currentLevel.mapType;
             // Destroy all old wave buttons
             ClearAllWaves();
             
@@ -60,6 +80,28 @@ namespace InGame.GateEditorV2
             txtLevel?.SetText($"Level: {levelId}");
         }
 
+        public void PlaySelectingLevel()
+        {
+            if (!currentLevel) return;
+            
+#if UNITY_EDITOR
+            LevelManager.isLoadFromInit = true;
+#endif
+            this.DelayCall(0.5f, () =>
+            {
+                Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame, () =>
+                {
+                    LevelManager.Instance.LoadLevel(currentLevel.level);
+                });
+            });
+        }
+
+        public void ChangeMapType(int index)
+        {
+            currentMapType = (LevelMapType)index;
+            LevelBackgroundVariantEditorV2.Instance.SetMapType((LevelMapType)index);
+        }
+        
         #region Waves
 
         public void ClearAllWaves()
@@ -240,7 +282,8 @@ namespace InGame.GateEditorV2
                     wave.SaveWave();
                 }
             }
-            
+
+            currentLevel.mapType = currentMapType;
                         
 #if UNITY_EDITOR
             EditorUtility.SetDirty(currentLevel);

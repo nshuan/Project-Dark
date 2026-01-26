@@ -7,6 +7,7 @@ namespace InGame
     public class LevelConfig : SerializedScriptableObject
     {
         public int level; // Start from 1
+        public LevelMapType mapType;
         public WaveInfo[] waveInfo;
 
         private void OnValidate()

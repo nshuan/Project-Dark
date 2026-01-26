@@ -226,6 +226,10 @@ namespace InGame
                 {
                     var enemy = enemies[i];
                     enemy.Item1.Init(config.spawnType, enemy.Item2, StatsScale, LevelExpRatio, LevelDarkRatio, LevelDarkUnitValue);
+                    if (enemy.Item3 == false)
+                    {
+                        enemy.Item1.attackPosition = enemy.Item4;
+                    }
                     enemy.Item1.Activate();
                     enemy.Item1.UniqueId = EnemyManager.Instance.CurrentEnemyIndex;
                     AliveEnemyCount += 1;

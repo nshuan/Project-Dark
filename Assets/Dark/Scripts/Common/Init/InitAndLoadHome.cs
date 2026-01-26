@@ -11,6 +11,7 @@ namespace Dark.Scripts.Common.Init
     public class InitAndLoadHome : SerializedMonoBehaviour
     {
         [OdinSerialize, NonSerialized] private List<IEarlyInitialize> initializers;
+        [SerializeField] private bool autoLoadHome = true;
 
         private IEnumerator Start()
         {
@@ -20,7 +21,8 @@ namespace Dark.Scripts.Common.Init
                 yield return new WaitForEndOfFrame();
             }
             
-            Loading.Instance.LoadScene(SceneConstants.SceneMenu);    
+            if (autoLoadHome)
+                Loading.Instance.LoadScene(SceneConstants.SceneMenu);    
         }
     }
 }

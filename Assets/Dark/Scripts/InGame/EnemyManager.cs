@@ -37,6 +37,7 @@ namespace InGame
             Enemies.Add(CurrentEnemyIndex, enemy);
             EnemiesAliveMap.Add(CurrentEnemyIndex, true);
             CurrentEnemyIndex += 1;
+            CombatActions.OnOneEnemySpawn?.Invoke(enemy);
         }
 
         public void OnEnemyDead(EnemyEntity enemy, EnemyDieReason reason)

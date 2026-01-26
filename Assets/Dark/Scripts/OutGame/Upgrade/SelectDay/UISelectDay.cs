@@ -4,6 +4,7 @@ using Dark.Scripts.Analytics;
 using Dark.Scripts.ForDemo;
 using Dark.Scripts.SceneNavigation;
 using Dark.Scripts.Utils;
+using Dark.Tools.Language.Runtime;
 using Data;
 using DG.Tweening;
 using InGame;
@@ -99,7 +100,7 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
                 });
                 
                 btn.GetComponentInChildren<TextMeshProUGUI>()
-                    .SetText($"Day {a}");
+                    .SetText(LanguageData.Instance.GetLocalizedString("key_day").Replace("%{value}", a.ToString()));
 
                 var groupBlock = btn.transform.Find("groupBlock");
                 if (groupBlock)
@@ -207,7 +208,7 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
                     });
                     
                     button.GetComponentInChildren<TextMeshProUGUI>()
-                        .SetText($"Day {a}");
+                        .SetText(LanguageData.Instance.GetLocalizedString("key_day").Replace("%{value}", a.ToString()));
                 }
                 
                 listShowQuickButtons.Add(cvg);

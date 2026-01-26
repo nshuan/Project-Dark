@@ -45,7 +45,7 @@ namespace Dark.Scripts.SceneNavigation
             {
                 if (coroutineClose != null) StopCoroutine(coroutineClose);
                 if (coroutineOpen != null) StopCoroutine(coroutineOpen);
-                coroutineClose = StartCoroutine(IEQuickClose(quickLoadHideBlankDuration, () =>
+                coroutineClose = StartCoroutine(IEQuickClose(0.5f, quickLoadHideBlankDuration, () =>
                 {
                     onLoadingComplete?.Invoke();
                     onLoadingComplete = null;
@@ -181,6 +181,20 @@ namespace Dark.Scripts.SceneNavigation
             
             yield return new WaitForEndOfFrame();
             Scene currentScene = SceneManager.GetActiveScene();
+            
+            var sceneCount = SceneManager.sceneCount;
+            AsyncOperation levelMapScene = null;
+            for (int i = 0; i < sceneCount; i++)
+            {
+                Scene scene = SceneManager.GetSceneAt(i);
+
+                if (scene.isLoaded && scene.name.ToLower().Contains("towers"))
+                {
+                    levelMapScene = SceneManager.UnloadSceneAsync(scene);
+                    break;
+                }
+            }
+            if (levelMapScene != null) yield return levelMapScene;
 
             // Load blank scene additively
             AsyncOperation loadBlankOp = SceneManager.LoadSceneAsync("Blank", LoadSceneMode.Additive);
@@ -216,8 +230,9 @@ namespace Dark.Scripts.SceneNavigation
             OnSceneLoaded(loadedScene);
         }
         
-        private IEnumerator IEQuickClose(float hideBlankDuration, Action callbackComplete = null)
+        private IEnumerator IEQuickClose(float delay, float hideBlankDuration, Action callbackComplete = null)
         {
+            yield return new WaitForSeconds(delay);
             yield return blankPanel.DOFade(0f, hideBlankDuration).SetUpdate(true).WaitForCompletion();
             blankPanel.gameObject.SetActive(false);
             loadingPanel.gameObject.SetActive(false);
