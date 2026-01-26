@@ -360,6 +360,12 @@ namespace Dark.Scripts.OutGame.Upgrade
 
             return map;
         }
+
+        [Button]
+        public void ValidateSkillAndPassiveNodes()
+        {
+            return;
+        }
 #endif
     }
     
