@@ -130,15 +130,15 @@ namespace InGame
                 if (RandomUtil.Range(0f, 1f) < LevelUtilityV2.GetVestigeTripleChance()) Dark *= 3;
             }
             
-            displayStats.UpdateStats(CurrentDamage, config.moveSpeed * StatsScale.speScale);
-            displayStats.gameObject.SetActive(false);
-            displayStats.transform.localScale = new Vector3(animController.transform.localScale.x,
-                displayStats.transform.localScale.y, displayStats.transform.localScale.z);
-            
             DarkRatio = 1f; // Chắc chắn rớt
             DarkUnitValue = levelDarkUnitValue;
             BossPoint = config.bossPoint;
             AttackRange = config.attackRange;
+            
+            displayStats.UpdateStats(CurrentDamage, AttackRange);
+            displayStats.gameObject.SetActive(false);
+            displayStats.transform.localScale = new Vector3(animController.transform.localScale.x,
+                displayStats.transform.localScale.y, displayStats.transform.localScale.z);
             
             State = EnemyState.Spawn;
             inAttackRange = false;
