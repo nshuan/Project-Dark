@@ -15,6 +15,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UINodeCovered
         private CanvasGroup cvgCloud;
 
         private bool initialzed;
+        private UICloudFloat[] allCloudFloat;
         
         private void Awake()
         {
@@ -26,6 +27,19 @@ namespace Dark.Scripts.OutGame.Upgrade.UINodeCovered
             
             upgradeTree = GetComponentInParent<UIUpgradeTree>();
             allClouds = GetComponentsInChildren<Image>();
+            allCloudFloat = new UICloudFloat[allClouds.Length];
+            for (var i = 0; i < allClouds.Length; i++)
+            {
+                var cloud = allClouds[i];
+                if (!cloud.TryGetComponent<UICloudFloat>(out var cloudFloat))
+                {
+                    cloudFloat = cloud.gameObject.AddComponent<UICloudFloat>();
+                }
+
+                cloudFloat.preset = CloudTweenPreset.Instance;
+                allCloudFloat[i] = cloudFloat;
+            }
+
             if (!TryGetComponent<CanvasGroup>(out cvgCloud))
                 cvgCloud = gameObject.AddComponent<CanvasGroup>();
 
@@ -46,6 +60,10 @@ namespace Dark.Scripts.OutGame.Upgrade.UINodeCovered
 
             DOTween.Kill(this);
             cvgCloud.DOFade(0f, 1f).SetEase(Ease.OutQuad).SetTarget(this);
+            foreach (var cloud in allCloudFloat)
+            {
+                cloud.TriggerSpeedScale(10f);
+            }
         }
 
         private void Init()
