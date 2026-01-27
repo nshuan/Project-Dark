@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Coffee.UIExtensions;
+using Dark.Scripts.Common;
 using DG.Tweening;
 using InGame.UI.InGameToast;
 using TMPro;
@@ -12,18 +13,21 @@ namespace InGame.UI.CombatSkills
     public abstract class UIInGameSkillIcon : MonoBehaviour
     {
         [SerializeField] protected Image imgFillCooldown;
-        [SerializeField] private Button btnTogglePassive;
+        [SerializeField] private UIInteractiveHoverButton btnTogglePassive;
         [SerializeField] private Image iconTogglePassive;
-        [SerializeField] private Image imgPassiveLine;
         [SerializeField] private Transform groupPassive;
+        [SerializeField] private CanvasGroup cvgGroupPassive;
         [SerializeField] private Transform groupIcon;
         [SerializeField] private UIParticle vfxCooldownComplete;
+        [SerializeField] private Image imgBackFadeActive;
+        [SerializeField] private RectTransform rectContent;
+        [SerializeField] private CanvasGroup cvgSkillTitle;
 
         [Space] [Header("Config")] 
-        [SerializeField] private float buttonXLocalOnShow = 106f;
-        [SerializeField] private float buttonXLocalOnHide = 80f;
-        [SerializeField] private float passiveYLocalOnShow = 0f;
-        [SerializeField] private float passiveYLocalOnHide = 32f;
+        [SerializeField] private float passiveXLocalOnShow = 135f;
+        [SerializeField] private float passiveXLocalOnHide = 90f;
+        [SerializeField] private float rectWidthOnShow = 210f;
+        [SerializeField] private float rectWidthOnHide = 100f;
         
         [Space] [Header("2nd skill")] 
         [SerializeField] protected GameObject secondSkill;
@@ -44,10 +48,12 @@ namespace InGame.UI.CombatSkills
             imgFillCooldown2nd.fillAmount = 1f;
             SetupPassive();
             if (GameConst.DefaultShowPassiveIcon == false)
+            {
                 DoHidePassive().OnComplete(() =>
                 {
-                    btnTogglePassive.interactable = true;
+                    btnTogglePassive.clickable = true;
                 });
+            }
         }
 
         public abstract void CheckShowSkill(Action callbackShow, Action callbackHide);
@@ -82,19 +88,20 @@ namespace InGame.UI.CombatSkills
             vfx.Play();
         }
 
-        private bool isShowPassive = true;
-        
         private void SetupPassive()
         {
-            btnTogglePassive.onClick.RemoveAllListeners();
-            btnTogglePassive.onClick.AddListener(() =>
+            btnTogglePassive.actionHoverIn.RemoveAllListeners();
+            btnTogglePassive.actionHoverIn.AddListener(() =>
             {
-                DOTween.Kill(groupIcon, complete:true);
-                groupIcon.transform.localScale = Vector3.one;
-                groupIcon.DOPunchScale(-0.2f * Vector3.one, 0.2f).SetTarget(groupIcon);
-                btnTogglePassive.interactable = false;
-                isShowPassive = !isShowPassive;
-                TogglePassive(isShowPassive);
+                btnTogglePassive.clickable = false;
+                TogglePassive(true);
+            });
+            
+            btnTogglePassive.actionHoverOut.RemoveAllListeners();
+            btnTogglePassive.actionHoverOut.AddListener(() =>
+            {
+                btnTogglePassive.clickable = false;
+                TogglePassive(false);
             });
         }
 
@@ -104,14 +111,14 @@ namespace InGame.UI.CombatSkills
             {
                 DoShowPassive().OnComplete(() =>
                 {
-                    btnTogglePassive.interactable = true;
+                    btnTogglePassive.clickable = true;
                 });
             }
             else
             {
                 DoHidePassive().OnComplete(() =>
                 {
-                    btnTogglePassive.interactable = true;
+                    btnTogglePassive.clickable = true;
                 });
             }
         }
@@ -119,29 +126,34 @@ namespace InGame.UI.CombatSkills
         private Tween DoShowPassive()
         {
             DOTween.Kill(this);
-            
-            iconTogglePassive.transform.localPosition = new Vector3(buttonXLocalOnShow, iconTogglePassive.transform.localPosition.y, iconTogglePassive.transform.localPosition.z);
-            imgPassiveLine.fillAmount = 0f;
-            groupPassive.localPosition = new Vector3(groupPassive.localPosition.x, passiveYLocalOnHide, groupPassive.localPosition.z);
+
+            iconTogglePassive.SetAlpha(1f);
+            groupPassive.localPosition = new Vector3(passiveXLocalOnHide, groupPassive.localPosition.y, groupPassive.localPosition.z);
+            cvgGroupPassive.alpha = 0f;
 
             return DOTween.Sequence(this)
-                .Append(iconTogglePassive.transform.DOLocalMoveX(buttonXLocalOnHide, 0.2f))
-                .Append(imgPassiveLine.DOFillAmount(1f, 0.2f))
-                .Append(groupPassive.DOLocalMoveY(passiveYLocalOnShow, 0.2f));
+                .Append(iconTogglePassive.DOFade(0f, 0.2f))
+                .Join(rectContent.DOSizeDelta(new Vector2(rectWidthOnShow, rectContent.sizeDelta.y), 0.2f).SetEase(Ease.OutQuad))
+                .Join(imgBackFadeActive.DOFade(1f, 0.2f))
+                .Append(groupPassive.DOLocalMoveX(passiveXLocalOnShow, 0.2f))
+                .Join(cvgGroupPassive.DOFade(1f, 0.2f))
+                .Join(cvgSkillTitle.DOFade(1f, 0.2f));
         }
 
         private Tween DoHidePassive()
         {
             DOTween.Kill(this);
 
-            iconTogglePassive.transform.localPosition = new Vector3(buttonXLocalOnHide, iconTogglePassive.transform.localPosition.y, iconTogglePassive.transform.localPosition.z);
-            imgPassiveLine.fillAmount = 1f;
-            groupPassive.localPosition = new Vector3(groupPassive.localPosition.x, passiveYLocalOnShow, groupPassive.localPosition.z);
+            iconTogglePassive.SetAlpha(0f);
+            groupPassive.localPosition = new Vector3(passiveXLocalOnShow, groupPassive.localPosition.y, groupPassive.localPosition.z);
             
             return DOTween.Sequence()
-                .Append(groupPassive.DOLocalMoveY(passiveYLocalOnHide, 0.2f))
-                .Append(imgPassiveLine.DOFillAmount(0f, 0.2f))
-                .Append(iconTogglePassive.transform.DOLocalMoveX(buttonXLocalOnShow, 0.2f));
+                .Append(groupPassive.DOLocalMoveX(passiveXLocalOnHide, 0.2f))
+                .Join(cvgGroupPassive.DOFade(0f, 0.2f))
+                .Join(cvgSkillTitle.DOFade(0f, 0.2f))
+                .Append(iconTogglePassive.DOFade(1f, 0.2f))
+                .Join(rectContent.DOSizeDelta(new Vector2(rectWidthOnHide, rectContent.sizeDelta.y), 0.2f).SetEase(Ease.OutQuad))
+                .Join(imgBackFadeActive.DOFade(0f, 0.2f));
         }
 
         protected virtual void ShowToast()

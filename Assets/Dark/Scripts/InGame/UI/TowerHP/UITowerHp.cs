@@ -1,5 +1,6 @@
 using System;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,7 @@ namespace InGame.UI
         [SerializeField] private Image hpFill;
         [SerializeField] private Image hpGlow;
         [SerializeField] private Image iconGlowLowHp;
+        [SerializeField] private TextMeshProUGUI txtTowerId;
 
         [Space] [Header("Config")] 
         [SerializeField] private float warningThreshold;
@@ -23,7 +25,10 @@ namespace InGame.UI
         private void Start()
         {
             if (towerIndex >= 0 && towerIndex < LevelManager.Instance.Towers.Length)
+            {
                 tower = LevelManager.Instance.Towers[towerIndex];
+                txtTowerId.SetText($"{towerIndex + 1}");
+            }
 
             if (tower)
             {

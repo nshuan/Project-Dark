@@ -47,7 +47,7 @@ namespace InGame.UI.LevelIntro
             
             cvgContent.gameObject.SetActive(true);
             cvgContent.alpha = 1f;
-            yield return DOTween.Sequence(this)
+            yield return DOTween.Sequence(this).SetUpdate(true)
                 .AppendCallback(() =>
                 {
                     vfxLevelFrame.gameObject.SetActive(true);
