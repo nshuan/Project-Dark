@@ -33,7 +33,7 @@ namespace InGame.UI.CombatSkills
         [SerializeField] protected GameObject secondSkill;
         [SerializeField] protected Image imgFillCooldown2nd;
         [SerializeField] private UIParticle vfx2ndCooldownComplete;
-        [SerializeField] protected Transform groupPassiveAndArrow;
+        [SerializeField] protected RectTransform groupPassiveAndArrow;
         [SerializeField] protected float groupPassiveOneSkillX = 0f;
         [SerializeField] protected float groupPassiveTwoSkillX = 0f;
         

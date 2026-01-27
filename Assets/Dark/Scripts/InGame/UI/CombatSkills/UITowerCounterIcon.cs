@@ -53,7 +53,7 @@ namespace InGame.UI.CombatSkills
                 SetSkillSprite(imgFillCooldown, 1);
                 SetSkillSprite(imgFillCooldown2nd, 2);
                 secondSkill.SetActive(true);
-                groupPassiveAndArrow.localPosition = new Vector3(groupPassiveTwoSkillX, groupPassiveAndArrow.localPosition.y, groupPassiveAndArrow.localPosition.z);
+                groupPassiveAndArrow.anchoredPosition = new Vector2(groupPassiveTwoSkillX, groupPassiveAndArrow.anchoredPosition.y);
             }
             else if (unlockedPierce)
             {
@@ -61,8 +61,7 @@ namespace InGame.UI.CombatSkills
                 SetSkillSprite(imgIconBaseSkill1, 1);
                 SetSkillSprite(imgFillCooldown, 1);
                 secondSkill.SetActive(false);
-                groupPassiveAndArrow.localPosition = new Vector3(groupPassiveOneSkillX, groupPassiveAndArrow.localPosition.y,
-                    groupPassiveAndArrow.localPosition.z);
+                groupPassiveAndArrow.anchoredPosition = new Vector2(groupPassiveOneSkillX, groupPassiveAndArrow.anchoredPosition.y);
             }
             else if (unlockedSlash)
             {
@@ -70,8 +69,7 @@ namespace InGame.UI.CombatSkills
                 SetSkillSprite(imgIconBaseSkill1, 2);
                 SetSkillSprite(imgFillCooldown, 2);
                 secondSkill.SetActive(false);
-                groupPassiveAndArrow.localPosition = new Vector3(groupPassiveOneSkillX, groupPassiveAndArrow.localPosition.y,
-                    groupPassiveAndArrow.localPosition.z);
+                groupPassiveAndArrow.anchoredPosition = new Vector2(groupPassiveOneSkillX, groupPassiveAndArrow.anchoredPosition.y);
             }
             else
             {
@@ -79,8 +77,7 @@ namespace InGame.UI.CombatSkills
                 SetSkillSprite(imgIconBaseSkill1, 0);
                 SetSkillSprite(imgFillCooldown, 0);
                 secondSkill.SetActive(false);
-                groupPassiveAndArrow.localPosition = new Vector3(groupPassiveOneSkillX, groupPassiveAndArrow.localPosition.y,
-                    groupPassiveAndArrow.localPosition.z);
+                groupPassiveAndArrow.anchoredPosition = new Vector2(groupPassiveOneSkillX, groupPassiveAndArrow.anchoredPosition.y);
             }
             
             if (showIcon)
