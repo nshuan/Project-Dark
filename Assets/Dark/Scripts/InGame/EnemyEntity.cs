@@ -400,12 +400,12 @@ namespace InGame
             shadow.SetActive(false);    
             OnStartDead?.Invoke();
             OnStartDead = null;
-            yield return new WaitForSeconds(delayDieAnimation);
-            yield return new WaitForSeconds(animController.PlayDie());
             if (showAttackRange)
             {
                 visualAttackRange.gameObject.SetActive(false);
             }
+            yield return new WaitForSeconds(delayDieAnimation);
+            yield return new WaitForSeconds(animController.PlayDie());
             OnDead?.Invoke(reason);
             OnDead = null;
             yield return new WaitForSeconds(delayRelease);
