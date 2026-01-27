@@ -17,6 +17,8 @@ namespace InGame
         [SerializeField] protected EnemyHealthBar healthBar;
         [SerializeField] protected EnemyDisplayStats displayStats;
         [SerializeField] private Transform burnVfxParent;
+        [SerializeField] private Transform visualAttackRange;
+        [SerializeField] private bool showAttackRange;
         public EnemyBody body;
 
         private MapBoundaryManager boundaryManager;
@@ -135,10 +137,15 @@ namespace InGame
             BossPoint = config.bossPoint;
             AttackRange = config.attackRange;
             
-            displayStats.UpdateStats(CurrentDamage, AttackRange);
             displayStats.gameObject.SetActive(false);
-            displayStats.transform.localScale = new Vector3(animController.transform.localScale.x,
-                displayStats.transform.localScale.y, displayStats.transform.localScale.z);
+            if (GameConst.ShowTextEnemyAtkAndAtkRange)
+            {
+                displayStats.UpdateStats(CurrentDamage, AttackRange);
+                displayStats.transform.localScale = new Vector3(animController.transform.localScale.x,
+                    displayStats.transform.localScale.y, displayStats.transform.localScale.z);
+            }
+
+            visualAttackRange.gameObject.SetActive(false);
             
             State = EnemyState.Spawn;
             inAttackRange = false;
@@ -175,6 +182,13 @@ namespace InGame
                 collider2d.enabled = true;
                 Activated = true;
                 healthBar.gameObject.SetActive(!IsBoss ? GameSettings.ShowEnemyHealth : GameSettings.ShowBossHealth);
+                if (showAttackRange)
+                {
+                    DOTween.Kill(visualAttackRange);
+                    visualAttackRange.localScale = Vector3.zero;
+                    visualAttackRange.gameObject.SetActive(true);
+                    visualAttackRange.DOScale(AttackRange, 0.5f).SetEase(Ease.OutQuad).SetTarget(visualAttackRange);
+                }
             });
         }
 
@@ -386,6 +400,11 @@ namespace InGame
             yield return new WaitForEndOfFrame();
             // Đợi chạy xong anim hit rồi mới chạy anim die
             shadow.SetActive(false);    
+            if (showAttackRange)
+            {
+                DOTween.Kill(visualAttackRange);
+                visualAttackRange.DOScale(0f, 0.5f).SetEase(Ease.InQuad).SetTarget(visualAttackRange);
+            }
             OnStartDead?.Invoke();
             OnStartDead = null;
             yield return new WaitForSeconds(delayDieAnimation);

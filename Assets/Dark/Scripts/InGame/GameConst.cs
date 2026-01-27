@@ -16,6 +16,7 @@ public class GameConst
     public const float BossEliteScale = 1.1f; // scale boss to be elite    
     public const bool DefaultAutoAttack = true; // Default enable auto-attack
     public const bool DefaultShowPassiveIcon = false;
+    public const bool ShowTextEnemyAtkAndAtkRange = false;
     
     public static bool HideLockedNode = false; // Hide locked nodes in skill tree
     public static bool HideLaserWaveOnSpawnTree = true; // Hide laser wave on tree spawn animation
