@@ -13,8 +13,9 @@ namespace InGame
 {
     public class EnemyEntity : MonoBehaviour, IDamageable, IEffectTarget
     {
-        [SerializeField] private Collider2D collider2d;
-        [SerializeField] private EnemyHealthBar healthBar;
+        [SerializeField] protected Collider2D collider2d;
+        [SerializeField] protected EnemyHealthBar healthBar;
+        [SerializeField] protected EnemyDisplayStats displayStats;
         [SerializeField] private Transform burnVfxParent;
         public EnemyBody body;
 
@@ -61,7 +62,7 @@ namespace InGame
         private Vector2 staggerTargetPos;
 
         [Space, Header("Visual")] 
-        [SerializeField] private EnemyBoidAgentWithObstacles boidAgent;
+        [SerializeField] protected EnemyBoidAgentWithObstacles boidAgent;
         [SerializeField] private Transform uiHealth;
         public EnemyAnimController animController;
         [SerializeField] protected GameObject shadow;
@@ -134,6 +135,11 @@ namespace InGame
             BossPoint = config.bossPoint;
             AttackRange = config.attackRange;
             
+            displayStats.UpdateStats(CurrentDamage, AttackRange);
+            displayStats.gameObject.SetActive(false);
+            displayStats.transform.localScale = new Vector3(animController.transform.localScale.x,
+                displayStats.transform.localScale.y, displayStats.transform.localScale.z);
+            
             State = EnemyState.Spawn;
             inAttackRange = false;
             IsDestroyed = false;
@@ -153,7 +159,7 @@ namespace InGame
 
         #region Core function
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             DOTween.Kill(this);
         }
@@ -221,6 +227,8 @@ namespace InGame
                     new Vector3(Mathf.Sign(Target.position.x - transform.position.x), 1f, 1f);
                 healthBar.transform.localScale = new Vector3(animController.transform.localScale.x,
                     healthBar.transform.localScale.y, healthBar.transform.localScale.z);
+                displayStats.transform.localScale = new Vector3(animController.transform.localScale.x,
+                    displayStats.transform.localScale.y, displayStats.transform.localScale.z);
             }
             else
             {
@@ -246,7 +254,7 @@ namespace InGame
                 StopCoroutine(attackCoroutine);
         }
         
-        private void StartAttackCoroutine()
+        protected void StartAttackCoroutine()
         {
             if (attackCoroutine != null)
                 StopCoroutine(attackCoroutine);
@@ -284,6 +292,7 @@ namespace InGame
 
         public virtual void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
         {
+            if (!Activated) return;
             if (IsDestroyed) return;
             if (dmgType != DamageType.Enemy && dmgType != DamageType.SelfDestruct && State == EnemyState.Invisible) return;
             
@@ -477,6 +486,10 @@ namespace InGame
         {
             aimPointer.SetActive(aimed);
             if (IsBoss) return;
+            
+            // Boss ko show stats
+            displayStats.gameObject.SetActive(aimed);
+            
             if (config.elite) return;
             visual.material = aimed ? materialHighlight : cacheMaterial;
         }
@@ -490,6 +503,10 @@ namespace InGame
             }
             hoverPointer.SetActive(hover);
             if (IsBoss) return;
+            
+            // Boss ko show stats
+            displayStats.gameObject.SetActive(hover);
+            
             if (config.elite) return;
             visual.material = hover ? materialHighlight : cacheMaterial;
         }
