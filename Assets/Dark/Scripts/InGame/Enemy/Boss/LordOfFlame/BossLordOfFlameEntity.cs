@@ -178,9 +178,10 @@ namespace InGame.Boss
                 healthBar.transform.localScale.y, healthBar.transform.localScale.z);
             
             // appear
+            if (shadowSprite)
+                yield return shadowSprite.DOFade(shadowOriginalAlpha, 0.5f).SetEase(Ease.InQuad).SetTarget(shadowSprite).WaitForCompletion();
             teleDuration = animController.PlayCustomAnim(appearAnim);
             DOTween.Kill(shadowSprite);
-            shadowSprite?.DOFade(shadowOriginalAlpha, 0.5f).SetEase(Ease.InQuad).SetTarget(shadowSprite);
             yield return new WaitForSeconds(teleDuration);
             yield return new WaitForEndOfFrame();
             yield return new WaitForSeconds(0.5f);

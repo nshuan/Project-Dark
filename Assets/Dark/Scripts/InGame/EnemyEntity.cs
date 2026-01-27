@@ -507,7 +507,8 @@ namespace InGame
             if (IsBoss) return;
             
             // Boss ko show stats
-            displayStats.gameObject.SetActive(aimed);
+            if (GameConst.ShowTextEnemyAtkAndAtkRange)
+                displayStats.gameObject.SetActive(aimed);
             
             if (config.elite) return;
             visual.material = aimed ? materialHighlight : cacheMaterial;
@@ -524,7 +525,8 @@ namespace InGame
             if (IsBoss) return;
             
             // Boss ko show stats
-            displayStats.gameObject.SetActive(hover);
+            if (GameConst.ShowTextEnemyAtkAndAtkRange)
+                displayStats.gameObject.SetActive(hover);
             
             if (config.elite) return;
             visual.material = hover ? materialHighlight : cacheMaterial;
