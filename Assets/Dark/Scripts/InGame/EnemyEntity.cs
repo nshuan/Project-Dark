@@ -463,8 +463,8 @@ namespace InGame
             {
                 visual.material = materialElite;
                 cacheMaterial = materialElite;
-                transform.localScale = GameConst.EnemyEliteScale * Vector3.one;
-                healthBar.transform.localScale = new Vector3(healthBar.transform.localScale.x, 1f / GameConst.EnemyEliteScale, healthBar.transform.localScale.z);
+                transform.localScale = (IsBoss ? GameConst.BossEliteScale : GameConst.EnemyEliteScale) * Vector3.one;
+                healthBar.transform.localScale = new Vector3(healthBar.transform.localScale.x, 1f / (IsBoss ? GameConst.BossEliteScale : GameConst.EnemyEliteScale), healthBar.transform.localScale.z);
             }
             else
             {
