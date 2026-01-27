@@ -15,6 +15,7 @@ namespace Dark.Scripts.Analytics
         [Header("Supabase Settings")]
         [SerializeField] private string projectUrl = "https://YOUR_PROJECT_ID.supabase.co";
         [SerializeField] private string apiKey = "YOUR_ANON_KEY";
+        [SerializeField] private string tableName = "game_logs";
         
         // Called by LogManager
         public void SendBatch(List<LogEntry> batch, System.Action<int> onSuccess)
@@ -24,7 +25,7 @@ namespace Dark.Scripts.Analytics
 
         IEnumerator UploadBatchRoutine(List<LogEntry> batch, System.Action<int> onSuccess)
         {
-            string url = projectUrl + "/rest/v1/game_logs";
+            string url = projectUrl + "/rest/v1/" + tableName;
             string json = JsonConvert.SerializeObject(batch);
             var data = Encoding.UTF8.GetBytes(json);
 #if UNITY_EDITOR
