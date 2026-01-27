@@ -189,6 +189,8 @@ namespace InGame.Boss
                               + targetPos);
             animController.transform.localScale =
                 new Vector3(Mathf.Sign(attackPosition.x - myPos.x), 1f, 1f);
+            healthBar.transform.localScale = new Vector3(animController.transform.localScale.x,
+                healthBar.transform.localScale.y, healthBar.transform.localScale.z);
             
             // Jump down
             jumpDuration = animController.PlayCustomAnim(jumpDownAnim);
