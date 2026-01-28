@@ -45,16 +45,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67ec75094a2d2314d8d48458b27b3de8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trigger: {fileID: 5878374698746314276}
   radius: 1.6
   itemLayer:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 16384
   pushDuration: 0.3
   moveDelay: 0.2
   absorbDuration: 0.35
   maxMoveSpeed: 35
   pushDistance: 0.5
   absorbMargin: 0.1
+  maxActiveItems: 12
   _cam: {fileID: 0}
   mouseFollower: {fileID: 9078062221237771910}
 --- !u!1 &2759567494984376879
@@ -66,7 +68,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9078062221237771910}
-  m_Layer: 0
+  - component: {fileID: 6224900969065262423}
+  - component: {fileID: 5878374698746314276}
+  m_Layer: 15
   m_Name: MouseFollower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,6 +92,54 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8985279824894709821}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &6224900969065262423
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2759567494984376879}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
+--- !u!114 &5878374698746314276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2759567494984376879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36007220300f4786be5d84e7c6408e8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  collider: {fileID: 6224900969065262423}
 --- !u!1 &3023722809295789821
 GameObject:
   m_ObjectHideFlags: 0

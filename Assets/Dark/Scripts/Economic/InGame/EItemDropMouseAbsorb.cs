@@ -14,6 +14,7 @@ namespace Economic.InGame
     public class EItemDropMouseAbsorb : MonoBehaviour
     {
         [Header("Detection")]
+        [SerializeField] private EItemDropMouseTrigger trigger;
         [SerializeField] private float radius = 2f;
         [SerializeField] private LayerMask itemLayer;
 
@@ -35,11 +36,17 @@ namespace Economic.InGame
 
         [Tooltip("Optional extra distance at which items start being absorbed (0 = exactly at radius).")]
         [SerializeField] private float absorbMargin = 0.05f;
+        
+        [Header("Performance")]
+        [SerializeField] private int maxActiveItems = 24;
 
+        const float CLAIM_DISTANCE = 0.25f;
         private readonly RaycastHit2D[] _hits = new RaycastHit2D[64];
+        private readonly List<int> _toClear = new List<int>(64);
 
         private struct AbsorbState
         {
+            public Transform transform;
             public EItemDrop targetItem;
             public Vector3 originalPos;
             public Vector3 pushTargetPos;
@@ -48,19 +55,23 @@ namespace Economic.InGame
         }
 
         // We track the Transform directly; no Rigidbody is required.
-        private readonly Dictionary<Transform, AbsorbState> _active = new Dictionary<Transform, AbsorbState>();
+        private readonly Dictionary<int, AbsorbState> _active = new Dictionary<int, AbsorbState>();
         // Temporary buffer to safely iterate active items without modifying the collection during enumeration.
-        private readonly List<Transform> _updateBuffer = new List<Transform>();
+        private readonly List<int> _updateBuffer = new List<int>();
         [SerializeField] private Camera _cam;
         [SerializeField] private Transform mouseFollower;
-
+        
         private MonoCursor cursor;
         private float maxDelayHideCursor = 0.5f;
         private float delayHideCursorCounter;
         private bool chargeBlockCollect;
+        private int tempItemCollectedCount;
+        
+        public bool IsChargeBlockCollect => chargeBlockCollect;
 
         private void Awake()
         {
+            trigger.Init(this);
             CombatActions.OnInitInGameCursor += OnInitCursor;
             CombatActions.OnChargeStarted += () => chargeBlockCollect = true;
             CombatActions.OnChargeEnded += () => chargeBlockCollect = false;
@@ -77,6 +88,7 @@ namespace Economic.InGame
         private void OnLevelPreLoaded(LevelConfig level)
         {
             radius = LevelUtilityV2.GetVestigeCollectSize();
+            trigger.collider.radius = radius + absorbMargin;
         }
 
         private void OnInitCursor(MonoCursor value)
@@ -99,47 +111,58 @@ namespace Economic.InGame
 
             float dt = Time.deltaTime;
 
-            // 1. Discover nearby items under the mouse radius.
-            var count = 0;
-            if (chargeBlockCollect == false)
+            UpdateActiveOnly(mouseWorld, dt);
+        }
+
+        public void TryRegisterItem(Collider2D col)
+        {
+            if (!col) return;
+            if (!col.CompareTag("Collectible")) return;
+            if (col.transform.TryGetComponent<EItemDrop>(out var targetItem) && !targetItem.Collectible) return;
+
+            Transform target = col.transform;
+
+            var instanceId = target.GetInstanceID();
+            if (!_active.ContainsKey(instanceId))
             {
-                count = Physics2D.CircleCastNonAlloc(mouseWorld, radius + absorbMargin, Vector2.zero, _hits, 0f, itemLayer);
-                for (int i = 0; i < count; i++)
+                // Calculate push direction (slight push away from mouse)
+                Vector3 mouseWorld = mouseFollower.position;
+                Vector3 toItem = target.position - mouseWorld;
+                Vector3 pushDir = toItem.normalized;
+                if (pushDir.magnitude < 0.01f)
                 {
-                    var col = _hits[i].collider;
-                    if (!col) continue;
-                    if (!col.CompareTag("Collectible")) continue;
-                    if (col.transform.TryGetComponent<EItemDrop>(out var targetItem) && !targetItem.Collectible) continue;
-
-                    Transform target = col.transform;
-
-                    if (!_active.ContainsKey(target))
-                    {
-                        // Calculate push direction (slight push away from mouse)
-                        Vector3 toItem = target.position - mouseWorld;
-                        Vector3 pushDir = toItem.normalized;
-                        if (pushDir.magnitude < 0.01f)
-                        {
-                            // If item is exactly at mouse, push in a random direction
-                            float angle = UnityEngine.Random.Range(0f, Mathf.PI * 2f);
-                            pushDir = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f);
-                        }
-                        Vector3 pushTarget = target.position + pushDir * pushDistance;
-
-                        _active[target] = new AbsorbState
-                        {
-                            targetItem = targetItem,
-                            originalPos = target.position,
-                            pushTargetPos = pushTarget,
-                            timeSinceDetected = 0f,
-                            hasPushed = false
-                        };
-                    }
+                    // If item is exactly at mouse, push in a random direction
+                    float angle = UnityEngine.Random.Range(0f, Mathf.PI * 2f);
+                    pushDir = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f);
                 }
-            }
+                Vector3 pushTarget = target.position + pushDir * pushDistance;
 
+                _active[instanceId] = new AbsorbState
+                {
+                    transform = target,
+                    targetItem = targetItem,
+                    originalPos = target.position,
+                    pushTargetPos = pushTarget,
+                    timeSinceDetected = 0f,
+                    hasPushed = false
+                };
+            }
+        }
+        
+        public void TryUnregisterItem(Collider2D col)
+        {
+            int id = col.transform.GetInstanceID();
+
+            if (_active.ContainsKey(id))
+            {
+                _toClear.Add(id);
+            }
+        }
+        
+        private void UpdateActiveOnly(Vector3 mouseWorld, float dt)
+        {
             // 2. Update movement of all actively absorbed items.
-            var toClear = new List<Transform>();
+            _toClear.Clear();
 
             // Copy keys to buffer so we can modify _active safely while iterating.
             _updateBuffer.Clear();
@@ -149,15 +172,15 @@ namespace Economic.InGame
             }
 
             var isCollecting = false;
-            foreach (var tr in _updateBuffer)
+            foreach (var id in _updateBuffer)
             {
-                if (!tr)
+                if (id == 0)
                 {
-                    toClear.Add(tr);
+                    _toClear.Add(id);
                     continue;
                 }
-
-                if (!_active.TryGetValue(tr, out var state))
+                
+                if (!_active.TryGetValue(id, out var state))
                 {
                     continue;
                 }
@@ -165,7 +188,7 @@ namespace Economic.InGame
                 if (!state.targetItem.Collectible) continue;
 
                 state.timeSinceDetected += dt;
-                Vector3 current = tr.position;
+                Vector3 current = state.transform.position;
 
                 // Phase 1: Push effect (immediate, slight movement)
                 if (!state.hasPushed)
@@ -173,7 +196,7 @@ namespace Economic.InGame
                     // Apply push immediately
                     float pushProgress = Mathf.Clamp01(state.timeSinceDetected / pushDuration);
                     current = Vector3.Lerp(state.originalPos, state.pushTargetPos, pushProgress);
-                    tr.position = current;
+                    state.transform.position = current;
                     
                     // Mark as pushed after a brief moment
                     if (state.timeSinceDetected >= pushDuration)
@@ -193,37 +216,62 @@ namespace Economic.InGame
                         // Move towards mouse, limited by maxMoveSpeed
                         float moveDistance = Mathf.Min(distanceToMouse, maxMoveSpeed * dt);
                         current += toMouse.normalized * moveDistance;
-                        tr.position = current;
+                        state.transform.position = current;
                         isCollecting = true;
                     }
                     else
                     {
                         // Very close to mouse, snap to it and mark for cleanup
-                        tr.position = mouseWorld;
-                        toClear.Add(tr);
+                        state.transform.position = mouseWorld;
+                        _toClear.Add(id);
                         continue;
                     }
                 }
                 // Phase 2 delay: Just wait (push is done, waiting for moveDelay)
-                else
-                {
-                    // Keep item at pushed position during delay
-                    tr.position = current;
-                }
+                // Keep item at pushed position during delay
 
                 // Update state
-                _active[tr] = state;
+                _active[id] = state;
 
                 // Safety check: if item is very close to mouse, mark for cleanup
-                float finalDistanceToMouse = Vector2.Distance(tr.position, mouseWorld);
-                if (finalDistanceToMouse < 0.15f)
+                float finalDistanceToMouse = Vector2.Distance(state.transform.position, mouseWorld);
+                if (finalDistanceToMouse < CLAIM_DISTANCE)
                 {
-                    toClear.Add(tr);
+                    _toClear.Add(id);
                 }
             }
-            
+
+            UpdateCursor(isCollecting);
+            CleanupCollected();
+        }
+
+        private void CleanupCollected()
+        {
+            // 3. Cleanup finished / null transforms.
+            var isClaim = false;
+            for (int i = 0; i < _toClear.Count; i++)
+            {
+                if (_active.TryGetValue(_toClear[i], out var state))
+                {
+                    if (state.targetItem)
+                    {
+                        state.targetItem.MarkedNotCollectedByManager = true;
+                        state.targetItem.DoClaimedVisual(mouseFollower);
+                        EItemDropManager.Instance.Claim(state.targetItem);
+                        EItemDropPool.Instance.Release(state.targetItem);
+                        isClaim = true;
+                    }
+                    _active.Remove(_toClear[i]);
+                }
+            }
+            if (isClaim)
+                cursor?.PunchCollectCursor();
+        }
+
+        private void UpdateCursor(bool collecting)
+        {
             // Update cursor
-            if (count > 0 || isCollecting)
+            if (collecting)
             {
                 cursor?.SetCollectCursor(true);
                 delayHideCursorCounter = maxDelayHideCursor;
@@ -234,23 +282,6 @@ namespace Economic.InGame
                 if (delayHideCursorCounter <= 0f)
                     cursor?.SetCollectCursor(false);
             }
-
-            // 3. Cleanup finished / null transforms.
-            var isClaim = false;
-            for (int i = 0; i < toClear.Count; i++)
-            {
-                _active.Remove(toClear[i]);
-                if (toClear[i].TryGetComponent<EItemDrop>(out var item))
-                {
-                    item.MarkedNotCollectedByManager = true;
-                    item.DoClaimedVisual(mouseFollower);
-                    EItemDropManager.Instance.Claim(item);
-                    EItemDropPool.Instance.Release(item);
-                    isClaim = true;
-                }
-            }
-            if (isClaim)
-                cursor.PunchCollectCursor();
         }
         
         private void OnDrawGizmosSelected()
