@@ -39,6 +39,7 @@ namespace Economic.InGame
         
         [Header("Performance")]
         [SerializeField] private int maxActiveItems = 24;
+        [SerializeField] private int maxActiveAbsorbing = 12;
 
         const float CLAIM_DISTANCE = 0.25f;
         private readonly RaycastHit2D[] _hits = new RaycastHit2D[64];
@@ -52,6 +53,7 @@ namespace Economic.InGame
             public Vector3 pushTargetPos;
             public float timeSinceDetected;
             public bool hasPushed;
+            public bool isAbsorbing;
         }
 
         // We track the Transform directly; no Rigidbody is required.
@@ -171,6 +173,27 @@ namespace Economic.InGame
                 _updateBuffer.Add(kvp.Key);
             }
 
+            int absorbingCount = 0;
+            foreach (var s in _active.Values)
+                if (s.isAbsorbing) absorbingCount++;
+
+            if (absorbingCount < maxActiveAbsorbing)
+            {
+                foreach (var id in _updateBuffer)
+                {
+                    if (absorbingCount >= maxActiveAbsorbing)
+                        break;
+
+                    var state = _active[id];
+                    if (!state.isAbsorbing)
+                    {
+                        state.isAbsorbing = true;
+                        _active[id] = state;
+                        absorbingCount++;
+                    }
+                }
+            }
+            
             var isCollecting = false;
             foreach (var id in _updateBuffer)
             {
@@ -184,7 +207,7 @@ namespace Economic.InGame
                 {
                     continue;
                 }
-                
+                if (!state.isAbsorbing) continue; // queued, do nothing this frame
                 if (!state.targetItem.Collectible) continue;
 
                 state.timeSinceDetected += dt;
