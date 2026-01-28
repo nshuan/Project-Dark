@@ -189,11 +189,16 @@ namespace InGame.Boss
                               + targetPos);
             animController.transform.localScale =
                 new Vector3(Mathf.Sign(attackPosition.x - myPos.x), 1f, 1f);
+            healthBar.transform.localScale = new Vector3(animController.transform.localScale.x,
+                healthBar.transform.localScale.y, healthBar.transform.localScale.z);
             
+            DOTween.Kill(shadowSprite);
+            if (shadowSprite)
+            {
+                yield return shadowSprite.DOFade(shadowOriginalAlpha, 0.5f).SetEase(Ease.InQuad).SetTarget(shadowSprite).WaitForCompletion();
+            }
             // Jump down
             jumpDuration = animController.PlayCustomAnim(jumpDownAnim);
-            DOTween.Kill(shadowSprite);
-            shadowSprite?.DOFade(shadowOriginalAlpha, 0.5f).SetEase(Ease.InQuad).SetTarget(shadowSprite);
             yield return new WaitForSeconds(jumpDuration);
             BurnVfxParent.gameObject.SetActive(true);
             animController.PlayRun();

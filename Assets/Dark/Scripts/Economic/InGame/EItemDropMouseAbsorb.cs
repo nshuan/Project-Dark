@@ -57,10 +57,13 @@ namespace Economic.InGame
         private MonoCursor cursor;
         private float maxDelayHideCursor = 0.5f;
         private float delayHideCursorCounter;
+        private bool chargeBlockCollect;
 
         private void Awake()
         {
             CombatActions.OnInitInGameCursor += OnInitCursor;
+            CombatActions.OnChargeStarted += () => chargeBlockCollect = true;
+            CombatActions.OnChargeEnded += () => chargeBlockCollect = false;
         }
 
         private void Start()
@@ -97,37 +100,41 @@ namespace Economic.InGame
             float dt = Time.deltaTime;
 
             // 1. Discover nearby items under the mouse radius.
-            int count = Physics2D.CircleCastNonAlloc(mouseWorld, radius + absorbMargin, Vector2.zero, _hits, 0f, itemLayer);
-            for (int i = 0; i < count; i++)
+            var count = 0;
+            if (chargeBlockCollect == false)
             {
-                var col = _hits[i].collider;
-                if (!col) continue;
-                if (!col.CompareTag("Collectible")) continue;
-                if (col.transform.TryGetComponent<EItemDrop>(out var targetItem) && !targetItem.Collectible) continue;
-
-                Transform target = col.transform;
-
-                if (!_active.ContainsKey(target))
+                count = Physics2D.CircleCastNonAlloc(mouseWorld, radius + absorbMargin, Vector2.zero, _hits, 0f, itemLayer);
+                for (int i = 0; i < count; i++)
                 {
-                    // Calculate push direction (slight push away from mouse)
-                    Vector3 toItem = target.position - mouseWorld;
-                    Vector3 pushDir = toItem.normalized;
-                    if (pushDir.magnitude < 0.01f)
-                    {
-                        // If item is exactly at mouse, push in a random direction
-                        float angle = UnityEngine.Random.Range(0f, Mathf.PI * 2f);
-                        pushDir = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f);
-                    }
-                    Vector3 pushTarget = target.position + pushDir * pushDistance;
+                    var col = _hits[i].collider;
+                    if (!col) continue;
+                    if (!col.CompareTag("Collectible")) continue;
+                    if (col.transform.TryGetComponent<EItemDrop>(out var targetItem) && !targetItem.Collectible) continue;
 
-                    _active[target] = new AbsorbState
+                    Transform target = col.transform;
+
+                    if (!_active.ContainsKey(target))
                     {
-                        targetItem = targetItem,
-                        originalPos = target.position,
-                        pushTargetPos = pushTarget,
-                        timeSinceDetected = 0f,
-                        hasPushed = false
-                    };
+                        // Calculate push direction (slight push away from mouse)
+                        Vector3 toItem = target.position - mouseWorld;
+                        Vector3 pushDir = toItem.normalized;
+                        if (pushDir.magnitude < 0.01f)
+                        {
+                            // If item is exactly at mouse, push in a random direction
+                            float angle = UnityEngine.Random.Range(0f, Mathf.PI * 2f);
+                            pushDir = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f);
+                        }
+                        Vector3 pushTarget = target.position + pushDir * pushDistance;
+
+                        _active[target] = new AbsorbState
+                        {
+                            targetItem = targetItem,
+                            originalPos = target.position,
+                            pushTargetPos = pushTarget,
+                            timeSinceDetected = 0f,
+                            hasPushed = false
+                        };
+                    }
                 }
             }
 

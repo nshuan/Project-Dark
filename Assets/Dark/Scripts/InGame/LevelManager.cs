@@ -162,6 +162,8 @@ namespace InGame
             {
                 LevelMapType.ThreeTowers => "Level3Towers",
                 LevelMapType.FourTowers => "Level4Towers",
+                LevelMapType.ThreeTowersSquare => "Level3TowersSquare",
+                LevelMapType.FourTowersTriangle =>  "Level4TowersTriangle",
                 _ => "Level3Towers"
             };
             coroutineLoadMap = StartCoroutine(IELoadMapScene(sceneName));

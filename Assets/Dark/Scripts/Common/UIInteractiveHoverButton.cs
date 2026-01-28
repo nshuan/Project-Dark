@@ -5,13 +5,15 @@ using UnityEngine.EventSystems;
 
 namespace Dark.Scripts.Common
 {
-    public class UIInteractiveHoverButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public class UIInteractiveHoverButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
         [SerializeField] private RectTransform rectCheckHoverOut;
-        [SerializeField] private ButtonHoverEvent actionHoverIn;
-        [SerializeField] private ButtonHoverEvent actionHoverOut;
+        [SerializeField] public ButtonHoverEvent actionHoverIn;
+        [SerializeField] public ButtonHoverEvent actionHoverOut;
+        [SerializeField] public ButtonHoverEvent actionOnClick;
  
         private bool flagCheckHoverOut = false;
+        public bool clickable = true;
         
         public void OnPointerEnter(PointerEventData eventData)
         {
@@ -22,6 +24,12 @@ namespace Dark.Scripts.Common
         public void OnPointerExit(PointerEventData eventData)
         {
             flagCheckHoverOut = true;
+        }
+        
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (clickable)
+                actionOnClick?.Invoke();
         }
 
         private void Update()

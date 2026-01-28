@@ -271,12 +271,15 @@ namespace InGame
 
             if (isCharging)
             {
+                CombatActions.OnChargeStarted?.Invoke();
                 hasSetupCharge = false;
             }
         }
 
         public void OnHoldReleased()
         {
+            if (isCharging)
+                CombatActions.OnChargeEnded?.Invoke();
             isCharging = false;
             InputManager.PlayerVisual.EndChargeAndShoot();
         }

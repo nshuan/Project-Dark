@@ -39,6 +39,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private UITooltip tooltip;
         [SerializeField] private UITooltipSkillVideo tooltipSkillVideo;
         [SerializeField] private Image imgLevelProgress;
+        [SerializeField] private RectTransform rectProgressVfxMask;
         [SerializeField] private UIParticle vfxBackgroundNotUpgrade;
         [SerializeField] private UIParticle vfxBackgroundUpgraded;
         [SerializeField] private UIParticle vfxBackgroundMax;
@@ -145,6 +146,11 @@ namespace Dark.Scripts.OutGame.Upgrade
             DOTween.Kill(imgLevelProgress);
             imgLevelProgress.DOFillAmount((cacheData?.level ?? 0f) / cacheConfig.MaxLevel, 0.3f).SetEase(Ease.OutQuad)
                 .SetTarget(imgLevelProgress);
+            rectProgressVfxMask
+                .DOSizeDelta(
+                    new Vector2(
+                        (cacheData?.level ?? 0f) / cacheConfig.MaxLevel * imgLevelProgress.rectTransform.sizeDelta.x,
+                        rectProgressVfxMask.sizeDelta.y), 0.3f).SetEase(Ease.OutQuad).SetEase(Ease.OutQuad).SetTarget(imgLevelProgress);
             if ((cacheData?.level ?? 0) <= 0) SetVfxBackgroundNotUpgraded();
             else if ((cacheData?.level ?? 0) < cacheConfig.MaxLevel) SetVfxBackgroundUpgraded();
             else SetVfxBackgroundMax();
