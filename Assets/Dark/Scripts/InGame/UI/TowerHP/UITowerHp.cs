@@ -21,8 +21,13 @@ namespace InGame.UI
         
         private TowerEntity tower;
         private bool isLowHp = false;
-        
-        private void Start()
+
+        private void Awake()
+        {
+            LevelManager.Instance.OnInitPlayer += OnInitPlayer;
+        }
+
+        private void OnInitPlayer()
         {
             if (towerIndex >= 0 && towerIndex < LevelManager.Instance.Towers.Length)
             {
