@@ -48,7 +48,12 @@ namespace InGame
             {
                 var gateCfg = waveConfig.gateConfigs[i];
                 Gates[i] = Object.Instantiate(gateCfg.gatePrefab ? gateCfg.gatePrefab : GateManifest.Get(0), gateCfg.position, quaternion.identity, null);
-                Gates[i].Initialize(gateCfg, gateCfg.targetBaseIndex.Select((index) => towers[index]).ToArray(), waveStatsScale, expRatio, darkRatio, darkUnitValue);
+                Gates[i].Initialize(gateCfg, gateCfg.targetBaseIndex.Select((index) =>
+                {
+                    if (index >= 0 && index < towers.Length)
+                        return towers[index];
+                    return towers[^1];
+                }).ToArray(), waveStatsScale, expRatio, darkRatio, darkUnitValue);
                 Gates[i].gameObject.SetActive(false);
                 VfxPreOpen[Gates[i]] = Gates[i].vfxPreOpen;
             }
