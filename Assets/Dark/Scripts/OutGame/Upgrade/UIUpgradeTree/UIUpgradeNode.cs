@@ -100,6 +100,16 @@ namespace Dark.Scripts.OutGame.Upgrade
         
         public virtual void UpdateUI()
         {
+            var groupUnlockOrder =
+                config.groupId.Min((info) => UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, false));
+            foreach (var logicV2 in config.nodeLogic)
+            {
+                if (logicV2 is INodeDynamicBonusValueV2 { IsDynamic: true } dynamicLogic)
+                {
+                    dynamicLogic.OverrideBonusValue(groupUnlockOrder);
+                }
+            }
+            
             var data = UpgradeManager.Instance.GetData(config.nodeId);
             if (data == null || data.level == 0) // Not activated yet
             {
