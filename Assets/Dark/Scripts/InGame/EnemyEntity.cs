@@ -184,10 +184,8 @@ namespace InGame
                 healthBar.gameObject.SetActive(!IsBoss ? GameSettings.ShowEnemyHealth : GameSettings.ShowBossHealth);
                 if (showAttackRange)
                 {
-                    DOTween.Kill(visualAttackRange);
-                    visualAttackRange.localScale = Vector3.zero;
+                    visualAttackRange.localScale = AttackRange * Vector3.one;
                     visualAttackRange.gameObject.SetActive(true);
-                    visualAttackRange.DOScale(AttackRange, 0.5f).SetEase(Ease.OutQuad).SetTarget(visualAttackRange);
                 }
             });
         }
@@ -400,13 +398,12 @@ namespace InGame
             yield return new WaitForEndOfFrame();
             // Đợi chạy xong anim hit rồi mới chạy anim die
             shadow.SetActive(false);    
-            if (showAttackRange)
-            {
-                DOTween.Kill(visualAttackRange);
-                visualAttackRange.DOScale(0f, 0.5f).SetEase(Ease.InQuad).SetTarget(visualAttackRange);
-            }
             OnStartDead?.Invoke();
             OnStartDead = null;
+            if (showAttackRange)
+            {
+                visualAttackRange.gameObject.SetActive(false);
+            }
             yield return new WaitForSeconds(delayDieAnimation);
             yield return new WaitForSeconds(animController.PlayDie());
             OnDead?.Invoke(reason);

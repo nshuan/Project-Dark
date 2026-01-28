@@ -3,17 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Coffee.UIExtensions;
 using Dark.Scripts.Analytics;
-using Dark.Scripts.Audio;
 using Dark.Scripts.AudioV2;
-using Dark.Scripts.Utils;
 using DG.Tweening;
 using Economic;
-using InGame;
 using InGame.Upgrade;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Dark.Scripts.OutGame.Upgrade
@@ -36,7 +32,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [Space]
         [Header("UI")]
         public UpgradeNodeType nodeType;
-        [SerializeField] protected RectTransform nodeContent;
+        [SerializeField] public RectTransform nodeContent;
         [SerializeField] protected UIUpgradeNodeHoverField hoverField;
         [SerializeField] protected UIUpgradeNodeSpawnAnimation spawnAnimation;
 
@@ -104,6 +100,16 @@ namespace Dark.Scripts.OutGame.Upgrade
         
         public virtual void UpdateUI()
         {
+            var groupUnlockOrder =
+                config.groupId.Min((info) => UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, false));
+            foreach (var logicV2 in config.nodeLogic)
+            {
+                if (logicV2 is INodeDynamicBonusValueV2 { IsDynamic: true } dynamicLogic)
+                {
+                    dynamicLogic.OverrideBonusValue(groupUnlockOrder);
+                }
+            }
+            
             var data = UpgradeManager.Instance.GetData(config.nodeId);
             if (data == null || data.level == 0) // Not activated yet
             {
@@ -239,9 +245,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                             if (UpgradeManager.Instance.GetData(nodeGroup.lockNode.nodeId) is { level: > 0 })
                                 return false;
                         }
-
-                        ;
-
+                        
                         return true;
                     }))
                 {
