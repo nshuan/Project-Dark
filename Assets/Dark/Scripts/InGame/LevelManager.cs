@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Core;
+using Dark.Scripts.Settings;
 using Dark.Scripts.Utils;
 using Data;
 using Economic;
@@ -12,8 +14,10 @@ using InGame.CounterConfig;
 using InGame.Upgrade;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using Sirenix.Utilities;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 namespace InGame
@@ -49,6 +53,8 @@ namespace InGame
         
         public PlayerCharacter Player { get; set; }
 
+        private List<LevelMapVariant> mapVarientItems;
+        
         #region Upgrade
 
         [ReadOnly, NonSerialized, OdinSerialize] private UpgradeBonusInfoV2 bonusInfo = new UpgradeBonusInfoV2();
@@ -81,13 +87,13 @@ namespace InGame
         private void Start()
         {
             InitSkillTreeBonus();
-            InitPlayerAndTowers();
+            InitLevelMapVariant();
             
 #if UNITY_EDITOR
 
             if (isLoadFromInit == false && autoLoadLevel && Level == null)
             {
-                this.DelayCall(2f, () => LoadLevel(testLevel));
+                this.DelayCall(2f, () => LoadLevel(testLevel.level));
             }
 #endif
         }
@@ -127,17 +133,52 @@ namespace InGame
             Player.transform.position = towers[0].transform.position + towers[0].GetTowerHeight();
             OnInitPlayer?.Invoke();
         }
+
+        private void InitLevelMapVariant()
+        {
+            mapVarientItems = FindObjectsByType<LevelMapVariant>(FindObjectsInactive.Include, FindObjectsSortMode.None).ToList();
+        }
         
         public void LoadLevel(int level)
         {
             var levelConfig = LevelManifest.Instance.GetLevel(level);
-            if (levelConfig == null) return;
-            LoadLevel(levelConfig);
+            if (!levelConfig) return;
+            Level = levelConfig;
+            SceneManager.sceneLoaded += OnLevelSceneLoaded;
+            LoadMapScene(Level.mapType);
+        }
+
+        private void OnLevelSceneLoaded(Scene scene, LoadSceneMode loadMode)
+        {
+            SceneManager.sceneLoaded -= OnLevelSceneLoaded;
+            InitPlayerAndTowers();
+            LoadLevel(Level, false);
         }
         
-        public void LoadLevel(LevelConfig level)
+        private void LoadMapScene(LevelMapType mapType)
         {
-            Level = level;
+            if (coroutineLoadMap != null) StopCoroutine(coroutineLoadMap);
+            var sceneName = mapType switch
+            {
+                LevelMapType.ThreeTowers => "Level3Towers",
+                LevelMapType.FourTowers => "Level4Towers",
+                LevelMapType.ThreeTowersSquare => "Level3TowersSquare",
+                LevelMapType.FourTowersTriangle =>  "Level4TowersTriangle",
+                _ => "Level3Towers"
+            };
+            coroutineLoadMap = StartCoroutine(IELoadMapScene(sceneName));
+        }
+
+        private Coroutine coroutineLoadMap;
+        private IEnumerator IELoadMapScene(string sceneName)
+        {
+            yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+        }
+        
+        public void LoadLevel(LevelConfig level, bool overrideLevel = false)
+        {
+            if (overrideLevel)
+                Level = level;
             
             EnemyManager.Instance.Initialize();
             winLoseManager = new WinLoseManager();
@@ -174,7 +215,11 @@ namespace InGame
             
             OnLevelPreLoaded?.Invoke(Level);
             yield return new WaitForSeconds(delayStartLevel);
-            
+
+            foreach (var waveInfo in Level.waveInfo)
+            {
+                waveInfo.SetupWave(Towers, OnWaveForceStop);
+            }
             waveCoroutine = StartCoroutine(IEWave(Level.waveInfo));
             LevelStarted = true;
             OnLevelLoaded?.Invoke(Level);
@@ -246,10 +291,11 @@ namespace InGame
             while (currentWaveIndex < waves.Length)
             {
                 var currentWave = waves[currentWaveIndex];
-                currentWave.SetupWave(Towers, OnWaveForceStop);
                 OnWaveStart?.Invoke(currentWaveIndex, currentWave.timeToEnd);
                 if (currentWave.IsBossWave) OnBossWaveStart?.Invoke();
                 currentWaveIndex += 1;
+                if (GameSettings.ShowGateWarning && currentWaveIndex < waves.Length)
+                    waves[currentWaveIndex].PreOpen();
                 yield return currentWave.IEActivateWave();
                 onWaveEnded?.Invoke(currentWaveIndex - 1, WaveEndReason.EndTime);
             }
@@ -265,7 +311,7 @@ namespace InGame
 
             // Nếu wave stop vì hết thời gian thì invoke hàm này
             // if (reason == WaveEndReason.EndTime)
-            onWaveEnded?.Invoke(currentWaveIndex - 1, reason);
+            onWaveEnded?.Invoke(waveIndex, reason);
             
             if (!IsEndLevel)
                 winLoseManager.CheckWin(this);
@@ -282,8 +328,12 @@ namespace InGame
 
         private void InitTowers()
         {
+            towers = FindObjectsByType<TowerEntity>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            towers.Sort((t1, t2) => t1.transform.GetSiblingIndex().CompareTo(t2.transform.GetSiblingIndex()));
             for (var i = 0; i < towers.Length; i++)
             {
+                if (Level.towerPositions != null && i < Level.towerPositions.Length)
+                    towers[i].transform.position = Level.towerPositions[i];
                 towers[i].Initialize(i, LevelUtilityV2.GetBaseTowerHp());
                 towers[i].OnDestroyed += OnTowerDestroyed;
             }
@@ -358,7 +408,7 @@ namespace InGame
         [Button]
         public void TestLoadLevel()
         {
-            LoadLevel(testLevel);
+            LoadLevel(testLevel.level);
         }
     }
 }

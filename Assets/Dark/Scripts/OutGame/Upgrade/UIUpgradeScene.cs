@@ -1,6 +1,7 @@
 using System;
 using Core;
 using Dark.Scripts.Analytics;
+using Dark.Scripts.Common.UIWarning;
 using Dark.Scripts.OutGame.SaveSlot;
 using Dark.Scripts.SceneNavigation;
 using Dark.Scripts.Utils;
@@ -19,6 +20,11 @@ namespace Dark.Scripts.OutGame.Upgrade
         [Space] [Header("Select class")] 
         [SerializeField] private GameObject panelSelectClass;
 
+        [Space] [Header("Confirm")] 
+        [SerializeField] private UIPopupConfirmExchange popupConfirmExchange;
+        
+        public UIPopupConfirmExchange PopupConfirmExchange => popupConfirmExchange;
+        
         protected override void Awake()
         {
             if (PlayerDataManager.Instance.Data.initialized == false)
@@ -58,10 +64,11 @@ namespace Dark.Scripts.OutGame.Upgrade
             {
                 LogManager.Log(LogConst.EventLogStartLevel, $"level_{PlayerDataManager.Instance.Data.level + 1}", "from class select");
                 
-                Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame, () =>
+                Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame);
+                Loading.Instance.onSceneLoaded += () =>
                 {
                     LevelManager.Instance.LoadLevel(PlayerDataManager.Instance.Data.level + 1);
-                });
+                };
             });
         }
     }

@@ -8,13 +8,11 @@ namespace InGame
     public class EnemyManager : Singleton<EnemyManager>
     {
         public Dictionary<int, EnemyEntity> Enemies { get; private set; } = new Dictionary<int, EnemyEntity>();
-        public Dictionary<int, bool> EnemiesAliveMap {get; private set; } = new Dictionary<int, bool>();
         public int CurrentEnemyIndex { get; private set; } // index is stored as enemy id
         
         public void Initialize()
         { 
             Enemies = new Dictionary<int, EnemyEntity>();
-            EnemiesAliveMap = new Dictionary<int, bool>();
             CurrentEnemyIndex = 0;
 
             LevelManager.Instance.OnLose += OnLevelCompleted;
@@ -27,21 +25,20 @@ namespace InGame
             
             for (var i = 0; i < Enemies.Count; i++)
             {
-                if (EnemiesAliveMap[i] == false) continue;
-                Enemies[i].Stop();
+                if (Enemies[i].gameObject.activeInHierarchy)
+                    Enemies[i].Stop();
             }
         }
         
         public void OnEnemySpawn(EnemyEntity enemy)
         {
             Enemies.Add(CurrentEnemyIndex, enemy);
-            EnemiesAliveMap.Add(CurrentEnemyIndex, true);
             CurrentEnemyIndex += 1;
+            CombatActions.OnOneEnemySpawn?.Invoke(enemy);
         }
 
         public void OnEnemyDead(EnemyEntity enemy, EnemyDieReason reason)
         {
-            EnemiesAliveMap[enemy.UniqueId] = false;
             CombatActions.OnOneEnemyDead?.Invoke(enemy, reason);
         }
 
@@ -53,7 +50,8 @@ namespace InGame
             foreach (var enemy in Enemies)
             {
                 if (count >= enemies.Length) break;
-                if (aliveOnly && EnemiesAliveMap[enemy.Key] == false) continue;
+                var enemyScript = Enemies[enemy.Key];
+                if (aliveOnly && (enemyScript.IsDestroyed || !enemyScript.gameObject.activeInHierarchy)) continue;
 
                 if (filter(enemy.Value))
                 {

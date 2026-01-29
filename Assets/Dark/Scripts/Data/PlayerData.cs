@@ -19,10 +19,18 @@ namespace Data
         public int levelPoint;
         public int dark;
         public int bossPoint;
+        public int totalDarkClaimed;
+        public int totalBossPointClaimed;
+        public int totalLevelPointClaimed;
         
         // Record
         public int passedDay;
         public double timePlayedMilli;
+        
+        // Instruction
+        public bool hasShowInstructionVestige;
+        public bool hasShowInstructionEchoes;
+        public bool hasShowInstructionSigils;
         
         public PlayerData()
         {

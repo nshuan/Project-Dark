@@ -34,7 +34,11 @@ namespace Economic.UI
         
         public override void OnPointerEnter(PointerEventData eventData)
         {
-            base.OnPointerEnter(eventData);
+            if (showInstruction && !WealthManager.Instance.hasShowInstructionEchoes)
+            {
+                panelInstruction.SetActive(true);
+                WealthManager.Instance.SetShownInstruction(WealthType.Echoes);
+            }
             OnEconomicIconHoverIn?.Invoke(WealthType.Echoes);
         }
     }
