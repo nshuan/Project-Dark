@@ -133,19 +133,13 @@ namespace InGame.GateEditorV2
             inpTargetTower.onValueChanged.AddListener((value) =>
             {
                 value = value.Trim(' ');
-                if (value == "0,1,2" || value == "0,2,1" || value == "1,0,2" || value == "1,2,0" || value == "2,0,1" ||
-                    value == "2,1,0"
-                    || value == "0,1" || value == "1,0" || value == "0,2" || value == "2,0" || value == "1,2" ||
-                    value == "2,1"
-                    || value == "0" || value == "1" || value == "2")
+                try
                 {
-                    // gate.StrTargetTowers = value;
                     gate.Config.targetBaseIndex = value.Split(",").Select(int.Parse).ToArray();
                 }
-                else
+                catch (Exception e)
                 {
                     value = "0";
-                    // gate.StrTargetTowers = value;
                     gate.Config.targetBaseIndex = value.Split(",").Select(int.Parse).ToArray();
                 }
             });
