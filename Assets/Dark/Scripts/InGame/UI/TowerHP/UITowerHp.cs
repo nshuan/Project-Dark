@@ -52,16 +52,16 @@ namespace InGame.UI
             var fill = Mathf.Clamp((float)tower.CurrentHp / tower.MaxHp, 0f, 1f);
             hpFill.fillAmount = fill;
 
+            var c = Color.Lerp(Color.white, warningColor,
+                (warningThreshold - fill) / warningThreshold);
+            hpFill.color = c;
+            c = Color.Lerp(glowStartColor, warningColor,
+                (warningThreshold - fill) / warningThreshold);
+            c.a = 0.5f;
+            hpGlow.color = c;
+            
             if (valueChanged < 0 && fill <= warningThreshold)
             {
-                var c = Color.Lerp(Color.white, warningColor,
-                    (warningThreshold - fill) / warningThreshold);
-                hpFill.color = c;
-                c = Color.Lerp(glowStartColor, warningColor,
-                    (warningThreshold - fill) / warningThreshold);
-                c.a = 0.5f;
-                hpGlow.color = c;
-                
                 if (!isLowHp)
                 {
                     isLowHp = true;
@@ -76,9 +76,6 @@ namespace InGame.UI
             }
             else
             {
-                hpFill.color = Color.white;
-                hpGlow.color = glowStartColor;
-                
                 if (isLowHp)
                 {
                     isLowHp = false;
