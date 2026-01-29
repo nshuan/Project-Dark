@@ -423,14 +423,18 @@ namespace InGame
         public Transform TargetTransform => transform;
         private Action callbackBurnComplete;
         private Coroutine coroutineBurn;
+        private bool isBurning;
         public void Burn(float duration, float delayEachBurn, int damage, Action callbackComplete)
         {
-            if (IsDestroyed)
+            if (IsDestroyed || isBurning)
             {
                 callbackComplete?.Invoke();
                 return;
             }
+
+            isBurning = true;
             callbackBurnComplete = callbackComplete;
+            callbackBurnComplete += () => { isBurning = false; };
             if (coroutineBurn != null) StopCoroutine(coroutineBurn);
             coroutineBurn = StartCoroutine(IEBurn(duration, delayEachBurn, damage));
         }
