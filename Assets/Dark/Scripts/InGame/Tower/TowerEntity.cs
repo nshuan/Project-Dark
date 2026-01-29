@@ -83,6 +83,12 @@ namespace InGame
             selected.SetActive(false);
         }
 
+        public void Deactivate()
+        {
+            autoRegenerate?.gameObject.SetActive(false);
+            regenerateOnKill?.gameObject.SetActive(false);
+        }
+        
         public float HitDirectionX { get; set; }
         public float HitDirectionY { get; set; }
 
