@@ -39,7 +39,7 @@ namespace Economic.InGame
         
         [Header("Performance")]
         [SerializeField] private int maxActiveItems = 24;
-        [SerializeField] private int maxActiveAbsorbing = 12;
+        [SerializeField] private int maxActiveAbsorbing = 24;
 
         const float CLAIM_DISTANCE = 0.25f;
         private readonly RaycastHit2D[] _hits = new RaycastHit2D[64];
@@ -120,35 +120,33 @@ namespace Economic.InGame
         {
             if (!col) return;
             if (!col.CompareTag("Collectible")) return;
+            if (_active.ContainsKey(col.transform.GetInstanceID())) return;
             if (col.transform.TryGetComponent<EItemDrop>(out var targetItem) && !targetItem.Collectible) return;
 
             Transform target = col.transform;
-
             var instanceId = target.GetInstanceID();
-            if (!_active.ContainsKey(instanceId))
-            {
-                // Calculate push direction (slight push away from mouse)
-                Vector3 mouseWorld = mouseFollower.position;
-                Vector3 toItem = target.position - mouseWorld;
-                Vector3 pushDir = toItem.normalized;
-                if (pushDir.magnitude < 0.01f)
-                {
-                    // If item is exactly at mouse, push in a random direction
-                    float angle = UnityEngine.Random.Range(0f, Mathf.PI * 2f);
-                    pushDir = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f);
-                }
-                Vector3 pushTarget = target.position + pushDir * pushDistance;
 
-                _active[instanceId] = new AbsorbState
-                {
-                    transform = target,
-                    targetItem = targetItem,
-                    originalPos = target.position,
-                    pushTargetPos = pushTarget,
-                    timeSinceDetected = 0f,
-                    hasPushed = false
-                };
+            // Calculate push direction (slight push away from mouse)
+            Vector3 mouseWorld = mouseFollower.position;
+            Vector3 toItem = target.position - mouseWorld;
+            Vector3 pushDir = toItem.normalized;
+            if (pushDir.magnitude < 0.01f)
+            {
+                // If item is exactly at mouse, push in a random direction
+                float angle = UnityEngine.Random.Range(0f, Mathf.PI * 2f);
+                pushDir = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f);
             }
+            Vector3 pushTarget = target.position + pushDir * pushDistance;
+
+            _active[instanceId] = new AbsorbState
+            {
+                transform = target,
+                targetItem = targetItem,
+                originalPos = target.position,
+                pushTargetPos = pushTarget,
+                timeSinceDetected = 0f,
+                hasPushed = false
+            };
         }
         
         public void TryUnregisterItem(Collider2D col)
