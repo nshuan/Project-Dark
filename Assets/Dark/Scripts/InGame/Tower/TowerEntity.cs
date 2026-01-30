@@ -3,6 +3,7 @@ using Dark.Scripts.AudioV2;
 using DG.Tweening;
 using InGame.Shield;
 using InGame.UI;
+using TMPro;
 using UnityEngine;
 
 namespace InGame
@@ -23,6 +24,7 @@ namespace InGame
         public Transform[] itemCollectorPositions;
         [SerializeField] private AudioPlayComponentV2 sfxHit;
         [SerializeField] private Transform flashSize;
+        [SerializeField] private TextMeshPro tmpLabel;
 
         [Space] [Header("Shield")] 
         [SerializeField] public TowerShield shield;
@@ -58,6 +60,7 @@ namespace InGame
             shield.Initialize();
             IsDestroyed = false;
 
+            tmpLabel.SetText((id + 1).ToString());
             OnDestroyed = null;
             currentState = 3; // 3 trạng thái máu và 1 trạng thái vỡ
             towerAnim.PlayIdle(currentState);
@@ -80,6 +83,12 @@ namespace InGame
             selected.SetActive(false);
         }
 
+        public void Deactivate()
+        {
+            autoRegenerate?.gameObject.SetActive(false);
+            regenerateOnKill?.gameObject.SetActive(false);
+        }
+        
         public float HitDirectionX { get; set; }
         public float HitDirectionY { get; set; }
 

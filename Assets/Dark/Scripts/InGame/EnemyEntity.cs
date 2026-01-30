@@ -13,9 +13,12 @@ namespace InGame
 {
     public class EnemyEntity : MonoBehaviour, IDamageable, IEffectTarget
     {
-        [SerializeField] private Collider2D collider2d;
-        [SerializeField] private EnemyHealthBar healthBar;
+        [SerializeField] protected Collider2D collider2d;
+        [SerializeField] protected EnemyHealthBar healthBar;
+        [SerializeField] protected EnemyDisplayStats displayStats;
         [SerializeField] private Transform burnVfxParent;
+        [SerializeField] private Transform visualAttackRange;
+        [SerializeField] private bool showAttackRange;
         public EnemyBody body;
 
         private MapBoundaryManager boundaryManager;
@@ -61,7 +64,7 @@ namespace InGame
         private Vector2 staggerTargetPos;
 
         [Space, Header("Visual")] 
-        [SerializeField] private EnemyBoidAgentWithObstacles boidAgent;
+        [SerializeField] protected EnemyBoidAgentWithObstacles boidAgent;
         [SerializeField] private Transform uiHealth;
         public EnemyAnimController animController;
         [SerializeField] protected GameObject shadow;
@@ -134,6 +137,16 @@ namespace InGame
             BossPoint = config.bossPoint;
             AttackRange = config.attackRange;
             
+            displayStats.gameObject.SetActive(false);
+            if (GameConst.ShowTextEnemyAtkAndAtkRange)
+            {
+                displayStats.UpdateStats(CurrentDamage, AttackRange);
+                displayStats.transform.localScale = new Vector3(animController.transform.localScale.x,
+                    displayStats.transform.localScale.y, displayStats.transform.localScale.z);
+            }
+
+            visualAttackRange.gameObject.SetActive(false);
+            
             State = EnemyState.Spawn;
             inAttackRange = false;
             IsDestroyed = false;
@@ -153,7 +166,7 @@ namespace InGame
 
         #region Core function
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             DOTween.Kill(this);
         }
@@ -169,6 +182,11 @@ namespace InGame
                 collider2d.enabled = true;
                 Activated = true;
                 healthBar.gameObject.SetActive(!IsBoss ? GameSettings.ShowEnemyHealth : GameSettings.ShowBossHealth);
+                if (showAttackRange)
+                {
+                    visualAttackRange.localScale = AttackRange * Vector3.one;
+                    visualAttackRange.gameObject.SetActive(true);
+                }
             });
         }
 
@@ -221,6 +239,8 @@ namespace InGame
                     new Vector3(Mathf.Sign(Target.position.x - transform.position.x), 1f, 1f);
                 healthBar.transform.localScale = new Vector3(animController.transform.localScale.x,
                     healthBar.transform.localScale.y, healthBar.transform.localScale.z);
+                displayStats.transform.localScale = new Vector3(animController.transform.localScale.x,
+                    displayStats.transform.localScale.y, displayStats.transform.localScale.z);
             }
             else
             {
@@ -246,7 +266,7 @@ namespace InGame
                 StopCoroutine(attackCoroutine);
         }
         
-        private void StartAttackCoroutine()
+        protected void StartAttackCoroutine()
         {
             if (attackCoroutine != null)
                 StopCoroutine(attackCoroutine);
@@ -284,8 +304,9 @@ namespace InGame
 
         public virtual void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
         {
+            if (!Activated) return;
             if (IsDestroyed) return;
-            if (State == EnemyState.Invisible) return;
+            if (dmgType != DamageType.Enemy && dmgType != DamageType.SelfDestruct && State == EnemyState.Invisible) return;
             
             // Scale damage on boss
             if (IsBoss)
@@ -379,6 +400,10 @@ namespace InGame
             shadow.SetActive(false);    
             OnStartDead?.Invoke();
             OnStartDead = null;
+            if (showAttackRange)
+            {
+                visualAttackRange.gameObject.SetActive(false);
+            }
             yield return new WaitForSeconds(delayDieAnimation);
             yield return new WaitForSeconds(animController.PlayDie());
             OnDead?.Invoke(reason);
@@ -398,14 +423,18 @@ namespace InGame
         public Transform TargetTransform => transform;
         private Action callbackBurnComplete;
         private Coroutine coroutineBurn;
+        private bool isBurning;
         public void Burn(float duration, float delayEachBurn, int damage, Action callbackComplete)
         {
-            if (IsDestroyed)
+            if (IsDestroyed || isBurning)
             {
                 callbackComplete?.Invoke();
                 return;
             }
+
+            isBurning = true;
             callbackBurnComplete = callbackComplete;
+            callbackBurnComplete += () => { isBurning = false; };
             if (coroutineBurn != null) StopCoroutine(coroutineBurn);
             coroutineBurn = StartCoroutine(IEBurn(duration, delayEachBurn, damage));
         }
@@ -454,8 +483,8 @@ namespace InGame
             {
                 visual.material = materialElite;
                 cacheMaterial = materialElite;
-                transform.localScale = GameConst.EnemyEliteScale * Vector3.one;
-                healthBar.transform.localScale = new Vector3(healthBar.transform.localScale.x, 1f / GameConst.EnemyEliteScale, healthBar.transform.localScale.z);
+                transform.localScale = (IsBoss ? GameConst.BossEliteScale : GameConst.EnemyEliteScale) * Vector3.one;
+                healthBar.transform.localScale = new Vector3(healthBar.transform.localScale.x, 1f / (IsBoss ? GameConst.BossEliteScale : GameConst.EnemyEliteScale), healthBar.transform.localScale.z);
             }
             else
             {
@@ -477,6 +506,11 @@ namespace InGame
         {
             aimPointer.SetActive(aimed);
             if (IsBoss) return;
+            
+            // Boss ko show stats
+            if (GameConst.ShowTextEnemyAtkAndAtkRange)
+                displayStats.gameObject.SetActive(aimed);
+            
             if (config.elite) return;
             visual.material = aimed ? materialHighlight : cacheMaterial;
         }
@@ -490,6 +524,11 @@ namespace InGame
             }
             hoverPointer.SetActive(hover);
             if (IsBoss) return;
+            
+            // Boss ko show stats
+            if (GameConst.ShowTextEnemyAtkAndAtkRange)
+                displayStats.gameObject.SetActive(hover);
+            
             if (config.elite) return;
             visual.material = hover ? materialHighlight : cacheMaterial;
         }

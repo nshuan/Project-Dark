@@ -63,10 +63,9 @@ namespace InGame
 
             dashDirection.x = toTower.GetBaseCenter().x - fromTower.GetBaseCenter().x;
             dashDirection.y = toTower.GetBaseCenter().y - fromTower.GetBaseCenter().y;
-            var dashLine = MoveTowerHelper.Instance.GetTowerLine(fromTower.Id, toTower.Id);
+            var dashLine = MoveTowerHelper.Instance.GetTowerLine(fromTower, toTower, dashHitRadius);
             yield return dashLine.transform.DOScaleY(1.8f, 0.4f).SetEase(Ease.InQuad).WaitForCompletion();
             yield return new WaitForSeconds(0.1f);
-            dashLine.color = new Color(1f, 1f, 1f, 0.7f);
             var count = Physics2D.CircleCastNonAlloc(fromTower.GetBaseCenter(), dashHitRadius, dashDirection, hits,
                 dashDirection.magnitude);
             if (count > 0)
@@ -78,8 +77,6 @@ namespace InGame
             }
             VisualEffectHelper.Instance.PlayEffect(cameraShake);
             yield return dashLine.transform.DOPunchScale(new Vector3(0f, 0.2f, 0f), 0.2f).WaitForCompletion();
-
-            dashLine.DOFade(0f, 0.2f);
             
             yield return new WaitForEndOfFrame();
             onComplete?.Invoke();
@@ -94,6 +91,7 @@ namespace InGame
                     hitTarget.HitDirectionX = dashDirection.x;
                     hitTarget.HitDirectionY = dashDirection.y;
                     hitTarget.Damage((int)value, hitCenter, dashStagger, DamageType.Normal);
+                    PassiveEffectManager.Instance.TriggerEffect(PassiveTriggerType.DameByMoveSKill, hitTarget);
                 }
             }
         }

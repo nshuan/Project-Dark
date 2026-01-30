@@ -27,7 +27,6 @@ namespace Dark.Scripts.Settings.Resolution
             Fullscreen = !GameSettings.WindowedMode;
             Width = GameSettings.ResolutionWidth;
             Height = GameSettings.ResolutionHeight;
-            FullscreenModeWhenFullscreen = Fullscreen ? FullScreenMode.FullScreenWindow : FullScreenMode.Windowed;
 
             SetSupportedResolutions(supportedResolutions, keepSelection: true);
 

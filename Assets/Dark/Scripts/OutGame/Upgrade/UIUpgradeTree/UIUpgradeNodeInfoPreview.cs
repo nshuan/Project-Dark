@@ -18,6 +18,7 @@ using Sirenix.Serialization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 namespace Dark.Scripts.OutGame.Upgrade
 {
@@ -38,9 +39,15 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private UITooltip tooltip;
         [SerializeField] private UITooltipSkillVideo tooltipSkillVideo;
         [SerializeField] private Image imgLevelProgress;
+        [SerializeField] private RectTransform rectProgressVfxMask;
         [SerializeField] private UIParticle vfxBackgroundNotUpgrade;
         [SerializeField] private UIParticle vfxBackgroundUpgraded;
         [SerializeField] private UIParticle vfxBackgroundMax;
+        [SerializeField] private List<UIParticle> vfxClaimNotEnoughs;
+        [SerializeField] private List<UIParticle> vfxClaimEnoughs;
+        [SerializeField] private List<UIParticle> vfxClaimMaxs;
+
+
 
         [Space] [Header("Requirement")] 
         [SerializeField] private RequirementInfo infoReqVestige;
@@ -115,13 +122,15 @@ namespace Dark.Scripts.OutGame.Upgrade
             var descriptions = cacheConfig.description.Split("\n");
             if (cacheConfig.nodeLogic != null)
             {
+                var groupUnlockOrder = cacheConfig.groupId.Min((info) =>
+                    UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, false));
                 for (var i = 0; i < cacheConfig.nodeLogic.Length; i++)
                 {
                     if (i < descriptions.Length)
                     {
                         if (cacheConfig.nodeLogic[i] is INodeDynamicBonusValueV2 { IsDynamic: true } dynamicLogic)
                         {
-                            dynamicLogic.OverrideBonusValue(cacheConfig.groupId.Min((info) => UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, false)));
+                            dynamicLogic.OverrideBonusValue(groupUnlockOrder);
                         }
                         descriptions[i] = descriptions[i].Replace("[X]",
                             cacheConfig.nodeLogic[i].GetDisplayValue(cacheData?.level ?? 0));
@@ -139,6 +148,11 @@ namespace Dark.Scripts.OutGame.Upgrade
             DOTween.Kill(imgLevelProgress);
             imgLevelProgress.DOFillAmount((cacheData?.level ?? 0f) / cacheConfig.MaxLevel, 0.3f).SetEase(Ease.OutQuad)
                 .SetTarget(imgLevelProgress);
+            rectProgressVfxMask
+                .DOSizeDelta(
+                    new Vector2(
+                        (cacheData?.level ?? 0f) / cacheConfig.MaxLevel * imgLevelProgress.rectTransform.sizeDelta.x,
+                        rectProgressVfxMask.sizeDelta.y), 0.3f).SetEase(Ease.OutQuad).SetEase(Ease.OutQuad).SetTarget(imgLevelProgress);
             if ((cacheData?.level ?? 0) <= 0) SetVfxBackgroundNotUpgraded();
             else if ((cacheData?.level ?? 0) < cacheConfig.MaxLevel) SetVfxBackgroundUpgraded();
             else SetVfxBackgroundMax();
@@ -372,6 +386,37 @@ namespace Dark.Scripts.OutGame.Upgrade
             if (vfxBackgroundUpgraded.gameObject.activeSelf) return vfxBackgroundUpgraded;
             if (vfxBackgroundMax.gameObject.activeSelf) return vfxBackgroundMax;
             return vfxBackgroundNotUpgrade;
+        }
+
+        public void PlayVfxUpgrade()
+        {
+            if (imgMax.gameObject.activeSelf)
+            {
+                foreach (var vfx in vfxClaimMaxs)
+                {
+                    vfx.Play();
+                }
+                
+                return;
+            }
+            
+            if (imgNotEnoughResource.gameObject.activeSelf)
+            {
+                foreach (var vfx in vfxClaimNotEnoughs)
+                {
+                    vfx.Play();
+                }
+                return;
+            }
+            
+            if (imgEnoughResource.gameObject.activeSelf)
+            {
+                foreach (var vfx in vfxClaimEnoughs)
+                {
+                    vfx.Play();
+                }
+                return;
+            }
         }
 
         // (vestige, echoes, sigils)

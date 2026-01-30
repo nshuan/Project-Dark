@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,12 +26,16 @@ namespace InGame.GateEditorV2
         public Button btnDeleteWave;
         public UIPopupWarning popupConfirm;
         public Button btnPlayLevel;
+        public TMP_Dropdown drdMapType;
+        public Button btnEditTower;
+        public LevelTowerPositionEditorV2 towerPositionEditor;
 
         [Space] [Header("Display")] 
         public TextMeshProUGUI txtLevel;
         
         private LevelManifest levelManifest;
         private LevelConfig currentLevel;
+        private LevelMapType currentMapType;
         
         protected override void Awake()
         {
@@ -45,6 +50,22 @@ namespace InGame.GateEditorV2
             btnDeleteWave.onClick.AddListener(DeleteSelectingWave);
             btnPlayLevel.onClick.RemoveAllListeners();
             btnPlayLevel.onClick.AddListener(PlaySelectingLevel);
+            drdMapType.onValueChanged.RemoveAllListeners();
+            var options = new List<LevelMapType>();
+            foreach (LevelMapType mapType in Enum.GetValues(typeof(LevelMapType)))
+            {
+                options.Add(mapType);
+            }
+            drdMapType.options = options.Select(mt => 
+                new TMP_Dropdown.OptionData(mt.ToString())).ToList();
+            drdMapType.onValueChanged.AddListener(ChangeMapType);
+            btnEditTower.onClick.RemoveAllListeners();
+            btnEditTower.onClick.AddListener(() =>
+            {
+                if (!currentLevel) return;
+                towerPositionEditor.Setup(LevelTowerEditorV2.Instance.GetTowers(currentMapType));
+                towerPositionEditor.gameObject.SetActive(true);
+            });
         }
         
         public void LoadLevel(int levelId)
@@ -52,7 +73,10 @@ namespace InGame.GateEditorV2
             if (!levelManifest) return;
             currentLevel = levelManifest.GetTrueLevel(levelId);
             if (!currentLevel) return;
-            
+
+            currentMapType = currentLevel.mapType;
+            drdMapType.value = (int)currentLevel.mapType;
+            LevelTowerEditorV2.Instance.SetPosition(currentMapType, currentLevel.towerPositions);
             // Destroy all old wave buttons
             ClearAllWaves();
             
@@ -77,9 +101,16 @@ namespace InGame.GateEditorV2
             {
                 Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame, () =>
                 {
-                    LevelManager.Instance.LoadLevel(currentLevel);
+                    LevelManager.Instance.LoadLevel(currentLevel.level);
                 });
             });
+        }
+
+        public void ChangeMapType(int index)
+        {
+            currentMapType = (LevelMapType)index;
+            LevelBackgroundVariantEditorV2.Instance.SetMapType((LevelMapType)index);
+            LevelTowerEditorV2.Instance.SetPosition(currentMapType, null);
         }
         
         #region Waves
@@ -262,7 +293,9 @@ namespace InGame.GateEditorV2
                     wave.SaveWave();
                 }
             }
-            
+
+            currentLevel.mapType = currentMapType;
+            currentLevel.towerPositions = LevelTowerEditorV2.Instance.GetPositions(currentMapType);
                         
 #if UNITY_EDITOR
             EditorUtility.SetDirty(currentLevel);

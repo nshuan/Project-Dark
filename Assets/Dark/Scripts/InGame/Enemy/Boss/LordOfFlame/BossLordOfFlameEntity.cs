@@ -135,8 +135,13 @@ namespace InGame.Boss
             yield return new WaitUntil(() => isAttacking == false);
             yield return new WaitForSeconds(delay);
             yield return new WaitForSeconds(0.5f);
+            var lastHealth = CurrentHealth;
             CurrentHealth += (int)(MaxHealth * configCasted.lordOfFlameConfig.percentageHealed);
             var animDuration = animController.PlayCustomAnim(recoverAnim);
+            DOTween.To(() => lastHealth, hp =>
+            {
+                healthBar.UpdateHp(hp);
+            }, CurrentHealth, animDuration - 1f).SetDelay(1f);
             yield return new WaitForSeconds(animDuration);
             yield return StartCoroutine(IEChangeTower(0f));
             animController.PlayRun();
@@ -152,6 +157,7 @@ namespace InGame.Boss
             var teleDuration = animController.PlayCustomAnim(disappearAnim);
             DOTween.Kill(shadowSprite);
             shadowSprite?.DOFade(0f, teleDuration).SetEase(Ease.InQuad).SetTarget(shadowSprite);
+            BurnVfxParent.gameObject.SetActive(false);
             yield return new WaitForSeconds(teleDuration);
             
             yield return new WaitForEndOfFrame();
@@ -169,13 +175,17 @@ namespace InGame.Boss
             attackPosition = transform.position;
             animController.transform.localScale =
                 new Vector3(Mathf.Sign(Target.position.x - transform.position.x), 1f, 1f);
+            healthBar.transform.localScale = new Vector3(animController.transform.localScale.x,
+                healthBar.transform.localScale.y, healthBar.transform.localScale.z);
             
             // appear
+            if (shadowSprite)
+                yield return shadowSprite.DOFade(shadowOriginalAlpha, 0.5f).SetEase(Ease.InQuad).SetTarget(shadowSprite).WaitForCompletion();
             teleDuration = animController.PlayCustomAnim(appearAnim);
             DOTween.Kill(shadowSprite);
-            shadowSprite?.DOFade(shadowOriginalAlpha, 0.5f).SetEase(Ease.InQuad).SetTarget(shadowSprite);
             yield return new WaitForSeconds(teleDuration);
             yield return new WaitForEndOfFrame();
+            BurnVfxParent.gameObject.SetActive(true);
             yield return new WaitForSeconds(0.5f);
         }
         

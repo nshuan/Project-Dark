@@ -18,6 +18,7 @@ namespace Dark.Scripts.OutGame.Home
         [SerializeField] private Transform rectBackground;
         [SerializeField] private Transform[] listButtonInAppearOrder;
         [SerializeField] private TextMeshProUGUI txtInstruction;
+        [SerializeField] private CanvasGroup groupStudioLogos;
 
         [Space] [Header("Config")] 
         [SerializeField] private Vector2 bgHidePosition;
@@ -86,6 +87,7 @@ namespace Dark.Scripts.OutGame.Home
 
             txtInstruction.SetAlpha(0f);
             txtInstruction.DOFade(1f, 3f).SetTarget(txtInstruction).SetDelay(2f).SetLoops(-1, LoopType.Yoyo);
+            groupStudioLogos.alpha = 0f;
         }
         
         public void OnPointerClick(PointerEventData eventData)
@@ -125,6 +127,8 @@ namespace Dark.Scripts.OutGame.Home
                     })
                     .AppendInterval(delayEachButton);
             }
+
+            seq.Append(groupStudioLogos.DOFade(1f, durationEachButton));
             
             return seq;
         }
@@ -133,6 +137,8 @@ namespace Dark.Scripts.OutGame.Home
         {
             DOTween.Kill(this);
             var seq = DOTween.Sequence(this);
+
+            seq.Append(groupStudioLogos.DOFade(0f, durationEachButton));
             
             for (var i = listButtonCanvasGroup.Count - 1; i >= 0 ; i--)
             {

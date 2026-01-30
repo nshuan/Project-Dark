@@ -13,10 +13,32 @@ namespace Dark.Tools.Language.Runtime
 {
     public class LanguageData : SerializedScriptableObject
     {
-        public static string Path = "Assets/Dark/Tools/Language/Runtime/LanguageData.asset";
+        public static string Path = "Assets/Dark/Tools/Language/Runtime/Resources/LanguageData.asset";
             
         [NonSerialized, OdinSerialize] public Dictionary<string, LanguageItem> dataMap;
         [NonSerialized, OdinSerialize] public Dictionary<LanguageType, TMP_FontAsset> fontMap;
+
+        public string GetLocalizedString(string key)
+        {
+            if (dataMap == null || !dataMap.TryGetValue(key, out var data)) return string.Empty;
+            if (data.languageMap.TryGetValue(LanguageManager.Instance.CurrentLanguage, out var term)) return term;
+            return data.languageMap[LanguageType.english];
+        }
+        
+        #region Singleton
+
+        private static LanguageData instance;
+
+        public static LanguageData Instance
+        {
+            get
+            {
+                if (!instance) instance = Resources.Load<LanguageData>("LanguageData");
+                return instance;
+            }
+        }
+
+        #endregion
         
 #if UNITY_EDITOR
         public static LanguageItem GetLanguageItem(string key)

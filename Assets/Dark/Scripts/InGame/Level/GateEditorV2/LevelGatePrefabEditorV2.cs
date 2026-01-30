@@ -18,7 +18,7 @@ namespace InGame.GateEditorV2
         public Action<LevelGatePrefabEditorV2> OnClick { get; set; }
         public Action<Vector2> OnDragging { get; set; }
         public GateConfig Config { get; set; }
-        public Vector2[] TargetPositions { get; set; }
+        public Transform[] TargetPositions { get; set; }
         
         // public bool IsBossGate { get; set; }
         public Vector2 Position { get; set; }
@@ -48,15 +48,25 @@ namespace InGame.GateEditorV2
             if (lines == null) InitLines();
             for (var i = 0; i < TargetPositions.Length; i++)
             {
+                var towerPosition = (Vector2)camera.WorldToScreenPoint(TargetPositions[i].position);
                 var line = lines[i];
-                var direction = TargetPositions[i] - (Vector2)transform.position;
+                if (!TargetPositions[i].gameObject.activeInHierarchy)
+                {
+                    line.gameObject.SetActive(false);
+                    continue;
+                }
+                else
+                {
+                    line.gameObject.SetActive(true);
+                }
+                var direction = towerPosition - (Vector2)transform.position;
                 line.sizeDelta = new Vector2(5f, direction.magnitude);
                 line.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f);
 
                 var txtLine = txtLines[i];
-                txtLine.transform.position = (TargetPositions[i] + (Vector2)transform.position) / 2;
+                txtLine.transform.position = (towerPosition + (Vector2)transform.position) / 2;
                 txtLine.transform.rotation = Quaternion.identity;
-                txtLine.SetText($"{((Vector2)camera.ScreenToWorldPoint(TargetPositions[i]) - Position).magnitude.ToString(GameConst.FloatFormat)}");
+                txtLine.SetText($"{((Vector2)TargetPositions[i].position - Position).magnitude.ToString(GameConst.FloatFormat)}");
             }
         }
 
@@ -93,7 +103,7 @@ namespace InGame.GateEditorV2
                         SpawnPositions.Add(Guid.NewGuid(), new GateSpawnPositionInfo()
                         {
                             spawnPosition = position.spawnPosition,
-                            attackPositions = position.attackPositions.ToArray()
+                            attackPositions = position.attackPositions?.ToArray()
                         });
                     }
 
@@ -156,17 +166,18 @@ namespace InGame.GateEditorV2
             txtLines = new List<TextMeshProUGUI>();
             for (var i = 0; i < TargetPositions.Length; i++)
             {
+                var towerPosition = (Vector2)camera.WorldToScreenPoint(TargetPositions[i].position);
                 var line = Instantiate(linePrefab, transform);
-                var direction = TargetPositions[i] - (Vector2)transform.position;
+                var direction = towerPosition - (Vector2)transform.position;
                 line.localPosition = Vector3.zero;
                 line.sizeDelta = new Vector2(5f, direction.magnitude);
                 line.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f);
                 lines.Add(line);
                 
                 var txtLine = Instantiate(txtLineDistancePrefab, line.transform);
-                txtLine.transform.position = (TargetPositions[i] + (Vector2)transform.position) / 2;
+                txtLine.transform.position = (towerPosition + (Vector2)transform.position) / 2;
                 txtLine.transform.rotation = Quaternion.identity;
-                txtLine.SetText($"{((Vector2)camera.ScreenToWorldPoint(TargetPositions[i]) - Position).magnitude.ToString(GameConst.FloatFormat)}");
+                txtLine.SetText($"{((Vector2)camera.ScreenToWorldPoint(towerPosition) - Position).magnitude.ToString(GameConst.FloatFormat)}");
                 txtLines.Add(txtLine);
             }
         }

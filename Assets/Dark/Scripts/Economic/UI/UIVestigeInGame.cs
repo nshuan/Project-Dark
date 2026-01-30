@@ -1,3 +1,4 @@
+using Coffee.UIExtensions;
 using TMPro;
 
 namespace Economic.UI
@@ -5,6 +6,7 @@ namespace Economic.UI
     public class UIVestigeInGame : UIEconomic
     {
         public TextMeshProUGUI txtVestige;
+        public UIParticle fxClaim;
         
         private void Start()
         {
@@ -24,6 +26,7 @@ namespace Economic.UI
         {
             if (before == after) return;
             AnimateUpdating(target + after - before);
+            fxClaim.Play();
         }
         
         public override void UpdateUI()

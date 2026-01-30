@@ -45,7 +45,7 @@ namespace InGame
 
         public override void Attack(Action<ProjectileEntity, Vector2, float> actionSetupProjectile)
         {
-            const float damageReducePercentageOnBoss = 0.5f;
+            const float damageReducePercentageOnBoss = 0.4f;
             
             var totalTargetBoss = 0;
             for (var i = 0; i < projectiles.Count; i++)

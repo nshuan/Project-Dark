@@ -27,6 +27,8 @@ namespace InGame
         public static Action<int> OnDamageDealt { get; set; }
         public static Action<int> OnDamageReceived { get; set; }
         public static Action<MonoCursor> OnInitInGameCursor { get; set; }
+        public static Action OnChargeStarted { get; set; }
+        public static Action OnChargeEnded { get; set; }
 
         public static void Clear()
         {
@@ -49,6 +51,8 @@ namespace InGame
             OnDamageDealt = null;
             OnDamageReceived = null;
             OnInitInGameCursor = null;
+            OnChargeStarted = null;
+            OnChargeEnded = null;
         }
     }
 }
