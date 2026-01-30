@@ -1,3 +1,5 @@
+using System.Globalization;
+
 public class GameConst
 {
     #region Log
@@ -24,4 +26,5 @@ public class GameConst
 
     public const string FloatFormat = "0.##";
     public const string FloatFormat1 = "0.#";
+    public static CultureInfo FloatCulture = CultureInfo.InvariantCulture; 
 }

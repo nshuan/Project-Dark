@@ -11,6 +11,7 @@ namespace InGame.UI.Waves
         [Range(0f, 1f)] public float nodePosition;
         public float padding;
 
+#if UNITY_EDITOR
         [Button]
         protected override void OnValidate()
         {
@@ -21,5 +22,6 @@ namespace InGame.UI.Waves
             Vertex1 = startColor + (endColor - startColor) * nodeStart;
             Vertex2 = startColor + (endColor - startColor) * nodeEnd;
         }
+#endif
     }
 }

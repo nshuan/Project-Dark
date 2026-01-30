@@ -360,7 +360,7 @@ namespace Dark.Scripts.AudioV2
             while (elapsed < fadeDuration)
             {
                 var t = elapsed / fadeDuration;
-                active.volume = Mathf.Lerp(startVolume, fadeTo, t);
+                active.volume = Mathf.Lerp(startVolume, fadeTo, t) * GetChannelVolume(AudioChannel.Music);
                 elapsed += Time.unscaledDeltaTime;
                 yield return null;
             }

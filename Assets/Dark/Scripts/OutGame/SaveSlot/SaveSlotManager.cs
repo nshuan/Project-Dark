@@ -12,14 +12,14 @@ namespace Dark.Scripts.OutGame.SaveSlot
     {
         #region Data
 
-        private const string TotalDataCreatedKey = "totalDataSlotsCreated";
+        private const string TotalDataCreatedKey = "demo_totalDataSlotsCreated";
         
         public static string[] SlotDataKeys = new[]
         {
-            "playerDataSlot0",
-            "playerDataSlot1",
-            "playerDataSlot2",
-            "playerDataSlot3",
+            "demo_playerDataSlot0",
+            "demo_playerDataSlot1",
+            "demo_playerDataSlot2",
+            "demo_playerDataSlot3",
         };
 
         public int CurrentSlotIndex = 0;

@@ -41,6 +41,8 @@ namespace InGame
         private void Start()
         {
             CombatActions.OnMoveTowerComplete += OnMoveTower;
+            LevelManager.Instance.OnWin += () => vfxCooldownComplete.gameObject.SetActive(false);
+            LevelManager.Instance.OnLose += () => vfxCooldownComplete.gameObject.SetActive(false);
         }
 
         private void OnDestroy()

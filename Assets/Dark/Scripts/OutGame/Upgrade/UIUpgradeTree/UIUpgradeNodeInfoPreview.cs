@@ -122,13 +122,15 @@ namespace Dark.Scripts.OutGame.Upgrade
             var descriptions = cacheConfig.description.Split("\n");
             if (cacheConfig.nodeLogic != null)
             {
+                var groupUnlockOrder = cacheConfig.groupId.Min((info) =>
+                    UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, false));
                 for (var i = 0; i < cacheConfig.nodeLogic.Length; i++)
                 {
                     if (i < descriptions.Length)
                     {
                         if (cacheConfig.nodeLogic[i] is INodeDynamicBonusValueV2 { IsDynamic: true } dynamicLogic)
                         {
-                            dynamicLogic.OverrideBonusValue(cacheConfig.groupId.Min((info) => UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, false)));
+                            dynamicLogic.OverrideBonusValue(groupUnlockOrder);
                         }
                         descriptions[i] = descriptions[i].Replace("[X]",
                             cacheConfig.nodeLogic[i].GetDisplayValue(cacheData?.level ?? 0));
