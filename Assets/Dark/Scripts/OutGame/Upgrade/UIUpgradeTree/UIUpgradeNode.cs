@@ -36,7 +36,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] protected UIUpgradeNodeHoverField hoverField;
         [SerializeField] protected UIUpgradeNodeSpawnAnimation spawnAnimation;
 
-        [SerializeField] protected CanvasGroup groupNode;
+        [SerializeField] public CanvasGroup groupNode;
         [SerializeField] protected Image nodeVisual;
         [SerializeField] protected Image nodeLockVisual;
         
@@ -57,6 +57,8 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         protected UIUpgradeNodeState currentState = UIUpgradeNodeState.Locked;
         public UIUpgradeNodeState CurrentState => currentState;
+        public float NodeAlphaOnHidden { get; set; } = 1f;
+        public bool flagHideOnSpawn = false;
 
         protected Vector3 defaultScale;
 
@@ -130,7 +132,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     imgActivatedGlow.SetActive(false);
                     imgActivatedMaxGlow.SetActive(false);
                     rectActivatedMaxOutline.gameObject.SetActive(false);
-                    groupNode.alpha = 1f;
+                    groupNode.alpha = GetNodeAlpha();
 
                     if (preRequires != null)
                     {
@@ -152,7 +154,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     imgActivatedGlow.SetActive(false);
                     imgActivatedMaxGlow.SetActive(false);
                     rectActivatedMaxOutline.gameObject.SetActive(false);
-                    groupNode.alpha = GameConst.HideLockedNode ? 0f : 1f;
+                    groupNode.alpha = GetNodeAlpha();
                     
                     foreach (var lineInfo in preRequires)
                     {
@@ -174,7 +176,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     imgActivatedGlow.SetActive(false);
                     imgActivatedMaxGlow.SetActive(false);
                     rectActivatedMaxOutline.gameObject.SetActive(false);
-                    groupNode.alpha = GameConst.HideLockedNode ? 0f : 1f;
+                    groupNode.alpha = GetNodeAlpha();
                     
                     foreach (var lineInfo in preRequires)
                     {
@@ -212,7 +214,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                         // imgBorder.gameObject.SetActive(true);
                     }
 
-                    groupNode.alpha = 1f;
+                    groupNode.alpha = GetNodeAlpha();
                     
                     foreach (var lineInfo in preRequires)
                     {
@@ -412,9 +414,15 @@ namespace Dark.Scripts.OutGame.Upgrade
                 .AppendCallback(() => ReleaseVfxActivate(vfxActivate));
         }
         
-        public Tween DoSpawn()
+        public virtual Tween DoSpawn()
         {
-            return spawnAnimation.SpawnLogic.DoSpawn();
+            groupNode.alpha = 0f;
+            return DOTween.Sequence()
+                .AppendCallback(() =>
+                {
+                    if (flagHideOnSpawn) return;
+                    spawnAnimation.SpawnLogic.DoSpawn();
+                });
         }
 
         #region Visual
@@ -459,6 +467,17 @@ namespace Dark.Scripts.OutGame.Upgrade
                     img.SetActive(true);
                 }
             }
+        }
+
+        protected float GetNodeAlpha()
+        {
+            if (preRequires == null || preRequires.Count == 0 || preRequires.Any((preRequire) => preRequire.node.CurrentState == UIUpgradeNodeState.Activated))
+            {
+                return 1f;
+            }
+            
+            if (GameConst.HideLockedNode) return 0f;
+            return NodeAlphaOnHidden;
         }
 
         #endregion
@@ -571,7 +590,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             {
                 if (GameConst.HideLockedNode) return;
 
-                groupNode.alpha = 1f;
+                groupNode.alpha = GetNodeAlpha();
                 imgHighlight.gameObject.SetActive(true);
             }
             else
@@ -586,7 +605,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             imgHighlight.gameObject.SetActive(false);
             if (GameConst.HideLockedNode) return;
 
-            groupNode.alpha = 1f;
+            groupNode.alpha = GetNodeAlpha();
         }
 
         #endregion

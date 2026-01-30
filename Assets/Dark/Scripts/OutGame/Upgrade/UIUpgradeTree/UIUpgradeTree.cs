@@ -19,7 +19,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private Transform linePrefab;
 
         [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, List<UIUpgradeNode>> nodesMap; // Luu cac node co cung id
-        [ReadOnly, OdinSerialize, NonSerialized] private Dictionary<int, List<UIUpgradeNode>> nodeChildrenMap;
+        [ReadOnly, OdinSerialize, NonSerialized] public Dictionary<int, List<UIUpgradeNode>> nodeChildrenMap;
         [ReadOnly, OdinSerialize, NonSerialized] public Dictionary<int, List<UIUpgradeNode>> nodesMapByLayer;
 
         public Dictionary<int, List<UIUpgradeNode>> NodesMap => nodesMap;
