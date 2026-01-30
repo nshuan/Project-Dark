@@ -62,5 +62,10 @@ namespace Dark.Scripts.OutGame.Upgrade
         {
             return DOTween.Sequence();
         }
+
+        public override Tween DoSpawn()
+        {
+            return spawnAnimation.SpawnLogic.DoSpawn();
+        }
     }
 }

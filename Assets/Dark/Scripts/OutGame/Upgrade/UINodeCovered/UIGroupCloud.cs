@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using UnityEngine;
@@ -9,6 +10,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UINodeCovered
     public class UIGroupCloud : MonoBehaviour
     {
         public int[] nodeIds;
+        public int hideLayer = -1; // -1 là ẩn hết layer dưới
+        public UIUpgradeNode hideNodeFrom;
         
         private UIUpgradeTree upgradeTree;
         private Image[] allClouds;
@@ -51,10 +54,10 @@ namespace Dark.Scripts.OutGame.Upgrade.UINodeCovered
             }
         }
 
-        private void OnNodeUpgraded(UIUpgradeNode node)
+        private void OnNodeUpgraded(UIUpgradeNode upgradedNode)
         {
             if (nodeIds == null) return;
-            if (!nodeIds.Contains(node.config.nodeId)) return;
+            if (!nodeIds.Contains(upgradedNode.config.nodeId)) return;
             if (allClouds == null) return;
             if (!cvgCloud) return;
 
@@ -63,6 +66,37 @@ namespace Dark.Scripts.OutGame.Upgrade.UINodeCovered
             foreach (var cloud in allCloudFloat)
             {
                 cloud.TriggerSpeedScale(10f);
+            }
+            
+            // Show nodes
+            if (!hideNodeFrom) return;
+
+            ShowNode(hideNodeFrom);
+                        
+            var queueCheck = new Queue<UIUpgradeNode>();
+            if (upgradeTree.nodeChildrenMap.TryGetValue(hideNodeFrom.config.nodeId, out var childrenLayer1))
+            {
+                foreach (var child in childrenLayer1)
+                {
+                    ShowNode(child);
+                    if (!queueCheck.Contains(child)) queueCheck.Enqueue(child);
+                }
+            }
+
+            if (hideLayer == -1)
+            {
+                while (queueCheck.Count > 0)
+                {
+                    var node = queueCheck.Dequeue();
+                    if (upgradeTree.nodeChildrenMap.TryGetValue(node.config.nodeId, out var children))
+                    {
+                        foreach (var child in children)
+                        {
+                            ShowNode(child);
+                            if (!queueCheck.Contains(child)) queueCheck.Enqueue(child);
+                        }
+                    }
+                }
             }
         }
 
@@ -77,13 +111,79 @@ namespace Dark.Scripts.OutGame.Upgrade.UINodeCovered
                     cvgCloud = gameObject.AddComponent<CanvasGroup>();
             }
 
+            var shouldShow = true;
             foreach (var id in nodeIds)
             {
-                if (upgradeTree.NodesMap.TryGetValue(id, out var nodes) &&
-                    nodes.Any((node) => node.CurrentState == UIUpgradeNodeState.Activated))
+                if (upgradeTree.NodesMap.TryGetValue(id, out var nodes))
                 {
-                    cvgCloud.alpha = 0f;
-                    break;
+                    if (nodes.Any((node) => node.CurrentState == UIUpgradeNodeState.Activated))
+                    {
+                        cvgCloud.alpha = 0f;
+                        shouldShow = false;
+                        break;
+                    }
+                }
+            }
+            
+            if (!shouldShow) return;
+            upgradeTree.OnNodeUpgraded += OnNodeUpgraded;
+            
+            // Hide nodes
+            if (!hideNodeFrom) return;
+
+            HideNode(hideNodeFrom);
+                        
+            var queueCheck = new Queue<UIUpgradeNode>();
+            if (upgradeTree.nodeChildrenMap.TryGetValue(hideNodeFrom.config.nodeId, out var childrenLayer1))
+            {
+                foreach (var child in childrenLayer1)
+                {
+                    HideNode(child);
+                    if (!queueCheck.Contains(child)) queueCheck.Enqueue(child);
+                }
+            }
+
+            if (hideLayer == -1)
+            {
+                while (queueCheck.Count > 0)
+                {
+                    var node = queueCheck.Dequeue();
+                    if (upgradeTree.nodeChildrenMap.TryGetValue(node.config.nodeId, out var children))
+                    {
+                        foreach (var child in children)
+                        {
+                            HideNode(child);
+                            if (!queueCheck.Contains(child)) queueCheck.Enqueue(child);
+                        }
+                    }
+                }
+            }
+        }
+        
+        void HideNode(UIUpgradeNode node)
+        {
+            node.groupNode.alpha = 0f;
+            node.flagHideOnSpawn = true;
+
+            if (node.preRequires != null)
+            {
+                foreach (var pre in node.preRequires)
+                {
+                    pre.line.groupLine.alpha = 0f;
+                    pre.line.flagHideOnSpawn = true;
+                }
+            }
+        }
+
+        void ShowNode(UIUpgradeNode node)
+        {
+            node.groupNode.alpha = 1f;
+
+            if (node.preRequires != null)
+            {
+                foreach (var pre in node.preRequires)
+                {
+                    pre.line.groupLine.alpha = 1f;
                 }
             }
         }
