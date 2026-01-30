@@ -21,10 +21,8 @@ namespace Dark.Scripts.OutGame.Upgrade
             currentState = UIUpgradeNodeState.Activated;
             
             txtNodeLevel.transform.parent.gameObject.SetActive(false);
-            imgAvailable.SetActive(true);
-            imgLock.gameObject.SetActive(false);
+            SetAvailable();
             imgActivatedGlow.SetActive(false);
-            imgBorder.gameObject.SetActive(true);
             imgActivatedMaxGlow.gameObject.SetActive(false);
             rectActivatedMaxOutline.gameObject.SetActive(false);
 

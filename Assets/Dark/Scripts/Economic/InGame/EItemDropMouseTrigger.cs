@@ -28,7 +28,13 @@ namespace Economic.InGame
         private void OnTriggerExit2D(Collider2D col)
         {
             if (!owner) return;
-            // owner.TryUnregisterItem(col);
+            owner.TryUnregisterItem(col);
+        }
+
+        private void OnTriggerStay2D(Collider2D other)
+        {
+            if (!owner || owner.IsChargeBlockCollect) return;
+            owner.TryRegisterItem(other);
         }
     }
 }

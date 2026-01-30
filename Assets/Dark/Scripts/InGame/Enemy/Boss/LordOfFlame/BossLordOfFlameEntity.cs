@@ -157,6 +157,7 @@ namespace InGame.Boss
             var teleDuration = animController.PlayCustomAnim(disappearAnim);
             DOTween.Kill(shadowSprite);
             shadowSprite?.DOFade(0f, teleDuration).SetEase(Ease.InQuad).SetTarget(shadowSprite);
+            BurnVfxParent.gameObject.SetActive(false);
             yield return new WaitForSeconds(teleDuration);
             
             yield return new WaitForEndOfFrame();
@@ -184,6 +185,7 @@ namespace InGame.Boss
             DOTween.Kill(shadowSprite);
             yield return new WaitForSeconds(teleDuration);
             yield return new WaitForEndOfFrame();
+            BurnVfxParent.gameObject.SetActive(true);
             yield return new WaitForSeconds(0.5f);
         }
         
