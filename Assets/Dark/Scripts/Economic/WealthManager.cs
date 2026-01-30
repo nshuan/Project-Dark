@@ -127,16 +127,28 @@ namespace Economic
             levelPoint = data.levelPoint;
             vestige = data.dark;
             bossPoint = data.bossPoint;
+            hasShowInstructionVestige = data.hasShowInstructionVestige;
+            hasShowInstructionEchoes = data.hasShowInstructionEchoes;
+            hasShowInstructionSigils = data.hasShowInstructionSigils;
         }
 
         public void Save()
         {
             var data = PlayerDataManager.Instance.Data;
+            var changedDark = vestige - data.dark;
+            var changedBossPoint = bossPoint - data.bossPoint;
+            var changedLevelPoint = levelPoint - data.levelPoint;
             data.grade = grade;
             data.exp = exp;
             data.levelPoint = levelPoint;
             data.dark = vestige;
             data.bossPoint = bossPoint;
+            data.totalDarkClaimed += Math.Max(changedDark, 0);
+            data.totalBossPointClaimed += Math.Max(changedBossPoint, 0);
+            data.totalLevelPointClaimed += Math.Max(changedLevelPoint, 0);
+            data.hasShowInstructionVestige = hasShowInstructionVestige;
+            data.hasShowInstructionEchoes = hasShowInstructionEchoes;
+            data.hasShowInstructionSigils = hasShowInstructionSigils;
             
             PlayerDataManager.Instance.Save(data);
         }
@@ -171,6 +183,32 @@ namespace Economic
                     break;
             }    
         }
+        
+        #region Resource Instruction
+
+        public bool hasShowInstructionVestige;
+        public bool hasShowInstructionEchoes;
+        public bool hasShowInstructionSigils;
+        
+        public void SetShownInstruction(WealthType type)
+        {
+            switch (type)
+            {
+                case WealthType.Vestige:
+                    hasShowInstructionVestige = true;
+                    break;
+                case WealthType.Echoes:
+                    hasShowInstructionEchoes = true;
+                    break;
+                case WealthType.Sigils:
+                    hasShowInstructionSigils = true;
+                    break;
+            }
+            
+            Save();
+        }
+
+        #endregion
     }
 
     public enum WealthType

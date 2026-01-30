@@ -65,6 +65,28 @@ namespace Dark.Tools.QuickSceneLoadEditor.Editor
                 }
             }
             
+            if (GUILayout.Button("[GD] Level", GUILayout.Width(80)))
+            {
+                if (!EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                    {
+                        EditorSceneManager.OpenScene($"Assets/Dark/Scenes/LevelDesign.unity"); 
+                    }
+                }
+            }
+            
+            if (GUILayout.Button("[GD] Tree", GUILayout.Width(80)))
+            {
+                if (!EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                    {
+                        EditorSceneManager.OpenScene($"Assets/Dark/Scenes/UpgradeCreator.unity"); 
+                    }
+                }
+            }
+            
             GUILayout.EndHorizontal();
         }
     }

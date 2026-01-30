@@ -3,16 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Coffee.UIExtensions;
 using Dark.Scripts.Analytics;
-using Dark.Scripts.Audio;
 using Dark.Scripts.AudioV2;
-using Dark.Scripts.Utils;
 using DG.Tweening;
-using InGame;
+using Economic;
 using InGame.Upgrade;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Dark.Scripts.OutGame.Upgrade
@@ -35,19 +32,21 @@ namespace Dark.Scripts.OutGame.Upgrade
         [Space]
         [Header("UI")]
         public UpgradeNodeType nodeType;
+        [SerializeField] public RectTransform nodeContent;
         [SerializeField] protected UIUpgradeNodeHoverField hoverField;
         [SerializeField] protected UIUpgradeNodeSpawnAnimation spawnAnimation;
 
         [SerializeField] protected CanvasGroup groupNode;
         [SerializeField] protected Image nodeVisual;
         [SerializeField] protected Image nodeLockVisual;
-
-        [SerializeField] protected Transform imgBorder;
+        
         [SerializeField] protected GameObject imgActivatedGlow;
         [SerializeField] protected GameObject imgActivatedMaxGlow;
         [SerializeField] protected Transform rectActivatedMaxOutline;
         [SerializeField] protected GameObject imgAvailable;
         [SerializeField] protected Image imgLock;
+        [SerializeField] protected GameObject[] imgAvailableDecor;
+        [SerializeField] protected GameObject[] imgLockedDecor;
         [SerializeField] protected Image imgIconLock;
         [SerializeField] protected AudioPlayComponentV2 sfxUnlockSuccess;
         [SerializeField] protected AudioPlayComponentV2 sfxUnlockFailure;
@@ -63,7 +62,7 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         protected virtual void Awake()
         {
-            defaultScale = transform.localScale;
+            defaultScale = nodeContent.localScale;
             defaultScale.z = 1f;
         }
 
@@ -102,6 +101,16 @@ namespace Dark.Scripts.OutGame.Upgrade
         
         public virtual void UpdateUI()
         {
+            var groupUnlockOrder =
+                config.groupId.Min((info) => UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, false));
+            foreach (var logicV2 in config.nodeLogic)
+            {
+                if (logicV2 is INodeDynamicBonusValueV2 { IsDynamic: true } dynamicLogic)
+                {
+                    dynamicLogic.OverrideBonusValue(groupUnlockOrder);
+                }
+            }
+            
             var data = UpgradeManager.Instance.GetData(config.nodeId);
             if (data == null || data.level == 0) // Not activated yet
             {
@@ -117,12 +126,10 @@ namespace Dark.Scripts.OutGame.Upgrade
                         txtNodeLevel.SetText($"0/{config.MaxLevel}");
                         txtNodeLevel.transform.parent.gameObject.SetActive(true);
                     }
-                    imgAvailable.SetActive(true);
-                    imgLock.gameObject.SetActive(false);
+                    SetAvailable();
                     imgActivatedGlow.SetActive(false);
                     imgActivatedMaxGlow.SetActive(false);
                     rectActivatedMaxOutline.gameObject.SetActive(false);
-                    imgBorder.gameObject.SetActive(true);
                     groupNode.alpha = 1f;
 
                     if (preRequires != null)
@@ -141,12 +148,10 @@ namespace Dark.Scripts.OutGame.Upgrade
                     // Locked
                     currentState = UIUpgradeNodeState.Locked;
                     txtNodeLevel.transform.parent.gameObject.SetActive(false);
-                    imgAvailable.SetActive(false);
-                    imgLock.gameObject.SetActive(true);
+                    SetLocked();
                     imgActivatedGlow.SetActive(false);
                     imgActivatedMaxGlow.SetActive(false);
                     rectActivatedMaxOutline.gameObject.SetActive(false);
-                    imgBorder.gameObject.SetActive(true);
                     groupNode.alpha = GameConst.HideLockedNode ? 0f : 1f;
                     
                     foreach (var lineInfo in preRequires)
@@ -165,12 +170,10 @@ namespace Dark.Scripts.OutGame.Upgrade
                 {
                     currentState = UIUpgradeNodeState.Locked;
                     txtNodeLevel.transform.parent.gameObject.SetActive(false);
-                    imgAvailable.SetActive(false);
-                    imgLock.gameObject.SetActive(true);
+                    SetLocked();
                     imgActivatedGlow.SetActive(false);
                     imgActivatedMaxGlow.SetActive(false);
                     rectActivatedMaxOutline.gameObject.SetActive(false);
-                    imgBorder.gameObject.SetActive(true);
                     groupNode.alpha = GameConst.HideLockedNode ? 0f : 1f;
                     
                     foreach (var lineInfo in preRequires)
@@ -194,8 +197,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                         txtNodeMaxLevel.gameObject.SetActive(data.level == config.MaxLevel);
                         txtNodeLevel.transform.parent.gameObject.SetActive(true);
                     }
-                    imgAvailable.SetActive(true);
-                    imgLock.gameObject.SetActive(false);
+                    SetAvailable();
                     imgActivatedGlow.SetActive(data.level < config.MaxLevel);
                     if (data.level >= config.MaxLevel)
                     {
@@ -226,12 +228,30 @@ namespace Dark.Scripts.OutGame.Upgrade
             {
                 if (GameConst.HideLockedNode && CurrentState == UIUpgradeNodeState.Locked)
                     return;
+                if (GameConst.HideLockedAreaByCloud && config.groupId.All((id) =>
+                    {
+                        if (id.isLockNode) return false;
+                        
+                        if (UpgradeManager.Instance.TreeConfig &&
+                            UpgradeManager.Instance.TreeConfig.nodeGroupsMapById.TryGetValue(id.groupId,
+                                out var nodeGroup))
+                        {
+                            if (UpgradeManager.Instance.GetData(nodeGroup.lockNode.nodeId) is { level: > 0 })
+                                return false;
+                        }
+                        
+                        return true;
+                    }))
+                {
+                    return;
+                }
+                
                 DOTween.Kill(transform);
                 sfxHover.Play();
-                transform.localRotation = Quaternion.identity;
-                transform.localScale = defaultScale;
-                transform.DOPunchRotation(new Vector3(0f, 0f, 10f), 0.3f, 20, 0.1f).SetTarget(transform);
-                transform.DOScale(new Vector3(0.2f, 0.2f, 0), 0.2f).SetRelative().SetEase(Ease.OutQuad);
+                nodeContent.localRotation = Quaternion.identity;
+                nodeContent.localScale = defaultScale;
+                nodeContent.DOPunchRotation(new Vector3(0f, 0f, 10f), 0.3f, 20, 0.1f).SetTarget(transform);
+                nodeContent.DOScale(new Vector3(0.2f, 0.2f, 0), 0.2f).SetRelative().SetEase(Ease.OutQuad);
                 UIUpgradeNodeInfoPreview.Instance.Setup(this, config, false);
                 UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), false, () => hoverField.interactable = true);
             };
@@ -240,50 +260,81 @@ namespace Dark.Scripts.OutGame.Upgrade
                 if (GameConst.HideLockedNode && CurrentState == UIUpgradeNodeState.Locked)
                     return;
                 hoverField.interactable = false;
-                transform.DOScale(defaultScale, 0.2f).SetEase(Ease.InQuad);
+                nodeContent.DOScale(defaultScale, 0.2f).SetEase(Ease.InQuad);
                 UIUpgradeNodeInfoPreview.Instance.Hide(false);
             };
-            hoverField.onPointerClick = () =>
-            {
-                if (GameConst.HideLockedNode && CurrentState == UIUpgradeNodeState.Locked)
-                    return;
-                // treeRef.SelectNode(this);
-                if (preRequires != null && preRequires.Select((node) => node.preRequireId)
-                        .All((id) =>
-                            UpgradeManager.Instance.GetData(id) == null ||
-                            UpgradeManager.Instance.GetData(id).level == 0))
-                {
-                    UIUpgradeNodeInfoPreview.Instance.Shake();
-                    sfxUnlockFailure?.Play();
-                    return;
-                }
+            hoverField.onPointerClick = GetActionNodeClick;
+        }
 
+        protected virtual void GetActionNodeClick()
+        {
+            if (GameConst.HideLockedNode && CurrentState == UIUpgradeNodeState.Locked)
+                return;
+
+            if (preRequires != null && preRequires.Select((node) => node.preRequireId)
+                    .All((id) =>
+                        UpgradeManager.Instance.GetData(id) == null ||
+                        UpgradeManager.Instance.GetData(id).level == 0))
+            {
+                UIUpgradeNodeInfoPreview.Instance.Shake();
+                UIUpgradeNodeInfoPreview.Instance.PlayVfxUpgrade();;
+                sfxUnlockFailure?.Play();
+                return;
+            }
+
+            if (!UpgradeManager.Instance.CanUpgrade(config.nodeId, config.groupId))
+            {
+                UIUpgradeNodeInfoPreview.Instance.Shake();
+                UIUpgradeNodeInfoPreview.Instance.PlayVfxUpgrade();;
+                sfxUnlockFailure?.Play();
+                return;
+            }
+            
+            Action actionUpgrade = () =>
+            {
                 var success = UpgradeManager.Instance.UpgradeNode(config.nodeId, config.groupId);
                 if (success)
                 {
-                    UpgradeManager.Instance.RefreshGroupUnlockOrder();
                     if (treeRef.IsNodeSkill(config.nodeId))
                         LogManager.Log(LogConst.EventLogActivateNode, "skill", config.nodeName);
                     else if (treeRef.IsNodePassive(config.nodeId))
                         LogManager.Log(LogConst.EventLogActivateNode, "passive", config.nodeName);
-                    
-                    config.ActivateLevel(UpgradeManager.Instance.GetData(config.nodeId).level, ref UIUpgradeNodeInfoPreview.Instance.bonusInfo);
+
+                    config.ActivateLevel(UpgradeManager.Instance.GetData(config.nodeId).level,
+                        ref UIUpgradeNodeInfoPreview.Instance.bonusInfo);
                     UIUpgradeNodeInfoPreview.Instance.Setup(this, config, true);
-                    UIUpgradeNodeInfoPreview.Instance.Show(transform.position, new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true, () => hoverField.interactable = true);
+                    UIUpgradeNodeInfoPreview.Instance.Show(transform.position,
+                        new Vector2(hoverField.nodeRepresentableRect.sizeDelta.x / 2, 0f), true,
+                        () => hoverField.interactable = true);
+                    UIUpgradeNodeInfoPreview.Instance.PlayVfxUpgrade();;
 
                     treeRef.LastUpgradeNodeId = config.nodeId;
                     treeRef.InvokeNodeUpgraded(this);
                     treeRef.UpgradeAllNodesWithId(config.nodeId);
                     sfxUnlockSuccess?.Play();
                 }
-                else
-                {
-                    UIUpgradeNodeInfoPreview.Instance.Shake();
-                    sfxUnlockFailure?.Play();
-                }
             };
+            
+            // Nếu node có dùng sigil thì phải bật popup confirm
+            if (config.costInfo.Any((cost) => cost.costType == WealthType.Sigils))
+            {
+                var displayCost = UIUpgradeNodeInfoPreview.Instance.GetDisplayCost();
+                UIUpgradeScene.Instance.PopupConfirmExchange.Setup(
+                    displayCost.Item1,
+                    displayCost.Item2,
+                    displayCost.Item3,
+                    "And you will receive",
+                    "Confirm exchange",
+                    config.nodeName, 
+                    actionUpgrade);
+                UIUpgradeScene.Instance.PopupConfirmExchange.DoOpenFadeIn();
+            }
+            else
+            {
+                actionUpgrade?.Invoke();   
+            }
         }
-
+        
         public void Upgrade()
         {
             UpdateUI();
@@ -310,7 +361,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                             var vfxUnlock = GetVfxUnlock();
                             DOVirtual.DelayedCall(lineInfo.line.activateDuration - 0.1f, () =>
                             {
-                                imgAvailable.gameObject.SetActive(true);
+                                SetAvailable();
                                 vfxUnlock?.Play();
                             }).SetTarget(this);
 
@@ -355,9 +406,9 @@ namespace Dark.Scripts.OutGame.Upgrade
             var vfxActivate = GetVfxActivate();
             vfxActivate.Play();
             return DOTween.Sequence(this)
-                .Append(imgBorder.DOLocalRotate(new Vector3(0f, 0f, 180f), 0.4f).SetRelative())
-                .Join(imgBorder.DOScale(1.2f, 0.4f).SetEase(Ease.OutQuad))
-                .Append(imgBorder.DOScale(1f, 0.2f).SetEase(Ease.InQuad))
+                .Append(imgAvailable.transform.DOLocalRotate(new Vector3(0f, 0f, 360f), 0.4f).SetRelative())
+                .Join(imgAvailable.transform.DOScale(1.2f, 0.4f).SetEase(Ease.OutQuad))
+                .Append(imgAvailable.transform.DOScale(1f, 0.2f).SetEase(Ease.InQuad))
                 .AppendCallback(() => ReleaseVfxActivate(vfxActivate));
         }
         
@@ -366,6 +417,52 @@ namespace Dark.Scripts.OutGame.Upgrade
             return spawnAnimation.SpawnLogic.DoSpawn();
         }
 
+        #region Visual
+
+        protected void SetAvailable()
+        {
+            imgAvailable.SetActive(true);
+            imgLock.gameObject.SetActive(false);
+            if (imgAvailableDecor != null)
+            {
+                foreach (var img in imgAvailableDecor)
+                {
+                    img.SetActive(true);   
+                }
+            }
+
+            if (imgLockedDecor != null)
+            {
+                foreach (var img in imgLockedDecor)
+                {
+                    img.SetActive(false);
+                }
+            }
+        }
+        
+        protected void SetLocked()
+        {
+            imgAvailable.SetActive(false);
+            imgLock.gameObject.SetActive(true);
+            if (imgAvailableDecor != null)
+            {
+                foreach (var img in imgAvailableDecor)
+                {
+                    img.SetActive(false);   
+                }
+            }
+
+            if (imgLockedDecor != null)
+            {
+                foreach (var img in imgLockedDecor)
+                {
+                    img.SetActive(true);
+                }
+            }
+        }
+
+        #endregion
+        
         #region Vfx
         
         public UIParticle GetVfxUnlock()

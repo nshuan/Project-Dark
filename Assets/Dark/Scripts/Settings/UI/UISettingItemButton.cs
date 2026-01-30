@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Dark.Scripts.Settings.UI
 {
-    public class UISettingItemButton : SerializedMonoBehaviour
+    public class UISettingItemButton : UISettingItem
     {
         [OdinSerialize, NonSerialized] private ISettingItemButton _settingItemLogic;
         [SerializeField] private Button button;
@@ -18,6 +18,17 @@ namespace Dark.Scripts.Settings.UI
         {
             _settingItemLogic.DisplayText = txtDisplay;
             _settingItemLogic.Initialize(button); 
+        }
+
+        private void OnEnable()
+        {
+            _settingItemLogic.DisplayText = txtDisplay;
+            _settingItemLogic.Initialize(button); 
+        }
+
+        public override void Save()
+        {
+            _settingItemLogic.Save();
         }
     }
 }

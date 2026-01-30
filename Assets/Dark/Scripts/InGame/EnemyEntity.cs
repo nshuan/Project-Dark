@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Dark.Scripts.AudioV2;
+using Dark.Scripts.Settings;
 using Dark.Scripts.Utils;
 using DG.Tweening;
 using InGame.EnemyEffect;
@@ -12,8 +13,12 @@ namespace InGame
 {
     public class EnemyEntity : MonoBehaviour, IDamageable, IEffectTarget
     {
-        [SerializeField] private Collider2D collider2d;
+        [SerializeField] protected Collider2D collider2d;
+        [SerializeField] protected EnemyHealthBar healthBar;
+        [SerializeField] protected EnemyDisplayStats displayStats;
         [SerializeField] private Transform burnVfxParent;
+        [SerializeField] private Transform visualAttackRange;
+        [SerializeField] private bool showAttackRange;
         public EnemyBody body;
 
         private MapBoundaryManager boundaryManager;
@@ -26,7 +31,7 @@ namespace InGame
         #region Stats
         public int MaxHealth { get; set; }
         protected int CurrentHealth { get; set; }
-        protected int CurrentDamage { get; set; }
+        public int CurrentDamage { get; set; }
         public int Exp { get; private set; }
         public int Dark { get; private set; }
         public int DarkUnitValue { get; private set; }
@@ -59,7 +64,7 @@ namespace InGame
         private Vector2 staggerTargetPos;
 
         [Space, Header("Visual")] 
-        [SerializeField] private EnemyBoidAgentWithObstacles boidAgent;
+        [SerializeField] protected EnemyBoidAgentWithObstacles boidAgent;
         [SerializeField] private Transform uiHealth;
         public EnemyAnimController animController;
         [SerializeField] protected GameObject shadow;
@@ -69,7 +74,8 @@ namespace InGame
         protected bool inAttackRange;
         private Coroutine attackCoroutine;
 
-        protected Vector2 attackPosition;
+        public Vector2 attackPosition;
+        protected bool reachAttackPosition;
         
         private float invisibleTimer;
         private float freezeDuration;
@@ -104,11 +110,17 @@ namespace InGame
             attackPosition = ((Quaternion.Euler(0f, 0f, RandomUtil.Range(-75f, 75f)) *
                                (Vector2)(myPos - targetPos).normalized) * (0.9f * AttackRange)
                               + targetPos);
+            reachAttackPosition = false;
             animController.transform.localScale =
                 new Vector3(Mathf.Sign(attackPosition.x - myPos.x), 1f, 1f);
+            healthBar.transform.localScale = new Vector3(animController.transform.localScale.x,
+                healthBar.transform.localScale.y, healthBar.transform.localScale.z);
             
             MaxHealth = (int)(config.hp * StatsScale.hpScale);
             CurrentHealth = MaxHealth;
+            healthBar.gameObject.SetActive(false);
+            healthBar.MaxHp = MaxHealth;
+            healthBar.UpdateHp(CurrentHealth);
             CurrentDamage = Mathf.RoundToInt(config.dmg * StatsScale.dmgScale);
             Exp = Mathf.RoundToInt(config.exp * levelExpRatio);
             Dark = Mathf.RoundToInt(config.dark * levelDarkRatio);
@@ -124,6 +136,16 @@ namespace InGame
             DarkUnitValue = levelDarkUnitValue;
             BossPoint = config.bossPoint;
             AttackRange = config.attackRange;
+            
+            displayStats.gameObject.SetActive(false);
+            if (GameConst.ShowTextEnemyAtkAndAtkRange)
+            {
+                displayStats.UpdateStats(CurrentDamage, AttackRange);
+                displayStats.transform.localScale = new Vector3(animController.transform.localScale.x,
+                    displayStats.transform.localScale.y, displayStats.transform.localScale.z);
+            }
+
+            visualAttackRange.gameObject.SetActive(false);
             
             State = EnemyState.Spawn;
             inAttackRange = false;
@@ -144,7 +166,7 @@ namespace InGame
 
         #region Core function
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             DOTween.Kill(this);
         }
@@ -159,6 +181,12 @@ namespace InGame
                 boidAgent.IsActive = true;
                 collider2d.enabled = true;
                 Activated = true;
+                healthBar.gameObject.SetActive(!IsBoss ? GameSettings.ShowEnemyHealth : GameSettings.ShowBossHealth);
+                if (showAttackRange)
+                {
+                    visualAttackRange.localScale = AttackRange * Vector3.one;
+                    visualAttackRange.gameObject.SetActive(true);
+                }
             });
         }
 
@@ -209,9 +237,23 @@ namespace InGame
                 animController.SetDefaultRun(false);
                 animController.transform.localScale =
                     new Vector3(Mathf.Sign(Target.position.x - transform.position.x), 1f, 1f);
+                healthBar.transform.localScale = new Vector3(animController.transform.localScale.x,
+                    healthBar.transform.localScale.y, healthBar.transform.localScale.z);
+                displayStats.transform.localScale = new Vector3(animController.transform.localScale.x,
+                    displayStats.transform.localScale.y, displayStats.transform.localScale.z);
             }
             else
             {
+                inAttackRange = false;
+                if (!reachAttackPosition)
+                {
+                    if (Vector2.Distance(transform.position, attackPosition) < 0.1f)
+                    {
+                        reachAttackPosition = true;
+                        attackPosition = Target.position;
+                    }
+                }
+                
                 config.moveBehaviour.MoveNonAlloc(transform, attackPosition, directionAddition, AttackRange, config.moveSpeed * StatsScale.speScale, ref direction);
                 animController.SetDefaultRun(true);
             }
@@ -224,7 +266,7 @@ namespace InGame
                 StopCoroutine(attackCoroutine);
         }
         
-        private void StartAttackCoroutine()
+        protected void StartAttackCoroutine()
         {
             if (attackCoroutine != null)
                 StopCoroutine(attackCoroutine);
@@ -262,8 +304,9 @@ namespace InGame
 
         public virtual void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
         {
+            if (!Activated) return;
             if (IsDestroyed) return;
-            if (State == EnemyState.Invisible) return;
+            if (dmgType != DamageType.Enemy && dmgType != DamageType.SelfDestruct && State == EnemyState.Invisible) return;
             
             // Scale damage on boss
             if (IsBoss)
@@ -271,6 +314,7 @@ namespace InGame
             
             var lastHealth = CurrentHealth;
             CurrentHealth -= damage;
+            healthBar.UpdateHp(CurrentHealth);
             if (dmgType != DamageType.Enemy && dmgType != DamageType.SelfDestruct)
                 CombatActions.OnDamageDealt?.Invoke(lastHealth - CurrentHealth);
             
@@ -356,6 +400,10 @@ namespace InGame
             shadow.SetActive(false);    
             OnStartDead?.Invoke();
             OnStartDead = null;
+            if (showAttackRange)
+            {
+                visualAttackRange.gameObject.SetActive(false);
+            }
             yield return new WaitForSeconds(delayDieAnimation);
             yield return new WaitForSeconds(animController.PlayDie());
             OnDead?.Invoke(reason);
@@ -375,14 +423,18 @@ namespace InGame
         public Transform TargetTransform => transform;
         private Action callbackBurnComplete;
         private Coroutine coroutineBurn;
+        private bool isBurning;
         public void Burn(float duration, float delayEachBurn, int damage, Action callbackComplete)
         {
-            if (IsDestroyed)
+            if (IsDestroyed || isBurning)
             {
                 callbackComplete?.Invoke();
                 return;
             }
+
+            isBurning = true;
             callbackBurnComplete = callbackComplete;
+            callbackBurnComplete += () => { isBurning = false; };
             if (coroutineBurn != null) StopCoroutine(coroutineBurn);
             coroutineBurn = StartCoroutine(IEBurn(duration, delayEachBurn, damage));
         }
@@ -431,13 +483,15 @@ namespace InGame
             {
                 visual.material = materialElite;
                 cacheMaterial = materialElite;
-                transform.localScale = GameConst.EnemyEliteScale * Vector3.one;
+                transform.localScale = (IsBoss ? GameConst.BossEliteScale : GameConst.EnemyEliteScale) * Vector3.one;
+                healthBar.transform.localScale = new Vector3(healthBar.transform.localScale.x, 1f / (IsBoss ? GameConst.BossEliteScale : GameConst.EnemyEliteScale), healthBar.transform.localScale.z);
             }
             else
             {
                 visual.material = materialNormal;
                 cacheMaterial = materialNormal;
                 transform.localScale = Vector3.one;
+                healthBar.transform.localScale = new Vector3(healthBar.transform.localScale.x, 1f, 1f);
             }
         }
 
@@ -452,6 +506,11 @@ namespace InGame
         {
             aimPointer.SetActive(aimed);
             if (IsBoss) return;
+            
+            // Boss ko show stats
+            if (GameConst.ShowTextEnemyAtkAndAtkRange)
+                displayStats.gameObject.SetActive(aimed);
+            
             if (config.elite) return;
             visual.material = aimed ? materialHighlight : cacheMaterial;
         }
@@ -465,6 +524,11 @@ namespace InGame
             }
             hoverPointer.SetActive(hover);
             if (IsBoss) return;
+            
+            // Boss ko show stats
+            if (GameConst.ShowTextEnemyAtkAndAtkRange)
+                displayStats.gameObject.SetActive(hover);
+            
             if (config.elite) return;
             visual.material = hover ? materialHighlight : cacheMaterial;
         }

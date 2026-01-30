@@ -1,3 +1,4 @@
+using Coffee.UIExtensions;
 using TMPro;
 
 namespace Economic.UI
@@ -5,6 +6,7 @@ namespace Economic.UI
     public class UIEchoesInGame : UIEconomic
     {
         public TextMeshProUGUI txtEchoes;
+        public UIParticle fxClaim;
         
         private void Start()
         {
@@ -24,11 +26,12 @@ namespace Economic.UI
         {
             if (before == after) return;
             AnimateUpdating(target + after - before);
+            fxClaim.Play();
         }
         
         public override void UpdateUI()
         {
-            txtEchoes.SetText($"{current}");
+            txtEchoes.SetText($"{current}");     
         }
     }
 }

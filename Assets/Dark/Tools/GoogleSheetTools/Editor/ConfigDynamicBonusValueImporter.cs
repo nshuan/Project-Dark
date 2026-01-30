@@ -55,7 +55,7 @@ namespace Dark.Tools.GoogleSheetTool
                             var bonus5 = new List<float>();
                             var bonus1 = 0f;
 
-                            if (!float.TryParse(allBonus5LineStr[index], NumberStyles.Any, format, out var value5))
+                            if (!float.TryParse(allBonus5LineStr[index], NumberStyles.Float, format, out var value5))
                             {
                                 Debug.LogError($"Invalid parseValueSuccess type 1");
                                 parseValueSuccess = false;
@@ -67,7 +67,7 @@ namespace Dark.Tools.GoogleSheetTool
                                     bonus5.Add(value5);
                             }
                             
-                            if (!float.TryParse(allBonus1LineStr[index], NumberStyles.Any, format, out var value1))
+                            if (!float.TryParse(allBonus1LineStr[index], NumberStyles.Float, format, out var value1))
                             {
                                 Debug.LogError($"Invalid parseValueSuccess type 2");
                                 parseValueSuccess = false;

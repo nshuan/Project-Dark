@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Sirenix.Utilities;
 using Unity.Mathematics;
@@ -25,6 +26,7 @@ namespace InGame
         public bool isRandomWaveConfig;
 
         public GateEntity[] Gates { get; private set; }
+        public Dictionary<GateEntity, GameObject> VfxPreOpen { get; private set; } 
         public Action<int, WaveEndReason> OnWaveForceStop { get; set; }
         public bool WaveEndedCompletely { get; set; }
         private int currentGateIndex = 0;
@@ -35,6 +37,7 @@ namespace InGame
                 waveConfig = randomWaveConfigs[RandomUtil.Range(0, randomWaveConfigs.Length)];
             DebugUtility.LogError($"Setup wave {waveConfig.name}");
             Gates = new GateEntity[waveConfig.gateConfigs.Count];
+            VfxPreOpen = new Dictionary<GateEntity, GameObject>();
             var waveStatsScale = new WaveStatsScale()
             {
                 hpScale = scaleHp,
@@ -45,7 +48,14 @@ namespace InGame
             {
                 var gateCfg = waveConfig.gateConfigs[i];
                 Gates[i] = Object.Instantiate(gateCfg.gatePrefab ? gateCfg.gatePrefab : GateManifest.Get(0), gateCfg.position, quaternion.identity, null);
-                Gates[i].Initialize(gateCfg, gateCfg.targetBaseIndex.Select((index) => towers[index]).ToArray(), waveStatsScale, expRatio, darkRatio, darkUnitValue);
+                Gates[i].Initialize(gateCfg, gateCfg.targetBaseIndex.Select((index) =>
+                {
+                    if (index >= 0 && index < towers.Length)
+                        return towers[index];
+                    return towers[^1];
+                }).ToArray(), waveStatsScale, expRatio, darkRatio, darkUnitValue);
+                Gates[i].gameObject.SetActive(false);
+                VfxPreOpen[Gates[i]] = Gates[i].vfxPreOpen;
             }
             
             Gates.Sort((gate1, gate2) => gate1.config.startTime.CompareTo(gate2.config.startTime));
@@ -69,6 +79,7 @@ namespace InGame
                     CombatActions.OnGateActivated?.Invoke(gate, waveIndex, currentGateIndex);
                     GateManager.Instance.AddGate(gate);
                 }};
+                gate.gameObject.SetActive(true);
                 gate.Activate();
                 gate.OnAllEnemiesDead += () => { OnStopGate(a); };
             }
@@ -81,6 +92,17 @@ namespace InGame
             yield return new WaitForSeconds(timeToEnd);
             DebugUtility.LogError($"Wave {waveIndex + 1}: End duration");
             CheckStopAllGate();
+        }
+
+        public void PreOpen()
+        {
+            if (VfxPreOpen == null) return;
+            foreach (var pair in VfxPreOpen)
+            {
+                if (pair.Key.config.durationVisual <= 0.1f) continue;
+                pair.Value.transform.SetParent(null);
+                pair.Value.SetActive(true);
+            }
         }
         
         private void CheckStopAllGate()
