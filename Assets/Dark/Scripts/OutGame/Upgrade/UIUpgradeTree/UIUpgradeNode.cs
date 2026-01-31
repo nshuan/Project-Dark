@@ -614,11 +614,12 @@ namespace Dark.Scripts.OutGame.Upgrade
                 if (GameConst.HideLockedNode) return;
 
                 groupNode.alpha = GetNodeAlpha();
-                imgHighlight.gameObject.SetActive(true);
+                if (groupNode.alpha > 0.01f)
+                    imgHighlight.gameObject.SetActive(true);
             }
             else
             {
-                groupNode.alpha = 0.02f;
+                groupNode.alpha = Mathf.Min(0.02f, GetNodeAlpha());
                 imgHighlight.gameObject.SetActive(false);
             }
         }
