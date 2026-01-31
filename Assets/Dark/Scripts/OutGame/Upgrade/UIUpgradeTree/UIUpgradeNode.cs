@@ -484,7 +484,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                 }
                 else 
                 {
-                    imgActivatedGlow.SetActive(data.level < config.MaxLevel && !DemoConfig.IsLockedNode(config.nodeId));
+                    imgActivatedGlow.SetActive(data.level < config.MaxLevel && canUpgrade && !DemoConfig.IsLockedNode(config.nodeId));
                     imgNotEnoughGlow.SetActive(data.level < config.MaxLevel && !canUpgrade && !DemoConfig.IsLockedNode(config.nodeId));
                     if (data.level >= config.MaxLevel)
                     {

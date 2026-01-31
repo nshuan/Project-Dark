@@ -164,6 +164,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UINodeCovered
         {
             node.groupNode.alpha = 0f;
             node.flagHideOnSpawn = true;
+            node.NodeAlphaOnHidden = 0;
 
             if (node.preRequires != null)
             {
@@ -178,6 +179,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UINodeCovered
         void ShowNode(UIUpgradeNode node)
         {
             node.groupNode.alpha = 1f;
+            node.NodeAlphaOnHidden = 1f;
 
             if (node.preRequires != null)
             {
