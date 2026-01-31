@@ -73,6 +73,14 @@ namespace Dark.Scripts.OutGame.Upgrade
                     node.Upgrade();
                 }
             }
+
+            foreach (var pair in NodesMap)
+            {
+                foreach (var node in pair.Value)
+                {
+                    node.SetGlow();
+                }
+            }
         }
 
         public void InvokeNodeUpgraded(UIUpgradeNode node)
