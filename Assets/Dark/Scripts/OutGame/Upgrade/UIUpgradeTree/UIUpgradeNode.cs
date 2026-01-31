@@ -484,7 +484,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                 }
                 else 
                 {
-                    imgActivatedGlow.SetActive(data.level < config.MaxLevel && canUpgrade && !DemoConfig.IsLockedNode(config.nodeId));
+                    imgActivatedGlow.SetActive(data.level < config.MaxLevel && !DemoConfig.IsLockedNode(config.nodeId));
                     imgNotEnoughGlow.SetActive(data.level < config.MaxLevel && !canUpgrade && !DemoConfig.IsLockedNode(config.nodeId));
                     if (data.level >= config.MaxLevel)
                     {
@@ -614,11 +614,12 @@ namespace Dark.Scripts.OutGame.Upgrade
                 if (GameConst.HideLockedNode) return;
 
                 groupNode.alpha = GetNodeAlpha();
-                imgHighlight.gameObject.SetActive(true);
+                if (groupNode.alpha > 0.01f)
+                    imgHighlight.gameObject.SetActive(true);
             }
             else
             {
-                groupNode.alpha = 0.02f;
+                groupNode.alpha = Mathf.Min(0.02f, GetNodeAlpha());
                 imgHighlight.gameObject.SetActive(false);
             }
         }
