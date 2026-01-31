@@ -42,6 +42,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] protected Image nodeLockVisual;
         
         [SerializeField] protected GameObject imgActivatedGlow;
+        [SerializeField] protected GameObject imgNotEnoughGlow;
         [SerializeField] protected GameObject imgActivatedMaxGlow;
         [SerializeField] protected Transform rectActivatedMaxOutline;
         [SerializeField] protected GameObject imgAvailable;
@@ -461,6 +462,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             {
                 imgActivatedGlow.SetActive(false);
                 imgActivatedMaxGlow.SetActive(false);
+                imgNotEnoughGlow.SetActive(false);
                 rectActivatedMaxOutline.gameObject.SetActive(false);
             };
             
@@ -475,13 +477,15 @@ namespace Dark.Scripts.OutGame.Upgrade
                 var canUpgrade = UpgradeManager.Instance.CanUpgrade(config.nodeId, config.groupId);
                 if (data == null || data.level == 0) // Not activated yet
                 {
-                    imgActivatedGlow.SetActive(canUpgrade && !DemoConfig.IsLockedNode(config.nodeId));
+                    imgActivatedGlow.SetActive(false);
+                    imgNotEnoughGlow.SetActive(!canUpgrade && !DemoConfig.IsLockedNode(config.nodeId));
                     imgActivatedMaxGlow.SetActive(false);
                     rectActivatedMaxOutline.gameObject.SetActive(false);
                 }
                 else 
                 {
                     imgActivatedGlow.SetActive(data.level < config.MaxLevel && canUpgrade && !DemoConfig.IsLockedNode(config.nodeId));
+                    imgNotEnoughGlow.SetActive(data.level < config.MaxLevel && !canUpgrade && !DemoConfig.IsLockedNode(config.nodeId));
                     if (data.level >= config.MaxLevel)
                     {
                         imgActivatedMaxGlow.SetActive(true);
