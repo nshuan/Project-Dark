@@ -61,7 +61,9 @@ namespace InGame
         {
             actionTowerChanged = null;
         }
-        
+
+        public bool BlockHover { get; set; }
+
         public void OnMouseClick()
         {
             if (!CanMove) return;
