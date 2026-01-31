@@ -175,14 +175,15 @@ namespace InGame
             }
             
             // Check bấm vào enemy để force attack vào đó
-            var mouseOverCount = Physics2D.OverlapPointNonAlloc(worldMousePosition, mouseHoverEnemies, LayerMask.GetMask("Entity"));
+            var mouseOverCount = Physics2D.OverlapPointNonAlloc(worldMousePosition, mouseHoverEnemies, LayerMask.GetMask("EnemyAim"));
             if (mouseOverCount > 0)
             {
                 hoveringEnemy?.SetHover(false);
                 hoveringEnemy = null;
                 for (var i = 0; i < mouseOverCount; i++)
                 {
-                    if (mouseHoverEnemies[i].TryGetComponent<EnemyEntity>(out var entity))
+                    var entity = mouseHoverEnemies[i].GetComponentInParent<EnemyEntity>();
+                    if (entity)
                     {
                         hoveringEnemy = entity;
                         hoveringEnemy.SetHover(true);
