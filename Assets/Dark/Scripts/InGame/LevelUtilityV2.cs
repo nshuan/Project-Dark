@@ -360,6 +360,18 @@ namespace InGame
                                      Mathf.Pow(Mathf.Sin(angle), 2));
             return maxRange * ratio;
         }
+        
+        public static float GetRelativeRangeMove(float maxRange, Vector2 direction)
+        {
+            var magnitude = direction.magnitude;
+            direction.x = Mathf.Abs(direction.x) / magnitude;
+            direction.y = Mathf.Abs(direction.y) / magnitude;
+            var angle = Mathf.Atan2(direction.y, direction.x);
+            var ratio = GameConst.IsoRatioMove
+                        / Mathf.Sqrt(Mathf.Pow(GameConst.IsoRatioMove * Mathf.Cos(angle), 2) +
+                                     Mathf.Pow(Mathf.Sin(angle), 2));
+            return maxRange * ratio;
+        }
 
         public static float GetTrueRange(float relativeRange, Vector2 direction)
         {
