@@ -15,9 +15,10 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private Gradient2 lineActivated;
         [SerializeField] private GameObject lineGlow;
         [SerializeField] private UIParticle vfxUnlock;
-        [SerializeField] private CanvasGroup groupLine;
+        [SerializeField] public CanvasGroup groupLine;
         public float activateDuration = 0.3f;
 
+        public bool flagHideOnSpawn = false;
         private UIUpgradeNodeState currentState = UIUpgradeNodeState.Activated;
         
         public void UpdateLineState(UIUpgradeNodeState state)
@@ -53,7 +54,12 @@ namespace Dark.Scripts.OutGame.Upgrade
         public Tween DoSpawn()
         {
             groupLine.alpha = 0f;
-            return groupLine.DOFade(1f, 0.1f);
+            return DOTween.Sequence()
+                .AppendCallback(() =>
+                {
+                    if (flagHideOnSpawn) return;
+                    groupLine.DOFade(1f, 0.1f);
+                });
         }
     }
 }

@@ -19,6 +19,7 @@ namespace Dark.Scripts.ForDemo
         [SerializeField] private List<int> lockedNodes;
         [SerializeField] private int collectLogicType = 0; // 0 = original, 1 = auto collect, 2 = mouse
         [SerializeField] private bool showTooltip = true;
+        [SerializeField] private Color nodeActivatedColor;
         
         public static string SteamWishlistURL { get; private set; }
         public static string FeedbackURL { get; private set; }

@@ -849,12 +849,14 @@ MonoBehaviour:
   groupNode: {fileID: 3612036316780880099}
   nodeVisual: {fileID: 2440453857933906848}
   nodeLockVisual: {fileID: 8548754967442229320}
-  imgBorder: {fileID: 6392280903052064895}
   imgActivatedGlow: {fileID: 7573443183965131077}
+  imgNotEnoughGlow: {fileID: 5808940857706320481}
   imgActivatedMaxGlow: {fileID: 7863846380689827027}
   rectActivatedMaxOutline: {fileID: 7792742129423425877}
   imgAvailable: {fileID: 7333372898558150954}
   imgLock: {fileID: 8548754967442229320}
+  imgAvailableDecor: []
+  imgLockedDecor: []
   imgIconLock: {fileID: 1990318772262170484}
   sfxUnlockSuccess: {fileID: 3288505321492332001}
   sfxUnlockFailure: {fileID: 3288505321492332001}
@@ -862,6 +864,7 @@ MonoBehaviour:
   txtNodeLevel: {fileID: 246484216401748150}
   txtNodeMaxLevel: {fileID: 0}
   lineAnchorOffsetRadius: 28
+  flagHideOnSpawn: 0
   imgHighlight: {fileID: 0}
 --- !u!114 &8640389401765528504
 MonoBehaviour:
@@ -958,14 +961,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fd5da469a3f44fe9fc2c158040f77d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &5808940857706320481 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7213429972457940523, guid: de82dc9f1a796c64998dc8ff08ad0271, type: 3}
+  m_PrefabInstance: {fileID: 3784924440477070410}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &6223517031983871231 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7122618173943808181, guid: de82dc9f1a796c64998dc8ff08ad0271, type: 3}
-  m_PrefabInstance: {fileID: 3784924440477070410}
-  m_PrefabAsset: {fileID: 0}
---- !u!224 &6392280903052064895 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 7796629413729799221, guid: de82dc9f1a796c64998dc8ff08ad0271, type: 3}
   m_PrefabInstance: {fileID: 3784924440477070410}
   m_PrefabAsset: {fileID: 0}
 --- !u!224 &6648967156579509832 stripped
