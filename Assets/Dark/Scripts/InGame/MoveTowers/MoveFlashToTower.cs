@@ -55,9 +55,9 @@ namespace InGame
                 {
                     for (int i = 0; i < count; i++)
                     {
-                        // var dir = hits[i].transform.position - toTower.transform.position;
-                        // if (dir.magnitude > LevelUtilityV2.GetRelativeRange(explodeSize, dir))
-                        //     continue;
+                        var dir = hits[i].transform.position - toTower.transform.position;
+                        if (dir.magnitude > LevelUtilityV2.GetRelativeRangeMove(explodeSize, dir))
+                            continue;
                         
                         FlashHit(hits[i].transform, damage, toTower);
                     }
