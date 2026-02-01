@@ -98,7 +98,8 @@ namespace InGame
                             LevelUtilityV2.GetPassiveSize(triggerType, effectConfig.logicType), 
                             LevelUtilityV2.GetPassiveValue(triggerType, effectConfig.logicType), 
                             LevelUtilityV2.GetPassiveStagger(triggerType, effectConfig.logicType), 
-                            pool);
+                            pool,
+                            effectConfig.GetAdditionalParams());
 
                     cooldownEffectMap[triggerType][effectConfig.logicType] = true;
                     var cooldown = LevelUtilityV2.GetPassiveCooldown(triggerType, effectConfig.logicType);
