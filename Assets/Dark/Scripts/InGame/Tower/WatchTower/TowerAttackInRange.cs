@@ -78,7 +78,7 @@ namespace InGame.WatchTower
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            // if (!canCounter) return;
+            if (!canCounter) return;
             if (counterCooldown) return;
             if (!other.CompareTag("Enemy")) return;
             if (!other.transform.TryGetComponent<EnemyEntity>(out var enemy)) return;
