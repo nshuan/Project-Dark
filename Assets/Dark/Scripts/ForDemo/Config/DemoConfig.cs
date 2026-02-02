@@ -24,8 +24,6 @@ namespace Dark.Scripts.ForDemo
         public static string SteamWishlistURL { get; private set; }
         public static string FeedbackURL { get; private set; }
         public static int MaxDemoLevel { get; private set; }
-        public static List<int> LockedNodes { get; private set; }
-        public static bool IsLockedNode(int nodeId) => IsDemo && LockedNodes != null && LockedNodes.Contains(nodeId);
         public static int CollectLogicType { get; private set; }
         public static bool ShowTooltip { get; private set; }
 
@@ -34,7 +32,6 @@ namespace Dark.Scripts.ForDemo
             SteamWishlistURL = steamWishlistURL;
             FeedbackURL = feedbackURL;
             MaxDemoLevel = IsDemo ? maxDemoLevel : 100;
-            LockedNodes = lockedNodes;
             CollectLogicType = collectLogicType;
             ShowTooltip = showTooltip;
         }
