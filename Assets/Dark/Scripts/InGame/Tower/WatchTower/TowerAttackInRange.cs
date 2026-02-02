@@ -14,6 +14,12 @@ namespace InGame.WatchTower
         [SerializeField] protected GameObject vfxActivateCounter;
         [SerializeField] protected float vfxActivateCounterDuration;
         [SerializeField] protected float bulletSpeedScale = 2f;
+
+        [Space] [Header("Range")] 
+        [SerializeField] protected Transform detectRange;
+        [SerializeField] protected CircleCollider2D detectCollider;
+        [SerializeField] protected float detectRangeRadius;
+        [SerializeField] protected float delayAttackAfterDetected = 1f;
         
         protected bool counterCooldown;
 
@@ -24,12 +30,18 @@ namespace InGame.WatchTower
         protected float Cooldown => GetCounterCooldown();
 
         protected Vector2 counterDirection = Vector2.zero;
+
+        protected Coroutine coroutineCounter;
+        protected int totalInRangeTarget;
         
         private void Awake()
         {
             UpgradeManager.Instance.OnActivated += OnUpgradeBonusActivated;
             LevelManager.Instance.OnLose += OnLose;
             tower.OnDestroyed += OnTowerDestroyed;
+            detectRange.localScale = detectRangeRadius * Vector3.one;
+            detectCollider.radius = detectRangeRadius;
+            detectRange.gameObject.SetActive(false);
         }
 
         private void OnDestroy()
@@ -78,26 +90,59 @@ namespace InGame.WatchTower
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (!canCounter) return;
+            // if (!canCounter) return;
             if (counterCooldown) return;
             if (!other.CompareTag("Enemy")) return;
             if (!other.transform.TryGetComponent<EnemyEntity>(out var enemy)) return;
-            
+
+            enemy.OnDead += OnEnemyDead;
+            totalInRangeTarget += 1;
             counterDirection.x = enemy.transform.position.x - transform.position.x;
             counterDirection.y = enemy.transform.position.y - transform.position.y;
-            StartCoroutine(IECounter(Cooldown));
+            if (coroutineCounter == null) coroutineCounter = StartCoroutine(IECounter(Cooldown));
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            totalInRangeTarget -= 1;
+            if (totalInRangeTarget < 0) totalInRangeTarget = 0;
+            if (totalInRangeTarget == 0 && coroutineCounter != null)
+            {
+                detectRange.gameObject.SetActive(false);
+                StopCoroutine(coroutineCounter);
+                coroutineCounter = null;
+            }
+        }
+
+        private void OnEnemyDead(EnemyDieReason dieReason)
+        {
+            totalInRangeTarget -= 1;
+            if (totalInRangeTarget < 0) totalInRangeTarget = 0;
+            if (totalInRangeTarget == 0 && coroutineCounter != null)
+            {
+                detectRange.gameObject.SetActive(false);
+                StopCoroutine(coroutineCounter);
+                coroutineCounter = null;
+            }
         }
 
         protected virtual IEnumerator IECounter(float cooldown)
         {
-            counterCooldown = true;
-            vfxActivateCounter.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(counterDirection.y, counterDirection.x) * Mathf.Rad2Deg);
-            vfxActivateCounter.SetActive(true);
-            Counter(transform.position, counterDirection, Damage, bulletSpeedScale);
-            yield return new WaitForSeconds(vfxActivateCounterDuration);
-            vfxActivateCounter.SetActive(false);
-            yield return new WaitForSeconds(cooldown - vfxActivateCounterDuration);
-            counterCooldown = false;
+            while (totalInRangeTarget > 0)
+            {
+                detectRange.gameObject.SetActive(true);
+                yield return new WaitForSeconds(delayAttackAfterDetected); 
+                counterCooldown = true;
+                vfxActivateCounter.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(counterDirection.y, counterDirection.x) * Mathf.Rad2Deg);
+                vfxActivateCounter.SetActive(true);
+                Counter(transform.position, counterDirection, Damage, bulletSpeedScale);
+                detectRange.gameObject.SetActive(false);
+                yield return new WaitForSeconds(vfxActivateCounterDuration);
+                vfxActivateCounter.SetActive(false);
+                yield return new WaitForSeconds(cooldown - vfxActivateCounterDuration);
+                counterCooldown = false;
+            }
+            coroutineCounter = null;
         }
         
         public virtual void Counter(Vector2 towerAttackPos, Vector2 direction, int damage, float speedScale)
