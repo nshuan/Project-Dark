@@ -12,6 +12,7 @@ namespace InGame.Upgrade
     {
         public int nodeId;
         public string nodeName; // Name to display
+        public bool lockOnDemo;
         public bool hideLevelInNode;
         public string description; // Description to display
         public float vestigeCostRatio; // cost will multiply to this value
