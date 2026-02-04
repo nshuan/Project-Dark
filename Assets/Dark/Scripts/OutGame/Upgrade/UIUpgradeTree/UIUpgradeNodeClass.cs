@@ -23,6 +23,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             txtNodeLevel.transform.parent.gameObject.SetActive(false);
             SetAvailable();
             imgActivatedGlow.SetActive(false);
+            imgNotEnoughGlow.SetActive(false);
             imgActivatedMaxGlow.gameObject.SetActive(false);
             rectActivatedMaxOutline.gameObject.SetActive(false);
 
@@ -61,6 +62,11 @@ namespace Dark.Scripts.OutGame.Upgrade
         protected override Tween DoUpgrade()
         {
             return DOTween.Sequence();
+        }
+
+        public override Tween DoSpawn()
+        {
+            return spawnAnimation.SpawnLogic.DoSpawn();
         }
     }
 }

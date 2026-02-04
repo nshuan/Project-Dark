@@ -14,6 +14,7 @@ public class GameConst
     #endregion
     
     public const float IsoRatio = 0.5837f; // max height / max width 
+    public const float IsoRatioMove = 0.7f; // max height / max width 
     public const float EnemyEliteScale = 1.5f; // scale normal enemy to be elite    
     public const float BossEliteScale = 1.1f; // scale boss to be elite    
     public const bool DefaultAutoAttack = true; // Default enable auto-attack
