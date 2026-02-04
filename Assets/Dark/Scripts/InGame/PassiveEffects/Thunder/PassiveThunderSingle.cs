@@ -21,7 +21,7 @@ namespace InGame
             hits = new RaycastHit2D[10];
         }
         
-        public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool)
+        public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool, params float[] additionalParams)
         {
             gameObject.SetActive(true);
             

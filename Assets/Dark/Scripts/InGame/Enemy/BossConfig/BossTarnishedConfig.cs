@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 namespace InGame.BossConfig
@@ -17,7 +18,7 @@ namespace InGame.BossConfig
             var split = stringHpThreshold.Split(',');
             foreach (var s in split)
             {
-                if (float.TryParse(s, out var threshold))
+                if (float.TryParse(s, NumberStyles.Float, GameConst.FloatCulture, out var threshold))
                 {
                     result.Add(threshold);
                 }
@@ -47,7 +48,7 @@ namespace InGame.BossConfig
             var split = stringStartDistance.Split(',');
             foreach (var s in split)
             {
-                if (float.TryParse(s, out var threshold))
+                if (float.TryParse(s, NumberStyles.Float, GameConst.FloatCulture, out var threshold))
                 {
                     result.Add(threshold);
                 }

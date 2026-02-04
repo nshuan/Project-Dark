@@ -175,19 +175,43 @@ namespace InGame
             }
             
             // Check bấm vào enemy để force attack vào đó
-            var mouseOverCount = Physics2D.OverlapPointNonAlloc(worldMousePosition, mouseHoverEnemies, LayerMask.GetMask("Entity"));
+            var mouseOverCount = Physics2D.OverlapPointNonAlloc(worldMousePosition, mouseHoverEnemies, LayerMask.GetMask("EnemyAim"));
             if (mouseOverCount > 0)
             {
-                hoveringEnemy?.SetHover(false);
-                hoveringEnemy = null;
+                EnemyEntity newHover = null;
+                // var minDist = float.MaxValue;
+                // for (var i = 0; i < mouseOverCount; i++)
+                // {
+                //     var entity = mouseHoverEnemies[i].GetComponentInParent<EnemyEntity>();
+                //     if (!entity) continue;
+                //
+                //     var dist = Vector2.Distance(entity.transform.position, worldMousePosition);
+                //     if (dist < minDist)
+                //     {
+                //         minDist = dist;
+                //         newHover = entity;
+                //     }
+                // }
                 for (var i = 0; i < mouseOverCount; i++)
                 {
-                    if (mouseHoverEnemies[i].TryGetComponent<EnemyEntity>(out var entity))
+                    var entity = mouseHoverEnemies[i].GetComponentInParent<EnemyEntity>();
+                    if (!entity) continue;
+
+                    if (!newHover) newHover = entity;
+                    else
                     {
-                        hoveringEnemy = entity;
-                        hoveringEnemy.SetHover(true);
-                        break;
+                        if (entity.transform.position.y < newHover.transform.position.y)
+                        {
+                            newHover = entity;
+                        }
                     }
+                }
+
+                if (newHover != hoveringEnemy)
+                {
+                    hoveringEnemy?.SetHover(false);
+                    hoveringEnemy = newHover;
+                    hoveringEnemy?.SetHover(true);
                 }
             }
             else

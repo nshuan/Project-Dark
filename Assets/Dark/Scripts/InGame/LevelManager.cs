@@ -231,6 +231,10 @@ namespace InGame
             if (IsEndLevel) return;
             
             StopTimer();
+            foreach (var tower in towers)
+            {
+                tower.Deactivate();
+            }
             
             WealthManager.Instance.Save();
             if (Level.level >= PlayerDataManager.Instance.Data.level + 1)
@@ -247,6 +251,10 @@ namespace InGame
             if (IsEndLevel) return;
             
             StopTimer();
+            foreach (var tower in towers)
+            {
+                tower.Deactivate();
+            }
             
             if (waveCoroutine != null) StopCoroutine(waveCoroutine);
             foreach (var tower in towers)

@@ -4,6 +4,7 @@ namespace InGame
 {
     public interface IMoveTowerMouseInput : IMoveMouseInput
     {
+        bool BlockHover { get; set; }
         void OnMouseClick();
         void OnActivated();
         void OnDeactivated();
