@@ -40,7 +40,7 @@ namespace Dark.Scripts.ForDemo
         protected override bool ShouldShowButton()
         {
             if (node.config == null) return false;
-            return DemoConfig.IsLockedNode(node.config.nodeId);
+            return node.config.lockOnDemo;
         }
 
         public override void OnPointerEnter(PointerEventData eventData)

@@ -17,10 +17,10 @@ namespace InGame
 		[SerializeField] private CanvasGroup motionBlur;
         public float holdThreshold = 0.5f;
         public PlayerCharacter PlayerVisual { get; set; }
-        public Transform ProjectileSpawnPos => PlayerVisual.transform;
         private List<MoveTowersConfig> availableTeleConfigs;
         private bool BlockAllInput { get; set; }
-        public bool BlockTeleport { get; set; }
+        public static bool BlockTeleport { get; set; }
+        public static Action OnChargeSetup { get; set; }
         public float CursorRangeRadius { get; set; }
         private bool IsMousePressing;
         private bool IsMousePressingStarted;
@@ -96,10 +96,12 @@ namespace InGame
                 
                 teleMouseInput.OnActivated();
                 
-                mouseInput.Initialize(this, chargeControllerArcher);
+                mouseInput.Initialize(PlayerVisual, chargeControllerArcher);
                 mouseInput.ResetChargeVariable();
                 
-                mouseAutoAttack.Initialize(this, null);
+                mouseAutoAttack.Initialize(PlayerVisual, null);
+
+                OnChargeSetup = () => MouseAutoAttack?.OnHoldStarted();
                 
                 LevelManager.Instance.OnWin += OnLevelCompleted;
                 LevelManager.Instance.OnLose += OnLevelCompleted;
@@ -130,38 +132,6 @@ namespace InGame
             if (BlockAllInput)
             {
                 return;
-            }
-
-            if (!BlockTeleport)
-            {
-                // if (Input.GetKey(activateTeleKey))
-                // {
-                //     if (teleMouseInput.CanMove)
-                //     {
-                //         ResetMousePressing();
-                //         
-                //         IsMousePressingStarted = false;
-                //         IsMousePressing = false;
-                //         mouseInput.ResetChargeVariable();
-                //         mouseInput.OnHoldReleased();
-                //         teleKeyPressed = true;
-                //         
-                //         teleMouseInput.OnActivated();
-                //     
-                //         DOTween.Kill(motionBlur);
-                //         DOTween.Sequence(motionBlur).AppendCallback(() =>
-                //             {
-                //                 foreach (var tower in LevelManager.Instance.Towers)
-                //                 {
-                //                     tower.OnMotionBlur();
-                //                 }
-                //                 PlayerVisual.OnMotionBlur();
-                //             
-                //                 motionBlur.gameObject.SetActive(true);
-                //             }).Append(motionBlur.DOFade(1f, 0.16f))
-                //             .OnComplete(FreezeTimeScale);
-                //     }
-                // }
             }
             
             if (IsMousePressingStarted)
