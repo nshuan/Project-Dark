@@ -12,5 +12,7 @@ namespace InGame.CounterConfig
         public float stagger;
         public float range;
         public float size; // Amount của piercing
+        public float detectRange;
+        public float delayOnDetectedEnemy = 0.5f;
     }
 }

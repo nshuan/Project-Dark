@@ -345,6 +345,26 @@ namespace InGame
             return (StatsCounterSlash.range + BonusInfo.bonusCounter.bonusSlashSize.add) * (1f + BonusInfo.bonusCounter.bonusSlashSize.mul);
         }
 
+        public static float GetCounterPiercingDetectRange()
+        {
+            return StatsCounterPiercing.detectRange;
+        }
+
+        public static float GetCounterSlashDetectRange()
+        {
+            return StatsCounterSlash.detectRange;
+        }
+
+        public static float GetCounterPiercingDelayAfterDetected()
+        {
+            return StatsCounterPiercing.delayOnDetectedEnemy;
+        }
+
+        public static float GetCounterSlashDelayAfterDetected()
+        {
+            return StatsCounterSlash.delayOnDetectedEnemy;
+        }
+
         #endregion
 
         #region Math
@@ -357,6 +377,18 @@ namespace InGame
             var angle = Mathf.Atan2(direction.y, direction.x);
             var ratio = GameConst.IsoRatio
                         / Mathf.Sqrt(Mathf.Pow(GameConst.IsoRatio * Mathf.Cos(angle), 2) +
+                                     Mathf.Pow(Mathf.Sin(angle), 2));
+            return maxRange * ratio;
+        }
+        
+        public static float GetRelativeRangeMove(float maxRange, Vector2 direction)
+        {
+            var magnitude = direction.magnitude;
+            direction.x = Mathf.Abs(direction.x) / magnitude;
+            direction.y = Mathf.Abs(direction.y) / magnitude;
+            var angle = Mathf.Atan2(direction.y, direction.x);
+            var ratio = GameConst.IsoRatioMove
+                        / Mathf.Sqrt(Mathf.Pow(GameConst.IsoRatioMove * Mathf.Cos(angle), 2) +
                                      Mathf.Pow(Mathf.Sin(angle), 2));
             return maxRange * ratio;
         }

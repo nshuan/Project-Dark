@@ -68,6 +68,7 @@ namespace Economic.InGame
         private float delayHideCursorCounter;
         private bool chargeBlockCollect;
         private int tempItemCollectedCount;
+        private bool levelComplete;
         
         public bool IsChargeBlockCollect => chargeBlockCollect;
 
@@ -84,7 +85,10 @@ namespace Economic.InGame
             if (DemoConfig.CollectLogicType == 2 && !_cam)
                 _cam = Camera.main;
 
+            levelComplete = false;
             LevelManager.Instance.OnLevelPreLoaded += OnLevelPreLoaded;
+            LevelManager.Instance.OnLose += () => levelComplete = true;
+            LevelManager.Instance.OnWin += () => levelComplete = true;
         }
 
         private void OnLevelPreLoaded(LevelConfig level)
@@ -118,6 +122,7 @@ namespace Economic.InGame
 
         public void TryRegisterItem(Collider2D col)
         {
+            if (levelComplete) return;
             if (!col) return;
             if (!col.CompareTag("Collectible")) return;
             if (_active.ContainsKey(col.transform.GetInstanceID())) return;

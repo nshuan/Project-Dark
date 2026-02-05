@@ -16,8 +16,9 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 2bfa92c94f94ea048b4f6427a3babf0a, type: 2}
+    - {fileID: 3134462521366388888, guid: 95af54fc898b08949b1ad7b3115feaaf, type: 3}
     - {fileID: 11400000, guid: ff66082d35a8786429078ae8cc5e9433, type: 2}
-    - {fileID: 3134462521366388888, guid: 6b6d6548c9a28704f9cbabd97a6d9cbf, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -29,7 +30,7 @@ MonoBehaviour:
         mscorlib
     - Name: 
       Entry: 12
-      Data: 1
+      Data: 2
     - Name: 
       Entry: 7
       Data: 1|InGame.GateConfig, Assembly-CSharp
@@ -41,10 +42,10 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: 5.870867
+      Data: -0.1271854
     - Name: 
       Entry: 4
-      Data: 0.7811022
+      Data: -3.28139925
     - Name: 
       Entry: 8
       Data: 
@@ -53,13 +54,10 @@ MonoBehaviour:
       Data: 2|System.Int32[], mscorlib
     - Name: 
       Entry: 14
-      Data: 2
-    - Name: 
-      Entry: 3
       Data: 1
     - Name: 
       Entry: 3
-      Data: 2
+      Data: 0
     - Name: 
       Entry: 13
       Data: 
@@ -71,25 +69,151 @@ MonoBehaviour:
       Data: 0
     - Name: duration
       Entry: 4
-      Data: 6
+      Data: 4
     - Name: spawnType
       Entry: 10
       Data: 0
     - Name: intervalLoop
       Entry: 4
-      Data: 2
+      Data: 4
     - Name: spawnLogic
       Entry: 7
-      Data: 3|InGame.GateSpawnMultiple, Assembly-CSharp
+      Data: 3|InGame.GateSpawnPositions, Assembly-CSharp
     - Name: amount
       Entry: 3
       Data: 2
-    - Name: maxRadius
+    - Name: spawnPositions
+      Entry: 7
+      Data: 4|UnityEngine.Vector2[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
       Entry: 4
-      Data: 1.8
-    - Name: randomSpanAngle
+      Data: -1.56438875
+    - Name: 
       Entry: 4
-      Data: 60
+      Data: -2.73449945
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: -1.81876123
+    - Name: 
+      Entry: 4
+      Data: -3.59936428
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: spawnPositionInfos
+      Entry: 7
+      Data: 5|InGame.GateSpawnPositionInfo[], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 6|InGame.GateSpawnPositionInfo, Assembly-CSharp
+    - Name: spawnPosition
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: -1.56438875
+    - Name: 
+      Entry: 4
+      Data: -2.73449945
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attackPositions
+      Entry: 7
+      Data: 7|UnityEngine.Vector2[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: -5.88871241
+    - Name: 
+      Entry: 4
+      Data: -2.20031834
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 8|InGame.GateSpawnPositionInfo, Assembly-CSharp
+    - Name: spawnPosition
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: -1.81876123
+    - Name: 
+      Entry: 4
+      Data: -3.59936428
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attackPositions
+      Entry: 7
+      Data: 9|UnityEngine.Vector2[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: -6.24483347
+    - Name: 
+      Entry: 4
+      Data: -2.91255951
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -101,7 +225,307 @@ MonoBehaviour:
       Data: 0
     - Name: durationVisual
       Entry: 4
-      Data: 9
+      Data: 0
+    - Name: hideOrb
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 10|InGame.GateConfig, Assembly-CSharp
+    - Name: isBossGate
+      Entry: 5
+      Data: false
+    - Name: position
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: -0.152623489
+    - Name: 
+      Entry: 4
+      Data: -3.28139925
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: targetBaseIndex
+      Entry: 7
+      Data: 11|System.Int32[], mscorlib
+    - Name: 
+      Entry: 14
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: startTime
+      Entry: 4
+      Data: 0
+    - Name: duration
+      Entry: 4
+      Data: 5
+    - Name: spawnType
+      Entry: 10
+      Data: 2
+    - Name: intervalLoop
+      Entry: 4
+      Data: 6
+    - Name: spawnLogic
+      Entry: 7
+      Data: 12|InGame.GateSpawnPositions, Assembly-CSharp
+    - Name: amount
+      Entry: 3
+      Data: 6
+    - Name: spawnPositions
+      Entry: 7
+      Data: 13|UnityEngine.Vector2[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 6
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: -0.572336853
+    - Name: 
+      Entry: 4
+      Data: -1.89507151
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.343402445
+    - Name: 
+      Entry: 4
+      Data: -1.99682045
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 1.23370361
+    - Name: 
+      Entry: 4
+      Data: -2.04769516
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: -0.0381571464
+    - Name: 
+      Entry: 4
+      Data: -1.5643878
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.8775838
+    - Name: 
+      Entry: 4
+      Data: -1.64069939
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.5214623
+    - Name: 
+      Entry: 4
+      Data: -1.25914145
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: spawnPositionInfos
+      Entry: 7
+      Data: 14|InGame.GateSpawnPositionInfo[], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 6
+    - Name: 
+      Entry: 7
+      Data: 15|InGame.GateSpawnPositionInfo, Assembly-CSharp
+    - Name: spawnPosition
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: -0.572336853
+    - Name: 
+      Entry: 4
+      Data: -1.89507151
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attackPositions
+      Entry: 7
+      Data: 16|UnityEngine.Vector2[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 17|InGame.GateSpawnPositionInfo, Assembly-CSharp
+    - Name: spawnPosition
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.343402445
+    - Name: 
+      Entry: 4
+      Data: -1.99682045
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attackPositions
+      Entry: 9
+      Data: 16
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 18|InGame.GateSpawnPositionInfo, Assembly-CSharp
+    - Name: spawnPosition
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 1.23370361
+    - Name: 
+      Entry: 4
+      Data: -2.04769516
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attackPositions
+      Entry: 9
+      Data: 16
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 19|InGame.GateSpawnPositionInfo, Assembly-CSharp
+    - Name: spawnPosition
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: -0.0381571464
+    - Name: 
+      Entry: 4
+      Data: -1.5643878
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attackPositions
+      Entry: 9
+      Data: 16
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 20|InGame.GateSpawnPositionInfo, Assembly-CSharp
+    - Name: spawnPosition
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.8775838
+    - Name: 
+      Entry: 4
+      Data: -1.64069939
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attackPositions
+      Entry: 9
+      Data: 16
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 21|InGame.GateSpawnPositionInfo, Assembly-CSharp
+    - Name: spawnPosition
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.5214623
+    - Name: 
+      Entry: 4
+      Data: -1.25914145
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attackPositions
+      Entry: 9
+      Data: 16
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: gatePrefab
+      Entry: 10
+      Data: 1
+    - Name: startTimeVisual
+      Entry: 4
+      Data: 0
+    - Name: durationVisual
+      Entry: 4
+      Data: 0
     - Name: hideOrb
       Entry: 5
       Data: false

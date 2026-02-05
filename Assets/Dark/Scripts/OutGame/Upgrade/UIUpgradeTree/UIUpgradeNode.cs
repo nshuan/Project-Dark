@@ -106,7 +106,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         public virtual void UpdateUI()
         {
             var groupUnlockOrder =
-                config.groupId.Min((info) => UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, false));
+                config.groupId.Min((info) => UpgradeManager.Instance.GetGroupUnlockOrder(info.groupId, true));
             foreach (var logicV2 in config.nodeLogic)
             {
                 if (logicV2 is INodeDynamicBonusValueV2 { IsDynamic: true } dynamicLogic)
@@ -478,14 +478,14 @@ namespace Dark.Scripts.OutGame.Upgrade
                 if (data == null || data.level == 0) // Not activated yet
                 {
                     imgActivatedGlow.SetActive(false);
-                    imgNotEnoughGlow.SetActive(!canUpgrade && !DemoConfig.IsLockedNode(config.nodeId));
+                    imgNotEnoughGlow.SetActive(!canUpgrade && !config.lockOnDemo);
                     imgActivatedMaxGlow.SetActive(false);
                     rectActivatedMaxOutline.gameObject.SetActive(false);
                 }
                 else 
                 {
-                    imgActivatedGlow.SetActive(data.level < config.MaxLevel && canUpgrade && !DemoConfig.IsLockedNode(config.nodeId));
-                    imgNotEnoughGlow.SetActive(data.level < config.MaxLevel && !canUpgrade && !DemoConfig.IsLockedNode(config.nodeId));
+                    imgActivatedGlow.SetActive(data.level < config.MaxLevel && canUpgrade && !config.lockOnDemo);
+                    imgNotEnoughGlow.SetActive(data.level < config.MaxLevel && !canUpgrade && !config.lockOnDemo);
                     if (data.level >= config.MaxLevel)
                     {
                         imgActivatedMaxGlow.SetActive(true);
