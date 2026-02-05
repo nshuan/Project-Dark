@@ -51,7 +51,7 @@ namespace InGame
             cameraShakeEffect = new CameraShake() { Cam = VisualEffectHelper.Instance.DefaultCamera, Magnitude = 0.05f };
         }
 
-        public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool)
+        public override void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool, params float[] additionalParams)
         {
             maxHitWithBonus = Mathf.RoundToInt(size);
             lineRenderer.ResetLine(Array.Empty<Transform>());

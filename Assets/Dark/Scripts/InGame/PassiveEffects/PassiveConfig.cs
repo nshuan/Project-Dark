@@ -18,5 +18,10 @@ namespace InGame
         public float value;
         public float stagger;
         public MonoPassiveEntity passivePrefab;
+
+        public virtual float[] GetAdditionalParams()
+        {
+            return null;
+        }
     }
 }
