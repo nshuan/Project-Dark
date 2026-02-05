@@ -345,6 +345,26 @@ namespace InGame
             return (StatsCounterSlash.range + BonusInfo.bonusCounter.bonusSlashSize.add) * (1f + BonusInfo.bonusCounter.bonusSlashSize.mul);
         }
 
+        public static float GetCounterPiercingDetectRange()
+        {
+            return StatsCounterPiercing.detectRange;
+        }
+
+        public static float GetCounterSlashDetectRange()
+        {
+            return StatsCounterSlash.detectRange;
+        }
+
+        public static float GetCounterPiercingDelayAfterDetected()
+        {
+            return StatsCounterPiercing.delayOnDetectedEnemy;
+        }
+
+        public static float GetCounterSlashDelayAfterDetected()
+        {
+            return StatsCounterSlash.delayOnDetectedEnemy;
+        }
+
         #endregion
 
         #region Math

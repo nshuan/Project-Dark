@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using DG.Tweening;
 using InGame.Upgrade;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -18,8 +19,6 @@ namespace InGame.WatchTower
         [Space] [Header("Range")] 
         [SerializeField] protected Transform detectRange;
         [SerializeField] protected CircleCollider2D detectCollider;
-        [SerializeField] protected float detectRangeRadius;
-        [SerializeField] protected float delayAttackAfterDetected = 1f;
         
         protected bool counterCooldown;
 
@@ -28,6 +27,8 @@ namespace InGame.WatchTower
 
         protected int Damage => GetCounterDamage();
         protected float Cooldown => GetCounterCooldown();
+        protected float DetectRange => GetRangeRadius();
+        protected float DelayOnDetected => GetDelayOnDetectedEnemy();
 
         protected Vector2 counterDirection = Vector2.zero;
 
@@ -39,8 +40,8 @@ namespace InGame.WatchTower
             UpgradeManager.Instance.OnActivated += OnUpgradeBonusActivated;
             LevelManager.Instance.OnLose += OnLose;
             tower.OnDestroyed += OnTowerDestroyed;
-            detectRange.localScale = detectRangeRadius * Vector3.one;
-            detectCollider.radius = detectRangeRadius;
+            detectRange.localScale = DetectRange * Vector3.one;
+            detectCollider.radius = DetectRange;
             detectRange.gameObject.SetActive(false);
         }
 
@@ -49,6 +50,8 @@ namespace InGame.WatchTower
             UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
         }
 
+        #region Config
+        
         private int GetCounterDamage()
         {
             return counterType switch
@@ -68,7 +71,28 @@ namespace InGame.WatchTower
                 _ => 1
             };
         }
+
+        private float GetRangeRadius()
+        {
+            return counterType switch
+            {
+                NodeTowerCounter.CounterType.Pierce => LevelUtilityV2.GetCounterPiercingDetectRange(),
+                NodeTowerCounter.CounterType.Slash => LevelUtilityV2.GetCounterSlashDetectRange(),
+                _ => 1
+            };
+        }
         
+        private float GetDelayOnDetectedEnemy()
+        {
+            return counterType switch
+            {
+                NodeTowerCounter.CounterType.Pierce => LevelUtilityV2.GetCounterPiercingDelayAfterDetected(),
+                NodeTowerCounter.CounterType.Slash => LevelUtilityV2.GetCounterSlashDelayAfterDetected(),
+                _ => 1
+            };
+        }
+        
+        #endregion
         private void OnUpgradeBonusActivated(UpgradeBonusInfoV2 bonusInfo)
         {
             if (counterType == NodeTowerCounter.CounterType.Pierce)
@@ -90,15 +114,17 @@ namespace InGame.WatchTower
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (!canCounter) return;
+            // if (!canCounter) return;
             if (counterCooldown) return;
             if (!other.CompareTag("Enemy")) return;
             if (!other.transform.TryGetComponent<EnemyEntity>(out var enemy)) return;
+            var triggerDirection = other.transform.position - transform.position;
+            if (LevelUtilityV2.GetRelativeRange(DetectRange, triggerDirection) < triggerDirection.magnitude) return;
 
             enemy.OnDead += OnEnemyDead;
             totalInRangeTarget += 1;
-            counterDirection.x = enemy.transform.position.x - transform.position.x;
-            counterDirection.y = enemy.transform.position.y - transform.position.y;
+            counterDirection.x = triggerDirection.x;
+            counterDirection.y = triggerDirection.y;
             if (coroutineCounter == null) coroutineCounter = StartCoroutine(IECounter(Cooldown));
         }
 
@@ -110,8 +136,14 @@ namespace InGame.WatchTower
             {
                 detectRange.gameObject.SetActive(false);
                 StopCoroutine(coroutineCounter);
+                counterCooldown = false;
                 coroutineCounter = null;
             }
+        }
+
+        private void OnTriggerStay2D(Collider2D other)
+        {
+            OnTriggerEnter2D(other);
         }
 
         private void OnEnemyDead(EnemyDieReason dieReason)
@@ -122,6 +154,7 @@ namespace InGame.WatchTower
             {
                 detectRange.gameObject.SetActive(false);
                 StopCoroutine(coroutineCounter);
+                counterCooldown = false;
                 coroutineCounter = null;
             }
         }
@@ -130,15 +163,18 @@ namespace InGame.WatchTower
         {
             while (totalInRangeTarget > 0)
             {
+                DOTween.Kill(vfxActivateCounter);
                 detectRange.gameObject.SetActive(true);
-                yield return new WaitForSeconds(delayAttackAfterDetected); 
+                yield return new WaitForSeconds(DelayOnDetected); 
                 counterCooldown = true;
                 vfxActivateCounter.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(counterDirection.y, counterDirection.x) * Mathf.Rad2Deg);
                 vfxActivateCounter.SetActive(true);
                 Counter(transform.position, counterDirection, Damage, bulletSpeedScale);
                 detectRange.gameObject.SetActive(false);
-                yield return new WaitForSeconds(vfxActivateCounterDuration);
-                vfxActivateCounter.SetActive(false);
+                DOVirtual.DelayedCall(vfxActivateCounterDuration, () =>
+                {
+                    vfxActivateCounter.SetActive(false);
+                }).SetTarget(vfxActivateCounter);
                 yield return new WaitForSeconds(cooldown - vfxActivateCounterDuration);
                 counterCooldown = false;
             }

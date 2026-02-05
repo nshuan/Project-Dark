@@ -10,7 +10,7 @@ namespace InGame
     [Serializable]
     public class MoveAutoAttack : IMouseInput
     {
-        private InputInGame InputManager { get; set; }
+        private PlayerCharacter Character { get; set; }
 
         protected Camera Cam { get; set; }
         protected MonoCursor cursor;
@@ -46,12 +46,12 @@ namespace InGame
             mouseHoverEnemies = new Collider2D[20];
         }
 
-        public void Initialize(InputInGame manager, MoveChargeController chargeController)
+        public void Initialize(PlayerCharacter character, MoveChargeController chargeController)
         {
             CanShoot = GameConst.DefaultAutoAttack;
             cursor.SetAuto(GameConst.DefaultAutoAttack);
 
-            InputManager = manager;
+            Character = character;
             Cooldown = LevelUtilityV2.GetNormalAttackCooldown();
             ActivateDuration = 1f;
         }
@@ -77,7 +77,7 @@ namespace InGame
                 maxHit += LevelUtilityV2.GetNormalPiercingAmount();
             var stagger = LevelUtilityV2.GetBaseStagger();
             
-            var delayShot = InputManager.PlayerVisual.PlayShoot(worldMousePosition);
+            var delayShot = Character.PlayShoot(worldMousePosition);
             var targetEnemy = nearestEnemy;
             var activateSplitBullets = 0;
             if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackBullet) 
@@ -93,14 +93,14 @@ namespace InGame
                         angle = LevelUtilityV2.StatsNormalBullet.GetNormalBulletSpanAngle(activateSplitBullets + 1)
                     }
                 };
-            InputManager.DelayCall(delayShot, () =>
+            Character.DelayCall(delayShot, () =>
             {
-                InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(skillRange);
+                Character.Weapon.GetAllEnemiesInRange(skillRange);
                 
                 LevelUtilityV2.StatsNormalAttack.ShootToTarget(
                     LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.Normal],
                     targetEnemy,
-                    InputManager.ProjectileSpawnPos.position,
+                    Character.transform.position,
                     LevelManager.Instance.CurrentTower.GetBaseCenter(),
                     tempMousePos,
                     damage,
@@ -168,7 +168,7 @@ namespace InGame
 
             if (!CanShoot)
             {
-                InputManager.PlayerVisual.SetDirection(worldMousePosition);
+                Character.SetDirection(worldMousePosition);
                 if (nearestEnemy) nearestEnemy.SetAimed(false);
                 forceTargetEnemy?.SetAimed(false);
                 return;
@@ -234,7 +234,7 @@ namespace InGame
                 this.worldMousePosition.y = worldMousePosition.y; 
             }
             
-            InputManager.PlayerVisual.SetDirection(this.worldMousePosition);
+            Character.SetDirection(this.worldMousePosition);
             
             var mousePosition = Input.mousePosition;
             mousePosition.z = 0; // Set z to 0 for 2D
