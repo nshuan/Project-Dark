@@ -26,8 +26,8 @@ namespace Dark.Scripts.OutGame.Intro
 
         private void Start()
         {
-            btnShowSkip.onClick.RemoveAllListeners();
-            btnShowSkip.onClick.AddListener(ShowSkip);
+            // btnShowSkip.onClick.RemoveAllListeners();
+            // btnShowSkip.onClick.AddListener(ShowSkip);
             btnSkip.onClick.RemoveAllListeners();
             btnSkip.onClick.AddListener(() =>
             {
@@ -37,6 +37,7 @@ namespace Dark.Scripts.OutGame.Intro
                 LoadGame(true);
             });
             btnSkip.gameObject.SetActive(false);
+            ShowSkip();
             ShowIntro();
         }
 
@@ -93,10 +94,10 @@ namespace Dark.Scripts.OutGame.Intro
             btnSkip.gameObject.SetActive(true);
             DOTween.Kill(btnSkip);
             DOTween.Sequence(btnSkip)
-                .Append(cvgSkip.DOFade(1f, 1f))
-                .AppendInterval(3f)
-                .Append(cvgSkip.DOFade(0f, 1f))
-                .AppendCallback(() => btnSkip.gameObject.SetActive(false));
+                .AppendInterval(delayShowBtnSkip)
+                .Append(cvgSkip.DOFade(1f, 1f));
+            // .Append(cvgSkip.DOFade(0f, 1f))
+            // .AppendCallback(() => btnSkip.gameObject.SetActive(false));
         }
         
         private void OnDestroy()
