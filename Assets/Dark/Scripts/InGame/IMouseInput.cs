@@ -4,7 +4,7 @@ namespace InGame
 {
     public interface IMouseInput : IDisposable, IMoveMouseInput
     {
-        void Initialize(InputInGame manager, MoveChargeController chargeController);
+        void Initialize(PlayerCharacter character, MoveChargeController chargeController);
         void OnMouseClick();
         void OnHoldStarted();
         void OnHoldReleased();
