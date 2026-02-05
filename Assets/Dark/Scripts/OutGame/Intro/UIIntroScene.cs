@@ -26,8 +26,8 @@ namespace Dark.Scripts.OutGame.Intro
 
         private void Start()
         {
-            // btnShowSkip.onClick.RemoveAllListeners();
-            // btnShowSkip.onClick.AddListener(ShowSkip);
+            btnShowSkip.onClick.RemoveAllListeners();
+            btnShowSkip.onClick.AddListener(UpdateSkipButton);
             btnSkip.onClick.RemoveAllListeners();
             btnSkip.onClick.AddListener(() =>
             {
@@ -92,12 +92,42 @@ namespace Dark.Scripts.OutGame.Intro
             if (btnSkip.gameObject.activeSelf) return;
             cvgSkip.alpha = 0f;
             btnSkip.gameObject.SetActive(true);
+            btnShowSkip.interactable = false;
             DOTween.Kill(btnSkip);
             DOTween.Sequence(btnSkip)
                 .AppendInterval(delayShowBtnSkip)
-                .Append(cvgSkip.DOFade(1f, 1f));
+                .Append(cvgSkip.DOFade(1f, 1f))
+                .AppendCallback(() =>
+                {
+                    btnShowSkip.interactable = true;
+                });
             // .Append(cvgSkip.DOFade(0f, 1f))
             // .AppendCallback(() => btnSkip.gameObject.SetActive(false));
+        }
+
+        private void UpdateSkipButton()
+        {
+            DOTween.Kill(btnSkip);
+            var seq = DOTween.Sequence(btnSkip);
+            if (btnSkip.gameObject.activeSelf)
+            {
+                seq.Append(cvgSkip.DOFade(0f, 1f))
+                    .AppendCallback(() =>
+                    {
+                        btnSkip.gameObject.SetActive(false);
+                    });
+            }
+            else
+            {
+                seq.AppendCallback(() =>
+                {
+                    cvgSkip.alpha = 0f;
+                    cvgSkip.gameObject.SetActive(true);
+                })
+                .Append(cvgSkip.DOFade(1f, 1f));
+            }
+
+            seq.Play();
         }
         
         private void OnDestroy()
