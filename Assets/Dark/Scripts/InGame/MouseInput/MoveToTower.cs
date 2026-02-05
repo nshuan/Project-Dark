@@ -246,6 +246,16 @@ namespace InGame
                             cursor.SetMoveCursor(false, selectingTower);
                         }
                     }
+                    else if (Input.GetKeyDown(GameSettings.KeyMoveTower3) && CurrentTowerIndex != 3 && LevelManager.Instance.Towers.Length > 3)
+                    {
+                        selectingTower = 3;
+                        OnMouseClick();
+                        if (UITutorialStepMoveTowers.ShouldShowHotKeyInstruction)
+                        {
+                            UITutorialStepMoveTowers.HideHotKeyInstruction();
+                            cursor.SetMoveCursor(false, selectingTower);
+                        }
+                    }
                 }
             }
 

@@ -27,6 +27,7 @@ namespace Dark.Scripts.Settings
         public static KeyCode KeyMoveTower0;
         public static KeyCode KeyMoveTower1;
         public static KeyCode KeyMoveTower2;
+        public static KeyCode KeyMoveTower3;
 
         [Header("In-game settings")] 
         public static bool ShowEnemyHealth;
@@ -61,6 +62,7 @@ namespace Dark.Scripts.Settings
             KeyMoveTower0 = _settings.keyMoveTower0;
             KeyMoveTower1 = _settings.keyMoveTower1;
             KeyMoveTower2 = _settings.keyMoveTower2;
+            KeyMoveTower3 = _settings.keyMoveTower3;
             ShowEnemyHealth = _settings.showEnemyHealth;
             ShowBossHealth = _settings.showBossHealth;
             ShowGateWarning = _settings.showGateWarning;
@@ -89,6 +91,7 @@ namespace Dark.Scripts.Settings
             _settings.keyMoveTower0 = KeyMoveTower0;
             _settings.keyMoveTower1 = KeyMoveTower1;
             _settings.keyMoveTower2 = KeyMoveTower2;
+            _settings.keyMoveTower3 = KeyMoveTower3;
             _settings.showEnemyHealth = ShowEnemyHealth;
             _settings.showBossHealth = ShowBossHealth;
             _settings.showGateWarning = ShowGateWarning;
@@ -123,6 +126,7 @@ namespace Dark.Scripts.Settings
             public KeyCode keyMoveTower0 = KeyCode.Alpha1;
             public KeyCode keyMoveTower1 = KeyCode.Alpha2;
             public KeyCode keyMoveTower2 = KeyCode.Alpha3;
+            public KeyCode keyMoveTower3 = KeyCode.Alpha4;
 
             public bool showEnemyHealth = true;
             public bool showBossHealth = true;
