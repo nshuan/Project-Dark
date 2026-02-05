@@ -50,7 +50,14 @@ namespace Dark.Scripts.OutGame.Intro
 
         private IEnumerator IEIntro()
         {
-            yield return new WaitForSeconds(2f);
+            var currentTime = DateTime.Now;
+            videoPlayer.Prepare();
+            while (!videoPlayer.isPrepared)
+                yield return null;
+            var prepareDuration = (DateTime.Now - currentTime).TotalSeconds;
+            if (prepareDuration < 2f)
+                yield return new WaitForSeconds(2f - (float)prepareDuration);
+            
             imgCover.gameObject.SetActive(false);
             videoPlayer.Play();
             yield return new WaitForSeconds((float)videoPlayer.length);
