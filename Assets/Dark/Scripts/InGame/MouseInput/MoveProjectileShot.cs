@@ -9,7 +9,7 @@ namespace InGame
     [Serializable]
     public class MoveProjectileShot : IMouseInput
     {
-        private InputInGame InputManager { get; set; }
+        private PlayerCharacter Character { get; set; }
 
         protected Camera Cam { get; set; }
         protected MonoCursor cursor;
@@ -68,9 +68,9 @@ namespace InGame
             cursorRect = cursor.GetComponent<RectTransform>();
         }
 
-        public void Initialize(InputInGame manager, MoveChargeController chargeController)
+        public void Initialize(PlayerCharacter character, MoveChargeController chargeController)
         {
-            InputManager = manager;
+            Character = character;
             ChargeController = chargeController;
             CooldownNormal = LevelUtilityV2.GetNormalAttackCooldown();
             CooldownCharge = LevelUtilityV2.GetChargeAttackCooldown();
@@ -84,7 +84,7 @@ namespace InGame
             ChargeController.Cam = Cam;
             
             // Setup shot radius
-            InputManager.PlayerVisual.ShowShotRadius(
+            Character.ShowShotRadius(
                 LevelManager.Instance.CurrentTower.GetBaseCenter(),
                 LevelUtilityV2.GetNormalAttackRange(Vector2.right));
         }
@@ -112,19 +112,19 @@ namespace InGame
                 maxHit += LevelUtilityV2.GetNormalPiercingAmount();
             var stagger = LevelUtilityV2.GetBaseStagger();
 
-            InputManager.BlockTeleport = true;
+            InputInGame.BlockTeleport = true;
             var delayShot = 0f;
             if (isCharge)
             {
                 delayShot = 0f;
-                InputManager.PlayerVisual.EndChargeAndShoot();
+                Character.EndChargeAndShoot();
             }
             else
             {
-                delayShot = InputManager.PlayerVisual.PlayShoot(worldMousePosition);
+                delayShot = Character.PlayShoot(worldMousePosition);
             }
             
-            InputManager.DelayCall(delayShot, () =>
+            Character.DelayCall(delayShot, () =>
             {
                 var isChargeBullet = canChargeBullet && bulletChargeAdded > 0;
                 var isChargeSize = canChargeSize && sizeChargeAdded > 0;
@@ -157,7 +157,7 @@ namespace InGame
                         };
                     LevelUtilityV2.StatsNormalAttack.Shoot(
                         LevelUtilityV2.StatsNormalAttack.projectiles[projectileType],
-                        InputManager.ProjectileSpawnPos.position,
+                        Character.transform.position,
                         LevelManager.Instance.CurrentTower.GetBaseCenter(),
                         tempMousePos,
                         damage,
@@ -179,7 +179,7 @@ namespace InGame
                     var chargeRange = (canChargeRange && rangeChargeAdded > 0 ? 1 + rangeChargeAdded : 1f) *
                                       LevelUtilityV2.GetNormalAttackRange(Vector2.right);
                     // Không check trong range charge nữa, check trên toàn map luôn
-                    InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(15f); 
+                    Character.Weapon.GetAllEnemiesInRange(15f); 
                     
                     ChargeController.Attack((projectile, direction, delay) =>
                     {
@@ -218,7 +218,7 @@ namespace InGame
                     });
                 }
 
-                InputManager.BlockTeleport = false;
+                InputInGame.BlockTeleport = false;
             });
 
             CooldownNormal = LevelUtilityV2.GetNormalAttackCooldown();
@@ -239,7 +239,7 @@ namespace InGame
             
 
             // Reset range
-            InputManager.PlayerVisual.UpdateShotRadius(
+            Character.UpdateShotRadius(
                 LevelUtilityV2.GetNormalAttackRange(Vector2.right), false);
             
             // Do cursor effect
@@ -281,7 +281,7 @@ namespace InGame
             if (isCharging)
                 CombatActions.OnChargeEnded?.Invoke();
             isCharging = false;
-            InputManager.PlayerVisual.EndChargeAndShoot();
+            Character.EndChargeAndShoot();
         }
 
         public void ResetChargeVariable()
@@ -353,9 +353,9 @@ namespace InGame
                     if (hasSetupCharge == false)
                     {
                         hasSetupCharge = true;
-                        InputManager.MouseAutoAttack.OnHoldStarted();
-                        InputManager.PlayerVisual.UpdateChargeScale(1f);
-                        InputManager.PlayerVisual.PlayCharge();
+                        InputInGame.OnChargeSetup?.Invoke();
+                        Character.UpdateChargeScale(1f);
+                        Character.PlayCharge();
                         cursor.UpdateScale(0f);
                         cursor.UpdateCooldown(false, 0f);
                     }
@@ -386,8 +386,8 @@ namespace InGame
                             bulletChargeAdded = Math.Min(bulletChargeAdded, LevelUtilityV2.GetChargeBulletAmount());
                             for (int i = 0; i < bulletChargeAdded - ChargeController.TotalBulletAdded; i++)
                             {
-                                ChargeController.AddBullet(InputManager.PlayerVisual.transform.position,
-                                    this.worldMousePosition - InputManager.PlayerVisual.transform.position);
+                                ChargeController.AddBullet(Character.transform.position,
+                                    this.worldMousePosition - Character.transform.position);
                             }
                         }
 
@@ -400,13 +400,13 @@ namespace InGame
                         {
                             sizeChargeAdded = sizePerStep * Math.Min(chargeStep, sizeChargeMaxStep);
                             ChargeController.AddSize(sizeChargeAdded > 0 ? 1 + sizeChargeAdded : 1f);
-                            InputManager.PlayerVisual.UpdateChargeScale(1f + Math.Min(chargeStep, sizeChargeMaxStep) * 0.15f);
+                            Character.UpdateChargeScale(1f + Math.Min(chargeStep, sizeChargeMaxStep) * 0.15f);
                         }
 
                         if (canChargeRange && rangeChargeMaxStep > 0)
                         {
                             rangeChargeAdded = rangePerStep * Math.Min(chargeStep, rangeChargeMaxStep);
-                            InputManager.PlayerVisual.UpdateShotRadius(
+                            Character.UpdateShotRadius(
                                 (rangeChargeAdded > 0 ? 1 + rangeChargeAdded : 1f) * LevelUtilityV2.GetNormalAttackRange(Vector2.right));
                         }
                     }
