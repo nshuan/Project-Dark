@@ -31,6 +31,7 @@ namespace Dark.Scripts.OutGame.Intro
             btnSkip.onClick.RemoveAllListeners();
             btnSkip.onClick.AddListener(() =>
             {
+                btnSkip.interactable = false;
                 DOTween.Kill(btnSkip);
                 cvgSkip.alpha = 1f; 
                 if (coroutineIntro != null) StopCoroutine(coroutineIntro);
