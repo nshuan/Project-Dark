@@ -99,8 +99,7 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
                     }
                 });
                 
-                btn.GetComponentInChildren<TextMeshProUGUI>()
-                    .SetText(LanguageData.Instance.GetLocalizedString("key_day").Replace("%{value}", a.ToString()));
+                btn.GetComponentInChildren<TextMeshProUGUI>().SetTextLanguage("key_day", ("%{value}", a.ToString()));
 
                 var groupBlock = btn.transform.Find("groupBlock");
                 if (groupBlock)
@@ -208,7 +207,7 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
                     });
                     
                     button.GetComponentInChildren<TextMeshProUGUI>()
-                        .SetText(LanguageData.Instance.GetLocalizedString("key_day").Replace("%{value}", a.ToString()));
+                        .SetTextLanguage("key_day", ("%{value}", a.ToString()));
                 }
                 
                 listShowQuickButtons.Add(cvg);
