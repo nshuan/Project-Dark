@@ -45,6 +45,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                         // imgSelected.gameObject.SetActive(true);
                         
                         // Select class
+                        btnSelect.interactable = false;
                         UIUpgradeScene.Instance.SelectClass(classType);
                     });
                     DoExpand();
