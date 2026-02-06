@@ -44,8 +44,8 @@ namespace Dark.Scripts.OutGame.SaveSlot
             if (!isEmptySlot)
             {
                 var classType = SaveSlotManager.Instance.GetClassTypeIndex(slotIndex);
-                if (classType >= 0 || classType < imgClass.Length) imgClass[classType].SetActive(true);
-                if (classType >= 0 || classType < imgClassLight.Length) imgClassLight[classType].SetActive(true);
+                if (classType >= 0 && classType < imgClass.Length) imgClass[classType].SetActive(true);
+                if (classType >= 0 && classType < imgClassLight.Length) imgClassLight[classType].SetActive(true);
                 
                 txtClassName.SetText(SaveSlotManager.Instance.GetDisplayClassName(slotIndex));
                 txtDayPassed.SetText(SaveSlotManager.Instance.GetDisplayPassedDays(slotIndex));
