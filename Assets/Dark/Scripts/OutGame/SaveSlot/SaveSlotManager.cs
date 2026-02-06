@@ -1,6 +1,7 @@
 using System;
 using Core;
 using Dark.Scripts.Tutorial;
+using Dark.Tools.Language.Runtime;
 using Data;
 using Economic;
 using InGame.CharacterClass;
@@ -85,8 +86,10 @@ namespace Dark.Scripts.OutGame.SaveSlot
         {
             if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length) return "days:";
             if (IsEmptySlot(slotIndex)) return "days:";
- 
-            return $"days: {GetSlotData(slotIndex).passedDay}";
+
+            return LanguageData.Instance
+                .GetLocalizedString("key_save_slot_days", LanguageManager.Instance.CurrentLanguage)
+                .Replace("%{value}", GetSlotData(slotIndex).passedDay.ToString());
         }
 
         public string GetDisplayLevel(int slotIndex)
@@ -94,7 +97,9 @@ namespace Dark.Scripts.OutGame.SaveSlot
             if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length) return "level:";
             if (IsEmptySlot(slotIndex)) return "level:";
             
-            return $"level: {GetSlotData(slotIndex).level + 1}";
+            return LanguageData.Instance
+                .GetLocalizedString("key_save_slot_level", LanguageManager.Instance.CurrentLanguage)
+                .Replace("%{value}", (GetSlotData(slotIndex).level + 1).ToString());
         }
 
         public string GetDisplayTimePlayed(int slotIndex)

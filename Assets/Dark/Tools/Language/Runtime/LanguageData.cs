@@ -18,11 +18,19 @@ namespace Dark.Tools.Language.Runtime
         [NonSerialized, OdinSerialize] public Dictionary<string, LanguageItem> dataMap;
         [NonSerialized, OdinSerialize] public Dictionary<LanguageType, TMP_FontAsset> fontMap;
 
-        public string GetLocalizedString(string key)
+        public string GetLocalizedString(string key, LanguageType language)
         {
             if (dataMap == null || !dataMap.TryGetValue(key, out var data)) return string.Empty;
-            if (data.languageMap.TryGetValue(LanguageManager.Instance.CurrentLanguage, out var term)) return term;
+            if (data.languageMap.TryGetValue(language, out var term)) return term;
             return data.languageMap[LanguageType.english];
+        }
+        
+        public TMP_FontAsset GetFontAssetRuntime(LanguageType languageType)
+        {
+            if (fontMap.TryGetValue(languageType, out var result))
+                return result;
+
+            return fontMap[LanguageType.english];
         }
         
         #region Singleton
