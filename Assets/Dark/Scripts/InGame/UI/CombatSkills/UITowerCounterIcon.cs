@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Dark.Tools.Language.Runtime;
 using Data;
 using InGame.UI.InGameToast;
 using InGame.Upgrade;
@@ -99,46 +100,30 @@ namespace InGame.UI.CombatSkills
             switch (counterType)
             {
                 case NodeTowerCounter.CounterType.Pierce:
-                    OnSkillUsed(cooldown);
+                    OnSkillUsed(cooldown,
+                        LanguageData.Instance.GetLocalizedString("key_notify_counter_pierce",
+                            LanguageManager.Instance.CurrentLanguage));
                     break;
                 // Mặc định counter piercing là skill số 1, check nếu đã unlock thì counter slash là skill số 2,
                 // không thì counter slash là skill số 1
                 case NodeTowerCounter.CounterType.Slash:
                     var unlockedPierce = LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockCounterPiercing;
                     if (unlockedPierce)
-                        On2ndSkillUsed(cooldown);
+                        On2ndSkillUsed(cooldown, LanguageData.Instance.GetLocalizedString("key_notify_counter_slash",
+                            LanguageManager.Instance.CurrentLanguage));
                     else
-                        OnSkillUsed(cooldown);
+                        OnSkillUsed(cooldown, LanguageData.Instance.GetLocalizedString("key_notify_counter_slash",
+                            LanguageManager.Instance.CurrentLanguage));
                     break;
             }
         }
         
-        protected override void ShowToast()
+        protected override void ShowToast(string text)
         {
             if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockCounterPiercing == false && LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockCounterSlash == false) return;
-            var unlockedPierce =
-                LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockCounterPiercing;
-            var unlockedSlash =
-                LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockCounterSlash;
-            
-            // Nếu mới unlock 1 loại thì dùng tên loại đó
-            // Nếu đã unlock cả 2 loại thì dùng tên cả 2 loại
-            var message = "";
-            if (unlockedPierce && unlockedSlash)
-            {
-                message = "Vowpierce and Trine Severance are ready!";
-            }
-            else if (unlockedPierce)
-            {
-                message = "Vowpierce is ready!";
-            }
-            else if (unlockedSlash)
-            {
-                message = "Trine Severance is ready!";
-            }
             
             ToastInGameManager.Instance.Register(
-                message: message,
+                message: text,
                 icon: toastIcon);
         }
         
