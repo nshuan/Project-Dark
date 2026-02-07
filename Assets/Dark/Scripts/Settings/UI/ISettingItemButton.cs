@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Dark.Scripts.Audio;
 using Dark.Scripts.AudioV2;
 using Dark.Scripts.Settings.Resolution;
+using Dark.Tools.Language.Runtime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -142,7 +143,7 @@ namespace Dark.Scripts.Settings.UI
         public void UpdateValue(bool onEnable)
         {
             if (onEnable) isWindowedMode = GameSettings.WindowedMode;
-            DisplayText.SetText(isWindowedMode ? "Off" : "On");
+            DisplayText.SetTextLanguage(isWindowedMode ? "key_off" : "key_on");
         }
     }
 
