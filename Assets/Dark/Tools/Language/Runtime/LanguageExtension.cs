@@ -22,5 +22,12 @@ namespace Dark.Tools.Language.Runtime
             }
             txt.SetText(text);
         }
+
+        public static void SetTextValueLanguage(this TextMeshProUGUI txt, string text)
+        {
+            var currentLanguage = LanguageManager.Instance.CurrentLanguage;
+            txt.font = LanguageData.Instance.GetFontAssetRuntime(currentLanguage);
+            txt.SetText(text);
+        }
     }
 }

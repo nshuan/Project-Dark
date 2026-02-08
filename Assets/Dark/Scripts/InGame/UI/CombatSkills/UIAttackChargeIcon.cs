@@ -1,4 +1,5 @@
 using System;
+using Dark.Tools.Language.Runtime;
 using InGame.UI.InGameToast;
 using InGame.Upgrade;
 using UnityEngine;
@@ -25,7 +26,7 @@ namespace InGame.UI.CombatSkills
 
         private void OnDestroy()
         {
-            CombatActions.OnAttackCharge -= OnSkillUsed;
+            CombatActions.OnAttackCharge -= OnChargeUsed;
             UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
         }
         
@@ -73,8 +74,8 @@ namespace InGame.UI.CombatSkills
             {
                 available = true;
                 callbackShowSkill?.Invoke();
-                CombatActions.OnAttackCharge -= OnSkillUsed;
-                CombatActions.OnAttackCharge += OnSkillUsed;
+                CombatActions.OnAttackCharge -= OnChargeUsed;
+                CombatActions.OnAttackCharge += OnChargeUsed;
             }
             else
             {
@@ -83,22 +84,30 @@ namespace InGame.UI.CombatSkills
             }
         }
         
-        protected override void ShowToast()
+        private void OnChargeUsed(float cooldown)
+        {
+            OnSkillUsed(cooldown, string.Empty);
+        }
+        
+        protected override void ShowToast(string text)
         {
             // Nếu mới unlock 1 loại thì dùng tên loại đó
             // Nếu đã unlock cả 2 loại thì dùng tên cả 2 loại
             var message = "";
             if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockChargeAttackSize && LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockChargeAttackBullet)
             {
-                message = "Splitting Echo and Wanderfang are ready!";
+                message = LanguageData.Instance.GetLocalizedString("key_notify_charge_both",
+                    LanguageManager.Instance.CurrentLanguage);
             }
             else if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockChargeAttackSize)
             {
-                message = "Splitting Echo is ready!";
+                message = LanguageData.Instance.GetLocalizedString("key_notify_charge_size",
+                    LanguageManager.Instance.CurrentLanguage);
             }
             else if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockChargeAttackBullet)
             {
-                message = "Wanderfang is ready!";
+                message = LanguageData.Instance.GetLocalizedString("key_notify_charge_bullet",
+                    LanguageManager.Instance.CurrentLanguage);
             }
             
             ToastInGameManager.Instance.Register(

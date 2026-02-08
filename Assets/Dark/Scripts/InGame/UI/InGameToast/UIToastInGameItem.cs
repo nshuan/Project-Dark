@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Dark.Tools.Language.Runtime;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -25,7 +26,7 @@ namespace InGame.UI.InGameToast
         private IEnumerator IEShowToast(ToastInGame toast, Action callbackComplete)
         {
             transform.localScale = new Vector3(1f, 0f, 1f);
-            txtMessage.SetText(toast.message);
+            txtMessage.SetTextValueLanguage(toast.message);
             txtMessage.SetAlpha(0f);
             imgIcon.sprite = toast.icon;
             imgIcon.SetAlpha(0f);

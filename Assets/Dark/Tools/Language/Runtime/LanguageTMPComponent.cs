@@ -36,7 +36,13 @@ namespace Dark.Tools.Language.Runtime
         {
             if (fontMap != null)
             {
-                txt.font = fontMap[language];
+                if (fontMap.TryGetValue(language, out var font))
+                    txt.font = font;
+                else
+                {
+                    font = LanguageData.Instance.GetFontAssetRuntime(language);
+                    txt.font = font;
+                }
             }
 
             if (valueMap != null)

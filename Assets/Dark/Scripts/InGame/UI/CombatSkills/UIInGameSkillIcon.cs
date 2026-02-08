@@ -58,17 +58,17 @@ namespace InGame.UI.CombatSkills
 
         public abstract void CheckShowSkill(Action callbackShow, Action callbackHide);
         
-        protected virtual void OnSkillUsed(float cooldown)
+        protected virtual void OnSkillUsed(float cooldown, string toastText)
         {
-            StartCoroutine(IECooldown(imgFillCooldown, groupIcon, vfxCooldownComplete, cooldown));
+            StartCoroutine(IECooldown(imgFillCooldown, groupIcon, vfxCooldownComplete, cooldown, toastText));
         }
 
-        protected virtual void On2ndSkillUsed(float cooldown)
+        protected virtual void On2ndSkillUsed(float cooldown, string toastText)
         {
-            StartCoroutine(IECooldown(imgFillCooldown2nd, secondSkill.transform, vfx2ndCooldownComplete, cooldown));
+            StartCoroutine(IECooldown(imgFillCooldown2nd, secondSkill.transform, vfx2ndCooldownComplete, cooldown, toastText));
         }
         
-        private IEnumerator IECooldown(Image imgCooldown, Transform icon, UIParticle vfx, float cooldown)
+        private IEnumerator IECooldown(Image imgCooldown, Transform icon, UIParticle vfx, float cooldown, string toastText)
         {
             imgCooldown.gameObject.SetActive(true);
             
@@ -81,7 +81,7 @@ namespace InGame.UI.CombatSkills
                 yield return null;
             }
 
-            ShowToast();
+            ShowToast(toastText);
             DOTween.Kill(groupIcon);
             icon.localScale = Vector3.one;
             icon.DOPunchScale(0.1f * Vector3.one, 0.2f).SetTarget(groupIcon);
@@ -156,7 +156,7 @@ namespace InGame.UI.CombatSkills
                 .Join(imgBackFadeActive.DOFade(0f, 0.2f));
         }
 
-        protected virtual void ShowToast()
+        protected virtual void ShowToast(string text)
         {
             ToastInGameManager.Instance.Register(string.Empty, null);
         }
