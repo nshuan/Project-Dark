@@ -55,7 +55,7 @@ namespace InGame
         protected RaycastHit2D[] hits = new RaycastHit2D[1];
         protected ProjectileCollider.HitEnemyInfo hitEnemyInfo;
 
-        private bool hasVfxHit;
+        protected bool hasVfxHit;
         
         #region Actions
 
