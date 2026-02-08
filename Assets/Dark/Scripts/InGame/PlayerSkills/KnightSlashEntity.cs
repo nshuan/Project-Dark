@@ -74,6 +74,7 @@ namespace InGame
 
         protected override IEnumerator IEActivate(float delay)
         {
+            transform.localScale = Range * Vector3.one;
             yield return new WaitForSeconds(delay);
             
             activated = true;
