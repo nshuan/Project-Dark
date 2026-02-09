@@ -79,7 +79,11 @@ namespace InGame
             {
                 if (int.TryParse(level.name.Split(" ")[1], out var levelNum))
                 {
-                    level.level = levelNum;
+                    if (level.level != levelNum)
+                    {
+                        level.level = levelNum;
+                        EditorUtility.SetDirty(level);
+                    }
                 }
                 else
                 {
@@ -103,6 +107,8 @@ namespace InGame
                 if (!levelMap.ContainsKey(i))
                     DebugUtility.LogError($"Level {i} is missing!");
             }
+            
+            AssetDatabase.SaveAssets();
         }
 #endif
     }

@@ -17,7 +17,7 @@ namespace Dark.Scripts.ForDemo
 
         protected virtual void Awake()
         {
-            defaultScale = node.transform.localScale;
+            defaultScale = node.nodeContent.localScale;
             defaultScale.z = 1f;
         }
 
@@ -40,7 +40,7 @@ namespace Dark.Scripts.ForDemo
         protected override bool ShouldShowButton()
         {
             if (node.config == null) return false;
-            return DemoConfig.IsLockedNode(node.config.nodeId);
+            return node.config.lockOnDemo;
         }
 
         public override void OnPointerEnter(PointerEventData eventData)
@@ -53,17 +53,17 @@ namespace Dark.Scripts.ForDemo
             DOTween.Kill(this);
             buttonVisual.alpha = 1f;
             hiddenButton?.SetActive(false);
-            node.transform.localRotation = Quaternion.identity;
-            node.transform.localScale = defaultScale;
-            node.transform.DOPunchRotation(new Vector3(0f, 0f, 10f), 0.3f, 20, 0.1f).SetTarget(transform);
-            node.transform.DOScale(new Vector3(0.2f, 0.2f, 0), 0.2f).SetRelative().SetEase(Ease.OutQuad);
+            node.nodeContent.localRotation = Quaternion.identity;
+            node.nodeContent.localScale = defaultScale;
+            node.nodeContent.DOPunchRotation(new Vector3(0f, 0f, 10f), 0.3f, 20, 0.1f).SetTarget(this);
+            node.nodeContent.DOScale(new Vector3(0.2f, 0.2f, 0), 0.2f).SetRelative().SetEase(Ease.OutQuad);
         }
 
         public override void OnPointerExit(PointerEventData eventData)
         {
             if (!DemoConfig.IsDemo) return;
             
-            node.transform.DOScale(defaultScale, 0.2f).SetEase(Ease.InQuad);
+            node.nodeContent.DOScale(defaultScale, 0.2f).SetEase(Ease.InQuad);
         }
 
         private Coroutine coroutinePointerDown;
@@ -73,14 +73,14 @@ namespace Dark.Scripts.ForDemo
             
             DOTween.Kill(this);
             DOTween.Sequence(this).SetUpdate(true).SetRelative()
-                .Append(node.transform.DOScale(new Vector3(-0.1f, -0.1f, -0.1f), 0.2f).SetEase(Ease.OutQuad)).Play();
+                .Append(node.nodeContent.DOScale(new Vector3(-0.1f, -0.1f, -0.1f), 0.2f).SetEase(Ease.OutQuad)).Play();
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
             DOTween.Kill(this);
             DOTween.Sequence(this).SetUpdate(true)
-                .Append(node.transform.DOScale(defaultScale + new Vector3(0.2f, 0.2f, 0), 0.2f)).Play();
+                .Append(node.nodeContent.DOScale(defaultScale + new Vector3(0.2f, 0.2f, 0), 0.2f)).Play();
         }
 
         public override void OnPointerClick(PointerEventData eventData)
@@ -95,7 +95,7 @@ namespace Dark.Scripts.ForDemo
             cachePopupWishlist.transform.SetAsLastSibling();
             DOTween.Kill(this);
             DOTween.Sequence(this).SetUpdate(true)
-                .Append(node.transform.DOPunchScale(new Vector3(-0.1f, -0.1f, -0.1f), 0.2f))
+                .Append(node.nodeContent.DOPunchScale(new Vector3(-0.1f, -0.1f, -0.1f), 0.2f))
                 .OnComplete(() =>
                 {
                     cachePopupWishlist.gameObject.SetActive(true);

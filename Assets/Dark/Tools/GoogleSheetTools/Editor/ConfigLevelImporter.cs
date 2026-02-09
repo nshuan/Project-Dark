@@ -10,6 +10,8 @@ namespace Dark.Tools.GoogleSheetTool
 {
     public class ConfigLevelImporter
     {
+        static NumberFormatInfo format = new NumberFormatInfo { NumberDecimalSeparator = "," };
+        
         public static void Import(ScriptableObject[] configs, List<string[]> csvData)
         {
             var configDict = new Dictionary<int, LevelConfig>();
@@ -56,35 +58,35 @@ namespace Dark.Tools.GoogleSheetTool
                 }
                 
                 // The fourth column is scale hp
-                if (!float.TryParse(cols[3], NumberStyles.Float, new NumberFormatInfo { NumberDecimalSeparator = "," }, out var scaleHp))
+                if (!float.TryParse(cols[3], NumberStyles.Float, format, out var scaleHp))
                 {
                     Debug.LogWarning($"Row {i+1} skipped - invalid hp scale");
                     continue;
                 }
                 
                 // The fifth column is scale damage
-                if (!float.TryParse(cols[4], NumberStyles.Float, new NumberFormatInfo { NumberDecimalSeparator = "," }, out var scaleDmg))
+                if (!float.TryParse(cols[4], NumberStyles.Float, format, out var scaleDmg))
                 {
                     Debug.LogWarning($"Row {i+1} skipped - invalid damage scale");
                     continue;
                 }
                 
                 // The sixth column is scale speed
-                if (!float.TryParse(cols[5], NumberStyles.Float, new NumberFormatInfo { NumberDecimalSeparator = "," }, out var scaleSpe))
+                if (!float.TryParse(cols[5], NumberStyles.Float, format, out var scaleSpe))
                 {
                     Debug.LogWarning($"Row {i+1} skipped - invalid speed scale");
                     continue;
                 }
                 
                 // The seventh column is scale exp
-                if (!float.TryParse(cols[6], NumberStyles.Float, new NumberFormatInfo { NumberDecimalSeparator = "," }, out var scaleExp))
+                if (!float.TryParse(cols[6], NumberStyles.Float, format, out var scaleExp))
                 {
                     Debug.LogWarning($"Row {i+1} skipped - invalid exp scale");
                     continue;
                 }
                 
                 // The eighth column is scale vestige
-                if (!float.TryParse(cols[7], NumberStyles.Float, new NumberFormatInfo { NumberDecimalSeparator = "," }, out var scaleVestige))
+                if (!float.TryParse(cols[7], NumberStyles.Float, format, out var scaleVestige))
                 {
                     Debug.LogWarning($"Row {i+1} skipped - invalid vestige scale");
                     continue;
