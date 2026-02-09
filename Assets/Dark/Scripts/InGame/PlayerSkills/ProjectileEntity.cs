@@ -115,7 +115,6 @@ namespace InGame
             MaxHit = maxHit;
             currentHit = 0;
             DamageType = damageType;
-            
             hitStatus = ProjectileCollider.ProjectileHitStatus.None;
             hitEnemyInfo = new ProjectileCollider.HitEnemyInfo();
             collider.Init();
