@@ -131,7 +131,7 @@ namespace InGame
             currentTowerIndex = -1;
             
             if (Player != null) Destroy(Player.gameObject);
-            Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)LevelUtilityV2.StatsNormalAttack.skillId);
+            Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)PlayerDataManager.Instance.Data.characterClass);
             Player.transform.position = towers[0].transform.position + towers[0].GetTowerHeight();
             OnInitPlayer?.Invoke();
         }

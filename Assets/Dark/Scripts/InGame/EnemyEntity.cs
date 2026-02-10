@@ -466,6 +466,9 @@ namespace InGame
             HitDirectionY = 0f;
             Damage(CurrentHealth, transform.position, 0f, dmgType);
         }
+
+        public bool IsEffectTargetDead => IsDestroyed;
+
         #endregion
 
         #region Elite

@@ -158,7 +158,7 @@ namespace InGame
             {
                 if (Vector2.Distance(transform.position, SpawnPosition) > maxDistanceFromSpawnPosition)
                 {
-                    if (!BlockSpawnDeadBody)
+                    if (!BlockSpawnDeadBody && !forceHideDeadObject)
                     {
                         // ProjectileDeadPool.Instance.Get(direction).position = transform.position;
                         ProjectileDeadPool.Instance.Get(BoundPosition, direction);
@@ -208,7 +208,7 @@ namespace InGame
             
             if (flagOutOfRange && !BlockAutoDestroyOutRange)
             {
-                if (!BlockSpawnDeadBody)
+                if (!BlockSpawnDeadBody && !forceHideDeadObject)
                 {
                     // ProjectileDeadPool.Instance.Get(direction).position = transform.position;
                     ProjectileDeadPool.Instance.Get(BoundPosition, direction);

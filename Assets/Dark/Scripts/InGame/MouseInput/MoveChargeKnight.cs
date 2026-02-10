@@ -50,6 +50,7 @@ namespace InGame
             RandomUtil.InsideUnitSpanSpacedNonAlloc(camPos - projectiles[0].transform.position, spanAngle, projectiles.Count, ref directions);
             for (var i = 0; i < projectiles.Count; i++)
             {
+                projectiles[i].transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(directions[i].y, directions[i].x) * Mathf.Rad2Deg);
                 actionSetupProjectile?.Invoke(projectiles[i], directions[i], i * 0.1f);
                 
                 // Giảm dame dần nếu target vào boss trong cùng 1 lượt bắn
