@@ -162,24 +162,17 @@ namespace InGame
                 return;
             }
             
+            // Check enemy force attack đã ngủm thì set force = null
+            if (forceTargetEnemy && forceTargetEnemy.IsDestroyed)
+            {
+                forceTargetEnemy = null;
+            }
+            
             // Check bấm vào enemy để force attack vào đó
             var mouseOverCount = Physics2D.OverlapPointNonAlloc(worldMousePosition, mouseHoverEnemies, LayerMask.GetMask("EnemyAim"));
             if (mouseOverCount > 0)
             {
                 EnemyEntity newHover = null;
-                // var minDist = float.MaxValue;
-                // for (var i = 0; i < mouseOverCount; i++)
-                // {
-                //     var entity = mouseHoverEnemies[i].GetComponentInParent<EnemyEntity>();
-                //     if (!entity) continue;
-                //
-                //     var dist = Vector2.Distance(entity.transform.position, worldMousePosition);
-                //     if (dist < minDist)
-                //     {
-                //         minDist = dist;
-                //         newHover = entity;
-                //     }
-                // }
                 for (var i = 0; i < mouseOverCount; i++)
                 {
                     var entity = mouseHoverEnemies[i].GetComponentInParent<EnemyEntity>();
