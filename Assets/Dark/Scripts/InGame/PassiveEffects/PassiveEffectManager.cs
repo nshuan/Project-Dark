@@ -90,6 +90,9 @@ namespace InGame
                 // Skip if in cooldown
                 if (cooldownEffectMap[triggerType][effectConfig.logicType]) continue;
                 
+                // Skip if explosion on alive enemy
+                if (effectConfig.logicType == PassiveType.Explosion && !target.IsEffectTargetDead) continue;
+                
                 // Calculate chance
                 if (RandomUtil.Range(0f, 1f) <= LevelUtilityV2.GetPassiveChance(triggerType, effectConfig.logicType))
                 {
