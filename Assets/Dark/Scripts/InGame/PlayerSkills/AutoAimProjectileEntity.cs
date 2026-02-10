@@ -28,7 +28,7 @@ namespace InGame
             {
                 if (Vector2.Distance(transform.position, SpawnPosition) > maxDistanceFromSpawnPosition)
                 {
-                    if (!BlockSpawnDeadBody)
+                    if (!BlockSpawnDeadBody && !forceHideDeadObject)
                     {
                         // ProjectileDeadPool.Instance.Get(direction).position = transform.position;
                         ProjectileDeadPool.Instance.Get(BoundPosition, direction);
@@ -58,14 +58,17 @@ namespace InGame
                     if (collider.TryHit(TargetToChase.transform))
                     {
                         DebugUtility.Log($"Hit enemy {TargetToChase}");
-                        var deadProjectile = ProjectileDeadOnEnemyPool.Instance.Get(targetDirection);
-                        deadProjectile.position = TargetToChase.transform.position;
-                        TargetToChase.body.SetupProjectileHit(deadProjectile.transform, targetDirection);
-                        deadProjectile.SetParent(TargetToChase.transform);
-                        TargetToChase.OnStartDead += () =>
+                        if (!TargetToChase.IsDestroyed && !BlockSpawnDeadBody && !forceHideDeadObject && currentHit + 1 >= MaxHit)
                         {
-                            deadProjectile.gameObject.SetActive(false);
-                        };
+                            var deadProjectile = ProjectileDeadOnEnemyPool.Instance.Get(targetDirection);
+                            deadProjectile.position = TargetToChase.transform.position;
+                            TargetToChase.body.SetupProjectileHit(deadProjectile.transform, targetDirection);
+                            deadProjectile.SetParent(TargetToChase.transform);
+                            TargetToChase.OnStartDead += () =>
+                            {
+                                deadProjectile.gameObject.SetActive(false);
+                            };
+                        }
                         ProjectileHit(TargetToChase);
                         TargetToChase = null;
                     }
@@ -78,7 +81,7 @@ namespace InGame
             {
                 DebugUtility.Log($"Hit enemy {hitEnemyInfo.hitEnemy}");
                 // Nếu trúng con quái này xong là destroy đạn thì ko di chuyển viên đạn nữa, set vị trí vào chỗ con quái luôn
-                if (!hitEnemyInfo.hitEnemy.IsDestroyed && !forceHideDeadObject && currentHit + 1 >= MaxHit)
+                if (!hitEnemyInfo.hitEnemy.IsDestroyed && !BlockSpawnDeadBody && !forceHideDeadObject && currentHit + 1 >= MaxHit)
                 {
                     transform.position = hitEnemyInfo.hitEnemy.transform.position;
                         
@@ -98,7 +101,7 @@ namespace InGame
                 
             if (flagOutOfRange && !BlockAutoDestroyOutRange)
             {
-                if (!BlockSpawnDeadBody)
+                if (!BlockSpawnDeadBody && !forceHideDeadObject)
                 {
                     // ProjectileDeadPool.Instance.Get(direction).position = transform.position;
                     ProjectileDeadPool.Instance.Get(BoundPosition, targetDirection);
