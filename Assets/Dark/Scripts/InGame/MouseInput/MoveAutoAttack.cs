@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Dark.Scripts.Utils;
+using Data;
 using DG.Tweening;
 using UnityEngine;
 
@@ -79,20 +80,7 @@ namespace InGame
             
             var delayShot = Character.PlayShoot(worldMousePosition);
             var targetEnemy = nearestEnemy;
-            var activateSplitBullets = 0;
-            if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackBullet) 
-                activateSplitBullets = LevelUtilityV2.GetNormalBulletAmount();
-            var activateActions = activateSplitBullets == 0
-                ? null
-                : new List<IProjectileActivate>()
-                {
-                    new ProjectileActivateSplit()
-                    {
-                        projectile = LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.Normal],
-                        amount = activateSplitBullets,
-                        angle = LevelUtilityV2.StatsNormalBullet.GetNormalBulletSpanAngle(activateSplitBullets + 1)
-                    }
-                };
+           
             Character.DelayCall(delayShot, () =>
             {
                 Character.Weapon.GetAllEnemiesInRange(skillRange);
@@ -112,7 +100,7 @@ namespace InGame
                     stagger,
                     maxHit,
                     false,
-                    activateActions,
+                    GetProjectileActivateAction(),
                     null);
             });
 
@@ -296,6 +284,44 @@ namespace InGame
             nearestEnemy.SetAimed(true);
             
             return true;
+        }
+
+        private List<IProjectileActivate> GetProjectileActivateAction()
+        {
+            var activateBullets = 0;
+            if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackBullet) 
+                activateBullets = LevelUtilityV2.GetNormalBulletAmount();
+            List<IProjectileActivate> activateActions = null;
+            var classInt = PlayerDataManager.Instance.Data.characterClass;
+            if (classInt == 0)
+            {
+                activateActions = activateBullets == 0
+                    ? null
+                    : new List<IProjectileActivate>()
+                    {
+                        new ProjectileActivateSplit()
+                        {
+                            projectile = LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.Normal],
+                            amount = activateBullets,
+                            angle = LevelUtilityV2.StatsNormalBullet.GetNormalBulletSpanAngle(activateBullets + 1)
+                        }
+                    };
+            }
+            else if (classInt == 1)
+            {
+                activateActions = activateBullets == 0
+                    ? null
+                    : new List<IProjectileActivate>()
+                    {
+                        new ProjectileActivateMultishot()
+                        {
+                            projectile = LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.Normal],
+                            amount = activateBullets,
+                        }
+                    };
+            }
+
+            return activateActions;
         }
     }
 }

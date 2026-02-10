@@ -9,6 +9,7 @@ namespace InGame
         [SerializeField] private float slashSpan = 45f;
         [SerializeField] private LayerMask enemyLayer;
         [SerializeField] private float vfxDuration = 1.5f;
+        [SerializeField] private GameObject vfxSlash;
         
         private RaycastHit2D[] hits = new RaycastHit2D[20];
         private EnemyEntity cacheEnemy;
@@ -74,8 +75,10 @@ namespace InGame
 
         protected override IEnumerator IEActivate(float delay)
         {
+            vfxSlash.SetActive(false);
             transform.localScale = Range * Vector3.one;
             yield return new WaitForSeconds(delay);
+            vfxSlash.SetActive(true);
             
             activated = true;
             collider.CanTrigger = false;
