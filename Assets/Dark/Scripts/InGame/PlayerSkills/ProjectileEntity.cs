@@ -124,14 +124,13 @@ namespace InGame
 
         public void Activate(float delay)
         {
+            gameObject.SetActive(true);
             StartCoroutine(IEActivate(delay));
         }
 
         protected virtual IEnumerator IEActivate(float delay)
         {
             yield return new WaitForSeconds(delay);
-            
-            gameObject.SetActive(true);
             
             // Khi vừa activate đạn thì check luôn tại vị trí spawn, bán kính [x] để xử lý những enemy ở quá gân
             collider.CheckHitEnemiesOnInit();
