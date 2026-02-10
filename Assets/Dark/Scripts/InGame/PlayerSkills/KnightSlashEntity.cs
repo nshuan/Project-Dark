@@ -83,20 +83,24 @@ namespace InGame
             activated = true;
             collider.CanTrigger = false;
             
-            var hitCount = Physics2D.CircleCastNonAlloc(transform.position, Range, direction, hits, 0f, enemyLayer);
+            var hitCount = Physics2D.CircleCastNonAlloc(RangeCenter, Range, direction, hits, 0f, enemyLayer);
             if (hitCount > 0)
             {
                 var halfAngle = slashSpan / 2;
                 for (var i = 0; i < hitCount; i++)
                 {
-                    var dirTo = (hits[i].point - (Vector2)transform.position).normalized;
+                    var dirTo = hits[i].point - (Vector2)transform.position;
+                    var dirToCenter = hits[i].point - (Vector2)RangeCenter;
+                    
                     // Check những enemy va chạm, nếu nằm trong góc damageAngle thì mới gây dame
-                    if (Vector2.Angle(direction, dirTo) <= halfAngle)
+                    if (Vector2.Angle(direction, dirTo.normalized) > halfAngle) continue;
+                    
+                    // Check relative range
+                    if (dirToCenter.magnitude > LevelUtilityV2.GetRelativeRange(Range, dirToCenter)) continue;
+                    
+                    if (hits[i].transform.TryGetComponent<EnemyEntity>(out cacheEnemy))
                     {
-                        if (hits[i].transform.TryGetComponent<EnemyEntity>(out cacheEnemy))
-                        {
-                            ProjectileHit(cacheEnemy);
-                        }
+                        ProjectileHit(cacheEnemy);
                     }
                 }
             }
