@@ -92,7 +92,7 @@ namespace InGame
         public float HitDirectionX { get; set; }
         public float HitDirectionY { get; set; }
 
-        public void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
+        public void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType, bool ignoreState = false)
         {
             if (IsDestroyed) return;
             

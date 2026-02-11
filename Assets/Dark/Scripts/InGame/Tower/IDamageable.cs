@@ -7,7 +7,7 @@ namespace InGame
     {
         float HitDirectionX { get; set; }
         float HitDirectionY { get; set; }
-        void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType);
+        void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType, bool ignoreState = false);
         bool IsDestroyed { get; set; }
         Action<int, DamageType> OnHit { get; set; } // <damage, DamageType>
     }
