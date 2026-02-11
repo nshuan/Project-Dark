@@ -10,7 +10,13 @@ namespace InGame.UI.HitShowDamage
     public class UIHitDameTextPool : MonoSingleton<UIHitDameTextPool>
     {
         [SerializeField] private TextMeshProUGUI prefab;
-        [SerializeField] private UIHitDameCanvas manager;
+        [SerializeField] private UIFloatTextCanvas manager;
+        
+        [Space]
+        [Header("Text config")]
+        [SerializeField] private List<float> scaleInfos;
+        [SerializeField] private Color criticalColor;
+        [SerializeField] private int damageGap;
         
         private Queue<TextMeshProUGUI> pool;
         private TextMeshProUGUI tempText;
@@ -25,7 +31,9 @@ namespace InGame.UI.HitShowDamage
         public void ShowDamage(int damage, Vector3 worldPos, DamageType dmgType)
         {
             Get();
-            manager.ShowDamage(tempText, damage, worldPos, dmgType);
+            var indexScale = damage / damageGap;
+            var scale = scaleInfos[Math.Clamp(indexScale, 0, scaleInfos.Count - 1)];
+            manager.ShowText(tempText, damage.ToString(), worldPos, dmgType == DamageType.NormalCritical ? criticalColor : Color.white, scale, Release);
         }
         
         public TextMeshProUGUI Get()

@@ -302,11 +302,11 @@ namespace InGame
         public float HitDirectionX { get; set; }
         public float HitDirectionY { get; set; }
 
-        public virtual void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
+        public virtual void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType, bool ignoreState = false)
         {
             if (!Activated) return;
             if (IsDestroyed) return;
-            if (dmgType != DamageType.Enemy && dmgType != DamageType.SelfDestruct && State == EnemyState.Invisible) return;
+            if (dmgType != DamageType.Enemy && dmgType != DamageType.SelfDestruct && State == EnemyState.Invisible && ignoreState == false) return;
             
             // Scale damage on boss
             if (IsBoss)
@@ -464,7 +464,7 @@ namespace InGame
             delayDieAnimation = delayAnimation;
             HitDirectionX = 0f;
             HitDirectionY = 0f;
-            Damage(CurrentHealth, transform.position, 0f, dmgType);
+            Damage(CurrentHealth, transform.position, 0f, dmgType, true);
         }
 
         public bool IsEffectTargetDead => IsDestroyed;
