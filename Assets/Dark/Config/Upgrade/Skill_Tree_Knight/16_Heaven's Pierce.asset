@@ -41,14 +41,16 @@ MonoBehaviour:
       Data: 
   nodeId: 16
   nodeName: Heaven's Pierce
-  lockOnDemo: 0
+  lockOnDemo: 1
   hideLevelInNode: 0
-  description: Channel Attacks have a 70% chance to summon a thunder that dealt damage
-    and finishes off low-health enemies
+  description: Channel Attacks have a 50% chance to summon a thunder that finishes
+    off low-health enemies
   vestigeCostRatio: 1
   dynamicVestige: 0
   dynamicEchoes: 0
   costInfo:
   - costType: 2
     costValue: 01000000
-  groupId: []
+  groupId:
+  - groupId: 13
+    isLockNode: 1

@@ -41,9 +41,9 @@ MonoBehaviour:
       Data: 
   nodeId: 23
   nodeName: Core Detonation
-  lockOnDemo: 0
+  lockOnDemo: 1
   hideLevelInNode: 0
-  description: Counter Attacks have a 50% chance to trigger an explosion upon killing
+  description: Channel Attacks have a 50% chance to trigger an explosion upon killing
     an enemy.
   vestigeCostRatio: 1
   dynamicVestige: 0
@@ -51,4 +51,6 @@ MonoBehaviour:
   costInfo:
   - costType: 2
     costValue: 01000000
-  groupId: []
+  groupId:
+  - groupId: 18
+    isLockNode: 1

@@ -29,7 +29,8 @@ MonoBehaviour:
       Data: 1
     - Name: 
       Entry: 7
-      Data: 1|InGame.Upgrade.NodeLogicsV2.NodeV2BonusPassiveNormalThunderRate, Assembly-CSharp
+      Data: 1|InGame.Upgrade.NodeLogicsV2.NodeV2BonusPassiveNormalExplosiveRate,
+        Assembly-CSharp
     - Name: value
       Entry: 7
       Data: 2|System.Single[], mscorlib
@@ -71,7 +72,7 @@ MonoBehaviour:
       Data: 
   nodeId: 88
   nodeName: Ashen Thunder
-  lockOnDemo: 0
+  lockOnDemo: 1
   hideLevelInNode: 0
   description: Increase active rate of all thunder spell by [X]%
   vestigeCostRatio: 1
@@ -80,4 +81,6 @@ MonoBehaviour:
   costInfo:
   - costType: 0
     costValue: 
-  groupId: []
+  groupId:
+  - groupId: 7
+    isLockNode: 0
