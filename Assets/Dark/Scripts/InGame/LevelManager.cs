@@ -143,7 +143,7 @@ namespace InGame
         
         public void LoadLevel(int level)
         {
-            var levelConfig = LevelManifest.Instance.GetLevel(level);
+            var levelConfig = LevelManifest.Instance.GetLevel(PlayerDataManager.Instance.Data.Class, level);
             if (!levelConfig) return;
             Level = levelConfig;
             SceneManager.sceneLoaded += OnLevelSceneLoaded;

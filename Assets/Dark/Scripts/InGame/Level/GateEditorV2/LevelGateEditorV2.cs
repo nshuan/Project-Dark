@@ -33,6 +33,9 @@ namespace InGame.GateEditorV2
         [Space] [Header("Display")] 
         public TextMeshProUGUI txtLevel;
         
+        [Space] [Header("Settings")]
+        public CharacterClass.CharacterClass classType;
+        
         private LevelManifest levelManifest;
         private LevelConfig currentLevel;
         private LevelMapType currentMapType;
@@ -71,7 +74,7 @@ namespace InGame.GateEditorV2
         public void LoadLevel(int levelId)
         {
             if (!levelManifest) return;
-            currentLevel = levelManifest.GetTrueLevel(levelId);
+            currentLevel = levelManifest.GetTrueLevel(classType, levelId);
             if (!currentLevel) return;
 
             currentMapType = currentLevel.mapType;
@@ -143,11 +146,11 @@ namespace InGame.GateEditorV2
             };
             WaveConfig newWaveAsset;
 #if UNITY_EDITOR
-            if (!Directory.Exists(Path.Combine(LevelManifest.WavePath, $"Level {currentLevel.level}")))
+            if (!Directory.Exists(Path.Combine(WaveFolderPath, $"Level {currentLevel.level}")))
             {
-                Directory.CreateDirectory(Path.Combine(LevelManifest.WavePath, $"Level {currentLevel.level}"));
+                Directory.CreateDirectory(Path.Combine(WaveFolderPath, $"Level {currentLevel.level}"));
             }
-            var filePath = Path.Combine(LevelManifest.WavePath,
+            var filePath = Path.Combine(WaveFolderPath,
                 $"Level {currentLevel.level}/Level_{currentLevel.level}_Wave_{newWave + 1}.asset");
             if (File.Exists(filePath))
             {
@@ -169,6 +172,24 @@ namespace InGame.GateEditorV2
             AssetDatabase.Refresh();
 #endif
             AddNewWave(newWaveInfo);
+        }
+
+        public string WaveFolderPath
+        {
+            get
+            {
+                if (classType == CharacterClass.CharacterClass.Knight) return LevelManifest.KnightWavePath;
+                return LevelManifest.ArcherWavePath;
+            }
+        }
+        
+        public string LevelFolderPath
+        {
+            get
+            {
+                if (classType == CharacterClass.CharacterClass.Knight) return LevelManifest.KnightLevelPath;
+                return LevelManifest.ArcherLevelPath;
+            }
         }
         
         public void AddNewWave(WaveInfo waveInfo)

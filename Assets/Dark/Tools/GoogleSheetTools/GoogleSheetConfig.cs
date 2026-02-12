@@ -6,6 +6,7 @@ using Dark.Scripts.InGame.Upgrade;
 using InGame.Upgrade.DynamicCost;
 using Economic;
 using InGame;
+using InGame.CharacterClass;
 using InGame.Upgrade.DynamicBonus;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -143,10 +144,14 @@ namespace Dark.Tools.GoogleSheetTool
     [Serializable]
     public class GoogleSheetLevelInfo : GoogleSheetDataInfo
     {
+        public CharacterClass classType;
+        
 #if UNITY_EDITOR
         public override void GetConfigsSortByName()
         {
-            var folderPath = LevelManifest.LevelPath;
+            var folderPath = "";
+            if (classType == CharacterClass.Archer) folderPath = LevelManifest.ArcherLevelPath;
+            else if (classType == CharacterClass.Knight) folderPath = LevelManifest.KnightLevelPath;
             string[] guids = UnityEditor.AssetDatabase.FindAssets("t:" + nameof(ScriptableObject), new[] { folderPath });
             List<ScriptableObject> assets = new List<ScriptableObject>();
 
