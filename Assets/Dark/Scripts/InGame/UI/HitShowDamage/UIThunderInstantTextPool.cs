@@ -19,7 +19,7 @@ namespace InGame.UI.HitShowDamage
         public void ShowText(string text, Vector3 worldPos)
         {
             Get();
-            manager.ShowText(tempText, text, worldPos, textColor, 1f, Release);
+            manager.ShowText(tempText, text, worldPos, textColor, new Vector2(0f, 30f), 1f, Release);
         }
         
         public TextMeshProUGUI Get()
