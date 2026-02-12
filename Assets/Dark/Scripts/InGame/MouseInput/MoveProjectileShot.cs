@@ -116,6 +116,8 @@ namespace InGame
             var delayShot = 0f;
             if (isCharge)
             {
+                // Nếu bắn charge thì maxHit = 1 thôi
+                maxHit = 1;
                 delayShot = 0f;
                 Character.EndChargeAndShoot();
             }
@@ -150,7 +152,7 @@ namespace InGame
                         {
                             new ProjectileHitBlossom()
                             {
-                                projectile = LevelUtilityV2.StatsNormalAttack.projectiles[projectileType],
+                                projectile = LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.ChargeSizeSubBullet],
                                 bulletAmount = blossomAmount,
                                 blossomSize = LevelUtilityV2.StatsChargeSize.range
                             }
@@ -192,7 +194,7 @@ namespace InGame
                             {
                                 new ProjectileHitBlossom()
                                 {
-                                    projectile = LevelUtilityV2.StatsNormalAttack.projectiles[projectileType],
+                                    projectile = LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.ChargeSizeSubBullet],
                                     bulletAmount = blossomAmount,
                                     blossomSize = LevelUtilityV2.StatsChargeSize.range
                                 }
