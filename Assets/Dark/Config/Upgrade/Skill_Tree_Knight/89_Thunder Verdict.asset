@@ -29,7 +29,7 @@ MonoBehaviour:
       Data: 1
     - Name: 
       Entry: 7
-      Data: 1|InGame.Upgrade.NodeLogicsV2.NodeV2BonusPassiveNormalThunderDmg, Assembly-CSharp
+      Data: 1|InGame.Upgrade.NodeLogicsV2.NodeV2BonusPassiveNormalExplosiveDmg, Assembly-CSharp
     - Name: value
       Entry: 7
       Data: 2|System.Single[], mscorlib
@@ -71,7 +71,7 @@ MonoBehaviour:
       Data: 
   nodeId: 89
   nodeName: Thunder Verdict
-  lockOnDemo: 0
+  lockOnDemo: 1
   hideLevelInNode: 0
   description: Increase damage of all Thunder spell by [X]%
   vestigeCostRatio: 1
@@ -80,4 +80,6 @@ MonoBehaviour:
   costInfo:
   - costType: 0
     costValue: 
-  groupId: []
+  groupId:
+  - groupId: 7
+    isLockNode: 0
