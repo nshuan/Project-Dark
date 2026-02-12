@@ -110,6 +110,7 @@ namespace InGame
         Normal,
         ChargeBullet,
         ChargeSize,
-        ChargeBulletSize
+        ChargeBulletSize,
+        ChargeSizeSubBullet
     }
 }

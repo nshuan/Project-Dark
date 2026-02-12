@@ -29,7 +29,6 @@ namespace InGame
                 var pDir = (Vector2)(Quaternion.Euler(0f, 0f, angle * i) * dir);
                 var p = ProjectilePool.Instance.Get(projectile, null, false);
                 p.transform.position = position;
-                p.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(pDir.y, pDir.x) * Mathf.Rad2Deg);
                 p.Init(
                     position, 
                     pDir.normalized, 
@@ -48,7 +47,7 @@ namespace InGame
                 
                 callbackLateInit?.Invoke(p);
                 
-                p.Activate(0);
+                p.Activate(i * 0.1f);
             }
         }
     }
