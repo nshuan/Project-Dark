@@ -33,6 +33,7 @@ namespace InGame.WatchTower
         protected Vector2 counterDirection = Vector2.zero;
 
         protected Coroutine coroutineCounter;
+        protected Coroutine coroutineCooldown;
         protected int totalInRangeTarget;
         
         private void Awake()
@@ -137,7 +138,6 @@ namespace InGame.WatchTower
             {
                 detectRange.gameObject.SetActive(false);
                 StopCoroutine(coroutineCounter);
-                counterCooldown = false;
                 coroutineCounter = null;
             }
         }
@@ -155,30 +155,30 @@ namespace InGame.WatchTower
             {
                 detectRange.gameObject.SetActive(false);
                 StopCoroutine(coroutineCounter);
-                counterCooldown = false;
                 coroutineCounter = null;
             }
         }
 
         protected virtual IEnumerator IECounter(float cooldown)
         {
-            while (totalInRangeTarget > 0)
+            DOTween.Kill(vfxActivateCounter);
+            detectRange.gameObject.SetActive(true);
+            yield return new WaitForSeconds(DelayOnDetected); 
+            if (totalInRangeTarget <= 0)
+                yield break;
+            
+            if (coroutineCooldown != null) StopCoroutine(coroutineCooldown);
+            coroutineCooldown = StartCoroutine(IECooldown(cooldown));
+                
+            vfxActivateCounter.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(counterDirection.y, counterDirection.x) * Mathf.Rad2Deg);
+            vfxActivateCounter.SetActive(true);
+            Counter(transform.position, counterDirection, Damage, bulletSpeedScale);
+            detectRange.gameObject.SetActive(false);
+            DOVirtual.DelayedCall(vfxActivateCounterDuration, () =>
             {
-                DOTween.Kill(vfxActivateCounter);
-                detectRange.gameObject.SetActive(true);
-                yield return new WaitForSeconds(DelayOnDetected); 
-                counterCooldown = true;
-                vfxActivateCounter.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(counterDirection.y, counterDirection.x) * Mathf.Rad2Deg);
-                vfxActivateCounter.SetActive(true);
-                Counter(transform.position, counterDirection, Damage, bulletSpeedScale);
-                detectRange.gameObject.SetActive(false);
-                DOVirtual.DelayedCall(vfxActivateCounterDuration, () =>
-                {
-                    vfxActivateCounter.SetActive(false);
-                }).SetTarget(vfxActivateCounter);
-                yield return new WaitForSeconds(cooldown - vfxActivateCounterDuration);
-                counterCooldown = false;
-            }
+                vfxActivateCounter.SetActive(false);
+            }).SetTarget(vfxActivateCounter);
+            
             coroutineCounter = null;
         }
         
@@ -197,6 +197,13 @@ namespace InGame.WatchTower
             projectile.Init(towerAttackPos, direction.normalized, 8, 5, speedScale, damage, damage, 0f, stagger, false, maxHit, null, null, ProjectileType.TowerProjectile);
             projectile.BlockDestroy = true;
             projectile.Activate(0f);
+        }
+
+        private IEnumerator IECooldown(float cooldown)
+        {
+            counterCooldown = true;
+            yield return new WaitForSeconds(cooldown);
+            counterCooldown = false;
         }
     }
 }
