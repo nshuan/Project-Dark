@@ -9,6 +9,7 @@ namespace InGame
     {
         public ProjectileEntity projectile;
         public int amount;
+        public float delayEachShot;
         
         private PlayerCharacter character;
         
@@ -54,7 +55,7 @@ namespace InGame
             
             // Đạn sẽ giảm dame, nếu có normal piercing thì vẫn apply
             baseDamage = LevelUtilityV2.ToInt(baseDamage * LevelUtilityV2.GetNormalBulletDamageScale());
-            for (var i = 0; i <= amount; i++)
+            for (var i = 1; i <= amount; i++)
             {
                 var p1 = ProjectilePool.Instance.Get(projectile, null, false);
                 p1.transform.position = parentProjectile.transform.position;
@@ -75,14 +76,14 @@ namespace InGame
                     parentProjectile.HitActions,
                     ProjectileType.PlayerProjectile
                 );
-                if (characterAttackAnimDelay > 0.25f * i)
+                if (characterAttackAnimDelay > delayEachShot * i)
                     character?.PlayShoot((Vector2)character.transform.position + direction);
                 else
-                    character?.DelayCall(0.25f * i - characterAttackAnimDelay, () =>
+                    character?.DelayCall(delayEachShot * i - characterAttackAnimDelay, () =>
                     {
                         character?.PlayShoot((Vector2)character.transform.position + direction);
                     });
-                p1.Activate(0.25f * i);
+                p1.Activate(delayEachShot * i);
                 if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing)
                     p1.OnHit += () =>
                     {
