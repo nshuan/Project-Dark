@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Dark.Scripts.AudioV2;
 using InGame.Effects;
+using InGame.UI.HitShowDamage;
 using UnityEngine;
 
 namespace InGame
@@ -35,6 +36,7 @@ namespace InGame
                     triggerredEnemy.Damage(Mathf.RoundToInt(value), triggerredEnemy.transform.position, stagger, DamageType.Normal);
                     if (!triggerredEnemy.IsDestroyed && triggerredEnemy.PercentageHpLeft < size)
                     {
+                        UIThunderInstantTextPool.Instance.ShowText("Instant kill", tempTarget.Position);
                         triggerredEnemy.Kill(DamageType.Normal);
                     }
                     sfx.Play();

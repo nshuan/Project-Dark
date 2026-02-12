@@ -302,11 +302,11 @@ namespace InGame
         public float HitDirectionX { get; set; }
         public float HitDirectionY { get; set; }
 
-        public virtual void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
+        public virtual void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType, bool instantKill = false)
         {
             if (!Activated) return;
             if (IsDestroyed) return;
-            if (dmgType != DamageType.Enemy && dmgType != DamageType.SelfDestruct && State == EnemyState.Invisible) return;
+            if (dmgType != DamageType.Enemy && dmgType != DamageType.SelfDestruct && State == EnemyState.Invisible && instantKill == false) return;
             
             // Scale damage on boss
             if (IsBoss)
@@ -317,6 +317,12 @@ namespace InGame
             healthBar.UpdateHp(CurrentHealth);
             if (dmgType != DamageType.Enemy && dmgType != DamageType.SelfDestruct)
                 CombatActions.OnDamageDealt?.Invoke(lastHealth - CurrentHealth);
+
+            if (instantKill)
+            {
+                OnDie(EnemyDieReason.PlayerKill);
+                return;
+            }
             
             OnHit?.Invoke(damage, dmgType);
             if (stagger - config.staggerResist > 0)
@@ -464,8 +470,11 @@ namespace InGame
             delayDieAnimation = delayAnimation;
             HitDirectionX = 0f;
             HitDirectionY = 0f;
-            Damage(CurrentHealth, transform.position, 0f, dmgType);
+            Damage(CurrentHealth, transform.position, 0f, dmgType, true);
         }
+
+        public bool IsEffectTargetDead => IsDestroyed;
+
         #endregion
 
         #region Elite

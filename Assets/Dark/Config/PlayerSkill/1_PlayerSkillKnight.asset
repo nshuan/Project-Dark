@@ -16,8 +16,8 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 6844351392576462872, guid: 5bf387a4936339542a95d194cf62d737, type: 3}
-    - {fileID: 6844351392576462872, guid: 3de001d91ec8b174eaa2d43aaf531f9d, type: 3}
+    - {fileID: 5021492589426841772, guid: ab577fc0b0c07384799443725cf4038e, type: 3}
+    - {fileID: 8488806177892243480, guid: df5940f4bf6725548839b9276aae2011, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -42,7 +42,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 4
+      Data: 5
     - Name: 
       Entry: 7
       Data: 
@@ -92,6 +92,18 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 4
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
       Entry: 13
       Data: 
     - Name: 
@@ -107,18 +119,20 @@ MonoBehaviour:
       Entry: 8
       Data: 
   skillId: 1
-  damePerBullet: 2
+  damePerBullet: 25
   numberOfBullets: 1
-  cooldown: 0
-  range: 10
+  cooldown: 1.5
+  range: 2.5
   size: 1
-  chargeDameMax: -1
-  chargeDameTime: -1
-  chargeSizeMax: 3
-  chargeSizeTime: 5
-  chargeRangeMax: -1
-  chargeRangeTime: -1
-  chargeBulletInterval: 0.5
-  chargeBulletMaxAdd: 5
+  chargeCooldown: 6
+  chargeDameStep: 0.2
+  chargeDameMaxStep: 5
+  chargeSizeStep: 0.1
+  chargeSizeMaxStep: 5
+  chargeRangeStep: 0.2
+  chargeRangeMaxStep: 5
+  chargeBulletStep: 1
+  chargeBulletMaxStep: 3
+  chargeStepTime: 0.4
   speedScale: 6
-  stagger: 0.8
+  stagger: 0.5

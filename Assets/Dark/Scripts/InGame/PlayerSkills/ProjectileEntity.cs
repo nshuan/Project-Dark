@@ -55,7 +55,7 @@ namespace InGame
         protected RaycastHit2D[] hits = new RaycastHit2D[1];
         protected ProjectileCollider.HitEnemyInfo hitEnemyInfo;
 
-        private bool hasVfxHit;
+        protected bool hasVfxHit;
         
         #region Actions
 
@@ -115,7 +115,6 @@ namespace InGame
             MaxHit = maxHit;
             currentHit = 0;
             DamageType = damageType;
-            
             hitStatus = ProjectileCollider.ProjectileHitStatus.None;
             hitEnemyInfo = new ProjectileCollider.HitEnemyInfo();
             collider.Init();
@@ -159,7 +158,7 @@ namespace InGame
             {
                 if (Vector2.Distance(transform.position, SpawnPosition) > maxDistanceFromSpawnPosition)
                 {
-                    if (!BlockSpawnDeadBody)
+                    if (!BlockSpawnDeadBody && !forceHideDeadObject)
                     {
                         // ProjectileDeadPool.Instance.Get(direction).position = transform.position;
                         ProjectileDeadPool.Instance.Get(BoundPosition, direction);
@@ -173,38 +172,49 @@ namespace InGame
             moveDirection.y = Speed * Time.deltaTime * direction.y;
             moveDirection.z = 0f;
             
-            if (!BlockAutoDestroyOutRange && Vector2.Distance(transform.position + moveDirection, SpawnPosition) > maxDistanceFromSpawnPosition)
+            var flagOutOfRange = false;
+
+            moveDirection.x = Speed * Time.deltaTime * direction.x;
+            moveDirection.y = Speed * Time.deltaTime * direction.y;
+            
+            if (Vector2.Distance(transform.position + moveDirection, SpawnPosition) > maxDistanceFromSpawnPosition)
             {
-                if (!BlockSpawnDeadBody)
+                moveDirection.x = BoundPosition.x - transform.position.x;
+                moveDirection.y = BoundPosition.y - transform.position.y;
+                flagOutOfRange = true;
+            }
+            
+            hitStatus = collider.CheckCollision(ref moveDirection, ref hitEnemyInfo);
+            if (hitStatus == ProjectileCollider.ProjectileHitStatus.Enemy)
+            {
+                DebugUtility.Log($"Hit enemy {hitEnemyInfo.hitEnemy}");
+                // Nếu trúng con quái này xong là destroy đạn thì ko di chuyển viên đạn nữa, set vị trí vào chỗ con quái luôn
+                if (!hitEnemyInfo.hitEnemy.IsDestroyed && !forceHideDeadObject && currentHit + 1 >= MaxHit)
+                {
+                    transform.position = hitEnemyInfo.hitEnemy.transform.position;
+                        
+                    var deadProjectile = ProjectileDeadOnEnemyPool.Instance.Get(moveDirection);
+                    deadProjectile.position = hitEnemyInfo.hit.point;
+                    hitEnemyInfo.hitEnemy.body.SetupProjectileHit(deadProjectile.transform, moveDirection);
+                    hitEnemyInfo.hitEnemy.OnStartDead += () =>
+                    {
+                        deadProjectile.gameObject.SetActive(false);
+                    };
+                }
+                ProjectileHit(hitEnemyInfo.hitEnemy);
+            }
+                
+            transform.position += moveDirection;
+            
+            if (flagOutOfRange && !BlockAutoDestroyOutRange)
+            {
+                if (!BlockSpawnDeadBody && !forceHideDeadObject)
                 {
                     // ProjectileDeadPool.Instance.Get(direction).position = transform.position;
                     ProjectileDeadPool.Instance.Get(BoundPosition, direction);
                 }
                 ProjectileHit(null);
-            }
-            else
-            {
-                hitStatus = collider.CheckCollision(ref moveDirection, ref hitEnemyInfo);
-                if (hitStatus == ProjectileCollider.ProjectileHitStatus.Enemy)
-                {
-                    DebugUtility.Log($"Hit enemy {hitEnemyInfo.hitEnemy}");
-                    // Nếu trúng con quái này xong là destroy đạn thì ko di chuyển viên đạn nữa, set vị trí vào chỗ con quái luôn
-                    if (!hitEnemyInfo.hitEnemy.IsDestroyed && !forceHideDeadObject && currentHit + 1 >= MaxHit)
-                    {
-                        transform.position = hitEnemyInfo.hitEnemy.transform.position;
-                        
-                        var deadProjectile = ProjectileDeadOnEnemyPool.Instance.Get(moveDirection);
-                        deadProjectile.position = hitEnemyInfo.hit.point;
-                        hitEnemyInfo.hitEnemy.body.SetupProjectileHit(deadProjectile.transform, moveDirection);
-                        hitEnemyInfo.hitEnemy.OnStartDead += () =>
-                        {
-                            deadProjectile.gameObject.SetActive(false);
-                        };
-                    }
-                    ProjectileHit(hitEnemyInfo.hitEnemy);
-                }
-                
-                transform.position += moveDirection;
+                return;
             }
                 
             lifeTime += Time.deltaTime;

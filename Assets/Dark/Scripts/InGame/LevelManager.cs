@@ -63,6 +63,7 @@ namespace InGame
         
         #region Action
 
+        public Action OnInitTowers { get; set; }
         public Action OnInitPlayer { get; set; }
         public Action<LevelConfig> OnLevelPreLoaded { get; set; }
         public Action<LevelConfig> OnLevelLoaded { get; set; }
@@ -126,10 +127,11 @@ namespace InGame
         private void InitPlayerAndTowers()
         {
             InitTowers();
+            OnInitTowers?.Invoke();
             currentTowerIndex = -1;
             
             if (Player != null) Destroy(Player.gameObject);
-            Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)LevelUtilityV2.StatsNormalAttack.skillId);
+            Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)PlayerDataManager.Instance.Data.characterClass);
             Player.transform.position = towers[0].transform.position + towers[0].GetTowerHeight();
             OnInitPlayer?.Invoke();
         }
@@ -279,6 +281,7 @@ namespace InGame
             OnBossWaveStart = null;
             onWaveEnded = null;
             OnInitPlayer = null;
+            OnInitTowers = null;
             
             CombatActions.Clear();
         }

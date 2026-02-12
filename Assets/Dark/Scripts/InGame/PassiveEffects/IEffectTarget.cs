@@ -11,5 +11,6 @@ namespace InGame
         void Burn(float duration, float delayEachBurn, int damage, Action callbackComplete);
         Transform BurnVfxParent { get; }
         void Kill(DamageType dmgType, float delayAnimation = 0f);
+        bool IsEffectTargetDead { get; }
     }
 }

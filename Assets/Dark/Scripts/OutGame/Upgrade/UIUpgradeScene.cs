@@ -80,7 +80,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                 };
                 
                 Loading.Instance.OverrideQuickLoadBgColorOnce(loadingIntroColor);
-                Loading.Instance.QuickLoadScene(SceneConstants.SceneIntro);
+                Loading.Instance.QuickLoadScene(SceneConstants.SceneIntro, overrideOpenDuration: 1f);
             });
         }
     }

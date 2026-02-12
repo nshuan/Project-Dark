@@ -37,7 +37,7 @@ namespace InGame.WatchTower
         
         private void Awake()
         {
-            UpgradeManager.Instance.OnActivated += OnUpgradeBonusActivated;
+            LevelManager.Instance.OnInitTowers += OnInitTowers;
             LevelManager.Instance.OnLose += OnLose;
             tower.OnDestroyed += OnTowerDestroyed;
             detectRange.localScale = DetectRange * Vector3.one;
@@ -47,7 +47,7 @@ namespace InGame.WatchTower
 
         private void OnDestroy()
         {
-            UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
+            LevelManager.Instance.OnInitTowers -= OnInitTowers;
         }
 
         #region Config
@@ -93,8 +93,9 @@ namespace InGame.WatchTower
         }
         
         #endregion
-        private void OnUpgradeBonusActivated(UpgradeBonusInfoV2 bonusInfo)
+        private void OnInitTowers()
         {
+            var bonusInfo = LevelUtilityV2.BonusInfo;
             if (counterType == NodeTowerCounter.CounterType.Pierce)
                 canCounter = bonusInfo.bonusUnlockSkill.unlockCounterPiercing;
             else if (counterType == NodeTowerCounter.CounterType.Slash)
