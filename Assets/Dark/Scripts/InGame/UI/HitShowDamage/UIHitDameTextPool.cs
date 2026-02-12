@@ -33,7 +33,7 @@ namespace InGame.UI.HitShowDamage
             Get();
             var indexScale = damage / damageGap;
             var scale = scaleInfos[Math.Clamp(indexScale, 0, scaleInfos.Count - 1)];
-            manager.ShowText(tempText, damage.ToString(), worldPos, dmgType == DamageType.NormalCritical ? criticalColor : Color.white, scale, Release);
+            manager.ShowText(tempText, damage.ToString(), worldPos, dmgType == DamageType.NormalCritical ? criticalColor : Color.white, Vector2.zero, scale, Release);
         }
         
         public TextMeshProUGUI Get()

@@ -107,10 +107,10 @@ namespace InGame.Boss
                    PercentageHpLeft <= thresholdChangeTower[currentThresholdChangeTowerIndex];
         }
 
-        public override void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType, bool ignoreState)
+        public override void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType, bool instantKill)
         {
             if (isChangingTower) return;
-            base.Damage(damage, dealerPosition, stagger, dmgType, ignoreState);
+            base.Damage(damage, dealerPosition, stagger, dmgType, instantKill);
 
             if (IsChangeTower())
             {

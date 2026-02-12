@@ -12,15 +12,15 @@ namespace InGame.UI.HitShowDamage
 
         public Camera Cam => cam;
         
-        public void ShowText(TextMeshProUGUI tmp, string text, Vector3 worldPos, Color color, float scale = 1f, Action<TextMeshProUGUI> callbackComplete = null)
+        public void ShowText(TextMeshProUGUI tmp, string text, Vector3 worldPos, Color color, Vector2 offset, float scale = 1f, Action<TextMeshProUGUI> callbackComplete = null)
         {
-            StartCoroutine(IEShowText(tmp, text, worldPos, color, scale, callbackComplete));
+            StartCoroutine(IEShowText(tmp, text, worldPos, color, offset, scale, callbackComplete));
         }
 
-        private IEnumerator IEShowText(TextMeshProUGUI tmp, string damage, Vector3 worldPos, Color color, float scale, Action<TextMeshProUGUI> callbackComplete)
+        private IEnumerator IEShowText(TextMeshProUGUI tmp, string damage, Vector3 worldPos, Color color, Vector2 offset, float scale, Action<TextMeshProUGUI> callbackComplete)
         {
             tmp.color = color;
-            tmp.transform.position = cam.WorldToScreenPoint(worldPos) + new Vector3(RandomUtil.Range(-30f, 30f), 0f, 0f);
+            tmp.transform.position = cam.WorldToScreenPoint(worldPos) + new Vector3(RandomUtil.Range(-30f, 30f), 0f, 0f) + (Vector3)offset;
             tmp.transform.localScale = scale * Vector3.one;
             tmp.SetText(damage);
             tmp.gameObject.SetActive(true);
