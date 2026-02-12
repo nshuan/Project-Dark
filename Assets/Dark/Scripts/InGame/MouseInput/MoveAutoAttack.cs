@@ -4,6 +4,7 @@ using System.Linq;
 using Dark.Scripts.Utils;
 using Data;
 using DG.Tweening;
+using InGame.AttackNormalConfig;
 using UnityEngine;
 
 namespace InGame
@@ -71,7 +72,7 @@ namespace InGame
             var (damage, criticalDamage) = LevelUtilityV2.GetNormalAttackDamage();
             var critRate = LevelUtilityV2.GetBaseCriticalRate();
             var bulletNum = 1;
-            var skillSize = 1f;
+            var skillSize = LevelUtilityV2.GetNormalAttackSize();;
             var skillRange = LevelUtilityV2.GetNormalAttackRange(Vector2.right);
             var maxHit = 1;
             if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing) 
@@ -302,6 +303,9 @@ namespace InGame
             }
             else if (classInt == 1)
             {
+                var delayEachShot = 0.25f;
+                if (LevelUtilityV2.StatsNormalBullet is KnightSkillNormalConfig knightConfig)
+                    delayEachShot = 1f / knightConfig.atkSpeed;
                 activateActions = activateBullets == 0
                     ? null
                     : new List<IProjectileActivate>()
@@ -310,6 +314,7 @@ namespace InGame
                         {
                             projectile = LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.Normal],
                             amount = activateBullets,
+                            delayEachShot = delayEachShot
                         }
                     };
             }

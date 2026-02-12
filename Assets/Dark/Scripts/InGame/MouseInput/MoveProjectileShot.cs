@@ -105,7 +105,7 @@ namespace InGame
                 canChargeDame && dameChargeAdded > 0 ? 1 + dameChargeAdded : 1f);
             var critRate = LevelUtilityV2.GetBaseCriticalRate();
             var bulletNum = 1;
-            var skillSize = canChargeSize && sizeChargeAdded > 0 ? 1 + sizeChargeAdded : 1f;
+            var skillSize = (canChargeSize && sizeChargeAdded > 0 ? 1 + sizeChargeAdded : 1f) * LevelUtilityV2.GetNormalAttackSize();
             var skillRange = (canChargeRange && rangeChargeAdded > 0 ? 1 + rangeChargeAdded : 1f) * LevelUtilityV2.GetNormalAttackRange(Vector2.right);
             var maxHit = 1;
             if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing) 

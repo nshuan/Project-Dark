@@ -90,8 +90,8 @@ namespace Dark.Scripts.OutGame.Upgrade
             LevelUtilityV2.BonusInfo = bonusInfo;
             LevelUtilityV2.StatsBase = playerStatsConfig;
             LevelUtilityV2.StatsNormalAttack = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
-            LevelUtilityV2.StatsNormalPiercing = PlayerSkillNormalManifest.Get(NormalType.Piercing);
-            LevelUtilityV2.StatsNormalBullet = PlayerSkillNormalManifest.Get(NormalType.Bullet);
+            LevelUtilityV2.StatsNormalPiercing = PlayerSkillNormalManifest.Get(PlayerDataManager.Instance.Data.Class, NormalType.Piercing);
+            LevelUtilityV2.StatsNormalBullet = PlayerSkillNormalManifest.Get(PlayerDataManager.Instance.Data.Class, NormalType.Bullet);
             LevelUtilityV2.StatsChargeBullet = PlayerChargeManifest.Get(ChargeType.Bullet);
             LevelUtilityV2.StatsChargeSize = PlayerChargeManifest.Get(ChargeType.Size);
             LevelUtilityV2.StatsDash = dashConfig;

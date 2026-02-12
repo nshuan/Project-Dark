@@ -12,6 +12,7 @@ namespace Dark.Tools.GoogleSheetTool
         NodeConfig = 1947278781, // "NodeConfig"
         NodeConfigV1 = 1578883628, // "NodeConfigV1"
         NodeConfigV2 = 622683651, // "NodeConfigV2"
+        NodeConfigKnight = 1957172946, // "NodeConfigKnight"
         CostConfig = 677348826, // "CostConfig"
         LevelUpConfig = 468570559, // "LevelUpConfig"
         VestigeDynamic = 1180815186, // "VestigeDynamic"
