@@ -47,7 +47,7 @@ namespace InGame
                 
                 callbackLateInit?.Invoke(p);
                 
-                p.Activate(i * 0.1f);
+                p.Activate(0f);
             }
         }
     }

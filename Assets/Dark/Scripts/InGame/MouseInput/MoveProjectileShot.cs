@@ -141,7 +141,7 @@ namespace InGame
                     if (isChargeSize) projectileType = PlayerProjectileType.ChargeSize;
                 }
 
-                if (!isChargeBullet || isChargeSize)
+                if (!isChargeBullet)
                 {
                     var blossomAmount = 0;
                     if (canChargeSize)

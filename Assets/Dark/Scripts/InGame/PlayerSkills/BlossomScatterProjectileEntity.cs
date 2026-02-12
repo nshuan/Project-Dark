@@ -6,11 +6,13 @@ namespace InGame
     public class BlossomScatterProjectileEntity : BlossomProjectileEntity
     {
         [Space] [Header("Blossom Scatter")] 
-        [SerializeField] private float durationScatter = 1f;
+        [SerializeField] private float durationScatterMin = 0.85f;
+        [SerializeField] private float durationScatterMax = 1.15f;
         [SerializeField] private AnimationCurve dropYCurve;
         
         private float scatterTimer;
         private Vector3 targetDropPosition;
+        private float durationScatter;
 
         public override void Init(Vector2 rangeCenter, Vector2 direction, float range, float size, float speedScale, int damage,
             int criticalDamage, float criticalRate, float stagger, bool isCharge, int maxHit, List<IProjectileActivate> activateActions,
@@ -19,9 +21,10 @@ namespace InGame
             base.Init(rangeCenter, direction, range, size, speedScale, damage, criticalDamage, criticalRate, stagger, isCharge, maxHit, activateActions, hitActions, damageType);
 
             scatterTimer = 0f;
-            targetDropPosition = transform.position + (Vector3)direction * Range;
+            targetDropPosition = transform.position + (Vector3)direction * RandomUtil.Range(Range - 0.3f, Range + 0.1f);
             collider.CanTrigger = false;
             MaxHit = 1;
+            durationScatter = RandomUtil.Range(durationScatterMin, durationScatterMax);
         }
 
         protected override void FixedUpdate()
