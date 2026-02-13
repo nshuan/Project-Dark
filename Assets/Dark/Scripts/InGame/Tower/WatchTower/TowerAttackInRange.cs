@@ -191,10 +191,11 @@ namespace InGame.WatchTower
                 NodeTowerCounter.CounterType.Slash => LevelUtilityV2.StatsCounterSlash.stagger,
                 _ => 1
             };
-            var maxHit = LevelUtilityV2.GetCounterPiercingAmount();
+            var maxHit = 20;
+            var size = LevelUtilityV2.GetCounterPiercingSize();
             projectile.transform.position = towerAttackPos;
             projectile.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
-            projectile.Init(towerAttackPos, direction.normalized, 8, 5, speedScale, damage, damage, 0f, stagger, false, maxHit, null, null, ProjectileType.TowerProjectile);
+            projectile.Init(towerAttackPos, direction.normalized, 8, size, speedScale, damage, damage, 0f, stagger, false, maxHit, null, null, ProjectileType.TowerProjectile);
             projectile.BlockDestroy = true;
             projectile.Activate(0f);
         }
