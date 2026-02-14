@@ -115,8 +115,8 @@ namespace InGame
             LevelUtilityV2.StatsNormalAttack = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
             LevelUtilityV2.StatsNormalPiercing = PlayerSkillNormalManifest.Get(PlayerDataManager.Instance.Data.Class, NormalType.Piercing);
             LevelUtilityV2.StatsNormalBullet = PlayerSkillNormalManifest.Get(PlayerDataManager.Instance.Data.Class, NormalType.Bullet);
-            LevelUtilityV2.StatsChargeBullet = PlayerChargeManifest.Get(ChargeType.Bullet);
-            LevelUtilityV2.StatsChargeSize = PlayerChargeManifest.Get(ChargeType.Size);
+            LevelUtilityV2.StatsChargeBullet = PlayerChargeManifest.Get(PlayerDataManager.Instance.Data.Class, ChargeType.Bullet);
+            LevelUtilityV2.StatsChargeSize = PlayerChargeManifest.Get(PlayerDataManager.Instance.Data.Class, ChargeType.Size);
             LevelUtilityV2.StatsDash = dashConfig;
             LevelUtilityV2.StatsFlash = flashConfig;
             LevelUtilityV2.StatsTele = defaultTeleConfig; 
