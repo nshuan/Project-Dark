@@ -53,7 +53,7 @@ namespace InGame
         public bool IsBoss { get; set; }
         public float PercentageHpLeft => (float)CurrentHealth / MaxHealth;
         public Action<int, DamageType> OnHit { get; set; }
-        public Action OnStartDead { get; set; }
+        public Action<EnemyEntity> OnStartDead { get; set; }
         public Action<EnemyEntity, EnemyDieReason> OnDead { get; set; }
         public EnemyState State { get; set; }
         public bool Activated { get; set; }
@@ -404,7 +404,7 @@ namespace InGame
             yield return new WaitForEndOfFrame();
             // Đợi chạy xong anim hit rồi mới chạy anim die
             shadow.SetActive(false);    
-            OnStartDead?.Invoke();
+            OnStartDead?.Invoke(this);
             OnStartDead = null;
             if (showAttackRange)
             {

@@ -64,7 +64,7 @@ namespace InGame
                             deadProjectile.position = TargetToChase.transform.position;
                             TargetToChase.body.SetupProjectileHit(deadProjectile.transform, targetDirection);
                             deadProjectile.SetParent(TargetToChase.transform);
-                            TargetToChase.OnStartDead += () =>
+                            TargetToChase.OnStartDead += (dead) =>
                             {
                                 deadProjectile.gameObject.SetActive(false);
                             };
@@ -89,7 +89,7 @@ namespace InGame
                     deadProjectile.position = hitEnemyInfo.hit.point;
                     hitEnemyInfo.hitEnemy.body.SetupProjectileHit(deadProjectile.transform, moveDirection);
                     deadProjectile.SetParent(hitEnemyInfo.hitEnemy.transform);
-                    hitEnemyInfo.hitEnemy.OnStartDead += () =>
+                    hitEnemyInfo.hitEnemy.OnStartDead += (dead) =>
                     {
                         deadProjectile.gameObject.SetActive(false);
                     };
