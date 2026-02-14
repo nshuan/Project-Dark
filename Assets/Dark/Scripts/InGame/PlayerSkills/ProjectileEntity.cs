@@ -196,7 +196,7 @@ namespace InGame
                     var deadProjectile = ProjectileDeadOnEnemyPool.Instance.Get(moveDirection);
                     deadProjectile.position = hitEnemyInfo.hit.point;
                     hitEnemyInfo.hitEnemy.body.SetupProjectileHit(deadProjectile.transform, moveDirection);
-                    hitEnemyInfo.hitEnemy.OnStartDead += () =>
+                    hitEnemyInfo.hitEnemy.OnStartDead += (dead) =>
                     {
                         deadProjectile.gameObject.SetActive(false);
                     };

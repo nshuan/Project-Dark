@@ -20,6 +20,7 @@ namespace InGame.WatchTower
         [SerializeField] protected GameObject visualFill;
         [SerializeField] protected float vfxActivateCounterDuration;
         [SerializeField] protected float bulletSpeedScale = 2f;
+        [SerializeField] protected float yOffsetWhenEnemyStay = 1.5f;
 
         [Space] [Header("Range")] 
         [SerializeField] protected Transform detectRange;
@@ -28,8 +29,10 @@ namespace InGame.WatchTower
         [Space] [Header("Visual")]
         [SerializeField] protected SpriteRenderer spriteFill;
         [SerializeField] protected GameObject fillFull;
-        
+
+        private Camera cam;
         protected bool counterCooldown;
+        private float visualBaseLocalY;
 
         [Space] [Header("Config")] 
         public bool canCounter;
@@ -48,6 +51,7 @@ namespace InGame.WatchTower
         
         private void Awake()
         {
+            visualBaseLocalY = visual.localPosition.y;
             fillMaterial = new Material(spriteFill.sharedMaterial);
             spriteFill.material = fillMaterial;
             
@@ -60,6 +64,8 @@ namespace InGame.WatchTower
             SetRingFillFull(false);
             fillMaterial.SetFloat(RadialProgress, 0f);
             inRangeEnemies = new List<Transform>();
+
+            LevelManager.Instance.OnChangeTower += OnChangeTower;
         }
 
         private void OnDestroy()
@@ -120,6 +126,13 @@ namespace InGame.WatchTower
             
             detectRange.gameObject.SetActive(canCounter);
             visual.gameObject.SetActive(canCounter);
+            cam = Camera.main;
+        }
+        
+        private void OnChangeTower(TowerEntity t)
+        {
+            if (t.Id == tower.Id) visual.localPosition = new Vector3(visual.localPosition.x, visualBaseLocalY + yOffsetWhenEnemyStay, visual.localPosition.z);
+            else visual.localPosition = new Vector3(visual.localPosition.x, visualBaseLocalY, visual.localPosition.z);
         }
 
         private void OnTowerDestroyed(TowerEntity destroyedTower)
@@ -141,7 +154,7 @@ namespace InGame.WatchTower
             var triggerDirection = other.transform.position - transform.position;
             if (LevelUtilityV2.GetRelativeRange(DetectRange, triggerDirection) < triggerDirection.magnitude) return;
 
-            enemy.OnDead += OnEnemyDead;
+            enemy.OnStartDead += OnEnemyDead;
             inRangeEnemies.Add(enemy.transform);
             counterDirection.x = other.transform.position.x - visual.position.x;
             counterDirection.y = other.transform.position.y - visual.position.y;
@@ -154,8 +167,7 @@ namespace InGame.WatchTower
             if (inRangeEnemies.Contains(other.transform)) inRangeEnemies.Remove(other.transform);
             if (inRangeEnemies.Count == 0 && coroutineCounter != null)
             {
-                StopCoroutine(coroutineCounter);
-                coroutineCounter = null;
+                TerminateCounter();
             }
         }
 
@@ -164,14 +176,21 @@ namespace InGame.WatchTower
             OnTriggerEnter2D(other);
         }
 
-        private void OnEnemyDead(EnemyEntity enemy, EnemyDieReason dieReason)
+        private void OnEnemyDead(EnemyEntity enemy)
         {
             if (inRangeEnemies.Contains(enemy.transform)) inRangeEnemies.Remove(enemy.transform);
             if (inRangeEnemies.Count == 0 && coroutineCounter != null)
             {
-                StopCoroutine(coroutineCounter);
-                coroutineCounter = null;
+                TerminateCounter();
             }
+        }
+
+        private void Update()
+        {
+            if (coroutineCounter != null) return;
+            if (!cam) return;
+            var mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+            visual.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(mousePos.y - visual.position.y, mousePos.x - visual.position.x) * Mathf.Rad2Deg);
         }
 
         protected virtual IEnumerator IECounter(float cooldown)
@@ -239,11 +258,19 @@ namespace InGame.WatchTower
             visualFill.gameObject.SetActive(true);
         }
 
+        private void TerminateCounter()
+        {
+            StopCoroutine(coroutineCounter);
+            coroutineCounter = null;
+            fillMaterial.SetFloat(RadialProgress, 0f);
+        }
+
         private void SetRingFillFull(bool show)
         {
             fillFull.SetActive(show);
         }
         
+        // Phải tìm cách khác, cách này rất lag
         private Transform FindMostCrowdedEnemy(List<Transform> enemies, float radius)
         {
             Transform bestTarget = null;
