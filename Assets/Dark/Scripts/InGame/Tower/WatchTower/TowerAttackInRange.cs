@@ -10,6 +10,8 @@ namespace InGame.WatchTower
 {
     public class TowerAttackInRange : MonoBehaviour
     {
+        private static readonly int RadialProgress = Shader.PropertyToID("_RadialProgress");
+        
         [SerializeField] protected TowerEntity tower;
         [SerializeField] protected NodeTowerCounter.CounterType counterType;
         [SerializeField] protected ProjectileEntity projectilePrefab;
@@ -22,6 +24,10 @@ namespace InGame.WatchTower
         [Space] [Header("Range")] 
         [SerializeField] protected Transform detectRange;
         [SerializeField] protected CircleCollider2D detectCollider;
+
+        [Space] [Header("Visual")]
+        [SerializeField] protected SpriteRenderer spriteFill;
+        [SerializeField] protected GameObject fillFull;
         
         protected bool counterCooldown;
 
@@ -38,16 +44,21 @@ namespace InGame.WatchTower
         protected Coroutine coroutineCounter;
         protected Coroutine coroutineCooldown;
         protected List<Transform> inRangeEnemies;
+        protected Material fillMaterial;
         
         private void Awake()
         {
+            fillMaterial = new Material(spriteFill.sharedMaterial);
+            spriteFill.material = fillMaterial;
+            
             LevelManager.Instance.OnInitTowers += OnInitTowers;
             LevelManager.Instance.OnLose += OnLose;
             tower.OnDestroyed += OnTowerDestroyed;
             detectRange.localScale = DetectRange * Vector3.one;
             detectCollider.radius = DetectRange;
-            detectRange.gameObject.SetActive(false);
             visual.gameObject.SetActive(false);
+            SetRingFillFull(false);
+            fillMaterial.SetFloat(RadialProgress, 0f);
             inRangeEnemies = new List<Transform>();
         }
 
@@ -107,6 +118,7 @@ namespace InGame.WatchTower
             else if (counterType == NodeTowerCounter.CounterType.Slash)
                 canCounter = bonusInfo.bonusUnlockSkill.unlockCounterSlash;
             
+            detectRange.gameObject.SetActive(canCounter);
             visual.gameObject.SetActive(canCounter);
         }
 
@@ -131,6 +143,8 @@ namespace InGame.WatchTower
 
             enemy.OnDead += OnEnemyDead;
             inRangeEnemies.Add(enemy.transform);
+            counterDirection.x = other.transform.position.x - visual.position.x;
+            counterDirection.y = other.transform.position.y - visual.position.y;
             if (counterCooldown) return;
             if (coroutineCounter == null) coroutineCounter = StartCoroutine(IECounter(Cooldown));
         }
@@ -140,7 +154,6 @@ namespace InGame.WatchTower
             if (inRangeEnemies.Contains(other.transform)) inRangeEnemies.Remove(other.transform);
             if (inRangeEnemies.Count == 0 && coroutineCounter != null)
             {
-                detectRange.gameObject.SetActive(false);
                 StopCoroutine(coroutineCounter);
                 coroutineCounter = null;
             }
@@ -156,7 +169,6 @@ namespace InGame.WatchTower
             if (inRangeEnemies.Contains(enemy.transform)) inRangeEnemies.Remove(enemy.transform);
             if (inRangeEnemies.Count == 0 && coroutineCounter != null)
             {
-                detectRange.gameObject.SetActive(false);
                 StopCoroutine(coroutineCounter);
                 coroutineCounter = null;
             }
@@ -165,21 +177,20 @@ namespace InGame.WatchTower
         protected virtual IEnumerator IECounter(float cooldown)
         {
             DOTween.Kill(vfxActivateCounter);
-            detectRange.gameObject.SetActive(true);
             var delayOnDetectTimer = DelayOnDetected;
             while (delayOnDetectTimer > 0)
             {
                 delayOnDetectTimer -= Time.deltaTime;
-                var bestTarget = FindMostCrowdedEnemy(inRangeEnemies, 2f);
-                if (bestTarget)
-                {
-                    counterDirection.x = bestTarget.position.x - visual.position.x;
-                    counterDirection.y = bestTarget.position.y - visual.position.y;
-                }
+                // var bestTarget = FindMostCrowdedEnemy(inRangeEnemies, 2f);
+                // if (bestTarget)
+                // {
+                //     counterDirection.x = bestTarget.position.x - visual.position.x;
+                //     counterDirection.y = bestTarget.position.y - visual.position.y;
+                // }
                 visual.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(counterDirection.y, counterDirection.x) * Mathf.Rad2Deg);
+                fillMaterial.SetFloat(RadialProgress, (1f - delayOnDetectTimer / DelayOnDetected) * -360f);
                 yield return null;
             }
-            yield return new WaitForSeconds(DelayOnDetected); 
             if (inRangeEnemies.Count <= 0)
                 yield break;
             
@@ -189,7 +200,10 @@ namespace InGame.WatchTower
             vfxActivateCounter.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(counterDirection.y, counterDirection.x) * Mathf.Rad2Deg);
             vfxActivateCounter.SetActive(true);
             Counter(visual.position, counterDirection, Damage, bulletSpeedScale);
-            detectRange.gameObject.SetActive(false);
+            DOTween.Kill(fillFull);
+            SetRingFillFull(true);
+            DOVirtual.DelayedCall(0.2f, () => SetRingFillFull(false)).SetTarget(fillFull);
+            fillMaterial.SetFloat(RadialProgress, 0f);
             DOVirtual.DelayedCall(vfxActivateCounterDuration, () =>
             {
                 vfxActivateCounter.SetActive(false);
@@ -224,8 +238,13 @@ namespace InGame.WatchTower
             counterCooldown = false;
             visualFill.gameObject.SetActive(true);
         }
+
+        private void SetRingFillFull(bool show)
+        {
+            fillFull.SetActive(show);
+        }
         
-        public Transform FindMostCrowdedEnemy(List<Transform> enemies, float radius)
+        private Transform FindMostCrowdedEnemy(List<Transform> enemies, float radius)
         {
             Transform bestTarget = null;
             int maxCount = 0;
