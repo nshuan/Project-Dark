@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using Data;
 using InGame.ChargeConfig;
 
 namespace InGame.Upgrade
@@ -18,14 +19,14 @@ namespace InGame.Upgrade
 
         public (string, string) GetBeforeAfterValueTotalStat(int level, ref UpgradeBonusInfo bonusInfo)
         {
-            var before = LevelUtility.GetChargeSizeExplodeBullet((int)PlayerChargeManifest.Get(ChargeType.Size).value);
+            var before = LevelUtility.GetChargeSizeExplodeBullet((int)PlayerChargeManifest.Get(PlayerDataManager.Instance.Data.Class, ChargeType.Size).value);
             if (level > value.Length)
             {
                 return (before.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture), before.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture));
             }
             var maxBulletExplodeChargeSize = bonusInfo.chargeBonus.maxBulletExplodeChargeSize;
             ActivateNode(level, ref bonusInfo);
-            var after = LevelUtility.GetChargeSizeExplodeBullet((int)PlayerChargeManifest.Get(ChargeType.Size).value);
+            var after = LevelUtility.GetChargeSizeExplodeBullet((int)PlayerChargeManifest.Get(PlayerDataManager.Instance.Data.Class, ChargeType.Size).value);
             bonusInfo.chargeBonus.maxBulletExplodeChargeSize = maxBulletExplodeChargeSize;
             return (before.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture), after.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture));
         }

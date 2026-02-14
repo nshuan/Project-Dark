@@ -6,9 +6,9 @@ namespace InGame
 {
     public class MoveChargeKnight : MoveChargeController
     {
-        [SerializeField] private float spanAngle = 45f;
         [SerializeField] private int bulletAddedPerUnit = 5;
         
+        private float spanAngle = 45f;
         private List<ProjectileEntity> projectiles;
         private Vector2[] directions;
         
@@ -44,6 +44,8 @@ namespace InGame
             const float damageReducePercentageOnBoss = 0.4f;
             
             if (projectiles.Count == 0) return;
+
+            spanAngle = LevelUtilityV2.StatsChargeBullet.range;
             
             var totalTargetBoss = 0;
             var camPos = Cam.ScreenToWorldPoint(Input.mousePosition);

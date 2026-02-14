@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 using InGame.Upgrade;
 using Unity.VisualScripting;
@@ -13,6 +14,8 @@ namespace InGame.WatchTower
         [SerializeField] protected NodeTowerCounter.CounterType counterType;
         [SerializeField] protected ProjectileEntity projectilePrefab;
         [SerializeField] protected GameObject vfxActivateCounter;
+        [SerializeField] protected Transform visual;
+        [SerializeField] protected GameObject visualFill;
         [SerializeField] protected float vfxActivateCounterDuration;
         [SerializeField] protected float bulletSpeedScale = 2f;
 
@@ -34,7 +37,7 @@ namespace InGame.WatchTower
 
         protected Coroutine coroutineCounter;
         protected Coroutine coroutineCooldown;
-        protected int totalInRangeTarget;
+        protected List<Transform> inRangeEnemies;
         
         private void Awake()
         {
@@ -44,6 +47,8 @@ namespace InGame.WatchTower
             detectRange.localScale = DetectRange * Vector3.one;
             detectCollider.radius = DetectRange;
             detectRange.gameObject.SetActive(false);
+            visual.gameObject.SetActive(false);
+            inRangeEnemies = new List<Transform>();
         }
 
         private void OnDestroy()
@@ -101,6 +106,8 @@ namespace InGame.WatchTower
                 canCounter = bonusInfo.bonusUnlockSkill.unlockCounterPiercing;
             else if (counterType == NodeTowerCounter.CounterType.Slash)
                 canCounter = bonusInfo.bonusUnlockSkill.unlockCounterSlash;
+            
+            visual.gameObject.SetActive(canCounter);
         }
 
         private void OnTowerDestroyed(TowerEntity destroyedTower)
@@ -117,24 +124,21 @@ namespace InGame.WatchTower
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (!canCounter) return;
-            if (counterCooldown) return;
             if (!other.CompareTag("Enemy")) return;
             if (!other.transform.TryGetComponent<EnemyEntity>(out var enemy)) return;
             var triggerDirection = other.transform.position - transform.position;
             if (LevelUtilityV2.GetRelativeRange(DetectRange, triggerDirection) < triggerDirection.magnitude) return;
 
             enemy.OnDead += OnEnemyDead;
-            totalInRangeTarget += 1;
-            counterDirection.x = triggerDirection.x;
-            counterDirection.y = triggerDirection.y;
+            inRangeEnemies.Add(enemy.transform);
+            if (counterCooldown) return;
             if (coroutineCounter == null) coroutineCounter = StartCoroutine(IECounter(Cooldown));
         }
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            totalInRangeTarget -= 1;
-            if (totalInRangeTarget < 0) totalInRangeTarget = 0;
-            if (totalInRangeTarget == 0 && coroutineCounter != null)
+            if (inRangeEnemies.Contains(other.transform)) inRangeEnemies.Remove(other.transform);
+            if (inRangeEnemies.Count == 0 && coroutineCounter != null)
             {
                 detectRange.gameObject.SetActive(false);
                 StopCoroutine(coroutineCounter);
@@ -147,11 +151,10 @@ namespace InGame.WatchTower
             OnTriggerEnter2D(other);
         }
 
-        private void OnEnemyDead(EnemyDieReason dieReason)
+        private void OnEnemyDead(EnemyEntity enemy, EnemyDieReason dieReason)
         {
-            totalInRangeTarget -= 1;
-            if (totalInRangeTarget < 0) totalInRangeTarget = 0;
-            if (totalInRangeTarget == 0 && coroutineCounter != null)
+            if (inRangeEnemies.Contains(enemy.transform)) inRangeEnemies.Remove(enemy.transform);
+            if (inRangeEnemies.Count == 0 && coroutineCounter != null)
             {
                 detectRange.gameObject.SetActive(false);
                 StopCoroutine(coroutineCounter);
@@ -163,8 +166,21 @@ namespace InGame.WatchTower
         {
             DOTween.Kill(vfxActivateCounter);
             detectRange.gameObject.SetActive(true);
+            var delayOnDetectTimer = DelayOnDetected;
+            while (delayOnDetectTimer > 0)
+            {
+                delayOnDetectTimer -= Time.deltaTime;
+                var bestTarget = FindMostCrowdedEnemy(inRangeEnemies, 2f);
+                if (bestTarget)
+                {
+                    counterDirection.x = bestTarget.position.x - visual.position.x;
+                    counterDirection.y = bestTarget.position.y - visual.position.y;
+                }
+                visual.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(counterDirection.y, counterDirection.x) * Mathf.Rad2Deg);
+                yield return null;
+            }
             yield return new WaitForSeconds(DelayOnDetected); 
-            if (totalInRangeTarget <= 0)
+            if (inRangeEnemies.Count <= 0)
                 yield break;
             
             if (coroutineCooldown != null) StopCoroutine(coroutineCooldown);
@@ -172,7 +188,7 @@ namespace InGame.WatchTower
                 
             vfxActivateCounter.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(counterDirection.y, counterDirection.x) * Mathf.Rad2Deg);
             vfxActivateCounter.SetActive(true);
-            Counter(transform.position, counterDirection, Damage, bulletSpeedScale);
+            Counter(visual.position, counterDirection, Damage, bulletSpeedScale);
             detectRange.gameObject.SetActive(false);
             DOVirtual.DelayedCall(vfxActivateCounterDuration, () =>
             {
@@ -203,8 +219,42 @@ namespace InGame.WatchTower
         private IEnumerator IECooldown(float cooldown)
         {
             counterCooldown = true;
+            visualFill.gameObject.SetActive(false);
             yield return new WaitForSeconds(cooldown);
             counterCooldown = false;
+            visualFill.gameObject.SetActive(true);
+        }
+        
+        public Transform FindMostCrowdedEnemy(List<Transform> enemies, float radius)
+        {
+            Transform bestTarget = null;
+            int maxCount = 0;
+
+            float radiusSqr = radius * radius;
+
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                int count = 0;
+                Vector3 center = enemies[i].position;
+
+                for (int j = 0; j < enemies.Count; j++)
+                {
+                    if (i == j) continue;
+
+                    if ((enemies[j].position - center).sqrMagnitude <= radiusSqr)
+                    {
+                        count++;
+                    }
+                }
+
+                if (count > maxCount)
+                {
+                    maxCount = count;
+                    bestTarget = enemies[i];
+                }
+            }
+
+            return bestTarget;
         }
     }
 }
