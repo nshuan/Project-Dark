@@ -53,8 +53,8 @@ namespace InGame
         public bool IsBoss { get; set; }
         public float PercentageHpLeft => (float)CurrentHealth / MaxHealth;
         public Action<int, DamageType> OnHit { get; set; }
-        public Action OnStartDead { get; set; }
-        public Action<EnemyDieReason> OnDead { get; set; }
+        public Action<EnemyEntity> OnStartDead { get; set; }
+        public Action<EnemyEntity, EnemyDieReason> OnDead { get; set; }
         public EnemyState State { get; set; }
         public bool Activated { get; set; }
         public int UniqueId { get; set; }
@@ -302,11 +302,11 @@ namespace InGame
         public float HitDirectionX { get; set; }
         public float HitDirectionY { get; set; }
 
-        public virtual void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
+        public virtual void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType, bool instantKill = false)
         {
             if (!Activated) return;
             if (IsDestroyed) return;
-            if (dmgType != DamageType.Enemy && dmgType != DamageType.SelfDestruct && State == EnemyState.Invisible) return;
+            if (dmgType != DamageType.Enemy && dmgType != DamageType.SelfDestruct && State == EnemyState.Invisible && instantKill == false) return;
             
             // Scale damage on boss
             if (IsBoss)
@@ -317,6 +317,12 @@ namespace InGame
             healthBar.UpdateHp(CurrentHealth);
             if (dmgType != DamageType.Enemy && dmgType != DamageType.SelfDestruct)
                 CombatActions.OnDamageDealt?.Invoke(lastHealth - CurrentHealth);
+
+            if (instantKill)
+            {
+                OnDie(EnemyDieReason.PlayerKill);
+                return;
+            }
             
             OnHit?.Invoke(damage, dmgType);
             if (stagger - config.staggerResist > 0)
@@ -398,7 +404,7 @@ namespace InGame
             yield return new WaitForEndOfFrame();
             // Đợi chạy xong anim hit rồi mới chạy anim die
             shadow.SetActive(false);    
-            OnStartDead?.Invoke();
+            OnStartDead?.Invoke(this);
             OnStartDead = null;
             if (showAttackRange)
             {
@@ -406,7 +412,7 @@ namespace InGame
             }
             yield return new WaitForSeconds(delayDieAnimation);
             yield return new WaitForSeconds(animController.PlayDie());
-            OnDead?.Invoke(reason);
+            OnDead?.Invoke(this, reason);
             OnDead = null;
             yield return new WaitForSeconds(delayRelease);
             EnemyPool.Instance.Release(this, config.enemyId);
@@ -464,8 +470,11 @@ namespace InGame
             delayDieAnimation = delayAnimation;
             HitDirectionX = 0f;
             HitDirectionY = 0f;
-            Damage(CurrentHealth, transform.position, 0f, dmgType);
+            Damage(CurrentHealth, transform.position, 0f, dmgType, true);
         }
+
+        public bool IsEffectTargetDead => IsDestroyed;
+
         #endregion
 
         #region Elite

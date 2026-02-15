@@ -183,6 +183,17 @@ namespace InGame
             
             return (StatsNormalAttack.range + BonusInfo.bonusNormalAttack.bonusNormalAttackRange.add) * (1 + BonusInfo.bonusNormalAttack.bonusNormalAttackRange.mul) * ratio;
         }
+        
+        /// <summary>
+        /// Skill_Size = Size * [1 + Total (Skill_Size_Multiple) ] * [ 1 + ( Charge_Size_Max / Charge_Size_Time ) * Charge_Time ]
+        /// </summary>
+        /// <param name="baseSize"></param>
+        /// <param name="chargeSize"></param>
+        /// <returns></returns>
+        public static float GetNormalAttackSize()
+        {
+            return (StatsNormalAttack.size + BonusInfo.bonusNormalAttack.bonusNormalAttackSize.add) * (1 + BonusInfo.bonusNormalAttack.bonusNormalAttackSize.mul);
+        }
 
         public static float GetNormalPiercingDamageScale()
         {
@@ -335,7 +346,7 @@ namespace InGame
                 Mathf.Clamp01(1f - BonusInfo.bonusCounter.bonusCounterCooldown.mul - GetBaseCooldown()), 0.001f);
         }
 
-        public static int GetCounterPiercingAmount()
+        public static int GetCounterPiercingSize()
         {
             return Mathf.RoundToInt((StatsCounterPiercing.size + BonusInfo.bonusCounter.bonusPiercingAmount.addInt) * (1f + BonusInfo.bonusCounter.bonusPiercingAmount.mul));
         }

@@ -63,6 +63,7 @@ namespace InGame
         
         #region Action
 
+        public Action OnInitTowers { get; set; }
         public Action OnInitPlayer { get; set; }
         public Action<LevelConfig> OnLevelPreLoaded { get; set; }
         public Action<LevelConfig> OnLevelLoaded { get; set; }
@@ -112,10 +113,10 @@ namespace InGame
             LevelUtilityV2.BonusInfo = bonusInfo;
             LevelUtilityV2.StatsBase = playerStats;
             LevelUtilityV2.StatsNormalAttack = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
-            LevelUtilityV2.StatsNormalPiercing = PlayerSkillNormalManifest.Get(NormalType.Piercing);
-            LevelUtilityV2.StatsNormalBullet = PlayerSkillNormalManifest.Get(NormalType.Bullet);
-            LevelUtilityV2.StatsChargeBullet = PlayerChargeManifest.Get(ChargeType.Bullet);
-            LevelUtilityV2.StatsChargeSize = PlayerChargeManifest.Get(ChargeType.Size);
+            LevelUtilityV2.StatsNormalPiercing = PlayerSkillNormalManifest.Get(PlayerDataManager.Instance.Data.Class, NormalType.Piercing);
+            LevelUtilityV2.StatsNormalBullet = PlayerSkillNormalManifest.Get(PlayerDataManager.Instance.Data.Class, NormalType.Bullet);
+            LevelUtilityV2.StatsChargeBullet = PlayerChargeManifest.Get(PlayerDataManager.Instance.Data.Class, ChargeType.Bullet);
+            LevelUtilityV2.StatsChargeSize = PlayerChargeManifest.Get(PlayerDataManager.Instance.Data.Class, ChargeType.Size);
             LevelUtilityV2.StatsDash = dashConfig;
             LevelUtilityV2.StatsFlash = flashConfig;
             LevelUtilityV2.StatsTele = defaultTeleConfig; 
@@ -126,10 +127,11 @@ namespace InGame
         private void InitPlayerAndTowers()
         {
             InitTowers();
+            OnInitTowers?.Invoke();
             currentTowerIndex = -1;
             
             if (Player != null) Destroy(Player.gameObject);
-            Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)LevelUtilityV2.StatsNormalAttack.skillId);
+            Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)PlayerDataManager.Instance.Data.characterClass);
             Player.transform.position = towers[0].transform.position + towers[0].GetTowerHeight();
             OnInitPlayer?.Invoke();
         }
@@ -141,7 +143,7 @@ namespace InGame
         
         public void LoadLevel(int level)
         {
-            var levelConfig = LevelManifest.Instance.GetLevel(level);
+            var levelConfig = LevelManifest.Instance.GetLevel(PlayerDataManager.Instance.Data.Class, level);
             if (!levelConfig) return;
             Level = levelConfig;
             SceneManager.sceneLoaded += OnLevelSceneLoaded;
@@ -279,6 +281,7 @@ namespace InGame
             OnBossWaveStart = null;
             onWaveEnded = null;
             OnInitPlayer = null;
+            OnInitTowers = null;
             
             CombatActions.Clear();
         }

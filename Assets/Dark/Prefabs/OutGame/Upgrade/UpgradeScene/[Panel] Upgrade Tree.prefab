@@ -69,7 +69,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 112.77345, y: -340.5}
+  m_AnchoredPosition: {x: 112.77345, y: -478.5}
   m_SizeDelta: {x: 204, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &325553135310968634
@@ -112,8 +112,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 270.62732, y: 182.20001}
-  m_SizeDelta: {x: 311.64612, y: 58.663605}
+  m_AnchoredPosition: {x: 320.68005, y: 182.20001}
+  m_SizeDelta: {x: 411.7515, y: 58.6636}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7352317138223097543
 CanvasRenderer:
@@ -575,7 +575,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 112.77345, y: -202.5}
+  m_AnchoredPosition: {x: 112.77345, y: -340.5}
   m_SizeDelta: {x: 204, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &960439572204588283
@@ -588,7 +588,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4612810516151640618}
   m_Layer: 5
-  m_Name: Setting
+  m_Name: InstructionSetting
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1504,7 +1504,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 112.77345, y: -409.5}
+  m_AnchoredPosition: {x: 112.77345, y: -547.5}
   m_SizeDelta: {x: 204, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2283857400842506658
@@ -1518,6 +1518,7 @@ GameObject:
   - component: {fileID: 850669610881164040}
   - component: {fileID: 1822399022201463947}
   - component: {fileID: 3395427730409447311}
+  - component: {fileID: 3334965431454763228}
   m_Layer: 5
   m_Name: txtBack
   m_TagString: Untagged
@@ -1641,6 +1642,132 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &3334965431454763228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2283857400842506658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b351070690b4b52ade5c7e2d6852179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 1f70544114ea3874b91379e4ae75684d, type: 2}
+    - {fileID: 11400000, guid: a1cd34fa095a91f4e891e197de0085d5, type: 2}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: valueMap
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[System.String, mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 1
+      Data: Return
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 1
+      Data: "Quay l\u1EA1i"
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: fontMap
+      Entry: 7
+      Data: 2|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[TMPro.TMP_FontAsset, Unity.TextMeshPro]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 1
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  key: key_return
 --- !u!1 &2466417126311073885
 GameObject:
   m_ObjectHideFlags: 0
@@ -1777,7 +1904,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8757129013592213915}
   m_Layer: 5
-  m_Name: Mouse
+  m_Name: InstructionZoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1843,8 +1970,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 270.62732, y: 249.90002}
-  m_SizeDelta: {x: 311.64612, y: 58.663605}
+  m_AnchoredPosition: {x: 328.32697, y: 249.90002}
+  m_SizeDelta: {x: 427.0453, y: 58.6636}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7945657430169971382
 CanvasRenderer:
@@ -1948,6 +2075,7 @@ GameObject:
   - component: {fileID: 2751894279838484192}
   - component: {fileID: 8811211981997317913}
   - component: {fileID: 37349033180619401}
+  - component: {fileID: 8437232635531330114}
   m_Layer: 5
   m_Name: txtFeedback
   m_TagString: Untagged
@@ -1969,9 +2097,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2452878026768826164}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 12.900024, y: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 168.72308, y: 0}
   m_SizeDelta: {x: 450, y: 64}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8811211981997317913
@@ -2071,6 +2199,132 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8437232635531330114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2735322533693287785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b351070690b4b52ade5c7e2d6852179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 1f70544114ea3874b91379e4ae75684d, type: 2}
+    - {fileID: 11400000, guid: a1cd34fa095a91f4e891e197de0085d5, type: 2}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: valueMap
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[System.String, mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 1
+      Data: Feedback
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 1
+      Data: "\u0110\xE1nh gi\xE1"
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: fontMap
+      Entry: 7
+      Data: 2|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[TMPro.TMP_FontAsset, Unity.TextMeshPro]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 1
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  key: key_feedback
 --- !u!1 &2895318761864295767
 GameObject:
   m_ObjectHideFlags: 0
@@ -2331,6 +2585,7 @@ GameObject:
   - component: {fileID: 7019576105659401139}
   - component: {fileID: 2312991181335598703}
   - component: {fileID: 3538436300410141466}
+  - component: {fileID: 4900946187377345083}
   m_Layer: 5
   m_Name: txtSetting
   m_TagString: Untagged
@@ -2454,6 +2709,132 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4900946187377345083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3119307649309694977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b351070690b4b52ade5c7e2d6852179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 1f70544114ea3874b91379e4ae75684d, type: 2}
+    - {fileID: 11400000, guid: a1cd34fa095a91f4e891e197de0085d5, type: 2}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: valueMap
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[System.String, mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 1
+      Data: setting
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 1
+      Data: "c\xE0i \u0111\u1EB7t"
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: fontMap
+      Entry: 7
+      Data: 2|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[TMPro.TMP_FontAsset, Unity.TextMeshPro]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 1
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  key: key_instruction_setting
 --- !u!1 &3212420705219896507
 GameObject:
   m_ObjectHideFlags: 0
@@ -2818,7 +3199,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8380365078620772623}
   m_Layer: 5
-  m_Name: Mouse (1)
+  m_Name: InstructionUpgrade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2878,7 +3259,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 112.77345, y: -547.5}
+  m_AnchoredPosition: {x: 112.77345, y: -685.5}
   m_SizeDelta: {x: 204, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &3980110807738233007
@@ -3308,7 +3689,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 60, y: 108.00003}
-  m_SizeDelta: {x: 3, y: 621}
+  m_SizeDelta: {x: 3, y: 483}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &2019097498010770364
 CanvasRenderer:
@@ -3401,7 +3782,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 112.77345, y: -64.5}
+  m_AnchoredPosition: {x: 112.77345, y: -202.5}
   m_SizeDelta: {x: 204, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5217646464064033300
@@ -3419,7 +3800,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4707032480426802093
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3729,6 +4110,7 @@ GameObject:
   - component: {fileID: 5364135192227911373}
   - component: {fileID: 3221116176394722002}
   - component: {fileID: 7031085934764937574}
+  - component: {fileID: 8587464715216094824}
   m_Layer: 5
   m_Name: txtMouse
   m_TagString: Untagged
@@ -3852,6 +4234,132 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8587464715216094824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5679666412489026319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b351070690b4b52ade5c7e2d6852179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 1f70544114ea3874b91379e4ae75684d, type: 2}
+    - {fileID: 11400000, guid: a1cd34fa095a91f4e891e197de0085d5, type: 2}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: valueMap
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[System.String, mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 1
+      Data: scroll - zoom
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 1
+      Data: "cu\u1ED9n - zoom"
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: fontMap
+      Entry: 7
+      Data: 2|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[TMPro.TMP_FontAsset, Unity.TextMeshPro]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 1
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  key: key_instruction_zoom
 --- !u!1 &6041622247731382464
 GameObject:
   m_ObjectHideFlags: 0
@@ -4039,8 +4547,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 258.51318, y: 178.49997}
-  m_SizeDelta: {x: 375.02625, y: 221}
+  m_AnchoredPosition: {x: 306.42, y: 178.49997}
+  m_SizeDelta: {x: 470.85, y: 221}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8097687573968554041
 CanvasRenderer:
@@ -4480,6 +4988,7 @@ GameObject:
   - component: {fileID: 700613890488793315}
   - component: {fileID: 9030674004071831519}
   - component: {fileID: 4526884317468610708}
+  - component: {fileID: 4385519014791272243}
   m_Layer: 5
   m_Name: txtWishlist
   m_TagString: Untagged
@@ -4501,9 +5010,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 5469151805476572162}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 12.9, y: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 168.72305, y: 0}
   m_SizeDelta: {x: 450, y: 64}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9030674004071831519
@@ -4603,6 +5112,132 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4385519014791272243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6608672131495625148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b351070690b4b52ade5c7e2d6852179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 1f70544114ea3874b91379e4ae75684d, type: 2}
+    - {fileID: 11400000, guid: a1cd34fa095a91f4e891e197de0085d5, type: 2}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: valueMap
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[System.String, mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 1
+      Data: Wishlist on Steam
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 1
+      Data: Wishlist on Steam
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: fontMap
+      Entry: 7
+      Data: 2|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[TMPro.TMP_FontAsset, Unity.TextMeshPro]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 1
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  key: key_wishlist
 --- !u!1 &6785540007897546297
 GameObject:
   m_ObjectHideFlags: 0
@@ -4711,7 +5346,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 112.77345, y: -133.5}
+  m_AnchoredPosition: {x: 112.77345, y: -271.5}
   m_SizeDelta: {x: 204, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6792323569932417756
@@ -4747,7 +5382,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 112.77345, y: -271.5}
+  m_AnchoredPosition: {x: 112.77345, y: -409.5}
   m_SizeDelta: {x: 204, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &7240775900252027385
@@ -4761,6 +5396,7 @@ GameObject:
   - component: {fileID: 7047314025030812224}
   - component: {fileID: 9031587162664156686}
   - component: {fileID: 4999411674342942080}
+  - component: {fileID: 8110581895941788132}
   m_Layer: 5
   m_Name: txtStartGame
   m_TagString: Untagged
@@ -4848,7 +5484,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 16
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -4884,6 +5520,132 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8110581895941788132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7240775900252027385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b351070690b4b52ade5c7e2d6852179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 1f70544114ea3874b91379e4ae75684d, type: 2}
+    - {fileID: 11400000, guid: a1cd34fa095a91f4e891e197de0085d5, type: 2}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: valueMap
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[System.String, mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 1
+      Data: Battle
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 1
+      Data: Battle
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: fontMap
+      Entry: 7
+      Data: 2|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[TMPro.TMP_FontAsset, Unity.TextMeshPro]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 1
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  key: key_battle
 --- !u!1 &7288002224821413542
 GameObject:
   m_ObjectHideFlags: 0
@@ -5761,6 +6523,7 @@ GameObject:
   - component: {fileID: 5243068309540141359}
   - component: {fileID: 785130461276480471}
   - component: {fileID: 8564953753162759674}
+  - component: {fileID: 2789502894983675821}
   m_Layer: 5
   m_Name: txtMouse
   m_TagString: Untagged
@@ -5815,7 +6578,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ' UPGRADE'
+  m_text: UPGRADE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 98fd6dde58d0aae4fa6e92e35acc1d57, type: 2}
   m_sharedMaterial: {fileID: -2322905581608244437, guid: 98fd6dde58d0aae4fa6e92e35acc1d57, type: 2}
@@ -5884,6 +6647,132 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &2789502894983675821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8284479766327657968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b351070690b4b52ade5c7e2d6852179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 1f70544114ea3874b91379e4ae75684d, type: 2}
+    - {fileID: 11400000, guid: a1cd34fa095a91f4e891e197de0085d5, type: 2}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: valueMap
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[System.String, mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 1
+      Data: upgrade
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 1
+      Data: "n\xE2ng c\u1EA5p"
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: fontMap
+      Entry: 7
+      Data: 2|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[TMPro.TMP_FontAsset, Unity.TextMeshPro]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 1
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  key: key_instruction_upgrade
 --- !u!1 &8317402815082995744
 GameObject:
   m_ObjectHideFlags: 0
@@ -6201,7 +7090,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &34599886968419102
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6375,8 +7264,6 @@ MonoBehaviour:
   - {fileID: 518571226762047719}
   - {fileID: 1045048668039360114}
   - {fileID: 3125576486832290479}
-  - {fileID: 6037662998005869520}
-  - {fileID: 6660118691235800011}
   btnDayShort:
   - {fileID: 7039733484634707881}
   - {fileID: 9118157661115455084}
@@ -6424,7 +7311,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 112.77345, y: -478.5}
+  m_AnchoredPosition: {x: 112.77345, y: -616.5}
   m_SizeDelta: {x: 204, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &9105743771131722314
@@ -7140,6 +8027,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2271267573961882439}
     m_Modifications:
+    - target: {fileID: 753315508926413279, guid: b5cf4ca0fad87644b8171cae4f22b462, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 822870093160558865, guid: b5cf4ca0fad87644b8171cae4f22b462, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2308758891677596711, guid: b5cf4ca0fad87644b8171cae4f22b462, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2526779192733726566, guid: b5cf4ca0fad87644b8171cae4f22b462, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2828598616118377099, guid: b5cf4ca0fad87644b8171cae4f22b462, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -7224,6 +8127,18 @@ PrefabInstance:
       propertyPath: m_SortingLayer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3062026583936519675, guid: b5cf4ca0fad87644b8171cae4f22b462, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3217433388455570176, guid: b5cf4ca0fad87644b8171cae4f22b462, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3439669491433889857, guid: b5cf4ca0fad87644b8171cae4f22b462, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4103466839523942291, guid: b5cf4ca0fad87644b8171cae4f22b462, type: 3}
       propertyPath: m_SortingLayer
       value: 0
@@ -7236,6 +8151,22 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 4600412890677341762, guid: b5cf4ca0fad87644b8171cae4f22b462, type: 3}
+    - target: {fileID: 4975350339164396602, guid: b5cf4ca0fad87644b8171cae4f22b462, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5381657575949718084, guid: b5cf4ca0fad87644b8171cae4f22b462, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5385614741309653084, guid: b5cf4ca0fad87644b8171cae4f22b462, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5453936694031850122, guid: b5cf4ca0fad87644b8171cae4f22b462, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5454486801457080172, guid: b5cf4ca0fad87644b8171cae4f22b462, type: 3}
       propertyPath: serializationData.Prefab
       value: 
@@ -7312,6 +8243,10 @@ PrefabInstance:
       propertyPath: serializationData.PrefabModificationsReferencedUnityObjects.Array.data[7]
       value: 
       objectReference: {fileID: 2401850531765193266}
+    - target: {fileID: 7684739172766770784, guid: b5cf4ca0fad87644b8171cae4f22b462, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8814401623587761150, guid: b5cf4ca0fad87644b8171cae4f22b462, type: 3}
       propertyPath: m_Name
       value: NodeInfoPreview
@@ -8093,6 +9028,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6547868019389992703, guid: 19a446dc128d193488746f8819e4a4e8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6285682430735584991}
+    - targetCorrespondingSourceObject: {fileID: 5243342537326901148, guid: 19a446dc128d193488746f8819e4a4e8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 479484104360832528}
   m_SourcePrefab: {fileID: 100100000, guid: 19a446dc128d193488746f8819e4a4e8, type: 3}
 --- !u!114 &1935476351702392213 stripped
 MonoBehaviour:
@@ -8159,6 +9097,137 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   clickable: 1
+--- !u!1 &6892506441339896807 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5243342537326901148, guid: 19a446dc128d193488746f8819e4a4e8, type: 3}
+  m_PrefabInstance: {fileID: 1685193258205492347}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &479484104360832528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6892506441339896807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b351070690b4b52ade5c7e2d6852179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 1f70544114ea3874b91379e4ae75684d, type: 2}
+    - {fileID: 11400000, guid: a1cd34fa095a91f4e891e197de0085d5, type: 2}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: valueMap
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[System.String, mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 1
+      Data: Wishlist Now!
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 1
+      Data: Wishlist ngay!
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: fontMap
+      Entry: 7
+      Data: 2|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[TMPro.TMP_FontAsset, Unity.TextMeshPro]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 1
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  key: key_wishlist_now
 --- !u!224 &7283626425816556948 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8248239303948833263, guid: 19a446dc128d193488746f8819e4a4e8, type: 3}
@@ -10645,17 +11714,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2093140761545778128, guid: c3beb6dbc9360684bb6c5e45f467a241, type: 3}
   m_PrefabInstance: {fileID: 6039511424340535841}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6660118691235800011 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1134301335214590442, guid: c3beb6dbc9360684bb6c5e45f467a241, type: 3}
-  m_PrefabInstance: {fileID: 6039511424340535841}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &6240159880313882122
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11057,17 +12115,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2093140761545778128, guid: c3beb6dbc9360684bb6c5e45f467a241, type: 3}
   m_PrefabInstance: {fileID: 6663022373989474874}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6037662998005869520 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1134301335214590442, guid: c3beb6dbc9360684bb6c5e45f467a241, type: 3}
-  m_PrefabInstance: {fileID: 6663022373989474874}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &6705881583350061699
 PrefabInstance:
   m_ObjectHideFlags: 0

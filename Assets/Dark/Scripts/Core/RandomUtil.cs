@@ -47,6 +47,32 @@ public static class RandomUtil
         return InsideUnitSpan((Vector2)spanDirection, spanAngle);
     }
 
+    public static void InsideUnitSpanSpacedNonAlloc(Vector2 spanDirection, float spanAngle, int count, ref Vector2[] result, float randomness = 0.3f)
+    {
+        if (result == null) return;
+        if (count > result.Length) count = result.Length;
+        
+        float startAngle = -spanAngle * 0.5f;
+        float step = spanAngle / count;
+
+        for (int i = 0; i < count; i++)
+        {
+            float baseAngle = startAngle + step * (i + 0.5f);
+            float offset = Range(-step, step) * randomness * 0.5f;
+            float angle = baseAngle + offset;
+
+            Vector2 dir = Quaternion.Euler(0, 0, angle) * spanDirection;
+            result[i] = dir.normalized;
+        }
+        
+        // 2. Shuffle (break left→right feeling)
+        for (int i = count - 1; i > 0; i--)
+        {
+            int j = Range(0, i + 1);
+            (result[i], result[j]) = (result[j], result[i]);
+        }
+    }
+    
     // Shouldn't spam
     public static int RangeWithOwnRate(params float[] rates)
     {

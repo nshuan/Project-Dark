@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Coffee.UIExtensions;
+using Dark.Tools.Language.Runtime;
 using DG.Tweening;
 using InGame.UI.InGameToast;
 using TMPro;
@@ -78,7 +79,8 @@ namespace InGame.UI.Waves
             var waveLeft = totalWave - 1 - waveIndex; 
             if (waveLeft <= waveLeftToNotifyBoss && waveLeft > 0)
             {
-                var message = $"Boss incoming in {waveLeft} waves!";
+                var message = LanguageData.Instance.GetLocalizedString("key_notify_boss_incoming",
+                    LanguageManager.Instance.CurrentLanguage).Replace("%{value}", waveLeft.ToString());
                 ToastInGameManager.Instance.Register(message: message, icon: null);
             }
             
@@ -91,7 +93,7 @@ namespace InGame.UI.Waves
             currentWave.transform.SetParent(currentWaveGroup.parent);
             txtWave.transform.SetParent(currentWaveGroup.parent);
             
-            txtWave.SetText("Completed");
+            txtWave.SetTextLanguage("key_complete");
 
             DOTween.Kill(this);
             txtWave.transform.localRotation = Quaternion.identity;
@@ -115,7 +117,7 @@ namespace InGame.UI.Waves
                     currentWave.transform.localPosition = Vector3.zero;
                     txtWave.transform.localPosition = new Vector3(0f,
                         txtWave.transform.position.y - currentWave.transform.position.y, 0f);
-                    txtWave.SetText($"wave {waveIndex + 1 + 1}");
+                    txtWave.SetTextLanguage("key_wave", ("%{value}", (waveIndex + 1 + 1).ToString()));
 
                     currentWave.transform.DOScale(1f, 0.2f).SetEase(Ease.OutBack).SetTarget(this);
                     vfxCurrentWave.Play();

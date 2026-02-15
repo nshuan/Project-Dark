@@ -152,7 +152,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     else
                     {
                         txtNodeLevel.SetText($"0/{config.MaxLevel}");
-                        txtNodeLevel.transform.parent.gameObject.SetActive(true);
+                        txtNodeLevel.transform.parent.gameObject.SetActive(!config.lockOnDemo);
                     }
                     
                     SetAvailable();
@@ -182,7 +182,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     {
                         txtNodeLevel.SetText($"{data.level}/{config.MaxLevel}");
                         txtNodeMaxLevel.gameObject.SetActive(data.level == config.MaxLevel);
-                        txtNodeLevel.transform.parent.gameObject.SetActive(true);
+                        txtNodeLevel.transform.parent.gameObject.SetActive(!config.lockOnDemo);
                     }
                     
                     SetAvailable();

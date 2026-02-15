@@ -59,7 +59,7 @@ namespace InGame
                 creep.Activate(creepDelayAttack);
                 enemy.UniqueId = EnemyManager.Instance.CurrentEnemyIndex;
                 EnemyManager.Instance.OnEnemySpawn(creep);
-                creep.OnDead += (reason) =>
+                creep.OnDead += (dead, reason) =>
                 {
                     EnemyManager.Instance.OnEnemyDead(creep, reason);
                 };

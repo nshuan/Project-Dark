@@ -37,7 +37,7 @@ namespace InGame.GateEditorV2
 #if UNITY_EDITOR
             levelManifest.Validate();
 #endif
-            var allLevels = levelManifest.GetAllLevels();
+            var allLevels = levelManifest.GetAllLevels(LevelGateEditorV2.Instance.classType);
             if (allLevels == null) return;
 
             foreach (Transform child in contentHolder)
@@ -75,11 +75,11 @@ namespace InGame.GateEditorV2
 
         private void AddLevel()
         {
-            var newLevel = levelManifest.GetAllLevels()[^1].level + 1;
+            var newLevel = levelManifest.GetAllLevels(LevelGateEditorV2.Instance.classType)[^1].level + 1;
             var newLevelAsset = ScriptableObject.CreateInstance<LevelConfig>();
             newLevelAsset.level = newLevel;
 #if UNITY_EDITOR
-            AssetDatabase.CreateAsset(newLevelAsset, Path.Combine(LevelManifest.LevelPath, $"Level {newLevel}.asset"));
+            AssetDatabase.CreateAsset(newLevelAsset, Path.Combine(LevelGateEditorV2.Instance.LevelFolderPath, $"Level {newLevel}.asset"));
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             
@@ -139,8 +139,8 @@ namespace InGame.GateEditorV2
 #if UNITY_EDITOR
         public void DeleteLevel(LevelConfig level)
         {
-            var wavePath = Path.Combine(LevelManifest.WavePath, $"Level {level.level}");
-            var levelPath = Path.Combine(LevelManifest.LevelPath, $"Level {level.level}.asset");
+            var wavePath = Path.Combine(LevelGateEditorV2.Instance.WaveFolderPath, $"Level {level.level}");
+            var levelPath = Path.Combine(LevelGateEditorV2.Instance.LevelFolderPath, $"Level {level.level}.asset");
             AssetDatabase.DeleteAsset(wavePath);
             AssetDatabase.DeleteAsset(levelPath);
             AssetDatabase.Refresh();

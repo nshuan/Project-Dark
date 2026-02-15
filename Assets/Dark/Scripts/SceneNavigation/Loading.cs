@@ -25,6 +25,7 @@ namespace Dark.Scripts.SceneNavigation
         private float normalLoadHideBlankDuration = 0.3f;
         private float normalLoadHideDuration = 0.5f;
         
+        private float quickLoadOpenBlankDuration = 0.3f;
         private float quickLoadHideBlankDuration = 0.5f;
         private float overrideQuickLoadHideDuration = -1f;
         
@@ -167,7 +168,7 @@ namespace Dark.Scripts.SceneNavigation
             imgQuickLoadBg.color = color;
         }
         
-        public void QuickLoadScene(string sceneName, Action completeCallback = null, float delay = 0f, float overrideHideDuration = -1f)
+        public void QuickLoadScene(string sceneName, Action completeCallback = null, float delay = 0f, float overrideOpenDuration = -1f, float overrideHideDuration = -1f)
         {
             DebugUtility.LogWarning($"Loading (quick) scene {sceneName}");
             onLoadingComplete = completeCallback;
@@ -177,9 +178,9 @@ namespace Dark.Scripts.SceneNavigation
             if (coroutineClose != null) StopCoroutine(coroutineClose);
 
             CurrentTotalDurationAfterSceneLoaded = TotalDurationAfterSceneQuickLoaded;
-
+            
             overrideQuickLoadHideDuration = overrideHideDuration;
-            coroutineOpen = StartCoroutine(IEQuickOpen(0.3f, delay, sceneName));
+            coroutineOpen = StartCoroutine(IEQuickOpen(overrideOpenDuration > 0 ? overrideOpenDuration : quickLoadOpenBlankDuration, delay, sceneName));
         }
         
         private IEnumerator IEQuickOpen(float duration, float delay, string sceneName)

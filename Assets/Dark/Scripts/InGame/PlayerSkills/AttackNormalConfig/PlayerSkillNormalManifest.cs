@@ -12,35 +12,69 @@ namespace InGame.AttackNormalConfig
         public static string Path = "PlayerSkillNormalManifest";
         private static string FilePath = "Assets/Dark/Resources/PlayerSkillNormalManifest.asset";
 
-        public Dictionary<NormalType, PlayerSkillNormalConfig> configMap;
+        public Dictionary<NormalType, PlayerSkillNormalConfig> archerConfigMap;
+        public Dictionary<NormalType, KnightSkillNormalConfig> knightConfigMap;
         
-        public static PlayerSkillNormalConfig GetRandom()
+        public static PlayerSkillNormalConfig GetRandom(CharacterClass.CharacterClass classType)
         {
             var instance = Resources.Load<PlayerSkillNormalManifest>(Path);
-            if (instance.configMap == null || instance.configMap.Count == 0) return null;
-            var result = instance.configMap.Values.ToArray()[RandomUtil.Range(0, instance.configMap.Count)];
-            Resources.UnloadAsset(instance);
+            PlayerSkillNormalConfig result = null;
+            if (classType == CharacterClass.CharacterClass.Archer)
+            {
+                if (instance.archerConfigMap == null || instance.archerConfigMap.Count == 0) return null;
+                result = instance.archerConfigMap.Values.ToArray()[RandomUtil.Range(0, instance.archerConfigMap.Count)];
+            }
+            else if (classType == CharacterClass.CharacterClass.Knight)
+            {
+                if (instance.knightConfigMap == null || instance.knightConfigMap.Count == 0) return null;
+                result = instance.knightConfigMap.Values.ToArray()[RandomUtil.Range(0, instance.knightConfigMap.Count)];
+            }
+            
+            Resources.UnloadAsset(instance); 
             return result;
         }
 
-        public static PlayerSkillNormalConfig Get(NormalType type)
+        public static PlayerSkillNormalConfig Get(CharacterClass.CharacterClass classType, NormalType type)
         {
             var instance = Resources.Load<PlayerSkillNormalManifest>(Path);
-            if (instance.configMap == null || instance.configMap.Count == 0) return null;
-            var result = instance.configMap.GetValueOrDefault(type);
+            PlayerSkillNormalConfig result = null;
+
+            if (classType == CharacterClass.CharacterClass.Archer)
+            {
+                if (instance.archerConfigMap == null || instance.archerConfigMap.Count == 0) return null;
+                result = instance.archerConfigMap.GetValueOrDefault(type);
+            }
+            else if (classType == CharacterClass.CharacterClass.Knight)
+            {
+                if (instance.knightConfigMap == null || instance.knightConfigMap.Count == 0) return null;
+                result = instance.knightConfigMap.GetValueOrDefault(type);
+            }
+            
             Resources.UnloadAsset(instance);
             return result;
         }
 
 #if UNITY_EDITOR
-        public static PlayerSkillNormalConfig EditorGet(NormalType type)
+        public static PlayerSkillNormalConfig EditorGet(CharacterClass.CharacterClass classType, NormalType type)
         {
             var instance = AssetDatabase.LoadAssetAtPath<PlayerSkillNormalManifest>(FilePath);
-            if (instance.configMap == null || instance.configMap.Count == 0) return null;
-            return instance.configMap.GetValueOrDefault(type);
+            
+            if (classType == CharacterClass.CharacterClass.Archer)
+            {
+                if (instance.archerConfigMap == null || instance.archerConfigMap.Count == 0) return null;
+                return instance.archerConfigMap.GetValueOrDefault(type);
+            }
+            else if (classType == CharacterClass.CharacterClass.Knight)
+            {
+                if (instance.knightConfigMap == null || instance.knightConfigMap.Count == 0) return null;
+                return instance.knightConfigMap.GetValueOrDefault(type);
+            }
+
+            return null;
         }
 
         private static string ConfigFolderPath = "Assets/Dark/Config/SkillNormalConfig";
+        [Button]
         public static void GetAllConfig()
         {
             var instance = AssetDatabase.LoadAssetAtPath<PlayerSkillNormalManifest>(FilePath);
@@ -55,8 +89,11 @@ namespace InGame.AttackNormalConfig
                 if (asset != null)
                     assets.Add(asset);
             }
+
+            instance.archerConfigMap = assets.Where((config) => config is not KnightSkillNormalConfig).Select((config) => new KeyValuePair<int, PlayerSkillNormalConfig>(config.id, config)).ToDictionary(x => (NormalType)x.Key, x => x.Value);
+            instance.knightConfigMap = assets.Where((config) => config is KnightSkillNormalConfig).Select((knightConfig) => new KeyValuePair<int, KnightSkillNormalConfig>(knightConfig.id, (KnightSkillNormalConfig)knightConfig)).ToDictionary(x => (NormalType)x.Key, x => x.Value);
             
-            instance.configMap = assets.Select((config) => new KeyValuePair<int,PlayerSkillNormalConfig>(config.id, config)).ToDictionary(x => (NormalType)x.Key, x => x.Value);
+            
             EditorUtility.SetDirty(instance);
         }
 #endif

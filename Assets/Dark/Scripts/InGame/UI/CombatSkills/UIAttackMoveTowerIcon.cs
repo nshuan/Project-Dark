@@ -1,4 +1,5 @@
 using System;
+using Dark.Tools.Language.Runtime;
 using InGame.UI.InGameToast;
 using InGame.Upgrade;
 using UnityEngine;
@@ -26,7 +27,7 @@ namespace InGame.UI.CombatSkills
         private void OnDestroy()
         {
             UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
-            CombatActions.OnMoveTowerComplete -= OnSkillUsed;
+            CombatActions.OnMoveTowerComplete -= OnMoveUsed;
         }
 
         private void OnUpgradeBonusActivated(UpgradeBonusInfoV2 bonusInfo)
@@ -65,25 +66,39 @@ namespace InGame.UI.CombatSkills
             
             available = true;
             callbackShowSkill?.Invoke();
-            CombatActions.OnMoveTowerComplete -= OnSkillUsed;
-            CombatActions.OnMoveTowerComplete += OnSkillUsed;
+            CombatActions.OnMoveTowerComplete -= OnMoveUsed;
+            CombatActions.OnMoveTowerComplete += OnMoveUsed;
+        }
+
+        private void OnMoveUsed(float cooldown)
+        {
+            OnSkillUsed(cooldown, string.Empty);
         }
         
-        protected override void ShowToast()
+        protected override void ShowToast(string text)
         {
             // Nếu mới unlock 1 loại thì dùng tên loại đó
             // Nếu đã unlock cả 2 loại thì dùng tên loại unlock trước
             var message = "";
             if (!LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockMoveFlash && !LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockMoveDash)
             {
-                message = "Ready to move!";
+                message = LanguageData.Instance.GetLocalizedString("key_notify_move_tele",
+                    LanguageManager.Instance.CurrentLanguage);
             }
             else
             {
                 if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockMoveFlash)
-                    message = "Echofall is ready!";
+                {
+                    if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockMoveDash)
+                        message = LanguageData.Instance.GetLocalizedString("key_notify_move_both",
+                            LanguageManager.Instance.CurrentLanguage);
+                    else
+                        message = LanguageData.Instance.GetLocalizedString("key_notify_move_flash",
+                            LanguageManager.Instance.CurrentLanguage);
+                }
                 else if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockMoveDash)
-                    message = "Vanguard’s Line is ready";
+                    message = LanguageData.Instance.GetLocalizedString("key_notify_move_dash",
+                        LanguageManager.Instance.CurrentLanguage);
             }
             
             ToastInGameManager.Instance.Register(

@@ -114,10 +114,10 @@ namespace InGame.Boss
             config.attackBehaviour.Attack(this, TargetTower, transform.position, LevelUtilityV2.ToInt(CurrentDamage * damageScale));
         }
 
-        public override void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
+        public override void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType, bool instantKill)
         {
             if (isRecovering) return;
-            base.Damage(damage, dealerPosition, stagger, dmgType);
+            base.Damage(damage, dealerPosition, stagger, dmgType, instantKill);
              
             if (IsDestroyed) return;
             if (!hasRecoverOnce && PercentageHpLeft < configCasted.lordOfFlameConfig.percentageToHeal)
@@ -198,7 +198,7 @@ namespace InGame.Boss
             CombatActions.OnBossKilled?.Invoke(config, transform.position);
             var dropVestige = Dark > 0;
             CombatActions.OnDropResource?.Invoke(this, dropVestige);
-            OnDead?.Invoke(reason);
+            OnDead?.Invoke(this, reason);
             OnDead = null;
             yield return new WaitForSeconds(delayRelease);
             EnemyPool.Instance.Release(this, config.enemyId);

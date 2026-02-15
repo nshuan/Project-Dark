@@ -49,7 +49,7 @@ namespace InGame.Boss
             CombatActions.OnBossKilled?.Invoke(config, transform.position);
             var dropVestige = Dark > 0;
             CombatActions.OnDropResource?.Invoke(this, dropVestige);
-            OnDead?.Invoke(reason);
+            OnDead?.Invoke(this, reason);
             OnDead = null;
             yield return new WaitForSeconds(delayRelease);
             EnemyPool.Instance.Release(this, config.enemyId);
@@ -107,10 +107,10 @@ namespace InGame.Boss
                    PercentageHpLeft <= thresholdChangeTower[currentThresholdChangeTowerIndex];
         }
 
-        public override void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
+        public override void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType, bool instantKill)
         {
             if (isChangingTower) return;
-            base.Damage(damage, dealerPosition, stagger, dmgType);
+            base.Damage(damage, dealerPosition, stagger, dmgType, instantKill);
 
             if (IsChangeTower())
             {

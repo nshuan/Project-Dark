@@ -26,7 +26,7 @@ namespace InGame.Upgrade.NodeLogicsV2
         {
             var before = "";
 
-            before = LevelUtilityV2.GetCounterPiercingAmount().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+            before = LevelUtilityV2.GetCounterPiercingSize().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
 
             if (level > value.Length)
                 return (before, before);
@@ -37,7 +37,7 @@ namespace InGame.Upgrade.NodeLogicsV2
             ActivateNode(level, ref bonusInfo);
             
             var after = "";
-            after = LevelUtilityV2.GetCounterPiercingAmount().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+            after = LevelUtilityV2.GetCounterPiercingSize().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
             
             bonusInfo.bonusCounter.bonusPiercingAmount.mul = amountMultiply;
             bonusInfo.bonusCounter.bonusPiercingAmount.add = amountPlus;

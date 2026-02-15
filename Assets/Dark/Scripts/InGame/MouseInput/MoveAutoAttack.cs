@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Dark.Scripts.Utils;
+using Data;
 using DG.Tweening;
+using InGame.AttackNormalConfig;
 using UnityEngine;
 
 namespace InGame
@@ -70,7 +72,7 @@ namespace InGame
             var (damage, criticalDamage) = LevelUtilityV2.GetNormalAttackDamage();
             var critRate = LevelUtilityV2.GetBaseCriticalRate();
             var bulletNum = 1;
-            var skillSize = 1f;
+            var skillSize = LevelUtilityV2.GetNormalAttackSize();;
             var skillRange = LevelUtilityV2.GetNormalAttackRange(Vector2.right);
             var maxHit = 1;
             if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing) 
@@ -79,20 +81,7 @@ namespace InGame
             
             var delayShot = Character.PlayShoot(worldMousePosition);
             var targetEnemy = nearestEnemy;
-            var activateSplitBullets = 0;
-            if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackBullet) 
-                activateSplitBullets = LevelUtilityV2.GetNormalBulletAmount();
-            var activateActions = activateSplitBullets == 0
-                ? null
-                : new List<IProjectileActivate>()
-                {
-                    new ProjectileActivateSplit()
-                    {
-                        projectile = LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.Normal],
-                        amount = activateSplitBullets,
-                        angle = LevelUtilityV2.StatsNormalBullet.GetNormalBulletSpanAngle(activateSplitBullets + 1)
-                    }
-                };
+           
             Character.DelayCall(delayShot, () =>
             {
                 Character.Weapon.GetAllEnemiesInRange(skillRange);
@@ -112,7 +101,7 @@ namespace InGame
                     stagger,
                     maxHit,
                     false,
-                    activateActions,
+                    GetProjectileActivateAction(),
                     null);
             });
 
@@ -174,24 +163,17 @@ namespace InGame
                 return;
             }
             
+            // Check enemy force attack đã ngủm thì set force = null
+            if (forceTargetEnemy && forceTargetEnemy.IsDestroyed)
+            {
+                forceTargetEnemy = null;
+            }
+            
             // Check bấm vào enemy để force attack vào đó
             var mouseOverCount = Physics2D.OverlapPointNonAlloc(worldMousePosition, mouseHoverEnemies, LayerMask.GetMask("EnemyAim"));
             if (mouseOverCount > 0)
             {
                 EnemyEntity newHover = null;
-                // var minDist = float.MaxValue;
-                // for (var i = 0; i < mouseOverCount; i++)
-                // {
-                //     var entity = mouseHoverEnemies[i].GetComponentInParent<EnemyEntity>();
-                //     if (!entity) continue;
-                //
-                //     var dist = Vector2.Distance(entity.transform.position, worldMousePosition);
-                //     if (dist < minDist)
-                //     {
-                //         minDist = dist;
-                //         newHover = entity;
-                //     }
-                // }
                 for (var i = 0; i < mouseOverCount; i++)
                 {
                     var entity = mouseHoverEnemies[i].GetComponentInParent<EnemyEntity>();
@@ -296,6 +278,48 @@ namespace InGame
             nearestEnemy.SetAimed(true);
             
             return true;
+        }
+
+        private List<IProjectileActivate> GetProjectileActivateAction()
+        {
+            var activateBullets = 0;
+            if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackBullet) 
+                activateBullets = LevelUtilityV2.GetNormalBulletAmount();
+            List<IProjectileActivate> activateActions = null;
+            var classInt = PlayerDataManager.Instance.Data.characterClass;
+            if (classInt == 0)
+            {
+                activateActions = activateBullets == 0
+                    ? null
+                    : new List<IProjectileActivate>()
+                    {
+                        new ProjectileActivateSplit()
+                        {
+                            projectile = LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.Normal],
+                            amount = activateBullets,
+                            angle = LevelUtilityV2.StatsNormalBullet.GetNormalBulletSpanAngle(activateBullets + 1)
+                        }
+                    };
+            }
+            else if (classInt == 1)
+            {
+                var delayEachShot = 0.25f;
+                if (LevelUtilityV2.StatsNormalBullet is KnightSkillNormalConfig knightConfig)
+                    delayEachShot = 1f / knightConfig.atkSpeed;
+                activateActions = activateBullets == 0
+                    ? null
+                    : new List<IProjectileActivate>()
+                    {
+                        new ProjectileActivateMultishot()
+                        {
+                            projectile = LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.Normal],
+                            amount = activateBullets,
+                            delayEachShot = delayEachShot
+                        }
+                    };
+            }
+
+            return activateActions;
         }
     }
 }
