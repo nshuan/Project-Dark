@@ -4,6 +4,7 @@ using System.Linq;
 using Dark.Scripts.SceneNavigation;
 using DG.Tweening;
 using InGame;
+using InGame.CharacterClass;
 using InGame.Upgrade;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -182,7 +183,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         private static string spritesPath = "Assets/Dark/Config/Upgrade/Skill_Tree_Sprites";
         
         [Button]
-        public void ValidateNodes()
+        public void ValidateNodes(CharacterClass classType)
         {
             // Destroy all lines
             var children = new GameObject[lineParent.childCount];
@@ -268,7 +269,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             
             EditorUtility.SetDirty(this);
             
-            UpdateNodeSprites();
+            UpdateNodeSprites(classType);
         }
         
         [Button]
@@ -310,9 +311,9 @@ namespace Dark.Scripts.OutGame.Upgrade
         }
 
         [Button]
-        public void UpdateNodeSprites()
+        public void UpdateNodeSprites(CharacterClass classType)
         {
-            var spriteMap = GetSpritesMapById();
+            var spriteMap = GetSpritesMapById(classType);
             
             var nodes = GetComponentsInChildren<UIUpgradeNode>();
             foreach (var node in nodes)
@@ -328,11 +329,17 @@ namespace Dark.Scripts.OutGame.Upgrade
             EditorUtility.SetDirty(this);
         }
         
-        public static Dictionary<int, NodeSpriteInfo> GetSpritesMapById()
+        public static Dictionary<int, NodeSpriteInfo> GetSpritesMapById(CharacterClass classType)
         {
+            var nodeSkillPath = spritesPath;
+            if (classType == CharacterClass.Archer) nodeSkillPath += "/Skill_Archer";
+            else if (classType == CharacterClass.Knight) nodeSkillPath += "/Skill_Knight";
+            
             // Get all sprites from path
             string[] guids = AssetDatabase.FindAssets("t:Sprite", new[] { spritesPath });
+            string[] skillGuids = AssetDatabase.FindAssets("t:Sprite", new[] { nodeSkillPath });
             Sprite[] sprites = new Sprite[guids.Length];
+            Sprite[] skillSprites = new Sprite[skillGuids.Length];
         
             for (int i = 0; i < guids.Length; i++)
             {
@@ -340,11 +347,42 @@ namespace Dark.Scripts.OutGame.Upgrade
                 sprites[i] = AssetDatabase.LoadAssetAtPath<Sprite>(path);
             }
             
+            for (int i = 0; i < skillGuids.Length; i++)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(skillGuids[i]);
+                skillSprites[i] = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+            }
+            
             // Sprite should be named as one of the below, the name with "locked" is the locked state of the node
             // [nodeId]_UI_Icon_[nodeType]_[nodeName]
             // [nodeId]_UI_Icon_[nodeType]_locked_[nodeName]
             var map = new Dictionary<int, NodeSpriteInfo>();
             foreach (var sprite in sprites)
+            {
+                var nameParts = sprite.name.Split('_');
+                if (nameParts.Length == 0)
+                {
+                    Debug.LogError($"Invalid name: {sprite.name}");
+                    continue;
+                }
+
+                if (!int.TryParse(nameParts[0], out var id))
+                {
+                    Debug.LogError($"Invalid id: {sprite.name}");
+                    continue;
+                }
+
+                map.TryAdd(id, new NodeSpriteInfo());
+                if (nameParts.Any(part => part == "locked"))
+                    map[id].lockedSprite = sprite;
+                else
+                    map[id].normalSprite = sprite;
+            }
+            
+            // Sprite should be named as one of the below, the name with "locked" is the locked state of the node
+            // [nodeId]_UI_Icon_[nodeType]_[nodeName]
+            // [nodeId]_UI_Icon_[nodeType]_locked_[nodeName]
+            foreach (var sprite in skillSprites)
             {
                 var nameParts = sprite.name.Split('_');
                 if (nameParts.Length == 0)

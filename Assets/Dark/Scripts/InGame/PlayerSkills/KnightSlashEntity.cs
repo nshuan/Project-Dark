@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using InGame.AttackNormalConfig;
 using UnityEngine;
 
 namespace InGame
@@ -6,14 +8,36 @@ namespace InGame
     public class KnightSlashEntity : ProjectileEntity
     {
         [Space] [Header("Slash")] 
-        [SerializeField] private float slashSpan = 45f;
         [SerializeField] private LayerMask enemyLayer;
         [SerializeField] private float vfxDuration = 1.5f;
         [SerializeField] private GameObject vfxSlash;
         
         private RaycastHit2D[] hits = new RaycastHit2D[20];
         private EnemyEntity cacheEnemy;
-        
+
+        public override void Init(Vector2 rangeCenter, Vector2 direction, float range, float size, float speedScale, int damage,
+            int criticalDamage, float criticalRate, float stagger, bool isCharge, int maxHit, List<IProjectileActivate> activateActions,
+            List<IProjectileHit> hitActions, ProjectileType damageType)
+        {
+            base.Init(rangeCenter, direction, range, size, speedScale, damage, criticalDamage, criticalRate, stagger, isCharge, maxHit, activateActions, hitActions, damageType);
+            
+            // Attack piercing dùng script này nên nhân bonus vào đây
+            if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing &&
+                LevelUtilityV2.StatsNormalPiercing is KnightSkillNormalConfig piercingSkillConfig)
+            {
+                Size *= piercingSkillConfig.sizeScale;
+                Range *= piercingSkillConfig.rangeScale;
+            }
+            
+            // Attack bullet dùng script này nên nhân bonus vào đây
+            if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackBullet &&
+                LevelUtilityV2.StatsNormalBullet is KnightSkillNormalConfig bulletSkillConfig)
+            {
+                Size *= bulletSkillConfig.sizeScale;
+                Range *= bulletSkillConfig.rangeScale;
+            }
+        }
+
         protected override void FixedUpdate()
         {
             
@@ -86,7 +110,7 @@ namespace InGame
             var hitCount = Physics2D.CircleCastNonAlloc(RangeCenter, Range, direction, hits, 0f, enemyLayer);
             if (hitCount > 0)
             {
-                var halfAngle = slashSpan / 2;
+                var halfAngle = Size / 2;
                 for (var i = 0; i < hitCount; i++)
                 {
                     var dirTo = hits[i].point - (Vector2)transform.position;
