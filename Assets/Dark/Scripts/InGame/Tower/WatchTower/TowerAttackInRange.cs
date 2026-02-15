@@ -11,13 +11,14 @@ namespace InGame.WatchTower
     public class TowerAttackInRange : MonoBehaviour
     {
         private static readonly int RadialProgress = Shader.PropertyToID("_RadialProgress");
+        private static readonly int LinearProgress = Shader.PropertyToID("_LinearProgress");
         
         [SerializeField] protected TowerEntity tower;
         [SerializeField] protected NodeTowerCounter.CounterType counterType;
         [SerializeField] protected ProjectileEntity projectilePrefab;
         [SerializeField] protected GameObject vfxActivateCounter;
         [SerializeField] protected Transform visual;
-        [SerializeField] protected GameObject visualFill;
+        [SerializeField] protected SpriteRenderer visualFill;
         [SerializeField] protected float vfxActivateCounterDuration;
         [SerializeField] protected float bulletSpeedScale = 2f;
         [SerializeField] protected float yOffsetWhenEnemyStay = 1.5f;
@@ -30,7 +31,6 @@ namespace InGame.WatchTower
         [SerializeField] protected SpriteRenderer spriteFill;
         [SerializeField] protected GameObject fillFull;
 
-        private Camera cam;
         protected bool counterCooldown;
         private float visualBaseLocalY;
 
@@ -48,12 +48,15 @@ namespace InGame.WatchTower
         protected Coroutine coroutineCooldown;
         protected List<Transform> inRangeEnemies;
         protected Material fillMaterial;
+        protected Material iconFillMaterial;
         
         private void Awake()
         {
             visualBaseLocalY = visual.localPosition.y;
             fillMaterial = new Material(spriteFill.sharedMaterial);
             spriteFill.material = fillMaterial;
+            iconFillMaterial = new Material(visualFill.sharedMaterial);
+            visualFill.material = iconFillMaterial;
             
             LevelManager.Instance.OnInitTowers += OnInitTowers;
             LevelManager.Instance.OnLose += OnLose;
@@ -63,6 +66,7 @@ namespace InGame.WatchTower
             visual.gameObject.SetActive(false);
             SetRingFillFull(false);
             fillMaterial.SetFloat(RadialProgress, 0f);
+            iconFillMaterial.SetFloat(LinearProgress, 1f);
             inRangeEnemies = new List<Transform>();
 
             LevelManager.Instance.OnChangeTower += OnChangeTower;
@@ -126,7 +130,6 @@ namespace InGame.WatchTower
             
             detectRange.gameObject.SetActive(canCounter);
             visual.gameObject.SetActive(canCounter);
-            cam = Camera.main;
         }
         
         private void OnChangeTower(TowerEntity t)
@@ -156,8 +159,8 @@ namespace InGame.WatchTower
 
             enemy.OnStartDead += OnEnemyDead;
             inRangeEnemies.Add(enemy.transform);
-            counterDirection.x = other.transform.position.x - visual.position.x;
-            counterDirection.y = other.transform.position.y - visual.position.y;
+            counterDirection.x = other.transform.position.x - transform.position.x;
+            counterDirection.y = other.transform.position.y - transform.position.y;
             if (counterCooldown) return;
             if (coroutineCounter == null) coroutineCounter = StartCoroutine(IECounter(Cooldown));
         }
@@ -185,14 +188,6 @@ namespace InGame.WatchTower
             }
         }
 
-        private void Update()
-        {
-            if (coroutineCounter != null) return;
-            if (!cam) return;
-            var mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-            visual.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(mousePos.y - visual.position.y, mousePos.x - visual.position.x) * Mathf.Rad2Deg);
-        }
-
         protected virtual IEnumerator IECounter(float cooldown)
         {
             DOTween.Kill(vfxActivateCounter);
@@ -206,7 +201,6 @@ namespace InGame.WatchTower
                 //     counterDirection.x = bestTarget.position.x - visual.position.x;
                 //     counterDirection.y = bestTarget.position.y - visual.position.y;
                 // }
-                visual.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(counterDirection.y, counterDirection.x) * Mathf.Rad2Deg);
                 fillMaterial.SetFloat(RadialProgress, (1f - delayOnDetectTimer / DelayOnDetected) * -360f);
                 yield return null;
             }
@@ -218,7 +212,7 @@ namespace InGame.WatchTower
                 
             vfxActivateCounter.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(counterDirection.y, counterDirection.x) * Mathf.Rad2Deg);
             vfxActivateCounter.SetActive(true);
-            Counter(visual.position, counterDirection, Damage, bulletSpeedScale);
+            Counter(transform.position, counterDirection, Damage, bulletSpeedScale);
             DOTween.Kill(fillFull);
             SetRingFillFull(true);
             DOVirtual.DelayedCall(0.2f, () => SetRingFillFull(false)).SetTarget(fillFull);
@@ -252,10 +246,14 @@ namespace InGame.WatchTower
         private IEnumerator IECooldown(float cooldown)
         {
             counterCooldown = true;
-            visualFill.gameObject.SetActive(false);
-            yield return new WaitForSeconds(cooldown);
+            var cooldownTimer = 0f;
+            while (cooldownTimer < cooldown)
+            {
+                cooldownTimer += Time.deltaTime;
+                iconFillMaterial.SetFloat(RadialProgress, cooldownTimer / cooldown);
+                yield return null;
+            }
             counterCooldown = false;
-            visualFill.gameObject.SetActive(true);
         }
 
         private void TerminateCounter()
