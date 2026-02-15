@@ -150,6 +150,9 @@ namespace InGame.WatchTower
 
             SetVisual();
             iconFillMaterial.SetFloat(LinearProgress, 1f);
+            
+            if (tower.Id == 0)
+                visual.localPosition = new Vector3(visual.localPosition.x, visualBaseLocalY + yOffsetWhenEnemyStay, visual.localPosition.z);
         }
         
         private void OnChangeTower(TowerEntity t)
