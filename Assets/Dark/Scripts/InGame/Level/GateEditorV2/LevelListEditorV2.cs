@@ -39,7 +39,11 @@ namespace InGame.GateEditorV2
             }
             drdSelectClass.options = options.Select(mt => 
                 new TMP_Dropdown.OptionData(mt.ToString())).ToList();
-            drdSelectClass.onValueChanged.AddListener((index) => currentClass = (CharacterClass.CharacterClass)index);
+            drdSelectClass.onValueChanged.AddListener((index) =>
+            {
+                currentClass = (CharacterClass.CharacterClass)index;
+                LevelGateEditorV2.Instance.ClassType = currentClass;
+            });
             drdSelectClass.value = 0;
             btnLoadLevels.onClick.RemoveAllListeners();
             btnLoadLevels.onClick.AddListener(LoadLevels);
@@ -95,7 +99,7 @@ namespace InGame.GateEditorV2
 
         private void AddLevel()
         {
-            var newLevel = levelManifest.GetAllLevels(LevelGateEditorV2.Instance.classType)[^1].level + 1;
+            var newLevel = levelManifest.GetAllLevels(currentClass)[^1].level + 1;
             var newLevelAsset = ScriptableObject.CreateInstance<LevelConfig>();
             newLevelAsset.level = newLevel;
 #if UNITY_EDITOR
