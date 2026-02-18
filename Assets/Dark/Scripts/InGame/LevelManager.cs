@@ -30,6 +30,7 @@ namespace InGame
         public MoveTowersConfig dashConfig;
 
         [SerializeField] private PlayerSpawner playerSpawner;
+        [SerializeField] private BackgroundSpawner backgroundSpawner;
         public GateEntity gatePrefab;
         
         [SerializeField] private TowerEntity[] towers;
@@ -146,6 +147,7 @@ namespace InGame
             var levelConfig = LevelManifest.Instance.GetLevel(PlayerDataManager.Instance.Data.Class, level);
             if (!levelConfig) return;
             Level = levelConfig;
+            backgroundSpawner.Spawn(Level.backgroundIndex);
             SceneManager.sceneLoaded += OnLevelSceneLoaded;
             LoadMapScene(Level.mapType);
         }
