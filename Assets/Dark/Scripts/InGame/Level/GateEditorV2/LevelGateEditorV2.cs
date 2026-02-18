@@ -34,8 +34,7 @@ namespace InGame.GateEditorV2
         [Space] [Header("Display")] 
         public TextMeshProUGUI txtLevel;
         
-        [Space] [Header("Settings")]
-        public CharacterClass.CharacterClass classType;
+        public CharacterClass.CharacterClass ClassType { get; set; }
         
         private LevelManifest levelManifest;
         private LevelConfig currentLevel;
@@ -84,7 +83,7 @@ namespace InGame.GateEditorV2
         public void LoadLevel(int levelId)
         {
             if (!levelManifest) return;
-            currentLevel = levelManifest.GetTrueLevel(classType, levelId);
+            currentLevel = levelManifest.GetTrueLevel(ClassType, levelId);
             if (!currentLevel) return;
 
             currentMapType = currentLevel.mapType;
@@ -196,7 +195,7 @@ namespace InGame.GateEditorV2
         {
             get
             {
-                if (classType == CharacterClass.CharacterClass.Knight) return LevelManifest.KnightWavePath;
+                if (ClassType == CharacterClass.CharacterClass.Knight) return LevelManifest.KnightWavePath;
                 return LevelManifest.ArcherWavePath;
             }
         }
@@ -205,7 +204,7 @@ namespace InGame.GateEditorV2
         {
             get
             {
-                if (classType == CharacterClass.CharacterClass.Knight) return LevelManifest.KnightLevelPath;
+                if (ClassType == CharacterClass.CharacterClass.Knight) return LevelManifest.KnightLevelPath;
                 return LevelManifest.ArcherLevelPath;
             }
         }
