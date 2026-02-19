@@ -31,6 +31,8 @@ namespace InGame
         private EnemyEntity forceTargetEnemy;
         private EnemyEntity hoveringEnemy;
         private Collider2D[] mouseHoverEnemies;
+
+        private CharacterClass.CharacterClass classType;
         
         public MoveAutoAttack()
         {
@@ -56,6 +58,8 @@ namespace InGame
             Character = character;
             Cooldown = LevelUtilityV2.GetNormalAttackCooldown();
             ActivateDuration = 1f;
+
+            classType = PlayerDataManager.Instance.Data.Class;
         }
 
         public virtual void OnMouseClick()
@@ -81,6 +85,7 @@ namespace InGame
             
             var delayShot = Character.PlayShoot(worldMousePosition);
             var targetEnemy = nearestEnemy;
+            var towerBaseCenter = LevelManager.Instance.CurrentTower.GetBaseCenter();
            
             Character.DelayCall(delayShot, () =>
             {
@@ -89,8 +94,8 @@ namespace InGame
                 LevelUtilityV2.StatsNormalAttack.ShootToTarget(
                     LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.Normal],
                     targetEnemy,
-                    Character.transform.position,
-                    LevelManager.Instance.CurrentTower.GetBaseCenter(),
+                    classType == CharacterClass.CharacterClass.Archer ? Character.transform.position : towerBaseCenter,
+                    towerBaseCenter,
                     tempMousePos,
                     damage,
                     bulletNum,
