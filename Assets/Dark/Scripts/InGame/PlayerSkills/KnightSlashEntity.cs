@@ -22,7 +22,7 @@ namespace InGame
             base.Init(rangeCenter, direction, range, size, speedScale, damage, criticalDamage, criticalRate, stagger, isCharge, maxHit, activateActions, hitActions, damageType);
             
             transform.position = RangeCenter;
-            if (TargetToChase != null)
+            if (TargetToChase)
                 transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(TargetToChase.transform.position.y - RangeCenter.y, TargetToChase.transform.position.x - RangeCenter.x) * Mathf.Rad2Deg);
             else 
                 transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(BoundPosition.y - RangeCenter.y, BoundPosition.x - RangeCenter.x) * Mathf.Rad2Deg);
