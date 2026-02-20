@@ -22,10 +22,13 @@ namespace InGame
             base.Init(rangeCenter, direction, range, size, speedScale, damage, criticalDamage, criticalRate, stagger, isCharge, maxHit, activateActions, hitActions, damageType);
             
             transform.position = RangeCenter;
+            Quaternion rotation;
             if (TargetToChase)
-                transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(TargetToChase.transform.position.y - RangeCenter.y, TargetToChase.transform.position.x - RangeCenter.x) * Mathf.Rad2Deg);
+                rotation = Quaternion.Euler(-45f, 0f, Mathf.Atan2(TargetToChase.transform.position.y - RangeCenter.y, TargetToChase.transform.position.x - RangeCenter.x) * Mathf.Rad2Deg);
             else 
-                transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(BoundPosition.y - RangeCenter.y, BoundPosition.x - RangeCenter.x) * Mathf.Rad2Deg);
+                rotation = Quaternion.Euler(-45f, 0f, Mathf.Atan2(BoundPosition.y - RangeCenter.y, BoundPosition.x - RangeCenter.x) * Mathf.Rad2Deg);
+            transform.rotation = Quaternion.identity;
+            vfxSlash.transform.rotation = rotation;
             
             // Attack piercing dùng script này nên nhân bonus vào đây
             if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing &&
@@ -125,8 +128,9 @@ namespace InGame
                     // Check những enemy va chạm, nếu nằm trong góc damageAngle thì mới gây dame
                     if (Vector2.Angle(dirToCenter, dirTo.normalized) > halfAngle) continue;
                     
-                    // Check relative range
-                    if (dirToCenter.magnitude > LevelUtilityV2.GetRelativeRangeMove(Range, dirToCenter)) continue;
+                    // Check relative range, tăng range lên 1 tí
+                    var bonusRangeForInRangeEnemy = (TargetToChase && hits[i].transform == TargetToChase.transform) ? 0.2f : 0.1f;
+                    if (dirToCenter.magnitude > (LevelUtilityV2.GetRelativeRangeMove(Range, dirToCenter) + bonusRangeForInRangeEnemy)) continue;
                     
                     if (hits[i].transform.TryGetComponent<EnemyEntity>(out cacheEnemy))
                     {

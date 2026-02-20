@@ -13,6 +13,8 @@ namespace InGame
             projectilePrefab = projectileEntity;    
         }
         
+        public Vector2 ForceDirection { get; set; }
+        public bool UseForceDirection { get; set; }
         public int TotalBulletAdded { get; set; }
         public abstract void AddBullet(Vector2 spawnPos, Vector2 aimDirection);
         public abstract void AddSize(float size);
