@@ -129,7 +129,7 @@ namespace InGame
                     if (Vector2.Angle(dirToCenter, dirTo.normalized) > halfAngle) continue;
                     
                     // Check relative range, tăng range lên 1 tí
-                    var bonusRangeForInRangeEnemy = (TargetToChase && hits[i].transform == TargetToChase.transform) ? 0.2f : 0.1f;
+                    var bonusRangeForInRangeEnemy = (TargetToChase && hits[i].transform == TargetToChase.transform) ? 0.2f : 0.2f;
                     if (dirToCenter.magnitude > (LevelUtilityV2.GetRelativeRangeMove(Range, dirToCenter) + bonusRangeForInRangeEnemy)) continue;
                     
                     if (hits[i].transform.TryGetComponent<EnemyEntity>(out cacheEnemy))
