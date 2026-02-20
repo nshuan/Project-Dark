@@ -183,6 +183,35 @@ namespace InGame
                     // Không check trong range charge nữa, check trên toàn map luôn
                     Character.Weapon.GetAllEnemiesInRange(15f); 
                     
+                    // Check enemy in range
+                    var nearestDistance = float.MaxValue;
+                    EnemyEntity tempNearestEnemy = null;
+                 
+                    foreach (var enemy in EnemyManager.Instance.Enemies)
+                    {
+                        if (enemy.Value.gameObject.activeInHierarchy && enemy.Value.Activated && enemy.Value.IsDestroyed == false)
+                        {
+                            var direction = enemy.Value.transform.position - LevelManager.Instance.CurrentTower.GetBaseCenter();
+                            var distance = direction.magnitude;
+                            if (distance > skillRange)
+                                continue;
+                    
+                            if (distance < nearestDistance)
+                            {
+                                nearestDistance = distance;
+                                tempNearestEnemy = enemy.Value;
+                            }
+                        }
+                    }
+
+                    if (tempNearestEnemy)
+                    {
+                        Character.SetDirection(tempNearestEnemy.transform.position);
+                        ChargeController.ForceDirection =
+                            tempNearestEnemy.transform.position - Character.transform.position;
+                        ChargeController.UseForceDirection = true;
+                    }
+                    
                     ChargeController.Attack((projectile, direction, delay) =>
                     {
                         var blossomAmount = 0;
@@ -218,6 +247,8 @@ namespace InGame
                         
                         projectile.Activate(delay);
                     });
+
+                    ChargeController.UseForceDirection = false;
                 }
 
                 InputInGame.BlockTeleport = false;

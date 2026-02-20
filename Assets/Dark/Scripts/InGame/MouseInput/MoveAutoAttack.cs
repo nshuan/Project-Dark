@@ -79,8 +79,10 @@ namespace InGame
             var skillSize = LevelUtilityV2.GetNormalAttackSize();;
             var skillRange = LevelUtilityV2.GetNormalAttackRange(Vector2.right);
             var maxHit = 1;
-            if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing) 
+            if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing)
+            {
                 maxHit += LevelUtilityV2.GetNormalPiercingAmount();
+            }
             var stagger = LevelUtilityV2.GetBaseStagger();
             
             var delayShot = Character.PlayShoot(worldMousePosition);
