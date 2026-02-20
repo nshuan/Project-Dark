@@ -17,8 +17,8 @@ namespace InGame
         [SerializeField] protected EnemyHealthBar healthBar;
         [SerializeField] protected EnemyDisplayStats displayStats;
         [SerializeField] private Transform burnVfxParent;
-        [SerializeField] private Transform visualAttackRange;
-        [SerializeField] private bool showAttackRange;
+        [SerializeField] protected Transform visualAttackRange;
+        [SerializeField] protected bool showAttackRange;
         public EnemyBody body;
 
         private MapBoundaryManager boundaryManager;
@@ -52,6 +52,8 @@ namespace InGame
 
         public bool IsBoss { get; set; }
         public float PercentageHpLeft => (float)CurrentHealth / MaxHealth;
+        public Action OnInit { get; set; }
+        public Action OnSpawn { get; set; }
         public Action<int, DamageType> OnHit { get; set; }
         public Action<EnemyEntity> OnStartDead { get; set; }
         public Action<EnemyEntity, EnemyDieReason> OnDead { get; set; }
@@ -187,6 +189,8 @@ namespace InGame
                     visualAttackRange.localScale = AttackRange * Vector3.one;
                     visualAttackRange.gameObject.SetActive(true);
                 }
+                
+                OnSpawn?.Invoke();
             });
         }
 
