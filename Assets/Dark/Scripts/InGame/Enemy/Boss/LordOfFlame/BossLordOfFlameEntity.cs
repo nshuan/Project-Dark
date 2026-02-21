@@ -111,7 +111,7 @@ namespace InGame.Boss
         protected override void Attack()
         {
             if  (TargetTower.IsDestroyed) return;
-            config.attackBehaviour.Attack(this, TargetTower, transform.position, LevelUtilityV2.ToInt(CurrentDamage * damageScale));
+            config.attackBehaviour.Attack(this, TargetTower, transform.position, LevelUtilityV2.ToInt(CurrentDamage * damageScale * TempDmgScale));
         }
 
         public override void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType, bool instantKill)

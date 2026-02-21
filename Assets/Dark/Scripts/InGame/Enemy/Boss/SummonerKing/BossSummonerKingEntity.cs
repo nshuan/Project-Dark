@@ -41,7 +41,7 @@ namespace InGame.Boss
             this.DelayCall(animController.GetAttackDelayTrigger(), () =>
             {
                 if (TargetTower.IsDestroyed) return;
-                config.attackBehaviour.Attack(this, TargetTower, transform.position, CurrentDamage);
+                config.attackBehaviour.Attack(this, TargetTower, transform.position, LevelUtilityV2.ToInt(CurrentDamage * TempDmgScale));
             });
             this.DelayCall(animController.GetAttackDuration(), () =>
             {

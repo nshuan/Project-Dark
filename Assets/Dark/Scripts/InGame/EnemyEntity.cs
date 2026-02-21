@@ -38,6 +38,8 @@ namespace InGame
         public float DarkRatio { get; private set; }
         public int BossPoint { get; protected set; }
         public float AttackRange { get; set; }
+        public float TempSpeedScale { get; set; } = 1f;
+        public float TempDmgScale { get; set; } = 1f;
 
         #endregion
 
@@ -100,6 +102,9 @@ namespace InGame
             LevelExpRatio = levelExpRatio;
             LevelDarkRatio = levelDarkRatio;
             LevelDarkUnitValue = levelDarkUnitValue;
+
+            TempDmgScale = 1f;
+            TempSpeedScale = 1f;
             
             // Set target and attack position
             Target = target.transform;
@@ -142,7 +147,7 @@ namespace InGame
             displayStats.gameObject.SetActive(false);
             if (GameConst.ShowTextEnemyAtkAndAtkRange)
             {
-                displayStats.UpdateStats(CurrentDamage, AttackRange);
+                displayStats.UpdateStats(LevelUtilityV2.ToInt(CurrentDamage * TempDmgScale), AttackRange);
                 displayStats.transform.localScale = new Vector3(animController.transform.localScale.x,
                     displayStats.transform.localScale.y, displayStats.transform.localScale.z);
             }
@@ -258,7 +263,7 @@ namespace InGame
                     }
                 }
                 
-                config.moveBehaviour.MoveNonAlloc(transform, attackPosition, directionAddition, AttackRange, config.moveSpeed * StatsScale.speScale, ref direction);
+                config.moveBehaviour.MoveNonAlloc(transform, attackPosition, directionAddition, AttackRange, config.moveSpeed * StatsScale.speScale * TempSpeedScale, ref direction);
                 animController.SetDefaultRun(true);
             }
         }
@@ -299,7 +304,7 @@ namespace InGame
             this.DelayCall(animController.GetAttackDelayTrigger(), () =>
             {
                 if (TargetTower.IsDestroyed) return;
-                config.attackBehaviour.Attack(this, TargetTower, transform.position, CurrentDamage);
+                config.attackBehaviour.Attack(this, TargetTower, transform.position, LevelUtilityV2.ToInt(CurrentDamage * TempDmgScale));
             });
         }
 

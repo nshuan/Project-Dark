@@ -40,7 +40,7 @@ namespace InGame.SpawnBehaviour
                     seq.AppendInterval(attackDuration - 0.5f)
                         .AppendCallback(() => boss.animController.PlayCustomAnim(boss.buffAnim))
                         .AppendInterval(boss.delayTriggerBuff)
-                        .AppendCallback(Buff)
+                        .AppendCallback(() => Buff(enemy))
                         .AppendInterval(buffDuration - boss.delayTriggerBuff);
                 }
                 
@@ -52,9 +52,19 @@ namespace InGame.SpawnBehaviour
             return enemy.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
         }
 
-        private void Buff()
+        private void Buff(EnemyEntity thisEnemy)
         {
-            
+            foreach (var enemy in EnemyManager.Instance.Enemies)
+            {
+                if (enemy.Value == thisEnemy) continue;
+                
+                if (enemy.Value.gameObject.activeInHierarchy &&
+                    enemy.Value.IsDestroyed == false)
+                {
+                    enemy.Value.TempDmgScale = 1.5f;
+                    enemy.Value.TempSpeedScale = 1.5f;
+                }
+            }
         }
     }
 }
