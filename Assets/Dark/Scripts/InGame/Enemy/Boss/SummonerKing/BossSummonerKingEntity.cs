@@ -1,6 +1,7 @@
 using System.Collections;
 using Dark.Scripts.Utils;
 using Data;
+using InGame.EnemyEffect;
 using InGame.UI;
 using UnityEngine;
 
@@ -8,6 +9,10 @@ namespace InGame.Boss
 {
     public class BossSummonerKingEntity : EnemyNecromancerEntity
     {
+        [Space] [Header("Customize boss")]
+        [SerializeField] public EnemySpritesAnimationInfo buffAnim;
+        [SerializeField] public float delayTriggerBuff;
+        
         private bool isAttacking;
         
         public override void Init(EnemyBehaviour eConfig, TowerEntity target, WaveStatsScale statsScale, float levelExpRatio,
