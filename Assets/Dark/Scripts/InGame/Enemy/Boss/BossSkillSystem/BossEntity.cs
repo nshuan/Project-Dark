@@ -40,7 +40,7 @@ namespace InGame.Boss.BossSkillSystem
         protected override void Attack()
         {
             if  (TargetTower.IsDestroyed) return;
-            config.attackBehaviour.Attack(this, TargetTower, transform.position, LevelUtilityV2.ToInt(CurrentDamage));
+            config.attackBehaviour.Attack(this, TargetTower, transform.position, LevelUtilityV2.ToInt(CurrentDamage * TempDmgScale));
         }
 
         public override void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType, bool instantKill)
