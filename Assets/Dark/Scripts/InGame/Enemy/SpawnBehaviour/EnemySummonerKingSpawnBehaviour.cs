@@ -1,26 +1,18 @@
-using System.Collections.Generic;
 using DG.Tweening;
+using InGame.Boss;
 using UnityEngine;
 
 namespace InGame.SpawnBehaviour
 {
-    [CreateAssetMenu(menuName = "InGame/Enemy/Spawn/Enemy Spawn Necromancer", fileName = "EnemySpawnNecromancer")]
-    public class EnemyNecromancerSpawnBehaviour : EnemySpawnBehaviour
+    [CreateAssetMenu(menuName = "InGame/Enemy/Spawn/Enemy Spawn Summoner King", fileName = "EnemySpawnSummonerKing")]
+    public class EnemySummonerKingSpawnBehaviour : EnemyNecromancerSpawnBehaviour
     {
-        [SerializeField] protected EnemyAttackSummonBehaviour summonBehaviour;
-        [SerializeField] private float firstCreepSpawnDuration = 0.5f;
-        
-        public override void Init(EnemyEntity enemy)
-        {
-            
-        }
-
         public override Tween DoSpawn(EnemyEntity enemy)
         {
             if (enemy.config is EnemySummonBehaviour enemyConfig)
             {
                 var spawnTime = enemy.animController.PlaySpawn();
-                var seq = DOTween.Sequence().AppendInterval(spawnTime);
+                var seq = DOTween.Sequence().AppendInterval(spawnTime).SetTarget(enemy);
 
                 if (enemyConfig.listSummonIdsOnSpawned == null || enemyConfig.listSummonAmountOnSpawned == null ||
                     enemyConfig.listSummonIdsOnSpawned.Count == 0 || enemyConfig.listSummonAmountOnSpawned.Count == 0) return seq;
@@ -28,8 +20,7 @@ namespace InGame.SpawnBehaviour
                 var summonIndex = RandomUtil.Range(0, enemyConfig.listSummonAmountOnSpawned.Count);
                 if (summonIndex >= 0 && summonIndex < enemyConfig.listSummonAmountOnSpawned.Count && enemyConfig.listSummonAmountOnSpawned[summonIndex] > 0)
                 {
-                    DOTween.Sequence().SetTarget(enemy).AppendInterval(spawnTime)
-                        .AppendCallback(() =>
+                    seq.AppendCallback(() =>
                         {
                             enemy.animController.PlayAttack();
                         })
@@ -40,7 +31,17 @@ namespace InGame.SpawnBehaviour
                                 enemyConfig.listSummonIdsOnSpawned[summonIndex],
                                 enemyConfig.listSummonAmountOnSpawned[summonIndex]);
                         });
-                    // .AppendInterval(firstCreepSpawnDuration - 0.5f);
+                }
+
+                if (enemy is BossSummonerKingEntity boss)
+                {
+                    var attackDuration = enemy.animController.GetAttackDuration();
+                    var buffDuration = enemy.animController.GetCustomAnimDuration(boss.buffAnim);
+                    seq.AppendInterval(attackDuration - 0.5f)
+                        .AppendCallback(() => boss.animController.PlayCustomAnim(boss.buffAnim))
+                        .AppendInterval(boss.delayTriggerBuff)
+                        .AppendCallback(Buff)
+                        .AppendInterval(buffDuration - boss.delayTriggerBuff);
                 }
                 
                 return seq;
@@ -49,6 +50,11 @@ namespace InGame.SpawnBehaviour
             // Spawn thường
             enemy.transform.localScale = 0.3f * Vector3.one;
             return enemy.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
+        }
+
+        private void Buff()
+        {
+            
         }
     }
 }
