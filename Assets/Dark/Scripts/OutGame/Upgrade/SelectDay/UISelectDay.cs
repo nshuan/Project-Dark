@@ -76,7 +76,7 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
                 {
                     if (a >= 1 && a <= PlayerDataManager.Instance.Data.level + 1)
                     {
-                        if (a > DemoConfig.MaxDemoLevel)
+                        if (DemoConfig.IsDemo && a > DemoConfig.MaxDemoLevel)
                         {
                             btnWishlist?.CheckShowDemoPopup();
                             return;
@@ -183,7 +183,7 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
                     {
                         if (a >= 1 && a <= PlayerDataManager.Instance.Data.level + 1)
                         {
-                            if (a > DemoConfig.MaxDemoLevel)
+                            if (DemoConfig.IsDemo && a > DemoConfig.MaxDemoLevel)
                             {
                                 btnWishlist?.CheckShowDemoPopup();
                                 return;
