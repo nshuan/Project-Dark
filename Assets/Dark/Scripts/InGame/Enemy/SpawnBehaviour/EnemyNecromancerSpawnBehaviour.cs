@@ -7,7 +7,7 @@ namespace InGame.SpawnBehaviour
     [CreateAssetMenu(menuName = "InGame/Enemy/Spawn/Enemy Spawn Necromancer", fileName = "EnemySpawnNecromancer")]
     public class EnemyNecromancerSpawnBehaviour : EnemySpawnBehaviour
     {
-        [SerializeField] private EnemyAttackSummonBehaviour summonBehaviour;
+        [SerializeField] protected EnemyAttackSummonBehaviour summonBehaviour;
         [SerializeField] private float firstCreepSpawnDuration = 0.5f;
         
         public override void Init(EnemyEntity enemy)

@@ -43,7 +43,7 @@ namespace InGame.Crow
             hasAttack = true;
             yield return new WaitForSeconds(delayExplode);
             if (TargetTower.IsDestroyed) yield break;
-            config.attackBehaviour.Attack(this, TargetTower, transform.position, CurrentDamage);
+            config.attackBehaviour.Attack(this, TargetTower, transform.position, LevelUtilityV2.ToInt(CurrentDamage * TempDmgScale));
         }
     }
 }
