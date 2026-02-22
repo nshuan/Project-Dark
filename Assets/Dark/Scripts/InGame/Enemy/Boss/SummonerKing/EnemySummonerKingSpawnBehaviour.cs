@@ -1,8 +1,8 @@
 using DG.Tweening;
-using InGame.Boss;
+using InGame.SpawnBehaviour;
 using UnityEngine;
 
-namespace InGame.SpawnBehaviour
+namespace InGame.Boss
 {
     [CreateAssetMenu(menuName = "InGame/Enemy/Spawn/Enemy Spawn Summoner King", fileName = "EnemySpawnSummonerKing")]
     public class EnemySummonerKingSpawnBehaviour : EnemyNecromancerSpawnBehaviour
@@ -33,14 +33,14 @@ namespace InGame.SpawnBehaviour
                         });
                 }
 
-                if (enemy is BossSummonerKingEntity boss)
+                if (enemy is BossSummonerKingEntity boss && boss.configCasted.summonerKingConfig.buffOnSpawn)
                 {
                     var attackDuration = enemy.animController.GetAttackDuration();
                     var buffDuration = enemy.animController.GetCustomAnimDuration(boss.buffAnim);
                     seq.AppendInterval(attackDuration - 0.5f)
                         .AppendCallback(() => boss.animController.PlayCustomAnim(boss.buffAnim))
                         .AppendInterval(boss.delayTriggerBuff)
-                        .AppendCallback(() => Buff(enemy))
+                        .AppendCallback(() => boss.UseBuffSkill())
                         .AppendInterval(buffDuration - boss.delayTriggerBuff);
                 }
                 
@@ -50,21 +50,6 @@ namespace InGame.SpawnBehaviour
             // Spawn thường
             enemy.transform.localScale = 0.3f * Vector3.one;
             return enemy.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
-        }
-
-        private void Buff(EnemyEntity thisEnemy)
-        {
-            foreach (var enemy in EnemyManager.Instance.Enemies)
-            {
-                if (enemy.Value == thisEnemy) continue;
-                
-                if (enemy.Value.gameObject.activeInHierarchy &&
-                    enemy.Value.IsDestroyed == false)
-                {
-                    enemy.Value.TempDmgScale = 1.5f;
-                    enemy.Value.TempSpeedScale = 1.5f;
-                }
-            }
         }
     }
 }

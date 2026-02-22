@@ -1,6 +1,7 @@
 using System.Collections;
 using Dark.Scripts.Utils;
 using Data;
+using InGame.BossConfig;
 using InGame.EnemyEffect;
 using InGame.UI;
 using UnityEngine;
@@ -12,7 +13,8 @@ namespace InGame.Boss
         [Space] [Header("Customize boss")]
         [SerializeField] public EnemySpritesAnimationInfo buffAnim;
         [SerializeField] public float delayTriggerBuff;
-        
+
+        public EnemyBossSummonerKingBehaviour configCasted;
         private bool isAttacking;
         
         public override void Init(EnemyBehaviour eConfig, TowerEntity target, WaveStatsScale statsScale, float levelExpRatio,
@@ -22,6 +24,8 @@ namespace InGame.Boss
 
             if (LevelManager.Instance.Level.level != PlayerDataManager.Instance.Data.level + 1)
                 BossPoint = 0;
+
+            configCasted = (EnemyBossSummonerKingBehaviour)config;
         }
 
         protected override IEnumerator IEAttack()
@@ -73,6 +77,22 @@ namespace InGame.Boss
         protected override void DropResource()
         {
            
+        }
+
+        public void UseBuffSkill()
+        {
+            foreach (var enemy in EnemyManager.Instance.Enemies)
+            {
+                if (enemy.Value == this) continue;
+                
+                if (enemy.Value.gameObject.activeInHierarchy &&
+                    enemy.Value.IsDestroyed == false)
+                {
+                    enemy.Value.TempDmgScale = configCasted.summonerKingConfig.buffSpawn.scaleDmg;
+                    enemy.Value.TempSpeedScale = configCasted.summonerKingConfig.buffSpawn.scaleSpeed;
+                    enemy.Value.TempAtkSpeedScale = configCasted.summonerKingConfig.buffSpawn.scaleAtkSpeed;
+                }
+            }
         }
     }
 }

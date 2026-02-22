@@ -40,6 +40,7 @@ namespace InGame
         public float AttackRange { get; set; }
         public float TempSpeedScale { get; set; } = 1f;
         public float TempDmgScale { get; set; } = 1f;
+        public float TempAtkSpeedScale { get; set; } = 1f;
 
         #endregion
 
@@ -105,6 +106,7 @@ namespace InGame
 
             TempDmgScale = 1f;
             TempSpeedScale = 1f;
+            TempAtkSpeedScale = 1f;
             
             // Set target and attack position
             Target = target.transform;
@@ -290,7 +292,7 @@ namespace InGame
                 if (inAttackRange)
                 {
                     Attack();
-                    yield return new WaitForSeconds(1 / config.attackSpeed);
+                    yield return new WaitForSeconds(1 / (config.attackSpeed * TempAtkSpeedScale));
                 }
                 else
                     yield return new WaitUntil(() => inAttackRange);
@@ -549,6 +551,18 @@ namespace InGame
             
             if (config.elite) return;
             visual.material = hover ? materialHighlight : cacheMaterial;
+        }
+
+        #endregion
+
+        #region Buff
+
+        [Space] [Header("Buff")] 
+        [SerializeField] private GameObject vfxBuff;
+
+        public void Buff()
+        {
+            
         }
 
         #endregion
