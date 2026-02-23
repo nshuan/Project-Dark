@@ -48,8 +48,15 @@ namespace InGame
             spanAngle = LevelUtilityV2.StatsChargeBullet.range;
             
             var totalTargetBoss = 0;
-            var camPos = Cam.ScreenToWorldPoint(Input.mousePosition);
-            RandomUtil.InsideUnitSpanSpacedNonAlloc(camPos - projectiles[0].transform.position, spanAngle, projectiles.Count, ref directions);
+            if (UseForceDirection)
+            {
+                RandomUtil.InsideUnitSpanSpacedNonAlloc(ForceDirection, spanAngle, projectiles.Count, ref directions);    
+            }
+            else
+            {
+                var camPos = Cam.ScreenToWorldPoint(Input.mousePosition);
+                RandomUtil.InsideUnitSpanSpacedNonAlloc(camPos - projectiles[0].transform.position, spanAngle, projectiles.Count, ref directions);
+            }
             for (var i = 0; i < projectiles.Count; i++)
             {
                 projectiles[i].transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(directions[i].y, directions[i].x) * Mathf.Rad2Deg);

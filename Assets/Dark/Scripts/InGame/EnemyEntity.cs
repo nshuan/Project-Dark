@@ -17,8 +17,8 @@ namespace InGame
         [SerializeField] protected EnemyHealthBar healthBar;
         [SerializeField] protected EnemyDisplayStats displayStats;
         [SerializeField] private Transform burnVfxParent;
-        [SerializeField] private Transform visualAttackRange;
-        [SerializeField] private bool showAttackRange;
+        [SerializeField] protected Transform visualAttackRange;
+        [SerializeField] protected bool showAttackRange;
         public EnemyBody body;
 
         private MapBoundaryManager boundaryManager;
@@ -38,6 +38,9 @@ namespace InGame
         public float DarkRatio { get; private set; }
         public int BossPoint { get; protected set; }
         public float AttackRange { get; set; }
+        public float TempSpeedScale { get; set; } = 1f;
+        public float TempDmgScale { get; set; } = 1f;
+        public float TempAtkSpeedScale { get; set; } = 1f;
 
         #endregion
 
@@ -52,6 +55,8 @@ namespace InGame
 
         public bool IsBoss { get; set; }
         public float PercentageHpLeft => (float)CurrentHealth / MaxHealth;
+        public Action OnInit { get; set; }
+        public Action OnSpawn { get; set; }
         public Action<int, DamageType> OnHit { get; set; }
         public Action<EnemyEntity> OnStartDead { get; set; }
         public Action<EnemyEntity, EnemyDieReason> OnDead { get; set; }
@@ -98,6 +103,10 @@ namespace InGame
             LevelExpRatio = levelExpRatio;
             LevelDarkRatio = levelDarkRatio;
             LevelDarkUnitValue = levelDarkUnitValue;
+
+            TempDmgScale = 1f;
+            TempSpeedScale = 1f;
+            TempAtkSpeedScale = 1f;
             
             // Set target and attack position
             Target = target.transform;
@@ -140,7 +149,7 @@ namespace InGame
             displayStats.gameObject.SetActive(false);
             if (GameConst.ShowTextEnemyAtkAndAtkRange)
             {
-                displayStats.UpdateStats(CurrentDamage, AttackRange);
+                displayStats.UpdateStats(LevelUtilityV2.ToInt(CurrentDamage * TempDmgScale), AttackRange);
                 displayStats.transform.localScale = new Vector3(animController.transform.localScale.x,
                     displayStats.transform.localScale.y, displayStats.transform.localScale.z);
             }
@@ -187,6 +196,8 @@ namespace InGame
                     visualAttackRange.localScale = AttackRange * Vector3.one;
                     visualAttackRange.gameObject.SetActive(true);
                 }
+                
+                OnSpawn?.Invoke();
             });
         }
 
@@ -254,7 +265,7 @@ namespace InGame
                     }
                 }
                 
-                config.moveBehaviour.MoveNonAlloc(transform, attackPosition, directionAddition, AttackRange, config.moveSpeed * StatsScale.speScale, ref direction);
+                config.moveBehaviour.MoveNonAlloc(transform, attackPosition, directionAddition, AttackRange, config.moveSpeed * StatsScale.speScale * TempSpeedScale, ref direction);
                 animController.SetDefaultRun(true);
             }
         }
@@ -281,7 +292,7 @@ namespace InGame
                 if (inAttackRange)
                 {
                     Attack();
-                    yield return new WaitForSeconds(1 / config.attackSpeed);
+                    yield return new WaitForSeconds(1 / (config.attackSpeed * TempAtkSpeedScale));
                 }
                 else
                     yield return new WaitUntil(() => inAttackRange);
@@ -295,7 +306,7 @@ namespace InGame
             this.DelayCall(animController.GetAttackDelayTrigger(), () =>
             {
                 if (TargetTower.IsDestroyed) return;
-                config.attackBehaviour.Attack(this, TargetTower, transform.position, CurrentDamage);
+                config.attackBehaviour.Attack(this, TargetTower, transform.position, LevelUtilityV2.ToInt(CurrentDamage * TempDmgScale));
             });
         }
 
@@ -540,6 +551,18 @@ namespace InGame
             
             if (config.elite) return;
             visual.material = hover ? materialHighlight : cacheMaterial;
+        }
+
+        #endregion
+
+        #region Buff
+
+        [Space] [Header("Buff")] 
+        [SerializeField] private GameObject vfxBuff;
+
+        public void Buff()
+        {
+            
         }
 
         #endregion

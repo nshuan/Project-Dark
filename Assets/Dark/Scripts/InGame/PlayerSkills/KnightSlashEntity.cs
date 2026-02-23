@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace InGame
 {
-    public class KnightSlashEntity : ProjectileEntity
+    public class KnightSlashEntity : AutoAimProjectileEntity
     {
         [Space] [Header("Slash")] 
         [SerializeField] private LayerMask enemyLayer;
@@ -20,6 +20,15 @@ namespace InGame
             List<IProjectileHit> hitActions, ProjectileType damageType)
         {
             base.Init(rangeCenter, direction, range, size, speedScale, damage, criticalDamage, criticalRate, stagger, isCharge, maxHit, activateActions, hitActions, damageType);
+            
+            transform.position = RangeCenter;
+            Quaternion rotation;
+            if (TargetToChase)
+                rotation = Quaternion.Euler(-45f, 0f, Mathf.Atan2(TargetToChase.transform.position.y - RangeCenter.y, TargetToChase.transform.position.x - RangeCenter.x) * Mathf.Rad2Deg);
+            else 
+                rotation = Quaternion.Euler(-45f, 0f, Mathf.Atan2(BoundPosition.y - RangeCenter.y, BoundPosition.x - RangeCenter.x) * Mathf.Rad2Deg);
+            transform.rotation = Quaternion.identity;
+            vfxSlash.transform.rotation = rotation;
             
             // Attack piercing dùng script này nên nhân bonus vào đây
             if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing &&
@@ -117,10 +126,11 @@ namespace InGame
                     var dirToCenter = hits[i].point - (Vector2)RangeCenter;
                     
                     // Check những enemy va chạm, nếu nằm trong góc damageAngle thì mới gây dame
-                    if (Vector2.Angle(direction, dirTo.normalized) > halfAngle) continue;
+                    if (Vector2.Angle(dirToCenter, dirTo.normalized) > halfAngle) continue;
                     
-                    // Check relative range
-                    if (dirToCenter.magnitude > LevelUtilityV2.GetRelativeRange(Range, dirToCenter)) continue;
+                    // Check relative range, tăng range lên 1 tí
+                    var bonusRangeForInRangeEnemy = (TargetToChase && hits[i].transform == TargetToChase.transform) ? 0.2f : 0.2f;
+                    if (dirToCenter.magnitude > (LevelUtilityV2.GetRelativeRangeMove(Range, dirToCenter) + bonusRangeForInRangeEnemy)) continue;
                     
                     if (hits[i].transform.TryGetComponent<EnemyEntity>(out cacheEnemy))
                     {

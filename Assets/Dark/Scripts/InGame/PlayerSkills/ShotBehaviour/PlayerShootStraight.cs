@@ -43,9 +43,9 @@ namespace InGame
                 var p = ProjectilePool.Instance.Get(projectilePrefab, null, false);
                 var direction = (target - spawnPos).normalized;
                 p.transform.position = spawnPos;
-                p.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
-                p.Init(rangeCenter, (target - spawnPos).normalized, skillRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, isCharge, maxHit, activateActions, hitEffects, ProjectileType.PlayerProjectile);
+                p.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
                 if (p is AutoAimProjectileEntity autoAimP) autoAimP.TargetToChase = targetEnemy;
+                p.Init(rangeCenter, direction, skillRange, skillSize, bulletSpeedScale, damagePerBullet, criticalDamagePerBullet, criticalRatePerBullet, stagger, isCharge, maxHit, activateActions, hitEffects, ProjectileType.PlayerProjectile);
                 
                 // Có activate action thì ko bắn đạn nữa
                 if (activateActions == null || activateActions.Count == 0)

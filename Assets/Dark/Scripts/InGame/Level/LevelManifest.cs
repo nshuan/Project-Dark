@@ -16,16 +16,16 @@ namespace InGame
         private static string Path = "LevelManifest";
         private static string FilePath = "Assets/Dark/Resources/LevelManifest.asset";
         
-        [ReadOnly, NonSerialized, OdinSerialize]
+        [NonSerialized, OdinSerialize]
         private Dictionary<int, LevelConfig> archerLevelMap;
         
-        [ReadOnly, NonSerialized, OdinSerialize]
+        [NonSerialized, OdinSerialize]
         private int maxLevelArcher;
 
-        [ReadOnly, NonSerialized, OdinSerialize]
+        [NonSerialized, OdinSerialize]
         private Dictionary<int, LevelConfig> knightLevelMap;
 
-        [ReadOnly, NonSerialized, OdinSerialize]
+        [NonSerialized, OdinSerialize]
         private int maxLevelKnight;
 
         public LevelConfig GetLevel(CharacterClass.CharacterClass classType, int level)

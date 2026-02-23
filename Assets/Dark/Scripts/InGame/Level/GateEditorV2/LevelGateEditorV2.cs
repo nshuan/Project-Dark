@@ -27,18 +27,19 @@ namespace InGame.GateEditorV2
         public UIPopupWarning popupConfirm;
         public Button btnPlayLevel;
         public TMP_Dropdown drdMapType;
+        public TMP_Dropdown drdBackgroundType;
         public Button btnEditTower;
         public LevelTowerPositionEditorV2 towerPositionEditor;
 
         [Space] [Header("Display")] 
         public TextMeshProUGUI txtLevel;
         
-        [Space] [Header("Settings")]
-        public CharacterClass.CharacterClass classType;
+        public CharacterClass.CharacterClass ClassType { get; set; }
         
         private LevelManifest levelManifest;
         private LevelConfig currentLevel;
         private LevelMapType currentMapType;
+        private int currentBgIndex;
         
         protected override void Awake()
         {
@@ -62,6 +63,14 @@ namespace InGame.GateEditorV2
             drdMapType.options = options.Select(mt => 
                 new TMP_Dropdown.OptionData(mt.ToString())).ToList();
             drdMapType.onValueChanged.AddListener(ChangeMapType);
+            drdBackgroundType.onValueChanged.RemoveAllListeners();
+            var optionsBg = new List<string>()
+            {
+                "Background 1", "Background 2", "Background 3"
+            };
+            drdBackgroundType.options = optionsBg.Select(mt => 
+                new TMP_Dropdown.OptionData(mt)).ToList();
+            drdBackgroundType.onValueChanged.AddListener(ChangeBgType);
             btnEditTower.onClick.RemoveAllListeners();
             btnEditTower.onClick.AddListener(() =>
             {
@@ -74,12 +83,14 @@ namespace InGame.GateEditorV2
         public void LoadLevel(int levelId)
         {
             if (!levelManifest) return;
-            currentLevel = levelManifest.GetTrueLevel(classType, levelId);
+            currentLevel = levelManifest.GetTrueLevel(ClassType, levelId);
             if (!currentLevel) return;
 
             currentMapType = currentLevel.mapType;
             drdMapType.value = (int)currentLevel.mapType;
             LevelTowerEditorV2.Instance.SetPosition(currentMapType, currentLevel.towerPositions);
+            currentBgIndex = currentLevel.backgroundIndex;
+            drdBackgroundType.value = currentLevel.backgroundIndex;
             // Destroy all old wave buttons
             ClearAllWaves();
             
@@ -114,6 +125,12 @@ namespace InGame.GateEditorV2
             currentMapType = (LevelMapType)index;
             LevelBackgroundVariantEditorV2.Instance.SetMapType((LevelMapType)index);
             LevelTowerEditorV2.Instance.SetPosition(currentMapType, null);
+        }
+        
+        public void ChangeBgType(int index)
+        {
+            currentBgIndex = index;
+            LevelBackgroundVariantEditorV2.Instance.SetBackgroundType(currentBgIndex);
         }
         
         #region Waves
@@ -178,7 +195,7 @@ namespace InGame.GateEditorV2
         {
             get
             {
-                if (classType == CharacterClass.CharacterClass.Knight) return LevelManifest.KnightWavePath;
+                if (ClassType == CharacterClass.CharacterClass.Knight) return LevelManifest.KnightWavePath;
                 return LevelManifest.ArcherWavePath;
             }
         }
@@ -187,7 +204,7 @@ namespace InGame.GateEditorV2
         {
             get
             {
-                if (classType == CharacterClass.CharacterClass.Knight) return LevelManifest.KnightLevelPath;
+                if (ClassType == CharacterClass.CharacterClass.Knight) return LevelManifest.KnightLevelPath;
                 return LevelManifest.ArcherLevelPath;
             }
         }
@@ -317,6 +334,7 @@ namespace InGame.GateEditorV2
 
             currentLevel.mapType = currentMapType;
             currentLevel.towerPositions = LevelTowerEditorV2.Instance.GetPositions(currentMapType);
+            currentLevel.backgroundIndex = currentBgIndex;
                         
 #if UNITY_EDITOR
             EditorUtility.SetDirty(currentLevel);

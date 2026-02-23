@@ -20,8 +20,7 @@ namespace Dark.Scripts.Common.Init
     {
         public void Initialize()
         {
-            if (DemoConfig.IsDemo)
-                DemoConfig.Instance.InitPublicProperties();
+            DemoConfig.Instance.InitPublicProperties();
         }
     }
     
