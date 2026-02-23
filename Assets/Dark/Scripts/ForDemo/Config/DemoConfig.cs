@@ -8,7 +8,7 @@ namespace Dark.Scripts.ForDemo
 {
     public class DemoConfig : ScriptableObject
     {
-        public const bool IsDemo = true;
+        public const bool IsDemo = false;
         
         private static string Path = "DemoConfig";
         private static string FilePath = "Assets/Dark/Scripts/ForDemo/Resources/DemoConfig.asset";
