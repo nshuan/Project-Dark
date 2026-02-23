@@ -5,7 +5,7 @@ using UnityEngine;
 namespace InGame.Boss
 {
     [CreateAssetMenu(menuName = "InGame/Enemy/Spawn/Enemy Spawn Summoner King", fileName = "EnemySpawnSummonerKing")]
-    public class EnemySummonerKingSpawnBehaviour : EnemyNecromancerSpawnBehaviour
+    public class BossSummonerKingSpawnBehaviour : EnemyNecromancerSpawnBehaviour
     {
         public override Tween DoSpawn(EnemyEntity enemy)
         {

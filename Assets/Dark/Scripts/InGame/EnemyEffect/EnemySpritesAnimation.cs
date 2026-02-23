@@ -230,6 +230,13 @@ namespace InGame.EnemyEffect
                 followers[i].localPositions = temp;
             }
         }
+
+        [Button]
+        private void ClearFramesAndFollowers()
+        {
+            frames = null;
+            followers = null;
+        }
         
         [Space]
         [Header("Follow objects")]
