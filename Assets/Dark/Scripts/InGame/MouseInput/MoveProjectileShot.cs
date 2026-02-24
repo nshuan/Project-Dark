@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Dark.Scripts.Utils;
+using Data;
 using DG.Tweening;
 using UnityEngine;
 namespace InGame
@@ -25,6 +26,8 @@ namespace InGame
         protected float cdCounterNormal;
         protected float cdCounterCharge;
 
+        private CharacterClass.CharacterClass classType;
+        
         #region Charge
 
         private bool canChargeBullet;
@@ -70,6 +73,8 @@ namespace InGame
 
         public void Initialize(PlayerCharacter character, MoveChargeController chargeController)
         {
+            classType = PlayerDataManager.Instance.Data.Class;
+            
             Character = character;
             ChargeController = chargeController;
             CooldownNormal = LevelUtilityV2.GetNormalAttackCooldown();
@@ -154,7 +159,7 @@ namespace InGame
                             {
                                 projectile = LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.ChargeSizeSubBullet],
                                 bulletAmount = blossomAmount,
-                                blossomSize = LevelUtilityV2.StatsChargeSize.range
+                                blossomSize = classType == CharacterClass.CharacterClass.Knight ? skillRange * LevelUtilityV2.StatsChargeSize.range : LevelUtilityV2.StatsChargeSize.range
                             }
                         };
                     LevelUtilityV2.StatsNormalAttack.Shoot(
@@ -225,7 +230,7 @@ namespace InGame
                                 {
                                     projectile = LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.ChargeSizeSubBullet],
                                     bulletAmount = blossomAmount,
-                                    blossomSize = LevelUtilityV2.StatsChargeSize.range
+                                    blossomSize = classType == CharacterClass.CharacterClass.Knight ? skillRange * LevelUtilityV2.StatsChargeSize.range : LevelUtilityV2.StatsChargeSize.range
                                 }
                             };
                         

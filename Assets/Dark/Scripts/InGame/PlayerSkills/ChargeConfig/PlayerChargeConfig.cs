@@ -8,7 +8,7 @@ namespace InGame.ChargeConfig
     {
         public int id;
         public float value;
-        public float range;
+        public float range; // hệ số scale của nhát chém charge size của knight charge size
     }
 
     public enum ChargeType

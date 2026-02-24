@@ -94,7 +94,9 @@ namespace InGame
             Range = range;
             
             Size = size;
-            transform.localScale = size * Vector3.one;
+            var sign = new Vector3(Mathf.Sign(transform.localScale.x), Mathf.Sign(transform.localScale.y),
+                Mathf.Sign(transform.localScale.z));
+            transform.localScale = new Vector3(size * sign.x, size * sign.y, size * sign.z);
             SpeedScale = speedScale;
             Speed = baseSpeed * speedScale;
             this.RangeCenter = rangeCenter;
