@@ -27,8 +27,14 @@ namespace InGame
                 rotation = Quaternion.Euler(-45f, 0f, Mathf.Atan2(TargetToChase.transform.position.y - RangeCenter.y, TargetToChase.transform.position.x - RangeCenter.x) * Mathf.Rad2Deg);
             else 
                 rotation = Quaternion.Euler(-45f, 0f, Mathf.Atan2(BoundPosition.y - RangeCenter.y, BoundPosition.x - RangeCenter.x) * Mathf.Rad2Deg);
+            var signY = Mathf.Sign(transform.localScale.y);
+            transform.localScale = Vector3.one;
             transform.rotation = Quaternion.identity;
             vfxSlash.transform.rotation = rotation;
+            vfxSlash.transform.localScale = new Vector3(
+                vfxSlash.transform.localScale.x, 
+                signY * Mathf.Abs(vfxSlash.transform.localScale.y), 
+                vfxSlash.transform.localScale.z);
             
             // Attack piercing dùng script này nên nhân bonus vào đây
             if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing &&

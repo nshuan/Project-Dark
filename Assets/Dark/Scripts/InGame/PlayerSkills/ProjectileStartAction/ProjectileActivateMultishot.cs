@@ -28,6 +28,7 @@ namespace InGame
             var p = ProjectilePool.Instance.Get(projectile, null, false);
             p.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
             p.transform.position = parentProjectile.transform.position;
+            p.transform.localScale = Vector3.one;
             p.Init(
                 parentProjectile.RangeCenter, 
                 direction, 
@@ -60,6 +61,7 @@ namespace InGame
                 var p1 = ProjectilePool.Instance.Get(projectile, null, false);
                 p1.transform.position = parentProjectile.transform.position;
                 p1.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+                p1.transform.localScale = new Vector3(0f, i % 2 == 0 ? 1f : -1f, 1f);
                 p1.Init(
                     parentProjectile.RangeCenter, 
                     direction, 
