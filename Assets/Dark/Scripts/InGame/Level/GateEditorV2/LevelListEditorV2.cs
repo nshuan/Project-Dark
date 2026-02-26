@@ -12,6 +12,7 @@ namespace InGame.GateEditorV2
 {
     public class LevelListEditorV2 : MonoBehaviour
     {
+#if UNITY_EDITOR
         [SerializeField] private GameObject groupSelectClass;
         [SerializeField] private TMP_Dropdown drdSelectClass;
         [SerializeField] private Button btnLoadLevels;
@@ -160,7 +161,6 @@ namespace InGame.GateEditorV2
             popupConfirm.gameObject.SetActive(true);
         }
         
-#if UNITY_EDITOR
         public void DeleteLevel(LevelConfig level)
         {
             var wavePath = Path.Combine(LevelGateEditorV2.Instance.WaveFolderPath, $"Level {level.level}");
