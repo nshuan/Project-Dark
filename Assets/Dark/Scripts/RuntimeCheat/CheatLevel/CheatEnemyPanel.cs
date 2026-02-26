@@ -46,8 +46,6 @@ namespace Dark.Scripts.RuntimeCheat.CheatLevel
             {
                 panel.SetActive(isPanelOpen);
             }
-            
-            cam = Camera.main;
         }
         
         private void Start()
@@ -289,7 +287,10 @@ namespace Dark.Scripts.RuntimeCheat.CheatLevel
         private void Update()
         {
             if (newEnemy)
+            {
+                cam ??= Camera.current;
                 newEnemy.transform.position = (Vector2)cam.ScreenToWorldPoint(Input.mousePosition);
+            }
         }
     }
 }

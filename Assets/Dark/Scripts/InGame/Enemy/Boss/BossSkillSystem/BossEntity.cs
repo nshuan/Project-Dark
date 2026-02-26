@@ -57,7 +57,7 @@ namespace InGame.Boss.BossSkillSystem
             BackgroundInGame.Instance.SetActiveBlackBg(true);
             CanvasInGame.Instance.HideUI();
             
-            CombatActions.OnBossKilled?.Invoke(config, transform.position);
+            CombatActions.OnBossKilled?.Invoke(this, transform.position);
             var dropVestige = Dark > 0;
             CombatActions.OnDropResource?.Invoke(this, dropVestige);
             OnDead?.Invoke(this, reason);
