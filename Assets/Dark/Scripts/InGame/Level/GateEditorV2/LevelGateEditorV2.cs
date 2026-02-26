@@ -16,6 +16,7 @@ namespace InGame.GateEditorV2
 {
     public class LevelGateEditorV2 : MonoSingleton<LevelGateEditorV2>
     {
+#if UNITY_EDITOR
         public Camera cam;
         public RectTransform parentWaveButtons;
         public Button prefabWaveButton;
@@ -344,5 +345,6 @@ namespace InGame.GateEditorV2
         }
 
         #endregion
+#endif
     }
 }
