@@ -1,9 +1,7 @@
 using System.Collections;
 using System.Linq;
-using Dark.Scripts.Utils;
 using Data;
 using DG.Tweening;
-using InGame.BossConfig;
 using InGame.EnemyEffect;
 using InGame.UI;
 using UnityEngine;
@@ -195,7 +193,7 @@ namespace InGame.Boss
             BackgroundInGame.Instance.SetActiveBlackBg(true);
             CanvasInGame.Instance.HideUI();
             
-            CombatActions.OnBossKilled?.Invoke(config, transform.position);
+            CombatActions.OnBossKilled?.Invoke(this, transform.position);
             var dropVestige = Dark > 0;
             CombatActions.OnDropResource?.Invoke(this, dropVestige);
             OnDead?.Invoke(this, reason);

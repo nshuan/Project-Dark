@@ -27,11 +27,13 @@ namespace Dark.Scripts.RuntimeCheat.CheatLevel
 
         private void ChangeBgNormal()
         {
+            bgController ??= FindAnyObjectByType<BackgroundInGame>();
             if (bgController) bgController.ForceChangeBg(false, true);
         }
 
         private void ChangeBgBoss()
         {
+            bgController ??= FindAnyObjectByType<BackgroundInGame>();
             if (bgController) bgController.ForceChangeBg(true, true);
         }
     }
