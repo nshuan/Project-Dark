@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f1427934e97420e88cdf1eeb6547fc2, type: 3}
-  m_Name: "50_Warden\u2019s Piercing"
+  m_Name: "50_Warden\u2019s Slash"
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -29,7 +29,7 @@ MonoBehaviour:
       Data: 1
     - Name: 
       Entry: 7
-      Data: 1|InGame.Upgrade.NodeLogicsV2.NodeV2BonusPiercingAmount, Assembly-CSharp
+      Data: 1|InGame.Upgrade.NodeLogicsV2.NodeV2BonusNormalAttackRange, Assembly-CSharp
     - Name: value
       Entry: 7
       Data: 2|System.Single[], mscorlib
@@ -38,7 +38,7 @@ MonoBehaviour:
       Data: 1
     - Name: 
       Entry: 4
-      Data: 1
+      Data: 0.1
     - Name: 
       Entry: 13
       Data: 
@@ -58,10 +58,10 @@ MonoBehaviour:
       Entry: 8
       Data: 
   nodeId: 50
-  nodeName: "Warden\u2019s Piercing"
+  nodeName: "Warden\u2019s Slash"
   lockOnDemo: 0
   hideLevelInNode: 0
-  description: + [X] number of enemies an arrow can pierce.
+  description: Increase attack range by [X]%
   vestigeCostRatio: 1
   dynamicVestige: 1
   dynamicEchoes: 1
