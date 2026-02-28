@@ -57,9 +57,14 @@ namespace InGame.Upgrade.NodeLogicsV2
         {
             if (level < 0) return "??";
             if (level >= value.Length) level = value.Length - 1;
-            
+
+            var valueScale = 1f;
+            if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Knight)
+            {
+                valueScale = MoveChargeKnight.BulletAddedPerUnit;
+            }
             if (isMul) return (value[level] * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
-            else return value[level].ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+            else return (value[level] * valueScale).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
         }
 
         public int MaxLevel => value?.Length ?? 0;
