@@ -168,5 +168,10 @@ namespace InGame
                 angle = angle,
             };
         }
+
+        public float GetAttackDuration()
+        {
+            return 0f;
+        }
     }
 }
