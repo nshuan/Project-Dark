@@ -15,10 +15,20 @@ namespace Dark.Tools.Language.Runtime
         [ReadOnly, NonSerialized, OdinSerialize]
         private Dictionary<LanguageType, string> valueMap;
 
-        [ReadOnly, NonSerialized, OdinSerialize]
-        private Dictionary<LanguageType, TMP_FontAsset> fontMap;
+        // [ReadOnly, NonSerialized, OdinSerialize]
+        // private Dictionary<LanguageType, TMP_FontAsset> fontMap;
 
         private TextMeshProUGUI txt;
+
+        private void Start()
+        {
+            LanguageManager.Instance.RegisterForceUpdate(OnForceUpdate);
+        }
+
+        private void OnDestroy()
+        {
+            LanguageManager.Instance.UnregisterForceUpdate(OnForceUpdate);
+        }
 
         private void OnEnable()
         {
@@ -34,34 +44,22 @@ namespace Dark.Tools.Language.Runtime
 
         public void UpdateText(LanguageType language)
         {
-            if (fontMap != null)
-            {
-                if (fontMap.TryGetValue(language, out var font))
-                    txt.font = font;
-                else
-                {
-                    font = LanguageData.Instance.GetFontAssetRuntime(language);
-                    txt.font = font;
-                }
-            }
+            if (string.IsNullOrEmpty(key)) return;
+            var font = LanguageData.Instance.GetFontAssetRuntime(language);
+            txt.font = font;
 
-            if (valueMap != null)
-            {
-                if (!valueMap.ContainsKey(language)) txt.SetText(valueMap[LanguageType.english]);
-                else txt.SetText(valueMap[language]);
-            }
+            txt.SetText(LanguageData.Instance.GetLocalizedString(key, language));
+        }
+
+        private void OnForceUpdate()
+        {
+            UpdateText(LanguageManager.Instance.CurrentLanguage);
         }
         
 #if UNITY_EDITOR
         [Button]
         public void Validate()
         {
-            fontMap = new Dictionary<LanguageType, TMP_FontAsset>();
-            foreach (LanguageType language in Enum.GetValues(typeof(LanguageType)))
-            {
-                fontMap.Add(language, LanguageData.GetFontAsset(language));
-            }
-            
             var data = LanguageData.GetLanguageItem(key);
             if (data == null) return;
             

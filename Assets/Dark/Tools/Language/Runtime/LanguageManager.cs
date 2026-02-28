@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using Data;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Dark.Tools.Language.Runtime
 {
@@ -53,8 +55,30 @@ namespace Dark.Tools.Language.Runtime
         {
             CurrentLanguage = language;
             settings.defaultLanguage = language;
+            ForceUpdate();
             Save();
         }
+
+        #region Force update
+
+        private UnityAction forceUpdateAction;
+
+        public void RegisterForceUpdate(UnityAction action)
+        {
+            forceUpdateAction += action;
+        }
+
+        public void UnregisterForceUpdate(UnityAction action)
+        {
+            forceUpdateAction -= action;
+        }
+
+        private void ForceUpdate()
+        {
+            forceUpdateAction?.Invoke();
+        }
+
+        #endregion
     }
 
     [Serializable]
