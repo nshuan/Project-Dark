@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Dark.Scripts.Utils;
 using UnityEngine;
 
 namespace InGame
@@ -57,10 +58,24 @@ namespace InGame
                 var camPos = Cam.ScreenToWorldPoint(Input.mousePosition);
                 RandomUtil.InsideUnitSpanSpacedNonAlloc(camPos - projectiles[0].transform.position, spanAngle, projectiles.Count, ref directions);
             }
+
+            var indexUnit = 1;
+            var character = LevelManager.Instance.Player;
+            var characterAttackAnimDelay = character.GetShootPrepareDuration();
             for (var i = 0; i < projectiles.Count; i++)
             {
                 projectiles[i].transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(directions[i].y, directions[i].x) * Mathf.Rad2Deg);
                 actionSetupProjectile?.Invoke(projectiles[i], directions[i], i * 0.1f);
+
+                if (i >= indexUnit * bulletAddedPerUnit)
+                {
+                    var a = i;
+                    character?.DelayCall(i * 0.1f - characterAttackAnimDelay, () =>
+                    {
+                        character?.PlayShoot((Vector2)character.transform.position + directions[a]);
+                    });
+                    indexUnit += 1;
+                }
                 
                 // Giảm dame dần nếu target vào boss trong cùng 1 lượt bắn
                 if (projectiles[i] is HomingProjectileV2Entity castedProjectile)
