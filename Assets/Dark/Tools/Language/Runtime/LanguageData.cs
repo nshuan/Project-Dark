@@ -21,7 +21,7 @@ namespace Dark.Tools.Language.Runtime
         public string GetLocalizedString(string key, LanguageType language)
         {
             if (dataMap == null || !dataMap.TryGetValue(key, out var data)) return string.Empty;
-            if (data.languageMap.TryGetValue(language, out var term)) return term;
+            if (data.languageMap.TryGetValue(language, out var term) && !string.IsNullOrEmpty(term)) return term;
             return data.languageMap[LanguageType.english];
         }
         

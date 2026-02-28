@@ -40,7 +40,17 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
         private Vector3 cacheExpandPosition;
         private Vector2 cacheLineFullSize;
         private Vector2 cacheLineShortSize;
-        
+
+        private void Start()
+        {
+            LanguageManager.Instance.RegisterForceUpdate(OnForceUpdateLanguage);
+        }
+
+        private void OnDestroy()
+        {
+            LanguageManager.Instance.UnregisterForceUpdate(OnForceUpdateLanguage);
+        }
+
         private void OnEnable()
         {
             SetupDayButtons();
@@ -417,6 +427,34 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
             DOTween.Kill(rectTotalDay);
             rectTotalDay.DOLocalMove(Vector3.zero, durationShowEachButton).SetEase(Ease.InQuad)
                 .SetTarget(rectTotalDay);
+        }
+
+        private void OnForceUpdateLanguage()
+        {
+            // Setup buttons in full list
+            var index = 0;
+            foreach (var btn in btnDaysFull)
+            {
+                index += 1;
+                var a = index;
+               
+                btn.GetComponentInChildren<TextMeshProUGUI>().SetTextLanguage("key_day", ("%{value}", a.ToString()));
+            }
+
+            // Setup buttons in short list
+            index = PlayerDataManager.Instance.Data.level + 1;
+            foreach (var cvg in btnDayShort)
+            {
+                var a = index;
+ 
+                if (cvg.TryGetComponent<Button>(out var button))
+                {
+                    button.GetComponentInChildren<TextMeshProUGUI>()
+                        .SetTextLanguage("key_day", ("%{value}", a.ToString()));
+                }
+
+                index -= 1;
+            }
         }
     }
 }
