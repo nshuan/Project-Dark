@@ -27,8 +27,8 @@ namespace Dark.Tools.Language.Runtime
         private LanguageManager()
         {
             Load();
-            // CurrentLanguage = settings.defaultLanguage;
-            CurrentLanguage = LanguageType.english;
+            CurrentLanguage = settings.defaultLanguage;
+            // CurrentLanguage = LanguageType.english;
         }
 
         #endregion
