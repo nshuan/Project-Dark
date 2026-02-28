@@ -157,6 +157,7 @@ namespace Dark.Tools.GoogleSheetTool
         BonusChargeDmg,
         BonusChargeBulletAmount,
         BonusChargeSizeAmount,
+        BonusChargeRangeStep,
         // Move bonuses
         BonusMoveDmg,
         BonusMoveCooldown,

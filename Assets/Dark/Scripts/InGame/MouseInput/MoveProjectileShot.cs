@@ -112,6 +112,8 @@ namespace InGame
             var bulletNum = 1;
             var skillSize = (canChargeSize && sizeChargeAdded > 0 ? 1 + sizeChargeAdded : 1f) * LevelUtilityV2.GetNormalAttackSize();
             var skillRange = (canChargeRange && rangeChargeAdded > 0 ? 1 + rangeChargeAdded : 1f) * LevelUtilityV2.GetNormalAttackRange(Vector2.right);
+            // if (classType == CharacterClass.CharacterClass.Knight)
+            //     skillRange 
             var maxHit = 1;
             if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing) 
                 maxHit += LevelUtilityV2.GetNormalPiercingAmount();
@@ -339,7 +341,10 @@ namespace InGame
             sizeChargeMaxStep = LevelUtilityV2.StatsNormalAttack.chargeSizeMaxStep;
             
             rangeChargeAdded = 0f;
-            rangePerStep = LevelUtilityV2.StatsNormalAttack.chargeRangeStep;
+            rangePerStep = LevelUtilityV2.GetChargeRangeStep();
+            if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockChargeAttackBullet)
+                rangePerStep = Mathf.Max(rangePerStep, LevelUtilityV2.StatsChargeBullet.rangeStepMin);
+            
             rangeChargeMaxStep = LevelUtilityV2.StatsNormalAttack.chargeRangeMaxStep;
 
             isCharging = false;

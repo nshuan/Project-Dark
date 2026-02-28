@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Dark.Tools.GoogleSheetTool;
-using Data;
 
 namespace InGame.Upgrade.NodeLogicsV2
 {
     [Serializable]
-    [ConfigNodeLogicTypeV2(NodeBonusTypeV2.BonusChargeBulletAmount)]
-    public class NodeV2BonusChargeBulletAmount : INodeActivateLogicV2, INodeLogicGeneratorV2
+    [ConfigNodeLogicTypeV2(NodeBonusTypeV2.BonusChargeRangeStep)]
+    public class NodeV2BonusChargeRangeStep : INodeActivateLogicV2, INodeLogicGeneratorV2
     {
         public float[] value;
         public bool isMul;
@@ -19,36 +18,29 @@ namespace InGame.Upgrade.NodeLogicsV2
             if (value == null || level <= 0 || level > value.Length) return;
             if (bonusInfo == null) return;
             
-            if (isMul) bonusInfo.bonusChargeAttack.bonusBulletAmount.mul += value[level - 1];
-            else bonusInfo.bonusChargeAttack.bonusBulletAmount.add += value[level - 1];
+            if (isMul) bonusInfo.bonusChargeAttack.bonusRangeStep.mul += value[level - 1];
+            else bonusInfo.bonusChargeAttack.bonusRangeStep.add += value[level - 1];
         }
 
         public (string, string) GetBeforeAfterValueTotalStat(int level, ref UpgradeBonusInfoV2 bonusInfo)
         {
             var before = "";
 
-            var beforeFloat = LevelUtilityV2.GetChargeBulletAmount();
-            if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Knight)
-                beforeFloat *= MoveChargeKnight.BulletAddedPerUnit;
-                
-            before = beforeFloat.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+            before = LevelUtilityV2.GetChargeAttackCooldown().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture) + "s";
 
             if (level > value.Length)
                 return (before, before);
  
-            var amountMultiply = bonusInfo.bonusChargeAttack.bonusBulletAmount.mul;
-            var amountPlus = bonusInfo.bonusChargeAttack.bonusBulletAmount.add;
+            var cooldownMultiply = bonusInfo.bonusChargeAttack.bonusRangeStep.mul;
+            var cooldownPlus = bonusInfo.bonusChargeAttack.bonusRangeStep.add;
 
             ActivateNode(level, ref bonusInfo);
             
             var after = "";
-            var afterFloat = LevelUtilityV2.GetChargeBulletAmount();
-            if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Knight)
-                afterFloat *= MoveChargeKnight.BulletAddedPerUnit;
-            after = afterFloat.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+            after = LevelUtilityV2.GetChargeAttackCooldown().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture) + "s";
             
-            bonusInfo.bonusChargeAttack.bonusBulletAmount.mul = amountMultiply;
-            bonusInfo.bonusChargeAttack.bonusBulletAmount.add = amountPlus;
+            bonusInfo.bonusChargeAttack.bonusRangeStep.mul = cooldownMultiply;
+            bonusInfo.bonusChargeAttack.bonusRangeStep.add = cooldownPlus;
             
             return (before, after);
         }
@@ -57,14 +49,9 @@ namespace InGame.Upgrade.NodeLogicsV2
         {
             if (level < 0) return "??";
             if (level >= value.Length) level = value.Length - 1;
-
-            var valueScale = 1f;
-            if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Knight)
-            {
-                valueScale = MoveChargeKnight.BulletAddedPerUnit;
-            }
+            
             if (isMul) return (value[level] * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
-            else return (value[level] * valueScale).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+            else return value[level].ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
         }
 
         public int MaxLevel => value?.Length ?? 0;
@@ -86,9 +73,8 @@ namespace InGame.Upgrade.NodeLogicsV2
             }
             catch (Exception e)
             {
-                throw new Exception($"Invalid BonusChargeBulletAmount value string: {listValue[0]}");
+                throw new Exception($"Invalid BonusChargeCooldown value string: {listValue[0]}");
             }
         }
     }
 }
-

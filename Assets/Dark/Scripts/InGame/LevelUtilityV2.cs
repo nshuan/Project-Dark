@@ -266,13 +266,20 @@ namespace InGame
         // Charge bullet max step
         public static int GetChargeBulletAmount()
         {
-            return Mathf.RoundToInt((StatsChargeBullet.value + BonusInfo.bonusChargeAttack.bonusBulletAmount.addInt) * (1f + BonusInfo.bonusChargeAttack.bonusBulletAmount.mul));
+            return ToInt((StatsChargeBullet.value + BonusInfo.bonusChargeAttack.bonusBulletAmount.addInt) * (1f + BonusInfo.bonusChargeAttack.bonusBulletAmount.mul));
         }
         
         // Charge size max bullet blossom
         public static int GetChargeSizeAmount()
         {
             return ToInt((1f + BonusInfo.bonusChargeAttack.bonusSizeAmount.mul) * (StatsChargeSize.value + BonusInfo.bonusChargeAttack.bonusSizeAmount.addInt) );
+        }
+        
+        // Charge range step
+        public static float GetChargeRangeStep()
+        {
+            return (StatsNormalAttack.chargeRangeStep + BonusInfo.bonusChargeAttack.bonusRangeStep.add) *
+                   (1f + BonusInfo.bonusChargeAttack.bonusRangeStep.mul);
         }
 
         #endregion

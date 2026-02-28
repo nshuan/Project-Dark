@@ -7,8 +7,8 @@ namespace InGame
 {
     public class MoveChargeKnight : MoveChargeController
     {
-        [SerializeField] private int bulletAddedPerUnit = 5;
-        
+        public const int BulletAddedPerUnit = 3;
+
         private float spanAngle = 45f;
         private List<ProjectileEntity> projectiles;
         private Vector2[] directions;
@@ -21,7 +21,7 @@ namespace InGame
         
         public override void AddBullet(Vector2 spawnPos, Vector2 aimDirection)
         {
-            for (var i = 0; i < bulletAddedPerUnit; i++)
+            for (var i = 0; i < BulletAddedPerUnit; i++)
             {
                 var p = ProjectilePool.Instance.Get(projectilePrefab, null, false);
                 p.transform.position = spawnPos;
@@ -67,7 +67,7 @@ namespace InGame
                 projectiles[i].transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(directions[i].y, directions[i].x) * Mathf.Rad2Deg);
                 actionSetupProjectile?.Invoke(projectiles[i], directions[i], i * 0.1f);
 
-                if (i >= indexUnit * bulletAddedPerUnit)
+                if (i >= indexUnit * BulletAddedPerUnit)
                 {
                     var a = i;
                     character?.DelayCall(i * 0.1f - characterAttackAnimDelay, () =>
