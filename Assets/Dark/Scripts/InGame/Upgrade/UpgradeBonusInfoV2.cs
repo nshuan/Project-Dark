@@ -102,6 +102,7 @@ namespace InGame
         public UpgradeBonusStatV2 bonusChargeDmg;
         public UpgradeBonusStatV2 bonusBulletAmount;
         public UpgradeBonusStatV2 bonusSizeAmount;
+        public UpgradeBonusStatV2 bonusRangeStep;
     }
 
     [Serializable]
