@@ -16,5 +16,6 @@ namespace InGame
         void TryCombineAndRevert<T>(T combineWith, Action combinedAction) where T : IProjectileActivate;
         float GetValue();
         IProjectileActivate Clone();
+        float GetAttackDuration();
     }
 }
