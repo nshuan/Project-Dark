@@ -129,5 +129,10 @@ namespace InGame
                 amount = amount,
             };
         }
+
+        public float GetAttackDuration()
+        {
+            return delayEachShot * amount;
+        }
     }
 }

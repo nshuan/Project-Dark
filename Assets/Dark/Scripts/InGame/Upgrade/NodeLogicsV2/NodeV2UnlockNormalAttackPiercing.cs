@@ -17,8 +17,7 @@ namespace InGame.Upgrade.NodeLogicsV2
             // Class knight khi unlock normal piercing thì x1.5 lên range và stagger
             if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Knight)
             {
-                bonusInfo.bonusNormalAttack.bonusNormalAttackRange.mul += 0.5f;
-                bonusInfo.bonusBase.bonusStagger.mul += 0.5f;
+                bonusInfo.bonusNormalAttack.bonusNormalAttackRange.mul += 0.1f;
             }
         }
 

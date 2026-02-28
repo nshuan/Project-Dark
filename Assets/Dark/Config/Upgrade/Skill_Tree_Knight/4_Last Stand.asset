@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f1427934e97420e88cdf1eeb6547fc2, type: 3}
-  m_Name: 54_Ashen Arrow
+  m_Name: 4_Last Stand
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -29,25 +29,7 @@ MonoBehaviour:
       Data: 1
     - Name: 
       Entry: 7
-      Data: 1|InGame.Upgrade.NodeLogicsV2.NodeV2BonusBulletAmount, Assembly-CSharp
-    - Name: value
-      Entry: 7
-      Data: 2|System.Single[], mscorlib
-    - Name: 
-      Entry: 14
-      Data: 1
-    - Name: 
-      Entry: 4
-      Data: 2
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: isMul
-      Entry: 5
-      Data: false
+      Data: 1|InGame.Upgrade.NodeLogicsV2.NodeV2UnlockChargeAttackSize, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -57,19 +39,17 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  nodeId: 54
-  nodeName: Ashen Arrow
+  nodeId: 4
+  nodeName: Last Stand
   lockOnDemo: 0
   hideLevelInNode: 0
-  description: + [X] number of accompanying arrows.
+  description: Channels energy to unleash a massive, devastating slash.
   vestigeCostRatio: 1
-  dynamicVestige: 1
-  dynamicEchoes: 1
+  dynamicVestige: 0
+  dynamicEchoes: 0
   costInfo:
-  - costType: 0
-    costValue: 
-  - costType: 1
-    costValue: 05000000
+  - costType: 2
+    costValue: 01000000
   groupId:
-  - groupId: 3
-    isLockNode: 0
+  - groupId: 9
+    isLockNode: 1
