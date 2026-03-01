@@ -184,6 +184,8 @@ namespace InGame.Boss.BossWizard
 
         protected override IEnumerator IEDie(float delayRelease, EnemyDieReason reason)
         {
+            LevelManager.Instance.BlockDamageAllTowers();
+            
             // Làm đen hết màn hình, tắt UI
             BackgroundInGame.Instance.SetActiveBlackBg(true);
             CanvasInGame.Instance.HideUI();
