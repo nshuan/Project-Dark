@@ -273,7 +273,8 @@ namespace InGame
                 {
                     var direction = enemy.Value.transform.position - levelManager.CurrentTower.GetBaseCenter();
                     var distance = direction.magnitude;
-                    if (distance > LevelUtilityV2.GetNormalAttackRange(direction) + 0.5f)
+                    var distanceAddOn = classType == CharacterClass.CharacterClass.Knight ? 0.5f : 0f;
+                    if (distance > LevelUtilityV2.GetNormalAttackRange(direction) + distanceAddOn)
                         continue;
                     
                     if (distance < nearestDistance)
