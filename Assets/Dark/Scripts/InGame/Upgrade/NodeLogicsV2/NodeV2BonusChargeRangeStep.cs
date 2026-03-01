@@ -26,7 +26,7 @@ namespace InGame.Upgrade.NodeLogicsV2
         {
             var before = "";
 
-            before = LevelUtilityV2.GetChargeAttackCooldown().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture) + "s";
+            before = LevelUtilityV2.GetChargeRangeStep().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
 
             if (level > value.Length)
                 return (before, before);
@@ -37,7 +37,7 @@ namespace InGame.Upgrade.NodeLogicsV2
             ActivateNode(level, ref bonusInfo);
             
             var after = "";
-            after = LevelUtilityV2.GetChargeAttackCooldown().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture) + "s";
+            after = LevelUtilityV2.GetChargeRangeStep().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
             
             bonusInfo.bonusChargeAttack.bonusRangeStep.mul = cooldownMultiply;
             bonusInfo.bonusChargeAttack.bonusRangeStep.add = cooldownPlus;
@@ -73,7 +73,7 @@ namespace InGame.Upgrade.NodeLogicsV2
             }
             catch (Exception e)
             {
-                throw new Exception($"Invalid BonusChargeCooldown value string: {listValue[0]}");
+                throw new Exception($"Invalid BonusChargeRangeStep value string: {listValue[0]}");
             }
         }
     }

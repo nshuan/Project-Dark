@@ -15,6 +15,8 @@ namespace InGame.UI
         [Space]
         [SerializeField] private Button btnBackToTree;
         [SerializeField] private Button btnResume;
+        [SerializeField] private Button btnOptions;
+        [SerializeField] private GameObject panelOptions;
 
         private void Start()
         {
@@ -57,6 +59,12 @@ namespace InGame.UI
             btnResume.onClick.AddListener(() =>
             {
                 PauseGame.Instance.Resume();
+            });
+            
+            btnOptions.onClick.RemoveAllListeners();
+            btnOptions.onClick.AddListener(() =>
+            {
+                panelOptions.SetActive(true);
             });
         }
         
