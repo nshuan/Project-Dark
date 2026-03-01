@@ -121,6 +121,11 @@ namespace InGame
             
             activated = true;
             collider.CanTrigger = false;
+
+            if (TargetToChase)
+            {
+                ProjectileHit(TargetToChase);    
+            }
             
             var hitCount = Physics2D.CircleCastNonAlloc(RangeCenter, Range, direction, hits, 0f, enemyLayer);
             if (hitCount > 0)
