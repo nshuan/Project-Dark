@@ -1,3 +1,4 @@
+using System;
 using Coffee.UIExtensions;
 using Dark.Scripts.Tutorial;
 using DG.Tweening;
@@ -30,6 +31,13 @@ namespace InGame
         [Header("Collect cursor")] 
         public CanvasGroup contentAimAndMove;
         [SerializeField] private CanvasGroup contentCollect;
+
+        private Vector3 defaultScale;
+
+        private void Awake()
+        {
+            defaultScale = transform.localScale;
+        }
 
         public void UpdateCooldown(bool active, float value)
         {
@@ -145,6 +153,11 @@ namespace InGame
             DOTween.Kill(contentCollect, true);
             contentCollect.transform.DOPunchScale(0.3f * Vector3.one, 0.13f).SetEase(Ease.InQuad)
                 .SetTarget(contentCollect);
+        }
+
+        public void SetDefaultScale()
+        {
+            transform.localScale = defaultScale;
         }
     }
 }
