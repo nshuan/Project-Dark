@@ -6,6 +6,7 @@ namespace InGame
     public class AutoAimProjectileEntity : ProjectileEntity
     {
         public EnemyEntity TargetToChase { get; set; }
+        public bool IsTargetToChaseSelectByMouse { get; set; }
         private Vector2 targetDirection = new Vector2();
 
         public override void Init(Vector2 rangeCenter, Vector2 direction, float range, float size, float speedScale, int damage,
