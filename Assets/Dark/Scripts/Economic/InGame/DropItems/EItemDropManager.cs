@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Core;
 using Dark.Scripts.Utils;
@@ -144,6 +145,19 @@ namespace Economic.InGame.DropItems
         private void OnEchoesAdded(int before, int after)
         {
             collectedData.AddEchoes(after - before);
+        }
+
+        public void AddCollectedData(WealthType kind, int value)
+        {
+            switch (kind)
+            {
+                case WealthType.Vestige:
+                    collectedData.AddVestige(value);
+                    break;
+                case WealthType.Sigils:
+                    collectedData.AddSigils(value);
+                    break;
+            }
         }
     }
     

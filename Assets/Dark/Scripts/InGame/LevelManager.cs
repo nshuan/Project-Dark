@@ -376,6 +376,17 @@ namespace InGame
             currentTowerIndex = towerIndex;
             OnChangeTower?.Invoke(CurrentTower);
         }
+
+        public void BlockDamageAllTowers()
+        {
+            if (towers == null) return;
+            
+            foreach (var tower in towers)
+            {
+                tower.BlockDamage = true;
+            }    
+        }
+        
         #endregion
 
         #region Timer
