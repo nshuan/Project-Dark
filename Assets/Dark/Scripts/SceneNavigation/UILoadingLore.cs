@@ -14,10 +14,10 @@ namespace Dark.Scripts.SceneNavigation
 
         private void Awake()
         {
-            loading.onStartLoading += OnStartLoading;
+            // loading.onStartLoading += OnStartLoading;
         }
 
-        private void Start()
+        private void OnEnable()
         {
             OnStartLoading();
         }
