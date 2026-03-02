@@ -121,6 +121,11 @@ namespace InGame
             
             activated = true;
             collider.CanTrigger = false;
+
+            if (TargetToChase)
+            {
+                ProjectileHit(TargetToChase);    
+            }
             
             var hitCount = Physics2D.CircleCastNonAlloc(RangeCenter, Range, direction, hits, 0f, enemyLayer);
             if (hitCount > 0)
@@ -128,11 +133,10 @@ namespace InGame
                 var halfAngle = Size / 2;
                 for (var i = 0; i < hitCount; i++)
                 {
-                    var dirTo = hits[i].point - (Vector2)transform.position;
                     var dirToCenter = hits[i].point - (Vector2)RangeCenter;
                     
                     // Check những enemy va chạm, nếu nằm trong góc damageAngle thì mới gây dame
-                    if (Vector2.Angle(dirToCenter, dirTo.normalized) > halfAngle) continue;
+                    if (Vector2.Angle(direction, dirToCenter) > halfAngle) continue;
                     
                     // Check relative range, tăng range lên 1 tí
                     var bonusRangeForInRangeEnemy = (TargetToChase && hits[i].transform == TargetToChase.transform) ? 0.2f : 0.2f;

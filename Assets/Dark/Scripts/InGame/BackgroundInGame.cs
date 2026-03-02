@@ -14,8 +14,9 @@ namespace InGame
         [SerializeField] private GameObject groupBgBlack;
         [SerializeField] private GameObject groupBlackAll;
         [SerializeField] private GameObject vfxBgBoss;
-        [SerializeField] private GameObject[] groupBgBossObj;
+        [SerializeField] private SpriteRenderer[] groupBgBossSpriteRenderer;
         [SerializeField] private Material matBgBoss;
+        [SerializeField] private GameObject vfxAppearCrack;
 
         private void Start()
         {
@@ -26,9 +27,11 @@ namespace InGame
         {
             matBgBoss.SetFloat(MatDisolveValue, 1f);
             vfxBgBoss.SetActive(false);
-            foreach (var obj in groupBgBossObj)
+            vfxAppearCrack.SetActive(false);
+            foreach (var obj in groupBgBossSpriteRenderer)
             {
-                obj.SetActive(false);
+                obj.gameObject.SetActive(false);
+                obj.color = new Color(1f, 1f, 1f, 0f);
             }
             groupBgBoss.SetActive(true);
             DOTween.Sequence(this).SetDelay(1.2f)
@@ -37,9 +40,11 @@ namespace InGame
                 {
                     groupBgNormal.SetActive(false);
                     vfxBgBoss.SetActive(true);
-                    foreach (var obj in groupBgBossObj)
+                    vfxAppearCrack.SetActive(true);
+                    foreach (var obj in groupBgBossSpriteRenderer)
                     {
-                        obj.SetActive(true);
+                        obj.gameObject.SetActive(true);
+                        obj.DOFade(1f, 0.5f);
                     }
                 });
         }
@@ -61,9 +66,10 @@ namespace InGame
                     {
                         groupBgNormal.SetActive(false);
                         vfxBgBoss.SetActive(true);
-                        foreach (var obj in groupBgBossObj)
+                        foreach (var obj in groupBgBossSpriteRenderer)
                         {
-                            obj.SetActive(true);
+                            obj.gameObject.SetActive(true);
+                            obj.DOFade(1f, 0.5f);
                         }
                     });
             }

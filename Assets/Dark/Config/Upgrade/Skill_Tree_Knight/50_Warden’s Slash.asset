@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f1427934e97420e88cdf1eeb6547fc2, type: 3}
-  m_Name: 2_Echopiercer
+  m_Name: "50_Warden\u2019s Slash"
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -29,7 +29,25 @@ MonoBehaviour:
       Data: 1
     - Name: 
       Entry: 7
-      Data: 1|InGame.Upgrade.NodeLogicsV2.NodeV2UnlockNormalAttackPiercing, Assembly-CSharp
+      Data: 1|InGame.Upgrade.NodeLogicsV2.NodeV2BonusNormalAttackRange, Assembly-CSharp
+    - Name: value
+      Entry: 7
+      Data: 2|System.Single[], mscorlib
+    - Name: 
+      Entry: 14
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 0.1
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: isMul
+      Entry: 5
+      Data: true
     - Name: 
       Entry: 8
       Data: 
@@ -39,20 +57,19 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  nodeId: 2
-  nodeName: Echopiercer
+  nodeId: 50
+  nodeName: "Warden\u2019s Slash"
   lockOnDemo: 0
   hideLevelInNode: 0
-  description: 'Fires an arrow that pierces through up to 2 enemies.
-
-    Each time
-    it pierces through an enemy, the damage is reduced by 60%.'
+  description: Increase attack range by [X]%
   vestigeCostRatio: 1
-  dynamicVestige: 0
-  dynamicEchoes: 0
+  dynamicVestige: 1
+  dynamicEchoes: 1
   costInfo:
-  - costType: 2
-    costValue: 01000000
+  - costType: 0
+    costValue: 
+  - costType: 1
+    costValue: 05000000
   groupId:
   - groupId: 2
-    isLockNode: 1
+    isLockNode: 0

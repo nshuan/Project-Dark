@@ -57,6 +57,11 @@ namespace InGame
 
             Character = character;
             Cooldown = LevelUtilityV2.GetNormalAttackCooldown();
+            var activateActions = GetProjectileActivateAction();
+            var cdAddOn = (activateActions == null || activateActions.Count == 0)
+                ? 0f
+                : activateActions.Max((a) => a.GetAttackDuration());
+            Cooldown += cdAddOn;
             ActivateDuration = 1f;
 
             classType = PlayerDataManager.Instance.Data.Class;
@@ -268,7 +273,8 @@ namespace InGame
                 {
                     var direction = enemy.Value.transform.position - levelManager.CurrentTower.GetBaseCenter();
                     var distance = direction.magnitude;
-                    if (distance > LevelUtilityV2.GetNormalAttackRange(direction))
+                    var distanceAddOn = classType == CharacterClass.CharacterClass.Knight ? 0.5f : 0f;
+                    if (distance > LevelUtilityV2.GetNormalAttackRange(direction) + distanceAddOn)
                         continue;
                     
                     if (distance < nearestDistance)

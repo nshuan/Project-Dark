@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f1427934e97420e88cdf1eeb6547fc2, type: 3}
-  m_Name: "50_Warden\u2019s Piercing"
+  m_Name: 2_Graven Edge
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -29,25 +29,7 @@ MonoBehaviour:
       Data: 1
     - Name: 
       Entry: 7
-      Data: 1|InGame.Upgrade.NodeLogicsV2.NodeV2BonusPiercingAmount, Assembly-CSharp
-    - Name: value
-      Entry: 7
-      Data: 2|System.Single[], mscorlib
-    - Name: 
-      Entry: 14
-      Data: 1
-    - Name: 
-      Entry: 4
-      Data: 1
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: isMul
-      Entry: 5
-      Data: false
+      Data: 1|InGame.Upgrade.NodeLogicsV2.NodeV2UnlockNormalAttackPiercing, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -57,19 +39,18 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  nodeId: 50
-  nodeName: "Warden\u2019s Piercing"
+  nodeId: 2
+  nodeName: Graven Edge
   lockOnDemo: 0
   hideLevelInNode: 0
-  description: + [X] number of enemies an arrow can pierce.
+  description: Greatly increases size and range for each hit, but decrease damage
+    from second target.
   vestigeCostRatio: 1
-  dynamicVestige: 1
-  dynamicEchoes: 1
+  dynamicVestige: 0
+  dynamicEchoes: 0
   costInfo:
-  - costType: 0
-    costValue: 
-  - costType: 1
-    costValue: 05000000
+  - costType: 2
+    costValue: 01000000
   groupId:
   - groupId: 2
-    isLockNode: 0
+    isLockNode: 1

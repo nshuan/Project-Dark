@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f1427934e97420e88cdf1eeb6547fc2, type: 3}
-  m_Name: 1_The Sightsunder
+  m_Name: 3_Afterslash
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -26,22 +26,33 @@ MonoBehaviour:
       Data: 0|InGame.Upgrade.INodeActivateLogicV2[], Assembly-CSharp
     - Name: 
       Entry: 12
-      Data: 0
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 1|InGame.Upgrade.NodeLogicsV2.NodeV2UnlockNormalAttackBullet, Assembly-CSharp
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 
     - Name: 
       Entry: 8
       Data: 
-  nodeId: 1
-  nodeName: The Sightsunder
+  nodeId: 3
+  nodeName: Afterslash
   lockOnDemo: 0
   hideLevelInNode: 0
-  description: Unleashes a single arrow charged with raw energy.
+  description: 'Each slash is following by another one.
+
+    The second slash deal
+    40% of the main slash''s damage.'
   vestigeCostRatio: 1
   dynamicVestige: 0
   dynamicEchoes: 0
-  costInfo: []
+  costInfo:
+  - costType: 2
+    costValue: 01000000
   groupId:
-  - groupId: 1
-    isLockNode: 0
+  - groupId: 3
+    isLockNode: 1
