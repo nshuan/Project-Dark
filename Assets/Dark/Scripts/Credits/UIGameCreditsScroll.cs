@@ -23,7 +23,7 @@ namespace Dark.Scripts.Credits
         private void Awake()
         {
             btnClose.onClick.RemoveAllListeners();
-            btnClose.onClick.AddListener(CloseCredits);
+            btnClose.onClick.AddListener(() => CloseCredits(0f));
         }
 
         private void OnEnable()
@@ -59,17 +59,21 @@ namespace Dark.Scripts.Credits
         {
             if (!started) return;
             content.localPosition += new Vector3(0f, movePointPerUpdate, 0f);
-            if (content.position.y > anchorEnd.position.y) StopCredits();
+            if (content.position.y > anchorEnd.position.y)
+            {
+                CloseCredits(2f);
+            }
         }
 
-        private void CloseCredits()
+        private void CloseCredits(float delay)
         {
             btnClose.interactable = false;
             StopCredits();
 
             DOTween.Kill(this);
             var seq = DOTween.Sequence(this).SetUpdate(true);
-            seq.Append(cvgButtonClose.DOFade(0f, 0.2f))
+            seq.AppendInterval(delay)
+                .Append(cvgButtonClose.DOFade(0f, 0.2f))
                 .Append(cvgCredits.DOFade(0f, 0.5f))
                 .AppendCallback(() =>
                 {
