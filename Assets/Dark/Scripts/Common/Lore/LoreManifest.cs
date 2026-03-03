@@ -51,7 +51,7 @@ namespace Dark.Scripts.Common.Lore
     [Serializable]
     public struct LoreInfo
     {
-        public string name;
-        public string lore;
+        public string nameKey;
+        public string loreKey;
     }
 }
