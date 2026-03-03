@@ -28,6 +28,7 @@ namespace InGame
         private LevelManager levelManager;
         private EnemyManager manager;
         private EnemyEntity nearestEnemy;
+        private bool isForceTargetEnemy;
         private EnemyEntity forceTargetEnemy;
         private EnemyEntity hoveringEnemy;
         private Collider2D[] mouseHoverEnemies;
@@ -101,6 +102,7 @@ namespace InGame
                 LevelUtilityV2.StatsNormalAttack.ShootToTarget(
                     LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.Normal],
                     targetEnemy,
+                    isForceTargetEnemy,
                     classType == CharacterClass.CharacterClass.Archer ? Character.transform.position : towerBaseCenter,
                     towerBaseCenter,
                     tempMousePos,
@@ -261,8 +263,11 @@ namespace InGame
                 nearestEnemy?.SetAimed(false);
                 nearestEnemy = forceTargetEnemy;
                 nearestEnemy.SetAimed(true);
+                isForceTargetEnemy = true;
                 return nearestEnemy;
             }
+
+            isForceTargetEnemy = false;
             
             var nearestDistance = float.MaxValue;
             EnemyEntity tempNearestEnemy = null;

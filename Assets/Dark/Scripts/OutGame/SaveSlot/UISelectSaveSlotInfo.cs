@@ -2,6 +2,7 @@ using System;
 using Coffee.UIExtensions;
 using Dark.Scripts.Common;
 using Dark.Scripts.Utils;
+using Dark.Tools.Language.Runtime;
 using Data;
 using TMPro;
 using UnityEngine;
@@ -49,7 +50,17 @@ namespace Dark.Scripts.OutGame.SaveSlot
                 
                 txtClassName.SetText(SaveSlotManager.Instance.GetDisplayClassName(slotIndex));
                 txtDayPassed.SetText(SaveSlotManager.Instance.GetDisplayPassedDays(slotIndex));
-                txtLevel.SetText(SaveSlotManager.Instance.GetDisplayLevel(slotIndex));
+                // if (SaveSlotManager.Instance.IsSlotCompleted(slotIndex))
+                // {
+                //     txtLevel.SetTextLanguage("key_save_slot_level",
+                //         ("%{value}",
+                //             LanguageData.Instance.GetLocalizedString("key_complete",
+                //                 LanguageManager.Instance.CurrentLanguage)));
+                // }
+                // else
+                { 
+                    txtLevel.SetText(SaveSlotManager.Instance.GetDisplayLevel(slotIndex));
+                }
                 txtPlayedTime.SetText(SaveSlotManager.Instance.GetDisplayTimePlayed(slotIndex));
                 
                 btnClearSave.onClick.AddListener(() =>

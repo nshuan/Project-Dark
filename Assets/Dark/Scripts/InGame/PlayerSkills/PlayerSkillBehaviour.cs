@@ -29,6 +29,7 @@ namespace InGame
         public abstract void ShootWithTarget(
             ProjectileEntity projectilePrefab,
             EnemyEntity targetEnemy,
+            bool isTargetEnemyForceSelect,
             Vector2 spawnPos, 
             Vector2 rangeCenter,
             Vector2 target,
