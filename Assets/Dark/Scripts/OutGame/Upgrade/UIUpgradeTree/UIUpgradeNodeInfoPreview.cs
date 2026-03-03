@@ -19,6 +19,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Dark.Tools.Language.Runtime;
 
 namespace Dark.Scripts.OutGame.Upgrade
 {
@@ -119,7 +120,9 @@ namespace Dark.Scripts.OutGame.Upgrade
             if (cacheConfig == null) return;
 
             var descriptionStr = "";
-            var descriptions = cacheConfig.description.Split("\n");
+            var descriptionLocalized = LanguageData.Instance.GetLocalizedString(cacheConfig.descriptionKey,
+                LanguageManager.Instance.CurrentLanguage);
+            var descriptions = descriptionLocalized.Split("\n");
             if (cacheConfig.nodeLogic != null)
             {
                 var groupUnlockOrder = cacheConfig.groupId.Min((info) =>
@@ -139,11 +142,10 @@ namespace Dark.Scripts.OutGame.Upgrade
                     }
                 }
             }
-            txtNodeBonus.SetText(descriptionStr);
+            txtNodeBonus.SetTextValueLanguage(descriptionStr);
             txtNodeBonus.gameObject.SetActive(true);
             
-            txtNodeName.SetText(cacheConfig.nodeName);
-            txtNodeLore.SetText(cacheConfig.description);
+            txtNodeName.SetTextLanguage(cacheConfig.nodeNameKey);
             txtNodeLevel.SetText($"{cacheData?.level ?? 0}/{cacheConfig.MaxLevel}");
             DOTween.Kill(imgLevelProgress);
             imgLevelProgress.DOFillAmount((cacheData?.level ?? 0f) / cacheConfig.MaxLevel, 0.3f).SetEase(Ease.OutQuad)
@@ -257,7 +259,9 @@ namespace Dark.Scripts.OutGame.Upgrade
             {
                 if (!tooltipSkillVideo.Show(cacheConfig, rectInfoFrameContent, new Vector2(10f, 0f)))
                 {
-                    tooltip.Show(cacheConfig.description, rectInfoFrameContent, new Vector2(10f, 0f));
+                    tooltip.Show(
+                        LanguageData.Instance.GetLocalizedString(cacheConfig.descriptionKey,
+                            LanguageManager.Instance.CurrentLanguage), rectInfoFrameContent, new Vector2(10f, 0f));
                 }
                 onShow?.Invoke();
             });

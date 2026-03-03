@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Dark.Scripts.Utils.Camera;
+using Dark.Tools.Language.Runtime;
 using Data;
 using InGame.Upgrade;
 using Sirenix.OdinInspector;
@@ -32,7 +33,7 @@ namespace OutGame.Upgrade.Tooltip
             }
             
             rectToolTip.anchoredPosition = new Vector2(positionX, positionY);
-            txtTitle.SetText(nodeConfig.nodeName);
+            txtTitle.SetText(LanguageData.Instance.GetLocalizedString(nodeConfig.nodeNameKey, LanguageManager.Instance.CurrentLanguage));
             foreach (var vid in map.Values)
             {
                 foreach (var v in vid)

@@ -296,13 +296,13 @@ namespace Dark.Scripts.OutGame.Upgrade
             if (config.costInfo.Any((cost) => cost.costType == WealthType.Sigils))
             {
                 var displayCost = UIUpgradeNodeInfoPreview.Instance.GetDisplayCost();
-                UIUpgradeScene.Instance.PopupConfirmExchange.Setup(
+                UIUpgradeScene.Instance.PopupConfirmExchange.SetupLocalize(
                     displayCost.Item1,
                     displayCost.Item2,
                     displayCost.Item3,
-                    "And you will receive",
-                    "Confirm exchange",
-                    config.nodeName, 
+                    "key_confirm_exchange_question",
+                    "key_confirm_exchange",
+                    config.nodeNameKey, 
                     actionUpgrade);
                 UIUpgradeScene.Instance.PopupConfirmExchange.DoOpenFadeIn();
             }

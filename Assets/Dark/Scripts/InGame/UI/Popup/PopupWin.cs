@@ -61,6 +61,9 @@ namespace InGame.UI
             btnNextLevel.onClick.RemoveAllListeners();
             btnNextLevel.onClick.AddListener(() =>
             {
+                if (PlayerDataManager.Instance.Data.level + 1 > LevelManifest.Instance.GetMaxLevel(PlayerDataManager.Instance.Data.Class))
+                    return;
+                
                 ui.gameObject.SetActive(false);
                 Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame);
                 Loading.Instance.onSceneLoaded += () =>
