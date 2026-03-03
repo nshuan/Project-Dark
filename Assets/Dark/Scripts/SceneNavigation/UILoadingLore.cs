@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Dark.Scripts.Common.Lore;
+using Dark.Tools.Language.Runtime;
 using TMPro;
 using UnityEngine;
 
@@ -25,8 +26,8 @@ namespace Dark.Scripts.SceneNavigation
         private void OnStartLoading()
         {
             var info = LoreManifest.GetRandom();
-            txtTitle.SetText(info.name);
-            txtLore.SetText(info.lore);
+            txtTitle.SetTextLanguage(info.nameKey);
+            txtLore.SetTextLanguage(info.loreKey);
         }
     }
 }
