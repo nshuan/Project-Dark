@@ -5,8 +5,8 @@ namespace Dark.Tools.Language
     {
         english, // "english"
         vietnamese, // "vietnamese"
-        spain, // "spain"
-        portuguese, // "portuguese"
+        spanish, // "spanish"
+        brazilian, // "brazilian"
         german, // "german"
     }
 }
