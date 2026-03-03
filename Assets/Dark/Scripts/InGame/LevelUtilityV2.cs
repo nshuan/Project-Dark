@@ -353,9 +353,9 @@ namespace InGame
                 Mathf.Clamp01(1f - BonusInfo.bonusCounter.bonusCounterCooldown.mul - GetBaseCooldown()), 0.001f);
         }
 
-        public static int GetCounterPiercingSize()
+        public static float GetCounterPiercingSize()
         {
-            return Mathf.RoundToInt((StatsCounterPiercing.size + BonusInfo.bonusCounter.bonusPiercingAmount.addInt) * (1f + BonusInfo.bonusCounter.bonusPiercingAmount.mul));
+            return (StatsCounterPiercing.size + BonusInfo.bonusCounter.bonusPiercingAmount.addInt) * (1f + BonusInfo.bonusCounter.bonusPiercingAmount.mul);
         }
 
         public static float GetCounterSlashRange()
