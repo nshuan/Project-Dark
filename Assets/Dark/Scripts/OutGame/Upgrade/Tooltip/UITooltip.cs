@@ -1,6 +1,7 @@
 using System;
 using Dark.Scripts.ForDemo;
 using Dark.Scripts.Utils.Camera;
+using Dark.Tools.Language.Runtime;
 using TMPro;
 using UnityEngine;
 
@@ -42,6 +43,7 @@ namespace OutGame.Upgrade.Tooltip
             rectToolTip.anchoredPosition = new Vector2(positionX, positionY);
             txtKeyword.SetText(tooltip.Item1);
             txtTooltip.SetText(tooltip.Item2);
+            txtTooltip.font = LanguageData.Instance.GetFontAssetRuntime(LanguageManager.Instance.CurrentLanguage);
             rectToolTip.gameObject.SetActive(true);
         }
     }

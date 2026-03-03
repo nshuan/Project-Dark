@@ -28,6 +28,19 @@ namespace InGame
         [NonSerialized, OdinSerialize]
         private int maxLevelKnight;
 
+        public int GetMaxLevel(CharacterClass.CharacterClass classType)
+        {
+            if (classType == CharacterClass.CharacterClass.Archer)
+            {
+                return archerLevelMap.Count;
+            }
+            else if (classType == CharacterClass.CharacterClass.Knight)
+            {
+                return knightLevelMap.Count;
+            }
+            return 0;
+        }
+        
         public LevelConfig GetLevel(CharacterClass.CharacterClass classType, int level)
         {
             if (classType == CharacterClass.CharacterClass.Archer)

@@ -286,15 +286,19 @@ namespace InGame
             cursor.UpdateScale(0f);
             cursor.UpdateChargeUnitAdd(false);
             cursor.UpdateCooldown(false, 0f);
-            DOTween.Complete(this);
-            var seq = DOTween.Sequence(this);
+            DOTween.Complete(cursor);
+            var seq = DOTween.Sequence(cursor);
             seq.Append(cursor.transform.DOPunchScale(0.3f * Vector3.one, 0.13f).SetEase(Ease.InQuad))
                 .Join(cursor.visual.DOFade(0.3f, 0.13f).SetEase(Ease.InQuad).SetLoops(2, LoopType.Yoyo))
                 .Join(DOTween.To(() => cursor.content.transform.localScale.x - 1f, x =>
                 {
                     cursor.UpdateScale(x);
                 }, 0f, 0.13f));
-            seq.Play().OnComplete(() => cursor.UpdateCooldown(false, 0f));
+            seq.Play().OnComplete(() =>
+            {
+                cursor.UpdateCooldown(false, 0f);
+                cursor.SetDefaultScale();
+            });
         }
 
         public void OnHoldStarted()
@@ -415,7 +419,8 @@ namespace InGame
                         
                         cursor.UpdateScale(0f);
                         cursor.UpdateChargeUnitAdd(true, chargeStep);
-                        cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f).SetEase(Ease.InQuad)
+                        DOTween.Kill(cursor);
+                        cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f).SetEase(Ease.InQuad).SetTarget(cursor)
                             .OnComplete(() => cursor.UpdateCooldown(true, 0f));
 
                         if (chargeStep >= chargeMaxStep)

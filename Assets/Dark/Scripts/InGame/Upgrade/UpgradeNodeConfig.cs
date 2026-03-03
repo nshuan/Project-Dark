@@ -11,9 +11,11 @@ namespace InGame.Upgrade
     public class UpgradeNodeConfig : SerializedScriptableObject
     {
         public int nodeId;
+        public string nodeNameKey;
         public string nodeName; // Name to display
         public bool lockOnDemo;
         public bool hideLevelInNode;
+        public string descriptionKey;
         public string description; // Description to display
         public float vestigeCostRatio; // cost will multiply to this value
         public bool dynamicVestige; // is this node using dynamic vestige?

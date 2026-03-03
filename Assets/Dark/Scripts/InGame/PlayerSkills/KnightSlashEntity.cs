@@ -122,7 +122,7 @@ namespace InGame
             activated = true;
             collider.CanTrigger = false;
 
-            if (TargetToChase)
+            if (!IsTargetToChaseSelectByMouse && TargetToChase)
             {
                 ProjectileHit(TargetToChase);    
             }
