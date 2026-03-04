@@ -154,6 +154,9 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
             
             // Setup buttons in short list
             index = PlayerDataManager.Instance.Data.level + 1;
+            var maxLevel = LevelManifest.Instance.GetMaxLevel(PlayerDataManager.Instance.Data.Class);
+            if (index > maxLevel)
+                index = maxLevel;
             listShowQuickButtons = new List<CanvasGroup>();
             foreach (var cvg in btnDayShort)
             {
@@ -443,6 +446,8 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
 
             // Setup buttons in short list
             index = PlayerDataManager.Instance.Data.level + 1;
+            var maxLevel = LevelManifest.Instance.GetMaxLevel(PlayerDataManager.Instance.Data.Class);
+            if (index > maxLevel) index = maxLevel;
             foreach (var cvg in btnDayShort)
             {
                 var a = index;
