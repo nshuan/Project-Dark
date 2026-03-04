@@ -37,6 +37,8 @@ namespace Dark.Scripts.OutGame.Settings
         private Button btnBack;
         private Button btnSave;
 
+        public Action OnCloseComplete;
+
         private void Awake()
         {
             matSymbol = new Material(imgSymbol.material);
@@ -127,7 +129,11 @@ namespace Dark.Scripts.OutGame.Settings
             
             DOTween.Kill(this);
             popupCanvasGroup.DOFade(0f, 0.5f).SetTarget(this).SetUpdate(true)
-                .OnComplete(() => gameObject.SetActive(false));
+                .OnComplete(() =>
+                {
+                    OnCloseComplete?.Invoke();
+                    gameObject.SetActive(false);
+                });
         }
     }
 }
