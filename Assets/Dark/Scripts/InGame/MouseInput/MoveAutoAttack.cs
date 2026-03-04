@@ -271,6 +271,7 @@ namespace InGame
             
             var nearestDistance = float.MaxValue;
             EnemyEntity tempNearestEnemy = null;
+            var attackMaxRange = LevelUtilityV2.GetNormalAttackRange(Vector2.right);
                  
             foreach (var enemy in manager.Enemies)
             {
@@ -278,9 +279,15 @@ namespace InGame
                 {
                     var direction = enemy.Value.transform.position - levelManager.CurrentTower.GetBaseCenter();
                     var distance = direction.magnitude;
-                    var distanceAddOn = classType == CharacterClass.CharacterClass.Knight ? 0.5f : 0f;
-                    if (distance > LevelUtilityV2.GetNormalAttackRange(direction) + distanceAddOn)
-                        continue;
+                    if (classType == CharacterClass.CharacterClass.Knight)
+                    {
+                        if (distance > attackMaxRange) continue;
+                    }
+                    else
+                    {
+                        if (distance > LevelUtilityV2.GetRelativeRangeMove(attackMaxRange, direction))
+                            continue;
+                    }
                     
                     if (distance < nearestDistance)
                     {
