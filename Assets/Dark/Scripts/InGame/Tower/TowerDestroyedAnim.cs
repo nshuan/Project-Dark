@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Dark.Scripts.Utils;
 using Dark.Scripts.Utils.Skeleton;
+using Data;
 using DG.Tweening;
 using InGame.UI;
 using Spine;
@@ -24,6 +25,8 @@ namespace InGame
         [SerializeField] private float durationDestroyTower = 0.8f;
         [SerializeField] private float durationFocusTower = 0.5f;
         [SerializeField] private float durationReturnAnim = 1.5f;
+        [SerializeField] private string skinForArcher = "Archer";
+        [SerializeField] private string skinForKnight = "Knight";
 
         public static IEndGameLoseAnimation Instance { get; private set; }
         
@@ -65,6 +68,11 @@ namespace InGame
 
         public float Play()
         {
+            mainSkeleton.skeleton.SetSkin(PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Knight
+                ? skinForKnight
+                : skinForArcher);
+            mainSkeleton.Skeleton.SetSlotsToSetupPose();
+            mainSkeleton.AnimationState.Apply(mainSkeleton.Skeleton);
             StartCoroutine(IEPlay());
             return Mathf.Max(durationFocusTower + durationDestroyTower, 2f); // Thấy duration của vfx là 2s
         }
