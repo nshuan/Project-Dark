@@ -1,4 +1,5 @@
 using System.Collections;
+using Dark.Scripts.OutGame.Settings;
 using Dark.Scripts.Utils;
 using Data;
 using InGame.BossConfig;
@@ -26,6 +27,8 @@ namespace InGame.Boss
                 BossPoint = 0;
 
             configCasted = (EnemyBossSummonerKingBehaviour)config;
+            
+            UISettingIconBoss.SetBossUnlocked(config.enemyId);
         }
 
         protected override IEnumerator IEAttack()

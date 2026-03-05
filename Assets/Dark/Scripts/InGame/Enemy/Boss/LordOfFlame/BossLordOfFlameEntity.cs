@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Linq;
+using Dark.Scripts.OutGame.Settings;
 using Data;
 using DG.Tweening;
 using InGame.EnemyEffect;
@@ -51,6 +52,8 @@ namespace InGame.Boss
             isAttacking = false;
             shadowSprite = shadow.GetComponent<SpriteRenderer>();
             shadowOriginalAlpha = shadowSprite.color.a;
+            
+            UISettingIconBoss.SetBossUnlocked(config.enemyId);
         }
 
         protected override IEnumerator IEAttack()

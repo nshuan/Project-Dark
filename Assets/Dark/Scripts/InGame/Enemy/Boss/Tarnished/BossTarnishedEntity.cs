@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Dark.Scripts.OutGame.Settings;
 using Dark.Scripts.Utils;
 using Data;
 using DG.Tweening;
@@ -28,6 +29,8 @@ namespace InGame.Boss
             
             shadowSprite = shadow.GetComponent<SpriteRenderer>();
             shadowOriginalAlpha = shadowSprite.color.a;
+            
+            UISettingIconBoss.SetBossUnlocked(config.enemyId);
         }
 
         public override void ActivateELite(bool active)
