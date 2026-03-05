@@ -1,5 +1,6 @@
 using System;
 using Coffee.UIExtensions;
+using Dark.Scripts.Settings;
 using Dark.Scripts.Tutorial;
 using Dark.Tools.Language.Runtime;
 using DG.Tweening;
@@ -136,8 +137,16 @@ namespace InGame
                 
                 if (UITutorialStepMoveTowers.ShouldShowHotKeyInstruction)
                 {
+                    var keyMoveTower = towerId switch
+                    {
+                        0 => GameSettings.KeyMoveTower0,
+                        1 => GameSettings.KeyMoveTower1,
+                        2 => GameSettings.KeyMoveTower2,
+                        3 => GameSettings.KeyMoveTower3,
+                        _ => GameSettings.KeyMoveTower0
+                    };
                     txtMoveInstruction.gameObject.SetActive(true);
-                    txtMoveInstruction.SetText($"Press  {towerId + 1}\nto move");
+                    txtMoveInstruction.SetTextLanguage("key_tutorial_move_tower", ("%{value}", keyMoveTower.ToString()));
                 }
             }
             else
