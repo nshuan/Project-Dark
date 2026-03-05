@@ -1,6 +1,7 @@
 using System;
 using Coffee.UIExtensions;
 using Dark.Scripts.Tutorial;
+using Dark.Tools.Language.Runtime;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -96,6 +97,20 @@ namespace InGame
             txtMax.SetAlpha(0f);
             txtAuto.SetAlpha(0f);
             txtReadyToCharge.SetAlpha(1f);
+            txtReadyToCharge.font = LanguageData.Instance.GetFontAssetRuntime(LanguageManager.Instance.CurrentLanguage);
+            var text = LanguageData.Instance.GetLocalizedString("key_charge_ready",
+                LanguageManager.Instance.CurrentLanguage);
+            var textPart = text.Split(" ");
+            if (textPart.Length == 2) text = textPart[0] + "\n" + textPart[1];
+            else if (textPart.Length > 2)
+            {
+                text = textPart[0] + " " + textPart[1] + "\n" + textPart[2];
+                for (var i = 3; i < textPart.Length; i++)
+                {
+                    text += " " + textPart[i];
+                }
+            }
+            txtReadyToCharge.SetText(text);
             txtReadyToCharge.gameObject.SetActive(true);
             vfxReadyToCharge.Play();
 

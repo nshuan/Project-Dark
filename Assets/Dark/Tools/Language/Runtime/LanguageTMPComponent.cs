@@ -15,6 +15,8 @@ namespace Dark.Tools.Language.Runtime
         [ReadOnly, NonSerialized, OdinSerialize]
         private Dictionary<LanguageType, string> valueMap;
 
+        [OdinSerialize, NonSerialized] private Dictionary<LanguageType, TMP_FontAsset> overrideFont;
+
         // [ReadOnly, NonSerialized, OdinSerialize]
         // private Dictionary<LanguageType, TMP_FontAsset> fontMap;
 
@@ -44,9 +46,17 @@ namespace Dark.Tools.Language.Runtime
 
         public void UpdateText(LanguageType language)
         {
+            if (overrideFont != null && overrideFont.TryGetValue(language, out var font))
+            {
+                txt.font = font;
+            }
+            else
+            {
+                font = LanguageData.Instance.GetFontAssetRuntime(language);
+                txt.font = font;
+            }
+            
             if (string.IsNullOrEmpty(key)) return;
-            var font = LanguageData.Instance.GetFontAssetRuntime(language);
-            txt.font = font;
 
             txt.SetText(LanguageData.Instance.GetLocalizedString(key, language));
         }
