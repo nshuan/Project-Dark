@@ -267,6 +267,19 @@ namespace InGame.Upgrade
 
             var nodeConfig = TreeConfig.GetNodeById(nodeId);
             
+            // Nếu nodeConfig.MaxLevel = 0 thì override lại 
+            if (nodeConfig.MaxLevel == 0)
+            {
+                var groupUnlockOrder =
+                    nodeConfig.groupId.Min((info) => GetGroupUnlockOrder(info.groupId, true));
+                foreach (var logicV2 in nodeConfig.nodeLogic)
+                {
+                    if (logicV2 is INodeDynamicBonusValueV2 { IsDynamic: true } dynamicLogic)
+                    {
+                        dynamicLogic.OverrideBonusValue(groupUnlockOrder);
+                    }
+                }
+            }
             if (dataMapById[nodeId].level >= nodeConfig.MaxLevel) return false;
 
             var currentLevel = dataMapById[nodeId].level;
