@@ -305,15 +305,19 @@ namespace InGame.WatchTower
                 var halfAngle = LevelUtilityV2.StatsCounterSlash.size / 2;
                 for (var i = 0; i < hitCount; i++)
                 {
-                    var dirTo = (slashHits[i].point - (Vector2)transform.position).normalized;
+                    var dirTo = slashHits[i].point - (Vector2)transform.position;
+                    var hitPosDirToCenter = slashHits[i].collider.transform.position - transform.position;
                     // Check những enemy va chạm, nếu nằm trong góc damageAngle thì mới gây dame
-                    if (Vector2.Angle(direction, dirTo) <= halfAngle)
+                    if (Vector2.Angle(direction, dirTo) > halfAngle)
                     {
-                        if (slashHits[i].transform.TryGetComponent<EnemyEntity>(out slashCacheEnemy))
-                        {
-                            slashCacheEnemy.Damage(DamageKnight, transform.position, LevelUtilityV2.StatsCounterSlash.stagger, DamageType.Normal);
-                            PassiveEffectManager.Instance.TriggerEffect(PassiveTriggerType.TowerTakeDame, slashCacheEnemy);
-                        }
+                        if (Vector2.Angle(direction, hitPosDirToCenter) > halfAngle)
+                            continue;
+                    }
+                    
+                    if (slashHits[i].transform.TryGetComponent<EnemyEntity>(out slashCacheEnemy))
+                    {
+                        slashCacheEnemy.Damage(DamageKnight, transform.position, LevelUtilityV2.StatsCounterSlash.stagger, DamageType.Normal);
+                        PassiveEffectManager.Instance.TriggerEffect(PassiveTriggerType.TowerTakeDame, slashCacheEnemy);
                     }
                 }
             }
