@@ -133,14 +133,19 @@ namespace InGame
                 var halfAngle = Size / 2;
                 for (var i = 0; i < hitCount; i++)
                 {
-                    var dirToCenter = hits[i].point - (Vector2)RangeCenter;
+                    var hitPointDirToCenter = hits[i].point - (Vector2)RangeCenter;
+                    var hitPosDirToCenter = hits[i].collider.transform.position - RangeCenter;
                     
                     // Check những enemy va chạm, nếu nằm trong góc damageAngle thì mới gây dame
-                    if (Vector2.Angle(direction, dirToCenter) > halfAngle) continue;
+                    if (Vector2.Angle(direction, hitPointDirToCenter) > halfAngle)
+                    {
+                        if (Vector2.Angle(direction, hitPosDirToCenter) > halfAngle)
+                            continue;
+                    }
                     
                     // Check relative range, tăng range lên 1 tí
                     var bonusRangeForInRangeEnemy = (TargetToChase && hits[i].transform == TargetToChase.transform) ? 0.2f : 0.2f;
-                    if (dirToCenter.magnitude > (LevelUtilityV2.GetRelativeRangeMove(Range, dirToCenter) + bonusRangeForInRangeEnemy)) continue;
+                    if (hitPointDirToCenter.magnitude > (LevelUtilityV2.GetRelativeRangeMove(Range, hitPointDirToCenter) + bonusRangeForInRangeEnemy)) continue;
                     
                     if (hits[i].transform.TryGetComponent<EnemyEntity>(out cacheEnemy))
                     {
