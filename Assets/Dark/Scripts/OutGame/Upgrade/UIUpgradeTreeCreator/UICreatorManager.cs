@@ -50,6 +50,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
     
     public class UICreatorManager : SerializedMonoBehaviour
     {
+        [Header("Config")] public CharacterClass classType;
+        [Space]
         public UICreatorConfigLoader configLoader;
         public JsonToTreePrefabConverter prefabConverter;
         [SerializeField] private Transform treeParent;
@@ -426,7 +428,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         public void UpdateNodeSprites(UICreatorUpgradeNode node)
         {
 #if UNITY_EDITOR
-            cacheSpriteMap ??= UIUpgradeTree.GetSpritesMapById();
+            cacheSpriteMap ??= UIUpgradeTree.GetSpritesMapById(classType);
             
             var id = node.config.nodeId;
             if (cacheSpriteMap.TryGetValue(id, out var spriteInfo))
@@ -919,7 +921,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
             jsonConverter.SaveJson(inputTreeName.text, newTree);
 
 #if UNITY_EDITOR
-            prefabConverter.ConvertJsonToPrefab(inputTreeName.text, inputTreeName.text);
+            prefabConverter.ConvertJsonToPrefab(inputTreeName.text, inputTreeName.text, classType);
             UpgradeTreeManifest.GetTreeConfig(CharacterClass.Archer).Validate();
 #endif
         }

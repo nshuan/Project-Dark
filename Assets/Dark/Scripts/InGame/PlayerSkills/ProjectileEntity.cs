@@ -55,7 +55,7 @@ namespace InGame
         protected RaycastHit2D[] hits = new RaycastHit2D[1];
         protected ProjectileCollider.HitEnemyInfo hitEnemyInfo;
 
-        private bool hasVfxHit;
+        protected bool hasVfxHit;
         
         #region Actions
 
@@ -94,7 +94,9 @@ namespace InGame
             Range = range;
             
             Size = size;
-            transform.localScale = size * Vector3.one;
+            var sign = new Vector3(Mathf.Sign(transform.localScale.x), Mathf.Sign(transform.localScale.y),
+                Mathf.Sign(transform.localScale.z));
+            transform.localScale = new Vector3(size * sign.x, size * sign.y, size * sign.z);
             SpeedScale = speedScale;
             Speed = baseSpeed * speedScale;
             this.RangeCenter = rangeCenter;
@@ -115,7 +117,6 @@ namespace InGame
             MaxHit = maxHit;
             currentHit = 0;
             DamageType = damageType;
-            
             hitStatus = ProjectileCollider.ProjectileHitStatus.None;
             hitEnemyInfo = new ProjectileCollider.HitEnemyInfo();
             collider.Init();
@@ -159,7 +160,7 @@ namespace InGame
             {
                 if (Vector2.Distance(transform.position, SpawnPosition) > maxDistanceFromSpawnPosition)
                 {
-                    if (!BlockSpawnDeadBody)
+                    if (!BlockSpawnDeadBody && !forceHideDeadObject)
                     {
                         // ProjectileDeadPool.Instance.Get(direction).position = transform.position;
                         ProjectileDeadPool.Instance.Get(BoundPosition, direction);
@@ -197,7 +198,7 @@ namespace InGame
                     var deadProjectile = ProjectileDeadOnEnemyPool.Instance.Get(moveDirection);
                     deadProjectile.position = hitEnemyInfo.hit.point;
                     hitEnemyInfo.hitEnemy.body.SetupProjectileHit(deadProjectile.transform, moveDirection);
-                    hitEnemyInfo.hitEnemy.OnStartDead += () =>
+                    hitEnemyInfo.hitEnemy.OnStartDead += (dead) =>
                     {
                         deadProjectile.gameObject.SetActive(false);
                     };
@@ -209,7 +210,7 @@ namespace InGame
             
             if (flagOutOfRange && !BlockAutoDestroyOutRange)
             {
-                if (!BlockSpawnDeadBody)
+                if (!BlockSpawnDeadBody && !forceHideDeadObject)
                 {
                     // ProjectileDeadPool.Instance.Get(direction).position = transform.position;
                     ProjectileDeadPool.Instance.Get(BoundPosition, direction);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Dark.Tools.GoogleSheetTool;
+using Data;
 
 namespace InGame.Upgrade.NodeLogicsV2
 {
@@ -26,7 +27,11 @@ namespace InGame.Upgrade.NodeLogicsV2
         {
             var before = "";
 
-            before = LevelUtilityV2.GetChargeBulletAmount().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+            var beforeFloat = LevelUtilityV2.GetChargeBulletAmount();
+            if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Knight)
+                beforeFloat *= MoveChargeKnight.BulletAddedPerUnit;
+                
+            before = beforeFloat.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
 
             if (level > value.Length)
                 return (before, before);
@@ -37,7 +42,10 @@ namespace InGame.Upgrade.NodeLogicsV2
             ActivateNode(level, ref bonusInfo);
             
             var after = "";
-            after = LevelUtilityV2.GetChargeBulletAmount().ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+            var afterFloat = LevelUtilityV2.GetChargeBulletAmount();
+            if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Knight)
+                afterFloat *= MoveChargeKnight.BulletAddedPerUnit;
+            after = afterFloat.ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
             
             bonusInfo.bonusChargeAttack.bonusBulletAmount.mul = amountMultiply;
             bonusInfo.bonusChargeAttack.bonusBulletAmount.add = amountPlus;
@@ -49,9 +57,14 @@ namespace InGame.Upgrade.NodeLogicsV2
         {
             if (level < 0) return "??";
             if (level >= value.Length) level = value.Length - 1;
-            
+
+            var valueScale = 1f;
+            if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Knight)
+            {
+                valueScale = MoveChargeKnight.BulletAddedPerUnit;
+            }
             if (isMul) return (value[level] * 100).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
-            else return value[level].ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
+            else return (value[level] * valueScale).ToString(GameConst.FloatFormat, CultureInfo.InvariantCulture);
         }
 
         public int MaxLevel => value?.Length ?? 0;

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using Dark.Scripts.Utils.Camera;
+using Dark.Tools.Language.Runtime;
+using Data;
 using InGame.Upgrade;
 using Sirenix.OdinInspector;
 using TMPro;
@@ -12,7 +14,7 @@ namespace OutGame.Upgrade.Tooltip
         [SerializeField] private RectTransform rectToolTip;
         [SerializeField] private RectTransform rectTransform;
         [SerializeField] private TextMeshProUGUI txtTitle;
-        [SerializeField] private Dictionary<int, GameObject> map;
+        [SerializeField] private Dictionary<int, GameObject[]> map;
         
         public bool Show(UpgradeNodeConfig nodeConfig, RectTransform parentRect, Vector2 padding)
         {
@@ -31,12 +33,24 @@ namespace OutGame.Upgrade.Tooltip
             }
             
             rectToolTip.anchoredPosition = new Vector2(positionX, positionY);
-            txtTitle.SetText(nodeConfig.nodeName);
+            txtTitle.SetText(LanguageData.Instance.GetLocalizedString(nodeConfig.nodeNameKey, LanguageManager.Instance.CurrentLanguage));
             foreach (var vid in map.Values)
             {
-                vid.gameObject.SetActive(false);
+                foreach (var v in vid)
+                {
+                    v.gameObject.SetActive(false);
+                }
             }
-            map[nodeConfig.nodeId].SetActive(true);
+            var classType = 0;
+            if (map[nodeConfig.nodeId].Length > 1)
+                classType = PlayerDataManager.Instance.Data.characterClass;
+            if (classType >= map[nodeConfig.nodeId].Length)
+                classType = 0;
+            for (var i = 0; i < map[nodeConfig.nodeId].Length; i++)
+            {
+                map[nodeConfig.nodeId][i].SetActive(i == classType);
+            }
+            map[nodeConfig.nodeId][classType].SetActive(true);
             rectToolTip.gameObject.SetActive(true);
             return true;
         }

@@ -1,5 +1,56 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &34534628700770249
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5845579778156130417}
+  - component: {fileID: 1302880944890314845}
+  m_Layer: 0
+  m_Name: BackgroundSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5845579778156130417
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 34534628700770249}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3021976312638285744}
+  - {fileID: 2246834718630997841}
+  - {fileID: 594707136797315129}
+  m_Father: {fileID: 8442460234137334643}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1302880944890314845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 34534628700770249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 661d67c970b2487f838ea310b81f446e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  listBackground:
+  - {fileID: 8056026944496400317}
+  - {fileID: 6418380326004735836}
+  - {fileID: 5655435219556909108}
 --- !u!1 &1172234731987362391
 GameObject:
   m_ObjectHideFlags: 0
@@ -93,7 +144,7 @@ MonoBehaviour:
     SerializedBytes: 
     ReferencedUnityObjects:
     - {fileID: 3085034273742998862, guid: f762f00d86aa35843bd867f87183bf11, type: 3}
-    - {fileID: 3085034273742998862, guid: 1396093528d5cc840b5646f2a97acffd, type: 3}
+    - {fileID: 3085034273742998862, guid: ef7e09af0f3041b4ebe71852e1591df3, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -225,6 +276,7 @@ Transform:
   m_Children:
   - {fileID: 3940038115736314547}
   - {fileID: 8916104190293468057}
+  - {fileID: 5845579778156130417}
   - {fileID: 6456557336778015659}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -250,272 +302,236 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes:
     - Name: bonusInfo
-      Entry: 7
-      Data: 0|InGame.UpgradeBonusInfo, Assembly-CSharp
-    - Name: unlockedMoveToTower
-      Entry: 7
-      Data: 1|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: moveCooldownPlus
-      Entry: 4
-      Data: 0
-    - Name: dashCooldownPlus
-      Entry: 4
-      Data: 0
-    - Name: dashSizePlus
-      Entry: 4
-      Data: 0
-    - Name: dashDamagePlus
-      Entry: 3
-      Data: 0
-    - Name: dashDamageMultiplier
-      Entry: 4
-      Data: 0
-    - Name: flashCooldownPlus
-      Entry: 4
-      Data: 0
-    - Name: flashSizePlus
-      Entry: 4
-      Data: 0
-    - Name: flashDamagePlus
-      Entry: 3
-      Data: 0
-    - Name: flashDamageMultiplier
-      Entry: 4
-      Data: 0
-    - Name: damePlus
-      Entry: 3
-      Data: 10
-    - Name: dameMultiply
-      Entry: 4
-      Data: 0
-    - Name: criticalRatePlus
-      Entry: 4
-      Data: 0
-    - Name: criticalDame
-      Entry: 3
-      Data: 0
-    - Name: cooldownPlus
-      Entry: 4
-      Data: 0
-    - Name: cooldownMultiplier
-      Entry: 4
-      Data: 0
-    - Name: hpPlus
-      Entry: 3
-      Data: 0
-    - Name: hpMultiply
-      Entry: 4
-      Data: 0
-    - Name: dropRatePlus
-      Entry: 4
-      Data: 0
-    - Name: dropRateMultiply
-      Entry: 4
-      Data: 0
-    - Name: skillBonus
-      Entry: 7
-      Data: 2|InGame.UpgradeBonusSkillInfo, Assembly-CSharp
-    - Name: skillDamePlus
-      Entry: 3
-      Data: 0
-    - Name: skillDameMultiply
-      Entry: 4
-      Data: 0
-    - Name: skillCooldownPlus
-      Entry: 4
-      Data: 0
-    - Name: skillCooldownMultiply
-      Entry: 4
-      Data: 0
-    - Name: skillSizeMultiply
-      Entry: 4
-      Data: 0
-    - Name: skillRangeMultiply
-      Entry: 4
-      Data: 0
-    - Name: bulletPlus
-      Entry: 3
-      Data: 0
-    - Name: bulletMaxHitPlus
-      Entry: 3
-      Data: 0
-    - Name: staggerMultiply
-      Entry: 4
-      Data: 0
-    - Name: unlockedChargeDame
-      Entry: 5
-      Data: false
-    - Name: unlockedChargeBullet
-      Entry: 5
-      Data: false
-    - Name: unlockedChargeSize
-      Entry: 5
-      Data: false
-    - Name: unlockedChargeRange
-      Entry: 5
-      Data: false
-    - Name: projectileHitActions
-      Entry: 7
-      Data: 3|System.Collections.Generic.List`1[[InGame.IProjectileHit, Assembly-CSharp]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: projectileChargeHitActions
       Entry: 6
-      Data: 
-    - Name: projectileActivateActions
-      Entry: 7
-      Data: 4|System.Collections.Generic.List`1[[InGame.IProjectileActivate, Assembly-CSharp]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: projectileChargeActivateActions
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: chargeDameBonus
-      Entry: 6
-      Data: 
-    - Name: chargeBulletBonus
-      Entry: 6
-      Data: 
-    - Name: chargeSizeBonus
-      Entry: 6
-      Data: 
-    - Name: chargeRangeBonus
-      Entry: 6
-      Data: 
-    - Name: unlockedTowerCounter
-      Entry: 5
-      Data: false
-    - Name: toleranceRegenPercentPerSecond
-      Entry: 4
-      Data: 0
-    - Name: toleranceRegenPercentWhenKill
-      Entry: 4
-      Data: 0
-    - Name: towerCounterCooldownPlus
-      Entry: 4
-      Data: 0
-    - Name: towerCounterDamagePlus
-      Entry: 3
-      Data: 0
-    - Name: passiveMapByTriggerType
-      Entry: 7
-      Data: 5|System.Collections.Generic.Dictionary`2[[InGame.PassiveTriggerType,
-        Assembly-CSharp],[System.Collections.Generic.List`1[[InGame.PassiveType,
-        Assembly-CSharp]], mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 6|System.Collections.Generic.EnumEqualityComparer`1[[InGame.PassiveTriggerType,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 1
-    - Name: $v
-      Entry: 7
-      Data: 7|System.Collections.Generic.List`1[[InGame.PassiveType, Assembly-CSharp]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 2
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: passiveBonusSizeMapByType
-      Entry: 6
-      Data: 
-    - Name: passiveBonusValueMapByType
-      Entry: 6
-      Data: 
-    - Name: passiveBonusCooldownMapByType
-      Entry: 6
-      Data: 
-    - Name: passiveBonusChanceMapByType
-      Entry: 6
-      Data: 
-    - Name: passiveBonusStaggerMapByType
-      Entry: 6
-      Data: 
-    - Name: tempDamageBonusOnMove
-      Entry: 6
-      Data: 
-    - Name: tempDamageBonusOnKill
-      Entry: 6
-      Data: 
-    - Name: tempAtkSpeBonusOnMove
-      Entry: 6
-      Data: 
-    - Name: tempAtkSpeBonusOnKill
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
       Data: 
   playerStats: {fileID: 11400000, guid: 830856e84733a004993eaec8e05af9a9, type: 2}
   defaultTeleConfig: {fileID: 11400000, guid: 6a7a121da2bedf343aa20462a679a796, type: 2}
   flashConfig: {fileID: 11400000, guid: bd153cf97d2f7e8439006a265d8ac9de, type: 2}
   dashConfig: {fileID: 11400000, guid: f9152b0524b07414a8e42f9f76bfc137, type: 2}
   playerSpawner: {fileID: 9122019738861351649}
+  backgroundSpawner: {fileID: 1302880944890314845}
   gatePrefab: {fileID: 3134462521366388888, guid: 6b6d6548c9a28704f9cbabd97a6d9cbf, type: 3}
   towers:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  delayStartLevel: 2.5
   autoLoadLevel: 1
   testLevel: {fileID: 11400000, guid: e182f814f86efba4ba5f56c05537fc1d, type: 2}
+--- !u!1001 &604040597944799966
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5845579778156130417}
+    m_Modifications:
+    - target: {fileID: 1679745889212169615, guid: a2d7fde28c2dbbb47a70caa295129303, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1679745889212169615, guid: a2d7fde28c2dbbb47a70caa295129303, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1679745889212169615, guid: a2d7fde28c2dbbb47a70caa295129303, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1679745889212169615, guid: a2d7fde28c2dbbb47a70caa295129303, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1679745889212169615, guid: a2d7fde28c2dbbb47a70caa295129303, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1679745889212169615, guid: a2d7fde28c2dbbb47a70caa295129303, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1679745889212169615, guid: a2d7fde28c2dbbb47a70caa295129303, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1679745889212169615, guid: a2d7fde28c2dbbb47a70caa295129303, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1679745889212169615, guid: a2d7fde28c2dbbb47a70caa295129303, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1679745889212169615, guid: a2d7fde28c2dbbb47a70caa295129303, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5869124210855783810, guid: a2d7fde28c2dbbb47a70caa295129303, type: 3}
+      propertyPath: m_Name
+      value: Background 4 Towers
+      objectReference: {fileID: 0}
+    - target: {fileID: 5869124210855783810, guid: a2d7fde28c2dbbb47a70caa295129303, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a2d7fde28c2dbbb47a70caa295129303, type: 3}
+--- !u!4 &2246834718630997841 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1679745889212169615, guid: a2d7fde28c2dbbb47a70caa295129303, type: 3}
+  m_PrefabInstance: {fileID: 604040597944799966}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6418380326004735836 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5869124210855783810, guid: a2d7fde28c2dbbb47a70caa295129303, type: 3}
+  m_PrefabInstance: {fileID: 604040597944799966}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1914608888790006849
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5845579778156130417}
+    m_Modifications:
+    - target: {fileID: 3702585418132298737, guid: 587ee39705817f9499e5ce28e80b9323, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3702585418132298737, guid: 587ee39705817f9499e5ce28e80b9323, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3702585418132298737, guid: 587ee39705817f9499e5ce28e80b9323, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3702585418132298737, guid: 587ee39705817f9499e5ce28e80b9323, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3702585418132298737, guid: 587ee39705817f9499e5ce28e80b9323, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3702585418132298737, guid: 587ee39705817f9499e5ce28e80b9323, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3702585418132298737, guid: 587ee39705817f9499e5ce28e80b9323, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3702585418132298737, guid: 587ee39705817f9499e5ce28e80b9323, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3702585418132298737, guid: 587ee39705817f9499e5ce28e80b9323, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3702585418132298737, guid: 587ee39705817f9499e5ce28e80b9323, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5256440980586290777, guid: 587ee39705817f9499e5ce28e80b9323, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8457425235217271804, guid: 587ee39705817f9499e5ce28e80b9323, type: 3}
+      propertyPath: m_Name
+      value: Background
+      objectReference: {fileID: 0}
+    - target: {fileID: 8457425235217271804, guid: 587ee39705817f9499e5ce28e80b9323, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 587ee39705817f9499e5ce28e80b9323, type: 3}
+--- !u!4 &3021976312638285744 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3702585418132298737, guid: 587ee39705817f9499e5ce28e80b9323, type: 3}
+  m_PrefabInstance: {fileID: 1914608888790006849}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8056026944496400317 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8457425235217271804, guid: 587ee39705817f9499e5ce28e80b9323, type: 3}
+  m_PrefabInstance: {fileID: 1914608888790006849}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2238136191232273846
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5845579778156130417}
+    m_Modifications:
+    - target: {fileID: 1679745889212169615, guid: 678df2806b9e4904e97c6d4ed2dafd39, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1679745889212169615, guid: 678df2806b9e4904e97c6d4ed2dafd39, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1679745889212169615, guid: 678df2806b9e4904e97c6d4ed2dafd39, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1679745889212169615, guid: 678df2806b9e4904e97c6d4ed2dafd39, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1679745889212169615, guid: 678df2806b9e4904e97c6d4ed2dafd39, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1679745889212169615, guid: 678df2806b9e4904e97c6d4ed2dafd39, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1679745889212169615, guid: 678df2806b9e4904e97c6d4ed2dafd39, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1679745889212169615, guid: 678df2806b9e4904e97c6d4ed2dafd39, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1679745889212169615, guid: 678df2806b9e4904e97c6d4ed2dafd39, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1679745889212169615, guid: 678df2806b9e4904e97c6d4ed2dafd39, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5869124210855783810, guid: 678df2806b9e4904e97c6d4ed2dafd39, type: 3}
+      propertyPath: m_Name
+      value: Background 4 Towers Metal
+      objectReference: {fileID: 0}
+    - target: {fileID: 5869124210855783810, guid: 678df2806b9e4904e97c6d4ed2dafd39, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 678df2806b9e4904e97c6d4ed2dafd39, type: 3}
+--- !u!4 &594707136797315129 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1679745889212169615, guid: 678df2806b9e4904e97c6d4ed2dafd39, type: 3}
+  m_PrefabInstance: {fileID: 2238136191232273846}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5655435219556909108 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5869124210855783810, guid: 678df2806b9e4904e97c6d4ed2dafd39, type: 3}
+  m_PrefabInstance: {fileID: 2238136191232273846}
+  m_PrefabAsset: {fileID: 0}

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dark.Scripts.Common;
 using InGame;
 using InGame.Pause;
 using InGame.UI;
@@ -46,8 +47,6 @@ namespace Dark.Scripts.RuntimeCheat.CheatLevel
             {
                 panel.SetActive(isPanelOpen);
             }
-            
-            cam = Camera.main;
         }
         
         private void Start()
@@ -289,7 +288,10 @@ namespace Dark.Scripts.RuntimeCheat.CheatLevel
         private void Update()
         {
             if (newEnemy)
+            {
+                cam ??= Camera.main;
                 newEnemy.transform.position = (Vector2)cam.ScreenToWorldPoint(Input.mousePosition);
+            }
         }
     }
 }

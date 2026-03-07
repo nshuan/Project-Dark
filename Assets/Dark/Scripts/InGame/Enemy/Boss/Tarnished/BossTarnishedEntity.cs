@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Dark.Scripts.OutGame.Settings;
 using Dark.Scripts.Utils;
 using Data;
 using DG.Tweening;
@@ -28,6 +29,8 @@ namespace InGame.Boss
             
             shadowSprite = shadow.GetComponent<SpriteRenderer>();
             shadowOriginalAlpha = shadowSprite.color.a;
+            
+            UISettingIconBoss.SetBossUnlocked(config.enemyId);
         }
 
         public override void ActivateELite(bool active)
@@ -42,14 +45,16 @@ namespace InGame.Boss
 
         protected override IEnumerator IEDie(float delayRelease, EnemyDieReason reason)
         {
+            LevelManager.Instance.BlockDamageAllTowers();
+            
             // Làm đen hết màn hình, tắt UI
             BackgroundInGame.Instance.SetActiveBlackBg(true);
             CanvasInGame.Instance.HideUI();
             
-            CombatActions.OnBossKilled?.Invoke(config, transform.position);
+            CombatActions.OnBossKilled?.Invoke(this, transform.position);
             var dropVestige = Dark > 0;
             CombatActions.OnDropResource?.Invoke(this, dropVestige);
-            OnDead?.Invoke(reason);
+            OnDead?.Invoke(this, reason);
             OnDead = null;
             yield return new WaitForSeconds(delayRelease);
             EnemyPool.Instance.Release(this, config.enemyId);
@@ -86,7 +91,7 @@ namespace InGame.Boss
             this.DelayCall(animController.GetAttackDelayTrigger(), () =>
             {
                 if (TargetTower.IsDestroyed) return;
-                config.attackBehaviour.Attack(this, TargetTower, transform.position, CurrentDamage);
+                config.attackBehaviour.Attack(this, TargetTower, transform.position, LevelUtilityV2.ToInt(CurrentDamage * TempDmgScale));
             });
         }
 
@@ -107,10 +112,10 @@ namespace InGame.Boss
                    PercentageHpLeft <= thresholdChangeTower[currentThresholdChangeTowerIndex];
         }
 
-        public override void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
+        public override void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType, bool instantKill)
         {
             if (isChangingTower) return;
-            base.Damage(damage, dealerPosition, stagger, dmgType);
+            base.Damage(damage, dealerPosition, stagger, dmgType, instantKill);
 
             if (IsChangeTower())
             {

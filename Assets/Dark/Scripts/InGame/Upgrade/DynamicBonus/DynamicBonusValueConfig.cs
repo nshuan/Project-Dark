@@ -28,9 +28,9 @@ namespace InGame.Upgrade.DynamicBonus
         {
             if (bonusInfos == null) return new []{ 0f, 0, 0, 0, 0 };
             if (!bonusInfos.TryGetValue(bonusType, out var bonusInfo)) return new []{ 0f, 0, 0, 0, 0 };
-            if (bonusInfo.Count <= index) return new []{ 0f, 0, 0, 0, 0 };
-            index = Math.Clamp(index, 0, bonusInfos[bonusType].Count - 1);
-            return bonusInfos[bonusType][index].bonus5Stages;
+            // if (bonusInfo.Count <= index) return new []{ 0f, 0, 0, 0, 0 };
+            index = Math.Clamp(index, 0, bonusInfo.Count - 1);
+            return bonusInfo[index].bonus5Stages;
         }
         
         #region SINGLETON

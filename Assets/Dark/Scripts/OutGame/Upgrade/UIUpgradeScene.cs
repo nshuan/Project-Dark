@@ -75,7 +75,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame, overrideHideDuration: 1f);
                     Loading.Instance.onSceneLoaded += () =>
                     {
-                        LevelManager.Instance.LoadLevel(PlayerDataManager.Instance.Data.level + 1);
+                        LevelManager.Instance.LoadLevel(1);
                     };
                 };
                 

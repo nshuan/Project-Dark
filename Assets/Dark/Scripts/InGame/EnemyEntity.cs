@@ -17,8 +17,8 @@ namespace InGame
         [SerializeField] protected EnemyHealthBar healthBar;
         [SerializeField] protected EnemyDisplayStats displayStats;
         [SerializeField] private Transform burnVfxParent;
-        [SerializeField] private Transform visualAttackRange;
-        [SerializeField] private bool showAttackRange;
+        [SerializeField] protected Transform visualAttackRange;
+        [SerializeField] protected bool showAttackRange;
         public EnemyBody body;
 
         private MapBoundaryManager boundaryManager;
@@ -38,6 +38,9 @@ namespace InGame
         public float DarkRatio { get; private set; }
         public int BossPoint { get; protected set; }
         public float AttackRange { get; set; }
+        public float TempSpeedScale { get; set; } = 1f;
+        public float TempDmgScale { get; set; } = 1f;
+        public float TempAtkSpeedScale { get; set; } = 1f;
 
         #endregion
 
@@ -52,9 +55,11 @@ namespace InGame
 
         public bool IsBoss { get; set; }
         public float PercentageHpLeft => (float)CurrentHealth / MaxHealth;
+        public Action OnInit { get; set; }
+        public Action OnSpawn { get; set; }
         public Action<int, DamageType> OnHit { get; set; }
-        public Action OnStartDead { get; set; }
-        public Action<EnemyDieReason> OnDead { get; set; }
+        public Action<EnemyEntity> OnStartDead { get; set; }
+        public Action<EnemyEntity, EnemyDieReason> OnDead { get; set; }
         public EnemyState State { get; set; }
         public bool Activated { get; set; }
         public int UniqueId { get; set; }
@@ -98,6 +103,10 @@ namespace InGame
             LevelExpRatio = levelExpRatio;
             LevelDarkRatio = levelDarkRatio;
             LevelDarkUnitValue = levelDarkUnitValue;
+
+            TempDmgScale = 1f;
+            TempSpeedScale = 1f;
+            TempAtkSpeedScale = 1f;
             
             // Set target and attack position
             Target = target.transform;
@@ -140,7 +149,7 @@ namespace InGame
             displayStats.gameObject.SetActive(false);
             if (GameConst.ShowTextEnemyAtkAndAtkRange)
             {
-                displayStats.UpdateStats(CurrentDamage, AttackRange);
+                displayStats.UpdateStats(LevelUtilityV2.ToInt(CurrentDamage * TempDmgScale), AttackRange);
                 displayStats.transform.localScale = new Vector3(animController.transform.localScale.x,
                     displayStats.transform.localScale.y, displayStats.transform.localScale.z);
             }
@@ -187,6 +196,8 @@ namespace InGame
                     visualAttackRange.localScale = AttackRange * Vector3.one;
                     visualAttackRange.gameObject.SetActive(true);
                 }
+                
+                OnSpawn?.Invoke();
             });
         }
 
@@ -254,7 +265,7 @@ namespace InGame
                     }
                 }
                 
-                config.moveBehaviour.MoveNonAlloc(transform, attackPosition, directionAddition, AttackRange, config.moveSpeed * StatsScale.speScale, ref direction);
+                config.moveBehaviour.MoveNonAlloc(transform, attackPosition, directionAddition, AttackRange, config.moveSpeed * StatsScale.speScale * TempSpeedScale, ref direction);
                 animController.SetDefaultRun(true);
             }
         }
@@ -281,7 +292,7 @@ namespace InGame
                 if (inAttackRange)
                 {
                     Attack();
-                    yield return new WaitForSeconds(1 / config.attackSpeed);
+                    yield return new WaitForSeconds(1 / (config.attackSpeed * TempAtkSpeedScale));
                 }
                 else
                     yield return new WaitUntil(() => inAttackRange);
@@ -295,18 +306,18 @@ namespace InGame
             this.DelayCall(animController.GetAttackDelayTrigger(), () =>
             {
                 if (TargetTower.IsDestroyed) return;
-                config.attackBehaviour.Attack(this, TargetTower, transform.position, CurrentDamage);
+                config.attackBehaviour.Attack(this, TargetTower, transform.position, LevelUtilityV2.ToInt(CurrentDamage * TempDmgScale));
             });
         }
 
         public float HitDirectionX { get; set; }
         public float HitDirectionY { get; set; }
 
-        public virtual void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
+        public virtual void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType, bool instantKill = false)
         {
             if (!Activated) return;
             if (IsDestroyed) return;
-            if (dmgType != DamageType.Enemy && dmgType != DamageType.SelfDestruct && State == EnemyState.Invisible) return;
+            if (dmgType != DamageType.Enemy && dmgType != DamageType.SelfDestruct && State == EnemyState.Invisible && instantKill == false) return;
             
             // Scale damage on boss
             if (IsBoss)
@@ -317,6 +328,12 @@ namespace InGame
             healthBar.UpdateHp(CurrentHealth);
             if (dmgType != DamageType.Enemy && dmgType != DamageType.SelfDestruct)
                 CombatActions.OnDamageDealt?.Invoke(lastHealth - CurrentHealth);
+
+            if (instantKill)
+            {
+                OnDie(EnemyDieReason.PlayerKill);
+                return;
+            }
             
             OnHit?.Invoke(damage, dmgType);
             if (stagger - config.staggerResist > 0)
@@ -398,7 +415,7 @@ namespace InGame
             yield return new WaitForEndOfFrame();
             // Đợi chạy xong anim hit rồi mới chạy anim die
             shadow.SetActive(false);    
-            OnStartDead?.Invoke();
+            OnStartDead?.Invoke(this);
             OnStartDead = null;
             if (showAttackRange)
             {
@@ -406,7 +423,7 @@ namespace InGame
             }
             yield return new WaitForSeconds(delayDieAnimation);
             yield return new WaitForSeconds(animController.PlayDie());
-            OnDead?.Invoke(reason);
+            OnDead?.Invoke(this, reason);
             OnDead = null;
             yield return new WaitForSeconds(delayRelease);
             EnemyPool.Instance.Release(this, config.enemyId);
@@ -464,8 +481,11 @@ namespace InGame
             delayDieAnimation = delayAnimation;
             HitDirectionX = 0f;
             HitDirectionY = 0f;
-            Damage(CurrentHealth, transform.position, 0f, dmgType);
+            Damage(CurrentHealth, transform.position, 0f, dmgType, true);
         }
+
+        public bool IsEffectTargetDead => IsDestroyed;
+
         #endregion
 
         #region Elite
@@ -531,6 +551,18 @@ namespace InGame
             
             if (config.elite) return;
             visual.material = hover ? materialHighlight : cacheMaterial;
+        }
+
+        #endregion
+
+        #region Buff
+
+        [Space] [Header("Buff")] 
+        [SerializeField] private GameObject vfxBuff;
+
+        public void Buff()
+        {
+            
         }
 
         #endregion

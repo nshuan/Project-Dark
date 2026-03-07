@@ -3,6 +3,7 @@ using Dark.Scripts.Analytics;
 using Dark.Scripts.AudioV2;
 using Dark.Scripts.CoreUI;
 using Dark.Scripts.SceneNavigation;
+using Dark.Tools.Language.Runtime;
 using Data;
 using DG.Tweening;
 using Sirenix.OdinInspector;
@@ -60,6 +61,9 @@ namespace InGame.UI
             btnNextLevel.onClick.RemoveAllListeners();
             btnNextLevel.onClick.AddListener(() =>
             {
+                if (PlayerDataManager.Instance.Data.level + 1 > LevelManifest.Instance.GetMaxLevel(PlayerDataManager.Instance.Data.Class))
+                    return;
+                
                 ui.gameObject.SetActive(false);
                 Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame);
                 Loading.Instance.onSceneLoaded += () =>
@@ -73,7 +77,7 @@ namespace InGame.UI
 
         [Space] [Header("UI Tween")] 
         
-        private string txtBossDown = "[BOSS] was down";
+        private string keyTextBossDown = "key_win_boss_was_down";
         
         [SerializeField] private Image imgTitle;
         [SerializeField] private Image imgTitleBg;
@@ -94,7 +98,7 @@ namespace InGame.UI
         {
             imgTitle.SetAlpha(0f);
             imgTitleBg.SetAlpha(0f);
-            txtDescription.SetText(txtBossDown.Replace("[BOSS]", LevelManager.Instance.LevelBossName));
+            txtDescription.SetTextLanguage(keyTextBossDown, ("%{value}", LevelManager.Instance.LevelBossName));
             txtDescription.SetAlpha(0f);
             txtTitleResourceCollected.SetAlpha(0f);
             groupResourceCollected.alpha = 0f;

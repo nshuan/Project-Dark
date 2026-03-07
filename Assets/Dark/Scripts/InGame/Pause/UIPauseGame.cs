@@ -35,9 +35,18 @@ namespace InGame.Pause
                 {
                     if (Input.GetKey(GameSettings.KeyPause))
                     {
-                        if (PauseGame.Instance.IsPaused) PauseGame.Instance.Resume();
-                        else PauseGame.Instance.Pause();
-                        pauseCooldown = pauseCooldownDuration;
+                        if (PauseGame.Instance.IsPaused)
+                        {
+                            var resumeSuccess = PauseGame.Instance.Resume();
+                            if (resumeSuccess)
+                                pauseCooldown = pauseCooldownDuration;
+                        }
+                        else
+                        {
+                            var pauseSuccess = PauseGame.Instance.Pause();
+                            if (pauseSuccess)
+                                pauseCooldown = pauseCooldownDuration;
+                        }
                     }
                 }
             }

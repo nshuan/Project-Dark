@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Data;
 using InGame.ChargeConfig;
 using UnityEngine.Serialization;
 
@@ -29,8 +30,8 @@ namespace InGame.Upgrade
                     bonusInfo.skillBonus.projectileChargeHitActions.Add(new ProjectileHitBlossom()
                     {
                         projectile = ProjectileManifest.Get(0),
-                        bulletAmount = (int)PlayerChargeManifest.Get(ChargeType.Size).value,
-                        blossomSize = PlayerChargeManifest.Get(ChargeType.Size).range
+                        bulletAmount = (int)PlayerChargeManifest.Get(PlayerDataManager.Instance.Data.Class, ChargeType.Size).value,
+                        blossomSize = PlayerChargeManifest.Get(PlayerDataManager.Instance.Data.Class, ChargeType.Size).range
                     });
                     break;
                 case BonusUnlockSkillType.MoveFlash:

@@ -152,7 +152,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     else
                     {
                         txtNodeLevel.SetText($"0/{config.MaxLevel}");
-                        txtNodeLevel.transform.parent.gameObject.SetActive(true);
+                        txtNodeLevel.transform.parent.gameObject.SetActive(!config.lockOnDemo);
                     }
                     
                     SetAvailable();
@@ -182,7 +182,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     {
                         txtNodeLevel.SetText($"{data.level}/{config.MaxLevel}");
                         txtNodeMaxLevel.gameObject.SetActive(data.level == config.MaxLevel);
-                        txtNodeLevel.transform.parent.gameObject.SetActive(true);
+                        txtNodeLevel.transform.parent.gameObject.SetActive(!config.lockOnDemo);
                     }
                     
                     SetAvailable();
@@ -296,13 +296,13 @@ namespace Dark.Scripts.OutGame.Upgrade
             if (config.costInfo.Any((cost) => cost.costType == WealthType.Sigils))
             {
                 var displayCost = UIUpgradeNodeInfoPreview.Instance.GetDisplayCost();
-                UIUpgradeScene.Instance.PopupConfirmExchange.Setup(
+                UIUpgradeScene.Instance.PopupConfirmExchange.SetupLocalize(
                     displayCost.Item1,
                     displayCost.Item2,
                     displayCost.Item3,
-                    "And you will receive",
-                    "Confirm exchange",
-                    config.nodeName, 
+                    "key_confirm_exchange_question",
+                    "key_confirm_exchange",
+                    config.nodeNameKey, 
                     actionUpgrade);
                 UIUpgradeScene.Instance.PopupConfirmExchange.DoOpenFadeIn();
             }

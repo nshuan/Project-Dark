@@ -1,8 +1,10 @@
 using System;
 using Core;
 using Dark.Scripts.Tutorial;
+using Dark.Tools.Language.Runtime;
 using Data;
 using Economic;
+using InGame;
 using InGame.CharacterClass;
 using InGame.Upgrade;
 
@@ -85,16 +87,32 @@ namespace Dark.Scripts.OutGame.SaveSlot
         {
             if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length) return "days:";
             if (IsEmptySlot(slotIndex)) return "days:";
- 
-            return $"days: {GetSlotData(slotIndex).passedDay}";
+
+            return LanguageData.Instance
+                .GetLocalizedString("key_save_slot_days", LanguageManager.Instance.CurrentLanguage)
+                .Replace("%{value}", GetSlotData(slotIndex).passedDay.ToString());
         }
 
         public string GetDisplayLevel(int slotIndex)
         {
             if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length) return "level:";
             if (IsEmptySlot(slotIndex)) return "level:";
+
+            var slotData = GetSlotData(slotIndex);
+            var displayLevel = slotData.level + 1;
+            if (displayLevel > LevelManifest.Instance.GetMaxLevel(slotData.Class)) displayLevel = slotData.level;
+            return LanguageData.Instance
+                .GetLocalizedString("key_save_slot_level", LanguageManager.Instance.CurrentLanguage)
+                .Replace("%{value}", displayLevel.ToString());
+        }
+
+        public bool IsSlotCompleted(int slotIndex)
+        {
+            if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length) return false;
+            if (IsEmptySlot(slotIndex)) return false;
             
-            return $"level: {GetSlotData(slotIndex).level + 1}";
+            var slotData = GetSlotData(slotIndex);
+            return slotData.level + 1 > LevelManifest.Instance.GetMaxLevel(slotData.Class);
         }
 
         public string GetDisplayTimePlayed(int slotIndex)

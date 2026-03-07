@@ -9,7 +9,7 @@ namespace InGame
     {
         public bool isBossGate;
         public Vector2 position;
-        [Range(0, 2)] public int[] targetBaseIndex;
+        [Range(0, 3)] public int[] targetBaseIndex;
         
         public float startTime; // delay before the gate start spawning
         public float duration; // gate life time

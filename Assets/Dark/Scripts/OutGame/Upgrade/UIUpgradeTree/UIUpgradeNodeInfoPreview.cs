@@ -19,6 +19,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Dark.Tools.Language.Runtime;
 
 namespace Dark.Scripts.OutGame.Upgrade
 {
@@ -90,10 +91,10 @@ namespace Dark.Scripts.OutGame.Upgrade
             LevelUtilityV2.BonusInfo = bonusInfo;
             LevelUtilityV2.StatsBase = playerStatsConfig;
             LevelUtilityV2.StatsNormalAttack = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
-            LevelUtilityV2.StatsNormalPiercing = PlayerSkillNormalManifest.Get(NormalType.Piercing);
-            LevelUtilityV2.StatsNormalBullet = PlayerSkillNormalManifest.Get(NormalType.Bullet);
-            LevelUtilityV2.StatsChargeBullet = PlayerChargeManifest.Get(ChargeType.Bullet);
-            LevelUtilityV2.StatsChargeSize = PlayerChargeManifest.Get(ChargeType.Size);
+            LevelUtilityV2.StatsNormalPiercing = PlayerSkillNormalManifest.Get(PlayerDataManager.Instance.Data.Class, NormalType.Piercing);
+            LevelUtilityV2.StatsNormalBullet = PlayerSkillNormalManifest.Get(PlayerDataManager.Instance.Data.Class, NormalType.Bullet);
+            LevelUtilityV2.StatsChargeBullet = PlayerChargeManifest.Get(PlayerDataManager.Instance.Data.Class, ChargeType.Bullet);
+            LevelUtilityV2.StatsChargeSize = PlayerChargeManifest.Get(PlayerDataManager.Instance.Data.Class, ChargeType.Size);
             LevelUtilityV2.StatsDash = dashConfig;
             LevelUtilityV2.StatsFlash = flashConfig;
             LevelUtilityV2.StatsTele = teleConfig; 
@@ -119,7 +120,9 @@ namespace Dark.Scripts.OutGame.Upgrade
             if (cacheConfig == null) return;
 
             var descriptionStr = "";
-            var descriptions = cacheConfig.description.Split("\n");
+            var descriptionLocalized = LanguageData.Instance.GetLocalizedString(cacheConfig.descriptionKey,
+                LanguageManager.Instance.CurrentLanguage);
+            var descriptions = descriptionLocalized.Split("\n");
             if (cacheConfig.nodeLogic != null)
             {
                 var groupUnlockOrder = cacheConfig.groupId.Min((info) =>
@@ -139,11 +142,10 @@ namespace Dark.Scripts.OutGame.Upgrade
                     }
                 }
             }
-            txtNodeBonus.SetText(descriptionStr);
+            txtNodeBonus.SetTextValueLanguage(descriptionStr);
             txtNodeBonus.gameObject.SetActive(true);
             
-            txtNodeName.SetText(cacheConfig.nodeName);
-            txtNodeLore.SetText(cacheConfig.description);
+            txtNodeName.SetTextLanguage(cacheConfig.nodeNameKey);
             txtNodeLevel.SetText($"{cacheData?.level ?? 0}/{cacheConfig.MaxLevel}");
             DOTween.Kill(imgLevelProgress);
             imgLevelProgress.DOFillAmount((cacheData?.level ?? 0f) / cacheConfig.MaxLevel, 0.3f).SetEase(Ease.OutQuad)
@@ -257,7 +259,9 @@ namespace Dark.Scripts.OutGame.Upgrade
             {
                 if (!tooltipSkillVideo.Show(cacheConfig, rectInfoFrameContent, new Vector2(10f, 0f)))
                 {
-                    tooltip.Show(cacheConfig.description, rectInfoFrameContent, new Vector2(10f, 0f));
+                    tooltip.Show(
+                        LanguageData.Instance.GetLocalizedString(cacheConfig.descriptionKey,
+                            LanguageManager.Instance.CurrentLanguage), rectInfoFrameContent, new Vector2(10f, 0f));
                 }
                 onShow?.Invoke();
             });

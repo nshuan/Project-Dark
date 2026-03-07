@@ -37,23 +37,27 @@ namespace InGame.Boss
             CombatActions.OnBossKilled -= OnBossKilled;
         }
 
-        private void OnBossKilled(EnemyBehaviour bossConfig, Vector2 position)
+        private void OnBossKilled(EnemyEntity boss, Vector2 position)
         {
             BackgroundInGame.Instance.SetActiveBlackAll(true);
-            if (bossAnimDict == null || !bossAnimDict.TryGetValue(bossConfig.enemyId, out var deadBoss)) return;
+            if (bossAnimDict == null || !bossAnimDict.TryGetValue(boss.config.enemyId, out var deadBoss)) return;
             if (LevelManager.Instance.Level.level == PlayerDataManager.Instance.Data.level + 1) shouldShowSigil = true;
-            StartCoroutine(IEBossAnim(deadBoss, position));
+            StartCoroutine(IEBossAnim(deadBoss, position, Mathf.Sign(boss.Target.position.x - boss.transform.position.x)));
         }
 
-        private IEnumerator IEBossAnim(GameObject deadBoss, Vector2 position)
+        private IEnumerator IEBossAnim(GameObject deadBoss, Vector2 position, float direction)
         {
             var animController = deadBoss.GetComponentInChildren<EnemyAnimController>(includeInactive:true);
             deadBoss.transform.position = position;
+            deadBoss.transform.localScale = new Vector3(
+                Mathf.Abs(deadBoss.transform.localScale.x) * direction,
+                deadBoss.transform.localScale.y,
+                deadBoss.transform.localScale.z);
             deadBoss.gameObject.SetActive(true);
             animController.PlayIdle();
 
             yield return DOTween.Sequence(deadBoss).SetUpdate(true)
-                .Append(deadBoss.transform.DOScale(bossTargetScale, 0.5f).SetEase(Ease.OutQuad))
+                .Append(deadBoss.transform.DOScale(new Vector3(bossTargetScale * direction, bossTargetScale, bossTargetScale), 0.5f).SetEase(Ease.OutQuad))
                 .Join(deadBoss.transform.DOMove(bossTargetPosition, 0.5f).SetEase(Ease.OutQuad))
                 .WaitForCompletion();
             yield return new WaitForSeconds(0.5f);

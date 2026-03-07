@@ -107,6 +107,17 @@ namespace InGame
         
         private void CheckStopAllGate()
         {
+            // Nếu chứa boss gate thì chỉ cần boss ngủm là được
+            var bossGate = Gates.FirstOrDefault((gate) => gate.config.isBossGate);
+            if (bossGate && bossGate.AllEnemyDead)
+            {
+                DebugUtility.LogError($"Stop wave {waveIndex + 1}: Boss is dead");
+                WaveEndedCompletely = true;
+                OnWaveForceStop?.Invoke(waveIndex, WaveEndReason.AllDead);
+                OnWaveForceStop = null;
+                return;
+            }
+            
             if (Gates.All((gate) => gate.AllEnemyDead))
             {
                 DebugUtility.LogError($"Stop wave {waveIndex + 1}: All enemies are dead");

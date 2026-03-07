@@ -30,6 +30,7 @@ namespace InGame
         public MoveTowersConfig dashConfig;
 
         [SerializeField] private PlayerSpawner playerSpawner;
+        [SerializeField] private BackgroundSpawner backgroundSpawner;
         public GateEntity gatePrefab;
         
         [SerializeField] private TowerEntity[] towers;
@@ -113,10 +114,10 @@ namespace InGame
             LevelUtilityV2.BonusInfo = bonusInfo;
             LevelUtilityV2.StatsBase = playerStats;
             LevelUtilityV2.StatsNormalAttack = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
-            LevelUtilityV2.StatsNormalPiercing = PlayerSkillNormalManifest.Get(NormalType.Piercing);
-            LevelUtilityV2.StatsNormalBullet = PlayerSkillNormalManifest.Get(NormalType.Bullet);
-            LevelUtilityV2.StatsChargeBullet = PlayerChargeManifest.Get(ChargeType.Bullet);
-            LevelUtilityV2.StatsChargeSize = PlayerChargeManifest.Get(ChargeType.Size);
+            LevelUtilityV2.StatsNormalPiercing = PlayerSkillNormalManifest.Get(PlayerDataManager.Instance.Data.Class, NormalType.Piercing);
+            LevelUtilityV2.StatsNormalBullet = PlayerSkillNormalManifest.Get(PlayerDataManager.Instance.Data.Class, NormalType.Bullet);
+            LevelUtilityV2.StatsChargeBullet = PlayerChargeManifest.Get(PlayerDataManager.Instance.Data.Class, ChargeType.Bullet);
+            LevelUtilityV2.StatsChargeSize = PlayerChargeManifest.Get(PlayerDataManager.Instance.Data.Class, ChargeType.Size);
             LevelUtilityV2.StatsDash = dashConfig;
             LevelUtilityV2.StatsFlash = flashConfig;
             LevelUtilityV2.StatsTele = defaultTeleConfig; 
@@ -131,7 +132,7 @@ namespace InGame
             currentTowerIndex = -1;
             
             if (Player != null) Destroy(Player.gameObject);
-            Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)LevelUtilityV2.StatsNormalAttack.skillId);
+            Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)PlayerDataManager.Instance.Data.characterClass);
             Player.transform.position = towers[0].transform.position + towers[0].GetTowerHeight();
             OnInitPlayer?.Invoke();
         }
@@ -143,9 +144,10 @@ namespace InGame
         
         public void LoadLevel(int level)
         {
-            var levelConfig = LevelManifest.Instance.GetLevel(level);
+            var levelConfig = LevelManifest.Instance.GetLevel(PlayerDataManager.Instance.Data.Class, level);
             if (!levelConfig) return;
             Level = levelConfig;
+            backgroundSpawner.Spawn(Level.backgroundIndex);
             SceneManager.sceneLoaded += OnLevelSceneLoaded;
             LoadMapScene(Level.mapType);
         }
@@ -374,6 +376,17 @@ namespace InGame
             currentTowerIndex = towerIndex;
             OnChangeTower?.Invoke(CurrentTower);
         }
+
+        public void BlockDamageAllTowers()
+        {
+            if (towers == null) return;
+            
+            foreach (var tower in towers)
+            {
+                tower.BlockDamage = true;
+            }    
+        }
+        
         #endregion
 
         #region Timer

@@ -26,7 +26,11 @@ namespace Dark.Scripts.OutGame.Upgrade
                 Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame);
                 Loading.Instance.onSceneLoaded += () =>
                 {
-                    LevelManager.Instance.LoadLevel(PlayerDataManager.Instance.Data.level + 1);
+                    var levelToLoad = PlayerDataManager.Instance.Data.level + 1;
+                    var maxLevel = LevelManifest.Instance.GetMaxLevel(PlayerDataManager.Instance.Data.Class);
+                    if (levelToLoad > maxLevel)
+                        levelToLoad = maxLevel;
+                    LevelManager.Instance.LoadLevel(levelToLoad);
                 };
             });
             

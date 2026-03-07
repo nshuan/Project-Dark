@@ -138,7 +138,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator.Editor
                 EditorUtility.SetDirty(goScript.config);
             }
             
-            root.GetComponent<UIUpgradeTree>().ValidateNodes();
+            root.GetComponent<UIUpgradeTree>().ValidateNodes(CharacterClass.Archer);
     
             var outputPath = outputPrefabPath + prefabName + ".prefab";
             var prefab = PrefabUtility.SaveAsPrefabAsset(root, outputPath);

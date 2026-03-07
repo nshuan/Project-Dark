@@ -29,7 +29,7 @@ namespace InGame
             }
         }
 
-        public void Summon(EnemyEntity enemy, TowerEntity target, int enemyId, int amount)
+        public void Summon(EnemyEntity enemy, TowerEntity[] targets, int enemyId, int amount)
         {
             var spawnEnemyConfig =
                 spawnableEnemies.FirstOrDefault(e => e.enemyId == enemyId);
@@ -40,9 +40,13 @@ namespace InGame
                 enemyConfig = spawnEnemyConfig,
                 amount = amount
             };
-            
+
+            var targetIndex = 0;
             for (var i = 0; i < summonInfo.amount; i++)
             {
+                var target = targets[targetIndex];
+                targetIndex += 1;
+                if (targetIndex >= targets.Length) targetIndex = 0;
                 var direction = (target.transform.position - enemy.transform.position).normalized;
                 var creep = EnemyPool.Instance.Get(summonInfo.enemyConfig.enemyPrefab, summonInfo.enemyConfig.enemyId, null, false);
                 creep.transform.position = enemy.transform.position + direction * 0.2f +
@@ -59,11 +63,22 @@ namespace InGame
                 creep.Activate(creepDelayAttack);
                 enemy.UniqueId = EnemyManager.Instance.CurrentEnemyIndex;
                 EnemyManager.Instance.OnEnemySpawn(creep);
-                creep.OnDead += (reason) =>
+                creep.OnDead += (dead, reason) =>
                 {
                     EnemyManager.Instance.OnEnemyDead(creep, reason);
                 };
             }
+        }
+
+        public void Summon(EnemyEntity enemy, TowerEntity target, int enemyId, int amount)
+        {
+            var targets = new TowerEntity[amount];
+            for (var i = 0; i < amount; i++)
+            {
+                targets[i] = target;
+            }
+            
+            Summon(enemy, targets, enemyId, amount);
         }
         
         [Serializable]

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Dark.Scripts.Utils;
+using Data;
 using DG.Tweening;
 using InGame.Pause;
 using UnityEngine;
@@ -45,7 +46,7 @@ namespace InGame
 
         #region Charge
 
-        [SerializeField] private MoveChargeController chargeControllerArcher;
+        [SerializeField] private List<MoveChargeController> chargeControllers;
 
         #endregion
         
@@ -96,7 +97,7 @@ namespace InGame
                 
                 teleMouseInput.OnActivated();
                 
-                mouseInput.Initialize(PlayerVisual, chargeControllerArcher);
+                mouseInput.Initialize(PlayerVisual, chargeControllers[PlayerDataManager.Instance.Data.characterClass]);
                 mouseInput.ResetChargeVariable();
                 
                 mouseAutoAttack.Initialize(PlayerVisual, null);
