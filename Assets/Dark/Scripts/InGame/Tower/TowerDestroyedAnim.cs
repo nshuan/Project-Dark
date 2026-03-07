@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Dark.Scripts.AudioV2;
 using Dark.Scripts.Utils;
 using Dark.Scripts.Utils.Skeleton;
 using Data;
@@ -25,8 +26,10 @@ namespace InGame
         [SerializeField] private float durationDestroyTower = 0.8f;
         [SerializeField] private float durationFocusTower = 0.5f;
         [SerializeField] private float durationReturnAnim = 1.5f;
+        [SerializeField] private float delayShowAnim = 0.5f;
         [SerializeField] private string skinForArcher = "Archer";
         [SerializeField] private string skinForKnight = "Knight";
+        [SerializeField] private AudioPlayComponentV2 sfxDestroyed;
 
         public static IEndGameLoseAnimation Instance { get; private set; }
         
@@ -39,6 +42,10 @@ namespace InGame
         
         public IEnumerator IEPlay()
         {
+            sfxDestroyed?.Play();
+            
+            yield return new WaitForSeconds(delayShowAnim);
+            
             BackgroundInGame.Instance.SetActiveBlackAll(true);
             CanvasInGame.Instance.HideUI();
             foreach (var tower in LevelManager.Instance.Towers)
@@ -74,7 +81,7 @@ namespace InGame
             mainSkeleton.Skeleton.SetSlotsToSetupPose();
             mainSkeleton.AnimationState.Apply(mainSkeleton.Skeleton);
             StartCoroutine(IEPlay());
-            return Mathf.Max(durationFocusTower + durationDestroyTower, 2f); // Thấy duration của vfx là 2s
+            return Mathf.Max(durationFocusTower + durationDestroyTower + delayShowAnim, 2f); // Thấy duration của vfx là 2s
         }
 
         public float PlayReturn()
