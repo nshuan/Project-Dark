@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Dark.Scripts.AudioV2;
 using InGame.AttackNormalConfig;
 using UnityEngine;
 
@@ -11,6 +12,9 @@ namespace InGame
         [SerializeField] private LayerMask enemyLayer;
         [SerializeField] private float vfxDuration = 1.5f;
         [SerializeField] private GameObject vfxSlash;
+        [SerializeField] private AudioPlayComponentV2 sfxSlash;
+
+        protected virtual float OverrideSize { get; set; } = -1;
         
         private RaycastHit2D[] hits = new RaycastHit2D[20];
         private EnemyEntity cacheEnemy;
@@ -118,6 +122,7 @@ namespace InGame
             transform.localScale = Range * Vector3.one;
             yield return new WaitForSeconds(delay);
             vfxSlash.SetActive(true);
+            sfxSlash?.Play();
             
             activated = true;
             collider.CanTrigger = false;
@@ -131,16 +136,25 @@ namespace InGame
             if (hitCount > 0)
             {
                 var halfAngle = Size / 2;
+                if (OverrideSize > 0)
+                {
+                    halfAngle = OverrideSize / 2;
+                }
                 for (var i = 0; i < hitCount; i++)
                 {
-                    var dirToCenter = hits[i].point - (Vector2)RangeCenter;
+                    var hitPointDirToCenter = hits[i].point - (Vector2)RangeCenter;
+                    var hitPosDirToCenter = hits[i].collider.transform.position - RangeCenter;
                     
                     // Check những enemy va chạm, nếu nằm trong góc damageAngle thì mới gây dame
-                    if (Vector2.Angle(direction, dirToCenter) > halfAngle) continue;
+                    if (Vector2.Angle(direction, hitPointDirToCenter) > halfAngle)
+                    {
+                        if (Vector2.Angle(direction, hitPosDirToCenter) > halfAngle)
+                            continue;
+                    }
                     
                     // Check relative range, tăng range lên 1 tí
                     var bonusRangeForInRangeEnemy = (TargetToChase && hits[i].transform == TargetToChase.transform) ? 0.2f : 0.2f;
-                    if (dirToCenter.magnitude > (LevelUtilityV2.GetRelativeRangeMove(Range, dirToCenter) + bonusRangeForInRangeEnemy)) continue;
+                    if (hitPointDirToCenter.magnitude > (LevelUtilityV2.GetRelativeRangeMove(Range, hitPointDirToCenter) + bonusRangeForInRangeEnemy)) continue;
                     
                     if (hits[i].transform.TryGetComponent<EnemyEntity>(out cacheEnemy))
                     {

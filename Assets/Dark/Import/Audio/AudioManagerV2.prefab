@@ -274,11 +274,11 @@ MonoBehaviour:
     stealWhenExhausted: 1
   - key: ingame_tower_hit
     channel: 1
-    clip: {fileID: 8300000, guid: ad0f5d93f1375e949b4af4fc4f96c040, type: 3}
-    volume: 0.2
+    clip: {fileID: 8300000, guid: 8fca1ba563b48b34894857bda3e7e216, type: 3}
+    volume: 1
     loop: 0
     spatialBlend: 0.5
-    pitchRange: {x: 1, y: 2}
+    pitchRange: {x: 0.8, y: 1.2}
     preloadPool: 4
     maxPool: 8
     stealWhenExhausted: 1
@@ -411,6 +411,36 @@ MonoBehaviour:
     pitchRange: {x: 1, y: 2}
     preloadPool: 4
     maxPool: 16
+    stealWhenExhausted: 1
+  - key: ingame_slash
+    channel: 1
+    clip: {fileID: 8300000, guid: b41f3a175eadc0b4ea4644139022bf8a, type: 3}
+    volume: 0.15
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 0.8, y: 1.2}
+    preloadPool: 4
+    maxPool: 8
+    stealWhenExhausted: 1
+  - key: ingame_charge_slash
+    channel: 1
+    clip: {fileID: 8300000, guid: b41f3a175eadc0b4ea4644139022bf8a, type: 3}
+    volume: 0.35
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 0.8, y: 1.2}
+    preloadPool: 4
+    maxPool: 8
+    stealWhenExhausted: 1
+  - key: ingame_tower_destroyed
+    channel: 1
+    clip: {fileID: 8300000, guid: c05f5d4f1b78a2e4c80721842d7c1df8, type: 3}
+    volume: 0.3
+    loop: 0
+    spatialBlend: 0.5
+    pitchRange: {x: 1, y: 1}
+    preloadPool: 1
+    maxPool: 1
     stealWhenExhausted: 1
   poolRoot: {fileID: 8839059311664363939}
   autoPlaySceneMusic: 1

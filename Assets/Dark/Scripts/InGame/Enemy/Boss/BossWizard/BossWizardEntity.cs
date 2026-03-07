@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Linq;
+using Dark.Scripts.OutGame.Settings;
 using Dark.Scripts.Utils;
 using Data;
 using DG.Tweening;
@@ -33,6 +34,8 @@ namespace InGame.Boss.BossWizard
             configCasted = (EnemyBossWizardBehaviour)config;
             swordAnim.transform.SetParent(null);
             swordAnim.gameObject.SetActive(false);
+            
+            UISettingIconBoss.SetBossUnlocked(config.enemyId);
         }
 
         protected override IEnumerator IEAttack()

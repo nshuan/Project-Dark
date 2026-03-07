@@ -17,6 +17,8 @@ namespace InGame.WatchTower
         [SerializeField] protected ProjectileEntity projectilePrefab;
         [SerializeField] protected GameObject vfxActivateCounterPierce;
         [SerializeField] protected GameObject vfxActivateCounterSlash;
+        [SerializeField] protected Transform vfxCounterSlashParent;
+        [SerializeField] protected GameObject vfxCounterSlash;
         [SerializeField] protected Transform visual;
         [SerializeField] protected SpriteRenderer visualBase;
         [SerializeField] protected SpriteRenderer visualFill;
@@ -68,6 +70,7 @@ namespace InGame.WatchTower
         private RaycastHit2D[] slashHits = new RaycastHit2D[20];
         private EnemyEntity slashCacheEnemy;
         private GameObject vfxActivateCounter;
+        private float vfxCounterSlashRotationX;
         
         private void Awake()
         {
@@ -78,6 +81,8 @@ namespace InGame.WatchTower
             visualFill.material = iconFillMaterial;
             vfxActivateCounterPierce.SetActive(false);
             vfxActivateCounterSlash.SetActive(false);
+            vfxCounterSlash.SetActive(false);
+            vfxCounterSlashRotationX = vfxCounterSlash.transform.eulerAngles.x;
             
             LevelManager.Instance.OnInitTowers += OnInitTowers;
             LevelManager.Instance.OnLose += OnLose;
@@ -248,7 +253,9 @@ namespace InGame.WatchTower
             coroutineCooldown = StartCoroutine(IECooldown(cooldown));
                 
             vfxActivateCounter.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(counterDirection.y, counterDirection.x) * Mathf.Rad2Deg);
+            vfxCounterSlash.transform.rotation = Quaternion.Euler(vfxCounterSlashRotationX, 0f,  Mathf.Atan2(counterDirection.y, counterDirection.x) * Mathf.Rad2Deg - 90f);
             vfxActivateCounter.SetActive(true);
+            vfxCounterSlash.SetActive(true);
             vfxCooldownComplete?.SetActive(false);
             vfxCooldownCompleteLoop?.SetActive(false);
             
@@ -269,6 +276,7 @@ namespace InGame.WatchTower
             DOVirtual.DelayedCall(vfxActivateCounterDuration, () =>
             {
                 vfxActivateCounter.SetActive(false);
+                vfxCounterSlash.SetActive(false);
             }).SetTarget(vfxActivateCounter);
             
             coroutineCounter = null;
@@ -290,21 +298,26 @@ namespace InGame.WatchTower
         public virtual void CounterSlash(Vector2 towerAttackPos, Vector2 direction, int damage, float speedScale)
         {
             var slashRange = LevelUtilityV2.GetCounterSlashRange();
-            var hitCount = Physics2D.CircleCastNonAlloc(transform.position, slashRange, direction, slashHits, 0f, hitLayer);
+            vfxCounterSlashParent.localScale = slashRange * Vector3.one;
+            var hitCount = Physics2D.CircleCastNonAlloc(towerAttackPos, slashRange, direction, slashHits, 0f, hitLayer);
             if (hitCount > 0)
             {
                 var halfAngle = LevelUtilityV2.StatsCounterSlash.size / 2;
                 for (var i = 0; i < hitCount; i++)
                 {
-                    var dirTo = (slashHits[i].point - (Vector2)transform.position).normalized;
+                    var dirTo = slashHits[i].point - (Vector2)transform.position;
+                    var hitPosDirToCenter = slashHits[i].collider.transform.position - transform.position;
                     // Check những enemy va chạm, nếu nằm trong góc damageAngle thì mới gây dame
-                    if (Vector2.Angle(direction, dirTo) <= halfAngle)
+                    if (Vector2.Angle(direction, dirTo) > halfAngle)
                     {
-                        if (slashHits[i].transform.TryGetComponent<EnemyEntity>(out slashCacheEnemy))
-                        {
-                            slashCacheEnemy.Damage(DamageKnight, transform.position, LevelUtilityV2.StatsCounterSlash.stagger, DamageType.Normal);
-                            PassiveEffectManager.Instance.TriggerEffect(PassiveTriggerType.TowerTakeDame, slashCacheEnemy);
-                        }
+                        if (Vector2.Angle(direction, hitPosDirToCenter) > halfAngle)
+                            continue;
+                    }
+                    
+                    if (slashHits[i].transform.TryGetComponent<EnemyEntity>(out slashCacheEnemy))
+                    {
+                        slashCacheEnemy.Damage(DamageKnight, transform.position, LevelUtilityV2.StatsCounterSlash.stagger, DamageType.Normal);
+                        PassiveEffectManager.Instance.TriggerEffect(PassiveTriggerType.TowerTakeDame, slashCacheEnemy);
                     }
                 }
             }

@@ -3582,6 +3582,7 @@ GameObject:
   - component: {fileID: 4629680893581173920}
   - component: {fileID: 9051746591137119997}
   - component: {fileID: 4496262515122055463}
+  - component: {fileID: 6163141498512978495}
   m_Layer: 5
   m_Name: txtSubInstruction
   m_TagString: Untagged
@@ -3705,6 +3706,191 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &6163141498512978495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1907066739696356555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b351070690b4b52ade5c7e2d6852179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 4c9ce71f63bc9d14685c180dfff3e21e, type: 2}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: valueMap
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[System.String, mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 5
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 1
+      Data: Click anywhere to continue
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 1
+      Data: "B\u1EA5m v\xE0o ch\u1ED7 b\u1EA5t k\u1EF3 \u0111\u1EC3 ti\u1EBFp t\u1EE5c"
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 1
+      Data: Haz clic en cualquier lugar para continuar
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 1
+      Data: Clique em qualquer lugar para continuar
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 4
+    - Name: $v
+      Entry: 1
+      Data: Klicke irgendwo, um fortzufahren
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: overrideFont
+      Entry: 7
+      Data: 2|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[TMPro.TMP_FontAsset, Unity.TextMeshPro]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 1
+    - Name: 
+      Entry: 12
+      Data: 5
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 4
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  key: key_tutorial_click_anywhere
 --- !u!1 &1938190822171477771
 GameObject:
   m_ObjectHideFlags: 0
@@ -5078,6 +5264,51 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &2434609734408098000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7642258327828034762}
+  - component: {fileID: 401864711041186145}
+  m_Layer: 0
+  m_Name: UIPauseGame
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7642258327828034762
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2434609734408098000}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1279396082057530951}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &401864711041186145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2434609734408098000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffe9db4d87a0404e93171aa8ecb96f87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pauseCooldownDuration: 1
 --- !u!1 &2456316737480064356
 GameObject:
   m_ObjectHideFlags: 0
@@ -10263,6 +10494,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: overrideFont
+      Entry: 6
+      Data: 
   key: key_return
 --- !u!1 &4921073751486089669
 GameObject:
@@ -14050,6 +14284,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: overrideFont
+      Entry: 6
+      Data: 
   key: key_only_day
 --- !u!1 &6735191512047453425
 GameObject:
@@ -16302,6 +16539,7 @@ Transform:
   - {fileID: 3779655171117705037}
   - {fileID: 7493551642559951055}
   - {fileID: 4984412668681310495}
+  - {fileID: 7642258327828034762}
   m_Father: {fileID: 8945016189891100426}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7641654970931404594
@@ -21069,8 +21307,201 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1398132326601039676, guid: 1625a1c1cf3c4b747940ecf420ea24e3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8091624965397094532}
   m_SourcePrefab: {fileID: 100100000, guid: 1625a1c1cf3c4b747940ecf420ea24e3, type: 3}
+--- !u!1 &727705968536830740 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1398132326601039676, guid: 1625a1c1cf3c4b747940ecf420ea24e3, type: 3}
+  m_PrefabInstance: {fileID: 1837043448614116392}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8091624965397094532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 727705968536830740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b351070690b4b52ade5c7e2d6852179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 4c9ce71f63bc9d14685c180dfff3e21e, type: 2}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: valueMap
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[System.String, mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 5
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 1
+      Data: Hold left mouse to charge
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 1
+      Data: "Gi\u1EEF chu\u1ED9t tr\xE1i \u0111\u1EC3 t\u1EE5"
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 1
+      Data: "Mant\xE9n clic izquierdo para cargar"
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 1
+      Data: "Segure o bot\xE3o esquerdo para carregar"
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 4
+    - Name: $v
+      Entry: 1
+      Data: Linke Maustaste halten zum Aufladen
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: overrideFont
+      Entry: 7
+      Data: 2|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[TMPro.TMP_FontAsset, Unity.TextMeshPro]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 1
+    - Name: 
+      Entry: 12
+      Data: 5
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 4
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  key: key_tutorial_hold_left_mouse
 --- !u!1 &3497050220624398408 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3023738259942315104, guid: 1625a1c1cf3c4b747940ecf420ea24e3, type: 3}
@@ -21524,7 +21955,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2691955651363094307, guid: 1625a1c1cf3c4b747940ecf420ea24e3, type: 3}
       insertIndex: 1
       addedObject: {fileID: 4629680893581173920}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1398132326601039676, guid: 1625a1c1cf3c4b747940ecf420ea24e3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2538226044475035872}
   m_SourcePrefab: {fileID: 100100000, guid: 1625a1c1cf3c4b747940ecf420ea24e3, type: 3}
 --- !u!224 &525938230188982616 stripped
 RectTransform:
@@ -21536,6 +21970,196 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3023738259942315104, guid: 1625a1c1cf3c4b747940ecf420ea24e3, type: 3}
   m_PrefabInstance: {fileID: 2456499665863736955}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &3562369981916635463 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1398132326601039676, guid: 1625a1c1cf3c4b747940ecf420ea24e3, type: 3}
+  m_PrefabInstance: {fileID: 2456499665863736955}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2538226044475035872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3562369981916635463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b351070690b4b52ade5c7e2d6852179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 4c9ce71f63bc9d14685c180dfff3e21e, type: 2}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: valueMap
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[System.String, mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 5
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 1
+      Data: Wait for cooldown
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 1
+      Data: "Ch\u1EDD th\u1EDDi gian \u0111\u1EBFm ng\u01B0\u1EE3c"
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 1
+      Data: Espera el enfriamiento
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 1
+      Data: Aguarde o tempo de recarga
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 4
+    - Name: $v
+      Entry: 1
+      Data: Warte auf die Abklingzeit
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: overrideFont
+      Entry: 7
+      Data: 2|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[TMPro.TMP_FontAsset, Unity.TextMeshPro]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 1
+    - Name: 
+      Entry: 12
+      Data: 5
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 4
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  key: key_tutorial_wait_for_cooldown
 --- !u!1001 &2858083171161284588
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21544,22 +22168,86 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4722519416753360130}
     m_Modifications:
+    - target: {fileID: 147213805785917035, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 147213805785917035, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+    - target: {fileID: 251270964546265051, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 251270964546265051, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+    - target: {fileID: 617165955784391231, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 617165955784391231, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
     - target: {fileID: 883937133550261779, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
       propertyPath: m_Name
       value: UIPopupConfirmReturn
       objectReference: {fileID: 0}
+    - target: {fileID: 952621481715726264, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 952621481715726264, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+    - target: {fileID: 1219320730851220357, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 1219320730851220357, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+    - target: {fileID: 1524595154464260897, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 1524595154464260897, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+    - target: {fileID: 2217140832836145570, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 2217140832836145570, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+    - target: {fileID: 2305747553925361206, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 2305747553925361206, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
     - target: {fileID: 2833244785887053864, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 2833244785887053864, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+    - target: {fileID: 3180247855606324601, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 3180247855606324601, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+    - target: {fileID: 3260414758212594347, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 3260414758212594347, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+    - target: {fileID: 3804171594673774538, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 3804171594673774538, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
     - target: {fileID: 4015930678751873332, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 4015930678751873332, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+    - target: {fileID: 4745693202597267946, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 4745693202597267946, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
     - target: {fileID: 5308266203070376987, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 5308266203070376987, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+    - target: {fileID: 5361441638286997074, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 5361441638286997074, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+    - target: {fileID: 5595805754912423214, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 5595805754912423214, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+    - target: {fileID: 6691865881328936081, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 6691865881328936081, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+    - target: {fileID: 7117644300811649778, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 7117644300811649778, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
     - target: {fileID: 7388818627052106269, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -21640,6 +22328,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7535553071926219056, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 7535553071926219056, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+    - target: {fileID: 8266246840625565608, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 8266246840625565608, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
     - target: {fileID: 8298365549519469665, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
       propertyPath: serializationData.Prefab
       value: 
@@ -21648,6 +22344,18 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 8300823164697151939, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+    - target: {fileID: 8949564057421430200, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 8949564057421430200, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+    - target: {fileID: 9014293044247082572, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 9014293044247082572, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+    - target: {fileID: 9048113373266708875, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 9048113373266708875, guid: 71b37ff5ce279b9438e96a0e8cef5ca8, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
