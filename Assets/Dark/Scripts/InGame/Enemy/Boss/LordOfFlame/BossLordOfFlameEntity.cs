@@ -5,6 +5,7 @@ using Data;
 using DG.Tweening;
 using InGame.EnemyEffect;
 using InGame.UI;
+using Steamworks.NET;
 using UnityEngine;
 
 namespace InGame.Boss
@@ -192,6 +193,11 @@ namespace InGame.Boss
         
         protected override IEnumerator IEDie(float delayRelease, EnemyDieReason reason)
         {
+            SteamStats.Instance.TryClaimAchievement(
+                LevelManager.Instance.PlayerClass == CharacterClass.CharacterClass.Knight
+                    ? SteamAchievementsAPIName.KNIGHT_KILL_GAMANIAC
+                    : SteamAchievementsAPIName.ARCHER_KILL_GAMANIAC);
+            
             LevelManager.Instance.BlockDamageAllTowers();
             
             // Làm đen hết màn hình, tắt UI

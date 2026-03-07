@@ -15,6 +15,7 @@ using InGame.Upgrade;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using Sirenix.Utilities;
+using Steamworks.NET;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -53,6 +54,7 @@ namespace InGame
         public string LevelBossName { get; set; }
         
         public PlayerCharacter Player { get; set; }
+        public CharacterClass.CharacterClass PlayerClass { get; set; }
 
         private List<LevelMapVariant> mapVarientItems;
         
@@ -88,6 +90,8 @@ namespace InGame
         
         private void Start()
         {
+            PlayerClass = PlayerDataManager.Instance.Data.Class;
+            
             InitSkillTreeBonus();
             InitLevelMapVariant();
             
@@ -113,11 +117,11 @@ namespace InGame
             UpgradeManager.Instance.ActivateTree(ref bonusInfo);
             LevelUtilityV2.BonusInfo = bonusInfo;
             LevelUtilityV2.StatsBase = playerStats;
-            LevelUtilityV2.StatsNormalAttack = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
-            LevelUtilityV2.StatsNormalPiercing = PlayerSkillNormalManifest.Get(PlayerDataManager.Instance.Data.Class, NormalType.Piercing);
-            LevelUtilityV2.StatsNormalBullet = PlayerSkillNormalManifest.Get(PlayerDataManager.Instance.Data.Class, NormalType.Bullet);
-            LevelUtilityV2.StatsChargeBullet = PlayerChargeManifest.Get(PlayerDataManager.Instance.Data.Class, ChargeType.Bullet);
-            LevelUtilityV2.StatsChargeSize = PlayerChargeManifest.Get(PlayerDataManager.Instance.Data.Class, ChargeType.Size);
+            LevelUtilityV2.StatsNormalAttack = ClassConfigManifest.GetConfig((int)PlayerClass);
+            LevelUtilityV2.StatsNormalPiercing = PlayerSkillNormalManifest.Get(PlayerClass, NormalType.Piercing);
+            LevelUtilityV2.StatsNormalBullet = PlayerSkillNormalManifest.Get(PlayerClass, NormalType.Bullet);
+            LevelUtilityV2.StatsChargeBullet = PlayerChargeManifest.Get(PlayerClass, ChargeType.Bullet);
+            LevelUtilityV2.StatsChargeSize = PlayerChargeManifest.Get(PlayerClass, ChargeType.Size);
             LevelUtilityV2.StatsDash = dashConfig;
             LevelUtilityV2.StatsFlash = flashConfig;
             LevelUtilityV2.StatsTele = defaultTeleConfig; 
@@ -144,7 +148,7 @@ namespace InGame
         
         public void LoadLevel(int level)
         {
-            var levelConfig = LevelManifest.Instance.GetLevel(PlayerDataManager.Instance.Data.Class, level);
+            var levelConfig = LevelManifest.Instance.GetLevel(PlayerClass, level);
             if (!levelConfig) return;
             Level = levelConfig;
             backgroundSpawner.Spawn(Level.backgroundIndex);
@@ -227,6 +231,9 @@ namespace InGame
             waveCoroutine = StartCoroutine(IEWave(Level.waveInfo));
             LevelStarted = true;
             OnLevelLoaded?.Invoke(Level);
+            
+            SteamStats.Instance.AddRuns(1, true);
+            
             StartTimer();
         }
         
@@ -243,6 +250,16 @@ namespace InGame
             WealthManager.Instance.Save();
             if (Level.level >= PlayerDataManager.Instance.Data.level + 1)
                 PlayerDataManager.Instance.CompleteLevel();
+            
+            SteamStats.Instance.CompleteDay(Level.level);
+            SteamStats.Instance.SaveStats();
+            if (Level.level == LevelManifest.Instance.GetMaxLevel(PlayerClass))
+            {
+                SteamStats.Instance.TryClaimAchievement(
+                    PlayerClass == CharacterClass.CharacterClass.Knight
+                        ? SteamAchievementsAPIName.COMPLETE_KNIGHT
+                        : SteamAchievementsAPIName.COMPLETE_ARCHER);
+            }
             
             DebugUtility.LogError($"Level {Level.level + 1} is ended: WIN");
             IsEndLevel = true;
@@ -267,6 +284,8 @@ namespace InGame
             }
             
             WealthManager.Instance.Save();
+            
+            SteamStats.Instance.SaveStats();
             
             DebugUtility.LogError($"Level {Level.level} is ended: LOSE");
             IsEndLevel = true;
