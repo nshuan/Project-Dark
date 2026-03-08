@@ -1,3 +1,4 @@
+using System.Collections;
 using Core;
 using UnityEngine;
 
@@ -14,14 +15,23 @@ namespace Steamworks.NET
 #endif
         
         public bool StatReceived { get; private set; }
+        private bool initializeStarted;
         
         public void Initialize()
         {
 #if STEAMWORKS_NET
+            if (initializeStarted) return;
             StatReceived = false;
+            initializeStarted = true;
+            StartCoroutine(IEInitialize());
+#endif
+        }
+
+        private IEnumerator IEInitialize()
+        {
+            yield return new WaitUntil(() => SteamManager.Initialized);
             callbackStatsReceived = Callback<UserStatsReceived_t>.Create(OnStatsReceived);
             SteamUserStats.RequestUserStats(SteamUser.GetSteamID());
-#endif
         }
 
 #if STEAMWORKS_NET

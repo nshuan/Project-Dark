@@ -1,6 +1,6 @@
 namespace Steamworks.NET
 {
-    public class SteamAchievementsAPIName
+    public static class SteamAchievementsAPIName
     {
         public const string COMPLETE_ARCHER = "COMPLETE_ARCHER";
         public const string COMPLETE_KNIGHT = "COMPLETE_KNIGHT";

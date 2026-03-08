@@ -1,6 +1,6 @@
 namespace Steamworks.NET
 {
-    public class SteamStatsAPIName
+    public static class SteamStatsAPIName
     {
         public const string TOTAL_KILL = "TOTAL_KILLS";
         public const string TOTAL_RUNS = "TOTAL_RUNS";
