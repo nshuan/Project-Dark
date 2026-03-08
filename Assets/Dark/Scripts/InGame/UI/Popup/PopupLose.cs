@@ -16,7 +16,6 @@ namespace InGame.UI
     {
         [SerializeField] private UIPopup ui;
         [SerializeField] private CanvasGroup popupLoseCanvasGroup;
-        [SerializeField] private float delayShowPopup = 5f; // Do có vfx endgame khi trụ bị phá nên cần delay xong vfx mới show popup
         [SerializeField] private AudioPlayComponentV2 sfxLose;
         
         [Space]
@@ -48,7 +47,7 @@ namespace InGame.UI
         {
             UpdateUI();
 
-            delayShowPopup = 0f;
+            var delayShowPopup = 0f;
             endingLevel = TowerDestroyedAnim.Instance;
             if (endingLevel != null) delayShowPopup = endingLevel.Play();
             AudioManagerV2.Instance.FadeVolumeMusic(0.08f, 2f);
