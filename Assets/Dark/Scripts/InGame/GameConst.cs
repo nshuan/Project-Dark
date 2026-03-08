@@ -8,7 +8,7 @@ public class GameConst
 #if UNITY_EDITOR
     public const bool EnableLog = false; // Enable event log in LogManager
 #else
-    public const bool EnableLog = true; // Enable event log in LogManager
+    public const bool EnableLog = false; // Enable event log in LogManager
 #endif
 
     #endregion
