@@ -146,60 +146,6 @@ namespace Dark.Scripts.Settings.UI
             DisplayText.SetTextLanguage(isWindowedMode ? "key_off" : "key_on");
         }
     }
-
-    [Serializable]
-    public class SettingResolution : ISettingItemButton
-    {
-        public Button Button { get; set; }
-        public TextMeshProUGUI DisplayText { get; set; }
-
-        private int width;
-        private int height;
-        private int selectedIndex;
-        
-        public void Initialize(Button button)
-        {
-            Button = button;
-            button.onClick.RemoveAllListeners();
-            button.onClick.AddListener(OnClick);
-            
-            selectedIndex = ResolutionSettings.GetSelectedResolutionIndex();
-            
-            UpdateValue(true);
-        }
-        
-        public void Save()
-        {
-            GameSettings.ResolutionWidth = width;
-            GameSettings.ResolutionHeight = height;
-            GameSettings.Save();
-            ResolutionSettings.SetResolutionByIndex(selectedIndex, apply: true);
-        }
-
-        public void OnClick()
-        {
-            if (selectedIndex == -1) return;
-
-            selectedIndex += 1;
-            if (selectedIndex >= ResolutionSettings.SupportedResolutions.Count)
-                selectedIndex = 0;
-            
-            var selectedEntry = ResolutionSettings.SupportedResolutions[selectedIndex];
-            width = selectedEntry.width;
-            height = selectedEntry.height;
-            UpdateValue(false);
-        }
-        
-        public void UpdateValue(bool onEnable)
-        {
-            if (onEnable)
-            {
-                width = GameSettings.ResolutionWidth;
-                height = GameSettings.ResolutionHeight;
-            }
-            DisplayText.SetText($"{width}x{height}");
-        }
-    }
     
     [Serializable]
     public class SettingVSync : ISettingItemButton

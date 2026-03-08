@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1551957390211432216}
   - component: {fileID: 1404557906923245303}
   - component: {fileID: 6645350404748870300}
+  - component: {fileID: 2951245163992647752}
   m_Layer: 5
   m_Name: txtTitle
   m_TagString: Untagged
@@ -134,6 +135,117 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &2951245163992647752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 315304761313344266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b351070690b4b52ade5c7e2d6852179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: valueMap
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[System.String, mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 5
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 1
+      Data: Sigils
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 1
+      Data: Sigils
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 1
+      Data: Sigils
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 1
+      Data: Sigils
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 4
+    - Name: $v
+      Entry: 1
+      Data: Sigils
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: overrideFont
+      Entry: 6
+      Data: 
+  key: key_lore_name_sigils
 --- !u!1 &332474767125387098
 GameObject:
   m_ObjectHideFlags: 0
@@ -449,7 +561,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -160}
+  m_AnchoredPosition: {x: 0, y: -173}
   m_SizeDelta: {x: 392, y: 214}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5406058627718616045
@@ -1365,8 +1477,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.02218628, y: -58.21852}
-  m_SizeDelta: {x: -7.3079, y: 110.6422}
+  m_AnchoredPosition: {x: 0.02218628, y: -61.557022}
+  m_SizeDelta: {x: -7.3079, y: 117.246}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4644330681738589013
 CanvasRenderer:
@@ -1430,6 +1542,7 @@ GameObject:
   - component: {fileID: 3974759759859441432}
   - component: {fileID: 5500302762522098969}
   - component: {fileID: 553551537560747715}
+  - component: {fileID: 7226298887704448496}
   m_Layer: 5
   m_Name: txtDescription
   m_TagString: Untagged
@@ -1453,8 +1566,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -150}
-  m_SizeDelta: {x: 489.1694, y: 94.1317}
+  m_AnchoredPosition: {x: 0, y: -154.58337}
+  m_SizeDelta: {x: 514.8367, y: 103.2985}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5500302762522098969
 CanvasRenderer:
@@ -1516,9 +1629,9 @@ MonoBehaviour:
   m_fontSize: 20
   m_fontSizeBase: 20
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 12
+  m_fontSizeMax: 20
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -1555,6 +1668,22 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &7226298887704448496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1896694247584225904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 411f71d933ec49b9be164e8fc88cf3b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: key_lore_vestige
+  replacePairs:
+  - key: Vestige
+    replaceTo: <color=#934a4a>Vestige</color>
 --- !u!1 &2009284092286508425
 GameObject:
   m_ObjectHideFlags: 0
@@ -1965,6 +2094,7 @@ GameObject:
   - component: {fileID: 3968687598810571613}
   - component: {fileID: 5177558723600226507}
   - component: {fileID: 13564343274076962}
+  - component: {fileID: 2807136151440190776}
   m_Layer: 5
   m_Name: txtDescription
   m_TagString: Untagged
@@ -1988,8 +2118,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -150}
-  m_SizeDelta: {x: 489.1694, y: 94.1317}
+  m_AnchoredPosition: {x: 0, y: -154.58337}
+  m_SizeDelta: {x: 514.8367, y: 103.2985}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5177558723600226507
 CanvasRenderer:
@@ -2050,9 +2180,9 @@ MonoBehaviour:
   m_fontSize: 20
   m_fontSizeBase: 20
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 12
+  m_fontSizeMax: 20
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -2089,6 +2219,22 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &2807136151440190776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2544089342493167268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 411f71d933ec49b9be164e8fc88cf3b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: key_lore_echoes
+  replacePairs:
+  - key: Echoes
+    replaceTo: <color=#79a8dc>Echoes</color>
 --- !u!1 &2613177481971791405
 GameObject:
   m_ObjectHideFlags: 0
@@ -2409,8 +2555,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.02218628, y: -58.21852}
-  m_SizeDelta: {x: -7.3079, y: 110.6422}
+  m_AnchoredPosition: {x: 0.02218628, y: -61.557022}
+  m_SizeDelta: {x: -7.3079, y: 117.246}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3583960591596105215
 CanvasRenderer:
@@ -2608,7 +2754,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -214}
+  m_AnchoredPosition: {x: 0, y: -227}
   m_SizeDelta: {x: 139.5, y: 16.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8987810045817538146
@@ -2735,6 +2881,7 @@ GameObject:
   - component: {fileID: 3359614862908447969}
   - component: {fileID: 1707752256030118476}
   - component: {fileID: 3044295257955263258}
+  - component: {fileID: 2164001280813698942}
   m_Layer: 5
   m_Name: txtTitle
   m_TagString: Untagged
@@ -2858,6 +3005,117 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &2164001280813698942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3713819922533615228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b351070690b4b52ade5c7e2d6852179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: valueMap
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[System.String, mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 5
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 1
+      Data: Echoes
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 1
+      Data: Echoes
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 1
+      Data: Echoes
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 1
+      Data: Echoes
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 4
+    - Name: $v
+      Entry: 1
+      Data: Echoes
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: overrideFont
+      Entry: 6
+      Data: 
+  key: key_lore_name_echoes
 --- !u!1 &3765620666743691810
 GameObject:
   m_ObjectHideFlags: 0
@@ -2975,6 +3233,7 @@ MonoBehaviour:
   hoverScale: 1.1
   pressScale: 1
   duration: 0.2
+  target: {fileID: 0}
 --- !u!1 &4460141369129335045
 GameObject:
   m_ObjectHideFlags: 0
@@ -3120,7 +3379,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -214}
+  m_AnchoredPosition: {x: 0, y: -227}
   m_SizeDelta: {x: 139.5, y: 16.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4522129871540064569
@@ -3172,6 +3431,7 @@ GameObject:
   - component: {fileID: 3274471476704572126}
   - component: {fileID: 6491580481859070}
   - component: {fileID: 8927118479393942101}
+  - component: {fileID: 2139552819432050519}
   m_Layer: 5
   m_Name: txtDescription
   m_TagString: Untagged
@@ -3195,8 +3455,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -150}
-  m_SizeDelta: {x: 489.1694, y: 94.1317}
+  m_AnchoredPosition: {x: 0, y: -154.58337}
+  m_SizeDelta: {x: 514.8367, y: 103.2985}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6491580481859070
 CanvasRenderer:
@@ -3258,9 +3518,9 @@ MonoBehaviour:
   m_fontSize: 20
   m_fontSizeBase: 20
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 12
+  m_fontSizeMax: 20
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -3297,6 +3557,22 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &2139552819432050519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4808111176710525170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 411f71d933ec49b9be164e8fc88cf3b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: key_lore_sigils
+  replacePairs:
+  - key: Sigils
+    replaceTo: <color=#795682>Sigils</color>
 --- !u!1 &4821297394093845457
 GameObject:
   m_ObjectHideFlags: 0
@@ -3334,7 +3610,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -160}
+  m_AnchoredPosition: {x: 0, y: -173}
   m_SizeDelta: {x: 392, y: 214}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4822302206308654497
@@ -3609,7 +3885,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -160}
+  m_AnchoredPosition: {x: 0, y: -173}
   m_SizeDelta: {x: 392, y: 214}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1318721278125874991
@@ -3785,6 +4061,7 @@ GameObject:
   - component: {fileID: 136671490162855707}
   - component: {fileID: 3501873893387738765}
   - component: {fileID: 7509219361068784383}
+  - component: {fileID: 1262118596632628046}
   m_Layer: 5
   m_Name: txtTitle
   m_TagString: Untagged
@@ -3908,6 +4185,117 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1262118596632628046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5121858839051653760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b351070690b4b52ade5c7e2d6852179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: valueMap
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[System.String, mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 5
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 1
+      Data: Vestige
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 1
+      Data: Vestige
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 1
+      Data: Vestige
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 1
+      Data: Vestige
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 4
+    - Name: $v
+      Entry: 1
+      Data: Vestige
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: overrideFont
+      Entry: 6
+      Data: 
+  key: key_lore_name_vestige
 --- !u!1 &5841896413087230817
 GameObject:
   m_ObjectHideFlags: 0
@@ -4017,7 +4405,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -214}
+  m_AnchoredPosition: {x: 0, y: -227}
   m_SizeDelta: {x: 139.5, y: 16.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4860763039874795987
@@ -4130,8 +4518,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -58.20056}
-  m_SizeDelta: {x: -0.56, y: 116.0811}
+  m_AnchoredPosition: {x: 0, y: -61.538807}
+  m_SizeDelta: {x: -0.56, y: 122.75759}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1837521003156454037
 CanvasRenderer:
@@ -4511,8 +4899,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -58.20056}
-  m_SizeDelta: {x: -0.56, y: 116.0811}
+  m_AnchoredPosition: {x: 0, y: -61.53882}
+  m_SizeDelta: {x: -0.56, y: 122.7576}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8528489413089353447
 CanvasRenderer:
@@ -4744,6 +5132,7 @@ MonoBehaviour:
   hoverScale: 1.1
   pressScale: 1
   duration: 0.2
+  target: {fileID: 0}
 --- !u!1 &8058284055828051811
 GameObject:
   m_ObjectHideFlags: 0
@@ -5018,6 +5407,7 @@ MonoBehaviour:
   hoverScale: 1.1
   pressScale: 1
   duration: 0.2
+  target: {fileID: 0}
 --- !u!1 &8626320282314694238
 GameObject:
   m_ObjectHideFlags: 0
@@ -5090,8 +5480,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.02218628, y: -58.21852}
-  m_SizeDelta: {x: -7.3079, y: 110.6422}
+  m_AnchoredPosition: {x: 0.02218628, y: -61.557022}
+  m_SizeDelta: {x: -7.3079, y: 117.246}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7052203103423652305
 CanvasRenderer:
@@ -5463,8 +5853,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -58.20056}
-  m_SizeDelta: {x: -0.56, y: 116.0811}
+  m_AnchoredPosition: {x: 0, y: -61.538807}
+  m_SizeDelta: {x: -0.56, y: 122.75759}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1883881045882770415
 CanvasRenderer:

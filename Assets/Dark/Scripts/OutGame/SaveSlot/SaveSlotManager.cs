@@ -78,9 +78,24 @@ namespace Dark.Scripts.OutGame.SaveSlot
         {
             if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length) return "";
             if (IsEmptySlot(slotIndex)) return "";
-            
 
-            return ((CharacterClass)(GetSlotData(slotIndex).characterClass)).ToString();
+            var classType = (CharacterClass)(GetSlotData(slotIndex).characterClass);
+            if (classType == CharacterClass.Archer)
+            {
+                var result = LanguageData.Instance.GetLocalizedString("key_node_the_sightsunder", LanguageManager.Instance.CurrentLanguage);
+                if (result.Substring(0, 4).ToLower() == "the ")
+                    result = result[4..];
+                return result;
+            }
+            else if (classType == CharacterClass.Knight)
+            {
+                var result = LanguageData.Instance.GetLocalizedString("key_node_the_vergebrand", LanguageManager.Instance.CurrentLanguage);
+                if (result.Substring(0, 4).ToLower() == "the ")
+                    result = result[4..];
+                return result;
+            }
+            
+            return "";
         }
 
         public string GetDisplayPassedDays(int slotIndex)
@@ -117,11 +132,14 @@ namespace Dark.Scripts.OutGame.SaveSlot
 
         public string GetDisplayTimePlayed(int slotIndex)
         {
-            if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length) return "0 hours 0 min";
-            if (IsEmptySlot(slotIndex)) return "0 hours 0 min";
+            var result =
+                LanguageData.Instance.GetLocalizedString("key_save_slot_time",
+                    LanguageManager.Instance.CurrentLanguage);
+            if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length) return result.Replace("%{value1}", "0").Replace("%{value2}", "0");
+            if (IsEmptySlot(slotIndex)) return result.Replace("%{value1}", "0").Replace("%{value2}", "0");
      
             var totalTime = TimeSpan.FromMilliseconds(GetSlotData(slotIndex).timePlayedMilli);
-            return $"{(int)totalTime.TotalHours} hours {totalTime.Minutes} min";
+            return result.Replace("%{value1}", ((int)totalTime.TotalHours).ToString()).Replace("%{value2}", totalTime.Minutes.ToString());
         }
 
         #endregion

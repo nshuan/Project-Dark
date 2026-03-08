@@ -56,13 +56,19 @@ namespace InGame
                 {
                     p.Activate(delayEachBullet * i);
                     if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing)
-                        p.OnHit += () =>
+                    {
+                        // Charge thì ko bị giảm dame
+                        if (p is not KnightChargeSlashEntity)
                         {
-                            p.Damage = LevelUtilityV2.ToInt(p.Damage *
-                                                            LevelUtilityV2.GetNormalPiercingDamageScale());
-                            p.CriticalDamage = LevelUtilityV2.ToInt(p.CriticalDamage *
-                                                                    LevelUtilityV2.GetNormalPiercingDamageScale());
-                        };
+                            p.OnHit += () =>
+                            {
+                                p.Damage = LevelUtilityV2.ToInt(p.Damage *
+                                                                LevelUtilityV2.GetNormalPiercingDamageScale());
+                                p.CriticalDamage = LevelUtilityV2.ToInt(p.CriticalDamage *
+                                                                        LevelUtilityV2.GetNormalPiercingDamageScale());
+                            };
+                        }
+                    }
                 }
                 else
                 {
