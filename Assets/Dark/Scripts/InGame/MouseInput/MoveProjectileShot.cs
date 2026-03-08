@@ -153,17 +153,31 @@ namespace InGame
                     var blossomAmount = 0;
                     if (canChargeSize)
                         blossomAmount = LevelUtilityV2.GetChargeSizeAmount();
-                    var blossomAction = blossomAmount == 0
-                        ? null
-                        : new List<IProjectileHit>()
-                        {
-                            new ProjectileHitBlossom()
+
+                    List<IProjectileHit> blossomAction;
+                    if (blossomAmount == 0) blossomAction = null;
+                    else
+                    {
+                        var blossom = classType == CharacterClass.CharacterClass.Knight
+                            ? new KnightSlashHitBlossom()
                             {
-                                projectile = LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.ChargeSizeSubBullet],
+                                projectile =
+                                    LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.ChargeSizeSubBullet],
                                 bulletAmount = blossomAmount,
-                                blossomSize = classType == CharacterClass.CharacterClass.Knight ? skillRange * LevelUtilityV2.StatsChargeSize.range : LevelUtilityV2.StatsChargeSize.range
+                                blossomSize = skillRange * LevelUtilityV2.StatsChargeSize.range
                             }
-                        };
+                            : new ProjectileHitBlossom()
+                            {
+                                projectile =
+                                    LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.ChargeSizeSubBullet],
+                                bulletAmount = blossomAmount,
+                                blossomSize = LevelUtilityV2.StatsChargeSize.range
+                            };
+                        blossomAction = new List<IProjectileHit>()
+                            {
+                                blossom
+                            };
+                    }
                     LevelUtilityV2.StatsNormalAttack.Shoot(
                         LevelUtilityV2.StatsNormalAttack.projectiles[projectileType],
                         Character.transform.position,
@@ -224,17 +238,32 @@ namespace InGame
                         var blossomAmount = 0;
                         if (canChargeSize)
                             blossomAmount = LevelUtilityV2.GetChargeSizeAmount();
-                        var blossomAction = blossomAmount == 0
-                            ? null
-                            : new List<IProjectileHit>()
-                            {
-                                new ProjectileHitBlossom()
+                        List<IProjectileHit> blossomAction;
+                        if (blossomAmount == 0) blossomAction = null;
+                        else
+                        {
+                            var blossom = classType == CharacterClass.CharacterClass.Knight
+                                ? new KnightSlashHitBlossom()
                                 {
-                                    projectile = LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.ChargeSizeSubBullet],
+                                    projectile =
+                                        LevelUtilityV2.StatsNormalAttack.projectiles[
+                                            PlayerProjectileType.ChargeSizeSubBullet],
                                     bulletAmount = blossomAmount,
-                                    blossomSize = classType == CharacterClass.CharacterClass.Knight ? skillRange * LevelUtilityV2.StatsChargeSize.range : LevelUtilityV2.StatsChargeSize.range
+                                    blossomSize = skillRange * LevelUtilityV2.StatsChargeSize.range
                                 }
+                                : new ProjectileHitBlossom()
+                                {
+                                    projectile =
+                                        LevelUtilityV2.StatsNormalAttack.projectiles[
+                                            PlayerProjectileType.ChargeSizeSubBullet],
+                                    bulletAmount = blossomAmount,
+                                    blossomSize = LevelUtilityV2.StatsChargeSize.range
+                                };
+                            blossomAction = new List<IProjectileHit>()
+                            {
+                                blossom
                             };
+                        }
                         
                         projectile.Init(
                             LevelManager.Instance.CurrentTower.GetBaseCenter(), 
