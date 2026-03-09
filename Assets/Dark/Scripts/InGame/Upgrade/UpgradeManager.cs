@@ -67,6 +67,8 @@ namespace InGame.Upgrade
 #if UNITY_EDITOR
             // data = new UpgradeData(TreeConfig.nodeMapById);
 #endif
+            // set null để lúc gọi sẽ lấy lại đúng tree theo class
+            treeConfig = null;
             dataMapById = new Dictionary<int, UpgradeNodeData>();
             var index = 0;
             foreach (var node in data.nodes)

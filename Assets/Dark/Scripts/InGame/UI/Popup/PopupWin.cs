@@ -22,6 +22,13 @@ namespace InGame.UI
         [Space]
         [SerializeField] private Button btnBackToTree;
         [SerializeField] private Button btnNextLevel;
+        [SerializeField] private Button btnCredit;
+        [SerializeField] private Button btnBackToTree1;
+        [SerializeField] private GameObject groupBtnWin;
+        [SerializeField] private GameObject groupEndLevel;
+
+        [Space] 
+        [SerializeField] private GameObject popupCredit;
 
         public static event Action onShowPopup;
         
@@ -50,29 +57,66 @@ namespace InGame.UI
         private void UpdateUI()
         {
             ResetPopupUI();
-            
-            btnBackToTree.onClick.RemoveAllListeners();
-            btnBackToTree.onClick.AddListener(() =>
+
+            var completed = PlayerDataManager.Instance.Data.completed;
+            var winLevel = LevelManager.Instance.Level.level;
+            if (winLevel + 1 <= LevelManifest.Instance.GetMaxLevel(PlayerDataManager.Instance.Data.Class))
             {
-                Loading.Instance.QuickLoadScene(SceneConstants.SceneUpgrade);
-            });
-            
-            // Todo load next level
-            btnNextLevel.onClick.RemoveAllListeners();
-            btnNextLevel.onClick.AddListener(() =>
-            {
-                if (PlayerDataManager.Instance.Data.level + 1 > LevelManifest.Instance.GetMaxLevel(PlayerDataManager.Instance.Data.Class))
-                    return;
+                groupBtnWin.SetActive(true);
+                groupEndLevel.SetActive(false);
                 
-                ui.gameObject.SetActive(false);
-                Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame);
-                Loading.Instance.onSceneLoaded += () =>
+                btnBackToTree.onClick.RemoveAllListeners();
+                btnBackToTree.onClick.AddListener(() =>
                 {
-                    LevelManager.Instance.LoadLevel(PlayerDataManager.Instance.Data.level + 1);
-                };
+                    Loading.Instance.QuickLoadScene(SceneConstants.SceneUpgrade);
+                });
+            
+                // Todo load next level
+                btnNextLevel.onClick.RemoveAllListeners();
+                btnNextLevel.onClick.AddListener(() =>
+                {
+                    if (winLevel + 1 > LevelManifest.Instance.GetMaxLevel(PlayerDataManager.Instance.Data.Class))
+                        return;
                 
-                LogManager.Log(LogConst.EventLogStartLevel, $"level_{PlayerDataManager.Instance.Data.level + 1}", "from popup win");
-            });
+                    ui.gameObject.SetActive(false);
+                    Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame);
+                    Loading.Instance.onSceneLoaded += () =>
+                    {
+                        LevelManager.Instance.LoadLevel(winLevel + 1);
+                    };
+                
+                    LogManager.Log(LogConst.EventLogStartLevel, $"level_{winLevel + 1}", "from popup win");
+                });    
+            }
+            else
+            {
+                groupBtnWin.SetActive(false);
+                groupEndLevel.SetActive(true);
+
+                if (completed)
+                {
+                    btnCredit.gameObject.SetActive(false);
+                    btnBackToTree1.gameObject.SetActive(true);
+                    
+                    btnBackToTree1.onClick.RemoveAllListeners();
+                    btnBackToTree1.onClick.AddListener(() =>
+                    {
+                        Loading.Instance.QuickLoadScene(SceneConstants.SceneUpgrade);
+                    });
+                }
+                else
+                {
+                    btnCredit.gameObject.SetActive(true);
+                    btnBackToTree1.gameObject.SetActive(false);
+                    
+                    btnCredit.onClick.RemoveAllListeners();
+                    btnCredit.onClick.AddListener(() =>
+                    {
+                        popupCredit.SetActive(true);
+                    });
+                }
+                
+            }
         }
 
         [Space] [Header("UI Tween")] 
@@ -88,6 +132,8 @@ namespace InGame.UI
         [SerializeField] private Transform rectLine;
         [SerializeField] private CanvasGroup groupBtnBackToTree;
         [SerializeField] private CanvasGroup groupBtnReplay;
+        [SerializeField] private CanvasGroup groupBtnCredits;
+        [SerializeField] private CanvasGroup groupBtnBackToTree1;
 
         [Header("UI Tween Config")] 
         [SerializeField] private float durationTitle = 2f;
@@ -106,6 +152,8 @@ namespace InGame.UI
             rectLine.localScale = new Vector3(0f, 1f, 1f);
             groupBtnBackToTree.alpha = 0f;
             groupBtnReplay.alpha = 0f;
+            groupBtnCredits.alpha = 0f;
+            groupBtnBackToTree1.alpha = 0f;
         }
         
         private Tween DoShowUIPopup()
@@ -143,13 +191,33 @@ namespace InGame.UI
                 .Append(rectLine.DOScaleX(1f, 0.2f))
                 .AppendCallback(() =>
                 {
-                    groupBtnBackToTree.transform.localPosition += new Vector3(0f, 10f, 0f);
-                    groupBtnBackToTree.transform.DOLocalMoveY(-10f, durationItemResourceGroup).SetUpdate(true).SetRelative(true);
-                    groupBtnBackToTree.DOFade(1f, durationItemResourceGroup).SetUpdate(true);
+                    if (groupBtnBackToTree.gameObject.activeInHierarchy)
+                    {
+                        groupBtnBackToTree.transform.localPosition += new Vector3(0f, 10f, 0f);
+                        groupBtnBackToTree.transform.DOLocalMoveY(-10f, durationItemResourceGroup).SetUpdate(true).SetRelative(true);
+                        groupBtnBackToTree.DOFade(1f, durationItemResourceGroup).SetUpdate(true);
+                    }
+
+                    if (groupBtnReplay.gameObject.activeInHierarchy)
+                    {
+                        groupBtnReplay.transform.localPosition += new Vector3(0f, 10f, 0f);
+                        groupBtnReplay.transform.DOLocalMoveY(-10f, durationItemResourceGroup).SetUpdate(true).SetRelative(true);
+                        groupBtnReplay.DOFade(1f, durationItemResourceGroup).SetUpdate(true);
+                    }
+
+                    if (groupBtnCredits.gameObject.activeInHierarchy)
+                    {
+                        groupBtnCredits.transform.localPosition += new Vector3(0f, 10f, 0f);
+                        groupBtnCredits.transform.DOLocalMoveY(-10f, durationItemResourceGroup).SetUpdate(true).SetRelative(true);
+                        groupBtnCredits.DOFade(1f, durationItemResourceGroup).SetUpdate(true);
+                    }
                     
-                    groupBtnReplay.transform.localPosition += new Vector3(0f, 10f, 0f);
-                    groupBtnReplay.transform.DOLocalMoveY(-10f, durationItemResourceGroup).SetUpdate(true).SetRelative(true);
-                    groupBtnReplay.DOFade(1f, durationItemResourceGroup).SetUpdate(true);
+                    if (groupBtnBackToTree1.gameObject.activeInHierarchy)
+                    {
+                        groupBtnBackToTree1.transform.localPosition += new Vector3(0f, 10f, 0f);
+                        groupBtnBackToTree1.transform.DOLocalMoveY(-10f, durationItemResourceGroup).SetUpdate(true).SetRelative(true);
+                        groupBtnBackToTree1.DOFade(1f, durationItemResourceGroup).SetUpdate(true);
+                    }
                 });
             
             return seq;

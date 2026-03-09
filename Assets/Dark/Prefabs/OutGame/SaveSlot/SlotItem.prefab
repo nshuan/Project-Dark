@@ -335,8 +335,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -54.132874, y: -62}
-  m_SizeDelta: {x: 115.6657, y: 25}
+  m_AnchoredPosition: {x: -52.919502, y: -62}
+  m_SizeDelta: {x: 124.179, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7821372077006026920
 CanvasRenderer:
@@ -393,8 +393,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18
-  m_fontSizeBase: 18
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -457,6 +457,9 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes:
     - Name: valueMap
+      Entry: 6
+      Data: 
+    - Name: overrideFont
       Entry: 6
       Data: 
   key: 
@@ -703,7 +706,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -163.1}
+  m_AnchoredPosition: {x: 0, y: -169}
   m_SizeDelta: {x: 93, y: 11}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2327350652088435654
@@ -1167,7 +1170,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -163.1}
+  m_AnchoredPosition: {x: 0, y: -169}
   m_SizeDelta: {x: 93, y: 11}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1348677957462036814
@@ -1476,6 +1479,7 @@ GameObject:
   - component: {fileID: 2871514586880674253}
   - component: {fileID: 7621328553717078977}
   - component: {fileID: 4769398129220393406}
+  - component: {fileID: 6717730201955563863}
   m_Layer: 5
   m_Name: txtClassName
   m_TagString: Untagged
@@ -1599,6 +1603,34 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &6717730201955563863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5149030299394482086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b351070690b4b52ade5c7e2d6852179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: valueMap
+      Entry: 6
+      Data: 
+    - Name: overrideFont
+      Entry: 6
+      Data: 
+  key: 
 --- !u!1 &5724878508317746389
 GameObject:
   m_ObjectHideFlags: 0
@@ -1634,8 +1666,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 53.859264, y: -62}
-  m_SizeDelta: {x: 108.1185, y: 25}
+  m_AnchoredPosition: {x: 59.505, y: -62}
+  m_SizeDelta: {x: 111.01, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4456010419923049533
 CanvasRenderer:
@@ -1692,12 +1724,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18
-  m_fontSizeBase: 18
+  m_fontSize: 19.7
+  m_fontSizeBase: 20
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 16
+  m_fontSizeMax: 20
   m_fontStyle: 8
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
@@ -1756,6 +1788,9 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes:
     - Name: valueMap
+      Entry: 6
+      Data: 
+    - Name: overrideFont
       Entry: 6
       Data: 
   key: 
@@ -2017,8 +2052,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18
-  m_fontSizeBase: 18
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2110,7 +2145,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -91.3}
+  m_AnchoredPosition: {x: 0, y: -95}
   m_SizeDelta: {x: 230.0142, y: 24.663}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &760427054364431308
@@ -2168,8 +2203,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10.5
-  m_fontSizeBase: 10.5
+  m_fontSize: 11
+  m_fontSizeBase: 11
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2250,7 +2285,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 2
+      Data: 5
     - Name: 
       Entry: 7
       Data: 
@@ -2276,10 +2311,49 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 1
+      Data: Tiempo total jugado
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 1
+      Data: Tempo total de jogo
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 4
+    - Name: $v
+      Entry: 1
+      Data: Gesamte Spielzeit
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
       Entry: 13
       Data: 
     - Name: 
       Entry: 8
+      Data: 
+    - Name: overrideFont
+      Entry: 6
       Data: 
   key: key_save_slot_total_time_played
 --- !u!1 &6300556780079296485
@@ -2293,6 +2367,7 @@ GameObject:
   - component: {fileID: 6875971695418383394}
   - component: {fileID: 4661900451569584950}
   - component: {fileID: 8612751000380497209}
+  - component: {fileID: 8099851756033081621}
   m_Layer: 5
   m_Name: txtTimePlayed
   m_TagString: Untagged
@@ -2316,7 +2391,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -109.6}
+  m_AnchoredPosition: {x: 0, y: -119}
   m_SizeDelta: {x: 202.5449, y: 24.9551}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4661900451569584950
@@ -2349,8 +2424,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 11 hours 30 min
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 9e8d4a5f65e372141a382c598cfbdb53, type: 2}
-  m_sharedMaterial: {fileID: -2175503189692066514, guid: 9e8d4a5f65e372141a382c598cfbdb53, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 53e32d92f04267c46ade4f2c4859a31d, type: 2}
+  m_sharedMaterial: {fileID: 3927744567885372615, guid: 53e32d92f04267c46ade4f2c4859a31d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2374,12 +2449,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 9.5
+  m_fontSize: 14
   m_fontSizeBase: 9.5
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 8
+  m_fontSizeMax: 14
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -2416,6 +2491,118 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8099851756033081621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6300556780079296485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b351070690b4b52ade5c7e2d6852179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 53e32d92f04267c46ade4f2c4859a31d, type: 2}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: valueMap
+      Entry: 6
+      Data: 
+    - Name: overrideFont
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp],[TMPro.TMP_FontAsset, Unity.TextMeshPro]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Dark.Tools.Language.LanguageType,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 5
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 4
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  key: 
 --- !u!1 &6534346051793797500
 GameObject:
   m_ObjectHideFlags: 0
@@ -2526,7 +2713,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -89.6}
+  m_AnchoredPosition: {x: 0, y: -95}
   m_SizeDelta: {x: 188.1803, y: 24.663}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1369652821562784697
@@ -2696,6 +2883,9 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 8
+      Data: 
+    - Name: overrideFont
+      Entry: 6
       Data: 
   key: key_save_slot_total_time_played
 --- !u!1 &6871988479472571834
@@ -3009,8 +3199,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18
-  m_fontSizeBase: 18
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -3160,7 +3350,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -109.6}
+  m_AnchoredPosition: {x: 0, y: -119}
   m_SizeDelta: {x: 202.5449, y: 24.9551}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2517269954078530206
@@ -3444,6 +3634,7 @@ MonoBehaviour:
   hoverScale: 1.1
   pressScale: 1
   duration: 0.2
+  target: {fileID: 0}
 --- !u!114 &8667178865170730517
 MonoBehaviour:
   m_ObjectHideFlags: 0

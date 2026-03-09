@@ -4,18 +4,10 @@ using Random = UnityEngine.Random;
 
 namespace InGame
 {
-    /// <summary>
-    /// Prefab của projectile sẽ được set ở trong upgrade node
-    /// </summary>
-    [Serializable]
-    public class ProjectileHitBlossom : IProjectileHit
+ 	[Serializable]
+    public class KnightSlashHitBlossom : ProjectileHitBlossom
     {
-        public ProjectileEntity projectile;
-
-        public int bulletAmount = 5;
-        public float blossomSize = 3f;
-        
-        public virtual void DoAction(ProjectileEntity parentProjectile, Vector2 position, Action<ProjectileEntity> callbackLateInit)
+        public override void DoAction(ProjectileEntity parentProjectile, Vector2 position, Action<ProjectileEntity> callbackLateInit)
         {
             if (bulletAmount == 0) return;
             if (blossomSize == 0) return;
@@ -24,8 +16,22 @@ namespace InGame
             var dir = Random.insideUnitCircle.normalized;
             var angle = 360f / bulletAmount;
             
+            // Chỉ gây dame 1 lần
+            var hasSetupDamage = false;
+            
             for (var i = 0; i < bulletAmount; i++)
             {
+                var damage = parentProjectile.Damage;
+                var criticalDamage = parentProjectile.CriticalDamage;
+                var size = 360f;
+                if (hasSetupDamage)
+                {
+                    damage = 0;
+                    criticalDamage = 0;
+                    size = 0;
+                }
+
+                hasSetupDamage = true;
                 var pDir = (Vector2)(Quaternion.Euler(0f, 0f, angle * i) * dir);
                 var p = ProjectilePool.Instance.Get(projectile, null, false);
                 p.transform.position = position;
@@ -33,10 +39,10 @@ namespace InGame
                     position, 
                     pDir.normalized, 
                     blossomSize, 
-                    parentProjectile.Size, 
+                    size, 
                     LevelUtilityV2.StatsNormalAttack.speedScale, 
-                    parentProjectile.Damage, 
-                    parentProjectile.CriticalDamage, 
+                    damage, 
+                    criticalDamage, 
                     parentProjectile.CriticalRate,
                     parentProjectile.Stagger, 
                     false,
