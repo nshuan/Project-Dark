@@ -9,6 +9,7 @@ namespace Data
     public class PlayerData
     {
         public bool initialized;
+        public bool completed;
         public int level;
         
         // Class

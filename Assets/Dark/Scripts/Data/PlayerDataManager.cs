@@ -56,6 +56,12 @@ namespace Data
             data.level += 1;
             Save();
         }
+
+        public void SetFlagCompletedAllLevel()
+        {
+            data.completed = true;
+            Save();
+        }
         
         #region SAVE LOAD
 
