@@ -145,8 +145,12 @@ namespace InGame
                         3 => GameSettings.KeyMoveTower3,
                         _ => GameSettings.KeyMoveTower0
                     };
+                    
+                    var keyMoveTowerStr = keyMoveTower.ToString();
+                    if (keyMoveTower is >= KeyCode.Alpha0 and <= KeyCode.Alpha9)
+                        keyMoveTowerStr = (keyMoveTower - KeyCode.Alpha0).ToString();
                     txtMoveInstruction.gameObject.SetActive(true);
-                    txtMoveInstruction.SetTextLanguage("key_tutorial_move_tower", ("%{value}", keyMoveTower.ToString()));
+                    txtMoveInstruction.SetTextLanguage("key_tutorial_move_tower", ("%{value}", keyMoveTowerStr));
                 }
             }
             else
