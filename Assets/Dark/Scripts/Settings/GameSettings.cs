@@ -33,6 +33,7 @@ namespace Dark.Scripts.Settings
         public static bool ShowEnemyHealth;
         public static bool ShowBossHealth;
         public static bool ShowGateWarning;
+        public static float ScreenShakeScale;
         
         [Header("Video settings")]
         public static int ResolutionWidth;
@@ -66,6 +67,7 @@ namespace Dark.Scripts.Settings
             ShowEnemyHealth = _settings.showEnemyHealth;
             ShowBossHealth = _settings.showBossHealth;
             ShowGateWarning = _settings.showGateWarning;
+            ScreenShakeScale = _settings.screenShakeScale;
             ResolutionWidth = _settings.resolutionWidth;
             ResolutionHeight = _settings.resolutionHeight;
             WindowedMode = _settings.windowedMode;
@@ -95,6 +97,7 @@ namespace Dark.Scripts.Settings
             _settings.showEnemyHealth = ShowEnemyHealth;
             _settings.showBossHealth = ShowBossHealth;
             _settings.showGateWarning = ShowGateWarning;
+            _settings.screenShakeScale = ScreenShakeScale;
             _settings.resolutionWidth = ResolutionWidth;
             _settings.resolutionHeight = ResolutionHeight;
             _settings.windowedMode = WindowedMode;
@@ -131,6 +134,7 @@ namespace Dark.Scripts.Settings
             public bool showEnemyHealth = true;
             public bool showBossHealth = true;
             public bool showGateWarning = true;
+            public float screenShakeScale = 1f;
 
             public int resolutionWidth = 1920;
             public int resolutionHeight = 1080;
