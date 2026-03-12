@@ -1,9 +1,15 @@
+using System;
 using UnityEngine;
 
 namespace InGame
 {
     public class BlossomProjectileEntity : ProjectileEntity
     {
+        private void Start()
+        {
+            hits = new RaycastHit2D[10];
+        }
+
         protected override void PlayVfxHit()
         {
             var hitVfx = BlossomProjectileHitVfxPool.Instance.Get(transform, true);
@@ -15,7 +21,7 @@ namespace InGame
         protected override void PlayHitActions(EnemyEntity hit)
         {
             var explodeCenter = hit ? hit.transform.position : transform.position;
-            var explodeHitCount = Physics2D.CircleCastNonAlloc(explodeCenter, 2 * Size, Vector2.zero, hits, 0f,
+            var explodeHitCount = Physics2D.CircleCastNonAlloc(explodeCenter, Size, Vector2.zero, hits, 0f,
                 collider.hitLayer);
             if (explodeHitCount > 0)
             {
