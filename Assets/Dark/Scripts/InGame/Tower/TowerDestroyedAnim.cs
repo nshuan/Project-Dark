@@ -81,7 +81,7 @@ namespace InGame
             mainSkeleton.Skeleton.SetSlotsToSetupPose();
             mainSkeleton.AnimationState.Apply(mainSkeleton.Skeleton);
             StartCoroutine(IEPlay());
-            return Mathf.Max(durationFocusTower + durationDestroyTower + delayShowAnim, 2f); // Thấy duration của vfx là 2s
+            return durationFocusTower + durationDestroyTower + delayShowAnim; // Thấy duration của vfx là 2s
         }
 
         public float PlayReturn()

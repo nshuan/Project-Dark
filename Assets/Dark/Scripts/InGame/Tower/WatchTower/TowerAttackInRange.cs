@@ -251,18 +251,23 @@ namespace InGame.WatchTower
             
             if (coroutineCooldown != null) StopCoroutine(coroutineCooldown);
             coroutineCooldown = StartCoroutine(IECooldown(cooldown));
-                
-            vfxActivateCounter.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(counterDirection.y, counterDirection.x) * Mathf.Rad2Deg);
-            vfxCounterSlash.transform.rotation = Quaternion.Euler(vfxCounterSlashRotationX, 0f,  Mathf.Atan2(counterDirection.y, counterDirection.x) * Mathf.Rad2Deg - 90f);
-            vfxActivateCounter.SetActive(true);
-            vfxCounterSlash.SetActive(true);
+            
             vfxCooldownComplete?.SetActive(false);
             vfxCooldownCompleteLoop?.SetActive(false);
-            
+
             if (canCounterPierce)
+            {
+                vfxActivateCounter.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(counterDirection.y, counterDirection.x) * Mathf.Rad2Deg);
+                vfxActivateCounter.SetActive(true);
                 Counter(transform.position, counterDirection, DamageArcher, bulletSpeedScale);
+            }
+
             if (canCounterSlash)
+            {
+                vfxCounterSlash.transform.rotation = Quaternion.Euler(vfxCounterSlashRotationX, 0f,  Mathf.Atan2(counterDirection.y, counterDirection.x) * Mathf.Rad2Deg - 90f);
+                vfxCounterSlash.SetActive(true);
                 CounterSlash(transform.position, counterDirection, DamageKnight, bulletSpeedScale);
+            }
             
             DOTween.Kill(fillFull);
             fillFull.color = new Color(fillFull.color.r, fillFull.color.g, fillFull.color.b, 1f);

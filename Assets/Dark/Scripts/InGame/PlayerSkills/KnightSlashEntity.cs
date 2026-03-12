@@ -136,7 +136,7 @@ namespace InGame
             if (hitCount > 0)
             {
                 var halfAngle = Size / 2;
-                if (OverrideSize > 0)
+                if (OverrideSize > 0 && OverrideSize > Size)
                 {
                     halfAngle = OverrideSize / 2;
                 }

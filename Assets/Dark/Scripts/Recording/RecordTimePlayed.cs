@@ -9,8 +9,8 @@ namespace Dark.Scripts.Recording
 {
     public class RecordTimePlayed : MonoBehaviour
     {
-        private List<string> recordScenes = new List<string>() { "Upgrade", "InGame" };
-        private List<string> ignoredScenes = new List<string>() { "Blank "};
+        private List<string> recordScenes = new List<string>() { "Upgrade", "BaseLevel" };
+        private List<string> ignoredScenes = new List<string>() { "Blank", "Level3Towers", "Level3TowersSquare", "Level4Towers", "Level4TowersTriangle" };
         
         private DateTime currentStartTime;
         
@@ -38,6 +38,7 @@ namespace Dark.Scripts.Recording
                 // Set start time to count
                 currentStartTime = DateTime.Now;
                 recording = true;
+                currentScene = scene.name;
                 return;
             }
 
@@ -48,6 +49,7 @@ namespace Dark.Scripts.Recording
                 
                 Save();
                 recording = false;
+                currentScene = scene.name;
                 return;
             }
             
@@ -64,10 +66,9 @@ namespace Dark.Scripts.Recording
                    Save();
                 }
                 
+                currentScene = scene.name;
                 return;
             }
-      
-            currentScene = scene.name;
         }
 
         // Đang chơi dở bị thoát khỏi game cũng lưu luôn
