@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Core;
+using Dark.Scripts.Leaderboard;
 using Dark.Scripts.Settings;
 using Dark.Scripts.Utils;
 using Data;
@@ -249,7 +250,16 @@ namespace InGame
             
             WealthManager.Instance.Save();
             if (Level.level >= PlayerDataManager.Instance.Data.level + 1)
+            {
                 PlayerDataManager.Instance.CompleteLevel();
+                
+                // Add score to leaderboard
+                if (PlayerDataManager.Instance.Data.level ==
+                    LevelManifest.Instance.GetMaxLevel(PlayerDataManager.Instance.Data.Class))
+                {
+                    GameCompletionLeaderboardManager.Instance.UploadScore((int)PlayerDataManager.Instance.Data.timePlayedMilli);
+                }
+            }
             
             SteamStats.Instance.CompleteDay(Level.level);
             SteamStats.Instance.SaveStats();
