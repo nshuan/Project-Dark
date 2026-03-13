@@ -60,6 +60,9 @@ namespace InGame
                     enemy.LevelDarkRatio, 
                     enemy.LevelDarkUnitValue);
                 
+                // Force enemy di chuyển đến cùng vị trí với spawner
+                creep.attackPosition = enemy.attackPosition;
+                
                 creep.Activate(creepDelayAttack);
                 enemy.UniqueId = EnemyManager.Instance.CurrentEnemyIndex;
                 EnemyManager.Instance.OnEnemySpawn(creep);
