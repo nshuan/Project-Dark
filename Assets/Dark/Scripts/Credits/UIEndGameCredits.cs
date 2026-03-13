@@ -7,6 +7,16 @@ namespace Dark.Scripts.Credits
 {
     public class UIEndGameCredits : UIGameCreditsScroll
     {
+        protected override void Awake()
+        {
+            btnClose.onClick.RemoveAllListeners();
+            btnClose.onClick.AddListener(() =>
+            {
+                StopCredits();
+                ReturnToHome();
+            });
+        }
+
         protected override void StartCredits()
         {
             PlayerDataManager.Instance.SetFlagCompletedAllLevel();
