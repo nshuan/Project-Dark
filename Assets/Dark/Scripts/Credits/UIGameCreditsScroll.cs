@@ -12,7 +12,7 @@ namespace Dark.Scripts.Credits
         [SerializeField] protected RectTransform content;
         [SerializeField] private RectTransform anchorStart;
         [SerializeField] protected RectTransform anchorEnd;
-        [SerializeField] private Button btnClose;
+        [SerializeField] protected Button btnClose;
         [SerializeField] private CanvasGroup cvgButtonClose;
 
         [Space] [Header("Config")] 
@@ -20,7 +20,7 @@ namespace Dark.Scripts.Credits
         
         protected bool started;
 
-        private void Awake()
+        protected virtual void Awake()
         {
             btnClose.onClick.RemoveAllListeners();
             btnClose.onClick.AddListener(() => CloseCredits(0f));

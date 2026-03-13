@@ -10,6 +10,8 @@ namespace InGame.EnemyEffect
 {
     public class EnemySpritesAnimation : MonoBehaviour
     {
+        [SerializeField] private bool enableOverrideOriginalScale = false;
+        [SerializeField, ShowIf("enableOverrideOriginalScale")] private Vector3 overrideOriginalScale;
         [SerializeField] private EnemySpritesAnimationInfo idleAnim;
         [SerializeField] private EnemySpritesAnimationInfo runAnim;
         [SerializeField] private EnemySpritesAnimationAttackInfo atkAnim;
@@ -33,6 +35,8 @@ namespace InGame.EnemyEffect
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
             originalScale = spriteRenderer.transform.localScale;
+            if (enableOverrideOriginalScale)
+                originalScale = overrideOriginalScale;
         }
 
         public float PlayCustomAnim(EnemySpritesAnimationInfo anim)
