@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Dark.Scripts.ForDemo;
+using Dark.Scripts.Leaderboard;
 using Dark.Scripts.OutGame.SaveSlot;
 using Dark.Scripts.Settings;
 using Dark.Scripts.Settings.Resolution;
@@ -54,6 +55,15 @@ namespace Dark.Scripts.Common.Init
         public void Initialize()
         {
             SteamStats.Instance.Initialize();
+        }
+    }
+    
+    [Serializable]
+    public class LeaderboardSpeedrunInitializer : IEarlyInitialize
+    {
+        public void Initialize()
+        {
+            GameCompletionLeaderboardManager.Instance.Initialize("Speedrun");
         }
     }
 }
