@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
+using InGame.Upgrade;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -61,6 +62,8 @@ namespace Dark.Scripts.OutGame.Upgrade.UINodeCovered
             if (allClouds == null) return;
             if (!cvgCloud) return;
 
+            UpgradeManager.Instance.OpenCloud(upgradedNode.config.nodeId, true);
+            
             DOTween.Kill(this);
             cvgCloud.DOFade(0f, 1f).SetEase(Ease.OutQuad).SetTarget(this);
             foreach (var cloud in allCloudFloat)
@@ -112,15 +115,28 @@ namespace Dark.Scripts.OutGame.Upgrade.UINodeCovered
             }
 
             var shouldShow = true;
-            foreach (var id in nodeIds)
+            if (nodeIds != null)
             {
-                if (upgradeTree.NodesMap.TryGetValue(id, out var nodes))
+                foreach (var id in nodeIds)
                 {
-                    if (nodes.Any((node) => node.CurrentState == UIUpgradeNodeState.Activated))
+                    if (UpgradeManager.Instance.Data.openedCloudGroup.Contains(id))
                     {
                         cvgCloud.alpha = 0f;
                         shouldShow = false;
                         break;
+                    }
+                    else
+                    {
+                        if (upgradeTree.NodesMap.TryGetValue(id, out var nodes))
+                        {
+                            if (nodes.Any((node) => node.CurrentState == UIUpgradeNodeState.Activated))
+                            {
+                                cvgCloud.alpha = 0f;
+                                shouldShow = false;
+                                UpgradeManager.Instance.OpenCloud(id, false);
+                                break;
+                            }
+                        }
                     }
                 }
             }

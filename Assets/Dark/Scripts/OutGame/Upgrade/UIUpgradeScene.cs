@@ -26,8 +26,10 @@ namespace Dark.Scripts.OutGame.Upgrade
 
         [Space] [Header("Confirm")] 
         [SerializeField] private UIPopupConfirmExchange popupConfirmExchange;
+        [SerializeField] private UIPopupConfirmReset popupConfirmReset;
         
         public UIPopupConfirmExchange PopupConfirmExchange => popupConfirmExchange;
+        public UIPopupConfirmReset PopupConfirmReset => popupConfirmReset;
         
         protected override void Awake()
         {

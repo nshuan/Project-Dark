@@ -8,6 +8,7 @@ using Economic;
 using Cheat;
 using Dark.Scripts.OutGame.SaveSlot;
 using InGame.Upgrade.DynamicCost;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace InGame.Upgrade
@@ -37,7 +38,6 @@ namespace InGame.Upgrade
 
         private Dictionary<int, UpgradeNodeData> dataMapById;
         private Dictionary<int, int> groupUnlockOrderMapById;
-        private int currentGroupUnlockOrder;
         private int currentNodeUnlockOrder;
         
         public void PreloadAllData()
@@ -69,16 +69,30 @@ namespace InGame.Upgrade
             // set null để lúc gọi sẽ lấy lại đúng tree theo class
             treeConfig = null;
             dataMapById = new Dictionary<int, UpgradeNodeData>();
-            var index = 0;
+            groupUnlockOrderMapById = new Dictionary<int, int>();
+            currentNodeUnlockOrder = 0;
             foreach (var node in data.nodes)
             {
                 dataMapById.TryAdd(node.id, node);
-                if (node.unlockOrder > currentNodeUnlockOrder) currentNodeUnlockOrder = node.unlockOrder;
+                if (node.level > 0 && node.unlockOrder > currentNodeUnlockOrder) currentNodeUnlockOrder = node.unlockOrder;
             }
+
+            if (data.groups == null || data.groups.Count == 0)
+            {
+                SyncGroupUnlockOrderData();
+            }
+            else
+            {
+                foreach (var group in data.groups)
+                {
+                    groupUnlockOrderMapById.TryAdd(group.id, group.unlockOrder);
+                }
+            }
+            
             RefreshGroupUnlockOrder();
         }
 
-        private void Save()
+        public void Save()
         {
             DataHandler.Save(DataKey, Data);
             preloadedData[DataKey] = data;
@@ -243,14 +257,33 @@ namespace InGame.Upgrade
                 {
                     if (!groupUnlockOrderMapById.ContainsKey(groupId.groupId) && groupId.isLockNode)
                     {
-                        groupUnlockOrderMapById.Add(groupId.groupId, groupUnlockOrderMapById.Count);
+                        // groupUnlockOrderMapById phải sắp xếp theo thứ tự tăng dần
+                        var unlockOrder = 0;
+                        var unlockOrderValues = groupUnlockOrderMapById.Values.ToArray();
+                        unlockOrderValues.Sort();
+                        if (unlockOrderValues.Length > 0)
+                            unlockOrder = unlockOrderValues[^1] + 1;
+                        for (var i = 0; i < unlockOrderValues.Length - 1; i++)
+                        {
+                            if (unlockOrderValues[i] + 1 < unlockOrderValues[i + 1])
+                            {
+                                unlockOrder = unlockOrderValues[i] + 1;
+                                break;
+                            }
+                        }
+                        Data.groups.Add(new UpgradeGroupData() { id = groupId.groupId, unlockOrder = unlockOrder });
+                        Data.groups.Sort((g1, g2) => g1.unlockOrder.CompareTo(g2.unlockOrder));
+                        groupUnlockOrderMapById.Add(groupId.groupId, unlockOrder);
                     }
                 }
             }
 
             RefreshGroupUnlockOrder();
-            dataMapById[nodeId].unlockOrder = currentNodeUnlockOrder;
-            currentNodeUnlockOrder += 1;
+            if (dataMapById[nodeId].level == 1)
+            {
+                dataMapById[nodeId].unlockOrder = currentNodeUnlockOrder;
+                currentNodeUnlockOrder += 1;
+            }
                 
             Save();
             return true;
@@ -343,6 +376,41 @@ namespace InGame.Upgrade
 
             return true;
         }
+
+        public bool ResetNode(int nodeId, UpgradeGroupIdInfo[] groupIds, bool refreshGroup = false, bool save = false)
+        {
+            if (TreeConfig.GetNodeById(nodeId) == null) return false;
+
+            if (!dataMapById.TryGetValue(nodeId, out var nodeData)) return false;
+
+            Data.nodes.Remove(nodeData);
+            dataMapById.Remove(nodeId);
+            foreach (var groupId in groupIds)
+            {
+                if (groupUnlockOrderMapById.ContainsKey(groupId.groupId) && groupId.isLockNode)
+                {
+                    groupUnlockOrderMapById.Remove(groupId.groupId);
+                    var shouldRemove = data.groups.FindAll((groupData) => groupData.id == groupId.groupId);
+                    if (shouldRemove is { Count: > 0 })
+                    {
+                        foreach (var group in shouldRemove)
+                        {
+                            data.groups.Remove(group);
+                        }
+                    }
+                }
+            }
+            
+            if (refreshGroup) RefreshGroupUnlockOrder();
+            if (save) Save();
+                
+            return true;
+        }
+        
+        public bool CanResetNode(int nodeId)
+        {
+            return true;
+        }
         
         public UpgradeNodeData GetData(int nodeId)
         {
@@ -375,39 +443,72 @@ namespace InGame.Upgrade
         {
             if (!TreeConfig.nodeGroupsMapById.ContainsKey(groupId)) return 999999;
             if (refresh) RefreshGroupUnlockOrder();
-            return groupUnlockOrderMapById[groupId];;
+            if (groupUnlockOrderMapById.TryGetValue(groupId, out var order)) return order;
+            return 999999;
         }
 
         public bool IsGroupUnlocked(int groupId)
         {
             if (!TreeConfig.nodeGroupsMapById.ContainsKey(groupId)) return false;
-            return groupUnlockOrderMapById[groupId] < 999999;
+            if (groupUnlockOrderMapById.TryGetValue(groupId, out var order)) return order < 999999;
+            return false;
         }
-        
-        public void RefreshGroupUnlockOrder()
+
+        private void SyncGroupUnlockOrderData()
         {
             var groups = TreeConfig.nodeGroupsMapById.Values.ToList();
             var unlockedData = Data.nodes.Where(node => node.level >= 1).ToDictionary(d => d.id);
             var unlockedGroup = new List<UpgradeNodeGroup>();
-            var lockedGroup = new List<UpgradeNodeGroup>();
             foreach (var group in groups)
             {
                 if (unlockedData.ContainsKey(group.lockNode.nodeId)) unlockedGroup.Add(group);
-                else lockedGroup.Add(group);
             }
             unlockedGroup.Sort((group1, group2) => unlockedData[group1.lockNode.nodeId].unlockOrder
                 .CompareTo(unlockedData[group2.lockNode.nodeId].unlockOrder));
             groupUnlockOrderMapById ??= new Dictionary<int, int>();
             for (var i = 0; i < unlockedGroup.Count; i++)
             {
+                data.groups.Add(new UpgradeGroupData() { id = unlockedGroup[i].groupId, unlockOrder = i });
                 groupUnlockOrderMapById[unlockedGroup[i].groupId] = i;
             }
-
-            currentGroupUnlockOrder = unlockedGroup.Count;
             
-            foreach (var group in lockedGroup)
+            Save();
+        }
+        
+        public void RefreshGroupUnlockOrder()
+        {
+            // var groups = TreeConfig.nodeGroupsMapById.Values.ToList();
+            // var unlockedData = Data.nodes.Where(node => node.level >= 1).ToDictionary(d => d.id);
+            // var unlockedGroup = new List<UpgradeNodeGroup>();
+            // var lockedGroup = new List<UpgradeNodeGroup>();
+            // foreach (var group in groups)
+            // {
+            //     if (unlockedData.ContainsKey(group.lockNode.nodeId)) unlockedGroup.Add(group);
+            //     else lockedGroup.Add(group);
+            // }
+            // unlockedGroup.Sort((group1, group2) => unlockedData[group1.lockNode.nodeId].unlockOrder
+            //     .CompareTo(unlockedData[group2.lockNode.nodeId].unlockOrder));
+            // groupUnlockOrderMapById ??= new Dictionary<int, int>();
+            // for (var i = 0; i < unlockedGroup.Count; i++)
+            // {
+            //     groupUnlockOrderMapById[unlockedGroup[i].groupId] = i;
+            // }
+            //
+            // currentGroupUnlockOrder = unlockedGroup.Count;
+            //
+            // foreach (var group in lockedGroup)
+            // {
+            //     groupUnlockOrderMapById[group.groupId] = currentGroupUnlockOrder;
+            // }
+        }
+
+        public void OpenCloud(int nodeId, bool save)
+        {
+            data.openedCloudGroup ??= new List<int>();
+            if (!data.openedCloudGroup.Contains(nodeId))
             {
-                groupUnlockOrderMapById[group.groupId] = currentGroupUnlockOrder;
+                data.openedCloudGroup.Add(nodeId);
+                if (save) Save();
             }
         }
 
@@ -424,6 +525,8 @@ namespace InGame.Upgrade
     public class UpgradeData
     {
         public List<UpgradeNodeData> nodes;
+        public List<UpgradeGroupData> groups;
+        public List<int> openedCloudGroup;
         public int indexVestige;
         public int indexEchoes;
         public int indexSigils;
@@ -431,6 +534,8 @@ namespace InGame.Upgrade
         public UpgradeData()
         {
             nodes = new List<UpgradeNodeData>();
+            groups =  new List<UpgradeGroupData>();
+            openedCloudGroup = new List<int>();
         }
     }
 
@@ -445,6 +550,13 @@ namespace InGame.Upgrade
         {
             level += 1;
         }
+    }
+
+    [Serializable]
+    public class UpgradeGroupData
+    {
+        public int id;
+        public int unlockOrder = 999999;
     }
     
     [Serializable]

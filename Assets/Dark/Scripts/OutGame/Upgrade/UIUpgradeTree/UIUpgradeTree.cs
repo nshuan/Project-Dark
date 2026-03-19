@@ -1,11 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Schema;
+using Dark.Scripts.InGame.Upgrade;
 using Dark.Scripts.SceneNavigation;
 using DG.Tweening;
+using Economic;
 using InGame;
 using InGame.CharacterClass;
 using InGame.Upgrade;
+using InGame.Upgrade.DynamicCost;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEditor;
@@ -38,6 +42,9 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private float nodeSpawnDelayStep = 0.1f;
         [SerializeField] private float firstNodeDelayStep = 0.5f;
 
+        [Space] [Header("Reset Skill")] 
+        [SerializeField] private UpgradeResetConfig resetConfig;
+
         public int LastUpgradeNodeId { get; set; } = -1;
         public Action<UIUpgradeNode> OnNodeUpgraded { get; set; }
         public Action OnTreeSpawned { get; set; }
@@ -48,7 +55,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             OnTreeSpawned = null;
         }
 
-        public void UpdateChildren(int id, bool isUnlock)
+        public void UpdateChildren(int id, bool isUnlock, bool isResetNode = false)
         {
             if (nodeChildrenMap.TryGetValue(id, out var children))
             {
@@ -60,7 +67,11 @@ namespace Dark.Scripts.OutGame.Upgrade
                         if (childNode.CurrentState == UIUpgradeNodeState.Activated)
                             UpdateChildren(childNode.config.nodeId, true);
                     });
-                    else childNode.UpdateUI();
+                    else
+                    {
+                        childNode.UpdateUI();
+                        if (isResetNode) UpdateChildren(childNode.config.nodeId, false, true);
+                    }
                 }
             }
         }
@@ -84,6 +95,154 @@ namespace Dark.Scripts.OutGame.Upgrade
             }
         }
 
+        public void ResetNode(int nodeId, UpgradeGroupIdInfo[] groups)
+        {
+            UpgradeManager.Instance.ResetNode(nodeId, groups);
+
+            if (nodeChildrenMap.TryGetValue(nodeId, out var children))
+            {
+                foreach (var child in children)
+                {
+                    var canReset = true;
+                    if (child.preRequires is { Count: > 1 })
+                    {
+                        foreach (var preRequire in child.preRequires)
+                        {
+                            if (preRequire.preRequireId == nodeId) continue;
+                            var data = UpgradeManager.Instance.GetData(preRequire.preRequireId);
+                            if (data is { level: > 0 })
+                            {
+                                canReset = false;
+                                break;
+                            }
+                        }
+                    }
+                    if (canReset) ResetNode(child.config.nodeId, child.config.groupId);
+                }
+            }
+        }
+
+        public (int, int, int) GetResetReturnResources(UpgradeNodeConfig nodeConfig)
+        {
+            var checkedList = new List<int>();
+            var result = GetResetReturnResources(nodeConfig, ref checkedList);
+            result.Item1 = Mathf.RoundToInt(result.Item1 * resetConfig.refundVestigeRatio);
+            result.Item2 = Mathf.RoundToInt(result.Item2 * resetConfig.refundEchoesRatio);
+            result.Item3 = Mathf.RoundToInt(result.Item3 * resetConfig.refundSigilsRatio);
+            return result;
+        }
+
+        private (int, int, int) GetResetReturnResources(UpgradeNodeConfig nodeConfig, ref List<int> checkedNodes)
+        {
+            if (checkedNodes.Contains(nodeConfig.nodeId)) return (0, 0, 0);
+            checkedNodes.Add(nodeConfig.nodeId);
+            
+            var data = UpgradeManager.Instance.GetData(nodeConfig.nodeId);
+            if (data == null || data.level == 0) return (0, 0, 0);
+
+            var result = (0, 0, 0);
+            var nodeGroupUnlockOrder = nodeConfig.groupId.Min((groupId) => UpgradeManager.Instance.GetGroupUnlockOrder(groupId.groupId, false));
+            var costInfo = nodeConfig.costInfo;
+            
+            foreach (var cost in costInfo)
+            {
+                if (cost.costType == WealthType.Vestige)
+                {
+                    if (nodeConfig.dynamicVestige)
+                    {
+                        if (nodeConfig.MaxLevel == 1)
+                        {
+                            result.Item1 += Mathf.RoundToInt(nodeConfig.vestigeCostRatio *
+                                                      DynamicVestigeConfig.Instance.GetCost1Stage(
+                                                          nodeGroupUnlockOrder));
+                        }
+                        else
+                        {
+                            var listCostValue = DynamicVestigeConfig.Instance.GetCost5Stage(nodeGroupUnlockOrder);
+                            for (var i = 0; i < data.level; i++)
+                            {
+                                if (i >= listCostValue.Length) break;
+                                result.Item1 += Mathf.RoundToInt(nodeConfig.vestigeCostRatio * listCostValue[i]);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (var i = 0; i < data.level; i++)
+                        {
+                            if (i >= cost.costValue.Length) break;
+                            result.Item1 += Mathf.RoundToInt(nodeConfig.vestigeCostRatio * cost.costValue[i]);
+                        }
+                    }
+                }
+                else if (cost.costType == WealthType.Echoes)
+                {
+                    if (nodeConfig.dynamicEchoes)
+                    {
+                        if (nodeConfig.MaxLevel == 1)
+                        {
+                            result.Item2 += Mathf.RoundToInt(1f *
+                                                             DynamicVestigeConfig.Instance.GetCost1Echoes(
+                                                                 nodeGroupUnlockOrder));
+                        }
+                        else
+                        {
+                            var listCostValue = DynamicVestigeConfig.Instance.GetCost5Echoes(nodeGroupUnlockOrder);
+                            for (var i = 0; i < data.level; i++)
+                            {
+                                if (i >= listCostValue.Length) break;
+                                result.Item2 += Mathf.RoundToInt(1f * listCostValue[i]);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (var i = 0; i < data.level; i++)
+                        {
+                            if (i >= cost.costValue.Length) break;
+                            result.Item2 += Mathf.RoundToInt(1f * cost.costValue[i]);
+                        }
+                    }
+                }
+                else
+                {
+                    for (var i = 0; i < data.level; i++)
+                    {
+                        if (i >= cost.costValue.Length) break;
+                        result.Item3 += Mathf.RoundToInt(1f * cost.costValue[i]);
+                    }
+                }
+            }
+
+            if (nodeChildrenMap.TryGetValue(nodeConfig.nodeId, out var children))
+            {
+                foreach (var child in children)
+                {
+                    var canReset = true;
+                    if (child.preRequires is { Count: > 1 })
+                    {
+                        foreach (var preRequire in child.preRequires)
+                        {
+                            if (preRequire.preRequireId == nodeConfig.nodeId) continue;
+                            var preRequiredData = UpgradeManager.Instance.GetData(preRequire.preRequireId);
+                            if (preRequiredData == null || preRequiredData.level == 0) continue;
+                            if (checkedNodes.Contains(preRequire.preRequireId)) continue;
+                            canReset = false;
+                            break;
+                        }
+                    }
+                    if (!canReset) continue; 
+                    
+                    var childReturnValue = GetResetReturnResources(child.config, ref checkedNodes);
+                    result.Item1 += childReturnValue.Item1;
+                    result.Item2 += childReturnValue.Item2;
+                    result.Item3 += childReturnValue.Item3;
+                }
+            }
+
+            return result;
+        }
+        
         public void InvokeNodeUpgraded(UIUpgradeNode node)
         {
             OnNodeUpgraded?.Invoke(node);
