@@ -13,6 +13,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private TextMeshProUGUI txtSigils;
         [SerializeField] private TextMeshProUGUI txtNodeName;
         [SerializeField] private TextMeshProUGUI txtDescription1;
+        [SerializeField] private TextMeshProUGUI txtSummary;
         
         public void Setup(int vestige, int echoes, int sigils, string title, string content, string nodeNameToDisplay, Action callbackYes, Action callbackNo = null)
         {
@@ -42,6 +43,14 @@ namespace Dark.Scripts.OutGame.Upgrade
             };
             LocalizedSetup(keyTitle, keyContent, callbackYes, callbackNo);
             txtDescription1.SetTextLanguage(keyContent1);
+        }
+
+        public void SetupReturnRatio(float vestige, float echoes, float sigils)
+        {
+            txtSummary.SetTextLanguage("key_confirm_reset_summary", 
+                ("%{value1}", (vestige * 100).ToString(GameConst.FloatFormat1)),
+                ("%{value2}", (echoes * 100).ToString(GameConst.FloatFormat1)),
+                ("%{value3}", (sigils * 100).ToString(GameConst.FloatFormat1)));
         }
     }
 }

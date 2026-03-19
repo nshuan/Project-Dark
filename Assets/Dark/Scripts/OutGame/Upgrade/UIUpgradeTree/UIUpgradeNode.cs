@@ -291,6 +291,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                         config.nodeNameKey, 
                         "key_confirm_exchange_question",
                         actionReset);
+                    UIUpgradeScene.Instance.PopupConfirmReset.SetupReturnRatio(treeRef.ResetConfig.refundVestigeRatio, treeRef.ResetConfig.refundEchoesRatio, treeRef.ResetConfig.refundSigilsRatio);
                     UIUpgradeScene.Instance.PopupConfirmReset.DoOpenFadeIn();
                     return;    
                 }

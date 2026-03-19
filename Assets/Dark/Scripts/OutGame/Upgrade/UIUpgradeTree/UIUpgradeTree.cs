@@ -45,6 +45,8 @@ namespace Dark.Scripts.OutGame.Upgrade
         [Space] [Header("Reset Skill")] 
         [SerializeField] private UpgradeResetConfig resetConfig;
 
+        public UpgradeResetConfig ResetConfig => resetConfig;
+        
         public int LastUpgradeNodeId { get; set; } = -1;
         public Action<UIUpgradeNode> OnNodeUpgraded { get; set; }
         public Action OnTreeSpawned { get; set; }
