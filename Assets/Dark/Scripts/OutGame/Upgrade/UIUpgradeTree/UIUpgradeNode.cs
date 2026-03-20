@@ -270,9 +270,15 @@ namespace Dark.Scripts.OutGame.Upgrade
                 var existData = UpgradeManager.Instance.GetData(config.nodeId);
                 if (existData != null && existData.level >= config.MaxLevel)
                 {
+                    var receivedValue = treeRef.GetResetReturnResources(config);
+                    
                     Action actionReset = () =>
                     {
-                        if (!UpgradeManager.Instance.CanResetNode(config.nodeId)) return;
+                        if (!UpgradeManager.Instance.CanResetSkill(config.nodeId)) return;
+                        
+                        WealthManager.Instance.AddVestige(receivedValue.Item1);
+                        WealthManager.Instance.AddLevelPoint(receivedValue.Item2);
+                        WealthManager.Instance.AddBossPoint(receivedValue.Item3);
                         
                         treeRef.ResetNode(config.nodeId, config.groupId);
                         UpgradeManager.Instance.RefreshGroupUnlockOrder();
@@ -281,11 +287,10 @@ namespace Dark.Scripts.OutGame.Upgrade
                         treeRef.UpdateChildren(config.nodeId, false, true);
                     };
 
-                    var displayCost = treeRef.GetResetReturnResources(config);
                     UIUpgradeScene.Instance.PopupConfirmReset.SetupLocalize(
-                        displayCost.Item1,
-                        displayCost.Item2,
-                        displayCost.Item3,
+                        receivedValue.Item1,
+                        receivedValue.Item2,
+                        receivedValue.Item3,
                         "key_confirm_reset_question",
                         "key_confirm_exchange",
                         config.nodeNameKey, 

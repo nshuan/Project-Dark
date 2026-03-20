@@ -18,6 +18,7 @@ namespace InGame.Upgrade
         #region Actions
 
         public Action<UpgradeBonusInfoV2> OnActivated;
+        public Action<int, int> OnResetPointChanged;
 
         #endregion
         
@@ -379,10 +380,10 @@ namespace InGame.Upgrade
 
         public bool ResetNode(int nodeId, UpgradeGroupIdInfo[] groupIds, bool refreshGroup = false, bool save = false)
         {
-            if (TreeConfig.GetNodeById(nodeId) == null) return false;
-
+            if (!TreeConfig.GetNodeById(nodeId)) return false;
+            if (PlayerDataManager.Instance.Data.resetPoint == 0) return false;
             if (!dataMapById.TryGetValue(nodeId, out var nodeData)) return false;
-
+            
             Data.nodes.Remove(nodeData);
             dataMapById.Remove(nodeId);
             foreach (var groupId in groupIds)
@@ -404,11 +405,20 @@ namespace InGame.Upgrade
             if (refreshGroup) RefreshGroupUnlockOrder();
             if (save) Save();
                 
+            var playerData = PlayerDataManager.Instance.Data;
+            var lastResetPoint = playerData.resetPoint;
+            playerData.resetPoint -= 1;
+            PlayerDataManager.Instance.Save(playerData);
+            OnResetPointChanged?.Invoke(lastResetPoint, playerData.resetPoint);
+            
             return true;
         }
         
-        public bool CanResetNode(int nodeId)
+        public bool CanResetSkill(int nodeId)
         {
+            if (!TreeConfig.GetNodeById(nodeId)) return false;
+            if (!dataMapById.ContainsKey(nodeId)) return false;
+            if (PlayerDataManager.Instance.Data.resetPoint == 0) return false;
             return true;
         }
         
