@@ -12,7 +12,7 @@ namespace InGame
             target.HitDirectionX = target.transform.position.x - enemyPosition.x;
             target.HitDirectionY = target.transform.position.y - enemyPosition.y;
             target.Damage(damage, enemyPosition, 0f, DamageType.Enemy);
-            enemy.Kill(DamageType.SelfDestruct, delayDieAnimation);
+            enemy.Damage(enemy.CurrentHealth, enemy.transform.position, 0f, DamageType.SelfDestruct, false);
         }
     }
 }

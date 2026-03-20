@@ -30,7 +30,7 @@ namespace InGame
 
         #region Stats
         public int MaxHealth { get; set; }
-        protected int CurrentHealth { get; set; }
+        public int CurrentHealth { get; set; }
         public int CurrentDamage { get; set; }
         public int Exp { get; private set; }
         public int Dark { get; private set; }

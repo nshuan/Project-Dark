@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Dark.Scripts.OutGame.Settings;
 using Dark.Scripts.Utils;
@@ -22,12 +23,15 @@ namespace InGame.Boss.BossWizard
         private bool isAttacking;
         private bool isChangingTower;
         private bool hasChangeTower;
+
+        private Queue<EnemySpritesAnimation> swordAnimPool;
         
         public override void Init(EnemyBehaviour eConfig, TowerEntity target, WaveStatsScale statsScale, float levelExpRatio,
             float levelDarkRatio, int levelDarkUnitValue)
         {
             base.Init(eConfig, target, statsScale, levelExpRatio, levelDarkRatio, levelDarkUnitValue);
 
+            swordAnimPool = new Queue<EnemySpritesAnimation>();
             if (LevelManager.Instance.Level.level != PlayerDataManager.Instance.Data.level + 1)
                 BossPoint = 0;
 
@@ -89,24 +93,34 @@ namespace InGame.Boss.BossWizard
             if (TargetTower.IsDestroyed) return;
             isAttacking = true;
             animController.PlayAttack();
-            swordAnim.PlayIdle();
-            swordAnim.gameObject.SetActive(false);
-            swordAnim.transform.position =
+            if (!swordAnimPool.TryDequeue(out var sword))
+            {
+                sword = Instantiate(swordAnim, null);
+                sword.transform.localScale = Vector3.one;
+            }
+            sword.PlayIdle();
+            sword.gameObject.SetActive(false);
+            sword.transform.position =
                 TargetTower.GetBaseCenter() + RandomUtil.InsideUnitSpan(new Vector3(0f, -1f), 240f);
-            this.DelayCall(animController.GetAttackDelayTrigger(), () =>
+            var delayTrigger = animController.GetAttackDelayTrigger();
+            this.DelayCall(delayTrigger, () =>
             {
                 if (TargetTower.IsDestroyed) return;
-                swordAnim.gameObject.SetActive(true);
-                swordAnim.PlayAttack();
-                swordAnim.DelayCall(swordAnim.GetAttackDelayTrigger(), () =>
+                sword.gameObject.SetActive(true);
+                sword.PlayAttack();
+                this.DelayCall(sword.GetAttackDelayTrigger(), () =>
                 {
                     config.attackBehaviour.Attack(this, TargetTower, transform.position,
                         LevelUtilityV2.ToInt(CurrentDamage * TempDmgScale));
                 });
             });
+            this.DelayCall(delayTrigger + sword.GetAttackDuration(), () =>
+            {
+                sword.gameObject.SetActive(false);
+                swordAnimPool.Enqueue(sword);
+            });
             this.DelayCall(animController.GetAttackDuration(), () =>
             {
-                swordAnim.gameObject.SetActive(false);
                 isAttacking = false;
             });
         }

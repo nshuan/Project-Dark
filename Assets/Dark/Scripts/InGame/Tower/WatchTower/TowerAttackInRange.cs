@@ -57,7 +57,7 @@ namespace InGame.WatchTower
         protected int DamageKnight => GetCounterDamage(NodeTowerCounter.CounterType.Slash);
         protected float Cooldown { get; set; }
         protected float DetectRangeArcher => GetRangeRadius(NodeTowerCounter.CounterType.Pierce);
-        protected float DetectRangeKnight => GetRangeRadius(NodeTowerCounter.CounterType.Slash);
+        protected float DetectRangeKnight => LevelUtilityV2.GetCounterSlashRange();
         protected float DelayOnDetected { get; set; }
 
         protected Vector2 counterDirection = Vector2.zero;
@@ -87,9 +87,6 @@ namespace InGame.WatchTower
             LevelManager.Instance.OnInitTowers += OnInitTowers;
             LevelManager.Instance.OnLose += OnLose;
             tower.OnDestroyed += OnTowerDestroyed;
-            var range = Mathf.Max(DetectRangeArcher, DetectRangeKnight);
-            detectRange.localScale = range * Vector3.one;
-            detectCollider.radius = range;
             visual.gameObject.SetActive(false);
             SetRingFillFull(false);
             fillMaterial.SetFloat(RadialProgress, 0f);
@@ -155,6 +152,11 @@ namespace InGame.WatchTower
             canCounterPierce = bonusInfo.bonusUnlockSkill.unlockCounterPiercing;
             canCounterSlash = bonusInfo.bonusUnlockSkill.unlockCounterSlash;
             
+            var range = 0f;
+            if (canCounterPierce) range = Mathf.Max(range, DetectRangeArcher);
+            if (canCounterSlash) range = Mathf.Max(range, DetectRangeKnight);
+            detectRange.localScale = range * Vector3.one;
+            detectCollider.radius = range;
             detectRange.gameObject.SetActive(CanCounter);
             visual.gameObject.SetActive(CanCounter);
             Cooldown = Mathf.Min(GetCounterCooldown(NodeTowerCounter.CounterType.Pierce),
@@ -196,8 +198,7 @@ namespace InGame.WatchTower
             if (!other.transform.TryGetComponent<EnemyEntity>(out var enemy)) return;
             var triggerDirection = other.transform.position - transform.position;
             if (LevelUtilityV2.GetRelativeRange(
-                    DetectRangeArcher >= DetectRangeKnight ? DetectRangeArcher : DetectRangeKnight, 
-                    triggerDirection) < triggerDirection.magnitude) return;
+                    detectCollider.radius, triggerDirection) < triggerDirection.magnitude) return;
 
             enemy.OnStartDead += OnEnemyDead;
             inRangeEnemies.Add(enemy.transform);

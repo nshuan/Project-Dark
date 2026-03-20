@@ -47,6 +47,7 @@ namespace InGame
                 var target = targets[targetIndex];
                 targetIndex += 1;
                 if (targetIndex >= targets.Length) targetIndex = 0;
+                if (!target) continue;
                 var direction = (target.transform.position - enemy.transform.position).normalized;
                 var creep = EnemyPool.Instance.Get(summonInfo.enemyConfig.enemyPrefab, summonInfo.enemyConfig.enemyId, null, false);
                 creep.transform.position = enemy.transform.position + direction * 0.2f +
@@ -59,6 +60,9 @@ namespace InGame
                     enemy.LevelExpRatio, 
                     enemy.LevelDarkRatio, 
                     enemy.LevelDarkUnitValue);
+                
+                // Force enemy di chuyển đến cùng vị trí với spawner
+                creep.attackPosition = enemy.attackPosition;
                 
                 creep.Activate(creepDelayAttack);
                 enemy.UniqueId = EnemyManager.Instance.CurrentEnemyIndex;
