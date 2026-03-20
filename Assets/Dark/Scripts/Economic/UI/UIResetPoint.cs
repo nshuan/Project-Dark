@@ -36,10 +36,8 @@ namespace Economic.UI
         
         public override void OnPointerEnter(PointerEventData eventData)
         {
-            if (showInstruction)
-            {
-                panelInstruction.SetActive(true);
-            }
+            panelInstruction.SetActive(true);
+            OnEconomicIconHoverIn?.Invoke(WealthType.Sigils);
         }
     }
 }

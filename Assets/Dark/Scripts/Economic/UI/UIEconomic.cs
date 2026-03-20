@@ -13,6 +13,7 @@ namespace Economic.UI
         [SerializeField] protected bool showInstruction = false;
         [SerializeField] protected GameObject panelInstruction;
         [SerializeField] protected Transform imgIcon;
+        [SerializeField] protected GameObject txtHintInstruction;
 
         public Transform parentTxtChanged;
         public TextMeshProUGUI prefabTxtChanged;
@@ -129,6 +130,7 @@ namespace Economic.UI
         {
              if (!showInstruction) return;
             panelInstruction.SetActive(false);
+            txtHintInstruction.SetActive(false);
             OnEconomicIconHoverOut?.Invoke();
        }
 
@@ -137,6 +139,7 @@ namespace Economic.UI
             if (showInstruction)
             {
                 panelInstruction.SetActive(!panelInstruction.gameObject.activeSelf);
+                txtHintInstruction.SetActive(false);
             }
         }
         
