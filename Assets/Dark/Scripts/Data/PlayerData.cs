@@ -24,6 +24,7 @@ namespace Data
         public int totalDarkClaimed;
         public int totalBossPointClaimed;
         public int totalLevelPointClaimed;
+        public int resetPoint;
         
         // Record
         public int passedDay;
