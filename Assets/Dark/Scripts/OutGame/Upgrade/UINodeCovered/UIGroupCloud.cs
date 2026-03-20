@@ -205,5 +205,18 @@ namespace Dark.Scripts.OutGame.Upgrade.UINodeCovered
                 }
             }
         }
+
+#if UNITY_EDITOR
+        [Sirenix.OdinInspector.Button]
+        private void FindNodeToHideFrom()
+        {
+            var tree = GetComponentInParent<UIUpgradeTree>();
+            if (nodeIds == null || nodeIds.Length == 0) return;
+            if (!tree) return;
+            if (tree.nodeChildrenMap == null || !tree.nodeChildrenMap.TryGetValue(nodeIds[0], out var children)) return;
+            if (children == null || children.Count == 0) return;
+            hideNodeFrom = children[0];
+        }
+#endif
     }
 }
