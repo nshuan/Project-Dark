@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -189,5 +190,18 @@ namespace Dark.Scripts.OutGame.Upgrade.UINodeCovered
                 }
             }
         }
+
+#if UNITY_EDITOR
+        [Button]
+        private void FindNodeToHideFrom()
+        {
+            var tree = GetComponentInParent<UIUpgradeTree>();
+            if (nodeIds == null || nodeIds.Length == 0) return;
+            if (!tree) return;
+            if (tree.nodeChildrenMap == null || !tree.nodeChildrenMap.TryGetValue(nodeIds[0], out var children)) return;
+            if (children == null || children.Count == 0) return;
+            hideNodeFrom = children[0];
+        }
+#endif
     }
 }
