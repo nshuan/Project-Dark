@@ -200,7 +200,13 @@ namespace Dark.Scripts.OutGame.Upgrade.UINodeCovered
             if (!tree) return;
             if (tree.nodeChildrenMap == null || !tree.nodeChildrenMap.TryGetValue(nodeIds[0], out var children)) return;
             if (children == null || children.Count == 0) return;
-            hideNodeFrom = children[0];
+            foreach (UIUpgradeNode child in children)
+            {
+                if (child.preRequires is { Count: > 1 })
+                    continue;
+                hideNodeFrom = child;
+                break;
+            }
         }
 #endif
     }
