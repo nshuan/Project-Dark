@@ -1,4 +1,5 @@
 using System;
+using InGame.CharacterClass;
 using UnityEngine;
 
 namespace Dark.Scripts.Leaderboard.UI
@@ -7,7 +8,7 @@ namespace Dark.Scripts.Leaderboard.UI
     {
         private void OnEnable()
         {
-            GameCompletionLeaderboardManager.Instance.DownloadTop(10);
+            LeaderboardManager.Instance.GetLeaderboard(CharacterClass.Archer).DownloadTop(10);
         }
     }
 }

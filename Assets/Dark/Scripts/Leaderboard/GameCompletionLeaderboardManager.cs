@@ -1,18 +1,21 @@
 using System;
 using Core;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Dark.Scripts.Leaderboard
 {
-    public class GameCompletionLeaderboardManager : MonoSingleton<GameCompletionLeaderboardManager>
+    public class GameCompletionLeaderboardManager : MonoBehaviour
     {
+        public string leaderboardName;
+        
         public event Action<List<LeaderboardEntryData>> OnScoresDownloaded;
         
         // -----------------------------
         // Initialize
         // -----------------------------
 
-        public void Initialize(string leaderboardName)
+        public void Initialize()
         {
 
         }
