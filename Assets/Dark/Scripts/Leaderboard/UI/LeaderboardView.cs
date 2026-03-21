@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Dark.Scripts.Leaderboard;
+using Data;
+using InGame.CharacterClass;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,10 +11,14 @@ namespace Dark.Scripts.Leaderboard.UI
 {
     public sealed class LeaderboardView : MonoBehaviour
     {
+        [Header("Config")] 
+        [SerializeField] private bool isClassLeaderboard;
+        [SerializeField, ShowIf("isClassLeaderboard")] private CharacterClass leaderboardClass;
+        
         [Header("UI")]
-        [SerializeField] ScrollRect scrollRect;
-        [SerializeField] RectTransform content;
-        [SerializeField] LeaderboardItemView itemPrefab;
+        [SerializeField] private ScrollRect scrollRect;
+        [SerializeField] private RectTransform content;
+        [SerializeField] private LeaderboardItemView itemPrefab;
         
         private GameCompletionLeaderboardManager manager;
 
@@ -20,7 +27,10 @@ namespace Dark.Scripts.Leaderboard.UI
 
         private void Awake()
         {
-            manager = GameCompletionLeaderboardManager.Instance;
+            if (!isClassLeaderboard)
+                manager = LeaderboardManager.Instance.GetFullLeaderboard();
+            else
+                manager = LeaderboardManager.Instance.GetLeaderboard(leaderboardClass);
         }
 
         void OnEnable()

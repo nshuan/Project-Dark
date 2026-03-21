@@ -63,7 +63,7 @@ namespace Dark.Scripts.Common.Init
     {
         public void Initialize()
         {
-            GameCompletionLeaderboardManager.Instance.Initialize("Speedrun");
+            LeaderboardManager.Instance.Initialize();
         }
     }
 }

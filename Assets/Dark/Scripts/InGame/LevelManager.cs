@@ -257,7 +257,7 @@ namespace InGame
                 if (PlayerDataManager.Instance.Data.level ==
                     LevelManifest.Instance.GetMaxLevel(PlayerDataManager.Instance.Data.Class))
                 {
-                    GameCompletionLeaderboardManager.Instance.UploadScore((int)PlayerDataManager.Instance.Data.timePlayedMilli);
+                    LeaderboardManager.Instance.GetLeaderboard(PlayerDataManager.Instance.Data.Class).UploadScore((int)PlayerDataManager.Instance.Data.timePlayedMilli);
                 }
             }
             

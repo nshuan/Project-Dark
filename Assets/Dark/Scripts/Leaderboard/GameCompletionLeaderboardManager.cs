@@ -7,8 +7,10 @@ using UnityEngine;
 
 namespace Dark.Scripts.Leaderboard
 {
-    public class GameCompletionLeaderboardManager : MonoSingleton<GameCompletionLeaderboardManager>
+    public class GameCompletionLeaderboardManager : MonoBehaviour
     {
+        public string leaderboardName;
+        
         bool leaderboardReady;
         private bool initializeStarted;
 
@@ -24,8 +26,8 @@ namespace Dark.Scripts.Leaderboard
         // -----------------------------
         // Initialize
         // -----------------------------
-        
-        public void Initialize(string leaderboardName)
+
+        public void Initialize()
         {
             if (initializeStarted) return;
             initializeStarted = true;
