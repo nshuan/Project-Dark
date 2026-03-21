@@ -61,6 +61,7 @@ namespace Dark.Scripts.Leaderboard
         public void UploadScore(int score)
         {
             if (!leaderboardReady) return;
+            if (!SteamManager.Initialized) return;
 
             var handle = SteamUserStats.UploadLeaderboardScore(
                 leaderboard,
@@ -85,6 +86,7 @@ namespace Dark.Scripts.Leaderboard
         public void DownloadTop(int count)
         {
             if (!leaderboardReady) return;
+            if (!SteamManager.Initialized) return;
 
             var handle = SteamUserStats.DownloadLeaderboardEntries(
                 leaderboard,
@@ -103,6 +105,7 @@ namespace Dark.Scripts.Leaderboard
         public void DownloadAroundPlayer(int range)
         {
             if (!leaderboardReady) return;
+            if (!SteamManager.Initialized) return;
 
             var handle = SteamUserStats.DownloadLeaderboardEntries(
                 leaderboard,

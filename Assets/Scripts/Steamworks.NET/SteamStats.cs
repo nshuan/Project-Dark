@@ -37,6 +37,7 @@ namespace Steamworks.NET
 #if STEAMWORKS_NET
         private void OnStatsReceived(UserStatsReceived_t callback)
         {
+            if (!SteamManager.Initialized) return;
             if (callback.m_eResult != EResult.k_EResultOK)
                 return;
 
@@ -54,6 +55,7 @@ namespace Steamworks.NET
         {
 #if STEAMWORKS_NET
             if (!StatReceived) return;
+            if (!SteamManager.Initialized) return;
             totalKills += addedValue;
             if (saveImmediately)
             { 
@@ -67,6 +69,7 @@ namespace Steamworks.NET
         {
 #if STEAMWORKS_NET
             if (!StatReceived) return;
+            if (!SteamManager.Initialized) return;
             totalRuns += addedValue;
             if (saveImmediately)
             { 
@@ -80,6 +83,7 @@ namespace Steamworks.NET
         {
 #if STEAMWORKS_NET
             if (!StatReceived) return;
+            if (!SteamManager.Initialized) return;
             if (day <= highestDayCompleted) return; 
             highestDayCompleted = day;
             if (saveImmediately)
@@ -92,6 +96,7 @@ namespace Steamworks.NET
 
         public void SaveStats()
         {
+            if (!SteamManager.Initialized) return;
             SteamUserStats.SetStat(SteamStatsAPIName.TOTAL_KILL, totalKills);
             SteamUserStats.SetStat(SteamStatsAPIName.TOTAL_RUNS, totalRuns);
             SteamUserStats.SetStat(SteamStatsAPIName.HIGHEST_DAY_COMPLETED, highestDayCompleted);
@@ -106,6 +111,7 @@ namespace Steamworks.NET
         {
 #if STEAMWORKS_NET
             if (!StatReceived) return;
+            if (!SteamManager.Initialized) return;
             if (!SteamUserStats.GetAchievement(achievementName, out var achieved)) return;
             if (achieved) return;
             SteamUserStats.SetAchievement(achievementName);
