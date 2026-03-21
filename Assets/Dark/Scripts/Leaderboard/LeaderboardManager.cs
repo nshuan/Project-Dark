@@ -21,6 +21,8 @@ namespace Dark.Scripts.Leaderboard
             {
                 leaderboard.Value.Initialize();
             }
+
+            fullLeaderboard.Initialize();
         }
 
         public GameCompletionLeaderboardManager GetLeaderboard(CharacterClass characterClass)
