@@ -19,6 +19,7 @@ namespace Dark.Scripts.Leaderboard.UI
         [SerializeField] private ScrollRect scrollRect;
         [SerializeField] private RectTransform content;
         [SerializeField] private LeaderboardItemView itemPrefab;
+        [SerializeField] private LeaderboardItemView top1Item;
         
         private GameCompletionLeaderboardManager manager;
 
@@ -36,7 +37,11 @@ namespace Dark.Scripts.Leaderboard.UI
         void OnEnable()
         {
             if (manager != null)
+            {
                 manager.OnScoresDownloaded += SetEntries;
+                manager.DownloadTop(10);
+            }
+            
         }
 
         void OnDisable()
@@ -47,6 +52,11 @@ namespace Dark.Scripts.Leaderboard.UI
 
         public void SetEntries(List<LeaderboardEntryData> entries)
         {
+            if (entries is { Count: > 0 })
+            {
+                top1Item.SetData(entries[0]);
+            }
+            entries.RemoveAt(0);
             SetEntries((IReadOnlyList<LeaderboardEntryData>)entries);
         }
 
