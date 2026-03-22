@@ -12,7 +12,8 @@ namespace Dark.Scripts.Leaderboard
     {
         public string leaderboardName;
         
-        public event Action<List<LeaderboardEntryData>> OnScoresDownloaded;
+        public event Action<List<LeaderboardEntryData>> OnTopScoresDownloaded;
+        public event Action<List<LeaderboardEntryData>> OnPlayerScoresDownloaded;
         
         // -----------------------------
         // Initialize
