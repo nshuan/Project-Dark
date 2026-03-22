@@ -76,7 +76,7 @@ namespace Dark.Scripts.Leaderboard.UI
             }
             else
             {
-                txtPlayerRank.SetTextLanguage("key_leaderboard_current_rank",
+                txtPlayerRank.SetTextLanguageKeepFont("key_leaderboard_current_rank",
                     ("%{value}", "##"));   
             }
         }
