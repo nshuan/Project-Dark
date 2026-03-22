@@ -40,7 +40,17 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
         private Vector3 cacheExpandPosition;
         private Vector2 cacheLineFullSize;
         private Vector2 cacheLineShortSize;
-        
+
+        private void Start()
+        {
+            LanguageManager.Instance.RegisterForceUpdate(OnForceUpdateLanguage);
+        }
+
+        private void OnDestroy()
+        {
+            LanguageManager.Instance.UnregisterForceUpdate(OnForceUpdateLanguage);
+        }
+
         private void OnEnable()
         {
             SetupDayButtons();
@@ -76,7 +86,7 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
                 {
                     if (a >= 1 && a <= PlayerDataManager.Instance.Data.level + 1)
                     {
-                        if (a > DemoConfig.MaxDemoLevel)
+                        if (DemoConfig.IsDemo && a > DemoConfig.MaxDemoLevel)
                         {
                             btnWishlist?.CheckShowDemoPopup();
                             return;
@@ -99,8 +109,7 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
                     }
                 });
                 
-                btn.GetComponentInChildren<TextMeshProUGUI>()
-                    .SetText(LanguageData.Instance.GetLocalizedString("key_day").Replace("%{value}", a.ToString()));
+                btn.GetComponentInChildren<TextMeshProUGUI>().SetTextLanguage("key_day", ("%{value}", a.ToString()));
 
                 var groupBlock = btn.transform.Find("groupBlock");
                 if (groupBlock)
@@ -145,6 +154,9 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
             
             // Setup buttons in short list
             index = PlayerDataManager.Instance.Data.level + 1;
+            var maxLevel = LevelManifest.Instance.GetMaxLevel(PlayerDataManager.Instance.Data.Class);
+            if (index > maxLevel)
+                index = maxLevel;
             listShowQuickButtons = new List<CanvasGroup>();
             foreach (var cvg in btnDayShort)
             {
@@ -184,7 +196,7 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
                     {
                         if (a >= 1 && a <= PlayerDataManager.Instance.Data.level + 1)
                         {
-                            if (a > DemoConfig.MaxDemoLevel)
+                            if (DemoConfig.IsDemo && a > DemoConfig.MaxDemoLevel)
                             {
                                 btnWishlist?.CheckShowDemoPopup();
                                 return;
@@ -208,7 +220,7 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
                     });
                     
                     button.GetComponentInChildren<TextMeshProUGUI>()
-                        .SetText(LanguageData.Instance.GetLocalizedString("key_day").Replace("%{value}", a.ToString()));
+                        .SetTextLanguage("key_day", ("%{value}", a.ToString()));
                 }
                 
                 listShowQuickButtons.Add(cvg);
@@ -418,6 +430,36 @@ namespace Dark.Scripts.OutGame.Upgrade.SelectDay
             DOTween.Kill(rectTotalDay);
             rectTotalDay.DOLocalMove(Vector3.zero, durationShowEachButton).SetEase(Ease.InQuad)
                 .SetTarget(rectTotalDay);
+        }
+
+        private void OnForceUpdateLanguage()
+        {
+            // Setup buttons in full list
+            var index = 0;
+            foreach (var btn in btnDaysFull)
+            {
+                index += 1;
+                var a = index;
+               
+                btn.GetComponentInChildren<TextMeshProUGUI>().SetTextLanguage("key_day", ("%{value}", a.ToString()));
+            }
+
+            // Setup buttons in short list
+            index = PlayerDataManager.Instance.Data.level + 1;
+            var maxLevel = LevelManifest.Instance.GetMaxLevel(PlayerDataManager.Instance.Data.Class);
+            if (index > maxLevel) index = maxLevel;
+            foreach (var cvg in btnDayShort)
+            {
+                var a = index;
+ 
+                if (cvg.TryGetComponent<Button>(out var button))
+                {
+                    button.GetComponentInChildren<TextMeshProUGUI>()
+                        .SetTextLanguage("key_day", ("%{value}", a.ToString()));
+                }
+
+                index -= 1;
+            }
         }
     }
 }

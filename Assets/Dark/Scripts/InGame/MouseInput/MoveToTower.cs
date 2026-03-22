@@ -61,7 +61,9 @@ namespace InGame
         {
             actionTowerChanged = null;
         }
-        
+
+        public bool BlockHover { get; set; }
+
         public void OnMouseClick()
         {
             if (!CanMove) return;
@@ -237,6 +239,16 @@ namespace InGame
                     else if (Input.GetKeyDown(GameSettings.KeyMoveTower2) && CurrentTowerIndex != 2)
                     {
                         selectingTower = 2;
+                        OnMouseClick();
+                        if (UITutorialStepMoveTowers.ShouldShowHotKeyInstruction)
+                        {
+                            UITutorialStepMoveTowers.HideHotKeyInstruction();
+                            cursor.SetMoveCursor(false, selectingTower);
+                        }
+                    }
+                    else if (Input.GetKeyDown(GameSettings.KeyMoveTower3) && CurrentTowerIndex != 3 && LevelManager.Instance.Towers.Length > 3)
+                    {
+                        selectingTower = 3;
                         OnMouseClick();
                         if (UITutorialStepMoveTowers.ShouldShowHotKeyInstruction)
                         {

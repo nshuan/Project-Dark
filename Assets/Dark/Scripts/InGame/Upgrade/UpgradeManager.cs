@@ -66,6 +66,8 @@ namespace InGame.Upgrade
 #if UNITY_EDITOR
             // data = new UpgradeData(TreeConfig.nodeMapById);
 #endif
+            // set null để lúc gọi sẽ lấy lại đúng tree theo class
+            treeConfig = null;
             dataMapById = new Dictionary<int, UpgradeNodeData>();
             var index = 0;
             foreach (var node in data.nodes)
@@ -111,7 +113,7 @@ namespace InGame.Upgrade
             get
             {
                 if (treeConfig == null) 
-                    treeConfig = UpgradeTreeManifest.GetTreeConfig(CharacterClass.CharacterClass.Archer);
+                    treeConfig = UpgradeTreeManifest.GetTreeConfig((CharacterClass.CharacterClass)PlayerDataManager.Instance.Data.characterClass);
                 return treeConfig;
             }
         }
@@ -267,6 +269,19 @@ namespace InGame.Upgrade
 
             var nodeConfig = TreeConfig.GetNodeById(nodeId);
             
+            // Nếu nodeConfig.MaxLevel = 0 thì override lại 
+            if (nodeConfig.MaxLevel == 0)
+            {
+                var groupUnlockOrder =
+                    nodeConfig.groupId.Min((info) => GetGroupUnlockOrder(info.groupId, true));
+                foreach (var logicV2 in nodeConfig.nodeLogic)
+                {
+                    if (logicV2 is INodeDynamicBonusValueV2 { IsDynamic: true } dynamicLogic)
+                    {
+                        dynamicLogic.OverrideBonusValue(groupUnlockOrder);
+                    }
+                }
+            }
             if (dataMapById[nodeId].level >= nodeConfig.MaxLevel) return false;
 
             var currentLevel = dataMapById[nodeId].level;

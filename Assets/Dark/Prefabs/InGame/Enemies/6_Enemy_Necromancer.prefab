@@ -89,6 +89,73 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   range: 0.1
+--- !u!1 &1542733675680905572
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2135639859285401555}
+  - component: {fileID: 6828972600718280131}
+  m_Layer: 15
+  m_Name: AimCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2135639859285401555
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1542733675680905572}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 541454038136209678}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!70 &6828972600718280131
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1542733675680905572}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.04000002, y: 0.49925375}
+  m_Size: {x: 1, y: 1.5}
+  m_Direction: 0
 --- !u!1 &2026576607495002774
 GameObject:
   m_ObjectHideFlags: 0
@@ -101,9 +168,10 @@ GameObject:
   - component: {fileID: 3140594308172958890}
   - component: {fileID: 8131059031516112919}
   - component: {fileID: 8872790398773853291}
+  - component: {fileID: -496813690439907789}
   m_Layer: 3
   m_Name: 6_Enemy_Necromancer
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -216,6 +284,33 @@ MonoBehaviour:
   obstacleDetectionRadius: 0.6
   obstacleAvoidanceWeight: 1
   boidCooldownStep: 2
+--- !u!50 &-496813690439907789
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2026576607495002774}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 65536
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &2162807400858415091
 GameObject:
   m_ObjectHideFlags: 0
@@ -628,6 +723,13 @@ MonoBehaviour:
     - {fileID: -435612049, guid: 288b465902999474a996a9aaaa0b8dbb, type: 3}
     - {fileID: 470782160, guid: 288b465902999474a996a9aaaa0b8dbb, type: 3}
     - {fileID: 548143359, guid: 288b465902999474a996a9aaaa0b8dbb, type: 3}
+    - {fileID: -901966824, guid: 288b465902999474a996a9aaaa0b8dbb, type: 3}
+    - {fileID: 1197916406, guid: 288b465902999474a996a9aaaa0b8dbb, type: 3}
+    - {fileID: 366372587, guid: 288b465902999474a996a9aaaa0b8dbb, type: 3}
+    - {fileID: 2060601971, guid: 288b465902999474a996a9aaaa0b8dbb, type: 3}
+    - {fileID: -256614955, guid: 288b465902999474a996a9aaaa0b8dbb, type: 3}
+    - {fileID: 564690908, guid: 288b465902999474a996a9aaaa0b8dbb, type: 3}
+    - {fileID: 767576639, guid: 288b465902999474a996a9aaaa0b8dbb, type: 3}
     isLoop: 0
     frameRate: 0.1
     scale: 1
@@ -770,6 +872,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 2135639859285401555}
   - {fileID: 4373337340460136414}
   - {fileID: 4764234842553233016}
   - {fileID: 2775015567938810026}

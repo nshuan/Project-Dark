@@ -1,8 +1,10 @@
 using System;
 using Core;
 using Dark.Scripts.Tutorial;
+using Dark.Tools.Language.Runtime;
 using Data;
 using Economic;
+using InGame;
 using InGame.CharacterClass;
 using InGame.Upgrade;
 
@@ -12,14 +14,14 @@ namespace Dark.Scripts.OutGame.SaveSlot
     {
         #region Data
 
-        private const string TotalDataCreatedKey = "demo_totalDataSlotsCreated";
+        private const string TotalDataCreatedKey = "game_totalDataSlotsCreated";
         
         public static string[] SlotDataKeys = new[]
         {
-            "demo_playerDataSlot0",
-            "demo_playerDataSlot1",
-            "demo_playerDataSlot2",
-            "demo_playerDataSlot3",
+            "game_playerDataSlot0",
+            "game_playerDataSlot1",
+            "game_playerDataSlot2",
+            "game_playerDataSlot3",
         };
 
         public int CurrentSlotIndex = 0;
@@ -76,34 +78,68 @@ namespace Dark.Scripts.OutGame.SaveSlot
         {
             if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length) return "";
             if (IsEmptySlot(slotIndex)) return "";
-            
 
-            return ((CharacterClass)(GetSlotData(slotIndex).characterClass)).ToString();
+            var classType = (CharacterClass)(GetSlotData(slotIndex).characterClass);
+            if (classType == CharacterClass.Archer)
+            {
+                var result = LanguageData.Instance.GetLocalizedString("key_node_the_sightsunder", LanguageManager.Instance.CurrentLanguage);
+                if (result.Substring(0, 4).ToLower() == "the ")
+                    result = result[4..];
+                return result;
+            }
+            else if (classType == CharacterClass.Knight)
+            {
+                var result = LanguageData.Instance.GetLocalizedString("key_node_the_vergebrand", LanguageManager.Instance.CurrentLanguage);
+                if (result.Substring(0, 4).ToLower() == "the ")
+                    result = result[4..];
+                return result;
+            }
+            
+            return "";
         }
 
         public string GetDisplayPassedDays(int slotIndex)
         {
             if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length) return "days:";
             if (IsEmptySlot(slotIndex)) return "days:";
- 
-            return $"days: {GetSlotData(slotIndex).passedDay}";
+
+            return LanguageData.Instance
+                .GetLocalizedString("key_save_slot_days", LanguageManager.Instance.CurrentLanguage)
+                .Replace("%{value}", GetSlotData(slotIndex).passedDay.ToString());
         }
 
         public string GetDisplayLevel(int slotIndex)
         {
             if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length) return "level:";
             if (IsEmptySlot(slotIndex)) return "level:";
+
+            var slotData = GetSlotData(slotIndex);
+            var displayLevel = slotData.level + 1;
+            if (displayLevel > LevelManifest.Instance.GetMaxLevel(slotData.Class)) displayLevel = slotData.level;
+            return LanguageData.Instance
+                .GetLocalizedString("key_save_slot_level", LanguageManager.Instance.CurrentLanguage)
+                .Replace("%{value}", displayLevel.ToString());
+        }
+
+        public bool IsSlotCompleted(int slotIndex)
+        {
+            if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length) return false;
+            if (IsEmptySlot(slotIndex)) return false;
             
-            return $"level: {GetSlotData(slotIndex).level + 1}";
+            var slotData = GetSlotData(slotIndex);
+            return slotData.level + 1 > LevelManifest.Instance.GetMaxLevel(slotData.Class);
         }
 
         public string GetDisplayTimePlayed(int slotIndex)
         {
-            if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length) return "0 hours 0 min";
-            if (IsEmptySlot(slotIndex)) return "0 hours 0 min";
+            var result =
+                LanguageData.Instance.GetLocalizedString("key_save_slot_time",
+                    LanguageManager.Instance.CurrentLanguage);
+            if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length) return result.Replace("%{value1}", "0").Replace("%{value2}", "0");
+            if (IsEmptySlot(slotIndex)) return result.Replace("%{value1}", "0").Replace("%{value2}", "0");
      
             var totalTime = TimeSpan.FromMilliseconds(GetSlotData(slotIndex).timePlayedMilli);
-            return $"{(int)totalTime.TotalHours} hours {totalTime.Minutes} min";
+            return result.Replace("%{value1}", ((int)totalTime.TotalHours).ToString()).Replace("%{value2}", totalTime.Minutes.ToString());
         }
 
         #endregion

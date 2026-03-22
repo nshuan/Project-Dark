@@ -19,7 +19,7 @@ namespace InGame
         public static Action<PassiveTriggerType, PassiveType, float> OnEffectTriggered { get; set; }
         public static Action<EnemyEntity, EnemyDieReason> OnOneEnemyDead { get; set; }
         public static Action<EnemyEntity> OnOneEnemySpawn { get; set; }
-        public static Action<EnemyBehaviour, Vector2> OnBossKilled { get; set; } // Invoke with boss config and dead position
+        public static Action<EnemyEntity, Vector2> OnBossKilled { get; set; } // Invoke with boss config and dead position
         public static Action<EnemyEntity, bool> OnDropResource { get; set; } // <Dropper, hasVestige>
         public static Action<EItemDropCollector> OnResourceCollectorInitialized { get; set; }
         public static Action<EItemDropCollector> OnResourceCollectorDamaged { get; set; }

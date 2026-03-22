@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using InGame.CharacterClass;
 using InGame.Upgrade;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
@@ -28,15 +29,15 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
         private string outputPrefabPath = "Assets/Dark/Prefabs/UIUpgradeTrees/";
     
     #if UNITY_EDITOR
-        public void ConvertJsonToPrefab(string filename, string outputTreeName)
+        public void ConvertJsonToPrefab(string filename, string outputTreeName, CharacterClass classType)
         {
             treeJsonFilename = filename;
             outPutTreeName = outputTreeName;
-            ConvertJsonToPrefab();
+            ConvertJsonToPrefab(classType);
         }
         
         [Button]
-        public void ConvertJsonToPrefab()
+        public void ConvertJsonToPrefab(CharacterClass classType)
         {
             var truePath = jsonFilePath + treeJsonFilename + ".json";
             if (!File.Exists(truePath))
@@ -102,7 +103,7 @@ namespace Dark.Scripts.OutGame.Upgrade.UIUpgradeTreeCreator
                 EditorUtility.SetDirty(uiNodeMap[node.guid]);
             }
             
-            root.GetComponent<UIUpgradeTree>().ValidateNodes();
+            root.GetComponent<UIUpgradeTree>().ValidateNodes(classType);
     
             var outputPath = outputPrefabPath + outPutTreeName + ".prefab";
             PrefabUtility.SaveAsPrefabAsset(root, outputPath);

@@ -7,5 +7,6 @@ namespace Dark.Scripts.SceneNavigation
         public const string SceneUpgrade = "Upgrade";
         public const string SceneInGame = "BaseLevel";
         // public const string SceneInGame = "CheatLevel";
+        public const string SceneIntro = "Intro";
     }
 }

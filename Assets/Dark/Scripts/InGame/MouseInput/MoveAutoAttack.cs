@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Dark.Scripts.Utils;
+using Data;
 using DG.Tweening;
+using InGame.AttackNormalConfig;
 using UnityEngine;
 
 namespace InGame
@@ -10,7 +12,7 @@ namespace InGame
     [Serializable]
     public class MoveAutoAttack : IMouseInput
     {
-        private InputInGame InputManager { get; set; }
+        private PlayerCharacter Character { get; set; }
 
         protected Camera Cam { get; set; }
         protected MonoCursor cursor;
@@ -26,9 +28,12 @@ namespace InGame
         private LevelManager levelManager;
         private EnemyManager manager;
         private EnemyEntity nearestEnemy;
+        private bool isForceTargetEnemy;
         private EnemyEntity forceTargetEnemy;
         private EnemyEntity hoveringEnemy;
         private Collider2D[] mouseHoverEnemies;
+
+        private CharacterClass.CharacterClass classType;
         
         public MoveAutoAttack()
         {
@@ -46,14 +51,21 @@ namespace InGame
             mouseHoverEnemies = new Collider2D[20];
         }
 
-        public void Initialize(InputInGame manager, MoveChargeController chargeController)
+        public void Initialize(PlayerCharacter character, MoveChargeController chargeController)
         {
             CanShoot = GameConst.DefaultAutoAttack;
             cursor.SetAuto(GameConst.DefaultAutoAttack);
 
-            InputManager = manager;
+            Character = character;
             Cooldown = LevelUtilityV2.GetNormalAttackCooldown();
+            var activateActions = GetProjectileActivateAction();
+            var cdAddOn = (activateActions == null || activateActions.Count == 0)
+                ? 0f
+                : activateActions.Max((a) => a.GetAttackDuration());
+            Cooldown += cdAddOn;
             ActivateDuration = 1f;
+
+            classType = PlayerDataManager.Instance.Data.Class;
         }
 
         public virtual void OnMouseClick()
@@ -70,38 +82,29 @@ namespace InGame
             var (damage, criticalDamage) = LevelUtilityV2.GetNormalAttackDamage();
             var critRate = LevelUtilityV2.GetBaseCriticalRate();
             var bulletNum = 1;
-            var skillSize = 1f;
+            var skillSize = LevelUtilityV2.GetNormalAttackSize();;
             var skillRange = LevelUtilityV2.GetNormalAttackRange(Vector2.right);
             var maxHit = 1;
-            if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing) 
+            if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing)
+            {
                 maxHit += LevelUtilityV2.GetNormalPiercingAmount();
+            }
             var stagger = LevelUtilityV2.GetBaseStagger();
             
-            var delayShot = InputManager.PlayerVisual.PlayShoot(worldMousePosition);
+            var delayShot = Character.PlayShoot(worldMousePosition);
             var targetEnemy = nearestEnemy;
-            var activateSplitBullets = 0;
-            if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackBullet) 
-                activateSplitBullets = LevelUtilityV2.GetNormalBulletAmount();
-            var activateActions = activateSplitBullets == 0
-                ? null
-                : new List<IProjectileActivate>()
-                {
-                    new ProjectileActivateSplit()
-                    {
-                        projectile = LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.Normal],
-                        amount = activateSplitBullets,
-                        angle = LevelUtilityV2.StatsNormalBullet.GetNormalBulletSpanAngle(activateSplitBullets + 1)
-                    }
-                };
-            InputManager.DelayCall(delayShot, () =>
+            var towerBaseCenter = LevelManager.Instance.CurrentTower.GetBaseCenter();
+           
+            Character.DelayCall(delayShot, () =>
             {
-                InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(skillRange);
+                Character.Weapon.GetAllEnemiesInRange(skillRange);
                 
                 LevelUtilityV2.StatsNormalAttack.ShootToTarget(
                     LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.Normal],
                     targetEnemy,
-                    InputManager.ProjectileSpawnPos.position,
-                    LevelManager.Instance.CurrentTower.GetBaseCenter(),
+                    isForceTargetEnemy,
+                    classType == CharacterClass.CharacterClass.Archer ? Character.transform.position : towerBaseCenter,
+                    towerBaseCenter,
                     tempMousePos,
                     damage,
                     bulletNum,
@@ -112,7 +115,7 @@ namespace InGame
                     stagger,
                     maxHit,
                     false,
-                    activateActions,
+                    GetProjectileActivateAction(),
                     null);
             });
 
@@ -168,26 +171,43 @@ namespace InGame
 
             if (!CanShoot)
             {
-                InputManager.PlayerVisual.SetDirection(worldMousePosition);
+                Character.SetDirection(worldMousePosition);
                 if (nearestEnemy) nearestEnemy.SetAimed(false);
                 forceTargetEnemy?.SetAimed(false);
                 return;
             }
             
+            // Check enemy force attack đã ngủm thì set force = null
+            if (forceTargetEnemy && forceTargetEnemy.IsDestroyed)
+            {
+                forceTargetEnemy = null;
+            }
+            
             // Check bấm vào enemy để force attack vào đó
-            var mouseOverCount = Physics2D.OverlapPointNonAlloc(worldMousePosition, mouseHoverEnemies, LayerMask.GetMask("Entity"));
+            var mouseOverCount = Physics2D.OverlapPointNonAlloc(worldMousePosition, mouseHoverEnemies, LayerMask.GetMask("EnemyAim"));
             if (mouseOverCount > 0)
             {
-                hoveringEnemy?.SetHover(false);
-                hoveringEnemy = null;
+                EnemyEntity newHover = null;
                 for (var i = 0; i < mouseOverCount; i++)
                 {
-                    if (mouseHoverEnemies[i].TryGetComponent<EnemyEntity>(out var entity))
+                    var entity = mouseHoverEnemies[i].GetComponentInParent<EnemyEntity>();
+                    if (!entity) continue;
+
+                    if (!newHover) newHover = entity;
+                    else
                     {
-                        hoveringEnemy = entity;
-                        hoveringEnemy.SetHover(true);
-                        break;
+                        if (entity.transform.position.y < newHover.transform.position.y)
+                        {
+                            newHover = entity;
+                        }
                     }
+                }
+
+                if (newHover != hoveringEnemy)
+                {
+                    hoveringEnemy?.SetHover(false);
+                    hoveringEnemy = newHover;
+                    hoveringEnemy?.SetHover(true);
                 }
             }
             else
@@ -210,7 +230,7 @@ namespace InGame
                 this.worldMousePosition.y = worldMousePosition.y; 
             }
             
-            InputManager.PlayerVisual.SetDirection(this.worldMousePosition);
+            Character.SetDirection(this.worldMousePosition);
             
             var mousePosition = Input.mousePosition;
             mousePosition.z = 0; // Set z to 0 for 2D
@@ -243,11 +263,15 @@ namespace InGame
                 nearestEnemy?.SetAimed(false);
                 nearestEnemy = forceTargetEnemy;
                 nearestEnemy.SetAimed(true);
+                isForceTargetEnemy = true;
                 return nearestEnemy;
             }
+
+            isForceTargetEnemy = false;
             
             var nearestDistance = float.MaxValue;
             EnemyEntity tempNearestEnemy = null;
+            var attackMaxRange = LevelUtilityV2.GetNormalAttackRange(Vector2.right);
                  
             foreach (var enemy in manager.Enemies)
             {
@@ -255,8 +279,15 @@ namespace InGame
                 {
                     var direction = enemy.Value.transform.position - levelManager.CurrentTower.GetBaseCenter();
                     var distance = direction.magnitude;
-                    if (distance > LevelUtilityV2.GetNormalAttackRange(direction))
-                        continue;
+                    if (classType == CharacterClass.CharacterClass.Knight)
+                    {
+                        if (distance > attackMaxRange) continue;
+                    }
+                    else
+                    {
+                        if (distance > LevelUtilityV2.GetRelativeRangeMove(attackMaxRange, direction))
+                            continue;
+                    }
                     
                     if (distance < nearestDistance)
                     {
@@ -272,6 +303,48 @@ namespace InGame
             nearestEnemy.SetAimed(true);
             
             return true;
+        }
+
+        private List<IProjectileActivate> GetProjectileActivateAction()
+        {
+            var activateBullets = 0;
+            if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackBullet) 
+                activateBullets = LevelUtilityV2.GetNormalBulletAmount();
+            List<IProjectileActivate> activateActions = null;
+            var classInt = PlayerDataManager.Instance.Data.characterClass;
+            if (classInt == 0)
+            {
+                activateActions = activateBullets == 0
+                    ? null
+                    : new List<IProjectileActivate>()
+                    {
+                        new ProjectileActivateSplit()
+                        {
+                            projectile = LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.Normal],
+                            amount = activateBullets,
+                            angle = LevelUtilityV2.StatsNormalBullet.GetNormalBulletSpanAngle(activateBullets + 1)
+                        }
+                    };
+            }
+            else if (classInt == 1)
+            {
+                var delayEachShot = 0.25f;
+                if (LevelUtilityV2.StatsNormalBullet is KnightSkillNormalConfig knightConfig)
+                    delayEachShot = 1f / knightConfig.atkSpeed;
+                activateActions = activateBullets == 0
+                    ? null
+                    : new List<IProjectileActivate>()
+                    {
+                        new ProjectileActivateMultishot()
+                        {
+                            projectile = LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.Normal],
+                            amount = activateBullets,
+                            delayEachShot = delayEachShot
+                        }
+                    };
+            }
+
+            return activateActions;
         }
     }
 }

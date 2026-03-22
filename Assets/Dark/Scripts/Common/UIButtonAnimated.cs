@@ -11,25 +11,31 @@ namespace Dark.Scripts.Common
         [SerializeField] protected float hoverScale = 1.1f;
         [SerializeField] protected float pressScale = 1f;
         [SerializeField] protected float duration = 0.2f;
+        [SerializeField] private Transform target;
+
+        private void Awake()
+        {
+            if (!target) target = transform;
+        }
 
         private void OnDisable()
         {
             DOTween.Kill(this);
-            transform.localScale = Vector3.one;
+            target.localScale = Vector3.one;
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
             DOTween.Kill(this);
             DOTween.Sequence(this).SetUpdate(true)
-                .Append(transform.DOScale(hoverScale, duration)).Play();
+                .Append(target.DOScale(hoverScale, duration)).Play();
         }
 
         public virtual void OnPointerExit(PointerEventData eventData)
         {
             DOTween.Kill(this);
             DOTween.Sequence(this).SetUpdate(true)
-                .Append(transform.DOScale(1f, duration)).Play();
+                .Append(target.DOScale(1f, duration)).Play();
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -45,14 +51,14 @@ namespace Dark.Scripts.Common
             
             DOTween.Kill(this);
             DOTween.Sequence(this).SetUpdate(true)
-                .Append(transform.DOScale(pressScale, duration).SetEase(Ease.OutQuad)).Play();
+                .Append(target.DOScale(pressScale, duration).SetEase(Ease.OutQuad)).Play();
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
             DOTween.Kill(this);
             DOTween.Sequence(this).SetUpdate(true)
-                .Append(transform.DOScale(1f, duration)).Play();
+                .Append(target.DOScale(1f, duration)).Play();
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -61,7 +67,7 @@ namespace Dark.Scripts.Common
             
             DOTween.Kill(this);
             DOTween.Sequence(this).SetUpdate(true)
-                .Append(transform.DOPunchScale(new Vector3(pressScale - hoverScale, pressScale - hoverScale, pressScale - hoverScale), duration)).Play();
+                .Append(target.DOPunchScale(new Vector3(pressScale - hoverScale, pressScale - hoverScale, pressScale - hoverScale), duration)).Play();
         }
     }
 }

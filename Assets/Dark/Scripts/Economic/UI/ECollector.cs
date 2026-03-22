@@ -16,7 +16,6 @@ namespace Economic.UI
         
         private void Awake()
         {
-            CombatActions.OnResourceCollectorDamaged += OnCollectEntityDamaged;
             LevelManager.Instance.OnLevelPreLoaded += OnLevelPreLoaded;
             LevelManager.Instance.OnWin += OnWin;
             LevelManager.Instance.OnLose += OnLose;
@@ -52,23 +51,24 @@ namespace Economic.UI
                 UIKillCollectedPool.Instance.ShowCollected(WealthType.Exp, enemy.Exp, player.transform.position);
             }
 
-            if (TryDropFirstDayVestige(out var dropAmount))
+            // Enemy thường thì mới rớt vestige item, boss thì cộng trực tiếp vestige luôn
+            if (enemy.IsBoss)
             {
-                EItemDropManager.Instance.Drop(WealthType.Vestige, 1, dropAmount, enemy.transform.position);
+                EItemDropManager.Instance.AddCollectedData(WealthType.Vestige, enemy.DarkUnitValue * enemy.Dark);
+                EItemDropManager.Instance.AddCollectedData(WealthType.Sigils, enemy.BossPoint);
             }
             else
             {
-                if (hasVestige)
-                    EItemDropManager.Instance.Drop(WealthType.Vestige, enemy.DarkUnitValue, enemy.Dark, enemy.transform.position);
+                if (TryDropFirstDayVestige(out var dropAmount))
+                {
+                    EItemDropManager.Instance.Drop(WealthType.Vestige, 1, dropAmount, enemy.transform.position);
+                }
+                else
+                {
+                    if (hasVestige)
+                        EItemDropManager.Instance.Drop(WealthType.Vestige, enemy.DarkUnitValue, enemy.Dark, enemy.transform.position);
+                }
             }
-            
-            if (enemy.BossPoint > 0)
-                EItemDropManager.Instance.DropOne(WealthType.Sigils, enemy.BossPoint, enemy.transform.position);
-        }
-
-        private void OnCollectEntityDamaged(EItemDropCollector collector)
-        {
-            EItemDropManager.Instance.CollectAll(collector.transform, false);
         }
         
         /// <summary>

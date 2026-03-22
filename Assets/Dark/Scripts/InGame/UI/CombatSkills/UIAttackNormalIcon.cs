@@ -13,13 +13,13 @@ namespace InGame.UI.CombatSkills
         
         private void Start()
         {
-            CombatActions.OnAttackNormal += OnSkillUsed;
+            CombatActions.OnAttackNormal += OnAttackUsed;
         }
 
         private void OnDestroy()
         {
             UpgradeManager.Instance.OnActivated -= OnUpgradeBonusActivated;
-            CombatActions.OnAttackNormal -= OnSkillUsed;
+            CombatActions.OnAttackNormal -= OnAttackUsed;
         }
 
         public override void CheckShowSkill(Action callbackShow, Action callbackHide)
@@ -64,7 +64,12 @@ namespace InGame.UI.CombatSkills
             }
         }
 
-        protected override void ShowToast()
+        private void OnAttackUsed(float cooldown)
+        {
+            OnSkillUsed(cooldown, string.Empty);    
+        }
+        
+        protected override void ShowToast(string text)
         {
             return;
             ToastInGameManager.Instance.Register(

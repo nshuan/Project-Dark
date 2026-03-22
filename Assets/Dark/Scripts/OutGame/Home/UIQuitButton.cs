@@ -12,8 +12,8 @@ namespace Dark.Scripts.OutGame.Home
         
         public override void OnPointerClick(PointerEventData eventData)
         {
-            popupWarning.Setup(
-                "Quit?",
+            popupWarning.LocalizedSetup(
+                "key_are_you_sure",
                 "",
                 Application.Quit);
             popupWarning.DoOpenFadeIn(UIConst.HomeBtnDelayOnClick);

@@ -42,6 +42,11 @@ namespace InGame
             return attackDuration.Item1;
         }
 
+        public float GetShootPrepareDuration()
+        {
+            return animController.GetAttackDuration().Item1;
+        }
+
         public void PlayCharge()
         {
             animController.PlayCharge();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Dark.Scripts.Audio;
 using Dark.Scripts.AudioV2;
 using Dark.Scripts.Settings.Resolution;
+using Dark.Tools.Language.Runtime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -142,61 +143,7 @@ namespace Dark.Scripts.Settings.UI
         public void UpdateValue(bool onEnable)
         {
             if (onEnable) isWindowedMode = GameSettings.WindowedMode;
-            DisplayText.SetText(isWindowedMode ? "Off" : "On");
-        }
-    }
-
-    [Serializable]
-    public class SettingResolution : ISettingItemButton
-    {
-        public Button Button { get; set; }
-        public TextMeshProUGUI DisplayText { get; set; }
-
-        private int width;
-        private int height;
-        private int selectedIndex;
-        
-        public void Initialize(Button button)
-        {
-            Button = button;
-            button.onClick.RemoveAllListeners();
-            button.onClick.AddListener(OnClick);
-            
-            selectedIndex = ResolutionSettings.GetSelectedResolutionIndex();
-            
-            UpdateValue(true);
-        }
-        
-        public void Save()
-        {
-            GameSettings.ResolutionWidth = width;
-            GameSettings.ResolutionHeight = height;
-            GameSettings.Save();
-            ResolutionSettings.SetResolutionByIndex(selectedIndex, apply: true);
-        }
-
-        public void OnClick()
-        {
-            if (selectedIndex == -1) return;
-
-            selectedIndex += 1;
-            if (selectedIndex >= ResolutionSettings.SupportedResolutions.Count)
-                selectedIndex = 0;
-            
-            var selectedEntry = ResolutionSettings.SupportedResolutions[selectedIndex];
-            width = selectedEntry.width;
-            height = selectedEntry.height;
-            UpdateValue(false);
-        }
-        
-        public void UpdateValue(bool onEnable)
-        {
-            if (onEnable)
-            {
-                width = GameSettings.ResolutionWidth;
-                height = GameSettings.ResolutionHeight;
-            }
-            DisplayText.SetText($"{width}x{height}");
+            DisplayText.SetTextLanguage(isWindowedMode ? "key_off" : "key_on");
         }
     }
     

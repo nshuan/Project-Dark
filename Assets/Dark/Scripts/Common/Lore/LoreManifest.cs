@@ -39,13 +39,19 @@ namespace Dark.Scripts.Common.Lore
     public enum LoreKey
     {
         TheSightSunder,
-        EchoPiercer
+        TheVergeBrand,
+        TheVerge,
+        Redgaze,
+        TheTowers,
+        Vestige,
+        Echoes,
+        Sigils
     }
 
     [Serializable]
     public struct LoreInfo
     {
-        public string name;
-        public string lore;
+        public string nameKey;
+        public string loreKey;
     }
 }

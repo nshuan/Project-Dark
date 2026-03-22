@@ -93,4 +93,51 @@ namespace Dark.Scripts.Settings.UI
             DisplayValue.SetText(Mathf.RoundToInt(Slider.value).ToString());
         }
     }
+    
+    [Serializable]
+    public class SettingScreenShakeScale : ISettingItemSlider
+    {
+        [SerializeField, Range(0, 10)] private int minValue;
+        [SerializeField, Range(0, 10)] private int maxValue;
+
+        public Slider Slider { get; set; }
+        public TextMeshProUGUI DisplayValue { get; set; }
+
+        public void Initialize(Slider slider)
+        {
+            if (maxValue == minValue) minValue = maxValue - 1; 
+            
+            Slider = slider;
+            Slider.minValue = minValue;
+            Slider.maxValue = maxValue;
+            slider.onValueChanged.RemoveAllListeners();
+            InitSlider();
+            slider.onValueChanged.AddListener(OnValueChanged);
+            
+            UpdateValue(false);
+        }
+
+        public void Save()
+        {
+            GameSettings.ScreenShakeScale = Mathf.Clamp01((Slider.value - minValue) / (maxValue - minValue));
+            
+            UpdateValue(false);
+            GameSettings.Save();
+        }
+
+        private void InitSlider()
+        {
+            Slider.value = Mathf.RoundToInt(Slider.minValue + (Slider.maxValue - Slider.minValue) * GameSettings.ScreenShakeScale);
+        }
+
+        public void OnValueChanged(float value)
+        {
+            UpdateValue(false);
+        }
+        
+        public void UpdateValue(bool onEnable)
+        {
+            DisplayValue.SetText(Mathf.RoundToInt(Slider.value).ToString());
+        }
+    }
 }

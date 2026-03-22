@@ -8,7 +8,7 @@ namespace Dark.Scripts.ForDemo
 {
     public class DemoConfig : ScriptableObject
     {
-        public const bool IsDemo = true;
+        public const bool IsDemo = false;
         
         private static string Path = "DemoConfig";
         private static string FilePath = "Assets/Dark/Scripts/ForDemo/Resources/DemoConfig.asset";
@@ -19,12 +19,11 @@ namespace Dark.Scripts.ForDemo
         [SerializeField] private List<int> lockedNodes;
         [SerializeField] private int collectLogicType = 0; // 0 = original, 1 = auto collect, 2 = mouse
         [SerializeField] private bool showTooltip = true;
+        [SerializeField] private Color nodeActivatedColor;
         
         public static string SteamWishlistURL { get; private set; }
         public static string FeedbackURL { get; private set; }
         public static int MaxDemoLevel { get; private set; }
-        public static List<int> LockedNodes { get; private set; }
-        public static bool IsLockedNode(int nodeId) => IsDemo && LockedNodes != null && LockedNodes.Contains(nodeId);
         public static int CollectLogicType { get; private set; }
         public static bool ShowTooltip { get; private set; }
 
@@ -33,7 +32,6 @@ namespace Dark.Scripts.ForDemo
             SteamWishlistURL = steamWishlistURL;
             FeedbackURL = feedbackURL;
             MaxDemoLevel = IsDemo ? maxDemoLevel : 100;
-            LockedNodes = lockedNodes;
             CollectLogicType = collectLogicType;
             ShowTooltip = showTooltip;
         }

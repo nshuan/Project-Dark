@@ -87,6 +87,7 @@ namespace InGame
         public UpgradeBonusStatV2 bonusNormalAttackDmg;
         public UpgradeBonusStatV2 bonusNormalAttackCooldown;
         public UpgradeBonusStatV2 bonusNormalAttackRange;
+        public UpgradeBonusStatV2 bonusNormalAttackSize;
         public UpgradeBonusStatV2 bonusPiercingDmg;
         public UpgradeBonusStatV2 bonusPiercingAmount;
         public UpgradeBonusStatV2 bonusBulletDmg;
@@ -101,6 +102,7 @@ namespace InGame
         public UpgradeBonusStatV2 bonusChargeDmg;
         public UpgradeBonusStatV2 bonusBulletAmount;
         public UpgradeBonusStatV2 bonusSizeAmount;
+        public UpgradeBonusStatV2 bonusRangeStep;
     }
 
     [Serializable]
