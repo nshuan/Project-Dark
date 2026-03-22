@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Dark.Scripts.Leaderboard;
 using TMPro;
 using UnityEngine;
 
@@ -14,9 +13,21 @@ namespace Dark.Scripts.Leaderboard.UI
 
         public void SetData(LeaderboardEntryData data)
         {
-            if (rankText != null) rankText.text = (data.rank + 1).ToString();
-            if (nameText != null) nameText.text = data.playerName ?? string.Empty;
-            if (scoreText != null) scoreText.text = data.score.ToString();
+            if (rankText != null) rankText.SetText((data.rank + 1).ToString());
+            if (nameText != null) nameText.SetText(data.playerName);
+            if (scoreText != null)
+            {
+                var time = System.TimeSpan.FromMilliseconds(data.score);
+
+                if (time.TotalHours >= 1)
+                {
+                    scoreText.SetText($"{time.TotalHours:D2}:{time.Minutes:D2}:{time.Seconds:D2}");
+                }
+                else
+                {
+                    scoreText.SetText($"{time.TotalMinutes:D2}:{time.Seconds:D2}");
+                }
+            }
             if (classIcons != null)
             {
                 for (var i = 0; i < classIcons.Count; i++)

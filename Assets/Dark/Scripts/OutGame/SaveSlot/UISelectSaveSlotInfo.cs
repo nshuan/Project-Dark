@@ -1,9 +1,4 @@
 using System;
-using Coffee.UIExtensions;
-using Dark.Scripts.Common;
-using Dark.Scripts.Utils;
-using Dark.Tools.Language.Runtime;
-using Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
