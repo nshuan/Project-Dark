@@ -13,7 +13,7 @@ namespace Dark.Scripts.Leaderboard.UI
 
         public void SetData(LeaderboardEntryData data)
         {
-            if (rankText != null) rankText.SetText((data.rank + 1).ToString());
+            if (rankText != null) rankText.SetText((data.rank).ToString());
             if (nameText != null) nameText.SetText(data.playerName);
             if (scoreText != null)
             {
