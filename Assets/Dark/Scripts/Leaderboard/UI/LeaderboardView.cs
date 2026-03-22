@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Dark.Scripts.Leaderboard;
+using Dark.Tools.Language.Runtime;
 using Data;
 using InGame.CharacterClass;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +22,7 @@ namespace Dark.Scripts.Leaderboard.UI
         [SerializeField] private RectTransform content;
         [SerializeField] private LeaderboardItemView itemPrefab;
         [SerializeField] private LeaderboardItemView top1Item;
+        [SerializeField] private TextMeshProUGUI txtPlayerRank;
         
         private GameCompletionLeaderboardManager manager;
 
@@ -38,26 +41,44 @@ namespace Dark.Scripts.Leaderboard.UI
         {
             if (manager != null)
             {
-                manager.OnScoresDownloaded += SetEntries;
+                manager.OnTopScoresDownloaded += OnTopScoresDownloaded;
+                manager.OnPlayerScoresDownloaded += OnPlayerScoresDownloaded;
                 manager.DownloadTop(10);
+                manager.DownloadAroundPlayer(5);
             }
-            
         }
 
         void OnDisable()
         {
             if (manager != null)
-                manager.OnScoresDownloaded -= SetEntries;
+            {
+                manager.OnTopScoresDownloaded -= OnTopScoresDownloaded;
+                manager.OnPlayerScoresDownloaded -= OnPlayerScoresDownloaded;
+            }
         }
 
-        public void SetEntries(List<LeaderboardEntryData> entries)
+        public void OnTopScoresDownloaded(List<LeaderboardEntryData> entries)
         {
             if (entries is { Count: > 0 })
             {
                 top1Item.SetData(entries[0]);
                 entries.RemoveAt(0);
             }
-            SetEntries((IReadOnlyList<LeaderboardEntryData>)entries);
+            SetEntries(entries);
+        }
+        
+        private void OnPlayerScoresDownloaded(List<LeaderboardEntryData> entries)
+        {
+            if (entries is { Count: > 0 })
+            {
+                txtPlayerRank.SetTextLanguage("key_leaderboard_current_rank",
+                    ("%{value}", $"#{entries[(entries.Count - 1) / 2].rank}"));
+            }
+            else
+            {
+                txtPlayerRank.SetTextLanguage("key_leaderboard_current_rank",
+                    ("%{value}", "##"));   
+            }
         }
 
         public void SetEntries(IReadOnlyList<LeaderboardEntryData> entries)

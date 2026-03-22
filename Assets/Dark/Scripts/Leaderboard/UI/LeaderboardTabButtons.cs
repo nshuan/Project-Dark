@@ -10,27 +10,37 @@ namespace Dark.Scripts.Leaderboard.UI
 {
     public class LeaderboardTabButtons : SerializedMonoBehaviour
     {
-        [OdinSerialize, NonSerialized] private Dictionary<Button, GameObject> tabDict;
+        [OdinSerialize, NonSerialized] private Dictionary<Button, LeaderboardButtonInfo> tabDict;
         [SerializeField] private Button firstShowTab;
         
         private void Awake()
         {
             foreach (var tab in tabDict)
             {
-                tab.Value.SetActive(false);
+                tab.Value.viewTab.SetActive(false);
+                tab.Value.btnLight.SetActive(false);
                 tab.Key.onClick.RemoveAllListeners();
                 tab.Key.onClick.AddListener(() =>
                 {
                     foreach (var pair in tabDict)
                     {
-                        pair.Value.SetActive(false);
+                        pair.Value.viewTab.SetActive(false);
+                        pair.Value.btnLight.SetActive(false);
                     }
                     
-                    tab.Value.SetActive(true);
+                    tab.Value.viewTab.SetActive(true);
+                    tab.Value.btnLight.SetActive(true);
                 });
             }
             
             firstShowTab.onClick.Invoke();
+        }
+        
+        [Serializable]
+        public class LeaderboardButtonInfo
+        {
+            public GameObject viewTab;
+            public GameObject btnLight;
         }
     }
 }

@@ -24,10 +24,12 @@ namespace Dark.Scripts.Leaderboard
 
         CallResult<LeaderboardFindResult_t> findLeaderboard;
         CallResult<LeaderboardScoreUploaded_t> uploadResult;
-        CallResult<LeaderboardScoresDownloaded_t> downloadResult;
+        CallResult<LeaderboardScoresDownloaded_t> downloadTopResult;
+        CallResult<LeaderboardScoresDownloaded_t> downloadAroundPlayerResult;
 
         List<LeaderboardEntryData> offlineLeaderboard = new List<LeaderboardEntryData>();
-        public event Action<List<LeaderboardEntryData>> OnScoresDownloaded;
+        public event Action<List<LeaderboardEntryData>> OnTopScoresDownloaded;
+        public event Action<List<LeaderboardEntryData>> OnPlayerScoresDownloaded;
         
         // -----------------------------
         // Initialize
@@ -47,7 +49,8 @@ namespace Dark.Scripts.Leaderboard
             
             findLeaderboard = CallResult<LeaderboardFindResult_t>.Create(OnLeaderboardFound);
             uploadResult = CallResult<LeaderboardScoreUploaded_t>.Create(OnScoreUploaded);
-            downloadResult = CallResult<LeaderboardScoresDownloaded_t>.Create(OnScoresDownloadedInternal);
+            downloadTopResult = CallResult<LeaderboardScoresDownloaded_t>.Create(OnTopScoresDownloadedInternal);
+            downloadAroundPlayerResult = CallResult<LeaderboardScoresDownloaded_t>.Create(OnPlayerScoresDownloadedInternal);
             
             var handle = SteamUserStats.FindLeaderboard(leaderboardName);
             findLeaderboard.Set(handle);
@@ -103,7 +106,7 @@ namespace Dark.Scripts.Leaderboard
                 count
             );
 
-            downloadResult.Set(handle);
+            downloadTopResult.Set(handle);
         }
 
         // -----------------------------
@@ -122,12 +125,24 @@ namespace Dark.Scripts.Leaderboard
                 range
             );
 
-            downloadResult.Set(handle);
+            downloadAroundPlayerResult.Set(handle);
         }
 
-        void OnScoresDownloadedInternal(LeaderboardScoresDownloaded_t result, bool failure)
+        void OnTopScoresDownloadedInternal(LeaderboardScoresDownloaded_t result, bool failure)
         {
-            if (failure) return;
+            var entries = ConvertScoresDownloadedInternal(result, failure);
+            OnTopScoresDownloaded?.Invoke(entries);
+        }
+
+        void OnPlayerScoresDownloadedInternal(LeaderboardScoresDownloaded_t result, bool failure)
+        {
+            var entries = ConvertScoresDownloadedInternal(result, failure);
+            OnPlayerScoresDownloaded?.Invoke(entries);
+        }
+        
+        List<LeaderboardEntryData> ConvertScoresDownloadedInternal(LeaderboardScoresDownloaded_t result, bool failure)
+        {
+            if (failure) return new List<LeaderboardEntryData>();
 
             List<LeaderboardEntryData> entries = new List<LeaderboardEntryData>();
 
@@ -152,7 +167,7 @@ namespace Dark.Scripts.Leaderboard
                 });
             }
 
-            OnScoresDownloaded?.Invoke(entries);
+            return entries;
         }
         
         // -----------------------------
