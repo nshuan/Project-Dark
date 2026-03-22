@@ -16,13 +16,15 @@ namespace Dark.Scripts.Leaderboard
         
         public void Initialize()
         {
-            if (leaderboards == null) return;
-            foreach (var leaderboard in leaderboards)
+            if (leaderboards != null)
             {
-                leaderboard.Value.Initialize();
+                foreach (var leaderboard in leaderboards)
+                {
+                    leaderboard.Value.Initialize();
+                }
             }
 
-            fullLeaderboard.Initialize();
+            fullLeaderboard?.Initialize();
         }
 
         public GameCompletionLeaderboardManager GetLeaderboard(CharacterClass characterClass)

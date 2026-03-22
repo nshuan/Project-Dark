@@ -55,8 +55,8 @@ namespace Dark.Scripts.Leaderboard.UI
             if (entries is { Count: > 0 })
             {
                 top1Item.SetData(entries[0]);
+                entries.RemoveAt(0);
             }
-            entries.RemoveAt(0);
             SetEntries((IReadOnlyList<LeaderboardEntryData>)entries);
         }
 
