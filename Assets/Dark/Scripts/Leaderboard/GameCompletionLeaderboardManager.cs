@@ -2,12 +2,17 @@ using System;
 using System.Collections;
 using Core;
 using System.Collections.Generic;
+using InGame.CharacterClass;
+using Sirenix.OdinInspector;
 using Steamworks;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Dark.Scripts.Leaderboard
 {
+    /// <summary>
+    /// detail[0] dùng để lưu class
+    /// </summary>
     public class GameCompletionLeaderboardManager : MonoBehaviour
     {
         public string leaderboardName;
@@ -70,8 +75,8 @@ namespace Dark.Scripts.Leaderboard
                 leaderboard,
                 ELeaderboardUploadScoreMethod.k_ELeaderboardUploadScoreMethodKeepBest,
                 score,
-                null,
-                0
+                details,
+                details?.Length ?? 0
             );
 
             uploadResult.Set(handle);
@@ -128,22 +133,22 @@ namespace Dark.Scripts.Leaderboard
 
             for (int i = 0; i < result.m_cEntryCount; i++)
             {
-                LeaderboardEntry_t entry;
-                int[] details = new int[0];
+                var details = new int[1];
 
                 SteamUserStats.GetDownloadedLeaderboardEntry(
                     result.m_hSteamLeaderboardEntries,
                     i,
-                    out entry,
+                    out var entry,
                     details,
                     0
                 );
-
+                
                 entries.Add(new LeaderboardEntryData
                 {
                     rank = entry.m_nGlobalRank,
                     score = entry.m_nScore,
-                    playerName = SteamFriends.GetFriendPersonaName(entry.m_steamIDUser)
+                    playerName = SteamFriends.GetFriendPersonaName(entry.m_steamIDUser),
+                    classType = (CharacterClass)details[0]
                 });
             }
 
