@@ -21,11 +21,11 @@ namespace Dark.Scripts.Leaderboard.UI
 
                 if (time.TotalHours >= 1)
                 {
-                    scoreText.SetText($"{time.TotalHours:D2}:{time.Minutes:D2}:{time.Seconds:D2}");
+                    scoreText.SetText(string.Format("{0:D2}:{1:D2}:{2:D2}", (int)time.TotalHours, time.Minutes, time.Seconds));
                 }
                 else
                 {
-                    scoreText.SetText($"{time.TotalMinutes:D2}:{time.Seconds:D2}");
+                    scoreText.SetText(string.Format("{0:D2}:{1:D2}", (int)time.TotalMinutes, time.Seconds));
                 }
             }
             if (classIcons != null)
