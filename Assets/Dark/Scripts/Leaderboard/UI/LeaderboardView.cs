@@ -44,7 +44,6 @@ namespace Dark.Scripts.Leaderboard.UI
                 manager.OnTopScoresDownloaded += OnTopScoresDownloaded;
                 manager.OnPlayerScoresDownloaded += OnPlayerScoresDownloaded;
                 manager.DownloadTop(10);
-                manager.DownloadAroundPlayer(5);
             }
         }
 
@@ -69,16 +68,7 @@ namespace Dark.Scripts.Leaderboard.UI
         
         private void OnPlayerScoresDownloaded(List<LeaderboardEntryData> entries)
         {
-            if (entries is { Count: > 0 })
-            {
-                txtPlayerRank.SetTextLanguage("key_leaderboard_current_rank",
-                    ("%{value}", $"#{entries[(entries.Count - 1) / 2].rank}"));
-            }
-            else
-            {
-                txtPlayerRank.SetTextLanguageKeepFont("key_leaderboard_current_rank",
-                    ("%{value}", "##"));   
-            }
+            
         }
 
         public void SetEntries(IReadOnlyList<LeaderboardEntryData> entries)
@@ -104,6 +94,20 @@ namespace Dark.Scripts.Leaderboard.UI
 
             if (scrollRect != null)
                 scrollRect.verticalNormalizedPosition = 1f;
+        }
+
+        private void SetCurrentPlayer(LeaderboardEntryData entry)
+        {
+            if (entry != null)
+            {
+                txtPlayerRank.SetTextLanguageKeepFont("key_leaderboard_current_rank",
+                    ("%{value}", $"#{entry.rank}"));
+            }
+            else
+            {
+                txtPlayerRank.SetTextLanguageKeepFont("key_leaderboard_current_rank",
+                    ("%{value}", "##"));   
+            }
         }
     }
 }
