@@ -43,6 +43,8 @@ public class SteamManager : MonoBehaviour {
 		}
 	}
 
+	public static CSteamID myId;
+
 	protected SteamAPIWarningMessageHook_t m_SteamAPIWarningMessageHook;
 
 	[AOT.MonoPInvokeCallback(typeof(SteamAPIWarningMessageHook_t))]
@@ -126,6 +128,7 @@ public class SteamManager : MonoBehaviour {
 			return;
 		}
 
+		myId = SteamUser.GetSteamID();
 		s_EverInitialized = true;
 	}
 

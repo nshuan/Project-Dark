@@ -60,6 +60,18 @@ namespace Dark.Scripts.Leaderboard.UI
         {
             if (entries is { Count: > 0 })
             {
+                // Get current player rank
+                var foundCurrentPlayer = false;
+                foreach (var entry in entries)
+                {
+                    if (entry.steamID != SteamManager.myId) continue;
+                    foundCurrentPlayer = true;
+                    SetCurrentPlayer(entry);
+                    break;
+                }
+                if (!foundCurrentPlayer)
+                    manager.DownloadAroundPlayer(0);
+                
                 top1Item.SetData(entries[0]);
                 entries.RemoveAt(0);
             }
@@ -68,7 +80,18 @@ namespace Dark.Scripts.Leaderboard.UI
         
         private void OnPlayerScoresDownloaded(List<LeaderboardEntryData> entries)
         {
-            
+            if (entries == null) SetCurrentPlayer(null);
+            else
+            {
+                LeaderboardEntryData result = null; 
+                foreach (var entry in entries)
+                {
+                    if (entry.steamID != SteamManager.myId) continue;
+                    result = entry;
+                    break;
+                }
+                SetCurrentPlayer(result);
+            }
         }
 
         public void SetEntries(IReadOnlyList<LeaderboardEntryData> entries)

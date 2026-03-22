@@ -160,6 +160,7 @@ namespace Dark.Scripts.Leaderboard
                 
                 entries.Add(new LeaderboardEntryData
                 {
+                    steamID = entry.m_steamIDUser,
                     rank = entry.m_nGlobalRank,
                     score = entry.m_nScore,
                     playerName = SteamFriends.GetFriendPersonaName(entry.m_steamIDUser),
