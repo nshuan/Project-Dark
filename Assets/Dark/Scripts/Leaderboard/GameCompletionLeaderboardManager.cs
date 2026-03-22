@@ -27,7 +27,7 @@ namespace Dark.Scripts.Leaderboard
         // Upload Score
         // -----------------------------
 
-        public void UploadScore(int score)
+        public void UploadScore(int score, int[] details = null)
         {
 
         }
