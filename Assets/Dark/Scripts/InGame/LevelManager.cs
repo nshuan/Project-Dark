@@ -251,8 +251,10 @@ namespace InGame
                     LevelManifest.Instance.GetMaxLevel(PlayerDataManager.Instance.Data.Class))
                 {
                     var classType = PlayerDataManager.Instance.Data.Class;
-                    LeaderboardManager.Instance.GetLeaderboard(classType).UploadScore((int)PlayerDataManager.Instance.Data.timePlayedMilli, new int[] { (int) classType });
-                    LeaderboardManager.Instance.GetFullLeaderboard().UploadScore((int)PlayerDataManager.Instance.Data.timePlayedMilli, new int[] { (int) classType });
+                    var timeCompleted = (int)PlayerDataManager.Instance.Data.timePlayedMilli +
+                                        TimePlayed.TotalMilliseconds;
+                    LeaderboardManager.Instance.GetLeaderboard(classType).UploadScore((int)timeCompleted, new int[] { (int) classType });
+                    LeaderboardManager.Instance.GetFullLeaderboard().UploadScore((int)timeCompleted, new int[] { (int) classType });
                 }
             }
             
