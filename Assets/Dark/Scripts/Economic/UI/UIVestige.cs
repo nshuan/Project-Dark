@@ -39,6 +39,10 @@ namespace Economic.UI
                 panelInstruction.SetActive(true);
                 WealthManager.Instance.SetShownInstruction(WealthType.Vestige);
             }
+            else if (showInstruction)
+            {
+                txtHintInstruction.SetActive(true);
+            }
             OnEconomicIconHoverIn?.Invoke(WealthType.Vestige);
         }
     }

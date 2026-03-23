@@ -5,6 +5,7 @@ using Coffee.UIExtensions;
 using Dark.Scripts.Analytics;
 using Dark.Scripts.AudioV2;
 using Dark.Scripts.ForDemo;
+using Dark.Scripts.Utils;
 using DG.Tweening;
 using Economic;
 using InGame.Upgrade;
@@ -155,6 +156,8 @@ namespace Dark.Scripts.OutGame.Upgrade
                         txtNodeLevel.transform.parent.gameObject.SetActive(!config.lockOnDemo);
                     }
                     
+                    txtNodeMaxLevel.gameObject.SetActive(false);
+                    
                     SetAvailable();
                     SetGlow();
                     
@@ -181,7 +184,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                     else
                     {
                         txtNodeLevel.SetText($"{data.level}/{config.MaxLevel}");
-                        txtNodeMaxLevel.gameObject.SetActive(data.level == config.MaxLevel);
+                        txtNodeMaxLevel.SetActive(data.level == config.MaxLevel);
                         txtNodeLevel.transform.parent.gameObject.SetActive(!config.lockOnDemo);
                     }
                     
@@ -205,6 +208,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             {
                 if (GameConst.HideLockedNode && CurrentState == UIUpgradeNodeState.Locked)
                     return;
+                
                 if (GameConst.HideLockedAreaByCloud && config.groupId.All((id) =>
                     {
                         if (id.isLockNode) return false;
@@ -213,6 +217,8 @@ namespace Dark.Scripts.OutGame.Upgrade
                             UpgradeManager.Instance.TreeConfig.nodeGroupsMapById.TryGetValue(id.groupId,
                                 out var nodeGroup))
                         {
+                            if (UpgradeManager.Instance.Data.openedCloudGroup.Contains(nodeGroup.lockNode.nodeId))
+                                return false;
                             if (UpgradeManager.Instance.GetData(nodeGroup.lockNode.nodeId) is { level: > 0 })
                                 return false;
                         }
@@ -259,6 +265,43 @@ namespace Dark.Scripts.OutGame.Upgrade
                 return;
             }
 
+            if (nodeType == UpgradeNodeType.NodeSkill || nodeType == UpgradeNodeType.NodeEffect)
+            {
+                var existData = UpgradeManager.Instance.GetData(config.nodeId);
+                if (existData != null && existData.level >= config.MaxLevel)
+                {
+                    var receivedValue = treeRef.GetResetReturnResources(config);
+                    
+                    Action actionReset = () =>
+                    {
+                        if (!UpgradeManager.Instance.CanResetSkill(config.nodeId)) return;
+                        
+                        WealthManager.Instance.AddVestige(receivedValue.Item1);
+                        WealthManager.Instance.AddLevelPoint(receivedValue.Item2);
+                        WealthManager.Instance.AddBossPoint(receivedValue.Item3);
+                        
+                        treeRef.ResetNode(config.nodeId, config.groupId);
+                        UpgradeManager.Instance.RefreshGroupUnlockOrder();
+                        UpgradeManager.Instance.Save();
+                        UpdateUI();
+                        treeRef.UpdateChildren(config.nodeId, false, true);
+                    };
+
+                    UIUpgradeScene.Instance.PopupConfirmReset.SetupLocalize(
+                        receivedValue.Item1,
+                        receivedValue.Item2,
+                        receivedValue.Item3,
+                        "key_confirm_reset_question",
+                        "key_confirm_exchange",
+                        config.nodeNameKey, 
+                        "key_confirm_exchange_question",
+                        actionReset);
+                    UIUpgradeScene.Instance.PopupConfirmReset.SetupReturnRatio(treeRef.ResetConfig.refundVestigeRatio, treeRef.ResetConfig.refundEchoesRatio, treeRef.ResetConfig.refundSigilsRatio);
+                    UIUpgradeScene.Instance.PopupConfirmReset.DoOpenFadeIn();
+                    return;    
+                }
+            }
+            
             if (!UpgradeManager.Instance.CanUpgrade(config.nodeId, config.groupId))
             {
                 UIUpgradeNodeInfoPreview.Instance.Shake();
@@ -373,20 +416,20 @@ namespace Dark.Scripts.OutGame.Upgrade
                 DOTween.Kill(rectActivatedMaxOutline);
                 var vfxActivateMax = GetVfxActivateMax();
                 vfxActivateMax.Play();
+                this.DelayCall(1f, () => ReleaseVfxActivateMax(vfxActivateMax));
                 return DOTween.Sequence(rectActivatedMaxOutline)
                     .Append(rectActivatedMaxOutline.DOLocalRotate(new Vector3(0f, 0f, 180f), 0.4f).SetRelative())
                     .Join(rectActivatedMaxOutline.DOScale(1.2f, 0.4f).SetEase(Ease.OutQuad))
-                    .Append(rectActivatedMaxOutline.DOScale(1f, 0.2f).SetEase(Ease.InQuad))
-                    .AppendCallback(() => ReleaseVfxActivateMax(vfxActivateMax));
+                    .Append(rectActivatedMaxOutline.DOScale(1f, 0.2f).SetEase(Ease.InQuad));
             }
 
             var vfxActivate = GetVfxActivate();
             vfxActivate.Play();
+            this.DelayCall(1f, () => ReleaseVfxActivate(vfxActivate));
             return DOTween.Sequence(this)
                 .Append(imgAvailable.transform.DOLocalRotate(new Vector3(0f, 0f, 360f), 0.4f).SetRelative())
                 .Join(imgAvailable.transform.DOScale(1.2f, 0.4f).SetEase(Ease.OutQuad))
-                .Append(imgAvailable.transform.DOScale(1f, 0.2f).SetEase(Ease.InQuad))
-                .AppendCallback(() => ReleaseVfxActivate(vfxActivate));
+                .Append(imgAvailable.transform.DOScale(1f, 0.2f).SetEase(Ease.InQuad));
         }
         
         public virtual Tween DoSpawn()
@@ -426,6 +469,8 @@ namespace Dark.Scripts.OutGame.Upgrade
         protected void SetLocked()
         {
             imgAvailable.SetActive(false);
+            imgLock.SetAlpha(1f);
+            imgIconLock.SetAlpha(1f);
             imgLock.gameObject.SetActive(true);
             imgIconLock.gameObject.SetActive(true);
             if (imgAvailableDecor != null)
