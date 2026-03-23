@@ -251,6 +251,7 @@ MonoBehaviour:
   hoverScale: 1.05
   pressScale: 1
   duration: 0.2
+  target: {fileID: 0}
 --- !u!1 &375908375771924448
 GameObject:
   m_ObjectHideFlags: 0
@@ -479,6 +480,7 @@ MonoBehaviour:
   hoverScale: 1.08
   pressScale: 1
   duration: 0.2
+  target: {fileID: 0}
 --- !u!114 &5908674973203564089
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1054,6 +1056,7 @@ MonoBehaviour:
   hoverScale: 1.1
   pressScale: 1
   duration: 0.2
+  target: {fileID: 0}
 --- !u!114 &384541447763555326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1713,6 +1716,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: overrideFont
+      Entry: 6
+      Data: 
   key: key_return
 --- !u!1 &2466417126311073885
 GameObject:
@@ -2010,6 +2016,7 @@ MonoBehaviour:
   hoverScale: 1.05
   pressScale: 1
   duration: 0.2
+  target: {fileID: 0}
 --- !u!1 &2735322533693287785
 GameObject:
   m_ObjectHideFlags: 0
@@ -2216,6 +2223,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: overrideFont
+      Entry: 6
+      Data: 
   key: key_feedback
 --- !u!1 &2895318761864295767
 GameObject:
@@ -2409,6 +2419,7 @@ MonoBehaviour:
   hoverScale: 1.1
   pressScale: 1
   duration: 0.2
+  target: {fileID: 0}
 --- !u!114 &1758639145794711317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2671,6 +2682,9 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 8
+      Data: 
+    - Name: overrideFont
+      Entry: 6
       Data: 
   key: key_instruction_setting
 --- !u!1 &3212420705219896507
@@ -3798,6 +3812,7 @@ MonoBehaviour:
   hoverScale: 1.1
   pressScale: 1
   duration: 0.2
+  target: {fileID: 0}
 --- !u!114 &6416021452256463334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4143,6 +4158,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: overrideFont
+      Entry: 6
+      Data: 
   key: key_instruction_zoom
 --- !u!1 &6041622247731382464
 GameObject:
@@ -4467,6 +4485,7 @@ MonoBehaviour:
   hoverScale: 1.1
   pressScale: 1
   duration: 0.2
+  target: {fileID: 0}
 --- !u!114 &3478179664987274303
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4967,6 +4986,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: overrideFont
+      Entry: 6
+      Data: 
   key: key_wishlist
 --- !u!1 &6785540007897546297
 GameObject:
@@ -5321,6 +5343,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: overrideFont
+      Entry: 6
+      Data: 
   key: key_battle
 --- !u!1 &7288002224821413542
 GameObject:
@@ -5599,6 +5624,7 @@ MonoBehaviour:
   hoverScale: 1.1
   pressScale: 1
   duration: 0.2
+  target: {fileID: 0}
 --- !u!114 &892654311042651843
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6394,6 +6420,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: overrideFont
+      Entry: 6
+      Data: 
   key: key_instruction_upgrade
 --- !u!1 &8317402815082995744
 GameObject:
@@ -6565,6 +6594,7 @@ MonoBehaviour:
   hoverScale: 1.1
   pressScale: 1
   duration: 0.2
+  target: {fileID: 0}
 --- !u!114 &3048418711129018035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8803,6 +8833,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: overrideFont
+      Entry: 6
+      Data: 
   key: key_wishlist_now
 --- !u!224 &7283626425816556948 stripped
 RectTransform:
@@ -9991,14 +10024,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2271267573961882439}
     m_Modifications:
+    - target: {fileID: 355163896511703743, guid: c01da5ce49d251b4ab041c740f3859f6, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 355163896511703743, guid: c01da5ce49d251b4ab041c740f3859f6, type: 3}
     - target: {fileID: 700150488406047546, guid: c01da5ce49d251b4ab041c740f3859f6, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1262118596632628046, guid: c01da5ce49d251b4ab041c740f3859f6, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 1262118596632628046, guid: c01da5ce49d251b4ab041c740f3859f6, type: 3}
+    - target: {fileID: 2164001280813698942, guid: c01da5ce49d251b4ab041c740f3859f6, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 2164001280813698942, guid: c01da5ce49d251b4ab041c740f3859f6, type: 3}
     - target: {fileID: 2430161789033441524, guid: c01da5ce49d251b4ab041c740f3859f6, type: 3}
       propertyPath: showInstruction
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2951245163992647752, guid: c01da5ce49d251b4ab041c740f3859f6, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 2951245163992647752, guid: c01da5ce49d251b4ab041c740f3859f6, type: 3}
     - target: {fileID: 3064599304784507582, guid: c01da5ce49d251b4ab041c740f3859f6, type: 3}
       propertyPath: showInstruction
       value: 1
@@ -10115,6 +10164,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6062798663125148305, guid: c01da5ce49d251b4ab041c740f3859f6, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6604483037877828818, guid: c01da5ce49d251b4ab041c740f3859f6, type: 3}
       propertyPath: m_fontColor.b
       value: 0.7921569
@@ -10146,6 +10199,10 @@ PrefabInstance:
     - target: {fileID: 7064912054799512626, guid: c01da5ce49d251b4ab041c740f3859f6, type: 3}
       propertyPath: m_fontColor32.rgba
       value: 4291414473
+      objectReference: {fileID: 0}
+    - target: {fileID: 7947371281616423207, guid: c01da5ce49d251b4ab041c740f3859f6, type: 3}
+      propertyPath: showInstruction
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8680873731674872262, guid: c01da5ce49d251b4ab041c740f3859f6, type: 3}
       propertyPath: m_IsActive
@@ -12132,6 +12189,10 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 111663622612351256, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
+    - target: {fileID: 475703521526495308, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 475703521526495308, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
     - target: {fileID: 818370220057547791, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.Prefab
       value: 
@@ -12640,6 +12701,10 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 1649304260483493137, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
+    - target: {fileID: 2012663148713055722, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 2012663148713055722, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
     - target: {fileID: 2051423144210673989, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.Prefab
       value: 
@@ -13104,6 +13169,10 @@ PrefabInstance:
       propertyPath: m_SortingLayer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4215200686020066149, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 4215200686020066149, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
     - target: {fileID: 4804589588204811199, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.Prefab
       value: 
@@ -13112,6 +13181,10 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 6042520054572132864, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
+    - target: {fileID: 6843002828827287483, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 6843002828827287483, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
     - target: {fileID: 6894741119878160068, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.Prefab
       value: 
@@ -13128,10 +13201,18 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 7197393746895314597, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
+    - target: {fileID: 7452630633407180984, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 7452630633407180984, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
     - target: {fileID: 7837538659291666566, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 7837538659291666566, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
+    - target: {fileID: 7987152939772826719, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 7987152939772826719, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
     - target: {fileID: 8292420133448199274, guid: fba3f8e06d02b7d4fa8b2f57b45b8477, type: 3}
       propertyPath: serializationData.Prefab
       value: 

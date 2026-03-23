@@ -89,6 +89,8 @@ namespace Economic
         public void AddBossPoint(int value)
         {
             bossPoint += value;
+            if (value > 0)
+                PlayerDataManager.Instance.Data.resetPoint += 1;
             Save();
             OnBossPointChanged?.Invoke(bossPoint - value, bossPoint);
         }
