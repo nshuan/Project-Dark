@@ -32,9 +32,9 @@ namespace Dark.Scripts.OutGame.SaveSlot
             {
                 slot.ActionClearSaveSlot = (int slotIndex) =>
                 {
-                    popupConfirmClearSave.Setup(
-                        "your data will be lost",
-                        $"Are you sure?",
+                    popupConfirmClearSave.LocalizedSetup(
+                        "key_confirm_delete_slot_title",
+                        $"key_are_you_sure",
                         () =>
                         {
                             SaveSlotManager.Instance.ClearSlot(slotIndex);

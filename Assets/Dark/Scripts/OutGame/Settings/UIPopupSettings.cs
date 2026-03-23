@@ -37,6 +37,8 @@ namespace Dark.Scripts.OutGame.Settings
         private Button btnBack;
         private Button btnSave;
 
+        public Action OnCloseComplete;
+
         private void Awake()
         {
             matSymbol = new Material(imgSymbol.material);
@@ -84,9 +86,9 @@ namespace Dark.Scripts.OutGame.Settings
                 .AppendCallback(() =>
                 {
                     vfxLight.SetActive(true);
-                    imgTitle.DOFade(1f, durationShowTitle);
-                    imgDayLine.DOFade(1f, durationShowDayLine);
-                    DOTween.To(() => 1f, (x) => matSymbol.SetFloat(MatDisolveValue, x), 0f, durationShowSymbol);
+                    imgTitle.DOFade(1f, durationShowTitle).SetUpdate(true);
+                    imgDayLine.DOFade(1f, durationShowDayLine).SetUpdate(true);
+                    DOTween.To(() => 1f, (x) => matSymbol.SetFloat(MatDisolveValue, x), 0f, durationShowSymbol).SetUpdate(true);
                 })
                 .AppendInterval(durationShowTitle)
                 .AppendCallback(() =>
@@ -94,7 +96,7 @@ namespace Dark.Scripts.OutGame.Settings
                     for (var i = 0; i < listBossIcons.Count; i++)
                     {
                         var delay = i * 0.03f;
-                        listBossIcons[i].DOFade(1f, durationShowBossIcon).SetDelay(delay).SetEase(Ease.OutQuad);
+                        listBossIcons[i].DOFade(1f, durationShowBossIcon).SetDelay(delay).SetEase(Ease.OutQuad).SetUpdate(true);
                     }
                 })
                 .AppendInterval(0.2f)
@@ -108,12 +110,12 @@ namespace Dark.Scripts.OutGame.Settings
                         .OnComplete(() =>
                         {
                             if (btnBack) btnBack.interactable = true;
-                        });
+                        }).SetUpdate(true);
                     groupSave.DOFade(1f, 0.2f).SetEase(Ease.OutQuad).SetDelay(0.2f)
                         .OnComplete(() =>
                         {
                             if (btnSave) btnSave.interactable = true;
-                        });
+                        }).SetUpdate(true);
                 })
                 .Append(groupSettings.DOFade(1f, durationShowTitle));
             
@@ -126,8 +128,12 @@ namespace Dark.Scripts.OutGame.Settings
             if (btnSave) btnSave.interactable = false;
             
             DOTween.Kill(this);
-            popupCanvasGroup.DOFade(0f, 0.5f).SetTarget(this)
-                .OnComplete(() => gameObject.SetActive(false));
+            popupCanvasGroup.DOFade(0f, 0.5f).SetTarget(this).SetUpdate(true)
+                .OnComplete(() =>
+                {
+                    OnCloseComplete?.Invoke();
+                    gameObject.SetActive(false);
+                });
         }
     }
 }

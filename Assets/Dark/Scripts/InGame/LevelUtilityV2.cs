@@ -183,6 +183,17 @@ namespace InGame
             
             return (StatsNormalAttack.range + BonusInfo.bonusNormalAttack.bonusNormalAttackRange.add) * (1 + BonusInfo.bonusNormalAttack.bonusNormalAttackRange.mul) * ratio;
         }
+        
+        /// <summary>
+        /// Skill_Size = Size * [1 + Total (Skill_Size_Multiple) ] * [ 1 + ( Charge_Size_Max / Charge_Size_Time ) * Charge_Time ]
+        /// </summary>
+        /// <param name="baseSize"></param>
+        /// <param name="chargeSize"></param>
+        /// <returns></returns>
+        public static float GetNormalAttackSize()
+        {
+            return (StatsNormalAttack.size + BonusInfo.bonusNormalAttack.bonusNormalAttackSize.add) * (1 + BonusInfo.bonusNormalAttack.bonusNormalAttackSize.mul);
+        }
 
         public static float GetNormalPiercingDamageScale()
         {
@@ -255,13 +266,20 @@ namespace InGame
         // Charge bullet max step
         public static int GetChargeBulletAmount()
         {
-            return Mathf.RoundToInt((StatsChargeBullet.value + BonusInfo.bonusChargeAttack.bonusBulletAmount.addInt) * (1f + BonusInfo.bonusChargeAttack.bonusBulletAmount.mul));
+            return ToInt((StatsChargeBullet.value + BonusInfo.bonusChargeAttack.bonusBulletAmount.addInt) * (1f + BonusInfo.bonusChargeAttack.bonusBulletAmount.mul));
         }
         
         // Charge size max bullet blossom
         public static int GetChargeSizeAmount()
         {
             return ToInt((1f + BonusInfo.bonusChargeAttack.bonusSizeAmount.mul) * (StatsChargeSize.value + BonusInfo.bonusChargeAttack.bonusSizeAmount.addInt) );
+        }
+        
+        // Charge range step
+        public static float GetChargeRangeStep()
+        {
+            return (StatsNormalAttack.chargeRangeStep + BonusInfo.bonusChargeAttack.bonusRangeStep.add) *
+                   (1f + BonusInfo.bonusChargeAttack.bonusRangeStep.mul);
         }
 
         #endregion
@@ -335,14 +353,34 @@ namespace InGame
                 Mathf.Clamp01(1f - BonusInfo.bonusCounter.bonusCounterCooldown.mul - GetBaseCooldown()), 0.001f);
         }
 
-        public static int GetCounterPiercingAmount()
+        public static float GetCounterPiercingSize()
         {
-            return Mathf.RoundToInt((StatsCounterPiercing.size + BonusInfo.bonusCounter.bonusPiercingAmount.addInt) * (1f + BonusInfo.bonusCounter.bonusPiercingAmount.mul));
+            return (StatsCounterPiercing.size + BonusInfo.bonusCounter.bonusPiercingAmount.addInt) * (1f + BonusInfo.bonusCounter.bonusPiercingAmount.mul);
         }
 
         public static float GetCounterSlashRange()
         {
             return (StatsCounterSlash.range + BonusInfo.bonusCounter.bonusSlashSize.add) * (1f + BonusInfo.bonusCounter.bonusSlashSize.mul);
+        }
+
+        public static float GetCounterPiercingDetectRange()
+        {
+            return StatsCounterPiercing.detectRange;
+        }
+
+        public static float GetCounterSlashDetectRange()
+        {
+            return StatsCounterSlash.detectRange;
+        }
+
+        public static float GetCounterPiercingDelayAfterDetected()
+        {
+            return StatsCounterPiercing.delayOnDetectedEnemy;
+        }
+
+        public static float GetCounterSlashDelayAfterDetected()
+        {
+            return StatsCounterSlash.delayOnDetectedEnemy;
         }
 
         #endregion
@@ -357,6 +395,18 @@ namespace InGame
             var angle = Mathf.Atan2(direction.y, direction.x);
             var ratio = GameConst.IsoRatio
                         / Mathf.Sqrt(Mathf.Pow(GameConst.IsoRatio * Mathf.Cos(angle), 2) +
+                                     Mathf.Pow(Mathf.Sin(angle), 2));
+            return maxRange * ratio;
+        }
+        
+        public static float GetRelativeRangeMove(float maxRange, Vector2 direction)
+        {
+            var magnitude = direction.magnitude;
+            direction.x = Mathf.Abs(direction.x) / magnitude;
+            direction.y = Mathf.Abs(direction.y) / magnitude;
+            var angle = Mathf.Atan2(direction.y, direction.x);
+            var ratio = GameConst.IsoRatioMove
+                        / Mathf.Sqrt(Mathf.Pow(GameConst.IsoRatioMove * Mathf.Cos(angle), 2) +
                                      Mathf.Pow(Mathf.Sin(angle), 2));
             return maxRange * ratio;
         }

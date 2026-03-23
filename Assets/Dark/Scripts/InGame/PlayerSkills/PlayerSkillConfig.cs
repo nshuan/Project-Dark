@@ -69,6 +69,7 @@ namespace InGame
         public void ShootToTarget(
             ProjectileEntity projectile,
             EnemyEntity targetEnemy,
+            bool isTargetEnemyForceSelect,
             Vector2 spawnPos, 
             Vector2 rangeCenter,
             Vector2 target, 
@@ -87,6 +88,7 @@ namespace InGame
             shootLogic.ShootWithTarget(
                 projectile,
                 targetEnemy,
+                isTargetEnemyForceSelect,
                 spawnPos, 
                 rangeCenter,
                 target,
@@ -110,6 +112,7 @@ namespace InGame
         Normal,
         ChargeBullet,
         ChargeSize,
-        ChargeBulletSize
+        ChargeBulletSize,
+        ChargeSizeSubBullet
     }
 }

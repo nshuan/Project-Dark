@@ -7,6 +7,6 @@ namespace InGame
         [SerializeField] protected LayerMask targetLayer;
 
         public virtual void Initialize() { }
-        public abstract void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool);
+        public abstract void TriggerEffect(int effectId, IEffectTarget target, float size, float value, float stagger, PassiveEffectPool pool, params float[] additionalParams);
     }
 }

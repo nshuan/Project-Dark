@@ -86,6 +86,12 @@ namespace InGame
             return (CurrentAnim.frameRate, CurrentAnim.frameRate * (CurrentAnim.data.frames.Length - currentFrame));
         }
         
+        public (float, float) GetAttackDuration()
+        {
+            var attackAnim = directionInfo[currentDirection].attackAnim;
+            return (attackAnim.frameRate, attackAnim.frameRate * (attackAnim.data.frames.Length - 0));
+        }
+        
         public float PlayCharge()
         {
             charging = true;

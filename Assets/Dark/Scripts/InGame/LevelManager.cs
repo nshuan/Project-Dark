@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Core;
+using Dark.Scripts.Leaderboard;
 using Dark.Scripts.Settings;
 using Dark.Scripts.Utils;
 using Data;
@@ -30,6 +31,7 @@ namespace InGame
         public MoveTowersConfig dashConfig;
 
         [SerializeField] private PlayerSpawner playerSpawner;
+        [SerializeField] private BackgroundSpawner backgroundSpawner;
         public GateEntity gatePrefab;
         
         [SerializeField] private TowerEntity[] towers;
@@ -63,6 +65,7 @@ namespace InGame
         
         #region Action
 
+        public Action OnInitTowers { get; set; }
         public Action OnInitPlayer { get; set; }
         public Action<LevelConfig> OnLevelPreLoaded { get; set; }
         public Action<LevelConfig> OnLevelLoaded { get; set; }
@@ -112,10 +115,10 @@ namespace InGame
             LevelUtilityV2.BonusInfo = bonusInfo;
             LevelUtilityV2.StatsBase = playerStats;
             LevelUtilityV2.StatsNormalAttack = ClassConfigManifest.GetConfig(PlayerDataManager.Instance.Data.characterClass);
-            LevelUtilityV2.StatsNormalPiercing = PlayerSkillNormalManifest.Get(NormalType.Piercing);
-            LevelUtilityV2.StatsNormalBullet = PlayerSkillNormalManifest.Get(NormalType.Bullet);
-            LevelUtilityV2.StatsChargeBullet = PlayerChargeManifest.Get(ChargeType.Bullet);
-            LevelUtilityV2.StatsChargeSize = PlayerChargeManifest.Get(ChargeType.Size);
+            LevelUtilityV2.StatsNormalPiercing = PlayerSkillNormalManifest.Get(PlayerDataManager.Instance.Data.Class, NormalType.Piercing);
+            LevelUtilityV2.StatsNormalBullet = PlayerSkillNormalManifest.Get(PlayerDataManager.Instance.Data.Class, NormalType.Bullet);
+            LevelUtilityV2.StatsChargeBullet = PlayerChargeManifest.Get(PlayerDataManager.Instance.Data.Class, ChargeType.Bullet);
+            LevelUtilityV2.StatsChargeSize = PlayerChargeManifest.Get(PlayerDataManager.Instance.Data.Class, ChargeType.Size);
             LevelUtilityV2.StatsDash = dashConfig;
             LevelUtilityV2.StatsFlash = flashConfig;
             LevelUtilityV2.StatsTele = defaultTeleConfig; 
@@ -126,10 +129,11 @@ namespace InGame
         private void InitPlayerAndTowers()
         {
             InitTowers();
+            OnInitTowers?.Invoke();
             currentTowerIndex = -1;
             
             if (Player != null) Destroy(Player.gameObject);
-            Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)LevelUtilityV2.StatsNormalAttack.skillId);
+            Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)PlayerDataManager.Instance.Data.characterClass);
             Player.transform.position = towers[0].transform.position + towers[0].GetTowerHeight();
             OnInitPlayer?.Invoke();
         }
@@ -141,9 +145,10 @@ namespace InGame
         
         public void LoadLevel(int level)
         {
-            var levelConfig = LevelManifest.Instance.GetLevel(level);
+            var levelConfig = LevelManifest.Instance.GetLevel(PlayerDataManager.Instance.Data.Class, level);
             if (!levelConfig) return;
             Level = levelConfig;
+            backgroundSpawner.Spawn(Level.backgroundIndex);
             SceneManager.sceneLoaded += OnLevelSceneLoaded;
             LoadMapScene(Level.mapType);
         }
@@ -238,7 +243,16 @@ namespace InGame
             
             WealthManager.Instance.Save();
             if (Level.level >= PlayerDataManager.Instance.Data.level + 1)
+            {
                 PlayerDataManager.Instance.CompleteLevel();
+                
+                // Add score to leaderboard
+                if (PlayerDataManager.Instance.Data.level ==
+                    LevelManifest.Instance.GetMaxLevel(PlayerDataManager.Instance.Data.Class))
+                {
+                    GameCompletionLeaderboardManager.Instance.UploadScore((int)PlayerDataManager.Instance.Data.timePlayedMilli);
+                }
+            }
             
             DebugUtility.LogError($"Level {Level.level + 1} is ended: WIN");
             IsEndLevel = true;
@@ -279,6 +293,7 @@ namespace InGame
             OnBossWaveStart = null;
             onWaveEnded = null;
             OnInitPlayer = null;
+            OnInitTowers = null;
             
             CombatActions.Clear();
         }
@@ -371,6 +386,17 @@ namespace InGame
             currentTowerIndex = towerIndex;
             OnChangeTower?.Invoke(CurrentTower);
         }
+
+        public void BlockDamageAllTowers()
+        {
+            if (towers == null) return;
+            
+            foreach (var tower in towers)
+            {
+                tower.BlockDamage = true;
+            }    
+        }
+        
         #endregion
 
         #region Timer

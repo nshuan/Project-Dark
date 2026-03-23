@@ -1,4 +1,5 @@
 using System.Collections;
+using Dark.Scripts.Settings;
 using UnityEngine;
 
 namespace InGame.Effects
@@ -16,11 +17,12 @@ namespace InGame.Effects
             var originalPos = Vector3.zero;
             originalPos.z = -10;
             var elapsed = 0f;
+            var scaledMagnitude = GameSettings.ScreenShakeScale * Magnitude;
 
             while (elapsed < Duration)
             {
-                float offsetX = RandomUtil.Range(-1f, 1f) * Magnitude;
-                float offsetY = RandomUtil.Range(-1f, 1f) * Magnitude;
+                float offsetX = RandomUtil.Range(-1f, 1f) * scaledMagnitude;
+                float offsetY = RandomUtil.Range(-1f, 1f) * scaledMagnitude;
 
                 Cam.transform.localPosition = originalPos + new Vector3(offsetX, offsetY, 0f);
 

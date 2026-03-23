@@ -18,12 +18,16 @@ namespace Dark.Scripts.SceneNavigation
         [SerializeField] private TextMeshProUGUI progressText;
         [SerializeField] private float minDuration = 0.5f;
         [SerializeField] private float maxDuration = 1.5f;
+        [SerializeField] private Image imgQuickLoadBg;
+        [SerializeField] private Color quickLoadDefaultColor;
 
         private float normalLoadDelayClose = 0.5f;
         private float normalLoadHideBlankDuration = 0.3f;
         private float normalLoadHideDuration = 0.5f;
         
+        private float quickLoadOpenBlankDuration = 0.3f;
         private float quickLoadHideBlankDuration = 0.5f;
+        private float overrideQuickLoadHideDuration = -1f;
         
         public Action onStartLoading;
         public Action onSceneLoaded;
@@ -45,11 +49,14 @@ namespace Dark.Scripts.SceneNavigation
             {
                 if (coroutineClose != null) StopCoroutine(coroutineClose);
                 if (coroutineOpen != null) StopCoroutine(coroutineOpen);
-                coroutineClose = StartCoroutine(IEQuickClose(0.5f, quickLoadHideBlankDuration, () =>
-                {
-                    onLoadingComplete?.Invoke();
-                    onLoadingComplete = null;
-                }));
+                coroutineClose = StartCoroutine(IEQuickClose(0.5f,
+                    overrideQuickLoadHideDuration < 0 ? quickLoadHideBlankDuration : overrideQuickLoadHideDuration,
+                    () =>
+                    {
+                        overrideQuickLoadHideDuration = -1f;
+                        onLoadingComplete?.Invoke();
+                        onLoadingComplete = null;
+                    }));
             }
             else
             {
@@ -156,17 +163,24 @@ namespace Dark.Scripts.SceneNavigation
 
         #region QuickLoad
 
-        public void QuickLoadScene(string sceneName, Action completeCallback = null, float delay = 0f)
+        public void OverrideQuickLoadBgColorOnce(Color color)
+        {
+            imgQuickLoadBg.color = color;
+        }
+        
+        public void QuickLoadScene(string sceneName, Action completeCallback = null, float delay = 0f, float overrideOpenDuration = -1f, float overrideHideDuration = -1f)
         {
             DebugUtility.LogWarning($"Loading (quick) scene {sceneName}");
             onLoadingComplete = completeCallback;
             onStartLoading?.Invoke();
+            
             if (coroutineOpen != null) StopCoroutine(coroutineOpen);
             if (coroutineClose != null) StopCoroutine(coroutineClose);
 
             CurrentTotalDurationAfterSceneLoaded = TotalDurationAfterSceneQuickLoaded;
             
-            coroutineOpen = StartCoroutine(IEQuickOpen(0.3f, delay, sceneName));
+            overrideQuickLoadHideDuration = overrideHideDuration;
+            coroutineOpen = StartCoroutine(IEQuickOpen(overrideOpenDuration > 0 ? overrideOpenDuration : quickLoadOpenBlankDuration, delay, sceneName));
         }
         
         private IEnumerator IEQuickOpen(float duration, float delay, string sceneName)
@@ -236,6 +250,7 @@ namespace Dark.Scripts.SceneNavigation
             yield return blankPanel.DOFade(0f, hideBlankDuration).SetUpdate(true).WaitForCompletion();
             blankPanel.gameObject.SetActive(false);
             loadingPanel.gameObject.SetActive(false);
+            imgQuickLoadBg.color = quickLoadDefaultColor;
             callbackComplete?.Invoke();
         }
 

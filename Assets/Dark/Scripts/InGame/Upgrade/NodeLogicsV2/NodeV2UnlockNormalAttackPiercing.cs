@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Dark.Tools.GoogleSheetTool;
+using Data;
 
 namespace InGame.Upgrade.NodeLogicsV2
 {
@@ -12,6 +13,12 @@ namespace InGame.Upgrade.NodeLogicsV2
         {
             if (bonusInfo == null) return;
             bonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing = true;
+            
+            // Class knight khi unlock normal piercing thì x1.5 lên range và stagger
+            if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Knight)
+            {
+                bonusInfo.bonusNormalAttack.bonusNormalAttackRange.mul += 0.1f;
+            }
         }
 
         public (string, string) GetBeforeAfterValueTotalStat(int level, ref UpgradeBonusInfoV2 bonusInfo)

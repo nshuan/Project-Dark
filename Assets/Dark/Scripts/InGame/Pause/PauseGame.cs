@@ -9,21 +9,25 @@ namespace InGame.Pause
         public Action<bool> onPause;
         
         public bool IsPaused { get; private set; }
+        public bool BlockResume { get; set; }
         
-        public void Pause()
+        public bool Pause()
         {
             Time.timeScale = 0f;
             IsPaused = true;
             onPause?.Invoke(true);
             DebugUtility.LogError("[InGame] Paused");
+            return true;
         }
 
-        public void Resume()
+        public bool Resume()
         {
+            if (BlockResume) return false;
             Time.timeScale = 1f;
             IsPaused = false;
             onPause?.Invoke(false);
             DebugUtility.LogError("[InGame] Resumed");
+            return true;
         }
     }
 }

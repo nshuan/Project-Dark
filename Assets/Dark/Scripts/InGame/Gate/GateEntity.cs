@@ -234,11 +234,11 @@ namespace InGame
                     enemy.Item1.UniqueId = EnemyManager.Instance.CurrentEnemyIndex;
                     AliveEnemyCount += 1;
                     EnemyManager.Instance.OnEnemySpawn(enemy.Item1);
-                    enemy.Item1.OnDead += (reason) =>
+                    enemy.Item1.OnDead += (dead, reason) =>
                     {
                         AliveEnemyCount -= 1;
                         EnemyManager.Instance.OnEnemyDead(enemy.Item1, reason);
-                        CheckAllEnemiesDead();
+                        CheckAllEnemiesDead(enemy.Item1.IsBoss);
                     };
                 }
 
@@ -249,13 +249,21 @@ namespace InGame
                     yield return new WaitForSeconds(config.intervalLoop);
             }
             
-            CheckAllEnemiesDead();
+            CheckAllEnemiesDead(false);
             
             Deactivate(false);
         }
         
-        private void CheckAllEnemiesDead()
+        private void CheckAllEnemiesDead(bool isBossDead)
         {
+            if (AllEnemyDead) return;
+            if (isBossDead)
+            {
+                AllEnemyDead = true;
+                OnAllEnemiesDead?.Invoke();
+                OnAllEnemiesDead = null;
+                return;
+            }
             if (IsActive || currentSpawnTurn < TotalSpawnTurn) return;
             if (AliveEnemyCount == 0)
             {

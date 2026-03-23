@@ -15,7 +15,7 @@ namespace InGame
         public int bulletAmount = 5;
         public float blossomSize = 3f;
         
-        public void DoAction(ProjectileEntity parentProjectile, Vector2 position, Action<ProjectileEntity> callbackLateInit)
+        public virtual void DoAction(ProjectileEntity parentProjectile, Vector2 position, Action<ProjectileEntity> callbackLateInit)
         {
             if (bulletAmount == 0) return;
             if (blossomSize == 0) return;
@@ -29,7 +29,6 @@ namespace InGame
                 var pDir = (Vector2)(Quaternion.Euler(0f, 0f, angle * i) * dir);
                 var p = ProjectilePool.Instance.Get(projectile, null, false);
                 p.transform.position = position;
-                p.transform.rotation = Quaternion.Euler(0f, 0f,  Mathf.Atan2(pDir.y, pDir.x) * Mathf.Rad2Deg);
                 p.Init(
                     position, 
                     pDir.normalized, 
@@ -48,7 +47,7 @@ namespace InGame
                 
                 callbackLateInit?.Invoke(p);
                 
-                p.Activate(0);
+                p.Activate(0f);
             }
         }
     }

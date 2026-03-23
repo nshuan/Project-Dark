@@ -8,7 +8,7 @@ namespace Data
 {
     public class PlayerDataManager : Singleton<PlayerDataManager>
     {
-        private const string DefaultDataKey = "demo_playerDataSlot0";
+        private const string DefaultDataKey = "game_playerDataSlot0";
         public static string CurrentDataKey = "";
         public static string DataKey => string.IsNullOrEmpty(CurrentDataKey) ? DefaultDataKey : CurrentDataKey;
 
@@ -54,6 +54,12 @@ namespace Data
         public void CompleteLevel()
         {
             data.level += 1;
+            Save();
+        }
+
+        public void SetFlagCompletedAllLevel()
+        {
+            data.completed = true;
             Save();
         }
         

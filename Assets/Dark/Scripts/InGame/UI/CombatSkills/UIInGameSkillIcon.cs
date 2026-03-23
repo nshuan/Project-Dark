@@ -58,19 +58,20 @@ namespace InGame.UI.CombatSkills
 
         public abstract void CheckShowSkill(Action callbackShow, Action callbackHide);
         
-        protected virtual void OnSkillUsed(float cooldown)
+        protected virtual void OnSkillUsed(float cooldown, string toastText)
         {
-            StartCoroutine(IECooldown(imgFillCooldown, groupIcon, vfxCooldownComplete, cooldown));
+            StartCoroutine(IECooldown(imgFillCooldown, groupIcon, vfxCooldownComplete, cooldown, toastText));
         }
 
-        protected virtual void On2ndSkillUsed(float cooldown)
+        protected virtual void On2ndSkillUsed(float cooldown, string toastText)
         {
-            StartCoroutine(IECooldown(imgFillCooldown2nd, secondSkill.transform, vfx2ndCooldownComplete, cooldown));
+            StartCoroutine(IECooldown(imgFillCooldown2nd, secondSkill.transform, vfx2ndCooldownComplete, cooldown, toastText));
         }
         
-        private IEnumerator IECooldown(Image imgCooldown, Transform icon, UIParticle vfx, float cooldown)
+        private IEnumerator IECooldown(Image imgCooldown, Transform icon, UIParticle vfx, float cooldown, string toastText)
         {
             imgCooldown.gameObject.SetActive(true);
+            imgBackFadeActive.gameObject.SetActive(false);
             
             var cooldownTimer = cooldown;
             
@@ -81,8 +82,9 @@ namespace InGame.UI.CombatSkills
                 yield return null;
             }
 
-            ShowToast();
+            ShowToast(toastText);
             DOTween.Kill(groupIcon);
+            imgBackFadeActive.gameObject.SetActive(true);
             icon.localScale = Vector3.one;
             icon.DOPunchScale(0.1f * Vector3.one, 0.2f).SetTarget(groupIcon);
             vfx.Play();
@@ -103,6 +105,8 @@ namespace InGame.UI.CombatSkills
                 btnTogglePassive.clickable = false;
                 TogglePassive(false);
             });
+            
+            imgBackFadeActive.gameObject.SetActive(true);
         }
 
         private void TogglePassive(bool show)
@@ -134,7 +138,7 @@ namespace InGame.UI.CombatSkills
             return DOTween.Sequence(this)
                 .Append(iconTogglePassive.DOFade(0f, 0.2f))
                 .Join(rectContent.DOSizeDelta(new Vector2(rectWidthOnShow, rectContent.sizeDelta.y), 0.2f).SetEase(Ease.OutQuad))
-                .Join(imgBackFadeActive.DOFade(1f, 0.2f))
+                // .Join(imgBackFadeActive.DOFade(1f, 0.2f))
                 .Append(groupPassive.DOLocalMoveX(passiveXLocalOnShow, 0.2f))
                 .Join(cvgGroupPassive.DOFade(1f, 0.2f))
                 .Join(cvgSkillTitle.DOFade(1f, 0.2f));
@@ -146,17 +150,18 @@ namespace InGame.UI.CombatSkills
 
             iconTogglePassive.SetAlpha(0f);
             groupPassive.localPosition = new Vector3(passiveXLocalOnShow, groupPassive.localPosition.y, groupPassive.localPosition.z);
-            
+
             return DOTween.Sequence()
                 .Append(groupPassive.DOLocalMoveX(passiveXLocalOnHide, 0.2f))
                 .Join(cvgGroupPassive.DOFade(0f, 0.2f))
                 .Join(cvgSkillTitle.DOFade(0f, 0.2f))
                 .Append(iconTogglePassive.DOFade(1f, 0.2f))
-                .Join(rectContent.DOSizeDelta(new Vector2(rectWidthOnHide, rectContent.sizeDelta.y), 0.2f).SetEase(Ease.OutQuad))
-                .Join(imgBackFadeActive.DOFade(0f, 0.2f));
+                .Join(rectContent.DOSizeDelta(new Vector2(rectWidthOnHide, rectContent.sizeDelta.y), 0.2f)
+                    .SetEase(Ease.OutQuad));
+            // .Join(imgBackFadeActive.DOFade(0f, 0.2f));
         }
 
-        protected virtual void ShowToast()
+        protected virtual void ShowToast(string text)
         {
             ToastInGameManager.Instance.Register(string.Empty, null);
         }

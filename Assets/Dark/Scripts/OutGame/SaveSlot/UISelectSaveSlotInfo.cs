@@ -2,6 +2,7 @@ using System;
 using Coffee.UIExtensions;
 using Dark.Scripts.Common;
 using Dark.Scripts.Utils;
+using Dark.Tools.Language.Runtime;
 using Data;
 using TMPro;
 using UnityEngine;
@@ -44,12 +45,22 @@ namespace Dark.Scripts.OutGame.SaveSlot
             if (!isEmptySlot)
             {
                 var classType = SaveSlotManager.Instance.GetClassTypeIndex(slotIndex);
-                if (classType >= 0 || classType < imgClass.Length) imgClass[classType].SetActive(true);
-                if (classType >= 0 || classType < imgClassLight.Length) imgClassLight[classType].SetActive(true);
+                if (classType >= 0 && classType < imgClass.Length) imgClass[classType].SetActive(true);
+                if (classType >= 0 && classType < imgClassLight.Length) imgClassLight[classType].SetActive(true);
                 
                 txtClassName.SetText(SaveSlotManager.Instance.GetDisplayClassName(slotIndex));
                 txtDayPassed.SetText(SaveSlotManager.Instance.GetDisplayPassedDays(slotIndex));
-                txtLevel.SetText(SaveSlotManager.Instance.GetDisplayLevel(slotIndex));
+                // if (SaveSlotManager.Instance.IsSlotCompleted(slotIndex))
+                // {
+                //     txtLevel.SetTextLanguage("key_save_slot_level",
+                //         ("%{value}",
+                //             LanguageData.Instance.GetLocalizedString("key_complete",
+                //                 LanguageManager.Instance.CurrentLanguage)));
+                // }
+                // else
+                { 
+                    txtLevel.SetText(SaveSlotManager.Instance.GetDisplayLevel(slotIndex));
+                }
                 txtPlayedTime.SetText(SaveSlotManager.Instance.GetDisplayTimePlayed(slotIndex));
                 
                 btnClearSave.onClick.AddListener(() =>

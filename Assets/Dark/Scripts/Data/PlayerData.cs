@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using InGame.CharacterClass;
 using UnityEngine.Serialization;
 
 namespace Data
@@ -8,6 +9,7 @@ namespace Data
     public class PlayerData
     {
         public bool initialized;
+        public bool completed;
         public int level;
         
         // Class
@@ -39,6 +41,7 @@ namespace Data
             passedDay = 1;
             timePlayedMilli = 0;
         }
-        
+
+        public CharacterClass Class => (CharacterClass)characterClass;
     }
 }

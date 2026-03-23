@@ -1,5 +1,6 @@
 using Dark.Scripts.Analytics;
 using Dark.Scripts.CoreUI;
+using Dark.Scripts.OutGame.Settings;
 using Dark.Scripts.SceneNavigation;
 using Data;
 using InGame.Pause;
@@ -15,12 +16,15 @@ namespace InGame.UI
         [Space]
         [SerializeField] private Button btnBackToTree;
         [SerializeField] private Button btnResume;
+        [SerializeField] private Button btnOptions;
+        [SerializeField] private UIPopupSettings panelOptions;
 
         private void Start()
         {
             PauseGame.Instance.onPause += OnPauseGame;
             LevelManager.Instance.OnWin += OnLevelCompleted;
             LevelManager.Instance.OnLose += OnLevelCompleted;
+            panelOptions.OnCloseComplete += () => PauseGame.Instance.BlockResume = false;
         }
 
         private void OnPauseGame(bool isPaused)
@@ -57,6 +61,13 @@ namespace InGame.UI
             btnResume.onClick.AddListener(() =>
             {
                 PauseGame.Instance.Resume();
+            });
+            
+            btnOptions.onClick.RemoveAllListeners();
+            btnOptions.onClick.AddListener(() =>
+            {
+                PauseGame.Instance.BlockResume = true;
+                panelOptions.gameObject.SetActive(true);
             });
         }
         

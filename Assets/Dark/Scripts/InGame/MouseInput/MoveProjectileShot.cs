@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Dark.Scripts.Utils;
+using Data;
 using DG.Tweening;
 using UnityEngine;
 namespace InGame
@@ -9,7 +10,7 @@ namespace InGame
     [Serializable]
     public class MoveProjectileShot : IMouseInput
     {
-        private InputInGame InputManager { get; set; }
+        private PlayerCharacter Character { get; set; }
 
         protected Camera Cam { get; set; }
         protected MonoCursor cursor;
@@ -25,6 +26,8 @@ namespace InGame
         protected float cdCounterNormal;
         protected float cdCounterCharge;
 
+        private CharacterClass.CharacterClass classType;
+        
         #region Charge
 
         private bool canChargeBullet;
@@ -68,9 +71,11 @@ namespace InGame
             cursorRect = cursor.GetComponent<RectTransform>();
         }
 
-        public void Initialize(InputInGame manager, MoveChargeController chargeController)
+        public void Initialize(PlayerCharacter character, MoveChargeController chargeController)
         {
-            InputManager = manager;
+            classType = PlayerDataManager.Instance.Data.Class;
+            
+            Character = character;
             ChargeController = chargeController;
             CooldownNormal = LevelUtilityV2.GetNormalAttackCooldown();
             CooldownCharge = LevelUtilityV2.GetChargeAttackCooldown();
@@ -84,7 +89,7 @@ namespace InGame
             ChargeController.Cam = Cam;
             
             // Setup shot radius
-            InputManager.PlayerVisual.ShowShotRadius(
+            Character.ShowShotRadius(
                 LevelManager.Instance.CurrentTower.GetBaseCenter(),
                 LevelUtilityV2.GetNormalAttackRange(Vector2.right));
         }
@@ -105,26 +110,30 @@ namespace InGame
                 canChargeDame && dameChargeAdded > 0 ? 1 + dameChargeAdded : 1f);
             var critRate = LevelUtilityV2.GetBaseCriticalRate();
             var bulletNum = 1;
-            var skillSize = canChargeSize && sizeChargeAdded > 0 ? 1 + sizeChargeAdded : 1f;
+            var skillSize = (canChargeSize && sizeChargeAdded > 0 ? 1 + sizeChargeAdded : 1f) * LevelUtilityV2.GetNormalAttackSize();
             var skillRange = (canChargeRange && rangeChargeAdded > 0 ? 1 + rangeChargeAdded : 1f) * LevelUtilityV2.GetNormalAttackRange(Vector2.right);
+            // if (classType == CharacterClass.CharacterClass.Knight)
+            //     skillRange 
             var maxHit = 1;
             if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockNormalAttackPiercing) 
                 maxHit += LevelUtilityV2.GetNormalPiercingAmount();
             var stagger = LevelUtilityV2.GetBaseStagger();
 
-            InputManager.BlockTeleport = true;
+            InputInGame.BlockTeleport = true;
             var delayShot = 0f;
             if (isCharge)
             {
+                // Nếu bắn charge thì maxHit = 1 thôi
+                maxHit = 1;
                 delayShot = 0f;
-                InputManager.PlayerVisual.EndChargeAndShoot();
+                Character.EndChargeAndShoot();
             }
             else
             {
-                delayShot = InputManager.PlayerVisual.PlayShoot(worldMousePosition);
+                delayShot = Character.PlayShoot(worldMousePosition);
             }
             
-            InputManager.DelayCall(delayShot, () =>
+            Character.DelayCall(delayShot, () =>
             {
                 var isChargeBullet = canChargeBullet && bulletChargeAdded > 0;
                 var isChargeSize = canChargeSize && sizeChargeAdded > 0;
@@ -139,25 +148,39 @@ namespace InGame
                     if (isChargeSize) projectileType = PlayerProjectileType.ChargeSize;
                 }
 
-                if (!isChargeBullet || isChargeSize)
+                if (!isChargeBullet)
                 {
                     var blossomAmount = 0;
                     if (canChargeSize)
                         blossomAmount = LevelUtilityV2.GetChargeSizeAmount();
-                    var blossomAction = blossomAmount == 0
-                        ? null
-                        : new List<IProjectileHit>()
-                        {
-                            new ProjectileHitBlossom()
+
+                    List<IProjectileHit> blossomAction;
+                    if (blossomAmount == 0) blossomAction = null;
+                    else
+                    {
+                        var blossom = classType == CharacterClass.CharacterClass.Knight
+                            ? new KnightSlashHitBlossom()
                             {
-                                projectile = LevelUtilityV2.StatsNormalAttack.projectiles[projectileType],
+                                projectile =
+                                    LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.ChargeSizeSubBullet],
+                                bulletAmount = blossomAmount,
+                                blossomSize = skillRange * LevelUtilityV2.StatsChargeSize.range
+                            }
+                            : new ProjectileHitBlossom()
+                            {
+                                projectile =
+                                    LevelUtilityV2.StatsNormalAttack.projectiles[PlayerProjectileType.ChargeSizeSubBullet],
                                 bulletAmount = blossomAmount,
                                 blossomSize = LevelUtilityV2.StatsChargeSize.range
-                            }
-                        };
+                            };
+                        blossomAction = new List<IProjectileHit>()
+                            {
+                                blossom
+                            };
+                    }
                     LevelUtilityV2.StatsNormalAttack.Shoot(
                         LevelUtilityV2.StatsNormalAttack.projectiles[projectileType],
-                        InputManager.ProjectileSpawnPos.position,
+                        Character.transform.position,
                         LevelManager.Instance.CurrentTower.GetBaseCenter(),
                         tempMousePos,
                         damage,
@@ -179,24 +202,68 @@ namespace InGame
                     var chargeRange = (canChargeRange && rangeChargeAdded > 0 ? 1 + rangeChargeAdded : 1f) *
                                       LevelUtilityV2.GetNormalAttackRange(Vector2.right);
                     // Không check trong range charge nữa, check trên toàn map luôn
-                    InputManager.PlayerVisual.Weapon.GetAllEnemiesInRange(15f); 
+                    Character.Weapon.GetAllEnemiesInRange(15f); 
+                    
+                    // Check enemy in range
+                    // var nearestDistance = float.MaxValue;
+                    // EnemyEntity tempNearestEnemy = null;
+                    //
+                    // foreach (var enemy in EnemyManager.Instance.Enemies)
+                    // {
+                    //     if (enemy.Value.gameObject.activeInHierarchy && enemy.Value.Activated && enemy.Value.IsDestroyed == false)
+                    //     {
+                    //         var direction = enemy.Value.transform.position - LevelManager.Instance.CurrentTower.GetBaseCenter();
+                    //         var distance = direction.magnitude;
+                    //         if (distance > skillRange)
+                    //             continue;
+                    //
+                    //         if (distance < nearestDistance)
+                    //         {
+                    //             nearestDistance = distance;
+                    //             tempNearestEnemy = enemy.Value;
+                    //         }
+                    //     }
+                    // }
+
+                    // if (tempNearestEnemy)
+                    // {
+                    //     Character.SetDirection(tempNearestEnemy.transform.position);
+                    //     ChargeController.ForceDirection =
+                    //         tempNearestEnemy.transform.position - Character.transform.position;
+                    //     ChargeController.UseForceDirection = true;
+                    // }
                     
                     ChargeController.Attack((projectile, direction, delay) =>
                     {
                         var blossomAmount = 0;
                         if (canChargeSize)
                             blossomAmount = LevelUtilityV2.GetChargeSizeAmount();
-                        var blossomAction = blossomAmount == 0
-                            ? null
-                            : new List<IProjectileHit>()
-                            {
-                                new ProjectileHitBlossom()
+                        List<IProjectileHit> blossomAction;
+                        if (blossomAmount == 0) blossomAction = null;
+                        else
+                        {
+                            var blossom = classType == CharacterClass.CharacterClass.Knight
+                                ? new KnightSlashHitBlossom()
                                 {
-                                    projectile = LevelUtilityV2.StatsNormalAttack.projectiles[projectileType],
+                                    projectile =
+                                        LevelUtilityV2.StatsNormalAttack.projectiles[
+                                            PlayerProjectileType.ChargeSizeSubBullet],
+                                    bulletAmount = blossomAmount,
+                                    blossomSize = skillRange * LevelUtilityV2.StatsChargeSize.range
+                                }
+                                : new ProjectileHitBlossom()
+                                {
+                                    projectile =
+                                        LevelUtilityV2.StatsNormalAttack.projectiles[
+                                            PlayerProjectileType.ChargeSizeSubBullet],
                                     bulletAmount = blossomAmount,
                                     blossomSize = LevelUtilityV2.StatsChargeSize.range
-                                }
+                                };
+                            blossomAction = new List<IProjectileHit>()
+                            {
+                                blossom
                             };
+                        }
                         
                         projectile.Init(
                             LevelManager.Instance.CurrentTower.GetBaseCenter(), 
@@ -216,9 +283,11 @@ namespace InGame
                         
                         projectile.Activate(delay);
                     });
+
+                    ChargeController.UseForceDirection = false;
                 }
 
-                InputManager.BlockTeleport = false;
+                InputInGame.BlockTeleport = false;
             });
 
             CooldownNormal = LevelUtilityV2.GetNormalAttackCooldown();
@@ -239,22 +308,26 @@ namespace InGame
             
 
             // Reset range
-            InputManager.PlayerVisual.UpdateShotRadius(
+            Character.UpdateShotRadius(
                 LevelUtilityV2.GetNormalAttackRange(Vector2.right), false);
             
             // Do cursor effect
             cursor.UpdateScale(0f);
             cursor.UpdateChargeUnitAdd(false);
             cursor.UpdateCooldown(false, 0f);
-            DOTween.Complete(this);
-            var seq = DOTween.Sequence(this);
+            DOTween.Complete(cursor);
+            var seq = DOTween.Sequence(cursor);
             seq.Append(cursor.transform.DOPunchScale(0.3f * Vector3.one, 0.13f).SetEase(Ease.InQuad))
                 .Join(cursor.visual.DOFade(0.3f, 0.13f).SetEase(Ease.InQuad).SetLoops(2, LoopType.Yoyo))
                 .Join(DOTween.To(() => cursor.content.transform.localScale.x - 1f, x =>
                 {
                     cursor.UpdateScale(x);
                 }, 0f, 0.13f));
-            seq.Play().OnComplete(() => cursor.UpdateCooldown(false, 0f));
+            seq.Play().OnComplete(() =>
+            {
+                cursor.UpdateCooldown(false, 0f);
+                cursor.SetDefaultScale();
+            });
         }
 
         public void OnHoldStarted()
@@ -281,7 +354,7 @@ namespace InGame
             if (isCharging)
                 CombatActions.OnChargeEnded?.Invoke();
             isCharging = false;
-            InputManager.PlayerVisual.EndChargeAndShoot();
+            Character.EndChargeAndShoot();
         }
 
         public void ResetChargeVariable()
@@ -301,7 +374,10 @@ namespace InGame
             sizeChargeMaxStep = LevelUtilityV2.StatsNormalAttack.chargeSizeMaxStep;
             
             rangeChargeAdded = 0f;
-            rangePerStep = LevelUtilityV2.StatsNormalAttack.chargeRangeStep;
+            rangePerStep = LevelUtilityV2.GetChargeRangeStep();
+            if (LevelUtilityV2.BonusInfo.bonusUnlockSkill.unlockChargeAttackBullet)
+                rangePerStep = Mathf.Max(rangePerStep, LevelUtilityV2.StatsChargeBullet.rangeStepMin);
+            
             rangeChargeMaxStep = LevelUtilityV2.StatsNormalAttack.chargeRangeMaxStep;
 
             isCharging = false;
@@ -353,9 +429,9 @@ namespace InGame
                     if (hasSetupCharge == false)
                     {
                         hasSetupCharge = true;
-                        InputManager.MouseAutoAttack.OnHoldStarted();
-                        InputManager.PlayerVisual.UpdateChargeScale(1f);
-                        InputManager.PlayerVisual.PlayCharge();
+                        InputInGame.OnChargeSetup?.Invoke();
+                        Character.UpdateChargeScale(1f);
+                        Character.PlayCharge();
                         cursor.UpdateScale(0f);
                         cursor.UpdateCooldown(false, 0f);
                     }
@@ -372,7 +448,8 @@ namespace InGame
                         
                         cursor.UpdateScale(0f);
                         cursor.UpdateChargeUnitAdd(true, chargeStep);
-                        cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f).SetEase(Ease.InQuad)
+                        DOTween.Kill(cursor);
+                        cursor.transform.DOPunchScale(0.2f * Vector3.one, 0.13f).SetEase(Ease.InQuad).SetTarget(cursor)
                             .OnComplete(() => cursor.UpdateCooldown(true, 0f));
 
                         if (chargeStep >= chargeMaxStep)
@@ -386,8 +463,8 @@ namespace InGame
                             bulletChargeAdded = Math.Min(bulletChargeAdded, LevelUtilityV2.GetChargeBulletAmount());
                             for (int i = 0; i < bulletChargeAdded - ChargeController.TotalBulletAdded; i++)
                             {
-                                ChargeController.AddBullet(InputManager.PlayerVisual.transform.position,
-                                    this.worldMousePosition - InputManager.PlayerVisual.transform.position);
+                                ChargeController.AddBullet(Character.transform.position,
+                                    this.worldMousePosition - Character.transform.position);
                             }
                         }
 
@@ -400,13 +477,13 @@ namespace InGame
                         {
                             sizeChargeAdded = sizePerStep * Math.Min(chargeStep, sizeChargeMaxStep);
                             ChargeController.AddSize(sizeChargeAdded > 0 ? 1 + sizeChargeAdded : 1f);
-                            InputManager.PlayerVisual.UpdateChargeScale(1f + Math.Min(chargeStep, sizeChargeMaxStep) * 0.15f);
+                            Character.UpdateChargeScale(1f + Math.Min(chargeStep, sizeChargeMaxStep) * 0.15f);
                         }
 
                         if (canChargeRange && rangeChargeMaxStep > 0)
                         {
                             rangeChargeAdded = rangePerStep * Math.Min(chargeStep, rangeChargeMaxStep);
-                            InputManager.PlayerVisual.UpdateShotRadius(
+                            Character.UpdateShotRadius(
                                 (rangeChargeAdded > 0 ? 1 + rangeChargeAdded : 1f) * LevelUtilityV2.GetNormalAttackRange(Vector2.right));
                         }
                     }

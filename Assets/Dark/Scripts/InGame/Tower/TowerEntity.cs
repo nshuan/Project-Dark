@@ -44,6 +44,7 @@ namespace InGame
         public int MaxHp { get; private set; }
         public int CurrentHp { get; private set; }
         public bool IsDestroyed { get; set; }
+        public bool BlockDamage { get; set; }
         
         public Action<int, DamageType> OnHit { get; set; }
         public Action<int, DamageType> OnHitShield { get; set; }
@@ -59,6 +60,7 @@ namespace InGame
             CurrentHp = MaxHp;
             shield.Initialize();
             IsDestroyed = false;
+            BlockDamage = false;
 
             tmpLabel.SetText((id + 1).ToString());
             OnDestroyed = null;
@@ -92,9 +94,10 @@ namespace InGame
         public float HitDirectionX { get; set; }
         public float HitDirectionY { get; set; }
 
-        public void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType)
+        public void Damage(int damage, Vector2 dealerPosition, float stagger, DamageType dmgType, bool instantKill = false)
         {
             if (IsDestroyed) return;
+            if (BlockDamage) return;
             
             // Reduce shield before applying to tower health
             var totalDamage = damage;

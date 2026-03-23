@@ -6,6 +6,7 @@ namespace InGame.GateEditorV2
 {
     public class LevelListItemEditorV2 : MonoBehaviour
     {
+#if UNITY_EDITOR
         public TextMeshProUGUI txtLevel;
         public Button btnClick;
         
@@ -22,5 +23,6 @@ namespace InGame.GateEditorV2
                 LevelGateEditorV2.Instance.LoadLevel(level.level);
             });
         }
+#endif
     }
 }

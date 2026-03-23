@@ -40,6 +40,10 @@ namespace InGame.UI
                 tower.OnHit += OnHit;
                 tower.OnRegenerate += OnTowerHpChanged;
             }
+            else
+            {
+                gameObject.SetActive(false);
+            }
         }
         
         private void OnHit(int damage, DamageType dmgType)

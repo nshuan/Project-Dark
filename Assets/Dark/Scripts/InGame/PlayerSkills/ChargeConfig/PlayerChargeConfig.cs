@@ -8,7 +8,8 @@ namespace InGame.ChargeConfig
     {
         public int id;
         public float value;
-        public float range;
+        public float range; // hệ số scale của nhát chém charge size của knight charge size
+        public float rangeStepMin; // if rangeStep after bonus is less than this value, override by this value
     }
 
     public enum ChargeType
