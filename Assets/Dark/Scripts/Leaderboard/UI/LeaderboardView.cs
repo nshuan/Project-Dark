@@ -9,6 +9,7 @@ using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace Dark.Scripts.Leaderboard.UI
 {
@@ -31,6 +32,7 @@ namespace Dark.Scripts.Leaderboard.UI
         [SerializeField] private LeaderboardItemView itemPrefab;
         [SerializeField] private LeaderboardItemView top1Item;
         [SerializeField] private TextMeshProUGUI txtPlayerRank;
+        [SerializeField] private Button btnNavigatePlayerRank;
         
         private GameCompletionLeaderboardManager manager;
 
@@ -38,12 +40,17 @@ namespace Dark.Scripts.Leaderboard.UI
         readonly List<LeaderboardItemView> _active = new List<LeaderboardItemView>(64);
         Coroutine _scrollRoutine;
 
+        private int playerRankIndex = -1;
+
         private void Awake()
         {
             if (!isClassLeaderboard)
                 manager = LeaderboardManager.Instance.GetFullLeaderboard();
             else
                 manager = LeaderboardManager.Instance.GetLeaderboard(leaderboardClass);
+            
+            btnNavigatePlayerRank.onClick.RemoveAllListeners();
+            btnNavigatePlayerRank.onClick.AddListener(NavigatePlayer);
         }
 
         void OnEnable()
@@ -111,6 +118,11 @@ namespace Dark.Scripts.Leaderboard.UI
                 scrollRect.verticalNormalizedPosition = 1f;
         }
 
+        private void NavigatePlayer()
+        {
+            if (playerRankIndex > 0) ScrollToIndex(playerRankIndex, ScrollAlign.Top, 0.5f);
+        }
+        
         [Button]
         private void TestScroll(int index, ScrollAlign align, float duration = 0f)
         {
