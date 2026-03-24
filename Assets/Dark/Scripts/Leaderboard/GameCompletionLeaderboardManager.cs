@@ -89,6 +89,9 @@ namespace Dark.Scripts.Leaderboard
         void OnScoreUploaded(LeaderboardScoreUploaded_t result, bool failure)
         {
             // Optional callback
+            if (failure) return;
+            OnPlayerScoreUploaded?.Invoke();
+            OnPlayerScoreUploaded = null;
         }
         
         // -----------------------------
@@ -149,14 +152,14 @@ namespace Dark.Scripts.Leaderboard
 
             for (int i = 0; i < result.m_cEntryCount; i++)
             {
-                var details = new int[1];
+                var details = new int[result.m_cEntryCount];
 
                 SteamUserStats.GetDownloadedLeaderboardEntry(
                     result.m_hSteamLeaderboardEntries,
                     i,
                     out var entry,
                     details,
-                    0
+                    result.m_cEntryCount
                 );
                 
                 entries.Add(new LeaderboardEntryData
