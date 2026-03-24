@@ -13,6 +13,18 @@ namespace Dark.Scripts.Leaderboard.UI
 
         public void SetData(LeaderboardEntryData data)
         {
+            if (data == null)
+            {
+                rankText.SetText("##");
+                nameText.SetText("");
+                scoreText.SetText("");
+                for (var i = 0; i < classIcons.Count; i++)
+                {
+                    classIcons[i].SetActive(false);
+                }
+                return;    
+            }
+            
             if (rankText != null) rankText.SetText((data.rank).ToString());
             if (nameText != null) nameText.SetText(data.playerName);
             if (scoreText != null)

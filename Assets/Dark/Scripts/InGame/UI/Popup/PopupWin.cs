@@ -133,6 +133,7 @@ namespace InGame.UI
         [SerializeField] private CanvasGroup groupBtnBackToTree;
         [SerializeField] private CanvasGroup groupBtnReplay;
         [SerializeField] private CanvasGroup groupBtnCredits;
+        [SerializeField] private CanvasGroup groupBtnLeaderboard;
         [SerializeField] private CanvasGroup groupBtnBackToTree1;
 
         [Header("UI Tween Config")] 
@@ -154,6 +155,7 @@ namespace InGame.UI
             groupBtnReplay.alpha = 0f;
             groupBtnCredits.alpha = 0f;
             groupBtnBackToTree1.alpha = 0f;
+            groupBtnLeaderboard.alpha = 0f;
         }
         
         private Tween DoShowUIPopup()
@@ -217,6 +219,13 @@ namespace InGame.UI
                         groupBtnBackToTree1.transform.localPosition += new Vector3(0f, 10f, 0f);
                         groupBtnBackToTree1.transform.DOLocalMoveY(-10f, durationItemResourceGroup).SetUpdate(true).SetRelative(true);
                         groupBtnBackToTree1.DOFade(1f, durationItemResourceGroup).SetUpdate(true);
+                    }
+
+                    if (groupBtnLeaderboard.gameObject.activeInHierarchy)
+                    {
+                        groupBtnLeaderboard.transform.localPosition += new Vector3(0f, 10f, 0f);
+                        groupBtnLeaderboard.transform.DOLocalMoveY(-10f, durationItemResourceGroup).SetUpdate(true).SetRelative(true);
+                        groupBtnLeaderboard.DOFade(1f, durationItemResourceGroup).SetUpdate(true);
                     }
                 });
             
