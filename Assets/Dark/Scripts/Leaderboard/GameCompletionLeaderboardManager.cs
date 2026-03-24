@@ -30,6 +30,7 @@ namespace Dark.Scripts.Leaderboard
         List<LeaderboardEntryData> offlineLeaderboard = new List<LeaderboardEntryData>();
         public event Action<List<LeaderboardEntryData>> OnTopScoresDownloaded;
         public event Action<List<LeaderboardEntryData>> OnPlayerScoresDownloaded;
+        public event Action OnPlayerScoreUploaded;
         
         // -----------------------------
         // Initialize
