@@ -30,6 +30,10 @@ namespace InGame.UI
         [Space] 
         [SerializeField] private GameObject popupCredit;
 
+        [Space] 
+        [SerializeField] private GameObject objCompleted;
+        [SerializeField] private TextMeshProUGUI txtCompletedTime;
+
         public static event Action onShowPopup;
         
         private void Start()
@@ -156,6 +160,7 @@ namespace InGame.UI
             groupBtnCredits.alpha = 0f;
             groupBtnBackToTree1.alpha = 0f;
             groupBtnLeaderboard.alpha = 0f;
+            objCompleted.SetActive(false);
         }
         
         private Tween DoShowUIPopup()
@@ -226,6 +231,29 @@ namespace InGame.UI
                         groupBtnLeaderboard.transform.localPosition += new Vector3(0f, 10f, 0f);
                         groupBtnLeaderboard.transform.DOLocalMoveY(-10f, durationItemResourceGroup).SetUpdate(true).SetRelative(true);
                         groupBtnLeaderboard.DOFade(1f, durationItemResourceGroup).SetUpdate(true);
+                    }
+                })
+                .AppendCallback(() =>
+                {
+                    if (groupBtnCredits.gameObject.activeInHierarchy)
+                    {
+                        DOVirtual.DelayedCall(durationItemResourceGroup, () =>
+                        {
+                            var totalTime = TimeSpan.FromMilliseconds(PlayerDataManager.Instance.Data.timeCompletedMilli);
+
+                            if (totalTime.TotalHours >= 1)
+                            {
+                                txtCompletedTime.SetText(string.Format("{0:D2} h {1:D2} m {2:D2} s", (int)totalTime.TotalHours,
+                                    totalTime.Minutes, totalTime.Seconds));
+                            }
+                            else
+                            {
+                                txtCompletedTime.SetText(string.Format("{0:D2} m {1:D2} s", (int)totalTime.TotalMinutes,
+                                    totalTime.Seconds));
+                            }
+
+                            objCompleted.SetActive(true);
+                        });
                     }
                 });
             
