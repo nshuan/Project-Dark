@@ -48,6 +48,12 @@ namespace Dark.Scripts.Leaderboard.UI
 
         void OnEnable()
         {
+            top1Item.SetData(null);
+            foreach (Transform child in content.transform)
+            {
+                child.gameObject.SetActive(false);
+            }
+            
             if (manager != null)
             {
                 manager.OnTopScoresDownloaded += OnTopScoresDownloaded;
