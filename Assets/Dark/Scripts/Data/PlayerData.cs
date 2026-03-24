@@ -29,6 +29,9 @@ namespace Data
         // Record
         public int passedDay;
         public double timePlayedMilli;
+        public double timeCompletedMilli;
+        public bool uploadedScoreBigLeaderboard;
+        public bool uploadedScoreSmallLeaderboard;
         
         // Instruction
         public bool hasShowInstructionVestige;
