@@ -21,10 +21,11 @@ namespace Dark.Scripts.Leaderboard.UI
             Center,
             Bottom
         }
-
+        
         [Header("Config")] 
         [SerializeField] private bool isClassLeaderboard;
         [SerializeField, ShowIf("isClassLeaderboard")] private CharacterClass leaderboardClass;
+        [SerializeField] private bool isNavigateToPlayerOnFirstLoad;
         
         [Header("UI")]
         [SerializeField] private ScrollRect scrollRect;
@@ -41,6 +42,7 @@ namespace Dark.Scripts.Leaderboard.UI
         Coroutine _scrollRoutine;
 
         private int playerRankIndex = -1;
+        private bool shouldNavigatedPlayer;
 
         private void Awake()
         {
@@ -51,6 +53,7 @@ namespace Dark.Scripts.Leaderboard.UI
             
             btnNavigatePlayerRank.onClick.RemoveAllListeners();
             btnNavigatePlayerRank.onClick.AddListener(NavigatePlayer);
+            shouldNavigatedPlayer = isNavigateToPlayerOnFirstLoad;
         }
 
         void OnEnable()
@@ -91,6 +94,8 @@ namespace Dark.Scripts.Leaderboard.UI
                     foundCurrentPlayer = true;
                     SetCurrentPlayer(entry);
                     playerRankIndex = entry.rank;
+                    if (shouldNavigatedPlayer) NavigatePlayer();
+                    shouldNavigatedPlayer = false;
                     break;
                 }
                 if (!foundCurrentPlayer)
@@ -99,12 +104,20 @@ namespace Dark.Scripts.Leaderboard.UI
                 top1Item.SetData(entries[0]);
                 entries.RemoveAt(0);
             }
+            else
+            {
+                shouldNavigatedPlayer = false;
+            }
             SetEntries(entries);
         }
         
         private void OnPlayerScoresDownloaded(List<LeaderboardEntryData> entries)
         {
-            if (entries == null) SetCurrentPlayer(null);
+            if (entries == null)
+            {
+                SetCurrentPlayer(null);
+                shouldNavigatedPlayer = false;
+            }
             else
             {
                 LeaderboardEntryData result = null; 
@@ -117,6 +130,9 @@ namespace Dark.Scripts.Leaderboard.UI
                 SetCurrentPlayer(result);
                 if (result != null) playerRankIndex = result.rank;
                 else playerRankIndex = -1;
+                
+                if (shouldNavigatedPlayer) NavigatePlayer();
+                shouldNavigatedPlayer = false;
             }
         }
 
