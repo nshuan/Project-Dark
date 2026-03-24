@@ -55,6 +55,7 @@ namespace Dark.Scripts.Leaderboard.UI
 
         void OnEnable()
         {
+            playerRankIndex = -1;
             top1Item.SetData(null);
             foreach (Transform child in content.transform)
             {
