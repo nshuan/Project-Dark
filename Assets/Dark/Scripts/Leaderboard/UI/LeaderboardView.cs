@@ -90,6 +90,7 @@ namespace Dark.Scripts.Leaderboard.UI
                     if (entry.steamID != SteamManager.myId) continue;
                     foundCurrentPlayer = true;
                     SetCurrentPlayer(entry);
+                    playerRankIndex = entry.rank;
                     break;
                 }
                 if (!foundCurrentPlayer)
@@ -114,6 +115,8 @@ namespace Dark.Scripts.Leaderboard.UI
                     break;
                 }
                 SetCurrentPlayer(result);
+                if (result != null) playerRankIndex = result.rank;
+                else playerRankIndex = -1;
             }
         }
 
