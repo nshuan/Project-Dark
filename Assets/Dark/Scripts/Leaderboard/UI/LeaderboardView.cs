@@ -21,10 +21,11 @@ namespace Dark.Scripts.Leaderboard.UI
             Center,
             Bottom
         }
-
+        
         [Header("Config")] 
         [SerializeField] private bool isClassLeaderboard;
         [SerializeField, ShowIf("isClassLeaderboard")] private CharacterClass leaderboardClass;
+        [SerializeField] private bool isNavigateToPlayerOnFirstLoad;
         
         [Header("UI")]
         [SerializeField] private ScrollRect scrollRect;
@@ -41,6 +42,7 @@ namespace Dark.Scripts.Leaderboard.UI
         Coroutine _scrollRoutine;
 
         private int playerRankIndex = -1;
+        private bool shouldNavigatedPlayer;
 
         private void Awake()
         {
@@ -51,6 +53,7 @@ namespace Dark.Scripts.Leaderboard.UI
             
             btnNavigatePlayerRank.onClick.RemoveAllListeners();
             btnNavigatePlayerRank.onClick.AddListener(NavigatePlayer);
+            shouldNavigatedPlayer = isNavigateToPlayerOnFirstLoad;
         }
 
         void OnEnable()
