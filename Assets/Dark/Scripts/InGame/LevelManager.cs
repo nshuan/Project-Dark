@@ -255,7 +255,7 @@ namespace InGame
                                         TimePlayed.TotalMilliseconds;
                     PlayerDataManager.Instance.SetCompleteAllLevelTime(timeCompleted);
                     
-                    LeaderboardManager.Instance.GetLeaderboard(classType).OnScoreUploaded += () =>
+                    LeaderboardManager.Instance.GetLeaderboard(classType).OnPlayerScoreUploaded += () =>
                     {
                         PlayerDataManager.Instance.SetUploadedScoreSmallLeaderboard(false);
                         if (PlayerDataManager.Instance.Data.uploadedScoreBigLeaderboard)
@@ -263,7 +263,7 @@ namespace InGame
                     };
                     LeaderboardManager.Instance.GetLeaderboard(classType).UploadScore((int)timeCompleted, new int[] { (int) classType });
                     
-                    LeaderboardManager.Instance.GetFullLeaderboard().OnScoreUploaded += () =>
+                    LeaderboardManager.Instance.GetFullLeaderboard().OnPlayerScoreUploaded += () =>
                     {
                         PlayerDataManager.Instance.SetUploadedScoreBigLeaderboard(false);
                         if (PlayerDataManager.Instance.Data.uploadedScoreSmallLeaderboard)

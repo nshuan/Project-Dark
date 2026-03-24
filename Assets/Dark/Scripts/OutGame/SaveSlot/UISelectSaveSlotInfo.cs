@@ -19,6 +19,10 @@ namespace Dark.Scripts.OutGame.SaveSlot
         [SerializeField] private TextMeshProUGUI txtPlayedTime;
         [SerializeField] private Button btnClearSave;
 
+        [Space] [Header("Completed info")] 
+        [SerializeField] private GameObject groupComplete;
+        [SerializeField] private TextMeshProUGUI txtCompletedTime;
+
         public Action<int> ActionClearSaveSlot { get; set; }
         
         public void UpdateUI()
@@ -62,6 +66,16 @@ namespace Dark.Scripts.OutGame.SaveSlot
                 { 
                     ActionClearSaveSlot?.Invoke(slotIndex);
                 });
+            }
+
+            if (SaveSlotManager.Instance.IsCompletedSlot(slotIndex))
+            {
+                groupComplete.SetActive(true);
+                txtCompletedTime.SetText(SaveSlotManager.Instance.GetDisplayTimeCompleted(slotIndex));
+            }
+            else
+            {
+                groupComplete.SetActive(false);
             }
         }
     }
