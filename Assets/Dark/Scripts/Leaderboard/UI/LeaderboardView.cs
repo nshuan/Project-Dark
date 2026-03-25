@@ -99,7 +99,8 @@ namespace Dark.Scripts.Leaderboard.UI
                     manager.DownloadAroundPlayer(0);
                 
                 top1Item?.SetData(entries[0]);
-                entries.RemoveAt(0);
+                if (!isKeepingTop1)
+                    entries.RemoveAt(0);
             }
             else
             {
