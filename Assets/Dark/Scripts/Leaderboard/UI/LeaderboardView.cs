@@ -1,15 +1,11 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Dark.Scripts.Leaderboard;
 using Dark.Tools.Language.Runtime;
-using Data;
 using InGame.CharacterClass;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 namespace Dark.Scripts.Leaderboard.UI
 {
@@ -26,6 +22,7 @@ namespace Dark.Scripts.Leaderboard.UI
         [SerializeField] private bool isClassLeaderboard;
         [SerializeField, ShowIf("isClassLeaderboard")] private CharacterClass leaderboardClass;
         [SerializeField] private bool isNavigateToPlayerOnFirstLoad;
+        [SerializeField] private bool isKeepingTop1;
         
         [Header("UI")]
         [SerializeField] private ScrollRect scrollRect;
@@ -59,7 +56,7 @@ namespace Dark.Scripts.Leaderboard.UI
         void OnEnable()
         {
             playerRankIndex = -1;
-            top1Item.SetData(null);
+            top1Item?.SetData(null);
             foreach (Transform child in content.transform)
             {
                 child.gameObject.SetActive(false);
@@ -101,7 +98,7 @@ namespace Dark.Scripts.Leaderboard.UI
                 if (!foundCurrentPlayer)
                     manager.DownloadAroundPlayer(0);
                 
-                top1Item.SetData(entries[0]);
+                top1Item?.SetData(entries[0]);
                 entries.RemoveAt(0);
             }
             else
