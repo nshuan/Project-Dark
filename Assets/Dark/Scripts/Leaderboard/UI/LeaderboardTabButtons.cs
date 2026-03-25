@@ -22,6 +22,8 @@ namespace Dark.Scripts.Leaderboard.UI
                 tab.Key.onClick.RemoveAllListeners();
                 tab.Key.onClick.AddListener(() =>
                 {
+                    if (tab.Value.viewTab.activeInHierarchy) return;
+                    
                     foreach (var pair in tabDict)
                     {
                         pair.Value.viewTab.SetActive(false);
