@@ -173,7 +173,7 @@ namespace Economic.InGame.DropItems
         public void Claim()
         {
             if (Vestige > 0)  WealthManager.Instance.AddVestige(Vestige);
-            if (Sigils > 0)  WealthManager.Instance.AddBossPoint(Sigils);
+            if (Sigils > 0)  WealthManager.Instance.AddBossPoint(Sigils, true);
             
             // Echoes không collect ở đây, khi đủ exp đã tự + echoes rồi
 
