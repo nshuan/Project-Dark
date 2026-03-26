@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Dark.Scripts.Leaderboard.UI
 {
@@ -10,6 +11,7 @@ namespace Dark.Scripts.Leaderboard.UI
         [SerializeField] TMP_Text nameText;
         [SerializeField] TMP_Text scoreText;
         [SerializeField] private List<GameObject> classIcons;
+        [SerializeField] private Image imgHighlightCurrentPlayer;
 
         public void SetData(LeaderboardEntryData data)
         {
@@ -47,6 +49,8 @@ namespace Dark.Scripts.Leaderboard.UI
                     classIcons[i].SetActive(i == (int)data.classType);
                 }
             }
+            
+            imgHighlightCurrentPlayer.gameObject.SetActive(false);
         }
     }
 }
