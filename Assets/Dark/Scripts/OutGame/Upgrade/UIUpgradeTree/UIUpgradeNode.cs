@@ -278,11 +278,13 @@ namespace Dark.Scripts.OutGame.Upgrade
                         
                         WealthManager.Instance.AddVestige(receivedValue.Item1);
                         WealthManager.Instance.AddLevelPoint(receivedValue.Item2);
-                        WealthManager.Instance.AddBossPoint(receivedValue.Item3);
+                        WealthManager.Instance.AddBossPoint(receivedValue.Item3, false);
                         
-                        treeRef.ResetNode(config.nodeId, config.groupId);
+                        treeRef.ResetNode(config.nodeId, config.groupId, true);
                         UpgradeManager.Instance.RefreshGroupUnlockOrder();
                         UpgradeManager.Instance.Save();
+                        treeRef.InvokeNodeUpgraded(this);
+                        treeRef.UpgradeAllNodesWithId(config.nodeId);
                         UpdateUI();
                         treeRef.UpdateChildren(config.nodeId, false, true);
                     };

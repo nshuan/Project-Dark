@@ -86,7 +86,7 @@ namespace Economic
         private int bossPoint;
         public int BossPoint => bossPoint;
 
-        public void AddBossPoint(int value)
+        public void AddBossPoint(int value, bool addResetPoint)
         {
             bossPoint += value;
             if (value > 0)

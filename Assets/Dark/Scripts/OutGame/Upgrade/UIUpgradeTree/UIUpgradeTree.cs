@@ -97,9 +97,9 @@ namespace Dark.Scripts.OutGame.Upgrade
             }
         }
 
-        public void ResetNode(int nodeId, UpgradeGroupIdInfo[] groups)
+        public void ResetNode(int nodeId, UpgradeGroupIdInfo[] groups, bool useResetPoint)
         {
-            UpgradeManager.Instance.ResetNode(nodeId, groups);
+            if (!UpgradeManager.Instance.ResetNode(nodeId, groups, useResetPoint)) return;
 
             if (nodeChildrenMap.TryGetValue(nodeId, out var children))
             {
@@ -119,7 +119,7 @@ namespace Dark.Scripts.OutGame.Upgrade
                             }
                         }
                     }
-                    if (canReset) ResetNode(child.config.nodeId, child.config.groupId);
+                    if (canReset) ResetNode(child.config.nodeId, child.config.groupId, false);
                 }
             }
         }
