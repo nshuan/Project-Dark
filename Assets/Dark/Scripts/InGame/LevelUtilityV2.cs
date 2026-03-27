@@ -26,6 +26,8 @@ namespace InGame
 
         public static int ToInt(float value) => Mathf.CeilToInt(value);
             
+        public static bool IsMaxBonusRange { get; set; }
+        
         #region Base
 
         /// <summary>

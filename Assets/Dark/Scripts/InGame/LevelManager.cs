@@ -111,6 +111,7 @@ namespace InGame
 
         private void InitSkillTreeBonus()
         {
+            LevelUtilityV2.IsMaxBonusRange = false;
             UpgradeManager.Instance.ActivateTree(ref bonusInfo);
             LevelUtilityV2.BonusInfo = bonusInfo;
             LevelUtilityV2.StatsBase = playerStats;

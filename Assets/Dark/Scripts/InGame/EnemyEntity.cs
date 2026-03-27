@@ -77,6 +77,7 @@ namespace InGame
         [SerializeField] protected GameObject hoverPointer;
         
         protected bool inAttackRange;
+        public bool InAttackRange => inAttackRange;
         private Coroutine attackCoroutine;
 
         public Vector2 attackPosition;
