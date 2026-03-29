@@ -12,6 +12,8 @@ namespace InGame.EndlessLevel
 {
     public class LevelEndlessManager : SerializedMonoBehaviour
     {
+        public static int passedWave;
+        
         [SerializeField] private LevelEndlessManifest levelManifest;
         [SerializeField] private float delayStartLevel = 2.5f;
         [SerializeField] private float defaultWaveDuration = 100f;
@@ -117,6 +119,7 @@ namespace InGame.EndlessLevel
                 yield return currentWaveRuntime.IEActivateWave();
 
                 currentWaveIndex++;
+                passedWave += 1;
             }
         }
 
@@ -145,7 +148,8 @@ namespace InGame.EndlessLevel
             // In endless mode we simply start the next wave immediately.
             if (levelCoroutine != null)
                 StopCoroutine(levelCoroutine);
-            
+
+            passedWave += 1;
             levelCoroutine = StartCoroutine(IELevelLoop());
         }
 

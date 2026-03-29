@@ -12,6 +12,7 @@ using InGame.AttackNormalConfig;
 using InGame.ChargeConfig;
 using InGame.ConfigManager;
 using InGame.CounterConfig;
+using InGame.EndlessLevel;
 using InGame.Upgrade;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -421,8 +422,58 @@ namespace InGame
                 yield return null;
             }
         }
+
+        #endregion
+
+        #region Endless Level
+
+        [Space] [Header("Endless Level")] [SerializeField]
+        private LevelEndlessManager endlessManager;
+
+        [SerializeField] private LevelEndlessConfig endlessTestLevel;
+
+        private void InitTowerEndless()
+        {
+            towers = endlessManager.allTowers;
+            for (var i = 0; i < towers.Length; i++)
+            {
+                if (Level.towerPositions != null && i < Level.towerPositions.Length)
+                    towers[i].transform.position = Level.towerPositions[i];
+                towers[i].Initialize(i, LevelUtilityV2.GetBaseTowerHp());
+                towers[i].OnDestroyed += OnTowerDestroyed;
+            }
+            
+            OnInitTowers?.Invoke();
+            currentTowerIndex = -1;
+        }
+
+        public void LoadEndlessLevel()
+        {
+            var levelConfig = LevelManifest.Instance.GetLevel(PlayerDataManager.Instance.Data.Class, 1);
+            if (!levelConfig) return;
+            Level = levelConfig;
+            
+            endlessManager.levelManager = _instance;
+            endlessManager.backgroundSpawner = backgroundSpawner;
+            InitTowerEndless();
+            InitPlayer();
+            backgroundSpawner.Spawn(Level.backgroundIndex);
+            
+            EnemyManager.Instance.Initialize();
+            winLoseManager = new WinLoseManager();
+            IsEndLevel = false;
+            
+            TeleportTower(0);
+
+            OnLevelPreLoaded?.Invoke(Level);
+            endlessManager.LoadLevel(endlessTestLevel);
+            LevelStarted = true;
+            OnLevelLoaded?.Invoke(Level);
+            StartTimer();
+        }
         
         #endregion
+        
 #if UNITY_EDITOR
         private void Update()
         {
