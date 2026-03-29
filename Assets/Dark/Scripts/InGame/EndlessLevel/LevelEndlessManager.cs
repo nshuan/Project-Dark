@@ -99,9 +99,11 @@ namespace InGame.EndlessLevel
                         towerIndexReset = 2;
 
                 }
-                LevelManager.Instance.TeleportTower(towerIndexReset);
+                levelManager.TeleportTower(towerIndexReset);
                 levelManager.Player.transform.position = levelManager.CurrentTower.transform.position +
                                                          levelManager.CurrentTower.GetTowerHeight();
+                levelManager.Player.ShowShotRadius(levelManager.CurrentTower.GetBaseCenter(),
+                    LevelUtilityV2.GetNormalAttackRange(Vector2.right));
                 
                 currentWaveRuntime = new EndlessWaveRuntime(
                     currentWaveIndex,
