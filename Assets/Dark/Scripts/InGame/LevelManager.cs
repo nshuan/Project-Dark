@@ -55,12 +55,11 @@ namespace InGame
         
         public PlayerCharacter Player { get; set; }
 
-        private List<LevelMapVariant> mapVarientItems;
-        
         #region Upgrade
 
-        [ReadOnly, NonSerialized, OdinSerialize] private UpgradeBonusInfoV2 bonusInfo = new UpgradeBonusInfoV2();
-        
+        [ReadOnly, NonSerialized, OdinSerialize]
+        private UpgradeBonusInfoV2 bonusInfo = new UpgradeBonusInfoV2();
+
         #endregion
         
         #region Action
@@ -90,7 +89,6 @@ namespace InGame
         private void Start()
         {
             InitSkillTreeBonus();
-            InitLevelMapVariant();
             
 #if UNITY_EDITOR
 
@@ -125,24 +123,15 @@ namespace InGame
             LevelUtilityV2.StatsCounterPiercing = TowerCounterManifest.Get(NodeTowerCounter.CounterType.Pierce);
             LevelUtilityV2.StatsCounterSlash = TowerCounterManifest.Get(NodeTowerCounter.CounterType.Slash);
         }
-        
-        private void InitPlayerAndTowers()
+
+        private void InitPlayer()
         {
-            InitTowers();
-            OnInitTowers?.Invoke();
-            currentTowerIndex = -1;
-            
             if (Player != null) Destroy(Player.gameObject);
             Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)PlayerDataManager.Instance.Data.characterClass);
             Player.transform.position = towers[0].transform.position + towers[0].GetTowerHeight();
             OnInitPlayer?.Invoke();
         }
 
-        private void InitLevelMapVariant()
-        {
-            mapVarientItems = FindObjectsByType<LevelMapVariant>(FindObjectsInactive.Include, FindObjectsSortMode.None).ToList();
-        }
-        
         public void LoadLevel(int level)
         {
             var levelConfig = LevelManifest.Instance.GetLevel(PlayerDataManager.Instance.Data.Class, level);
@@ -156,10 +145,11 @@ namespace InGame
         private void OnLevelSceneLoaded(Scene scene, LoadSceneMode loadMode)
         {
             SceneManager.sceneLoaded -= OnLevelSceneLoaded;
-            InitPlayerAndTowers();
+            InitTowers();
+            InitPlayer();
             LoadLevel(Level, false);
         }
-        
+
         private void LoadMapScene(LevelMapType mapType)
         {
             if (coroutineLoadMap != null) StopCoroutine(coroutineLoadMap);
@@ -168,7 +158,7 @@ namespace InGame
                 LevelMapType.ThreeTowers => "Level3Towers",
                 LevelMapType.FourTowers => "Level4Towers",
                 LevelMapType.ThreeTowersSquare => "Level3TowersSquare",
-                LevelMapType.FourTowersTriangle =>  "Level4TowersTriangle",
+                LevelMapType.FourTowersTriangle => "Level4TowersTriangle",
                 _ => "Level3Towers"
             };
             coroutineLoadMap = StartCoroutine(IELoadMapScene(sceneName));
@@ -360,9 +350,12 @@ namespace InGame
                 towers[i].Initialize(i, LevelUtilityV2.GetBaseTowerHp());
                 towers[i].OnDestroyed += OnTowerDestroyed;
             }
+
+            OnInitTowers?.Invoke();
+            currentTowerIndex = -1;
         }
 
-        private void OnTowerDestroyed(TowerEntity tower)
+        public void OnTowerDestroyed(TowerEntity tower)
         {
             Debug.LogError($"Tower {tower.name} is destroyed");
             FirstDestroyedTower = tower;
