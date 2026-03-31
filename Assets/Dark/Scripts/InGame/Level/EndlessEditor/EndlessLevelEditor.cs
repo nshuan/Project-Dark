@@ -30,6 +30,12 @@ namespace InGame.EndlessEditor
         public Button btnAddWave;
         public Button btnAddPool;
         public Button btnAddLevel;
+        public Button btnAddWaveInfo;
+        public Button btnDeleteWave;
+        public Button btnDeletePool;
+        public Button btnDeleteLevel;
+        public Button btnDeleteWaveInfo;
+        public Button btnRemoveWaveFromPool;
 
         [Space] [Header("Display")] 
         public TextMeshProUGUI txtLevel;
@@ -49,6 +55,7 @@ namespace InGame.EndlessEditor
         private LevelEndlessConfig currentLevel;
         private WaveEndlessInfo currentWaveInfo;
         private PoolWaveEndless currentPool;
+        private WaveEndlessConfig currentWave;
         private EndlessWaveEditor currentWaveEditor;
         private List<WaveEndlessInfo> allWaveInfoInLevel;
         private List<WaveEndlessConfig> allWaveInPool;
@@ -112,6 +119,24 @@ namespace InGame.EndlessEditor
             
             btnAddWave.onClick.RemoveAllListeners();
             btnAddWave.onClick.AddListener(AddWave);
+            
+            btnAddWaveInfo.onClick.RemoveAllListeners();
+            btnAddWaveInfo.onClick.AddListener(AddWaveInfo);
+
+            btnDeleteLevel.onClick.RemoveAllListeners();
+            btnDeleteLevel.onClick.AddListener(DeleteLevel);
+            
+            btnDeletePool.onClick.RemoveAllListeners();
+            btnDeletePool.onClick.AddListener(DeletePool);
+            
+            btnDeleteWave.onClick.RemoveAllListeners();
+            btnDeleteWave.onClick.AddListener(DeleteWave);
+            
+            btnDeleteWaveInfo.onClick.RemoveAllListeners();
+            btnDeleteWaveInfo.onClick.AddListener(DeleteWaveInfo);
+            
+            btnRemoveWaveFromPool.onClick.RemoveAllListeners();
+            btnRemoveWaveFromPool.onClick.AddListener(DeleteWaveFromPool);
         }
 
         #region Selecting
@@ -193,6 +218,8 @@ namespace InGame.EndlessEditor
         {
             if (index <= 0 || allWaveInPool == null || allWaveInPool.Count == 0 || index > allWaveInPool.Count)
             {
+                currentWave = null;
+                
                 // Destroy current wave editor
                 if (currentWaveEditor)
                 {
@@ -203,12 +230,14 @@ namespace InGame.EndlessEditor
                 return;
             }
 
+            currentWave = allWaveInPool[index - 1];
+            
             if (currentWaveEditor == null)
             {
                 currentWaveEditor = Instantiate(prefabWave, parentWaves);
             }
             
-            currentWaveEditor.UpdateUI(allWaveInPool[index - 1]);
+            currentWaveEditor.UpdateUI(currentWave);
             currentWaveEditor.gameObject.SetActive(true);
         }
 
@@ -244,6 +273,55 @@ namespace InGame.EndlessEditor
         {
             allWaveInPool ??= new List<WaveEndlessConfig>();
             allWaveInPool.Add(waveConfig);
+        }
+        
+        private void DeleteWaveFromPool()
+        {
+            if (allWaveInPool == null) return;
+            if (!currentWave) return;
+            if (allWaveInPool.Contains(currentWave))
+            {
+                allWaveInPool.Remove(currentWave);
+                
+                // Refresh global waves dropdown (used when picking inside a pool)
+                var options = new List<TMP_Dropdown.OptionData>() { new TMP_Dropdown.OptionData("None") };
+                for (var i = 0; i < allWaveInPool.Count; i++)
+                {
+                    options.Add(new TMP_Dropdown.OptionData() { text = allWaveInPool[i].name });
+                }
+
+                drdWaves.options = options;
+                drdWaves.value = 0;
+                OnSelectWave(0);
+                drdWaves.RefreshShownValue();
+                
+                RefreshPossibleWavesToAddToPool();
+            }
+        }
+
+        private void AddWaveInfo()
+        {
+            if (!currentLevel) return;
+            
+            allWaveInfoInLevel ??= new List<WaveEndlessInfo>();
+
+            var newWaveInfo = new WaveEndlessInfo();
+            allWaveInfoInLevel.Add(newWaveInfo);
+
+            // Refresh pools dropdown
+            var options = new List<TMP_Dropdown.OptionData>() { new TMP_Dropdown.OptionData("None") };
+            for (var i = 0; i < allWaveInfoInLevel.Count; i++)
+            {
+                options.Add(new TMP_Dropdown.OptionData() { text = $"wave {i}" });
+            }
+
+            drdLevelWaveInfo.options = options;
+
+            // Auto-select the newly created pool (in-memory; not an asset yet)
+            var newIndex = Mathf.Max(1, options.Count - 1);
+            drdLevelWaveInfo.value = newIndex;
+            OnSelectWaveInfo(newIndex);
+            drdLevelWaveInfo.RefreshShownValue();
         }
         
         private void AddWave()
@@ -374,6 +452,190 @@ namespace InGame.EndlessEditor
         }
         
         #endregion
+
+        #region Deleting
+
+        private void DeleteLevel()
+        {
+            if (!currentLevel) return;
+
+            // Remove from list
+            if (allLevels != null)
+                allLevels.Remove(currentLevel);
+
+#if UNITY_EDITOR
+            // Delete asset on disk if it exists
+            var levelPath = AssetDatabase.GetAssetPath(currentLevel);
+            if (!string.IsNullOrEmpty(levelPath))
+            {
+                AssetDatabase.DeleteAsset(levelPath);
+                AssetDatabase.Refresh();
+            }
+#endif
+
+            currentLevel = null;
+            txtLevel?.SetText(string.Empty);
+
+            // Rebuild level dropdown
+            var options = new List<TMP_Dropdown.OptionData> { new TMP_Dropdown.OptionData("None") };
+            if (allLevels != null)
+            {
+                foreach (var level in allLevels)
+                {
+                    if (!level) continue;
+                    options.Add(new TMP_Dropdown.OptionData { text = level.name });
+                }
+            }
+
+            drdEndlessLevel.options = options;
+            drdEndlessLevel.value = 0;
+            OnSelectLevel(0);
+            drdEndlessLevel.RefreshShownValue();
+        }
+
+        private void DeleteWaveInfo()
+        {
+            if (currentWaveInfo == null) return;
+
+            if (allWaveInfoInLevel == null) return;
+            allWaveInfoInLevel.Remove(currentWaveInfo);
+            currentWaveInfo = null;
+
+            // Rebuild wave-info dropdown for the current level
+            var options = new List<TMP_Dropdown.OptionData> { new TMP_Dropdown.OptionData("None") };
+            for (var i = 0; i < allWaveInfoInLevel.Count; i++)
+            {
+                options.Add(new TMP_Dropdown.OptionData { text = $"wave {i}" });
+            }
+
+            drdLevelWaveInfo.options = options;
+            drdLevelWaveInfo.value = 0;
+            OnSelectWaveInfo(0);
+            drdLevelWaveInfo.RefreshShownValue();
+        }
+
+        private void DeletePool()
+        {
+            if (!currentPool) return;
+
+            // Clear references from wave infos
+            if (allWaveInfoInLevel != null)
+            {
+                foreach (var info in allWaveInfoInLevel)
+                {
+                    if (info != null && info.wavePool == currentPool)
+                        info.wavePool = null;
+                }
+            }
+
+            // Remove from list
+            if (allWavePools != null)
+                allWavePools.Remove(currentPool);
+
+#if UNITY_EDITOR
+            // Delete asset on disk if it exists
+            var poolPath = AssetDatabase.GetAssetPath(currentPool);
+            if (!string.IsNullOrEmpty(poolPath))
+            {
+                AssetDatabase.DeleteAsset(poolPath);
+                AssetDatabase.Refresh();
+            }
+#endif
+
+            currentPool = null;
+            allWaveInPool = null;
+
+            // Rebuild pool dropdown
+            var options = new List<TMP_Dropdown.OptionData> { new TMP_Dropdown.OptionData("None") };
+            if (allWavePools != null)
+            {
+                foreach (var pool in allWavePools)
+                {
+                    if (!pool) continue;
+                    options.Add(new TMP_Dropdown.OptionData { text = pool.name });
+                }
+            }
+
+            drdWavePool.options = options;
+            drdWavePool.value = 0;
+            OnSelectWavePool(0);
+            drdWavePool.RefreshShownValue();
+        }
+        
+        private void DeleteWave()
+        {
+            if (!currentWave) return;
+
+            // Remove from global waves list
+            if (allWaves != null)
+                allWaves.Remove(currentWave);
+
+            // Remove from current pool list
+            if (allWaveInPool != null)
+                allWaveInPool.Remove(currentWave);
+
+            RefreshPossibleWavesToAddToPool();
+
+#if UNITY_EDITOR
+            // Delete asset on disk if it exists
+            var wavePath = AssetDatabase.GetAssetPath(currentWave);
+            if (!string.IsNullOrEmpty(wavePath))
+            {
+                AssetDatabase.DeleteAsset(wavePath);
+                AssetDatabase.Refresh();
+            }
+
+            if (allWavePools != null)
+            {
+                foreach (var pool in allWavePools)
+                {
+                    if (pool != null && pool.allWaves != null && pool.allWaves.Contains(currentWave))
+                    {
+                        var newWaves = new List<WaveEndlessConfig>();
+                        foreach (var w in pool.allWaves)
+                        {
+                            if (w == currentWave) continue;
+                            newWaves.Add(w);
+                        }
+
+                        pool.allWaves = newWaves.ToArray();
+                        
+                        EditorUtility.SetDirty(pool);
+                    }
+                }
+                
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+            }
+#endif
+
+            currentWave = null;
+
+            // Destroy editor UI
+            if (currentWaveEditor)
+            {
+                Destroy(currentWaveEditor.gameObject);
+                currentWaveEditor = null;
+            }
+
+            // Rebuild waves-in-pool dropdown
+            var options = new List<TMP_Dropdown.OptionData> { new TMP_Dropdown.OptionData("None") };
+            if (allWaveInPool != null)
+            {
+                foreach (var wave in allWaveInPool)
+                {
+                    if (!wave) continue;
+                    options.Add(new TMP_Dropdown.OptionData { text = wave.name });
+                }
+            }
+
+            drdWaves.options = options;
+            drdWaves.value = 0;
+            OnSelectWave(0);
+            drdWaves.RefreshShownValue();
+        }
+
+        #endregion
         
         public void LoadLevel(LevelEndlessConfig level)
         {
@@ -464,7 +726,23 @@ namespace InGame.EndlessEditor
 
             if (currentLevel)
             {
-                currentLevel.waveInfo = allWaveInfoInLevel.ToArray();
+                var allWaveInfos = new List<WaveEndlessInfo>();
+                foreach (var waveInfo in allWaveInfoInLevel)
+                {
+                    allWaveInfos.Add(new WaveEndlessInfo()
+                    {
+                        scaleHp = waveInfo.scaleHp,
+                        scaleDmg = waveInfo.scaleDmg,
+                        scaleSpe = waveInfo.scaleSpe,
+                        expRatio = waveInfo.expRatio,
+                        darkRatio = waveInfo.darkRatio,
+                        darkUnitValue = waveInfo.darkUnitValue,
+                        sigils = waveInfo.sigils,
+                        ashes = waveInfo.ashes,
+                        wavePool = waveInfo.wavePool
+                    });
+                }
+                currentLevel.waveInfo = allWaveInfos.ToArray();
                 EditorUtility.SetDirty(currentLevel);
             }
                         

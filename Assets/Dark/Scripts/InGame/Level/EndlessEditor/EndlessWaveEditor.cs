@@ -321,7 +321,7 @@ namespace InGame.EndlessEditor
             EditorUtility.SetDirty(waveConfig);
             AssetDatabase.SaveAssets();
         }
-
+        
         #endregion
                 
 #endif
