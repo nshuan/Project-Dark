@@ -22,6 +22,7 @@ namespace InGame.EndlessEditor
         public Button btnSave;
         public UIPopupWarning popupConfirm;
         public Button btnPlayLevel;
+        public EndlessWaveInfoEditor waveInfoConfigEditor;
         public TMP_Dropdown drdEndlessLevel;
         public TMP_Dropdown drdLevelWaveInfo;
         public TMP_Dropdown drdWavePool;
@@ -152,6 +153,8 @@ namespace InGame.EndlessEditor
             if (index <= 0 || !currentLevel || allWaveInfoInLevel == null || allWaveInfoInLevel.Count == 0 || index > allWaveInfoInLevel.Count)
             {
                 currentWaveInfo = null;
+                waveInfoConfigEditor.UpdateValue(currentWaveInfo);
+                waveInfoConfigEditor.gameObject.SetActive(false);
                 drdWavePool.value = 0;
                 OnSelectWavePool(0);
                 drdWavePool.RefreshShownValue();
@@ -159,6 +162,8 @@ namespace InGame.EndlessEditor
             }
 
             currentWaveInfo = allWaveInfoInLevel[index - 1];
+            waveInfoConfigEditor.gameObject.SetActive(true);
+            waveInfoConfigEditor.UpdateValue(currentWaveInfo);
             
             if (allWavePools == null || allWavePools.Count == 0) return;
 
