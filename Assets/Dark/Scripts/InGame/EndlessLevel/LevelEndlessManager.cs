@@ -29,6 +29,8 @@ namespace InGame.EndlessLevel
 
         public TowerEntity[] allTowers;
 
+        private bool hasStartLevel;
+
         public void LoadLevel(LevelEndlessConfig level)
         {
             if (level == null)
@@ -39,6 +41,7 @@ namespace InGame.EndlessLevel
 
             currentLevel = level;
             currentWaveIndex = 0;
+            hasStartLevel = false;
 
             if (levelCoroutine != null)
                 StopCoroutine(levelCoroutine);
@@ -54,9 +57,7 @@ namespace InGame.EndlessLevel
                 Debug.LogError("[LevelEndlessManager] Current level has no wave info.");
                 yield break;
             }
-
-            yield return new WaitForSeconds(delayStartLevel);
-
+            
             while (true)
             {
                 var waveTemplate = GetWaveTemplateForIndex(currentWaveIndex);
@@ -116,6 +117,14 @@ namespace InGame.EndlessLevel
                     OnWaveForceStop);
 
                 currentWaveRuntime.SetupWave();
+
+                // Delay start level, nhưng phải setup wave được để hiện map trước
+                if (!hasStartLevel)
+                {
+                    hasStartLevel = true;
+                    yield return new WaitForSeconds(delayStartLevel);
+                }
+                
                 yield return currentWaveRuntime.IEActivateWave();
 
                 currentWaveIndex++;
