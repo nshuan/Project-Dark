@@ -21,6 +21,9 @@ namespace InGame.Upgrade.NodeLogicsV2
             
             if (isMul) bonusInfo.bonusNormalAttack.bonusNormalAttackRange.mul += value[level - 1];
             else bonusInfo.bonusNormalAttack.bonusNormalAttackRange.add += value[level - 1];
+
+            if (level == value.Length)
+                LevelUtilityV2.IsMaxBonusRange = true;
         }
 
         public (string, string) GetBeforeAfterValueTotalStat(int level, ref UpgradeBonusInfoV2 bonusInfo)

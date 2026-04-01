@@ -17,6 +17,8 @@ namespace InGame
         protected virtual float OverrideSize { get; set; } = -1;
         
         private RaycastHit2D[] hits = new RaycastHit2D[20];
+        private RaycastHit2D[] forceHits = new RaycastHit2D[30];
+        private Transform[] cacheDamagedEnemies = new Transform[20];
         private EnemyEntity cacheEnemy;
 
         public override void Init(Vector2 rangeCenter, Vector2 direction, float range, float size, float speedScale, int damage,
@@ -24,7 +26,7 @@ namespace InGame
             List<IProjectileHit> hitActions, ProjectileType damageType)
         {
             base.Init(rangeCenter, direction, range, size, speedScale, damage, criticalDamage, criticalRate, stagger, isCharge, maxHit, activateActions, hitActions, damageType);
-            
+        
             transform.position = RangeCenter;
             Quaternion rotation;
             if (TargetToChase)
@@ -133,6 +135,7 @@ namespace InGame
             }
             
             var hitCount = Physics2D.CircleCastNonAlloc(RangeCenter, Range, direction, hits, 0f, enemyLayer);
+            var damagedCount = 0;
             if (hitCount > 0)
             {
                 var halfAngle = Size / 2;
@@ -154,11 +157,66 @@ namespace InGame
                     
                     // Check relative range, tăng range lên 1 tí
                     var bonusRangeForInRangeEnemy = (TargetToChase && hits[i].transform == TargetToChase.transform) ? 0.2f : 0.2f;
-                    if (hitPointDirToCenter.magnitude > (LevelUtilityV2.GetRelativeRangeMove(Range, hitPointDirToCenter) + bonusRangeForInRangeEnemy)) continue;
+                    if (hitPointDirToCenter.magnitude >
+                        (LevelUtilityV2.GetRelativeRangeMove(Range, hitPointDirToCenter) +
+                         bonusRangeForInRangeEnemy))
+                    {
+                        if (hitPosDirToCenter.magnitude >
+                            (LevelUtilityV2.GetRelativeRangeMove(Range, hitPosDirToCenter) +
+                             bonusRangeForInRangeEnemy))
+                            continue;
+                    }
                     
                     if (hits[i].transform.TryGetComponent<EnemyEntity>(out cacheEnemy))
                     {
+                        if (damagedCount < cacheDamagedEnemies.Length)
+                            cacheDamagedEnemies[damagedCount] = cacheEnemy.transform;
+                        damagedCount += 1;
                         ProjectileHit(cacheEnemy);
+                    }
+                }
+            }
+            
+            // Nếu đã nâng max range rồi thì quái chỉ cần đang attack là trúng
+            if (LevelUtilityV2.IsMaxBonusRange)
+            {
+                var forceHitCount = Physics2D.CircleCastNonAlloc(RangeCenter, Range + 2f, direction, forceHits, 0f, enemyLayer);
+                if (forceHitCount > 0)
+                {
+                    var halfAngle = Size / 2;
+                    if (OverrideSize > 0 && OverrideSize > Size)
+                    {
+                        halfAngle = OverrideSize / 2;
+                    }
+                    for (var i = 0; i < forceHitCount; i++)
+                    {
+                        var alreadyHit = false;
+                        for (var j = 0; j < damagedCount; j++)
+                        {
+                            if (cacheDamagedEnemies[j] == forceHits[j].transform)
+                            {
+                                alreadyHit = true;
+                                break;
+                            }
+                        }
+                        if (alreadyHit) continue;
+                        
+                        var hitPointDirToCenter = forceHits[i].point - (Vector2)RangeCenter;
+                        var hitPosDirToCenter = forceHits[i].collider.transform.position - RangeCenter;
+                        
+                        // Check những enemy va chạm, nếu nằm trong góc damageAngle thì mới gây dame
+                        if (Vector2.Angle(direction, hitPointDirToCenter) > halfAngle)
+                        {
+                            if (Vector2.Angle(direction, hitPosDirToCenter) > halfAngle)
+                                continue;
+                        }
+                        
+                        if (forceHits[i].transform.TryGetComponent<EnemyEntity>(out cacheEnemy))
+                        {
+                            if (cacheEnemy.InAttackRange &&
+                                cacheEnemy.TargetTower.Id == LevelManager.Instance.CurrentTower.Id)
+                                ProjectileHit(cacheEnemy);
+                        }
                     }
                 }
             }
