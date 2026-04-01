@@ -22,6 +22,7 @@ namespace InGame.EndlessEditor
         public Button btnSave;
         public UIPopupWarning popupConfirm;
         public Button btnPlayLevel;
+        public Button btnPlayWave;
         public EndlessWaveInfoEditor waveInfoConfigEditor;
         public TMP_Dropdown drdEndlessLevel;
         public TMP_Dropdown drdLevelWaveInfo;
@@ -74,6 +75,8 @@ namespace InGame.EndlessEditor
             btnSave.onClick.AddListener(SaveLevel);
             btnPlayLevel.onClick.RemoveAllListeners();
             btnPlayLevel.onClick.AddListener(PlaySelectingLevel);
+            btnPlayWave.onClick.RemoveAllListeners();
+            btnPlayWave.onClick.AddListener(PlaySelectingWave);
             
             drdEndlessLevel.onValueChanged.RemoveAllListeners();
             drdEndlessLevel.ClearOptions();
@@ -743,6 +746,30 @@ namespace InGame.EndlessEditor
                     LevelManager.Instance.LoadEndlessLevel(currentLevel);
                 });
             });
+        }
+
+        public void PlaySelectingWave()
+        {
+            if (!currentWave) return;
+            
+#if UNITY_EDITOR
+            LevelManager.isLoadFromInit = true;
+#endif
+            this.DelayCall(0.5f, () =>
+            {
+                var fakeLevel = ScriptableObject.CreateInstance<LevelEndlessConfig>();
+                var fakeWaveInfo = currentWaveInfo ?? new WaveEndlessInfo();
+                var fakePool = ScriptableObject.CreateInstance<PoolWaveEndless>();
+                fakePool.allWaves = new[] { currentWave };
+                fakeWaveInfo.wavePool = fakePool;
+                fakeLevel.waveInfo = new[] { fakeWaveInfo };
+                
+                Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame, () =>
+                {
+                    LevelManager.Instance.LoadEndlessLevel(fakeLevel);
+                });
+            });
+            
         }
 
         #region Save
