@@ -195,7 +195,7 @@ namespace InGame.Boss
             LevelManager.Instance.BlockDamageAllTowers();
             
             // Làm đen hết màn hình, tắt UI
-            BackgroundInGame.Instance.SetActiveBlackBg(true);
+            AllBackgroundInGame.Instance.CurrentBackground.SetActiveBlackBg(true);
             CanvasInGame.Instance.HideUI();
             
             CombatActions.OnBossKilled?.Invoke(this, transform.position);

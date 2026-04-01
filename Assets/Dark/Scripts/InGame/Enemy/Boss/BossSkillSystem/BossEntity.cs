@@ -54,7 +54,7 @@ namespace InGame.Boss.BossSkillSystem
         protected override IEnumerator IEDie(float delayRelease, EnemyDieReason reason)
         {
             // Làm đen hết màn hình, tắt UI
-            BackgroundInGame.Instance.SetActiveBlackBg(true);
+            AllBackgroundInGame.Instance.CurrentBackground.SetActiveBlackBg(true);
             CanvasInGame.Instance.HideUI();
             
             CombatActions.OnBossKilled?.Invoke(this, transform.position);

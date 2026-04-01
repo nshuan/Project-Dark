@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace InGame
 {
-    public class BackgroundInGame : MonoSingleton<BackgroundInGame>
+    public class BackgroundInGame : MonoBehaviour
     {
         private static readonly int MatDisolveValue = Shader.PropertyToID("Disolve_Value");
         

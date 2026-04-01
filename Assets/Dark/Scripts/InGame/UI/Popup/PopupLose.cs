@@ -110,6 +110,7 @@ namespace InGame.UI
         [SerializeField] private Transform rectLine;
         [SerializeField] private CanvasGroup groupBtnBackToTree;
         [SerializeField] private CanvasGroup groupBtnReplay;
+        [SerializeField] private CanvasGroup groupEndlessWavePassed;
 
         [Header("UI Tween Config")] 
         [SerializeField] private float durationTitle = 2f;
@@ -131,6 +132,7 @@ namespace InGame.UI
             rectLine.localScale = new Vector3(0f, 1f, 1f);
             groupBtnBackToTree.alpha = 0f;
             groupBtnReplay.alpha = 0f;
+            if (groupEndlessWavePassed) groupEndlessWavePassed.alpha = 0;
         }
         
         private Tween DoShowUIPopup()
@@ -168,6 +170,13 @@ namespace InGame.UI
                     groupTimePlayed.transform.localPosition += new Vector3(0f, 10f, 0f);
                     groupTimePlayed.transform.DOLocalMoveY(-10f, durationItemResourceGroup).SetUpdate(true).SetRelative(true).SetDelay(0.4f);
                     groupTimePlayed.DOFade(1f, durationItemResourceGroup).SetUpdate(true).SetDelay(0.4f);
+
+                    if (groupEndlessWavePassed)
+                    {
+                        groupEndlessWavePassed.transform.localPosition += new Vector3(0f, 10f, 0f);
+                        groupEndlessWavePassed.transform.DOLocalMoveY(-10f, durationItemResourceGroup).SetUpdate(true).SetRelative(true).SetDelay(0.6f);
+                        groupEndlessWavePassed.DOFade(1f, durationItemResourceGroup).SetUpdate(true).SetDelay(0.6f);
+                    }
                 })
                 .AppendInterval(durationItemResourceGroup + 0.4f)
                 .Append(rectLine.DOScaleX(1f, 0.2f))

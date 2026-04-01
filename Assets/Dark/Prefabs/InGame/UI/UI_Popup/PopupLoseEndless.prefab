@@ -1091,7 +1091,7 @@ GameObject:
   - component: {fileID: 7761247857601968704}
   - component: {fileID: 2746834970155517923}
   - component: {fileID: 6640226387815383305}
-  - component: {fileID: 3610367965606220214}
+  - component: {fileID: 3799775242485824219}
   m_Layer: 5
   m_Name: txtTitle
   m_TagString: Untagged
@@ -1215,7 +1215,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &3610367965606220214
+--- !u!114 &3799775242485824219
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1224,108 +1224,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2830508182541370823}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b351070690b4b52ade5c7e2d6852179, type: 3}
+  m_Script: {fileID: 11500000, guid: 411f71d933ec49b9be164e8fc88cf3b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes:
-    - Name: valueMap
-      Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
-        Assembly-CSharp],[System.String, mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Dark.Tools.Language.LanguageType,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 5
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 0
-    - Name: $v
-      Entry: 1
-      Data: wave %{value}
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 1
-    - Name: $v
-      Entry: 1
-      Data: "\u0111\u1EE3t %{value}"
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 2
-    - Name: $v
-      Entry: 1
-      Data: oleada %{value}
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 3
-    - Name: $v
-      Entry: 1
-      Data: onda %{value}
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 4
-    - Name: $v
-      Entry: 1
-      Data: Welle %{value}
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: overrideFont
-      Entry: 6
-      Data: 
   key: key_wave
+  replacePairs:
+  - key: '%{value}'
+    replaceTo: cleared
 --- !u!1 &2896166567387315488
 GameObject:
   m_ObjectHideFlags: 0
@@ -2114,6 +2019,7 @@ MonoBehaviour:
   rectLine: {fileID: 375531791634675339}
   groupBtnBackToTree: {fileID: 2980420399888446442}
   groupBtnReplay: {fileID: 790456200749069726}
+  groupEndlessWavePassed: {fileID: 5833599064562995237}
   durationTitle: 2
   delayBeforeResourceGroup: 1
   durationItemResourceGroup: 0.3

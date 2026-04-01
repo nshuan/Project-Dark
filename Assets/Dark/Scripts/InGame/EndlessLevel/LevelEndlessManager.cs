@@ -78,7 +78,10 @@ namespace InGame.EndlessLevel
 
                 OnStartWave?.Invoke(currentWaveIndex);
                 
-                backgroundSpawner?.Spawn(waveConfig.backgroundIndex);
+                if (!hasStartLevel)
+                    backgroundSpawner?.Spawn(waveConfig.backgroundIndex);
+                else
+                    yield return backgroundSpawner?.IETransition(waveConfig.backgroundIndex);
                 
                 for (var i = 0; i < allTowers.Length; i++)
                 {
