@@ -449,6 +449,11 @@ namespace InGame
 
         public void LoadEndlessLevel()
         {
+            LoadEndlessLevel(endlessTestLevel);
+        }
+            
+        public void LoadEndlessLevel(LevelEndlessConfig endlessLevel)
+        {
             var levelConfig = LevelManifest.Instance.GetLevel(PlayerDataManager.Instance.Data.Class, 1);
             if (!levelConfig) return;
             Level = levelConfig;
@@ -466,7 +471,7 @@ namespace InGame
             TeleportTower(0);
 
             OnLevelPreLoaded?.Invoke(Level);
-            endlessManager.LoadLevel(endlessTestLevel);
+            endlessManager.LoadLevel(endlessLevel);
             LevelStarted = true;
             OnLevelLoaded?.Invoke(Level);
             StartTimer();
