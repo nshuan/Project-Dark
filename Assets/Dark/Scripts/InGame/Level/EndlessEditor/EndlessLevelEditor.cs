@@ -37,6 +37,7 @@ namespace InGame.EndlessEditor
         public Button btnDeleteLevel;
         public Button btnDeleteWaveInfo;
         public Button btnRemoveWaveFromPool;
+        public EndlessLevelRenameEditor renameEditor;
 
         [Space] [Header("Display")] 
         public TextMeshProUGUI txtLevel;
@@ -332,82 +333,109 @@ namespace InGame.EndlessEditor
         private void AddWave()
         {
             allWaves ??= new List<WaveEndlessConfig>();
+                
+            renameEditor.GetName(GetUniqueName("WaveEndless_New", allWaves.Select(w => w ? w.name : null)), 
+                NameValidator,(newName) =>
+                {
+                    var wave = ScriptableObject.CreateInstance<WaveEndlessConfig>();
+                    wave.name = newName;
+                    wave.id = GetNextId(allWaves.Select(w => w ? w.id : 0));
 
-            var wave = ScriptableObject.CreateInstance<WaveEndlessConfig>();
-            wave.name = GetUniqueName("WaveEndless_New", allWaves.Select(w => w ? w.name : null));
-            wave.id = GetNextId(allWaves.Select(w => w ? w.id : 0));
+                    allWaves.Add(wave);
+                    AddWaveToPool(wave);
+                    RefreshPossibleWavesToAddToPool();
 
-            allWaves.Add(wave);
-            AddWaveToPool(wave);
-            RefreshPossibleWavesToAddToPool();
+                    // Refresh global waves dropdown (used when picking inside a pool)
+                    var options = new List<TMP_Dropdown.OptionData>() { new TMP_Dropdown.OptionData("None") };
+                    for (var i = 0; i < allWaveInPool.Count; i++)
+                    {
+                        options.Add(new TMP_Dropdown.OptionData() { text = allWaveInPool[i].name });
+                    }
 
-            // Refresh global waves dropdown (used when picking inside a pool)
-            var options = new List<TMP_Dropdown.OptionData>() { new TMP_Dropdown.OptionData("None") };
-            for (var i = 0; i < allWaveInPool.Count; i++)
+                    drdWaves.options = options;
+             
+                    // Auto-select the newly created wave (in-memory; not an asset yet)
+                    var newIndex = Mathf.Max(1, options.Count - 1);
+                    drdWaves.value = newIndex;
+                    OnSelectWave(newIndex);
+                    drdWaves.RefreshShownValue();
+                }, callbackCancel: () => renameEditor.gameObject.SetActive(false));
+
+            bool NameValidator(string n)
             {
-                options.Add(new TMP_Dropdown.OptionData() { text = allWaveInPool[i].name });
+                return ValidateName(n, allWaves.Select(w => w ? w.name : null));
             }
-
-            drdWaves.options = options;
-     
-            // Auto-select the newly created wave (in-memory; not an asset yet)
-            var newIndex = Mathf.Max(1, options.Count - 1);
-            drdWaves.value = newIndex;
-            OnSelectWave(newIndex);
-            drdWaves.RefreshShownValue();
         }
 
         private void AddPool()
         {
             allWavePools ??= new List<PoolWaveEndless>();
 
-            var pool = ScriptableObject.CreateInstance<PoolWaveEndless>();
-            pool.name = GetUniqueName("WaveEndlessPool_New", allWavePools.Select(p => p ? p.name : null));
-            pool.allWaves = Array.Empty<WaveEndlessConfig>();
+            renameEditor.GetName(GetUniqueName("WaveEndlessPool_New", allWavePools.Select(p => p ? p.name : null)),
+                NameValidator,(newName) =>
+                {
+                    var pool = ScriptableObject.CreateInstance<PoolWaveEndless>();
+                    pool.name = newName;
+                    pool.allWaves = Array.Empty<WaveEndlessConfig>();
 
-            allWavePools.Add(pool);
+                    allWavePools.Add(pool);
 
-            // Refresh pools dropdown
-            var options = new List<TMP_Dropdown.OptionData>() { new TMP_Dropdown.OptionData("None") };
-            foreach (var p in allWavePools)
+                    // Refresh pools dropdown
+                    var options = new List<TMP_Dropdown.OptionData>() { new TMP_Dropdown.OptionData("None") };
+                    foreach (var p in allWavePools)
+                    {
+                        if (!p) continue;
+                        options.Add(new TMP_Dropdown.OptionData() { text = p.name });
+                    }
+                    drdWavePool.options = options;
+
+                    // Auto-select the newly created pool (in-memory; not an asset yet)
+                    var newIndex = Mathf.Max(1, options.Count - 1);
+                    drdWavePool.value = newIndex;
+                    OnSelectWavePool(newIndex);
+                    drdWavePool.RefreshShownValue();
+                }, callbackCancel: () => renameEditor.gameObject.SetActive(false));
+            
+            bool NameValidator(string n)
             {
-                if (!p) continue;
-                options.Add(new TMP_Dropdown.OptionData() { text = p.name });
+                return ValidateName(n, allWavePools.Select(w => w ? w.name : null));
             }
-            drdWavePool.options = options;
-
-            // Auto-select the newly created pool (in-memory; not an asset yet)
-            var newIndex = Mathf.Max(1, options.Count - 1);
-            drdWavePool.value = newIndex;
-            OnSelectWavePool(newIndex);
-            drdWavePool.RefreshShownValue();
         }
 
         private void AddLevel()
         {
             allLevels ??= new List<LevelEndlessConfig>();
 
-            var level = ScriptableObject.CreateInstance<LevelEndlessConfig>();
-            level.name = GetUniqueName("LevelEndless_New", allLevels.Select(l => l ? l.name : null));
-            level.id = GetNextId(allLevels.Select(l => l ? l.id : 0));
-            level.waveInfo = Array.Empty<WaveEndlessInfo>();
+            renameEditor.GetName(GetUniqueName("LevelEndless_New", allLevels.Select(l => l ? l.name : null)), 
+                NameValidator, (newName) =>
+                {
+                    var level = ScriptableObject.CreateInstance<LevelEndlessConfig>();
+                    level.name = newName;
+                    level.id = GetNextId(allLevels.Select(l => l ? l.id : 0));
+                    level.waveInfo = Array.Empty<WaveEndlessInfo>();
 
-            allLevels.Add(level);
+                    allLevels.Add(level);
 
-            // Refresh levels dropdown
-            var options = new List<TMP_Dropdown.OptionData>() { new TMP_Dropdown.OptionData("None") };
-            foreach (var l in allLevels)
+                    // Refresh levels dropdown
+                    var options = new List<TMP_Dropdown.OptionData>() { new TMP_Dropdown.OptionData("None") };
+                    foreach (var l in allLevels)
+                    {
+                        if (!l) continue;
+                        options.Add(new TMP_Dropdown.OptionData() { text = l.name });
+                    }
+                    drdEndlessLevel.options = options;
+
+                    // Auto-select and load the newly created level (in-memory; not an asset yet)
+                    var newIndex = Mathf.Max(1, options.Count - 1);
+                    drdEndlessLevel.value = newIndex;
+                    OnSelectLevel(newIndex);
+                    drdEndlessLevel.RefreshShownValue(); 
+                }, callbackCancel: () => renameEditor.gameObject.SetActive(false));
+            
+            bool NameValidator(string n)
             {
-                if (!l) continue;
-                options.Add(new TMP_Dropdown.OptionData() { text = l.name });
+                return ValidateName(n, allLevels.Select(w => w ? w.name : null));
             }
-            drdEndlessLevel.options = options;
-
-            // Auto-select and load the newly created level (in-memory; not an asset yet)
-            var newIndex = Mathf.Max(1, options.Count - 1);
-            drdEndlessLevel.value = newIndex;
-            OnSelectLevel(newIndex);
-            drdEndlessLevel.RefreshShownValue();
         }
 
         private void RefreshPossibleWavesToAddToPool()
@@ -454,6 +482,12 @@ namespace InGame.EndlessEditor
                 if (!set.Contains(candidate)) return candidate;
                 i++;
             }
+        }
+        
+        private static bool ValidateName(string name, IEnumerable<string> existingNames)
+        {
+            var set = new HashSet<string>(existingNames.Where(n => !string.IsNullOrWhiteSpace(n)));
+            return !set.Contains(name);
         }
         
         #endregion
@@ -706,7 +740,7 @@ namespace InGame.EndlessEditor
             {
                 Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame, () =>
                 {
-                    LevelManager.Instance.LoadEndlessLevel();
+                    LevelManager.Instance.LoadEndlessLevel(currentLevel);
                 });
             });
         }
