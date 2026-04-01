@@ -57,6 +57,12 @@ namespace InGame.UI.Waves
         
         private void OnLevelLoaded(LevelConfig level)
         {
+            if (LevelManager.Instance.IsPlayingEndless)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+            
             totalWave = level.waveInfo.Length;
             currentWaveGroup.transform.position = waveItems[0].transform.position;
             currentWaveGroup.gameObject.SetActive(true);

@@ -2,10 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using InGame;
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
-using Sirenix.Utilities;
 using UnityEngine;
 
 namespace InGame.EndlessLevel
@@ -30,6 +27,8 @@ namespace InGame.EndlessLevel
         public TowerEntity[] allTowers;
 
         private bool hasStartLevel;
+
+        public static event Action<int> OnStartWave;
 
         public void LoadLevel(LevelEndlessConfig level)
         {
@@ -58,6 +57,9 @@ namespace InGame.EndlessLevel
                 yield break;
             }
             
+            var maxHp = LevelUtilityV2.GetBaseTowerHp();
+            var maxShield = LevelUtilityV2.GetBaseTowerShield();
+
             while (true)
             {
                 var waveTemplate = GetWaveTemplateForIndex(currentWaveIndex);
@@ -74,13 +76,16 @@ namespace InGame.EndlessLevel
                     yield break;
                 }
 
+                OnStartWave?.Invoke(currentWaveIndex);
+                
                 backgroundSpawner?.Spawn(waveConfig.backgroundIndex);
                 
                 for (var i = 0; i < allTowers.Length; i++)
                 {
                     if (waveConfig.towerPositions != null && i < waveConfig.towerPositions.Length)
                         allTowers[i].transform.position = waveConfig.towerPositions[i];
-                    allTowers[i].Initialize(i, LevelUtilityV2.GetBaseTowerHp());
+                    // Giữ nguyên lượng hp hiện tại
+                    allTowers[i].Initialize(i, maxHp, allTowers[i].CurrentHp, maxShield, allTowers[i].shield.CurrentShield);
                     allTowers[i].OnDestroyed += levelManager.OnTowerDestroyed;
                     if (i >= 3 && (waveConfig.mapType == LevelMapType.ThreeTowers ||
                                    waveConfig.mapType == LevelMapType.ThreeTowersSquare))
@@ -154,10 +159,13 @@ namespace InGame.EndlessLevel
 
         private void OnWaveForceStop(int waveIndex, WaveEndReason reason)
         {
+            if (waveIndex < currentWaveIndex) return;
+            
             // In endless mode we simply start the next wave immediately.
             if (levelCoroutine != null)
                 StopCoroutine(levelCoroutine);
 
+            currentWaveIndex++;
             passedWave += 1;
             levelCoroutine = StartCoroutine(IELevelLoop());
         }

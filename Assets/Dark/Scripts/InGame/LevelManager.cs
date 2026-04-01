@@ -56,6 +56,8 @@ namespace InGame
         
         public PlayerCharacter Player { get; set; }
 
+        public bool IsPlayingEndless { get; set; }
+        
         #region Upgrade
 
         [ReadOnly, NonSerialized, OdinSerialize]
@@ -135,6 +137,8 @@ namespace InGame
 
         public void LoadLevel(int level)
         {
+            IsPlayingEndless = false;
+            
             var levelConfig = LevelManifest.Instance.GetLevel(PlayerDataManager.Instance.Data.Class, level);
             if (!levelConfig) return;
             Level = levelConfig;
@@ -344,11 +348,13 @@ namespace InGame
         {
             towers = FindObjectsByType<TowerEntity>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             towers.Sort((t1, t2) => t1.transform.GetSiblingIndex().CompareTo(t2.transform.GetSiblingIndex()));
+            var maxHp = LevelUtilityV2.GetBaseTowerHp();
+            var maxShield = LevelUtilityV2.GetBaseTowerShield();
             for (var i = 0; i < towers.Length; i++)
             {
                 if (Level.towerPositions != null && i < Level.towerPositions.Length)
                     towers[i].transform.position = Level.towerPositions[i];
-                towers[i].Initialize(i, LevelUtilityV2.GetBaseTowerHp());
+                towers[i].Initialize(i, maxHp, maxHp, maxShield, maxShield);
                 towers[i].OnDestroyed += OnTowerDestroyed;
             }
 
@@ -435,11 +441,14 @@ namespace InGame
         private void InitTowerEndless()
         {
             towers = endlessManager.allTowers;
+            // Đầu tiên set max hp cho tất cả các towers
+            var maxHp = LevelUtilityV2.GetBaseTowerHp();
+            var maxShield = LevelUtilityV2.GetBaseTowerShield();
             for (var i = 0; i < towers.Length; i++)
             {
                 if (Level.towerPositions != null && i < Level.towerPositions.Length)
                     towers[i].transform.position = Level.towerPositions[i];
-                towers[i].Initialize(i, LevelUtilityV2.GetBaseTowerHp());
+                towers[i].Initialize(i, maxHp, maxHp, maxShield, maxShield);
                 towers[i].OnDestroyed += OnTowerDestroyed;
             }
             
@@ -449,6 +458,7 @@ namespace InGame
 
         public void LoadEndlessLevel()
         {
+            IsPlayingEndless = true;
             LoadEndlessLevel(endlessTestLevel);
         }
             

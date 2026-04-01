@@ -256,6 +256,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1366110413325337354}
   - component: {fileID: 3712872850445270429}
+  - component: {fileID: 5322912497663485090}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -305,6 +306,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rectContent: {fileID: 0}
   groupBlockRaycast: {fileID: 1910427582743940044}
+--- !u!114 &5322912497663485090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 323191438027614515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1081c88b3f44bd0b49e91d71d384e42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  txtPassedWave: {fileID: 7443829271490207545}
 --- !u!1 &839385918595598535
 GameObject:
   m_ObjectHideFlags: 0
@@ -316,7 +330,6 @@ GameObject:
   - component: {fileID: 4301158397901610287}
   - component: {fileID: 452670959770274024}
   - component: {fileID: 5833599064562995237}
-  - component: {fileID: 4788861171250846258}
   m_Layer: 5
   m_Name: groupWavePassed
   m_TagString: Untagged
@@ -365,19 +378,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &4788861171250846258
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 839385918595598535}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0bd718e0dd3a4cf0aea86970656f2778, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  txtTimePlayed: {fileID: 7443829271490207545}
 --- !u!1 &1194028547960005364
 GameObject:
   m_ObjectHideFlags: 0
@@ -1255,7 +1255,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 2
+      Data: 5
     - Name: 
       Entry: 7
       Data: 
@@ -1264,7 +1264,7 @@ MonoBehaviour:
       Data: 0
     - Name: $v
       Entry: 1
-      Data: Time play
+      Data: wave %{value}
     - Name: 
       Entry: 8
       Data: 
@@ -1276,7 +1276,43 @@ MonoBehaviour:
       Data: 1
     - Name: $v
       Entry: 1
-      Data: "Th\u1EDDi gian"
+      Data: "\u0111\u1EE3t %{value}"
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 1
+      Data: oleada %{value}
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 1
+      Data: onda %{value}
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 4
+    - Name: $v
+      Entry: 1
+      Data: Welle %{value}
     - Name: 
       Entry: 8
       Data: 
@@ -1289,7 +1325,7 @@ MonoBehaviour:
     - Name: overrideFont
       Entry: 6
       Data: 
-  key: key_lose_time_play
+  key: key_wave
 --- !u!1 &2896166567387315488
 GameObject:
   m_ObjectHideFlags: 0
@@ -2020,7 +2056,6 @@ GameObject:
   - component: {fileID: 4288406641200345285}
   - component: {fileID: 5393422469266948938}
   - component: {fileID: 7865435199738711122}
-  - component: {fileID: 5082819465060866550}
   m_Layer: 5
   m_Name: PopupLoseEndless
   m_TagString: Untagged
@@ -2067,6 +2102,7 @@ MonoBehaviour:
   sfxLose: {fileID: 1875269623321644740}
   btnBackToTree: {fileID: 9197805344346604662}
   btnReplay: {fileID: 396683488046443712}
+  isEndless: 1
   imgSymbol: {fileID: 1808165903114077339}
   imgSymbolShiny: {fileID: 4260716578450684615}
   imgTitle: {fileID: 1882751473510842672}
@@ -2093,19 +2129,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &5082819465060866550
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4142463276324074362}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1081c88b3f44bd0b49e91d71d384e42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  txtPassedWave: {fileID: 7443829271490207545}
 --- !u!1 &4539837302082856683
 GameObject:
   m_ObjectHideFlags: 0

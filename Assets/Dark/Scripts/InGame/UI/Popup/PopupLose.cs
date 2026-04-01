@@ -21,6 +21,8 @@ namespace InGame.UI
         [Space]
         [SerializeField] private Button btnBackToTree;
         [SerializeField] private Button btnReplay;
+
+        [Space] [SerializeField] private bool isEndless;
         
         private IEndGameLoseAnimation endingLevel;
 
@@ -45,6 +47,8 @@ namespace InGame.UI
         [Button]
         private void OnLose()
         {
+            if (isEndless != LevelManager.Instance.IsPlayingEndless) return;
+            
             UpdateUI();
 
             var delayShowPopup = 0f;
