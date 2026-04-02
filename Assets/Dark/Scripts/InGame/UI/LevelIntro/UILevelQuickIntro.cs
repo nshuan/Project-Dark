@@ -28,6 +28,12 @@ namespace InGame.UI.LevelIntro
 
         private void OnLevelPreLoaded(LevelConfig level)
         {
+            if (LevelManager.Instance.IsPlayingEndless)
+            {
+                cvgContent.gameObject.SetActive(false);
+                return;
+            }
+            
             txtLevel.SetText(level.level.ToString());
             txtBossName.SetText(LevelManager.Instance.LevelBossName);
             
