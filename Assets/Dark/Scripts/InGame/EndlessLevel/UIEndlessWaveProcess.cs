@@ -8,6 +8,7 @@ namespace InGame.EndlessLevel
     public class UIEndlessWaveProcess : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI txtWave;
+        [SerializeField] private GameObject content;
 
         private void Awake()
         {
@@ -26,8 +27,7 @@ namespace InGame.EndlessLevel
 
         private void OnLevelLoaded(LevelConfig level)
         {
-            if (!LevelManager.Instance.IsPlayingEndless)
-                gameObject.SetActive(false);
+            content.SetActive(LevelManager.Instance.IsPlayingEndless);
         }
         
         private void OnStartNewWave(int wave)
