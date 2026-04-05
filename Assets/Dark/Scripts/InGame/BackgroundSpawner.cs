@@ -47,6 +47,17 @@ namespace InGame
                 }
             }
         }
+
+        private Coroutine coroutineTransition;
+        [Button]
+        private void TestTransition(int index)
+        {
+            if (index < 0) return;
+            if (index > 2) return;
+            
+            if (coroutineTransition != null) StopCoroutine(coroutineTransition);
+            coroutineTransition = StartCoroutine(IETransition(index));
+        }
         
         public IEnumerator IETransition(int index)
         {

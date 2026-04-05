@@ -31,41 +31,40 @@ namespace InGame.EndlessEditor.Editor
                 Debug.LogError("[ToolConvertWaveToEndless] waveConfig is null.");
                 return null;
             }
-
+            
             if (!sourceLevel)
             {
                 Debug.LogError($"[ToolConvertWaveToEndless] sourceLevel is null for waveConfig '{waveConfig.name}'.");
                 return null;
             }
-
+            
             var endlessWave = ScriptableObject.CreateInstance<WaveEndlessConfig>();
             endlessWave.id = id;
             endlessWave.mapType = sourceLevel.mapType;
-            endlessWave.backgroundIndex = sourceLevel.backgroundIndex;
             endlessWave.towerPositions = sourceLevel.towerPositions != null ? sourceLevel.towerPositions.ToArray() : null;
             endlessWave.gateConfigs = waveConfig.gateConfigs != null
                 ? waveConfig.gateConfigs.Select(CloneGateConfig).Where(g => g != null).ToList()
                 : new List<InGame.GateConfig>();
-
+            
             var baseName = assetNameOverride;
             if (string.IsNullOrWhiteSpace(baseName))
-                baseName = $"{waveConfig.name}_EndlessWave";
+                baseName = $"{id}_{waveConfig.name}_EndlessWave";
             endlessWave.name = baseName;
-
+            
             if (!createAsset)
                 return endlessWave;
-
+            
             if (string.IsNullOrWhiteSpace(outputFolder) || !AssetDatabase.IsValidFolder(outputFolder))
             {
                 Debug.LogError($"[ToolConvertWaveToEndless] Output folder '{outputFolder}' is invalid.");
                 return endlessWave;
             }
-
+            
             // If a wave was already converted previously with the same name, reuse it.
             var sameName = FindWaveEndlessByNameInFolder(endlessWave.name, outputFolder);
             if (sameName)
                 return sameName;
-
+            
             var path = AssetDatabase.GenerateUniqueAssetPath($"{outputFolder}/{endlessWave.name}.asset");
             AssetDatabase.CreateAsset(endlessWave, path);
             EditorUtility.SetDirty(endlessWave);
@@ -77,8 +76,12 @@ namespace InGame.EndlessEditor.Editor
         /// </summary>
         public static void ConvertAllWaveConfigsToEndless(
             string outputFolder = DefaultOutputFolder,
+            bool archer = true,
+            bool knight = true,
             bool createAssets = true)
         {
+            if (!archer && !knight) return;
+            
             if (!AssetDatabase.IsValidFolder(outputFolder))
             {
                 Debug.LogError($"[ToolConvertWaveToEndless] Output folder '{outputFolder}' is invalid.");
@@ -92,7 +95,7 @@ namespace InGame.EndlessEditor.Editor
             // If a WaveConfig is referenced by multiple levels, we keep the first one (fields should match for that wave).
             var waveToLevel = new Dictionary<InGame.WaveConfig, InGame.LevelConfig>();
 
-            foreach (var level in LoadAllLevelConfigs())
+            foreach (var level in LoadAllLevelConfigs(archer, knight))
             {
                 if (level?.waveInfo == null) continue;
 
@@ -134,11 +137,14 @@ namespace InGame.EndlessEditor.Editor
             AssetDatabase.Refresh();
         }
 
-        private static IEnumerable<InGame.LevelConfig> LoadAllLevelConfigs()
+        private static IEnumerable<InGame.LevelConfig> LoadAllLevelConfigs(bool archer, bool knight)
         {
             var archerLevels = AssetUtility.LoadAllScriptableObjectsInFolder<InGame.LevelConfig>(InGame.LevelManifest.ArcherLevelPath);
             var knightLevels = AssetUtility.LoadAllScriptableObjectsInFolder<InGame.LevelConfig>(InGame.LevelManifest.KnightLevelPath);
 
+            if (archer && !knight) return archerLevels;
+            if (!archer && knight) return knightLevels;
+            
             return (archerLevels ?? Enumerable.Empty<InGame.LevelConfig>())
                 .Concat(knightLevels ?? Enumerable.Empty<InGame.LevelConfig>());
         }

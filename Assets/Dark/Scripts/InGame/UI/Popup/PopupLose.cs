@@ -47,7 +47,7 @@ namespace InGame.UI
         [Button]
         private void OnLose()
         {
-            if (isEndless != LevelManager.Instance.IsPlayingEndless) return;
+            if (isEndless != LevelManager.IsPlayingEndless) return;
             
             UpdateUI();
 

@@ -228,98 +228,98 @@ namespace InGame.EndlessEditor
 
         public void SaveWave()
         {
-            if (!waveConfig) return;
-
-            waveConfig.mapType = (LevelMapType)currentMapType;
-            waveConfig.backgroundIndex = currentBgIndex;
-            waveConfig.towerPositions = LevelTowerEditorV2.Instance.GetPositions((LevelMapType)currentMapType);
-            
-            waveConfig.gateConfigs = new List<GateConfig>();
-            foreach (Transform gate in parentGates)
-            {
-                if (gate.TryGetComponent<LevelGatePrefabEditorV2>(out var gateConfigEditor))
-                {
-                    gateConfigEditor.Config.position = gateConfigEditor.Position;
-                    
-                    var newTargets = new List<int>();
-                    if (gateConfigEditor.Config.targetBaseIndex != null)
-                    {
-                        newTargets.AddRange(gateConfigEditor.Config.targetBaseIndex);
-                    }
-
-                    IGateSpawner newSpawnLogic;
-                    if (gateConfigEditor.Config.spawnLogic is GateSpawnSingle existingSingle)
-                    {
-                        newSpawnLogic = new GateSpawnSingle() { radius = existingSingle.radius, randomSpanAngle = existingSingle.randomSpanAngle };
-                    }
-                    else if (gateConfigEditor.Config.spawnLogic is GateSpawnTriangle existingTriangle)
-                    {
-                        newSpawnLogic = new GateSpawnTriangle() {  radius = existingTriangle.radius, randomSpanAngle = existingTriangle.randomSpanAngle };
-                    }
-                    else if (gateConfigEditor.Config.spawnLogic is GateSpawnMultiple existingMultiple)
-                    {
-                        newSpawnLogic = new GateSpawnMultiple() { amount = existingMultiple.amount, randomSpanAngle = existingMultiple.randomSpanAngle, maxRadius = existingMultiple.maxRadius };
-                    }
-                    else if (gateConfigEditor.Config.spawnLogic is GateSpawnPositions existingPositions)
-                    {
-                        newSpawnLogic = new GateSpawnPositions() { amount = existingPositions.amount };
-                
-                        if (gateConfigEditor.SpawnPositions != null)
-                        {
-                            var newSpawnPositions = new List<Vector2>();
-                            var newSpawnPositionInfos = new List<GateSpawnPositionInfo>();
-                            
-                            foreach (var position in gateConfigEditor.SpawnPositions)
-                            {
-                                newSpawnPositions.Add(position.Value.spawnPosition);
-                                var attackPos = new List<Vector2>();
-                                if (position.Value.attackPositions != null)
-                                {
-                                    foreach (var pos in position.Value.attackPositions)
-                                    {
-                                        attackPos.Add(pos);
-                                    }
-                                }
-                                newSpawnPositionInfos.Add(new GateSpawnPositionInfo()
-                                {
-                                    spawnPosition = position.Value.spawnPosition,
-                                    attackPositions = attackPos.ToArray()
-                                });
-                            }
-                    
-                            newSpawnLogic = new GateSpawnPositions()
-                            {
-                                amount = existingPositions.amount, 
-                                spawnPositions = newSpawnPositions.ToArray(),
-                                spawnPositionInfos = newSpawnPositionInfos.ToArray()
-                            };
-                        }
-                    }
-                    else
-                    {
-                        newSpawnLogic = new GateSpawnCenter();
-                    }
-                    
-                    waveConfig.gateConfigs.Add(new GateConfig()
-                    {
-                        isBossGate = gateConfigEditor.Config.isBossGate,
-                        position = gateConfigEditor.Position,
-                        targetBaseIndex = newTargets.ToArray(),
-                        startTime = gateConfigEditor.Config.startTime,
-                        duration = gateConfigEditor.Config.duration,
-                        spawnType = gateConfigEditor.Config.spawnType,
-                        intervalLoop = gateConfigEditor.Config.intervalLoop,
-                        spawnLogic = newSpawnLogic,
-                        startTimeVisual = gateConfigEditor.Config.startTimeVisual,
-                        durationVisual = gateConfigEditor.Config.durationVisual,
-                        gatePrefab = gateConfigEditor.Config.gatePrefab,
-                        hideOrb = gateConfigEditor.Config.hideOrb
-                    });
-                }
-            }
-            
-            EditorUtility.SetDirty(waveConfig);
-            AssetDatabase.SaveAssets();
+            // if (!waveConfig) return;
+            //
+            // waveConfig.mapType = (LevelMapType)currentMapType;
+            // waveConfig.backgroundIndex = currentBgIndex;
+            // waveConfig.towerPositions = LevelTowerEditorV2.Instance.GetPositions((LevelMapType)currentMapType);
+            //
+            // waveConfig.gateConfigs = new List<GateConfig>();
+            // foreach (Transform gate in parentGates)
+            // {
+            //     if (gate.TryGetComponent<LevelGatePrefabEditorV2>(out var gateConfigEditor))
+            //     {
+            //         gateConfigEditor.Config.position = gateConfigEditor.Position;
+            //         
+            //         var newTargets = new List<int>();
+            //         if (gateConfigEditor.Config.targetBaseIndex != null)
+            //         {
+            //             newTargets.AddRange(gateConfigEditor.Config.targetBaseIndex);
+            //         }
+            //
+            //         IGateSpawner newSpawnLogic;
+            //         if (gateConfigEditor.Config.spawnLogic is GateSpawnSingle existingSingle)
+            //         {
+            //             newSpawnLogic = new GateSpawnSingle() { radius = existingSingle.radius, randomSpanAngle = existingSingle.randomSpanAngle };
+            //         }
+            //         else if (gateConfigEditor.Config.spawnLogic is GateSpawnTriangle existingTriangle)
+            //         {
+            //             newSpawnLogic = new GateSpawnTriangle() {  radius = existingTriangle.radius, randomSpanAngle = existingTriangle.randomSpanAngle };
+            //         }
+            //         else if (gateConfigEditor.Config.spawnLogic is GateSpawnMultiple existingMultiple)
+            //         {
+            //             newSpawnLogic = new GateSpawnMultiple() { amount = existingMultiple.amount, randomSpanAngle = existingMultiple.randomSpanAngle, maxRadius = existingMultiple.maxRadius };
+            //         }
+            //         else if (gateConfigEditor.Config.spawnLogic is GateSpawnPositions existingPositions)
+            //         {
+            //             newSpawnLogic = new GateSpawnPositions() { amount = existingPositions.amount };
+            //     
+            //             if (gateConfigEditor.SpawnPositions != null)
+            //             {
+            //                 var newSpawnPositions = new List<Vector2>();
+            //                 var newSpawnPositionInfos = new List<GateSpawnPositionInfo>();
+            //                 
+            //                 foreach (var position in gateConfigEditor.SpawnPositions)
+            //                 {
+            //                     newSpawnPositions.Add(position.Value.spawnPosition);
+            //                     var attackPos = new List<Vector2>();
+            //                     if (position.Value.attackPositions != null)
+            //                     {
+            //                         foreach (var pos in position.Value.attackPositions)
+            //                         {
+            //                             attackPos.Add(pos);
+            //                         }
+            //                     }
+            //                     newSpawnPositionInfos.Add(new GateSpawnPositionInfo()
+            //                     {
+            //                         spawnPosition = position.Value.spawnPosition,
+            //                         attackPositions = attackPos.ToArray()
+            //                     });
+            //                 }
+            //         
+            //                 newSpawnLogic = new GateSpawnPositions()
+            //                 {
+            //                     amount = existingPositions.amount, 
+            //                     spawnPositions = newSpawnPositions.ToArray(),
+            //                     spawnPositionInfos = newSpawnPositionInfos.ToArray()
+            //                 };
+            //             }
+            //         }
+            //         else
+            //         {
+            //             newSpawnLogic = new GateSpawnCenter();
+            //         }
+            //         
+            //         waveConfig.gateConfigs.Add(new GateConfig()
+            //         {
+            //             isBossGate = gateConfigEditor.Config.isBossGate,
+            //             position = gateConfigEditor.Position,
+            //             targetBaseIndex = newTargets.ToArray(),
+            //             startTime = gateConfigEditor.Config.startTime,
+            //             duration = gateConfigEditor.Config.duration,
+            //             spawnType = gateConfigEditor.Config.spawnType,
+            //             intervalLoop = gateConfigEditor.Config.intervalLoop,
+            //             spawnLogic = newSpawnLogic,
+            //             startTimeVisual = gateConfigEditor.Config.startTimeVisual,
+            //             durationVisual = gateConfigEditor.Config.durationVisual,
+            //             gatePrefab = gateConfigEditor.Config.gatePrefab,
+            //             hideOrb = gateConfigEditor.Config.hideOrb
+            //         });
+            //     }
+            // }
+            //
+            // EditorUtility.SetDirty(waveConfig);
+            // AssetDatabase.SaveAssets();
         }
         
         #endregion

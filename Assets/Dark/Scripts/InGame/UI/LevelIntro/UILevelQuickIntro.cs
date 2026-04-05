@@ -28,7 +28,7 @@ namespace InGame.UI.LevelIntro
 
         private void OnLevelPreLoaded(LevelConfig level)
         {
-            if (LevelManager.Instance.IsPlayingEndless)
+            if (LevelManager.IsPlayingEndless)
             {
                 cvgContent.gameObject.SetActive(false);
                 return;

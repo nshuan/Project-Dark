@@ -11,7 +11,6 @@ namespace InGame.EndlessLevel
     {
         public int id;
         public LevelMapType mapType;
-        public int backgroundIndex;
         public Vector2[] towerPositions;
         [NonSerialized, OdinSerialize] public List<GateConfig> gateConfigs;
     }

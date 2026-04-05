@@ -53,6 +53,12 @@ namespace InGame.Boss.BossSkillSystem
         
         protected override IEnumerator IEDie(float delayRelease, EnemyDieReason reason)
         {
+            if (LevelManager.IsPlayingEndless)
+            {
+                yield return base.IEDie(delayRelease, reason);
+                yield break;
+            }
+            
             // Làm đen hết màn hình, tắt UI
             AllBackgroundInGame.Instance.CurrentBackground.SetActiveBlackBg(true);
             CanvasInGame.Instance.HideUI();
@@ -68,7 +74,10 @@ namespace InGame.Boss.BossSkillSystem
 
         protected override void DropResource()
         {
-           
+            if (LevelManager.IsPlayingEndless)
+            {
+                base.DropResource();
+            }
         }
     }
 }

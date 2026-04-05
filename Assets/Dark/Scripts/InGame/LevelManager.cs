@@ -56,7 +56,7 @@ namespace InGame
         
         public PlayerCharacter Player { get; set; }
 
-        public bool IsPlayingEndless { get; set; }
+        public static bool IsPlayingEndless { get; set; }
         
         #region Upgrade
 
@@ -75,7 +75,7 @@ namespace InGame
 
         // <int waveIndex, float waveDuration>
         public event Action<int, float> OnWaveStart;
-        public event Action OnBossWaveStart;
+        public Action OnBossWaveStart;
         public event Action<int, WaveEndReason> onWaveEnded;
         
         public event Action OnWin;

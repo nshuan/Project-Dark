@@ -10,7 +10,10 @@ namespace InGame.EndlessLevel
     public class LevelEndlessManager : SerializedMonoBehaviour
     {
         public static int passedWave;
+
+        public PoolWaveEndless wavePool;
         
+        [Space]
         [SerializeField] private LevelEndlessManifest levelManifest;
         [SerializeField] private float delayStartLevel = 2.5f;
         [SerializeField] private float defaultWaveDuration = 100f;
@@ -26,9 +29,16 @@ namespace InGame.EndlessLevel
 
         public TowerEntity[] allTowers;
 
+        public int CurrentBackgroundIndex { get; set; }
+
         private bool hasStartLevel;
 
         public static event Action<int> OnStartWave;
+
+        private void Awake()
+        {
+            wavePool.Init();
+        }
 
         public void LoadLevel(LevelEndlessConfig level)
         {
@@ -68,7 +78,12 @@ namespace InGame.EndlessLevel
                     Debug.LogWarning("[LevelEndlessManager] Wave template is null, stopping endless loop.");
                     yield break;
                 }
-
+                
+                if (!hasStartLevel)
+                    backgroundSpawner?.Spawn(UpdateBackgroundIndex(waveTemplate));
+                else
+                    yield return backgroundSpawner?.IETransition(UpdateBackgroundIndex(waveTemplate));
+                
                 var waveConfig = GetRandomWaveConfig(waveTemplate);
                 if (waveConfig == null)
                 {
@@ -77,11 +92,7 @@ namespace InGame.EndlessLevel
                 }
 
                 OnStartWave?.Invoke(currentWaveIndex);
-                
-                if (!hasStartLevel)
-                    backgroundSpawner?.Spawn(waveConfig.backgroundIndex);
-                else
-                    yield return backgroundSpawner?.IETransition(waveConfig.backgroundIndex);
+                if (waveTemplate.waveType == WaveEndlessType.Boss) levelManager.OnBossWaveStart?.Invoke();
                 
                 for (var i = 0; i < allTowers.Length; i++)
                 {
@@ -121,7 +132,7 @@ namespace InGame.EndlessLevel
                     waveTemplate,
                     waveConfig,
                     levelManager.Towers,
-                    defaultWaveDuration,
+                    waveTemplate.timeToEnd,
                     OnWaveForceStop);
 
                 currentWaveRuntime.SetupWave();
@@ -149,15 +160,41 @@ namespace InGame.EndlessLevel
             return currentLevel.waveInfo[clampedIndex];
         }
 
+        private int UpdateBackgroundIndex(WaveEndlessInfo waveInfo)
+        {
+            switch (waveInfo.changeToMap)
+            {
+                case 0: return CurrentBackgroundIndex;
+                case 1:
+                    CurrentBackgroundIndex = 0;
+                    break;
+                case 2:
+                    CurrentBackgroundIndex = 1;
+                    break;
+                case 3:
+                    CurrentBackgroundIndex = 2;
+                    break;
+                case -1:
+                    var posible = new List<int>();
+                    for (var i = 0; i < 3; i++)
+                    {
+                        if (CurrentBackgroundIndex == i) continue;
+                        posible.Add(i);
+                    }
+
+                    CurrentBackgroundIndex = posible[RandomUtil.Range(0, posible.Count)];
+                    break;
+            }
+
+            return CurrentBackgroundIndex;
+        }
+
         private WaveEndlessConfig GetRandomWaveConfig(WaveEndlessInfo info)
         {
-            if (info == null || info.wavePool == null || info.wavePool.allWaves == null ||
-                info.wavePool.allWaves.Length == 0)
-                return null;
+            if (!wavePool) return null;
+            if (info == null) return null;
 
-            var allWaves = info.wavePool.allWaves;
-            var randomIndex = RandomUtil.Range(0, allWaves.Length);
-            return allWaves[randomIndex];
+            return wavePool.GetRandomWave(0, info.waveType);
         }
 
         private void OnWaveForceStop(int waveIndex, WaveEndReason reason)

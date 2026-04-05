@@ -45,6 +45,12 @@ namespace InGame.Boss
 
         protected override IEnumerator IEDie(float delayRelease, EnemyDieReason reason)
         {
+            if (LevelManager.IsPlayingEndless)
+            {
+                yield return base.IEDie(delayRelease, reason);
+                yield break;
+            }
+            
             LevelManager.Instance.BlockDamageAllTowers();
             
             // Làm đen hết màn hình, tắt UI
@@ -62,7 +68,10 @@ namespace InGame.Boss
 
         protected override void DropResource()
         {
-           
+            if (LevelManager.IsPlayingEndless)
+            {
+                base.DropResource();
+            }
         }
 
         protected override IEnumerator IEAttack()

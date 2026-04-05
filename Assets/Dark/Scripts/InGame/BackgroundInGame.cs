@@ -18,9 +18,14 @@ namespace InGame
         [SerializeField] private Material matBgBoss;
         [SerializeField] private GameObject vfxAppearCrack;
 
-        private void Start()
+        private void OnEnable()
         {
             LevelManager.Instance.OnBossWaveStart += OnStartWaveBoss;
+        }
+
+        private void OnDisable()
+        {
+            LevelManager.Instance.OnBossWaveStart -= OnStartWaveBoss;
         }
 
         private void OnStartWaveBoss()

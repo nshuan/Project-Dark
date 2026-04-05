@@ -1,4 +1,3 @@
-using System;
 using Dark.Tools.Language.Runtime;
 using TMPro;
 using UnityEngine;
@@ -27,12 +26,12 @@ namespace InGame.EndlessLevel
 
         private void OnLevelLoaded(LevelConfig level)
         {
-            content.SetActive(LevelManager.Instance.IsPlayingEndless);
+            content.SetActive(LevelManager.IsPlayingEndless);
         }
         
         private void OnStartNewWave(int wave)
         {
-            txtWave.SetTextLanguage("key_wave", ("%{value}", wave.ToString()));    
+            txtWave.SetTextLanguage("key_wave", ("%{value}", (wave + 1).ToString()));    
         }
     }
 }

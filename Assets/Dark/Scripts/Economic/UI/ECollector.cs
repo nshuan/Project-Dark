@@ -52,7 +52,7 @@ namespace Economic.UI
             }
 
             // Enemy thường thì mới rớt vestige item, boss thì cộng trực tiếp vestige luôn
-            if (enemy.IsBoss)
+            if (enemy.IsBoss && !LevelManager.IsPlayingEndless)
             {
                 EItemDropManager.Instance.AddCollectedData(WealthType.Vestige, enemy.DarkUnitValue * enemy.Dark);
                 EItemDropManager.Instance.AddCollectedData(WealthType.Sigils, enemy.BossPoint);

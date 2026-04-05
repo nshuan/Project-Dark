@@ -11,6 +11,8 @@ namespace InGame.EndlessEditor.Editor
     {
         private string outputFolder = ToolConvertWaveToEndless.DefaultOutputFolder;
         private bool createAssets = true;
+        private bool getArcher = true;
+        private bool getKnight = true;
 
         private InGame.WaveConfig selectedWaveConfig;
         private InGame.LevelConfig selectedWaveSourceLevel;
@@ -38,6 +40,8 @@ namespace InGame.EndlessEditor.Editor
 
             outputFolder = EditorGUILayout.TextField("Output Folder", outputFolder);
             createAssets = EditorGUILayout.Toggle("Create Assets", createAssets);
+            getArcher = EditorGUILayout.Toggle("Archer", getArcher);
+            getKnight = EditorGUILayout.Toggle("Knight", getKnight);
 
             EditorGUILayout.Space(10);
             EditorGUILayout.LabelField("Convert Selected WaveConfig", EditorStyles.boldLabel);
@@ -126,7 +130,7 @@ namespace InGame.EndlessEditor.Editor
                         "Convert",
                         "Cancel"))
                 {
-                    ToolConvertWaveToEndless.ConvertAllWaveConfigsToEndless(outputFolder, createAssets);
+                    ToolConvertWaveToEndless.ConvertAllWaveConfigsToEndless(outputFolder, getArcher, getKnight, createAssets);
                     RefreshStats();
                 }
             }

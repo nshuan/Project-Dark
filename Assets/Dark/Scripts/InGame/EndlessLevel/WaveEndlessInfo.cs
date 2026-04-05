@@ -13,6 +13,8 @@ namespace InGame.EndlessLevel
         public int darkUnitValue = 1;
         public int sigils = 0;
         public int ashes = 0;
-        public PoolWaveEndless wavePool;
+        public float timeToEnd = 1000f;
+        public WaveEndlessType waveType;
+        public int changeToMap; // 0 = unchange, -1 = random
     }
 }

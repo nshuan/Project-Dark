@@ -57,7 +57,7 @@ namespace InGame.UI.Waves
         
         private void OnLevelLoaded(LevelConfig level)
         {
-            if (LevelManager.Instance.IsPlayingEndless)
+            if (LevelManager.IsPlayingEndless)
             {
                 gameObject.SetActive(false);
                 return;
