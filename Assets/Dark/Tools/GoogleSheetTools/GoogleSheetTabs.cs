@@ -20,6 +20,9 @@ namespace Dark.Tools.GoogleSheetTool
         Tooltip = 1442243015, // "Tooltip"
         Wave = 230897661, // "Wave"
         LevelConfig = 992670229, // "LevelConfig"
+        LevelEndless = 1936876877, // "LevelEndless"
+        LevelEndlessPool = 1698663014, // "LevelEndlessPool"
         BossConfig = 181237602, // "BossConfig"
+        LoadingLore = 1587149198, // "LoadingLore"
     }
 }

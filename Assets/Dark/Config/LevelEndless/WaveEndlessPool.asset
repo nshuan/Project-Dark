@@ -1,0 +1,573 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d54db67d226440fb27b6019ff15de20, type: 3}
+  m_Name: WaveEndlessPool
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: pool
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[System.Collections.Generic.Dictionary`2[[InGame.EndlessLevel.WaveEndlessType,
+        Assembly-CSharp],[System.Collections.Generic.List`1[[System.Int32, mscorlib]],
+        mscorlib]], mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.Int32,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 7
+      Data: 2|System.Collections.Generic.Dictionary`2[[InGame.EndlessLevel.WaveEndlessType,
+        Assembly-CSharp],[System.Collections.Generic.List`1[[System.Int32, mscorlib]],
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 3|System.Collections.Generic.EnumEqualityComparer`1[[InGame.EndlessLevel.WaveEndlessType,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 4
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 7
+      Data: 4|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 3
+    - Name: 
+      Entry: 3
+      Data: 4
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 7
+      Data: 5|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 7
+      Data: 6|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 3
+      Data: 8
+    - Name: 
+      Entry: 3
+      Data: 9
+    - Name: 
+      Entry: 3
+      Data: 10
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 7
+      Data: 7|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 7
+      Data: 8|System.Collections.Generic.Dictionary`2[[InGame.EndlessLevel.WaveEndlessType,
+        Assembly-CSharp],[System.Collections.Generic.List`1[[System.Int32, mscorlib]],
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 4
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 7
+      Data: 9|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 6
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 3
+    - Name: 
+      Entry: 3
+      Data: 4
+    - Name: 
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 7
+      Data: 10|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 4
+    - Name: 
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 3
+      Data: 10
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 7
+      Data: 11|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 5
+    - Name: 
+      Entry: 3
+      Data: 8
+    - Name: 
+      Entry: 3
+      Data: 9
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 3
+    - Name: 
+      Entry: 3
+      Data: 4
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 7
+      Data: 12|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 7
+      Data: 13|System.Collections.Generic.Dictionary`2[[InGame.EndlessLevel.WaveEndlessType,
+        Assembly-CSharp],[System.Collections.Generic.List`1[[System.Int32, mscorlib]],
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 4
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 7
+      Data: 14|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 4
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 3
+      Data: 3
+    - Name: 
+      Entry: 3
+      Data: 4
+    - Name: 
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 7
+      Data: 15|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 3
+      Data: 9
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 7
+      Data: 16|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 3
+      Data: 8
+    - Name: 
+      Entry: 3
+      Data: 10
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 7
+      Data: 17|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  allWaves:
+  - {fileID: 11400000, guid: ce818246620674f42b0b001df0cb0dd1, type: 2}
+  - {fileID: 11400000, guid: 6f10c9ec5a5dfdf4b908ae347b756ee5, type: 2}
+  - {fileID: 11400000, guid: 4e95803699f5e344d9230b7b3434bee7, type: 2}
+  - {fileID: 11400000, guid: 978b3baa04cc55742a454d02f2f6bac4, type: 2}
+  - {fileID: 11400000, guid: edbe82a739b8f1346bada20c29d0d8ea, type: 2}
+  - {fileID: 11400000, guid: 2c61dec6a07fe5d45b80f950ffaf7d5e, type: 2}
+  - {fileID: 11400000, guid: b6afa9e8ae5d1a849ada556386bda4ff, type: 2}
+  - {fileID: 11400000, guid: d5f8ddb6d90a1064396be16c94f95687, type: 2}
+  - {fileID: 11400000, guid: c1d8acf5684c11745917ba96322247c8, type: 2}
+  - {fileID: 11400000, guid: d43cdc638a0c08e40afd833a7bf98318, type: 2}
+  - {fileID: 11400000, guid: 4cf08afe670b1fc42aea54c0b3256402, type: 2}
+  - {fileID: 11400000, guid: 3a6dc05ed55f3fc4eac997de4d59cb9f, type: 2}
+  - {fileID: 11400000, guid: c48a31b35cc5b9947aee82e76fb3c95e, type: 2}
+  - {fileID: 11400000, guid: 8cfcd50751d0da64ba5db89003672a93, type: 2}
+  - {fileID: 11400000, guid: ef50a966c58742f40be93ad0f4b4cbac, type: 2}
+  - {fileID: 11400000, guid: 04f10e63523f6264c88c2f539e77f4ff, type: 2}
+  - {fileID: 11400000, guid: 6521da855d7339746897bfe59d2ba1ea, type: 2}
+  - {fileID: 11400000, guid: 3cb71d06c042cc849be74c180277b8a1, type: 2}
+  - {fileID: 11400000, guid: 196603cc5712dde49bf0e0b6a151d650, type: 2}
+  - {fileID: 11400000, guid: 0cf637a7e09a38a4ba5d8ae88fd9c450, type: 2}
+  - {fileID: 11400000, guid: 7ad3ba9cba785df4c92ef5592705ab81, type: 2}
+  - {fileID: 11400000, guid: 9a23240654d60ae459fcf3a5d5c8db10, type: 2}
+  - {fileID: 11400000, guid: 1cebce566267d824ca391b650643fd2c, type: 2}
+  - {fileID: 11400000, guid: e6ef4346b0077c54d9ef368a9b3f8a37, type: 2}
+  - {fileID: 11400000, guid: 340db7d6bab7fe14d86a0f5b5cbd523b, type: 2}
+  - {fileID: 11400000, guid: 26104750ad99070409b226bd91139984, type: 2}
+  - {fileID: 11400000, guid: ef54f182e554cac488fe2938d06192f9, type: 2}
+  - {fileID: 11400000, guid: 5802fe540e37d45468058673e16a164b, type: 2}
+  - {fileID: 11400000, guid: de792df5074d3214a9af982b2b3ae274, type: 2}
+  - {fileID: 11400000, guid: b9b4b975b2b88f247a5982617d79e833, type: 2}
+  - {fileID: 11400000, guid: 4b73c2f057d08bf48a9edc6070be918b, type: 2}
+  - {fileID: 11400000, guid: ac654511a1a5b3e47b0c67da59dcfd79, type: 2}
+  - {fileID: 11400000, guid: c11a866a3287eab45b7fbbd22bbea218, type: 2}
+  - {fileID: 11400000, guid: 6e2b84fd225930a4ca38cf7c8076424e, type: 2}
+  - {fileID: 11400000, guid: f6df03bc3c969b443ab32bdf630f61d8, type: 2}
+  - {fileID: 11400000, guid: 28b8de83522907944b46068077c526bb, type: 2}
+  - {fileID: 11400000, guid: d5556f7ffcf15544196a40f54093d401, type: 2}
+  - {fileID: 11400000, guid: c917a0d5d34f59747a086fcaee9c87d0, type: 2}
+  - {fileID: 11400000, guid: a30cb932fd606fe418d251feb262c1e7, type: 2}
+  - {fileID: 11400000, guid: d192211374059534397aa91ddf537ec9, type: 2}
+  - {fileID: 11400000, guid: ef3c446c8630979418f2b416ab32c4e3, type: 2}
+  - {fileID: 11400000, guid: 2cc9f843c785e344492920e16d579b1e, type: 2}
+  - {fileID: 11400000, guid: b3c484c77b1b4594cace4d0909774212, type: 2}
+  - {fileID: 11400000, guid: 258e4688bdae6bb44ab8aba966e1e4eb, type: 2}
+  - {fileID: 11400000, guid: e940069b514f1044eabe1528482dae0b, type: 2}
+  - {fileID: 11400000, guid: 33b263407f2ef614499aa25c08b23243, type: 2}
+  - {fileID: 11400000, guid: e3d744ae7e9fb8f4aa6968a6751956e1, type: 2}
+  - {fileID: 11400000, guid: 703efaada693323429008dbae7b0468c, type: 2}
+  - {fileID: 11400000, guid: 51e7bf9efb61af14fbd504c83c26dde9, type: 2}
+  - {fileID: 11400000, guid: 83907c65f2cec6f4886db6dd90c6aa9d, type: 2}
+  - {fileID: 11400000, guid: 6bf17add4a3480f4aa9d64571694620f, type: 2}
+  - {fileID: 11400000, guid: da9edcd1d3e747c42995d82b64417240, type: 2}
+  - {fileID: 11400000, guid: 4c4e2bcc4b06ef4499f8ae23d4f2229c, type: 2}
+  - {fileID: 11400000, guid: f23ad4fc7f5108242b8028f2f3230e09, type: 2}
+  - {fileID: 11400000, guid: ce2baec3ced584240b2a4e1c27eb5a61, type: 2}
+  - {fileID: 11400000, guid: 5d2da15c08ba6e24daa120171513764a, type: 2}
+  - {fileID: 11400000, guid: fcb3281e10a87d14cb37ce7a1ab8ce86, type: 2}
+  - {fileID: 11400000, guid: 619ef435b819b9f42b9e545d3e23710d, type: 2}
+  - {fileID: 11400000, guid: 3fe908a37f23ead4e8ac108cea234ed7, type: 2}
+  - {fileID: 11400000, guid: 536a055e5f365a04697afa8205c573d3, type: 2}
+  - {fileID: 11400000, guid: 65c3cd3f1eebc3d4291c47aaf53c0c16, type: 2}
+  - {fileID: 11400000, guid: c44abd8e1c66bf442bda4e77a9229801, type: 2}
+  - {fileID: 11400000, guid: c7fc4acd87c7ec843bdae81cfca99419, type: 2}
+  - {fileID: 11400000, guid: 194c392230373a344a22c6f59f397e7a, type: 2}
+  - {fileID: 11400000, guid: 1e49b3973dcf8ee4b8127069a8bf1dbf, type: 2}
+  - {fileID: 11400000, guid: de14305014835ec46a776a9f9efbe0b8, type: 2}
+  - {fileID: 11400000, guid: 836f90e23da1064489f514eaf6874407, type: 2}
+  - {fileID: 11400000, guid: fa2d75cd483afe84c891c19137de35cc, type: 2}
+  - {fileID: 11400000, guid: 0640faabe35fc164f8079708515d9a18, type: 2}
+  - {fileID: 11400000, guid: 1ef25b881bc109a468cd1decab453eb7, type: 2}
+  - {fileID: 11400000, guid: 6a8c23be472e82e4dae2f002977bf4a5, type: 2}
+  - {fileID: 11400000, guid: 4b43753ce49ed52418c1e03ddeaf211a, type: 2}
+  - {fileID: 11400000, guid: ee28e3ca6fa0a3c4a87fabb68c90fc2a, type: 2}
+  - {fileID: 11400000, guid: 9c47d9154d47f1645bd98669fa0fc53b, type: 2}
+  - {fileID: 11400000, guid: 0638387edbe7b7342a571686a5b1d77c, type: 2}
+  - {fileID: 11400000, guid: fc339e2ad39e969448517c5efce37ec9, type: 2}
+  - {fileID: 11400000, guid: 94d7245c5b5ad5d4584fc3a9c2572de3, type: 2}
+  - {fileID: 11400000, guid: 3187a04a80f79594dabe92aec834599b, type: 2}
+  - {fileID: 11400000, guid: 5b7e21eb88cdab5488bcbe3e47419225, type: 2}
+  - {fileID: 11400000, guid: 991855d006b91ba4ba61f19be1a686e8, type: 2}
