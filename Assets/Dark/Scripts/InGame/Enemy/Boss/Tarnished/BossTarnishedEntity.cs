@@ -180,6 +180,7 @@ namespace InGame.Boss
                 var listTargetToRandom = new List<TowerEntity>();
                 foreach (var tower in LevelManager.Instance.Towers)
                 {
+                    if (!tower.gameObject.activeInHierarchy) continue;
                     if (tower.Id != TargetTower.Id) listTargetToRandom.Add(tower);
                 }
                 

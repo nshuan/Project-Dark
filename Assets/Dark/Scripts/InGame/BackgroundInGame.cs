@@ -133,9 +133,14 @@ namespace InGame
                         crack.gameObject.SetActive(false);
                     }
                 }
-                
-                objTransitionModel?.gameObject.SetActive(true);
-                objTransitionModel?.state?.SetAnimation(0, "animation", false);
+
+                if (objTransitionModel)
+                {
+                    objTransitionModel.state?.SetAnimation(0, "animation", false);
+                    objTransitionModel.Update(0);
+                    objTransitionModel.LateUpdate();
+                    objTransitionModel.gameObject.SetActive(true);
+                }
             }
         }
 

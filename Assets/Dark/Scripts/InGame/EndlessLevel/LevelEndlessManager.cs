@@ -34,6 +34,7 @@ namespace InGame.EndlessLevel
 
         private bool hasStartLevel;
         private bool isLevelEnded;
+        private bool isBossing;
 
         public static event Action<int> OnStartWave;
         public static event Action<float> OnStartHideMap;
@@ -63,6 +64,7 @@ namespace InGame.EndlessLevel
             currentWaveIndex = 0;
             hasStartLevel = false;
             isLevelEnded = false;
+            isBossing = false;
 
             if (levelCoroutine != null)
                 StopCoroutine(levelCoroutine);
@@ -85,6 +87,7 @@ namespace InGame.EndlessLevel
             while (true)
             {
                 var waveTemplate = GetWaveTemplateForIndex(currentWaveIndex);
+                
                 if (waveTemplate == null)
                 {
                     Debug.LogWarning("[LevelEndlessManager] Wave template is null, stopping endless loop.");
@@ -125,6 +128,13 @@ namespace InGame.EndlessLevel
                         yield return new WaitForSeconds(durationHideMap);
                         OnChangeMap?.Invoke(lastMapId, CurrentBackgroundIndex);
                         yield return backgroundSpawner?.IETransition(CurrentBackgroundIndex);
+                    }
+                    else if (isBossing)
+                    {
+                        var durationHideMap = 1f;
+                        OnStartHideMap?.Invoke(durationHideMap);
+                        yield return new WaitForSeconds(durationHideMap);
+                        backgroundSpawner.CurrentBackground.bg.Reset();
                     }
                     else
                     {
@@ -174,6 +184,8 @@ namespace InGame.EndlessLevel
                                                          levelManager.CurrentTower.GetTowerHeight();
                 levelManager.Player.ShowShotRadius(levelManager.CurrentTower.GetBaseCenter(),
                     LevelUtilityV2.GetNormalAttackRange(Vector2.right));
+                
+                isBossing = waveTemplate.waveType == WaveEndlessType.Boss;
                 
                 currentWaveRuntime = new EndlessWaveRuntime(
                     currentWaveIndex,
@@ -388,14 +400,6 @@ namespace InGame.EndlessLevel
 
             private void CheckStopAllGate()
             {
-                var bossGate = gates.FirstOrDefault(g => g.config.isBossGate);
-                if (bossGate && bossGate.AllEnemyDead)
-                {
-                    DebugUtility.LogError($"[Endless] Stop wave {waveIndex + 1}: Boss is dead");
-                    onWaveForceStop?.Invoke(waveIndex, WaveEndReason.AllDead);
-                    return;
-                }
-
                 if (gates.All(g => g.AllEnemyDead))
                 {
                     DebugUtility.LogError($"[Endless] Stop wave {waveIndex + 1}: All enemies are dead");
