@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -32,12 +33,22 @@ namespace InGame.EndlessLevel
         public int CurrentBackgroundIndex { get; set; }
 
         private bool hasStartLevel;
+        private bool isLevelEnded;
 
         public static event Action<int> OnStartWave;
+        public static event Action<float> OnStartHideMap;
+        public static event Action<float> OnStartShowMap;
+        public static event Action<int, int> OnChangeMap;
 
         private void Awake()
         {
             wavePool.Init();
+        }
+
+        private void OnDestroy()
+        {
+            OnStartWave = null;
+            OnChangeMap = null;
         }
 
         public void LoadLevel(LevelEndlessConfig level)
@@ -51,6 +62,7 @@ namespace InGame.EndlessLevel
             currentLevel = level;
             currentWaveIndex = 0;
             hasStartLevel = false;
+            isLevelEnded = false;
 
             if (levelCoroutine != null)
                 StopCoroutine(levelCoroutine);
@@ -78,11 +90,47 @@ namespace InGame.EndlessLevel
                     Debug.LogWarning("[LevelEndlessManager] Wave template is null, stopping endless loop.");
                     yield break;
                 }
-                
+
+                var lastMapId = CurrentBackgroundIndex;
                 if (!hasStartLevel)
                     backgroundSpawner?.Spawn(UpdateBackgroundIndex(waveTemplate));
                 else
-                    yield return backgroundSpawner?.IETransition(UpdateBackgroundIndex(waveTemplate));
+                {
+                    UpdateBackgroundIndex(waveTemplate);
+                    if (lastMapId != CurrentBackgroundIndex)
+                    {
+                        if (lastMapId == 1)
+                        {
+                            var durationAnim = 4f;
+                            backgroundSpawner?.CurrentBackground?.bg.PlayTransition();
+                            if (allTowers is { Length: > 2 })
+                            {
+                                var towerMoveSeq = DOTween.Sequence();
+                                towerMoveSeq
+                                    .AppendInterval(2f)
+                                    .AppendCallback(() =>
+                                    {
+                                        allTowers[1].transform.DOLocalMove(new Vector3(-0.6f, 0.4f, 0f), 2f)
+                                            .SetEase(Ease.Unset).SetRelative();
+                                        allTowers[2].transform.DOLocalMove(new Vector3(0.6f, 0.4f, 0f), 2f)
+                                            .SetEase(Ease.Unset).SetRelative();
+                                    });
+                                towerMoveSeq.Play();
+                            }
+                            yield return new WaitForSeconds(durationAnim);
+                        }
+                        
+                        var durationHideMap = 1f;
+                        OnStartHideMap?.Invoke(durationHideMap);
+                        yield return new WaitForSeconds(durationHideMap);
+                        OnChangeMap?.Invoke(lastMapId, CurrentBackgroundIndex);
+                        yield return backgroundSpawner?.IETransition(CurrentBackgroundIndex);
+                    }
+                    else
+                    {
+                        backgroundSpawner.CurrentBackground.bg.Reset();
+                    }
+                }
                 
                 var waveConfig = GetRandomWaveConfig(waveTemplate);
                 if (waveConfig == null)
@@ -143,6 +191,12 @@ namespace InGame.EndlessLevel
                     hasStartLevel = true;
                     yield return new WaitForSeconds(delayStartLevel);
                 }
+                else
+                {
+                    var durationShowMap = 0.5f;
+                    OnStartShowMap?.Invoke(durationShowMap);
+                    yield return new WaitForSeconds(durationShowMap);
+                }
                 
                 yield return currentWaveRuntime.IEActivateWave();
 
@@ -199,6 +253,8 @@ namespace InGame.EndlessLevel
 
         private void OnWaveForceStop(int waveIndex, WaveEndReason reason)
         {
+            if (isLevelEnded) return;
+            
             if (waveIndex < currentWaveIndex) return;
             
             // In endless mode we simply start the next wave immediately.
@@ -208,6 +264,13 @@ namespace InGame.EndlessLevel
             currentWaveIndex++;
             passedWave += 1;
             levelCoroutine = StartCoroutine(IELevelLoop());
+        }
+
+        public void EndLevel()
+        {
+            isLevelEnded = true;
+            if (levelCoroutine != null)
+                StopCoroutine(levelCoroutine);
         }
 
         /// <summary>

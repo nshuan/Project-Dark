@@ -13,6 +13,7 @@ namespace InGame
         [SerializeField] private List<BackgroundInfo> listBackground;
         
         private BackgroundInfo currentBackground;
+        public BackgroundInfo CurrentBackground => currentBackground;
 
         [Button]
         private void GetAllSprites()
@@ -39,7 +40,7 @@ namespace InGame
             index = Mathf.Clamp(index, 0, listBackground.Count - 1);
             for (var i = 0; i < listBackground.Count; i++)
             {
-                listBackground[i].bg.SetActive(i == index);
+                listBackground[i].bg.gameObject.SetActive(i == index);
                 if (i == index)
                 {
                     currentBackground = listBackground[i];
@@ -100,10 +101,10 @@ namespace InGame
                     seq.Join(s.DOFade(sAlpha, 0.25f));
                 }
                 
-                currentBackground.bg.SetActive(true);
+                currentBackground.bg.gameObject.SetActive(true);
             }
             
-            seq.AppendCallback(() => lastBackground?.bg.SetActive(false));
+            seq.AppendCallback(() => lastBackground?.bg.gameObject.SetActive(false));
             
             yield return seq.WaitForCompletion();
         }
@@ -111,7 +112,7 @@ namespace InGame
         [Serializable]
         public class BackgroundInfo
         {
-            public GameObject bg;
+            public BackgroundInGame bg;
             public List<SpriteRenderer> sprites;
             public List<float> spriteDefaultAlpha;
         }

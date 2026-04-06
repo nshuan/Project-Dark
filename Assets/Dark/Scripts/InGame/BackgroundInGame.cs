@@ -1,6 +1,9 @@
 using System;
 using Core;
+using Dark.Scripts.Utils;
 using DG.Tweening;
+using Sirenix.OdinInspector;
+using Spine.Unity;
 using UnityEngine;
 
 namespace InGame
@@ -17,6 +20,9 @@ namespace InGame
         [SerializeField] private SpriteRenderer[] groupBgBossSpriteRenderer;
         [SerializeField] private Material matBgBoss;
         [SerializeField] private GameObject vfxAppearCrack;
+        [SerializeField] private SkeletonAnimation objTransitionModel;
+        [SerializeField, ShowIf("objTransitionModel")]
+        private SpriteRenderer[] cracks;
 
         private void OnEnable()
         {
@@ -25,6 +31,8 @@ namespace InGame
 
         private void OnDisable()
         {
+            Reset();
+            objTransitionModel?.gameObject.SetActive(false);
             LevelManager.Instance.OnBossWaveStart -= OnStartWaveBoss;
         }
 
@@ -112,6 +120,37 @@ namespace InGame
                 groupBgNormal.SetActive(false);
                 groupBgBoss.SetActive(false);
             }
+        }
+
+        public void PlayTransition()
+        {
+            if (objTransitionModel)
+            {
+                if (cracks != null)
+                {
+                    foreach (var crack in cracks)
+                    {
+                        crack.gameObject.SetActive(false);
+                    }
+                }
+                
+                objTransitionModel?.gameObject.SetActive(true);
+                objTransitionModel?.state?.SetAnimation(0, "animation", false);
+            }
+        }
+
+        public void Reset()
+        {
+            matBgBoss.SetFloat(MatDisolveValue, 1f);
+            vfxBgBoss.SetActive(false);
+            vfxAppearCrack.SetActive(false);
+            foreach (var obj in groupBgBossSpriteRenderer)
+            {
+                obj.gameObject.SetActive(false);
+                obj.color = new Color(1f, 1f, 1f, 0f);
+            }
+            groupBgBoss.SetActive(false);
+            groupBgNormal.SetActive(true);
         }
     }
 }
