@@ -34,5 +34,13 @@ namespace InGame.EndlessLevel
             if (!allWavesMap.TryGetValue(randomWaveId, out var wave)) return null;
             return wave;
         }
+
+        [Space]
+        [SerializeField] private string wavePath = "Assets/Dark/Config/LevelEndlessWave";
+        [Button]
+        private void GetAllWave()
+        {
+            allWaves = AssetUtility.LoadAllScriptableObjectsInFolder<WaveEndlessConfig>(wavePath).ToArray();
+        }
     }
 }

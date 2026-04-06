@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using InGame.EndlessLevel;
+using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 
@@ -116,8 +118,18 @@ namespace InGame.EndlessEditor.Editor
                     }
                 }
             }
+            
+            var orderedWaves = waveToLevel.Keys.Select(k =>
+                {
+                    var matches = Regex.Matches(k.name, @"\d+");
+                    var level = matches.Count > 0 ? int.Parse(matches[0].Value) : 0;
+                    var wave = matches.Count > 1 ? int.Parse(matches[1].Value) : 0;
 
-            var orderedWaves = waveToLevel.Keys.OrderBy(w => w.name).ToList();
+                    return new { obj = k, level, wave };
+                })
+                .OrderBy(x => x.level)
+                .ThenBy(x => x.wave)
+                .Select(x => x.obj).ToList();
             var nextId = maxId + 1;
 
             foreach (var waveConfig in orderedWaves)
