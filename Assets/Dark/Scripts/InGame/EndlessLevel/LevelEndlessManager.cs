@@ -260,7 +260,7 @@ namespace InGame.EndlessLevel
             if (!wavePool) return null;
             if (info == null) return null;
 
-            return wavePool.GetRandomWave(0, info.waveType);
+            return wavePool.GetRandomWave(CurrentBackgroundIndex, info.waveType);
         }
 
         private void OnWaveForceStop(int waveIndex, WaveEndReason reason)
