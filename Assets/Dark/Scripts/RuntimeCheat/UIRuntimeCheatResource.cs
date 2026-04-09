@@ -27,7 +27,7 @@ namespace Dark.Scripts.RuntimeCheat
 
             if (int.TryParse(inpSetSigil.text, out valueInt))
             {
-                WealthManager.Instance.AddBossPoint(valueInt - WealthManager.Instance.BossPoint);
+                WealthManager.Instance.AddBossPoint(valueInt - WealthManager.Instance.BossPoint, false);
             }
 
             if (int.TryParse(inpSetEchoes.text, out valueInt))

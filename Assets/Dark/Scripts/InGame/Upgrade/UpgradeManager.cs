@@ -378,10 +378,10 @@ namespace InGame.Upgrade
             return true;
         }
 
-        public bool ResetNode(int nodeId, UpgradeGroupIdInfo[] groupIds, bool refreshGroup = false, bool save = false)
+        public bool ResetNode(int nodeId, UpgradeGroupIdInfo[] groupIds, bool useResetPoint, bool refreshGroup = false, bool save = false)
         {
             if (!TreeConfig.GetNodeById(nodeId)) return false;
-            if (PlayerDataManager.Instance.Data.resetPoint == 0) return false;
+            if (useResetPoint && PlayerDataManager.Instance.Data.resetPoint == 0) return false;
             if (!dataMapById.TryGetValue(nodeId, out var nodeData)) return false;
             
             Data.nodes.Remove(nodeData);
@@ -404,12 +404,15 @@ namespace InGame.Upgrade
             
             if (refreshGroup) RefreshGroupUnlockOrder();
             if (save) Save();
-                
-            var playerData = PlayerDataManager.Instance.Data;
-            var lastResetPoint = playerData.resetPoint;
-            playerData.resetPoint -= 1;
-            PlayerDataManager.Instance.Save(playerData);
-            OnResetPointChanged?.Invoke(lastResetPoint, playerData.resetPoint);
+
+            if (useResetPoint)
+            {
+                var playerData = PlayerDataManager.Instance.Data;
+                var lastResetPoint = playerData.resetPoint;
+                playerData.resetPoint -= 1;
+                PlayerDataManager.Instance.Save(playerData);
+                OnResetPointChanged?.Invoke(lastResetPoint, playerData.resetPoint);
+            }
             
             return true;
         }

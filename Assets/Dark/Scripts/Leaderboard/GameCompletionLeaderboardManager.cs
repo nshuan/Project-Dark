@@ -1,18 +1,26 @@
 using System;
 using Core;
 using System.Collections.Generic;
+using Dark.Scripts.Utils;
+using InGame.CharacterClass;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Dark.Scripts.Leaderboard
 {
-    public class GameCompletionLeaderboardManager : MonoSingleton<GameCompletionLeaderboardManager>
+    public class GameCompletionLeaderboardManager : MonoBehaviour
     {
-        public event Action<List<LeaderboardEntryData>> OnScoresDownloaded;
+        public string leaderboardName;
+        
+        public event Action<List<LeaderboardEntryData>> OnTopScoresDownloaded;
+        public event Action<List<LeaderboardEntryData>> OnPlayerScoresDownloaded;
+        public event Action OnPlayerScoreUploaded;
         
         // -----------------------------
         // Initialize
         // -----------------------------
 
-        public void Initialize(string leaderboardName)
+        public void Initialize()
         {
 
         }
@@ -21,7 +29,7 @@ namespace Dark.Scripts.Leaderboard
         // Upload Score
         // -----------------------------
 
-        public void UploadScore(int score)
+        public void UploadScore(int score, int[] details = null)
         {
 
         }

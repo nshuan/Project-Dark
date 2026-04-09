@@ -1,3 +1,5 @@
+using InGame.CharacterClass;
+
 namespace Dark.Scripts.Leaderboard
 {
     public class LeaderboardEntryData
@@ -5,5 +7,6 @@ namespace Dark.Scripts.Leaderboard
         public int rank;
         public int score;
         public string playerName;
+        public CharacterClass classType;
     }
 }

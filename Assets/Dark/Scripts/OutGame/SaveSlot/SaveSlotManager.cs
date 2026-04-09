@@ -66,6 +66,14 @@ namespace Dark.Scripts.OutGame.SaveSlot
             return slotIndex < 0 || slotIndex >= SlotDataKeys.Length || !DataHandler.Exist<PlayerData>(SlotDataKeys[slotIndex]);
         }
 
+        public bool IsCompletedSlot(int slotIndex)
+        {
+            if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length ||
+                !DataHandler.Exist<PlayerData>(SlotDataKeys[slotIndex])) return false;
+            var data = DataHandler.Load<PlayerData>(SlotDataKeys[slotIndex]);
+            return data.completed;
+        }
+
         public int GetClassTypeIndex(int slotIndex)
         {
             if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length) return -1;
@@ -139,6 +147,18 @@ namespace Dark.Scripts.OutGame.SaveSlot
             if (IsEmptySlot(slotIndex)) return result.Replace("%{value1}", "0").Replace("%{value2}", "0");
      
             var totalTime = TimeSpan.FromMilliseconds(GetSlotData(slotIndex).timePlayedMilli);
+            return result.Replace("%{value1}", ((int)totalTime.TotalHours).ToString()).Replace("%{value2}", totalTime.Minutes.ToString());
+        }
+        
+        public string GetDisplayTimeCompleted(int slotIndex)
+        {
+            var result =
+                LanguageData.Instance.GetLocalizedString("key_save_slot_time",
+                    LanguageManager.Instance.CurrentLanguage);
+            if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length) return result.Replace("%{value1}", "0").Replace("%{value2}", "0");
+            if (IsEmptySlot(slotIndex)) return result.Replace("%{value1}", "0").Replace("%{value2}", "0");
+     
+            var totalTime = TimeSpan.FromMilliseconds(GetSlotData(slotIndex).timeCompletedMilli);
             return result.Replace("%{value1}", ((int)totalTime.TotalHours).ToString()).Replace("%{value2}", totalTime.Minutes.ToString());
         }
 

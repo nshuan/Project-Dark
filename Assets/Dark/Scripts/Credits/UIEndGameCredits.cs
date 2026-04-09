@@ -13,7 +13,7 @@ namespace Dark.Scripts.Credits
             btnClose.onClick.AddListener(() =>
             {
                 StopCredits();
-                ReturnToHome();
+                ReturnToHome(0.5f);
             });
         }
 
@@ -30,13 +30,13 @@ namespace Dark.Scripts.Credits
             if (content.position.y > anchorEnd.position.y)
             {
                 StopCredits();
-                ReturnToHome();
+                ReturnToHome(3f);
             }
         }
 
-        private void ReturnToHome()
+        private void ReturnToHome(float delay)
         {
-            this.DelayCall(3f, () =>
+            this.DelayCall(delay, () =>
             {
                 Loading.Instance.LoadScene(SceneConstants.SceneMenu);
             });
