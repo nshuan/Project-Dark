@@ -5,13 +5,13 @@ namespace Dark.Scripts.Leaderboard.UI
 {
     public sealed class ComponentPool<T> where T : Component
     {
-        readonly Stack<T> _pool = new Stack<T>();
+        readonly Queue<T> _pool = new Queue<T>();
 
         public T Get(T prefab, Transform parent)
         {
             if (_pool.Count > 0)
             {
-                var item = _pool.Pop();
+                var item = _pool.Dequeue();
                 item.transform.SetParent(parent, false);
                 item.gameObject.SetActive(true);
                 return item;
@@ -23,7 +23,7 @@ namespace Dark.Scripts.Leaderboard.UI
         public void Release(T item)
         {
             item.gameObject.SetActive(false);
-            _pool.Push(item);
+            _pool.Enqueue(item);
         }
 
         public void Clear()

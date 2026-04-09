@@ -1,9 +1,4 @@
 using System;
-using Coffee.UIExtensions;
-using Dark.Scripts.Common;
-using Dark.Scripts.Utils;
-using Dark.Tools.Language.Runtime;
-using Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,6 +18,10 @@ namespace Dark.Scripts.OutGame.SaveSlot
         [SerializeField] private TextMeshProUGUI txtLevel;
         [SerializeField] private TextMeshProUGUI txtPlayedTime;
         [SerializeField] private Button btnClearSave;
+
+        [Space] [Header("Completed info")] 
+        [SerializeField] private GameObject groupComplete;
+        [SerializeField] private TextMeshProUGUI txtCompletedTime;
 
         public Action<int> ActionClearSaveSlot { get; set; }
         
@@ -67,6 +66,16 @@ namespace Dark.Scripts.OutGame.SaveSlot
                 { 
                     ActionClearSaveSlot?.Invoke(slotIndex);
                 });
+            }
+
+            if (SaveSlotManager.Instance.IsCompletedSlot(slotIndex))
+            {
+                groupComplete.SetActive(true);
+                txtCompletedTime.SetText(SaveSlotManager.Instance.GetDisplayTimeCompleted(slotIndex));
+            }
+            else
+            {
+                groupComplete.SetActive(false);
             }
         }
     }

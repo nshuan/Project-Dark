@@ -62,6 +62,24 @@ namespace Data
             data.completed = true;
             Save();
         }
+
+        public void SetCompleteAllLevelTime(double timeCompletedMilli)
+        {
+            data.timeCompletedMilli = timeCompletedMilli;
+            Save();
+        }
+
+        public void SetUploadedScoreBigLeaderboard(bool save)
+        {
+            data.uploadedScoreBigLeaderboard = true;
+            if (save) Save();
+        }
+
+        public void SetUploadedScoreSmallLeaderboard(bool save)
+        {
+            data.uploadedScoreSmallLeaderboard = true;
+            if (save) Save();
+        }
         
         #region SAVE LOAD
 

@@ -1,10 +1,8 @@
-using System;
 using Coffee.UIExtensions;
 using Dark.Scripts.OutGame.Common.NavButton;
 using Dark.Scripts.SceneNavigation;
 using Dark.Scripts.Utils;
 using DG.Tweening;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;

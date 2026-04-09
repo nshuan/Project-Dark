@@ -251,7 +251,26 @@ namespace InGame
                 if (PlayerDataManager.Instance.Data.level ==
                     LevelManifest.Instance.GetMaxLevel(PlayerDataManager.Instance.Data.Class))
                 {
-                    GameCompletionLeaderboardManager.Instance.UploadScore((int)PlayerDataManager.Instance.Data.timePlayedMilli);
+                    var classType = PlayerDataManager.Instance.Data.Class;
+                    var timeCompleted = (int)PlayerDataManager.Instance.Data.timePlayedMilli +
+                                        TimePlayed.TotalMilliseconds;
+                    PlayerDataManager.Instance.SetCompleteAllLevelTime(timeCompleted);
+                    
+                    LeaderboardManager.Instance.GetLeaderboard(classType).OnPlayerScoreUploaded += () =>
+                    {
+                        PlayerDataManager.Instance.SetUploadedScoreSmallLeaderboard(false);
+                        if (PlayerDataManager.Instance.Data.uploadedScoreBigLeaderboard)
+                            PlayerDataManager.Instance.Save();
+                    };
+                    LeaderboardManager.Instance.GetLeaderboard(classType).UploadScore((int)timeCompleted, new int[] { (int) classType });
+                    
+                    LeaderboardManager.Instance.GetFullLeaderboard().OnPlayerScoreUploaded += () =>
+                    {
+                        PlayerDataManager.Instance.SetUploadedScoreBigLeaderboard(false);
+                        if (PlayerDataManager.Instance.Data.uploadedScoreSmallLeaderboard)
+                            PlayerDataManager.Instance.Save();
+                    };
+                    LeaderboardManager.Instance.GetFullLeaderboard().UploadScore((int)timeCompleted, new int[] { (int) classType });
                 }
             }
             
