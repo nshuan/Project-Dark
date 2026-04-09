@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Data;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -283,6 +284,8 @@ namespace InGame.EndlessLevel
             isLevelEnded = true;
             if (levelCoroutine != null)
                 StopCoroutine(levelCoroutine);
+            
+            PlayerDataManager.Instance.UpdateEndlessWave(passedWave);
         }
 
         /// <summary>

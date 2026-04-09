@@ -80,6 +80,15 @@ namespace Data
             data.uploadedScoreSmallLeaderboard = true;
             if (save) Save();
         }
+
+        public void UpdateEndlessWave(int passedWave)
+        {
+            if (passedWave > data.endlessWavePassed)
+            {
+                data.endlessWavePassed = passedWave;
+                Save();
+            }
+        }
         
         #region SAVE LOAD
 
