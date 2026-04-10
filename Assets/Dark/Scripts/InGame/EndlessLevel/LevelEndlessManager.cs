@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Dark.Scripts.Leaderboard;
 using Data;
 using DG.Tweening;
 using Economic;
@@ -361,6 +362,8 @@ namespace InGame.EndlessLevel
                 StopCoroutine(levelCoroutine);
             
             PlayerDataManager.Instance.UpdateEndlessWave(passedWave, true);
+            
+            LeaderboardManager.Instance?.GetEndlessLeaderboard()?.UploadScore(passedWave, new int[] { (int)PlayerDataManager.Instance.Data.Class });
         }
 
         private void CheckNewWave()

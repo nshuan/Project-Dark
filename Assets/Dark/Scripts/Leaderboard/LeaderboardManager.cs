@@ -13,6 +13,7 @@ namespace Dark.Scripts.Leaderboard
         private Dictionary<CharacterClass, GameCompletionLeaderboardManager> leaderboards;
 
         [SerializeField] private GameCompletionLeaderboardManager fullLeaderboard;
+        [SerializeField] private GameCompletionLeaderboardManager endlessLeaderboard;
         
         public void Initialize()
         {
@@ -25,6 +26,7 @@ namespace Dark.Scripts.Leaderboard
             }
 
             fullLeaderboard?.Initialize();
+            endlessLeaderboard?.Initialize();
         }
 
         public GameCompletionLeaderboardManager GetLeaderboard(CharacterClass characterClass)
@@ -38,6 +40,11 @@ namespace Dark.Scripts.Leaderboard
         public GameCompletionLeaderboardManager GetFullLeaderboard()
         {
             return fullLeaderboard;
+        }
+
+        public GameCompletionLeaderboardManager GetEndlessLeaderboard()
+        {
+            return endlessLeaderboard;
         }
     }
 }
