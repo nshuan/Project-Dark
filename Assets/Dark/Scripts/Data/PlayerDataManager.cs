@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using Core;
 using Dark.Scripts.OutGame.SaveSlot;
+using InGame.EndlessLevel;
 using UnityEngine;
 
 namespace Data
@@ -60,6 +61,7 @@ namespace Data
         public void SetFlagCompletedAllLevel()
         {
             data.completed = true;
+            LevelEndlessData.UnlockEndlessFeature();
             Save();
         }
 
