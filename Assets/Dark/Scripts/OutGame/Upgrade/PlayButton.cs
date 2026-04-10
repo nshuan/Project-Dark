@@ -1,3 +1,4 @@
+using System;
 using Dark.Scripts.Analytics;
 using Dark.Scripts.Common;
 using Dark.Scripts.SceneNavigation;
@@ -6,13 +7,23 @@ using Data;
 using InGame;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace Dark.Scripts.OutGame.Upgrade
 {
     public class PlayButton : MonoBehaviour, IPointerClickHandler
     {
-        private bool interactable = true;
+        [SerializeField] private Image imgEndlessDecor;
         
+        private bool interactable = true;
+
+        private void OnEnable()
+        {
+            var levelToLoad = PlayerDataManager.Instance.Data.level + 1;
+            var maxLevel = LevelManifest.Instance.GetMaxLevel(PlayerDataManager.Instance.Data.Class);
+            imgEndlessDecor.gameObject.SetActive(levelToLoad > maxLevel);
+        }
+
         public void OnPointerClick(PointerEventData eventData)
         {
             if (!interactable) return;
@@ -29,8 +40,14 @@ namespace Dark.Scripts.OutGame.Upgrade
                     var levelToLoad = PlayerDataManager.Instance.Data.level + 1;
                     var maxLevel = LevelManifest.Instance.GetMaxLevel(PlayerDataManager.Instance.Data.Class);
                     if (levelToLoad > maxLevel)
+                    {
                         levelToLoad = maxLevel;
-                    LevelManager.Instance.LoadLevel(levelToLoad);
+                        LevelManager.Instance.LoadEndlessLevel();
+                    }
+                    else
+                    {
+                        LevelManager.Instance.LoadLevel(levelToLoad);
+                    }
                 };
             });
             

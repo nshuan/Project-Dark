@@ -39,7 +39,7 @@ namespace InGame.Boss
 
         private void OnBossKilled(EnemyEntity boss, Vector2 position)
         {
-            BackgroundInGame.Instance.SetActiveBlackAll(true);
+            AllBackgroundInGame.Instance.CurrentBackground.SetActiveBlackAll(true);
             if (bossAnimDict == null || !bossAnimDict.TryGetValue(boss.config.enemyId, out var deadBoss)) return;
             if (LevelManager.Instance.Level.level == PlayerDataManager.Instance.Data.level + 1) shouldShowSigil = true;
             StartCoroutine(IEBossAnim(deadBoss, position, Mathf.Sign(boss.Target.position.x - boss.transform.position.x)));

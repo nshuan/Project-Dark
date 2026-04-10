@@ -46,7 +46,7 @@ namespace InGame
             
             yield return new WaitForSeconds(delayShowAnim);
             
-            BackgroundInGame.Instance.SetActiveBlackAll(true);
+            AllBackgroundInGame.Instance.CurrentBackground.SetActiveBlackAll(true);
             CanvasInGame.Instance.HideUI();
             foreach (var tower in LevelManager.Instance.Towers)
             {

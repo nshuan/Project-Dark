@@ -46,6 +46,8 @@ namespace InGame.Boss
 
             if (LevelManager.Instance.Level.level != PlayerDataManager.Instance.Data.level + 1)
                 BossPoint = 0;
+            if (LevelManager.IsPlayingEndless)
+                BossPoint = 0;
             
             configCasted = (EnemyBossLordOfFlameBehaviour)config;
             hasRecoverOnce = false;
@@ -193,6 +195,12 @@ namespace InGame.Boss
         
         protected override IEnumerator IEDie(float delayRelease, EnemyDieReason reason)
         {
+            if (LevelManager.IsPlayingEndless)
+            {
+                yield return base.IEDie(delayRelease, reason);
+                yield break;
+            }
+            
             SteamStats.Instance.TryClaimAchievement(
                 LevelManager.Instance.PlayerClass == CharacterClass.CharacterClass.Knight
                     ? SteamAchievementsAPIName.KNIGHT_KILL_GAMANIAC
@@ -201,7 +209,7 @@ namespace InGame.Boss
             LevelManager.Instance.BlockDamageAllTowers();
             
             // Làm đen hết màn hình, tắt UI
-            BackgroundInGame.Instance.SetActiveBlackBg(true);
+            AllBackgroundInGame.Instance.CurrentBackground.SetActiveBlackBg(true);
             CanvasInGame.Instance.HideUI();
             
             CombatActions.OnBossKilled?.Invoke(this, transform.position);
@@ -215,7 +223,10 @@ namespace InGame.Boss
 
         protected override void DropResource()
         {
-           
+            if (LevelManager.IsPlayingEndless)
+            {
+                base.DropResource();
+            }
         }
     }
 }

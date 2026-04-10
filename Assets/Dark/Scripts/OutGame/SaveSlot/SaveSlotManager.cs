@@ -162,6 +162,18 @@ namespace Dark.Scripts.OutGame.SaveSlot
             return result.Replace("%{value1}", ((int)totalTime.TotalHours).ToString()).Replace("%{value2}", totalTime.Minutes.ToString());
         }
 
+        public string GetDisplayEndlessWave(int slotIndex)
+        {
+            var result =
+                LanguageData.Instance.GetLocalizedString("key_endless_wave_passed",
+                    LanguageManager.Instance.CurrentLanguage);
+            if (slotIndex < 0 || slotIndex >= SlotDataKeys.Length) return result.Replace("%{value}", "0");
+            if (IsEmptySlot(slotIndex)) return result.Replace("%{value}", "0");
+     
+            var wavePassed = GetSlotData(slotIndex).endlessWavePassed;
+            return result.Replace("%{value}", wavePassed.ToString());
+        }
+
         #endregion
     }
 }

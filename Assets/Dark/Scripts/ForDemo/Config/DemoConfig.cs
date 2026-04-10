@@ -17,14 +17,14 @@ namespace Dark.Scripts.ForDemo
         [SerializeField] private string feedbackURL = "https://forms.gle/C4zx8ouoPUoRji1v6";
         [SerializeField] private int maxDemoLevel = 3; // Tester can only play 3 levels in demo version
         [SerializeField] private List<int> lockedNodes;
-        [SerializeField] private int collectLogicType = 0; // 0 = original, 1 = auto collect, 2 = mouse
+        [SerializeField] private int collectLogicType = 2; // 0 = original, 1 = auto collect, 2 = mouse
         [SerializeField] private bool showTooltip = true;
         [SerializeField] private Color nodeActivatedColor;
         
         public static string SteamWishlistURL { get; private set; }
         public static string FeedbackURL { get; private set; }
         public static int MaxDemoLevel { get; private set; }
-        public static int CollectLogicType { get; private set; }
+        public static int CollectLogicType { get; private set; } = 2;
         public static bool ShowTooltip { get; private set; }
 
         public void InitPublicProperties()

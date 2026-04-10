@@ -283,13 +283,17 @@ namespace Economic.InGame
                     {
                         state.targetItem.MarkedNotCollectedByManager = true;
                         state.targetItem.DoClaimedVisual(mouseFollower);
-                        EItemDropManager.Instance.Claim(state.targetItem);
+                        // EItemDropManager.Instance.Claim(state.targetItem);
+                        EItemDropManager.Instance.AddCollectedData(state.targetItem.kind, state.targetItem.Quantity);
                         EItemDropPool.Instance.Release(state.targetItem);
                         isClaim = true;
                     }
                     _active.Remove(_toClear[i]);
                 }
             }
+            
+            EItemDropManager.Instance.CollectedData.Claim();
+            
             if (isClaim)
                 cursor?.PunchCollectCursor();
         }

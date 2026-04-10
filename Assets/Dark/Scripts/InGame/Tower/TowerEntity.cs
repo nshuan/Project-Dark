@@ -53,12 +53,12 @@ namespace InGame
         public Action<TowerEntity> OnDestroyed;
         private bool isSelecting;
         
-        public void Initialize(int id, int hp)
+        public void Initialize(int id, int maxHp, int currentHp, int maxShield, int currentShield)
         {
             Id = id;
-            MaxHp = hp;
-            CurrentHp = MaxHp;
-            shield.Initialize();
+            MaxHp = maxHp;
+            CurrentHp = currentHp;
+            shield.Initialize(maxShield, currentShield);
             IsDestroyed = false;
             BlockDamage = false;
 
@@ -201,6 +201,12 @@ namespace InGame
                 flashSize.transform.DOScale(size, 0.25f).SetEase(Ease.OutQuad)
                     .SetUpdate(true).SetTarget(flashSize.transform);
             }
+        }
+
+        public void ForceAutoRegen()
+        {
+            autoRegenerate.Deactivate();
+            autoRegenerate.Activate();
         }
         
         public void OnMotionBlur()

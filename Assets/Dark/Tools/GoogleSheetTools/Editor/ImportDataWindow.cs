@@ -136,6 +136,20 @@ public class ImportDataWindow : EditorWindow
                 TooltipImporter.Import(data.configs[0], csvTable);
             }
         }
+        else if (tabName.ToString().ToLower().Contains("levelendlesspool"))
+        {
+            foreach (var data in listDataToUpdate)
+            {
+                ConfigEndlessLevelPoolImporter.Import(data.configs[0], csvTable);
+            }
+        }
+        else if (tabName.ToString().ToLower().Contains("levelendless"))
+        {
+            foreach (var data in listDataToUpdate)
+            {
+                ConfigEndlessLevelImporter.Import(data.configs[0], csvTable);
+            }
+        }
         else
         {
             foreach (var data in listDataToUpdate)

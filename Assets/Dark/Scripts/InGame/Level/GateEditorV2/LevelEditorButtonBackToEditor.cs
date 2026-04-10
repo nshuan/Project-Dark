@@ -9,6 +9,8 @@ namespace InGame.GateEditorV2
     public class LevelEditorButtonBackToEditor : MonoBehaviour, IPointerClickHandler
     {
         public GameObject btnVisual;
+        public string sceneName;
+        
         private bool interactable = false;
         
         private void Awake()
@@ -18,7 +20,7 @@ namespace InGame.GateEditorV2
 
         private void Start()
         {
-            if (SceneManager.GetActiveScene().name == "LevelDesign")
+            if (SceneManager.GetActiveScene().name == sceneName)
             {
                 btnVisual.SetActive(false);
                 interactable = false;
@@ -32,7 +34,7 @@ namespace InGame.GateEditorV2
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode)
         {
-            if (scene.name == "LevelDesign")
+            if (scene.name == sceneName)
             {
                 btnVisual.SetActive(false);
                 interactable = false;
@@ -47,7 +49,7 @@ namespace InGame.GateEditorV2
         public void OnPointerClick(PointerEventData eventData)
         {
             if (!interactable) return;
-            SceneManager.LoadScene("LevelDesign", LoadSceneMode.Single);
+            SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
         }
     }
 }
