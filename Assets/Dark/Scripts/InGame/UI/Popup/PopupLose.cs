@@ -85,11 +85,20 @@ namespace InGame.UI
             {
                 btnReplay.interactable = false;
                 btnBackToTree.interactable = false;
-                var levelToLoad = LevelManager.Instance.Level.level;
+                var levelToLoad = LevelManager.Instance.Level.level + 1;
                 Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame);
                 Loading.Instance.onSceneLoaded += () =>
                 {
-                    LevelManager.Instance.LoadLevel(levelToLoad);
+                    var maxLevel = LevelManifest.Instance.GetMaxLevel(PlayerDataManager.Instance.Data.Class);
+                    if (levelToLoad > maxLevel)
+                    {
+                        levelToLoad = maxLevel;
+                        LevelManager.Instance.LoadEndlessLevel();
+                    }
+                    else
+                    {
+                        LevelManager.Instance.LoadLevel(levelToLoad);
+                    }
                 };
                 
                 LogManager.Log(LogConst.EventLogStartLevel, $"level_{LevelManager.Instance.Level.level}", "from popup lose");
