@@ -34,6 +34,8 @@ namespace InGame.Boss.BossWizard
             swordAnimPool = new Queue<EnemySpritesAnimation>();
             if (LevelManager.Instance.Level.level != PlayerDataManager.Instance.Data.level + 1)
                 BossPoint = 0;
+            if (LevelManager.IsPlayingEndless)
+                BossPoint = 0;
 
             configCasted = (EnemyBossWizardBehaviour)config;
             swordAnim.transform.SetParent(null);

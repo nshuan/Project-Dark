@@ -7,6 +7,7 @@ using Data;
 using DG.Tweening;
 using InGame.BossConfig;
 using InGame.CameraController;
+using InGame.EndlessLevel;
 using InGame.EnemyEffect;
 using InGame.UI;
 using UnityEngine;
@@ -25,6 +26,8 @@ namespace InGame.Boss
 
             configCasted = (EnemyBossTarnishedBehaviour)config;
             if (LevelManager.Instance.Level.level != PlayerDataManager.Instance.Data.level + 1)
+                BossPoint = 0;
+            if (LevelManager.IsPlayingEndless)
                 BossPoint = 0;
             
             shadowSprite = shadow.GetComponent<SpriteRenderer>();

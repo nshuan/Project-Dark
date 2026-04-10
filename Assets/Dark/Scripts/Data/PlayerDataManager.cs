@@ -81,12 +81,12 @@ namespace Data
             if (save) Save();
         }
 
-        public void UpdateEndlessWave(int passedWave)
+        public void UpdateEndlessWave(int passedWave, bool save)
         {
             if (passedWave > data.endlessWavePassed)
             {
                 data.endlessWavePassed = passedWave;
-                Save();
+                if (save) Save();
             }
         }
         

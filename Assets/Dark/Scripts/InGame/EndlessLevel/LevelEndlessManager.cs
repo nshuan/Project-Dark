@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Data;
 using DG.Tweening;
+using Economic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -36,11 +37,13 @@ namespace InGame.EndlessLevel
         private bool hasStartLevel;
         private bool isLevelEnded;
         private bool isBossing;
+        private int highestWavePassed;
 
         public static event Action<int> OnStartWave;
         public static event Action<float> OnStartHideMap;
         public static event Action<float> OnStartShowMap;
         public static event Action<int, int> OnChangeMap;
+        public static bool IsPlayingNewWave { get; private set; }
 
         private void Awake()
         {
@@ -66,6 +69,8 @@ namespace InGame.EndlessLevel
             hasStartLevel = false;
             isLevelEnded = false;
             isBossing = false;
+            highestWavePassed = PlayerDataManager.Instance.Data.endlessWavePassed;
+            CheckNewWave();
 
             if (levelCoroutine != null)
                 StopCoroutine(levelCoroutine);
@@ -88,6 +93,11 @@ namespace InGame.EndlessLevel
             while (true)
             {
                 var waveTemplate = GetWaveTemplateForIndex(currentWaveIndex);
+                if (!IsPlayingNewWave)
+                {
+                    waveTemplate.sigils = 0;
+                    waveTemplate.ashes = 0;
+                }
                 
                 if (waveTemplate == null)
                 {
@@ -194,7 +204,20 @@ namespace InGame.EndlessLevel
                     waveConfig,
                     levelManager.Towers,
                     waveTemplate.timeToEnd,
-                    OnWaveForceStop);
+                    (int waveIndex, WaveEndReason reason) =>
+                    {
+                        if (waveTemplate.sigils > 0)
+                        {
+                            WealthManager.Instance.AddBossPoint(waveTemplate.sigils, false);
+                        }
+
+                        if (waveTemplate.ashes > 0)
+                        {
+                            WealthManager.Instance.AddResetPoint(waveTemplate.ashes);
+                        }
+                        
+                        OnWaveForceStop(waveIndex, reason);
+                    });
 
                 currentWaveRuntime.SetupWave();
 
@@ -215,6 +238,8 @@ namespace InGame.EndlessLevel
 
                 currentWaveIndex++;
                 passedWave += 1;
+                PlayerDataManager.Instance.UpdateEndlessWave(passedWave, false);
+                CheckNewWave();
             }
         }
 
@@ -224,7 +249,21 @@ namespace InGame.EndlessLevel
                 return null;
 
             var clampedIndex = Mathf.Abs(waveIndex) % currentLevel.waveInfo.Length;
-            return currentLevel.waveInfo[clampedIndex];
+            var waveInfo = currentLevel.waveInfo[clampedIndex];
+            return new WaveEndlessInfo()
+            {
+                scaleHp = waveInfo.scaleHp,
+                scaleDmg = waveInfo.scaleDmg,
+                scaleSpe = waveInfo.scaleSpe,
+                expRatio = waveInfo.expRatio,
+                darkRatio = waveInfo.darkRatio,
+                darkUnitValue = waveInfo.darkUnitValue,
+                sigils = waveInfo.sigils,
+                ashes = waveInfo.ashes,
+                timeToEnd = waveInfo.timeToEnd,
+                waveType = waveInfo.waveType,
+                changeToMap = waveInfo.changeToMap
+            };
         }
 
         private int UpdateBackgroundIndex(WaveEndlessInfo waveInfo)
@@ -276,6 +315,8 @@ namespace InGame.EndlessLevel
 
             currentWaveIndex++;
             passedWave += 1;
+            PlayerDataManager.Instance.UpdateEndlessWave(passedWave, false);
+            CheckNewWave();
             levelCoroutine = StartCoroutine(IELevelLoop());
         }
 
@@ -285,7 +326,12 @@ namespace InGame.EndlessLevel
             if (levelCoroutine != null)
                 StopCoroutine(levelCoroutine);
             
-            PlayerDataManager.Instance.UpdateEndlessWave(passedWave);
+            PlayerDataManager.Instance.UpdateEndlessWave(passedWave, true);
+        }
+
+        private void CheckNewWave()
+        {
+            IsPlayingNewWave = currentWaveIndex >= highestWavePassed;
         }
 
         /// <summary>

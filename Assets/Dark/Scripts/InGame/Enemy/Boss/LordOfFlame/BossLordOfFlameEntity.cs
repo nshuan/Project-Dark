@@ -45,6 +45,8 @@ namespace InGame.Boss
 
             if (LevelManager.Instance.Level.level != PlayerDataManager.Instance.Data.level + 1)
                 BossPoint = 0;
+            if (LevelManager.IsPlayingEndless)
+                BossPoint = 0;
             
             configCasted = (EnemyBossLordOfFlameBehaviour)config;
             hasRecoverOnce = false;
