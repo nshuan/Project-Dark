@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Dark.Tools.Language.Runtime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,11 +8,13 @@ namespace Dark.Scripts.Leaderboard.UI
 {
     public sealed class LeaderboardItemView : MonoBehaviour
     {
-        [SerializeField] TMP_Text rankText;
-        [SerializeField] TMP_Text nameText;
-        [SerializeField] TMP_Text scoreText;
+        [SerializeField] TextMeshProUGUI rankText;
+        [SerializeField] TextMeshProUGUI nameText;
+        [SerializeField] TextMeshProUGUI scoreText;
         [SerializeField] private List<GameObject> classIcons;
         [SerializeField] private Image imgHighlightCurrentPlayer;
+        
+        public bool IsEndlessLeaderboard { get; set; }
 
         public void SetData(LeaderboardEntryData data)
         {
@@ -31,15 +34,22 @@ namespace Dark.Scripts.Leaderboard.UI
             if (nameText != null) nameText.SetText(data.playerName);
             if (scoreText != null)
             {
-                var time = System.TimeSpan.FromMilliseconds(data.score);
-
-                if (time.TotalHours >= 1)
+                if (IsEndlessLeaderboard)
                 {
-                    scoreText.SetText(string.Format("{0:D2}:{1:D2}:{2:D2}", (int)time.TotalHours, time.Minutes, time.Seconds));
+                    scoreText.SetTextLanguage("key_wave", ("%{value}", data.score.ToString()));
                 }
                 else
                 {
-                    scoreText.SetText(string.Format("{0:D2}:{1:D2}", (int)time.TotalMinutes, time.Seconds));
+                    var time = System.TimeSpan.FromMilliseconds(data.score);
+
+                    if (time.TotalHours >= 1)
+                    {
+                        scoreText.SetText(string.Format("{0:D2}:{1:D2}:{2:D2}", (int)time.TotalHours, time.Minutes, time.Seconds));
+                    }
+                    else
+                    {
+                        scoreText.SetText(string.Format("{0:D2}:{1:D2}", (int)time.TotalMinutes, time.Seconds));
+                    }
                 }
             }
             if (classIcons != null)

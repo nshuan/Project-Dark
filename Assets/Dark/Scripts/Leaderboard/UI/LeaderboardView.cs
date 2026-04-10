@@ -21,6 +21,7 @@ namespace Dark.Scripts.Leaderboard.UI
         [Header("Config")] 
         [SerializeField] private bool isClassLeaderboard;
         [SerializeField, ShowIf("isClassLeaderboard")] private CharacterClass leaderboardClass;
+        [SerializeField, HideIf("isClassLeaderboard")] private bool isEndlessLeaderboard;
         [SerializeField] private bool isNavigateToPlayerOnFirstLoad;
         [SerializeField] private bool isKeepingTop1;
         
@@ -44,9 +45,15 @@ namespace Dark.Scripts.Leaderboard.UI
         private void Awake()
         {
             if (!isClassLeaderboard)
-                manager = LeaderboardManager.Instance.GetFullLeaderboard();
+            {
+                if (isEndlessLeaderboard) manager = LeaderboardManager.Instance.GetEndlessLeaderboard();
+                else manager = LeaderboardManager.Instance.GetFullLeaderboard();
+            }
             else
+            {
+                isEndlessLeaderboard = false;
                 manager = LeaderboardManager.Instance.GetLeaderboard(leaderboardClass);
+            }
             
             btnNavigatePlayerRank.onClick.RemoveAllListeners();
             btnNavigatePlayerRank.onClick.AddListener(NavigatePlayer);
@@ -56,6 +63,7 @@ namespace Dark.Scripts.Leaderboard.UI
         void OnEnable()
         {
             playerRankIndex = -1;
+            if (top1Item) top1Item.IsEndlessLeaderboard = isEndlessLeaderboard;
             top1Item?.SetData(null);
             foreach (Transform child in content.transform)
             {
@@ -98,6 +106,7 @@ namespace Dark.Scripts.Leaderboard.UI
                 if (!foundCurrentPlayer)
                     manager.DownloadAroundPlayer(0);
                 
+                if (top1Item) top1Item.IsEndlessLeaderboard = isEndlessLeaderboard;
                 top1Item?.SetData(entries[0]);
                 if (!isKeepingTop1)
                     entries.RemoveAt(0);
@@ -148,6 +157,7 @@ namespace Dark.Scripts.Leaderboard.UI
                 for (int i = 0; i < entries.Count; i++)
                 {
                     var item = _pool.Get(itemPrefab, content);
+                    item.IsEndlessLeaderboard = isEndlessLeaderboard;
                     item.SetData(entries[i]);
                     _active.Add(item);
                 }
