@@ -39,6 +39,7 @@ namespace InGame.EndlessLevel
         private bool isLevelEnded;
         private bool isBossing;
         private int highestWavePassed;
+        private List<int> mapRandomGroup3;
 
         public static event Action<int> OnStartWave;
         public static event Action<float> OnStartHideMap;
@@ -177,13 +178,11 @@ namespace InGame.EndlessLevel
                 }
                 for (var i = 0; i < allTowers.Length; i++)
                 {
-                    if (waveConfig.towerPositions != null && i < waveConfig.towerPositions.Length)
-                    {
-                        if (towerPositions != null && i < towerPositions.Length)
-                            allTowers[i].transform.position = towerPositions[i];
-                        else
+                    if (towerPositions != null && i < towerPositions.Length)
+                        allTowers[i].transform.position = towerPositions[i];
+                    else if (waveConfig.towerPositions != null && i < waveConfig.towerPositions.Length)
                             allTowers[i].transform.position = waveConfig.towerPositions[i];
-                    }
+                    
                     // Giữ nguyên lượng hp hiện tại
                     allTowers[i].Initialize(i, maxHp, allTowers[i].CurrentHp, maxShield, allTowers[i].shield.CurrentShield);
                     allTowers[i].OnDestroyed += levelManager.OnTowerDestroyed;
@@ -289,6 +288,8 @@ namespace InGame.EndlessLevel
 
         private int UpdateBackgroundIndex(WaveEndlessInfo waveInfo)
         {
+            mapRandomGroup3 ??= new List<int>();
+            
             switch (waveInfo.changeToMap)
             {
                 case 0: return CurrentBackgroundIndex;
@@ -305,11 +306,21 @@ namespace InGame.EndlessLevel
                     var posible = new List<int>();
                     for (var i = 0; i < 3; i++)
                     {
-                        if (CurrentBackgroundIndex == i) continue;
+                        if (mapRandomGroup3.Contains(i)) continue;
                         posible.Add(i);
                     }
 
-                    CurrentBackgroundIndex = posible[RandomUtil.Range(0, posible.Count)];
+                    if (posible.Count == 0)
+                    {
+                        CurrentBackgroundIndex = mapRandomGroup3[RandomUtil.Range(0, mapRandomGroup3.Count)];
+                        mapRandomGroup3.Clear();
+                    }
+                    else
+                    {
+                        CurrentBackgroundIndex = posible[RandomUtil.Range(0, posible.Count)];
+                    }
+                    
+                    mapRandomGroup3.Add(CurrentBackgroundIndex);
                     break;
             }
 
