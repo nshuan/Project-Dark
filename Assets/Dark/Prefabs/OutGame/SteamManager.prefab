@@ -33,6 +33,7 @@ Transform:
   - {fileID: 5170019794561377854}
   - {fileID: 2587759466415292019}
   - {fileID: 302575922467271736}
+  - {fileID: 9042490228234859869}
   m_Father: {fileID: 3981182999864647280}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2843624098517663347
@@ -110,6 +111,7 @@ MonoBehaviour:
       Entry: 8
       Data: 
   fullLeaderboard: {fileID: 5135657711382386768}
+  endlessLeaderboard: {fileID: 9125788812340569064}
 --- !u!1 &1899947586729818269
 GameObject:
   m_ObjectHideFlags: 0
@@ -335,3 +337,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef4bffeda13d7a748973ff9204401c07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &9048337885383905877
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9042490228234859869}
+  - component: {fileID: 9125788812340569064}
+  m_Layer: 0
+  m_Name: LeaderboardEndless
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9042490228234859869
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9048337885383905877}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8326890388219072446}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9125788812340569064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9048337885383905877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15fba21ca51f47948b782b28f3f24b5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leaderboardName: Endless
