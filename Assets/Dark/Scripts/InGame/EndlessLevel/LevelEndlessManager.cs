@@ -79,6 +79,7 @@ namespace InGame.EndlessLevel
             hasStartLevel = false;
             isLevelEnded = false;
             isBossing = false;
+            passedWave = 0;
             highestWavePassed = PlayerDataManager.Instance.Data.endlessWavePassed;
             CheckNewWave();
 
