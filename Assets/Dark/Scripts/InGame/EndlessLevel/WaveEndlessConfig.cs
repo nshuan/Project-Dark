@@ -10,7 +10,6 @@ namespace InGame.EndlessLevel
     public class WaveEndlessConfig : SerializedScriptableObject
     {
         public int id;
-        public LevelMapType mapType;
         public Vector2[] towerPositions;
         [NonSerialized, OdinSerialize] public List<GateConfig> gateConfigs;
     }

@@ -42,7 +42,6 @@ namespace InGame.EndlessEditor.Editor
             
             var endlessWave = ScriptableObject.CreateInstance<WaveEndlessConfig>();
             endlessWave.id = id;
-            endlessWave.mapType = sourceLevel.mapType;
             endlessWave.towerPositions = sourceLevel.towerPositions != null ? sourceLevel.towerPositions.ToArray() : null;
             endlessWave.gateConfigs = waveConfig.gateConfigs != null
                 ? waveConfig.gateConfigs.Select(CloneGateConfig).Where(g => g != null).ToList()

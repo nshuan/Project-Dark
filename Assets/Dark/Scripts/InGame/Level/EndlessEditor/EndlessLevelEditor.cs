@@ -779,13 +779,7 @@ namespace InGame.EndlessEditor
                         }
                     },
                 };
-                var mapToChange = currentWave.mapType switch
-                {
-                    LevelMapType.ThreeTowers => 1,
-                    LevelMapType.FourTowers => 2,
-                    LevelMapType.FourTowersTriangle => 3,
-                    _ => 1
-                };
+                var mapToChange = currentWaveEditor.currentBgIndex + 1;
                 var fakeWaveInfo = currentWaveInfo ?? new WaveEndlessInfo()
                 {
                     changeToMap = mapToChange

@@ -1,4 +1,5 @@
 using Coffee.UIExtensions;
+using Economic.InGame.DropItems;
 using TMPro;
 
 namespace Economic.UI
@@ -14,12 +15,12 @@ namespace Economic.UI
             target = 0;
             UpdateUI();
             
-            WealthManager.Instance.OnVestigeChanged += OnDarkChanged;
+            EItemDropManager.Instance.CollectedData.onVestigeChanged += OnDarkChanged;
         }
         
         private void OnDestroy()
         {
-            WealthManager.Instance.OnVestigeChanged -= OnDarkChanged;
+            EItemDropManager.Instance.CollectedData.onVestigeChanged -= OnDarkChanged;
         }
 
         private void OnDarkChanged(int before, int after)

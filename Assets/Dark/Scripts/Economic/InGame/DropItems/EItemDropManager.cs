@@ -71,6 +71,7 @@ namespace Economic.InGame.DropItems
                         break;
                     case WealthType.Sigils:
                         collectedData.AddSigils(item.Quantity);
+                        if (!LevelManager.IsPlayingEndless) collectedData.AddAshes(item.Quantity);
                         break;
                 }
                 
@@ -113,6 +114,7 @@ namespace Economic.InGame.DropItems
                     break;
                 case WealthType.Sigils:
                     collectedData.AddSigils(item.Quantity);
+                    if (!LevelManager.IsPlayingEndless) collectedData.AddAshes(item.Quantity);
                     break;
             }
             
@@ -156,8 +158,14 @@ namespace Economic.InGame.DropItems
                     break;
                 case WealthType.Sigils:
                     collectedData.AddSigils(value);
+                    if (!LevelManager.IsPlayingEndless) collectedData.AddAshes(value);
                     break;
             }
+        }
+        
+        public void AddCollectedAshes(int value)
+        {
+            collectedData.AddAshes(value);
         }
     }
     
@@ -166,26 +174,45 @@ namespace Economic.InGame.DropItems
         public int TotalCollectedVestige { get; private set; }
         public int TotalCollectedEchoes { get; private set; }
         public int TotalCollectedSigils { get; private set; }
+        public int TotalCollectedAshes { get; private set; }
         public int Vestige { get; private set; }
         public int Sigils { get; private set; }
         public int Echoes { get; private set; }
+        public int Ashes { get; private set; }
+
+        public Action<int, int> onVestigeChanged;
 
         public void Claim()
         {
-            if (Vestige > 0)  WealthManager.Instance.AddVestige(Vestige);
-            if (Sigils > 0)  WealthManager.Instance.AddBossPoint(Sigils, true);
+            if (Vestige > 0) WealthManager.Instance.AddVestige(Vestige);
+            if (Sigils > 0) WealthManager.Instance.AddBossPoint(Sigils, false);
+            if (Ashes > 0) WealthManager.Instance.AddResetPoint(Ashes);
             
             // Echoes không collect ở đây, khi đủ exp đã tự + echoes rồi
 
             Vestige = 0;
             Sigils = 0;
             Echoes = 0;
+            Ashes = 0;
+        }
+
+        public void ClaimSigils()
+        {
+            if (Sigils > 0) WealthManager.Instance.AddBossPoint(Sigils, false);
+            Sigils = 0;
+        }
+
+        public void ClaimAshes()
+        {
+            if (Ashes > 0) WealthManager.Instance.AddResetPoint(Ashes);
+            Ashes = 0;
         }
 
         public void AddVestige(int amount)
         {
             Vestige += amount;
             TotalCollectedVestige += amount;
+            onVestigeChanged?.Invoke(Vestige - amount, Vestige);
         }
 
         public void AddEchoes(int amount)
@@ -198,6 +225,12 @@ namespace Economic.InGame.DropItems
         {
             Sigils += amount;
             TotalCollectedSigils += amount;
+        }
+
+        public void AddAshes(int amount)
+        {
+            Ashes += amount;
+            TotalCollectedAshes += amount;
         }
     }
 }

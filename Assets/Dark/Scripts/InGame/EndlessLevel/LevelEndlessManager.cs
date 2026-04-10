@@ -5,6 +5,7 @@ using System.Linq;
 using Data;
 using DG.Tweening;
 using Economic;
+using Economic.InGame.DropItems;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -186,8 +187,7 @@ namespace InGame.EndlessLevel
                     // Giữ nguyên lượng hp hiện tại
                     allTowers[i].Initialize(i, maxHp, allTowers[i].CurrentHp, maxShield, allTowers[i].shield.CurrentShield);
                     allTowers[i].OnDestroyed += levelManager.OnTowerDestroyed;
-                    if (i >= 3 && (waveConfig.mapType == LevelMapType.ThreeTowers ||
-                                   waveConfig.mapType == LevelMapType.ThreeTowersSquare))
+                    if (i >= 3 && CurrentBackgroundIndex == 0)
                     {
                         allTowers[i].gameObject.SetActive(false);   
                     }
@@ -200,13 +200,12 @@ namespace InGame.EndlessLevel
 
                 // Nếu từ wave 4 trụ về wave 3 trụ thì clamp player về 1, 2, 3
                 var towerIndexReset = levelManager.CurrentTower.Id;
-                if (waveConfig.mapType == LevelMapType.ThreeTowers ||
-                    waveConfig.mapType == LevelMapType.ThreeTowersSquare)
+                if (CurrentBackgroundIndex == 0)
                 {
                     if (levelManager.CurrentTower.Id == 3)
                         towerIndexReset = 2;
-
                 }
+
                 levelManager.TeleportTower(towerIndexReset);
                 levelManager.Player.transform.position = levelManager.CurrentTower.transform.position +
                                                          levelManager.CurrentTower.GetTowerHeight();
@@ -225,12 +224,14 @@ namespace InGame.EndlessLevel
                     {
                         if (waveTemplate.sigils > 0)
                         {
-                            WealthManager.Instance.AddBossPoint(waveTemplate.sigils, false);
+                            EItemDropManager.Instance.AddCollectedData(WealthType.Sigils, waveTemplate.sigils);
+                            EItemDropManager.Instance.CollectedData.ClaimSigils();
                         }
 
                         if (waveTemplate.ashes > 0)
                         {
-                            WealthManager.Instance.AddResetPoint(waveTemplate.ashes);
+                            EItemDropManager.Instance.AddCollectedAshes(waveTemplate.ashes);
+                            EItemDropManager.Instance.CollectedData.ClaimAshes();
                         }
                         
                         OnWaveForceStop(waveIndex, reason);

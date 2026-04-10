@@ -230,7 +230,6 @@ namespace InGame.EndlessEditor
         {
             if (!waveConfig) return;
             
-            waveConfig.mapType = (LevelMapType)currentMapType;
             waveConfig.towerPositions = LevelTowerEditorV2.Instance.GetPositions((LevelMapType)currentMapType);
             
             waveConfig.gateConfigs = new List<GateConfig>();
