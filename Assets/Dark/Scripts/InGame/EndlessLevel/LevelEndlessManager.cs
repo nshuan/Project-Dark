@@ -168,11 +168,17 @@ namespace InGame.EndlessLevel
 
                 OnStartWave?.Invoke(currentWaveIndex);
                 if (waveTemplate.waveType == WaveEndlessType.Boss) levelManager.OnBossWaveStart?.Invoke();
-                
+
+                var towerPositions = currentLevel.towerPositionsMap[CurrentBackgroundIndex];
                 for (var i = 0; i < allTowers.Length; i++)
                 {
                     if (waveConfig.towerPositions != null && i < waveConfig.towerPositions.Length)
-                        allTowers[i].transform.position = waveConfig.towerPositions[i];
+                    {
+                        if (towerPositions != null && i < towerPositions.Length)
+                            allTowers[i].transform.position = towerPositions[i];
+                        else
+                            allTowers[i].transform.position = waveConfig.towerPositions[i];
+                    }
                     // Giữ nguyên lượng hp hiện tại
                     allTowers[i].Initialize(i, maxHp, allTowers[i].CurrentHp, maxShield, allTowers[i].shield.CurrentShield);
                     allTowers[i].OnDestroyed += levelManager.OnTowerDestroyed;
