@@ -472,6 +472,7 @@ namespace InGame
                     towers[i].transform.position = Level.towerPositions[i];
                 towers[i].Initialize(i, maxHp, maxHp, maxShield, maxShield);
                 towers[i].OnDestroyed += OnTowerDestroyed;
+                towers[i].gameObject.SetActive(true);
             }
             
             OnInitTowers?.Invoke();

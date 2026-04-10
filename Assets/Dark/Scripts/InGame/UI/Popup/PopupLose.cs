@@ -85,12 +85,13 @@ namespace InGame.UI
             {
                 btnReplay.interactable = false;
                 btnBackToTree.interactable = false;
-                var levelToLoad = LevelManager.Instance.Level.level + 1;
+                var levelToLoad = LevelManager.Instance.Level.level;
                 Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame);
                 Loading.Instance.onSceneLoaded += () =>
                 {
+                    var completedLevel = PlayerDataManager.Instance.Data.level + 1;
                     var maxLevel = LevelManifest.Instance.GetMaxLevel(PlayerDataManager.Instance.Data.Class);
-                    if (levelToLoad > maxLevel)
+                    if (completedLevel > maxLevel)
                     {
                         levelToLoad = maxLevel;
                         LevelManager.Instance.LoadEndlessLevel();

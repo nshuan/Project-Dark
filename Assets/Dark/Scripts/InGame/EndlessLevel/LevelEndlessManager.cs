@@ -114,6 +114,7 @@ namespace InGame.EndlessLevel
                 }
 
                 var lastMapId = CurrentBackgroundIndex;
+                var shouldInvokeShowMap = false;
                 if (!hasStartLevel)
                     backgroundSpawner?.Spawn(UpdateBackgroundIndex(waveTemplate));
                 else
@@ -147,16 +148,10 @@ namespace InGame.EndlessLevel
                         
                         var durationHideMap = 1f;
                         OnStartHideMap?.Invoke(durationHideMap);
+                        shouldInvokeShowMap = true;
                         yield return new WaitForSeconds(durationHideMap);
                         OnChangeMap?.Invoke(lastMapId, CurrentBackgroundIndex);
                         yield return backgroundSpawner?.IETransition(CurrentBackgroundIndex);
-                    }
-                    else if (isBossing)
-                    {
-                        var durationHideMap = 1f;
-                        OnStartHideMap?.Invoke(durationHideMap);
-                        yield return new WaitForSeconds(durationHideMap);
-                        backgroundSpawner.CurrentBackground.bg.Reset();
                     }
                     else
                     {
@@ -241,9 +236,12 @@ namespace InGame.EndlessLevel
                 }
                 else
                 {
-                    var durationShowMap = 0.5f;
-                    OnStartShowMap?.Invoke(durationShowMap);
-                    yield return new WaitForSeconds(durationShowMap);
+                    if (shouldInvokeShowMap)
+                    {
+                        var durationShowMap = 0.5f;
+                        OnStartShowMap?.Invoke(durationShowMap);
+                        yield return new WaitForSeconds(durationShowMap);
+                    }
                 }
                 
                 yield return currentWaveRuntime.IEActivateWave();

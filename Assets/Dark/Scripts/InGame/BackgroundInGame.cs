@@ -163,6 +163,21 @@ namespace InGame
             }
             groupBgBoss.SetActive(false);
             groupBgNormal.SetActive(true);
+            
+            // DOTween.Sequence(this).SetDelay(1.2f)
+            //     .Append(DOTween.To(() => 0f, (x) => matBgBoss.SetFloat(MatDisolveValue, x), 1f, 2f))
+            //     .AppendCallback(() =>
+            //     {
+            //         vfxBgBoss.SetActive(false);
+            //         vfxAppearCrack.SetActive(false);
+            //         foreach (var obj in groupBgBossSpriteRenderer)
+            //         {
+            //             obj.gameObject.SetActive(false);
+            //             obj.color = new Color(1f, 1f, 1f, 0f);
+            //         }
+            //         groupBgBoss.SetActive(false);
+            //         groupBgNormal.SetActive(true);
+            //     });
         }
     }
 }
