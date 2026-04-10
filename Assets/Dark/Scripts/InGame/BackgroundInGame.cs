@@ -23,6 +23,8 @@ namespace InGame
         [SerializeField] private SkeletonAnimation objTransitionModel;
         [SerializeField, ShowIf("objTransitionModel")]
         private SpriteRenderer[] cracks;
+        [SerializeField, ShowIf("objTransitionModel")]
+        private Transform[] islandBoneFollowers;
 
         private void OnEnable()
         {
@@ -142,6 +144,11 @@ namespace InGame
                     objTransitionModel.gameObject.SetActive(true);
                 }
             }
+        }
+
+        public Transform[] GetTransitionBoneFollowers()
+        {
+            return islandBoneFollowers;
         }
 
         public void Reset()

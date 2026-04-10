@@ -202,6 +202,12 @@ namespace InGame
                     .SetUpdate(true).SetTarget(flashSize.transform);
             }
         }
+
+        public void ForceAutoRegen()
+        {
+            autoRegenerate.Deactivate();
+            autoRegenerate.Activate();
+        }
         
         public void OnMotionBlur()
         {

@@ -1,5 +1,59 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &780266542129783219
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5506753220413660442}
+  - component: {fileID: 7638820771411224270}
+  m_Layer: 0
+  m_Name: FollowerRight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5506753220413660442
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 780266542129783219}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0.30719933, w: 0.9516452}
+  m_LocalPosition: {x: 0.80077463, y: 0.72996646, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5641196507752029001}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7638820771411224270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 780266542129783219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1fd8daaed7b64148a34acb96ba14ce1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skeletonRenderer: {fileID: 8343904884227724514}
+  boneName: Right
+  followXYPosition: 1
+  followZPosition: 0
+  followBoneRotation: 0
+  followSkeletonFlip: 1
+  followLocalScale: 1
+  followParentWorldScale: 0
+  maintainedAxisOrientation: 1
+  initializeOnAwake: 1
 --- !u!1 &5903980834123067505
 GameObject:
   m_ObjectHideFlags: 0
@@ -4968,6 +5022,60 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!1 &6031819028583756547
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 108525243357600675}
+  - component: {fileID: 4227189538216310528}
+  m_Layer: 0
+  m_Name: FollowerLeft
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &108525243357600675
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6031819028583756547}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0.92565763, w: 0.3783622}
+  m_LocalPosition: {x: -0.8648034, y: 0.7362754, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5641196507752029001}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4227189538216310528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6031819028583756547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1fd8daaed7b64148a34acb96ba14ce1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skeletonRenderer: {fileID: 8343904884227724514}
+  boneName: Left
+  followXYPosition: 1
+  followZPosition: 0
+  followBoneRotation: 0
+  followSkeletonFlip: 1
+  followLocalScale: 1
+  followParentWorldScale: 0
+  maintainedAxisOrientation: 1
+  initializeOnAwake: 1
 --- !u!1 &6664184310303484104
 GameObject:
   m_ObjectHideFlags: 0
@@ -5189,6 +5297,18 @@ PrefabInstance:
       propertyPath: groupBgBossObj.Array.data[5]
       value: 
       objectReference: {fileID: 6664184310303484104}
+    - target: {fileID: 2912521074417387568, guid: 587ee39705817f9499e5ce28e80b9323, type: 3}
+      propertyPath: islandBoneFollowers.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2912521074417387568, guid: 587ee39705817f9499e5ce28e80b9323, type: 3}
+      propertyPath: islandBoneFollowers.Array.data[0]
+      value: 
+      objectReference: {fileID: 108525243357600675}
+    - target: {fileID: 2912521074417387568, guid: 587ee39705817f9499e5ce28e80b9323, type: 3}
+      propertyPath: islandBoneFollowers.Array.data[1]
+      value: 
+      objectReference: {fileID: 5506753220413660442}
     - target: {fileID: 2912521074417387568, guid: 587ee39705817f9499e5ce28e80b9323, type: 3}
       propertyPath: groupBgBossSpriteRenderer.Array.data[2]
       value: 
@@ -5989,7 +6109,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4565470031476872551, guid: 11d5688c5bc550a4093d459bc4ceb9bf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 108525243357600675}
+    - targetCorrespondingSourceObject: {fileID: 4565470031476872551, guid: 11d5688c5bc550a4093d459bc4ceb9bf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5506753220413660442}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 11d5688c5bc550a4093d459bc4ceb9bf, type: 3}
 --- !u!4 &5641196507752029001 stripped

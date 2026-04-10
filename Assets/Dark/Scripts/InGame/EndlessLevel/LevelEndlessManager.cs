@@ -24,6 +24,7 @@ namespace InGame.EndlessLevel
         
         public LevelManager levelManager;
         public BackgroundSpawner backgroundSpawner;
+        private MapFollower mapFollower;
         
         private LevelEndlessConfig currentLevel;
         private int currentWaveIndex;
@@ -48,12 +49,19 @@ namespace InGame.EndlessLevel
         private void Awake()
         {
             wavePool.Init();
+            mapFollower = new MapFollower() { isActiveFollowers = false };
         }
 
         private void OnDestroy()
         {
             OnStartWave = null;
             OnChangeMap = null;
+        }
+
+        private void Update()
+        {
+            if (!mapFollower.isActiveFollowers) return;
+            mapFollower.Update(Time.deltaTime);
         }
 
         public void LoadLevel(LevelEndlessConfig level)
@@ -117,21 +125,24 @@ namespace InGame.EndlessLevel
                         {
                             var durationAnim = 4f;
                             backgroundSpawner?.CurrentBackground?.bg.PlayTransition();
+                            if (backgroundSpawner && backgroundSpawner.CurrentBackground != null)
+                            {
+                                mapFollower.boneFollowers =
+                                    backgroundSpawner.CurrentBackground.bg.GetTransitionBoneFollowers();
+                            }
                             if (allTowers is { Length: > 2 })
                             {
-                                var towerMoveSeq = DOTween.Sequence();
-                                towerMoveSeq
-                                    .AppendInterval(2f)
-                                    .AppendCallback(() =>
-                                    {
-                                        allTowers[1].transform.DOLocalMove(new Vector3(-0.6f, 0.4f, 0f), 2f)
-                                            .SetEase(Ease.Unset).SetRelative();
-                                        allTowers[2].transform.DOLocalMove(new Vector3(0.6f, 0.4f, 0f), 2f)
-                                            .SetEase(Ease.Unset).SetRelative();
-                                    });
-                                towerMoveSeq.Play();
+                                mapFollower.towers = new[]
+                                {
+                                    allTowers[1].transform,
+                                    allTowers[2].transform
+                                };
                             }
+
+                            mapFollower.isActiveFollowers = true;
+                            mapFollower.Start(levelManager.Player.transform, levelManager.CurrentTower.Id);
                             yield return new WaitForSeconds(durationAnim);
+                            mapFollower.isActiveFollowers = false;
                         }
                         
                         var durationHideMap = 1f;
@@ -178,6 +189,7 @@ namespace InGame.EndlessLevel
                     else
                     {
                         allTowers[i].gameObject.SetActive(true);
+                        allTowers[i].ForceAutoRegen();
                     }
                 }
 
@@ -468,6 +480,50 @@ namespace InGame.EndlessLevel
                 }
 
                 CheckStopAllGate();
+            }
+        }
+        
+        private class MapFollower
+        {
+            public Transform[] towers;
+            public Transform[] boneFollowers;
+            public bool isActiveFollowers;
+
+            private List<Vector3> cacheBoneFollowerPositions;
+            private Transform _player;
+            private int indexPlayerTower;
+            
+            public void Start(Transform player, int currentStandingTower)
+            {
+                if (!isActiveFollowers) return;
+                if (boneFollowers == null) return;
+                cacheBoneFollowerPositions = new List<Vector3>();
+                foreach (var t in boneFollowers)
+                {
+                    cacheBoneFollowerPositions.Add(t.position);
+                }
+
+                _player = player;
+                indexPlayerTower = currentStandingTower - 1;
+            }
+            
+            public void Update(float dt)
+            {
+                if (!isActiveFollowers) return;
+                if (towers == null) return;
+                if (boneFollowers == null) return;
+                if (towers.Length != boneFollowers.Length) return;
+                
+                if (_player && indexPlayerTower >= 0 && indexPlayerTower < boneFollowers.Length)
+                {
+                    _player.position += boneFollowers[indexPlayerTower].position - cacheBoneFollowerPositions[indexPlayerTower];
+                }
+                
+                for (var i = 0; i < towers.Length; i++)
+                {
+                    towers[i].transform.position += boneFollowers[i].position - cacheBoneFollowerPositions[i];
+                    cacheBoneFollowerPositions[i] = boneFollowers[i].position;
+                }
             }
         }
     }
