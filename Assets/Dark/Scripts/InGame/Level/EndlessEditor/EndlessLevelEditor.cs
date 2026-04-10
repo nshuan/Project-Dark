@@ -142,6 +142,8 @@ namespace InGame.EndlessEditor
             
             btnRemoveWaveFromPool.onClick.RemoveAllListeners();
             btnRemoveWaveFromPool.onClick.AddListener(DeleteWaveFromPool);
+            
+            OnSelectWavePool(0);
         }
 
         #region Selecting
@@ -744,12 +746,55 @@ namespace InGame.EndlessEditor
             this.DelayCall(0.5f, () =>
             {
                 var fakeLevel = ScriptableObject.CreateInstance<LevelEndlessConfig>();
-                var fakeWaveInfo = currentWaveInfo ?? new WaveEndlessInfo();
+                fakeLevel.towerPositionsMap = allLevels[0].towerPositionsMap;
+                var fakePool = ScriptableObject.CreateInstance<PoolWaveEndless>();
+                fakePool.allWaves = new[] { currentWave };
+                fakePool.pool = new Dictionary<int, Dictionary<WaveEndlessType, List<int>>>()
+                {
+                    {
+                        0, new Dictionary<WaveEndlessType, List<int>>()
+                        {
+                            { WaveEndlessType.Normal, new List<int>() { currentWave.id } },
+                            { WaveEndlessType.Easy, new List<int>() { currentWave.id } },
+                            { WaveEndlessType.Hard, new List<int>() { currentWave.id } },
+                            { WaveEndlessType.Boss, new List<int>() { currentWave.id } }
+                        }
+                    },
+                    {
+                        1, new Dictionary<WaveEndlessType, List<int>>()
+                        {
+                            { WaveEndlessType.Normal, new List<int>() { currentWave.id } },
+                            { WaveEndlessType.Easy, new List<int>() { currentWave.id } },
+                            { WaveEndlessType.Hard, new List<int>() { currentWave.id } },
+                            { WaveEndlessType.Boss, new List<int>() { currentWave.id } }
+                        }
+                    },
+                    {
+                        2, new Dictionary<WaveEndlessType, List<int>>()
+                        {
+                            { WaveEndlessType.Normal, new List<int>() { currentWave.id } },
+                            { WaveEndlessType.Easy, new List<int>() { currentWave.id } },
+                            { WaveEndlessType.Hard, new List<int>() { currentWave.id } },
+                            { WaveEndlessType.Boss, new List<int>() { currentWave.id } }
+                        }
+                    },
+                };
+                var mapToChange = currentWave.mapType switch
+                {
+                    LevelMapType.ThreeTowers => 1,
+                    LevelMapType.FourTowers => 2,
+                    LevelMapType.FourTowersTriangle => 3,
+                    _ => 1
+                };
+                var fakeWaveInfo = currentWaveInfo ?? new WaveEndlessInfo()
+                {
+                    changeToMap = mapToChange
+                };
                 fakeLevel.waveInfo = new[] { fakeWaveInfo };
                 
                 Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame, () =>
                 {
-                    LevelManager.Instance.LoadEndlessLevel(fakeLevel);
+                    LevelManager.Instance.LoadEndlessLevel(fakeLevel, fakePool);
                 });
             });
             

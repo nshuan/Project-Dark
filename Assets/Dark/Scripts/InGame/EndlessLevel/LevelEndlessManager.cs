@@ -169,7 +169,12 @@ namespace InGame.EndlessLevel
                 OnStartWave?.Invoke(currentWaveIndex);
                 if (waveTemplate.waveType == WaveEndlessType.Boss) levelManager.OnBossWaveStart?.Invoke();
 
-                var towerPositions = currentLevel.towerPositionsMap[CurrentBackgroundIndex];
+                Vector2[] towerPositions;
+                if (currentLevel.towerPositionsMap == null ||
+                    !currentLevel.towerPositionsMap.TryGetValue(CurrentBackgroundIndex, out towerPositions))
+                {
+                    towerPositions = null;
+                }
                 for (var i = 0; i < allTowers.Length; i++)
                 {
                     if (waveConfig.towerPositions != null && i < waveConfig.towerPositions.Length)

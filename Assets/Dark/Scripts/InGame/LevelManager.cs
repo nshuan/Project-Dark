@@ -485,11 +485,16 @@ namespace InGame
             LoadEndlessLevel(endlessTestLevel);
         }
             
-        public void LoadEndlessLevel(LevelEndlessConfig endlessLevel)
+        public void LoadEndlessLevel(LevelEndlessConfig endlessLevel, PoolWaveEndless overridePool = null)
         {
             var levelConfig = LevelManifest.Instance.GetLevel(PlayerDataManager.Instance.Data.Class, 1);
             if (!levelConfig) return;
             Level = levelConfig;
+            if (overridePool)
+            {
+                endlessManager.wavePool = overridePool;
+                endlessManager.wavePool.Init();
+            }
             
             endlessManager.levelManager = _instance;
             endlessManager.backgroundSpawner = backgroundSpawner;
