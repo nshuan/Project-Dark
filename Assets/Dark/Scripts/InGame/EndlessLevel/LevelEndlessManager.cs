@@ -145,7 +145,7 @@ namespace InGame.EndlessLevel
                             }
 
                             mapFollower.isActiveFollowers = true;
-                            mapFollower.Start(levelManager.Player.transform, levelManager.CurrentTower.Id);
+                            mapFollower.Start(levelManager.Player.transform, levelManager.Player.shotRadius, levelManager.CurrentTower.Id);
                             yield return new WaitForSeconds(durationAnim);
                             mapFollower.isActiveFollowers = false;
                         }
@@ -516,9 +516,10 @@ namespace InGame.EndlessLevel
 
             private List<Vector3> cacheBoneFollowerPositions;
             private Transform _player;
+            private Transform _shotRadius;
             private int indexPlayerTower;
             
-            public void Start(Transform player, int currentStandingTower)
+            public void Start(Transform player, Transform shotRadius, int currentStandingTower)
             {
                 if (!isActiveFollowers) return;
                 if (boneFollowers == null) return;
@@ -529,6 +530,7 @@ namespace InGame.EndlessLevel
                 }
 
                 _player = player;
+                _shotRadius = shotRadius;
                 indexPlayerTower = currentStandingTower - 1;
             }
             
@@ -541,7 +543,10 @@ namespace InGame.EndlessLevel
                 
                 if (_player && indexPlayerTower >= 0 && indexPlayerTower < boneFollowers.Length)
                 {
-                    _player.position += boneFollowers[indexPlayerTower].position - cacheBoneFollowerPositions[indexPlayerTower];
+                    var transition = boneFollowers[indexPlayerTower].position -
+                                     cacheBoneFollowerPositions[indexPlayerTower];
+                    _player.position += transition;
+                    _shotRadius.position += transition;
                 }
                 
                 for (var i = 0; i < towers.Length; i++)
