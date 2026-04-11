@@ -98,11 +98,6 @@ namespace InGame.WatchTower
             LevelManager.Instance.OnChangeTower += OnChangeTower;
         }
 
-        private void OnDestroy()
-        {
-            LevelManager.Instance.OnInitTowers -= OnInitTowers;
-        }
-
         #region Config
         
         private int GetCounterDamage(NodeTowerCounter.CounterType counterType)
