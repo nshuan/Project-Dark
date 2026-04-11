@@ -211,7 +211,7 @@ namespace InGame.EndlessLevel
                 levelManager.TeleportTower(towerIndexReset);
                 levelManager.Player.transform.position = levelManager.CurrentTower.transform.position +
                                                          levelManager.CurrentTower.GetTowerHeight();
-                levelManager.Player.ShowShotRadius(levelManager.CurrentTower.GetBaseCenter(),
+                if (lastMapId != CurrentBackgroundIndex) levelManager.Player.ShowShotRadius(levelManager.CurrentTower.GetBaseCenter(),
                     LevelUtilityV2.GetNormalAttackRange(Vector2.right));
                 
                 isBossing = waveTemplate.waveType == WaveEndlessType.Boss;
