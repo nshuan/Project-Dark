@@ -116,9 +116,9 @@ PolygonCollider2D:
     - - {x: -0.42467785, y: -0.32215512}
       - {x: -0.7112623, y: -0.8946273}
       - {x: -0.65749454, y: -1.2568462}
-      - {x: -0.45461774, y: -1.49755}
-      - {x: 0.06325245, y: -1.5578185}
-      - {x: 0.63804185, y: -1.5012964}
+      - {x: -0.44214427, y: -1.5349702}
+      - {x: 0.06948912, y: -1.6264223}
+      - {x: 0.6442786, y: -1.5449533}
       - {x: 0.8387989, y: -1.1937355}
       - {x: 0.8774874, y: -0.96981096}
       - {x: 0.7867039, y: -0.61552185}
@@ -157,6 +157,7 @@ MonoBehaviour:
   materialNormal: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   materialElite: {fileID: 2100000, guid: 96d557139b52b064fa4bbb216521a74e, type: 2}
   materialHighlight: {fileID: 2100000, guid: 8eb624f56f0dee24aa152805b0a4d64d, type: 2}
+  vfxBuff: {fileID: 0}
   jumpUpAnim:
     frames:
     - {fileID: -1440868933, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
@@ -554,6 +555,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd7a0a4ca99a425d8303a305d9850026, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableOverrideOriginalScale: 0
+  overrideOriginalScale: {x: 0, y: 0, z: 0}
   idleAnim:
     frames:
     - {fileID: 1878099553, guid: 6969c906635b5a34ca31f984dbae235e, type: 3}
