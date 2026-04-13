@@ -36,7 +36,7 @@ namespace Dark.Scripts.Leaderboard.UI
             {
                 if (IsEndlessLeaderboard)
                 {
-                    scoreText.SetTextLanguage("key_wave", ("%{value}", data.score.ToString()));
+                    scoreText.SetTextLanguageKeepFont("key_wave", ("%{value}", data.score.ToString()));
                 }
                 else
                 {
