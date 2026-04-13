@@ -17,6 +17,7 @@ namespace Dark.Scripts.OutGame.SaveSlot
         [SerializeField] private TextMeshProUGUI txtDayPassed;
         [SerializeField] private TextMeshProUGUI txtLevel;
         [SerializeField] private TextMeshProUGUI txtPlayedTime;
+        [SerializeField] private TextMeshProUGUI txtEndlessWave;
         [SerializeField] private Button btnClearSave;
 
         [Space] [Header("Completed info")] 
@@ -61,6 +62,8 @@ namespace Dark.Scripts.OutGame.SaveSlot
                     txtLevel.SetText(SaveSlotManager.Instance.GetDisplayLevel(slotIndex));
                 }
                 txtPlayedTime.SetText(SaveSlotManager.Instance.GetDisplayTimePlayed(slotIndex));
+                txtEndlessWave.gameObject.SetActive(SaveSlotManager.Instance.IsSlotCompleted(slotIndex));
+                txtEndlessWave.SetText(SaveSlotManager.Instance.GetDisplayEndlessWave(slotIndex));
                 
                 btnClearSave.onClick.AddListener(() =>
                 { 

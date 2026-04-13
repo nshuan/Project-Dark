@@ -1,11 +1,14 @@
 using System;
 using Core;
+using Dark.Scripts.Utils;
 using DG.Tweening;
+using Sirenix.OdinInspector;
+using Spine.Unity;
 using UnityEngine;
 
 namespace InGame
 {
-    public class BackgroundInGame : MonoSingleton<BackgroundInGame>
+    public class BackgroundInGame : MonoBehaviour
     {
         private static readonly int MatDisolveValue = Shader.PropertyToID("Disolve_Value");
         
@@ -17,10 +20,22 @@ namespace InGame
         [SerializeField] private SpriteRenderer[] groupBgBossSpriteRenderer;
         [SerializeField] private Material matBgBoss;
         [SerializeField] private GameObject vfxAppearCrack;
+        [SerializeField] private SkeletonAnimation objTransitionModel;
+        [SerializeField, ShowIf("objTransitionModel")]
+        private SpriteRenderer[] cracks;
+        [SerializeField, ShowIf("objTransitionModel")]
+        private Transform[] islandBoneFollowers;
 
-        private void Start()
+        private void OnEnable()
         {
             LevelManager.Instance.OnBossWaveStart += OnStartWaveBoss;
+        }
+
+        private void OnDisable()
+        {
+            Reset();
+            objTransitionModel?.gameObject.SetActive(false);
+            LevelManager.Instance.OnBossWaveStart -= OnStartWaveBoss;
         }
 
         private void OnStartWaveBoss()
@@ -107,6 +122,62 @@ namespace InGame
                 groupBgNormal.SetActive(false);
                 groupBgBoss.SetActive(false);
             }
+        }
+
+        public void PlayTransition()
+        {
+            if (objTransitionModel)
+            {
+                if (cracks != null)
+                {
+                    foreach (var crack in cracks)
+                    {
+                        crack.gameObject.SetActive(false);
+                    }
+                }
+
+                if (objTransitionModel)
+                {
+                    objTransitionModel.state?.SetAnimation(0, "animation", false);
+                    objTransitionModel.Update(0);
+                    objTransitionModel.LateUpdate();
+                    objTransitionModel.gameObject.SetActive(true);
+                }
+            }
+        }
+
+        public Transform[] GetTransitionBoneFollowers()
+        {
+            return islandBoneFollowers;
+        }
+
+        public void Reset()
+        {
+            matBgBoss.SetFloat(MatDisolveValue, 1f);
+            vfxBgBoss.SetActive(false);
+            vfxAppearCrack.SetActive(false);
+            foreach (var obj in groupBgBossSpriteRenderer)
+            {
+                obj.gameObject.SetActive(false);
+                obj.color = new Color(1f, 1f, 1f, 0f);
+            }
+            groupBgBoss.SetActive(false);
+            groupBgNormal.SetActive(true);
+            
+            // DOTween.Sequence(this).SetDelay(1.2f)
+            //     .Append(DOTween.To(() => 0f, (x) => matBgBoss.SetFloat(MatDisolveValue, x), 1f, 2f))
+            //     .AppendCallback(() =>
+            //     {
+            //         vfxBgBoss.SetActive(false);
+            //         vfxAppearCrack.SetActive(false);
+            //         foreach (var obj in groupBgBossSpriteRenderer)
+            //         {
+            //             obj.gameObject.SetActive(false);
+            //             obj.color = new Color(1f, 1f, 1f, 0f);
+            //         }
+            //         groupBgBoss.SetActive(false);
+            //         groupBgNormal.SetActive(true);
+            //     });
         }
     }
 }

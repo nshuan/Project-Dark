@@ -113,18 +113,23 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.00005222857, y: -0.6636441}
-      - {x: -0.08016479, y: -0.7991575}
-      - {x: -0.1270226, y: -1.1986368}
-      - {x: -0.11665337, y: -1.4910235}
-      - {x: -0.074308254, y: -1.6494389}
+    - - {x: 0.16921777, y: -0.35983992}
+      - {x: -0.1118374, y: -0.48580402}
+      - {x: -0.17670667, y: -0.7280215}
+      - {x: -0.2249695, y: -0.86465794}
+      - {x: -0.24388883, y: -1.1224196}
+      - {x: -0.23186992, y: -1.3003894}
+      - {x: -0.19795172, y: -1.5215104}
+      - {x: -0.07430837, y: -1.6494389}
+      - {x: 0.012791596, y: -1.6743379}
       - {x: 0.10691814, y: -1.6697009}
-      - {x: 0.5893605, y: -1.6571943}
+      - {x: 0.28456813, y: -1.6647711}
+      - {x: 0.52330565, y: -1.5657337}
       - {x: 0.62058073, y: -1.3774981}
       - {x: 0.6420415, y: -1.2066274}
       - {x: 0.6313929, y: -0.86460716}
-      - {x: 0.52766377, y: -0.5489164}
-      - {x: 0.3110291, y: -0.5258973}
+      - {x: 0.58355635, y: -0.50318605}
+      - {x: 0.38216516, y: -0.37346303}
   m_UseDelaunayMesh: 0
 --- !u!114 &1367309541428699416
 MonoBehaviour:
@@ -158,6 +163,7 @@ MonoBehaviour:
   materialNormal: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   materialElite: {fileID: 2100000, guid: b01826ba29ead4f4fbbb8147425dbb43, type: 2}
   materialHighlight: {fileID: 2100000, guid: 8eb624f56f0dee24aa152805b0a4d64d, type: 2}
+  vfxBuff: {fileID: 0}
   delayMove: 1
   buffAnim:
     frames:
@@ -185,6 +191,7 @@ MonoBehaviour:
     autoExit: 1
     followers: []
   delayTriggerBuff: 1.1
+  configCasted: {fileID: 0}
 --- !u!114 &7383520355259516268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -473,6 +480,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd7a0a4ca99a425d8303a305d9850026, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableOverrideOriginalScale: 0
+  overrideOriginalScale: {x: 0, y: 0, z: 0}
   idleAnim:
     frames:
     - {fileID: 1698532315, guid: 0577b363057b47a4d944d553f55dead5, type: 3}

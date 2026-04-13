@@ -70,7 +70,7 @@ namespace InGame
                 
                 // Setup skill config and mouse input
                 CursorRangeRadius = LevelUtilityV2.StatsNormalAttack.range;
-                cursor ??= ShotCursorManager.Instance.GetPrefab(LevelUtilityV2.StatsNormalAttack.shootLogic.cursorType, canvasCursor.transform);
+                cursor = ShotCursorManager.Instance.GetPrefab(LevelUtilityV2.StatsNormalAttack.shootLogic.cursorType, canvasCursor.transform);
                 cursor.gameObject.SetActive(true);
                 CombatActions.OnInitInGameCursor?.Invoke(cursor);
                 

@@ -13,7 +13,7 @@ namespace Dark.Scripts.Credits
             btnClose.onClick.AddListener(() =>
             {
                 StopCredits();
-                ReturnToHome(0.5f);
+                ReturnToUpgrade(0.5f);
             });
         }
 
@@ -30,7 +30,7 @@ namespace Dark.Scripts.Credits
             if (content.position.y > anchorEnd.position.y)
             {
                 StopCredits();
-                ReturnToHome(3f);
+                ReturnToUpgrade(3f);
             }
         }
 
@@ -39,6 +39,14 @@ namespace Dark.Scripts.Credits
             this.DelayCall(delay, () =>
             {
                 Loading.Instance.LoadScene(SceneConstants.SceneMenu);
+            });
+        }
+
+        private void ReturnToUpgrade(float delay)
+        {
+            this.DelayCall(delay, () =>
+            {
+                Loading.Instance.QuickLoadScene(SceneConstants.SceneUpgrade);
             });
         }
     }

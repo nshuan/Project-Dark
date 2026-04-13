@@ -38,6 +38,9 @@ namespace Data
         public bool hasShowInstructionEchoes;
         public bool hasShowInstructionSigils;
         
+        // Endless
+        public int endlessWavePassed;
+        
         public PlayerData()
         {
             level = 0;

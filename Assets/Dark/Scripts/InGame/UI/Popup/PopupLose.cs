@@ -21,6 +21,8 @@ namespace InGame.UI
         [Space]
         [SerializeField] private Button btnBackToTree;
         [SerializeField] private Button btnReplay;
+
+        [Space] [SerializeField] private bool isEndless;
         
         private IEndGameLoseAnimation endingLevel;
 
@@ -45,6 +47,8 @@ namespace InGame.UI
         [Button]
         private void OnLose()
         {
+            if (isEndless != LevelManager.IsPlayingEndless) return;
+            
             UpdateUI();
 
             var delayShowPopup = 0f;
@@ -85,7 +89,17 @@ namespace InGame.UI
                 Loading.Instance.QuickLoadScene(SceneConstants.SceneInGame);
                 Loading.Instance.onSceneLoaded += () =>
                 {
-                    LevelManager.Instance.LoadLevel(levelToLoad);
+                    var completedLevel = PlayerDataManager.Instance.Data.level + 1;
+                    var maxLevel = LevelManifest.Instance.GetMaxLevel(PlayerDataManager.Instance.Data.Class);
+                    if (completedLevel > maxLevel)
+                    {
+                        levelToLoad = maxLevel;
+                        LevelManager.Instance.LoadEndlessLevel();
+                    }
+                    else
+                    {
+                        LevelManager.Instance.LoadLevel(levelToLoad);
+                    }
                 };
                 
                 LogManager.Log(LogConst.EventLogStartLevel, $"level_{LevelManager.Instance.Level.level}", "from popup lose");
@@ -106,6 +120,7 @@ namespace InGame.UI
         [SerializeField] private Transform rectLine;
         [SerializeField] private CanvasGroup groupBtnBackToTree;
         [SerializeField] private CanvasGroup groupBtnReplay;
+        [SerializeField] private CanvasGroup groupEndlessWavePassed;
 
         [Header("UI Tween Config")] 
         [SerializeField] private float durationTitle = 2f;
@@ -127,6 +142,7 @@ namespace InGame.UI
             rectLine.localScale = new Vector3(0f, 1f, 1f);
             groupBtnBackToTree.alpha = 0f;
             groupBtnReplay.alpha = 0f;
+            if (groupEndlessWavePassed) groupEndlessWavePassed.alpha = 0;
         }
         
         private Tween DoShowUIPopup()
@@ -164,6 +180,13 @@ namespace InGame.UI
                     groupTimePlayed.transform.localPosition += new Vector3(0f, 10f, 0f);
                     groupTimePlayed.transform.DOLocalMoveY(-10f, durationItemResourceGroup).SetUpdate(true).SetRelative(true).SetDelay(0.4f);
                     groupTimePlayed.DOFade(1f, durationItemResourceGroup).SetUpdate(true).SetDelay(0.4f);
+
+                    if (groupEndlessWavePassed)
+                    {
+                        groupEndlessWavePassed.transform.localPosition += new Vector3(0f, 10f, 0f);
+                        groupEndlessWavePassed.transform.DOLocalMoveY(-10f, durationItemResourceGroup).SetUpdate(true).SetRelative(true).SetDelay(0.6f);
+                        groupEndlessWavePassed.DOFade(1f, durationItemResourceGroup).SetUpdate(true).SetDelay(0.6f);
+                    }
                 })
                 .AppendInterval(durationItemResourceGroup + 0.4f)
                 .Append(rectLine.DOScaleX(1f, 0.2f))

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using Core;
 using Dark.Scripts.OutGame.SaveSlot;
+using InGame.EndlessLevel;
 using UnityEngine;
 
 namespace Data
@@ -60,6 +61,7 @@ namespace Data
         public void SetFlagCompletedAllLevel()
         {
             data.completed = true;
+            LevelEndlessData.UnlockEndlessFeature();
             Save();
         }
 
@@ -79,6 +81,15 @@ namespace Data
         {
             data.uploadedScoreSmallLeaderboard = true;
             if (save) Save();
+        }
+
+        public void UpdateEndlessWave(int passedWave, bool save)
+        {
+            if (passedWave > data.endlessWavePassed)
+            {
+                data.endlessWavePassed = passedWave;
+                if (save) Save();
+            }
         }
         
         #region SAVE LOAD

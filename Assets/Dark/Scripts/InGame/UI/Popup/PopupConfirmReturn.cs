@@ -52,6 +52,7 @@ namespace InGame.UI
             btnBackToTree.onClick.AddListener(() =>
             {
                 PauseGame.Instance.onPause = null;
+                PlayerDataManager.Instance.Save();
                 PauseGame.Instance.Resume();
                 Loading.Instance.QuickLoadScene(SceneConstants.SceneUpgrade);
                 LogManager.Log(LogConst.EventLogQuitLevel, $"level_{PlayerDataManager.Instance.Data.level + 1}", $"wave_{LevelManager.Instance.CurrentWaveIndex + 1}");

@@ -12,6 +12,7 @@ using InGame.AttackNormalConfig;
 using InGame.ChargeConfig;
 using InGame.ConfigManager;
 using InGame.CounterConfig;
+using InGame.EndlessLevel;
 using InGame.Upgrade;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -55,12 +56,13 @@ namespace InGame
         
         public PlayerCharacter Player { get; set; }
 
-        private List<LevelMapVariant> mapVarientItems;
+        public static bool IsPlayingEndless { get; set; }
         
         #region Upgrade
 
-        [ReadOnly, NonSerialized, OdinSerialize] private UpgradeBonusInfoV2 bonusInfo = new UpgradeBonusInfoV2();
-        
+        [ReadOnly, NonSerialized, OdinSerialize]
+        private UpgradeBonusInfoV2 bonusInfo = new UpgradeBonusInfoV2();
+
         #endregion
         
         #region Action
@@ -73,7 +75,7 @@ namespace InGame
 
         // <int waveIndex, float waveDuration>
         public event Action<int, float> OnWaveStart;
-        public event Action OnBossWaveStart;
+        public Action OnBossWaveStart;
         public event Action<int, WaveEndReason> onWaveEnded;
         
         public event Action OnWin;
@@ -90,7 +92,6 @@ namespace InGame
         private void Start()
         {
             InitSkillTreeBonus();
-            InitLevelMapVariant();
             
 #if UNITY_EDITOR
 
@@ -126,26 +127,19 @@ namespace InGame
             LevelUtilityV2.StatsCounterPiercing = TowerCounterManifest.Get(NodeTowerCounter.CounterType.Pierce);
             LevelUtilityV2.StatsCounterSlash = TowerCounterManifest.Get(NodeTowerCounter.CounterType.Slash);
         }
-        
-        private void InitPlayerAndTowers()
+
+        private void InitPlayer()
         {
-            InitTowers();
-            OnInitTowers?.Invoke();
-            currentTowerIndex = -1;
-            
             if (Player != null) Destroy(Player.gameObject);
             Player = playerSpawner.SpawnCharacter((CharacterClass.CharacterClass)PlayerDataManager.Instance.Data.characterClass);
             Player.transform.position = towers[0].transform.position + towers[0].GetTowerHeight();
             OnInitPlayer?.Invoke();
         }
 
-        private void InitLevelMapVariant()
-        {
-            mapVarientItems = FindObjectsByType<LevelMapVariant>(FindObjectsInactive.Include, FindObjectsSortMode.None).ToList();
-        }
-        
         public void LoadLevel(int level)
         {
+            IsPlayingEndless = false;
+            
             var levelConfig = LevelManifest.Instance.GetLevel(PlayerDataManager.Instance.Data.Class, level);
             if (!levelConfig) return;
             Level = levelConfig;
@@ -157,10 +151,11 @@ namespace InGame
         private void OnLevelSceneLoaded(Scene scene, LoadSceneMode loadMode)
         {
             SceneManager.sceneLoaded -= OnLevelSceneLoaded;
-            InitPlayerAndTowers();
+            InitTowers();
+            InitPlayer();
             LoadLevel(Level, false);
         }
-        
+
         private void LoadMapScene(LevelMapType mapType)
         {
             if (coroutineLoadMap != null) StopCoroutine(coroutineLoadMap);
@@ -169,7 +164,7 @@ namespace InGame
                 LevelMapType.ThreeTowers => "Level3Towers",
                 LevelMapType.FourTowers => "Level4Towers",
                 LevelMapType.ThreeTowersSquare => "Level3TowersSquare",
-                LevelMapType.FourTowersTriangle =>  "Level4TowersTriangle",
+                LevelMapType.FourTowersTriangle => "Level4TowersTriangle",
                 _ => "Level3Towers"
             };
             coroutineLoadMap = StartCoroutine(IELoadMapScene(sceneName));
@@ -287,6 +282,8 @@ namespace InGame
         {
             if (IsEndLevel) return;
             
+            endlessManager.EndLevel();
+            
             StopTimer();
             foreach (var tower in towers)
             {
@@ -376,16 +373,21 @@ namespace InGame
         {
             towers = FindObjectsByType<TowerEntity>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             towers.Sort((t1, t2) => t1.transform.GetSiblingIndex().CompareTo(t2.transform.GetSiblingIndex()));
+            var maxHp = LevelUtilityV2.GetBaseTowerHp();
+            var maxShield = LevelUtilityV2.GetBaseTowerShield();
             for (var i = 0; i < towers.Length; i++)
             {
                 if (Level.towerPositions != null && i < Level.towerPositions.Length)
                     towers[i].transform.position = Level.towerPositions[i];
-                towers[i].Initialize(i, LevelUtilityV2.GetBaseTowerHp());
+                towers[i].Initialize(i, maxHp, maxHp, maxShield, maxShield);
                 towers[i].OnDestroyed += OnTowerDestroyed;
             }
+
+            OnInitTowers?.Invoke();
+            currentTowerIndex = -1;
         }
 
-        private void OnTowerDestroyed(TowerEntity tower)
+        public void OnTowerDestroyed(TowerEntity tower)
         {
             Debug.LogError($"Tower {tower.name} is destroyed");
             FirstDestroyedTower = tower;
@@ -451,8 +453,73 @@ namespace InGame
                 yield return null;
             }
         }
+
+        #endregion
+
+        #region Endless Level
+
+        [Space] [Header("Endless Level")] [SerializeField]
+        private LevelEndlessManager endlessManager;
+
+        [SerializeField] private LevelEndlessConfig endlessTestLevel;
+
+        private void InitTowerEndless()
+        {
+            towers = endlessManager.allTowers;
+            // Đầu tiên set max hp cho tất cả các towers
+            var maxHp = LevelUtilityV2.GetBaseTowerHp();
+            var maxShield = LevelUtilityV2.GetBaseTowerShield();
+            for (var i = 0; i < towers.Length; i++)
+            {
+                if (Level.towerPositions != null && i < Level.towerPositions.Length)
+                    towers[i].transform.position = Level.towerPositions[i];
+                towers[i].Initialize(i, maxHp, maxHp, maxShield, maxShield);
+                towers[i].OnDestroyed += OnTowerDestroyed;
+                towers[i].gameObject.SetActive(true);
+            }
+            
+            OnInitTowers?.Invoke();
+            currentTowerIndex = -1;
+        }
+
+        public void LoadEndlessLevel()
+        {
+            IsPlayingEndless = true;
+            LoadEndlessLevel(endlessTestLevel);
+        }
+            
+        public void LoadEndlessLevel(LevelEndlessConfig endlessLevel, PoolWaveEndless overridePool = null)
+        {
+            var levelConfig = LevelManifest.Instance.GetLevel(PlayerDataManager.Instance.Data.Class, 1);
+            if (!levelConfig) return;
+            Level = levelConfig;
+            if (overridePool)
+            {
+                endlessManager.wavePool = overridePool;
+                endlessManager.wavePool.Init();
+            }
+            
+            endlessManager.levelManager = _instance;
+            endlessManager.backgroundSpawner = backgroundSpawner;
+            InitTowerEndless();
+            InitPlayer();
+            backgroundSpawner.Spawn(Level.backgroundIndex);
+            
+            EnemyManager.Instance.Initialize();
+            winLoseManager = new WinLoseManager();
+            IsEndLevel = false;
+            
+            TeleportTower(0);
+
+            OnLevelPreLoaded?.Invoke(Level);
+            endlessManager.LoadLevel(endlessLevel);
+            LevelStarted = true;
+            OnLevelLoaded?.Invoke(Level);
+            StartTimer();
+        }
         
         #endregion
+        
 #if UNITY_EDITOR
         private void Update()
         {

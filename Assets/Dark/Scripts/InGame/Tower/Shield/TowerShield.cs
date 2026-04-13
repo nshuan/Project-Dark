@@ -16,10 +16,10 @@ namespace InGame.Shield
         
         private Coroutine coroutineHealing;
         
-        public void Initialize()
+        public void Initialize(int maxShield, int currentShield)
         {
-            MaxShield = LevelUtilityV2.GetBaseTowerShield();
-            currentShield = MaxShield;
+            MaxShield = maxShield;
+            this.currentShield = currentShield;
         }
         
         // Return the amount of damage left after reducing shield

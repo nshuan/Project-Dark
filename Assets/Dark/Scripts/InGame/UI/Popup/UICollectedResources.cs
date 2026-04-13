@@ -18,7 +18,7 @@ namespace InGame.UI
             txtSigils.SetText(EItemDropManager.Instance.CollectedData.TotalCollectedSigils.ToString());
             txtEchoes.SetText(EItemDropManager.Instance.CollectedData.TotalCollectedEchoes.ToString());
             // Có sigil nghĩa là win, win thì +1 reset point
-            txtResetPoint.SetText((EItemDropManager.Instance.CollectedData.TotalCollectedSigils > 0 ? 1 : 0).ToString());
+            txtResetPoint.SetText((EItemDropManager.Instance.CollectedData.TotalCollectedAshes).ToString());
         }
     }
 }

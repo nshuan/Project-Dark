@@ -7,6 +7,7 @@ using Data;
 using DG.Tweening;
 using InGame.BossConfig;
 using InGame.CameraController;
+using InGame.EndlessLevel;
 using InGame.EnemyEffect;
 using InGame.UI;
 using UnityEngine;
@@ -25,6 +26,8 @@ namespace InGame.Boss
 
             configCasted = (EnemyBossTarnishedBehaviour)config;
             if (LevelManager.Instance.Level.level != PlayerDataManager.Instance.Data.level + 1)
+                BossPoint = 0;
+            if (LevelManager.IsPlayingEndless)
                 BossPoint = 0;
             
             shadowSprite = shadow.GetComponent<SpriteRenderer>();
@@ -45,10 +48,16 @@ namespace InGame.Boss
 
         protected override IEnumerator IEDie(float delayRelease, EnemyDieReason reason)
         {
+            if (LevelManager.IsPlayingEndless)
+            {
+                yield return base.IEDie(delayRelease, reason);
+                yield break;
+            }
+            
             LevelManager.Instance.BlockDamageAllTowers();
             
             // Làm đen hết màn hình, tắt UI
-            BackgroundInGame.Instance.SetActiveBlackBg(true);
+            AllBackgroundInGame.Instance.CurrentBackground.SetActiveBlackBg(true);
             CanvasInGame.Instance.HideUI();
             
             CombatActions.OnBossKilled?.Invoke(this, transform.position);
@@ -62,7 +71,10 @@ namespace InGame.Boss
 
         protected override void DropResource()
         {
-           
+            if (LevelManager.IsPlayingEndless)
+            {
+                base.DropResource();
+            }
         }
 
         protected override IEnumerator IEAttack()
@@ -171,6 +183,7 @@ namespace InGame.Boss
                 var listTargetToRandom = new List<TowerEntity>();
                 foreach (var tower in LevelManager.Instance.Towers)
                 {
+                    if (!tower.gameObject.activeInHierarchy) continue;
                     if (tower.Id != TargetTower.Id) listTargetToRandom.Add(tower);
                 }
                 

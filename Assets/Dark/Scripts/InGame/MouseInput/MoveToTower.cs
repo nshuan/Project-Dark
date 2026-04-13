@@ -155,6 +155,7 @@ namespace InGame
                 {
                     foreach (var tower in Towers)
                     {
+                        if (!tower.gameObject.activeInHierarchy) continue;
                         if (tower.Id == CurrentTowerIndex) continue;
                         if (Vector2.Distance(tower.transform.position, this.worldMousePosition) < HoverRadius)
                         {
