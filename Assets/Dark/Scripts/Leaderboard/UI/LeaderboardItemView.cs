@@ -8,9 +8,10 @@ namespace Dark.Scripts.Leaderboard.UI
 {
     public sealed class LeaderboardItemView : MonoBehaviour
     {
-        [SerializeField] TextMeshProUGUI rankText;
-        [SerializeField] TextMeshProUGUI nameText;
-        [SerializeField] TextMeshProUGUI scoreText;
+        [SerializeField] private TextMeshProUGUI rankText;
+        [SerializeField] private TextMeshProUGUI nameText;
+        [SerializeField] private TextMeshProUGUI scoreText;
+        [SerializeField] private TextMeshProUGUI scoreTitleText;
         [SerializeField] private List<GameObject> classIcons;
         [SerializeField] private Image imgHighlightCurrentPlayer;
         
@@ -20,6 +21,13 @@ namespace Dark.Scripts.Leaderboard.UI
         {
             if (data == null)
             {
+                if (scoreTitleText)
+                {
+                    if (IsEndlessLeaderboard)
+                        scoreTitleText.SetTextLanguageKeepFont("key_endless_leaderboard_score_title");
+                    else scoreTitleText.SetTextLanguageKeepFont("key_recorded_time");
+                }
+                
                 rankText.SetText("##");
                 nameText.SetText("");
                 scoreText.SetText("");
@@ -30,13 +38,15 @@ namespace Dark.Scripts.Leaderboard.UI
                 return;    
             }
             
-            if (rankText != null) rankText.SetText((data.rank).ToString());
+            if (rankText != null) rankText.SetText(data.rank.ToString());
             if (nameText != null) nameText.SetText(data.playerName);
             if (scoreText != null)
             {
                 if (IsEndlessLeaderboard)
                 {
-                    scoreText.SetTextLanguageKeepFont("key_wave", ("%{value}", data.score.ToString()));
+                    if (data.rank == 1)
+                        scoreText.SetText(data.score.ToString());
+                    else scoreText.SetTextLanguageKeepFont("key_endless_leaderboard_score", ("%{value}", data.score.ToString()));
                 }
                 else
                 {

@@ -292,9 +292,12 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes:
     - Name: valueMap
+      Entry: 6
+      Data: 
+    - Name: overrideFont
       Entry: 7
       Data: 0|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
-        Assembly-CSharp],[System.String, mscorlib]], mscorlib
+        Assembly-CSharp],[TMPro.TMP_FontAsset, Unity.TextMeshPro]], mscorlib
     - Name: comparer
       Entry: 7
       Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Dark.Tools.Language.LanguageType,
@@ -318,92 +321,6 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: $v
-      Entry: 1
-      Data: 'Recorded time:'
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 1
-    - Name: $v
-      Entry: 1
-      Data: "Th\u1EDDi gian:"
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 2
-    - Name: $v
-      Entry: 1
-      Data: 'Tiempo registrado:'
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 3
-    - Name: $v
-      Entry: 1
-      Data: 'Tempo registrado:'
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 4
-    - Name: $v
-      Entry: 1
-      Data: 'Aufgezeichnete Zeit:'
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: overrideFont
-      Entry: 7
-      Data: 2|System.Collections.Generic.Dictionary`2[[Dark.Tools.Language.LanguageType,
-        Assembly-CSharp],[TMPro.TMP_FontAsset, Unity.TextMeshPro]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 3|System.Collections.Generic.EnumEqualityComparer`1[[Dark.Tools.Language.LanguageType,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 5
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 0
-    - Name: $v
       Entry: 10
       Data: 0
     - Name: 
@@ -463,7 +380,7 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  key: key_recorded_time
+  key: 
 --- !u!1 &3117306580946107895
 GameObject:
   m_ObjectHideFlags: 0
@@ -856,6 +773,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4965360528198199036, guid: ad7a58fe3cd27184b8efb7c276b60ffc, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 4965360528198199036, guid: ad7a58fe3cd27184b8efb7c276b60ffc, type: 3}
     - target: {fileID: 6272037516623112900, guid: ad7a58fe3cd27184b8efb7c276b60ffc, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0.5
@@ -1076,6 +997,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ItemLeaderboard Top 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8506829554941178740, guid: ad7a58fe3cd27184b8efb7c276b60ffc, type: 3}
+      propertyPath: scoreTitleText
+      value: 
+      objectReference: {fileID: 4892331742702926849}
     m_RemovedComponents:
     - {fileID: 1824471565030458683, guid: ad7a58fe3cd27184b8efb7c276b60ffc, type: 3}
     m_RemovedGameObjects: []
