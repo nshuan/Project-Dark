@@ -8,6 +8,6 @@ namespace Dark.Scripts.Leaderboard
         public int score;
         public string playerName;
         public CharacterClass classType;
-        public bool isKeepRank1;
+        public bool isShowFullScoreText;
     }
 }
