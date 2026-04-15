@@ -361,6 +361,8 @@ namespace InGame.EndlessLevel
             if (levelCoroutine != null)
                 StopCoroutine(levelCoroutine);
             
+            if (passedWave <= 0) return;
+            
             PlayerDataManager.Instance.UpdateEndlessWave(passedWave, true);
             
             LeaderboardManager.Instance?.GetEndlessLeaderboard()?.UploadScore(passedWave, new int[] { (int)PlayerDataManager.Instance.Data.Class });

@@ -299,7 +299,8 @@ namespace InGame
         {
             if (IsEndLevel) return;
             
-            endlessManager.EndLevel();
+            if (IsPlayingEndless)
+                endlessManager.EndLevel();
             
             StopTimer();
             foreach (var tower in towers)
