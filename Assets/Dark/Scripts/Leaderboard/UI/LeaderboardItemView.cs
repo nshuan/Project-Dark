@@ -44,7 +44,7 @@ namespace Dark.Scripts.Leaderboard.UI
             {
                 if (IsEndlessLeaderboard)
                 {
-                    if (data.rank == 1)
+                    if (data.rank == 1 && !data.isKeepRank1)
                         scoreText.SetText(data.score.ToString());
                     else scoreText.SetTextLanguageKeepFont("key_endless_leaderboard_score", ("%{value}", data.score.ToString()));
                 }
