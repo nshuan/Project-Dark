@@ -91,6 +91,16 @@ namespace Dark.Scripts.Leaderboard.UI
         {
             if (entries is { Count: > 0 })
             {
+                // Show full score text
+                foreach (var entry in entries)
+                {
+                    // Keep top 1 thì đây là preview leader board nên sẽ show full score text
+                    if (isKeepingTop1)
+                        entry.isShowFullScoreText = true;
+                    else
+                        entry.isShowFullScoreText = entry.rank > 1;
+                }
+                
                 // Get current player rank
                 var foundCurrentPlayer = false;
                 foreach (var entry in entries)
