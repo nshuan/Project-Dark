@@ -14,6 +14,8 @@ namespace InGame.EndlessLevel
 {
     public class LevelEndlessManager : SerializedMonoBehaviour
     {
+        public const int LoopWaveAmount = 20;
+        
         public static int passedWave;
 
         public PoolWaveEndless wavePool;
@@ -271,7 +273,12 @@ namespace InGame.EndlessLevel
             if (currentLevel == null || currentLevel.waveInfo == null || currentLevel.waveInfo.Length == 0)
                 return null;
 
-            var clampedIndex = Mathf.Abs(waveIndex) % currentLevel.waveInfo.Length;
+            var clampedIndex = Math.Abs(waveIndex);
+            var totalWave = currentLevel.waveInfo.Length;
+            if (clampedIndex >= totalWave)
+            {
+                clampedIndex = (totalWave - LoopWaveAmount) + (clampedIndex % LoopWaveAmount);
+            }
             var waveInfo = currentLevel.waveInfo[clampedIndex];
             return new WaveEndlessInfo()
             {
