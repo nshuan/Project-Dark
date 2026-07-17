@@ -365,15 +365,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 299020681389993631}
-  - component: {fileID: 4984132575634846176}
   - component: {fileID: 1303778079048215946}
   m_Layer: 0
-  m_Name: STOVE Manager
+  m_Name: STOVE Bootstrap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &299020681389993631
 Transform:
   m_ObjectHideFlags: 0
@@ -389,18 +388,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 9183822099349005816}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4984132575634846176
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8485015684327801669}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d46273a17f4417087454e7964cf6cd9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1303778079048215946
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -413,7 +400,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17278702f3dc4553b2105b704433629d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myShopKey: 
+  initializeOnAwake: 1
+  config:
+    autoInitialize: 1
+    disableInEditor: 1
+    enforceLauncher: 1
+    environment: LIVE
+    gameId: GM-2A6F-6A54B6C1_IND
+    applicationKey: d5f8912403522362f29cd17427b57da47cb810b5309df82fd37b4a2f269d3c74
+    launcherCheckTimeoutMilliseconds: 60000
+    callbackIntervalSeconds: 0.1
+    initializeOwnership: 1
+    queryOwnershipOnInitialize: 1
+    initializeGameSupport: 0
 --- !u!1001 &4948640788701643006
 PrefabInstance:
   m_ObjectHideFlags: 0
