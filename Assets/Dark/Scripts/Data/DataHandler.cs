@@ -16,11 +16,19 @@ namespace Data
         {
             get
             {
-#if UNITY_EDITOR
-                return Application.dataPath + "/_DataTest";
-#endif
-                return Application.persistentDataPath;
+// #if UNITY_EDITOR
+//                 return Application.dataPath + "/_DataTest";
+// #endif
+                string path = Application.persistentDataPath;
+                EnsureDataDirectory(path);
+                return path;
             }
+        }
+
+        private static void EnsureDataDirectory(string path)
+        {
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
         }
 
         public static bool Exist<T>(string key)
