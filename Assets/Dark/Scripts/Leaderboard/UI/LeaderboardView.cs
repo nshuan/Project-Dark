@@ -91,16 +91,66 @@ namespace Dark.Scripts.Leaderboard.UI
         {
             if (entries is { Count: > 0 })
             {
+                // Show full score text
+                foreach (var entry in entries)
+                {
+                    // Keep top 1 thì đây là preview leader board nên sẽ show full score text
+                    if (isKeepingTop1)
+                        entry.isShowFullScoreText = true;
+                    else
+                        entry.isShowFullScoreText = entry.rank > 1;
+                }
+                
+                // Get current player rank
+                var foundCurrentPlayer = false;
+                foreach (var entry in entries)
+                {
+                    if (entry.steamID != SteamManager.myId) continue;
+                    foundCurrentPlayer = true;
+                    SetCurrentPlayer(entry);
+                    playerRankIndex = entry.rank;
+                    if (shouldNavigatedPlayer) NavigatePlayer();
+                    shouldNavigatedPlayer = false;
+                    break;
+                }
+                if (!foundCurrentPlayer)
+                    manager.DownloadAroundPlayer(0);
+                
                 if (top1Item) top1Item.IsEndlessLeaderboard = isEndlessLeaderboard;
                 top1Item?.SetData(entries[0]);
-                entries.RemoveAt(0);
+                if (!isKeepingTop1)
+                    entries.RemoveAt(0);
+            }
+            else
+            {
+                shouldNavigatedPlayer = false;
             }
             SetEntries(entries);
         }
         
         private void OnPlayerScoresDownloaded(List<LeaderboardEntryData> entries)
         {
-            
+            if (entries == null)
+            {
+                SetCurrentPlayer(null);
+                shouldNavigatedPlayer = false;
+            }
+            else
+            {
+                LeaderboardEntryData result = null; 
+                foreach (var entry in entries)
+                {
+                    if (entry.steamID != SteamManager.myId) continue;
+                    result = entry;
+                    break;
+                }
+                SetCurrentPlayer(result);
+                if (result != null) playerRankIndex = result.rank;
+                else playerRankIndex = -1;
+                
+                if (shouldNavigatedPlayer) NavigatePlayer();
+                shouldNavigatedPlayer = false;
+            }
         }
 
         public void SetEntries(IReadOnlyList<LeaderboardEntryData> entries)

@@ -7,6 +7,7 @@ using Data;
 using DG.Tweening;
 using InGame.EnemyEffect;
 using InGame.UI;
+using Steamworks.NET;
 using UnityEngine;
 
 namespace InGame.Boss.BossWizard
@@ -208,6 +209,11 @@ namespace InGame.Boss.BossWizard
                 yield return base.IEDie(delayRelease, reason);
                 yield break;
             }
+            
+            SteamStats.Instance.TryClaimAchievement(
+                LevelManager.Instance.PlayerClass == CharacterClass.CharacterClass.Knight
+                    ? SteamAchievementsAPIName.KNIGHT_KILL_WIZARD
+                    : SteamAchievementsAPIName.ARCHER_KILL_WIZARD);
             
             LevelManager.Instance.BlockDamageAllTowers();
             

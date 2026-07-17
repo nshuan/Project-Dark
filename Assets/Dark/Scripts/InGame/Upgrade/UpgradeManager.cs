@@ -9,6 +9,7 @@ using Cheat;
 using Dark.Scripts.OutGame.SaveSlot;
 using InGame.Upgrade.DynamicCost;
 using Sirenix.Utilities;
+using Steamworks.NET;
 using UnityEngine;
 
 namespace InGame.Upgrade
@@ -159,7 +160,7 @@ namespace InGame.Upgrade
         /// <param name="nodeId"></param>
         /// <param name="groupIds"></param>
         /// <returns></returns>
-        public bool UpgradeNode(int nodeId, UpgradeGroupIdInfo[] groupIds)
+        public bool UpgradeNode(UpgradeNodeType nodeType, int nodeId, UpgradeGroupIdInfo[] groupIds)
         {
             if (TreeConfig.GetNodeById(nodeId) == null) return false;
             
@@ -287,6 +288,9 @@ namespace InGame.Upgrade
             }
                 
             Save();
+            
+            SetSteamAchievementForSkill(nodeType, nodeId);
+            
             return true;
         }
 
@@ -525,6 +529,106 @@ namespace InGame.Upgrade
             }
         }
 
+        private void SetSteamAchievementForSkill(UpgradeNodeType nodeType, int nodeId)
+        {
+            if (nodeType != UpgradeNodeType.NodeSkill && nodeType != UpgradeNodeType.NodeEffect) return;
+            
+            // Echopiercer - Graven Edge
+            if (nodeId == 2)
+            {
+                if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Archer)
+                    SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_ECHOPIERCER);
+                else if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Knight)
+                    SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_GRAVEN_EDGE);
+                return;
+            }
+            
+            // Fracture Volley - Afterslash
+            if (nodeId == 3)
+            {
+                if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Archer)
+                    SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_FRACTURE_VOLLEY);
+                else if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Knight)
+                    SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_AFTERSLASH);
+                return;
+            }
+            
+            // Splitting Echo - Last Stand
+            if (nodeId == 4)
+            {
+                if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Archer)
+                    SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_SPLITTING_ECHO);
+                else if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Knight)
+                    SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_LAST_STAND);
+                return;
+            }
+            
+            // Wanderfang - Stormcoid
+            if (nodeId == 5)
+            {
+                if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Archer)
+                    SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_WANDERFANG);
+                else if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Knight)
+                    SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_STORMCOIL);
+                return;
+            }
+            
+            // Vanguard's Line
+            if (nodeId == 6)
+            {
+                SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_VANGUARD_LINE);
+                return;
+            }
+            
+            // Echofall
+            if (nodeId == 7)
+            {
+                SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_ECHOFALL);
+                return;
+            }
+            
+            // Vowpierce
+            if (nodeId == 8)
+            {
+                SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_VOWPIERCE);
+                return;
+            }
+            
+            // Trine Severance
+            if (nodeId == 9)
+            {
+                SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_TRINE_SEVERANCE);
+                return;
+            }
+            
+            // Passive Lightning
+            if (nodeId is 10 or 14 or 18 or 22)
+            {
+                SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_LIGHTNING_CHAIN);
+                return;
+            }
+            
+            // Passive Explosion
+            if (nodeId is 11 or 15 or 19 or 23)
+            {
+                SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_EXPLOSION);
+                return;
+            }
+            
+            // Passive Burning
+            if (nodeId is 12 or 16 or 20 or 24)
+            {
+                SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_THUNDER);
+                return;
+            }
+            
+            // Passive Lightning
+            if (nodeId is 13 or 17 or 21 or 25)
+            {
+                SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_BURNING);
+                return;
+            }
+        }
         
 #if HOT_CHEAT
         public void CheatUpdateBonusInfo(UpgradeBonusInfoV2 bonusInfo)

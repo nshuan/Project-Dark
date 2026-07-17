@@ -314,7 +314,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             
             Action actionUpgrade = () =>
             {
-                var success = UpgradeManager.Instance.UpgradeNode(config.nodeId, config.groupId);
+                var success = UpgradeManager.Instance.UpgradeNode(nodeType, config.nodeId, config.groupId);
                 if (success)
                 {
                     if (treeRef.IsNodeSkill(config.nodeId))

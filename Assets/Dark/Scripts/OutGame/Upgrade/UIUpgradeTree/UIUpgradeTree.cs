@@ -276,7 +276,7 @@ namespace Dark.Scripts.OutGame.Upgrade
             foreach (var nodeBase in nodesMapByLayer[0])
             {
                 // Do area 0 được đánh id là 1
-                UpgradeManager.Instance.UpgradeNode(nodeBase.config.nodeId,
+                UpgradeManager.Instance.UpgradeNode(UpgradeNodeType.NodeClass, nodeBase.config.nodeId,
                     new[] { new UpgradeGroupIdInfo() { groupId = 1, isLockNode = true } });
             }
             

@@ -70,7 +70,7 @@ namespace Dark.Scripts.Leaderboard.UI
                 }
             }
             
-            imgHighlightCurrentPlayer.gameObject.SetActive(false);
+            imgHighlightCurrentPlayer.gameObject.SetActive(data.steamID == SteamManager.myId);
         }
     }
 }

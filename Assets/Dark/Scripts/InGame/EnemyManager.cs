@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Core;
+using Steamworks.NET;
 using Object = UnityEngine.Object;
 
 namespace InGame
@@ -40,6 +41,7 @@ namespace InGame
         public void OnEnemyDead(EnemyEntity enemy, EnemyDieReason reason)
         {
             CombatActions.OnOneEnemyDead?.Invoke(enemy, reason);
+            SteamStats.Instance.AddKills(1);
         }
 
         public int FilterEnemiesNonAlloc(Func<EnemyEntity, bool> filter, ref EnemyEntity[] enemies, bool aliveOnly = true)
