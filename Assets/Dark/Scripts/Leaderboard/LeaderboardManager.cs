@@ -21,6 +21,7 @@ namespace Dark.Scripts.Leaderboard
             {
                 foreach (var leaderboard in leaderboards)
                 {
+                    leaderboard.Value.SetConfiguredClass(leaderboard.Key);
                     leaderboard.Value.Initialize();
                 }
             }

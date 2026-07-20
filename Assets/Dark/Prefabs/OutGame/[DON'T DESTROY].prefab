@@ -89,6 +89,67 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetFps: 120
+--- !u!1 &3317936474741432572
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4056497326016911595}
+  - component: {fileID: 1592787155551020229}
+  m_Layer: 0
+  m_Name: LeaderboardManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4056497326016911595
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3317936474741432572}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1864536622174318488}
+  - {fileID: 3223530456727654894}
+  - {fileID: 6688528640329309806}
+  - {fileID: 6676327454886398140}
+  m_Father: {fileID: 9183822099349005816}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1592787155551020229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3317936474741432572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 573beccf2406457ea0ae6e28b440e44d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 0
+    SerializedBytes: 01010c0000006c006500610064006500720062006f0061007200640073002f0000000001b7000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e00440069006300740069006f006e00610072007900600032005b005b0049006e00470061006d0065002e0043006800610072006100630074006500720043006c006100730073002e0043006800610072006100630074006500720043006c006100730073002c00200041007300730065006d0062006c0079002d004300530068006100720070005d002c005b004400610072006b002e0053006300720069007000740073002e004c006500610064006500720062006f006100720064002e00470061006d00650043006f006d0070006c006500740069006f006e004c006500610064006500720062006f006100720064004d0061006e0061006700650072002c00200041007300730065006d0062006c0079002d004300530068006100720070005d005d002c0020006d00730063006f0072006c00690062000000000001010800000063006f006d00700061007200650072002f010000000174000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e0045006e0075006d0045007100750061006c0069007400790043006f006d0070006100720065007200600031005b005b0049006e00470061006d0065002e0043006800610072006100630074006500720043006c006100730073002e0043006800610072006100630074006500720043006c006100730073002c00200041007300730065006d0062006c0079002d004300530068006100720070005d005d002c0020006d00730063006f0072006c0069006200010000000600000000000000000705060200000000000000042e1d010200000024006b0000000000000000000b0102000000240076000000000005042e1d010200000024006b0001000000000000000b01020000002400760001000000050705
+    ReferencedUnityObjects:
+    - {fileID: 8910091027696173096}
+    - {fileID: 8296942095687906711}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  fullLeaderboard: {fileID: 3741497243762962305}
+  endlessLeaderboard: {fileID: 3060029979439567797}
 --- !u!1 &3455835772348089027
 GameObject:
   m_ObjectHideFlags: 0
@@ -133,6 +194,108 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 941f370a58fd4b94b0478d573ac8167b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &3459133571947748968
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6676327454886398140}
+  - component: {fileID: 3060029979439567797}
+  m_Layer: 0
+  m_Name: LeaderboardEndless
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6676327454886398140
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3459133571947748968}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4056497326016911595}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3060029979439567797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3459133571947748968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15fba21ca51f47948b782b28f3f24b5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leaderboardName: Endless
+  stoveLeaderboardId: 
+  stoveStatId: 
+  fallbackPlayerName: Player
+  enableDebugLogs: 1
+  useConfiguredClassForEntries: 0
+  configuredClass: 0
+--- !u!1 &3527974989602127262
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6688528640329309806}
+  - component: {fileID: 8296942095687906711}
+  m_Layer: 0
+  m_Name: LeaderboardKnight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6688528640329309806
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3527974989602127262}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4056497326016911595}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8296942095687906711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3527974989602127262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15fba21ca51f47948b782b28f3f24b5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leaderboardName: SpeedrunKnight
+  stoveLeaderboardId: 
+  stoveStatId: 
+  fallbackPlayerName: Player
+  enableDebugLogs: 1
+  useConfiguredClassForEntries: 0
+  configuredClass: 0
 --- !u!1 &4017088013762128622
 GameObject:
   m_ObjectHideFlags: 0
@@ -209,6 +372,57 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bd346fb89364969baa618f95cd380bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &4996083192042809200
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1864536622174318488}
+  - component: {fileID: 3741497243762962305}
+  m_Layer: 0
+  m_Name: LeaderboardGeneral
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1864536622174318488
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4996083192042809200}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4056497326016911595}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3741497243762962305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4996083192042809200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15fba21ca51f47948b782b28f3f24b5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leaderboardName: Speedrun
+  stoveLeaderboardId: GM-2A6F-6A54B6C1_IND|TIME_COMPLETE_GAME
+  stoveStatId: TIME_COMPLETE_GAME
+  fallbackPlayerName: Player
+  enableDebugLogs: 1
+  useConfiguredClassForEntries: 0
+  configuredClass: 0
 --- !u!1 &6945455506563637764
 GameObject:
   m_ObjectHideFlags: 0
@@ -304,6 +518,57 @@ Transform:
   - {fileID: 1113080423149576838}
   m_Father: {fileID: 9183822099349005816}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7363899128914322572
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3223530456727654894}
+  - component: {fileID: 8910091027696173096}
+  m_Layer: 0
+  m_Name: LeaderboardArcher
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3223530456727654894
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7363899128914322572}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4056497326016911595}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8910091027696173096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7363899128914322572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15fba21ca51f47948b782b28f3f24b5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leaderboardName: SpeedrunArcher
+  stoveLeaderboardId: 
+  stoveStatId: 
+  fallbackPlayerName: Player
+  enableDebugLogs: 1
+  useConfiguredClassForEntries: 0
+  configuredClass: 0
 --- !u!1 &7504682569326810170
 GameObject:
   m_ObjectHideFlags: 0
@@ -342,6 +607,7 @@ Transform:
   - {fileID: 7269134296953178179}
   - {fileID: 8365400596579758148}
   - {fileID: 299020681389993631}
+  - {fileID: 4056497326016911595}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6853931376801999387

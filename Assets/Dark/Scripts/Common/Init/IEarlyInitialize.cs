@@ -7,7 +7,7 @@ using Dark.Scripts.Settings;
 using Dark.Scripts.Settings.Resolution;
 using Data;
 using InGame.Upgrade;
-using Steamworks.NET;
+using Dark.Scripts.STOVE;
 using UnityEngine;
 
 namespace Dark.Scripts.Common.Init
@@ -50,11 +50,11 @@ namespace Dark.Scripts.Common.Init
     }
 
     [Serializable]
-    public class SteamStatsInitializer : IEarlyInitialize
+    public class GameSupportStatsInitializer : IEarlyInitialize
     {
         public void Initialize()
         {
-            SteamStats.Instance.Initialize();
+            GameSupportStats.Instance.Initialize();
         }
     }
     

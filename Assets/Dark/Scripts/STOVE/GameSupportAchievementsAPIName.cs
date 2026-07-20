@@ -1,6 +1,6 @@
-namespace Steamworks.NET
+namespace Dark.Scripts.STOVE
 {
-    public static class SteamAchievementsAPIName
+    public static class GameSupportAchievementsAPIName
     {
         public const string COMPLETE_ARCHER = "COMPLETE_ARCHER";
         public const string COMPLETE_KNIGHT = "COMPLETE_KNIGHT";

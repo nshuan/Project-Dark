@@ -24,6 +24,7 @@ namespace Dark.Scripts.Leaderboard.UI
         [SerializeField, HideIf("isClassLeaderboard")] private bool isEndlessLeaderboard;
         [SerializeField] private bool isNavigateToPlayerOnFirstLoad;
         [SerializeField] private bool isKeepingTop1;
+        [SerializeField] private bool enableDebugLogs = true;
         
         [Header("UI")]
         [SerializeField] private ScrollRect scrollRect;
@@ -37,10 +38,12 @@ namespace Dark.Scripts.Leaderboard.UI
 
         readonly ComponentPool<LeaderboardItemView> _pool = new ComponentPool<LeaderboardItemView>();
         readonly List<LeaderboardItemView> _active = new List<LeaderboardItemView>(64);
+        readonly List<LeaderboardEntryData> _visibleEntries = new List<LeaderboardEntryData>(64);
         Coroutine _scrollRoutine;
 
         private int playerRankIndex = -1;
         private bool shouldNavigatedPlayer;
+        private LeaderboardEntryData _top1Entry;
 
         private void Awake()
         {
@@ -54,6 +57,8 @@ namespace Dark.Scripts.Leaderboard.UI
                 isEndlessLeaderboard = false;
                 manager = LeaderboardManager.Instance.GetLeaderboard(leaderboardClass);
             }
+
+            Log($"Awake. manager={(manager == null ? "null" : manager.name)}, isClassLeaderboard={isClassLeaderboard}, class={leaderboardClass}, isEndlessLeaderboard={isEndlessLeaderboard}.");
             
             btnNavigatePlayerRank.onClick.RemoveAllListeners();
             btnNavigatePlayerRank.onClick.AddListener(NavigatePlayer);
@@ -72,9 +77,14 @@ namespace Dark.Scripts.Leaderboard.UI
             
             if (manager != null)
             {
+                Log($"OnEnable. Subscribing and downloading top ranks.");
                 manager.OnTopScoresDownloaded += OnTopScoresDownloaded;
                 manager.OnPlayerScoresDownloaded += OnPlayerScoresDownloaded;
                 manager.DownloadTop(100);
+            }
+            else
+            {
+                Log("OnEnable skipped because manager is null.");
             }
         }
 
@@ -89,6 +99,8 @@ namespace Dark.Scripts.Leaderboard.UI
 
         public void OnTopScoresDownloaded(List<LeaderboardEntryData> entries)
         {
+            Log($"Top scores downloaded. count={(entries == null ? 0 : entries.Count)}.");
+
             if (entries is { Count: > 0 })
             {
                 // Show full score text
@@ -102,34 +114,29 @@ namespace Dark.Scripts.Leaderboard.UI
                 }
                 
                 // Get current player rank
-                var foundCurrentPlayer = false;
-                foreach (var entry in entries)
-                {
-                    if (entry.steamID != SteamManager.myId) continue;
-                    foundCurrentPlayer = true;
-                    SetCurrentPlayer(entry);
-                    playerRankIndex = entry.rank;
-                    if (shouldNavigatedPlayer) NavigatePlayer();
-                    shouldNavigatedPlayer = false;
-                    break;
-                }
-                if (!foundCurrentPlayer)
-                    manager.DownloadAroundPlayer(0);
+                ApplyCurrentPlayerFlag(entries);
+                manager.DownloadAroundPlayer(0);
                 
+                _top1Entry = entries[0];
                 if (top1Item) top1Item.IsEndlessLeaderboard = isEndlessLeaderboard;
-                top1Item?.SetData(entries[0]);
+                top1Item?.SetData(_top1Entry);
                 if (!isKeepingTop1)
                     entries.RemoveAt(0);
             }
             else
             {
+                Log("Top scores were empty. Requesting current player rank anyway for debugging.");
+                manager?.DownloadAroundPlayer(0);
                 shouldNavigatedPlayer = false;
+                _top1Entry = null;
             }
             SetEntries(entries);
         }
         
         private void OnPlayerScoresDownloaded(List<LeaderboardEntryData> entries)
         {
+            Log($"Player score downloaded. count={(entries == null ? 0 : entries.Count)}.");
+
             if (entries == null)
             {
                 SetCurrentPlayer(null);
@@ -137,16 +144,15 @@ namespace Dark.Scripts.Leaderboard.UI
             }
             else
             {
-                LeaderboardEntryData result = null; 
-                foreach (var entry in entries)
-                {
-                    if (entry.steamID != SteamManager.myId) continue;
-                    result = entry;
-                    break;
-                }
+                LeaderboardEntryData result = entries.Count > 0 ? entries[0] : null;
                 SetCurrentPlayer(result);
                 if (result != null) playerRankIndex = result.rank;
                 else playerRankIndex = -1;
+                Log(result == null
+                    ? "Current player rank not returned by STOVE."
+                    : $"Current player rank returned. rank={result.rank}, score={result.score}, name='{result.playerName}'.");
+
+                RefreshCurrentPlayerHighlight();
                 
                 if (shouldNavigatedPlayer) NavigatePlayer();
                 shouldNavigatedPlayer = false;
@@ -156,20 +162,26 @@ namespace Dark.Scripts.Leaderboard.UI
         public void SetEntries(IReadOnlyList<LeaderboardEntryData> entries)
         {
             if (content == null || itemPrefab == null)
+            {
+                Log($"SetEntries skipped. contentNull={content == null}, itemPrefabNull={itemPrefab == null}.");
                 return;
+            }
 
             for (int i = 0; i < _active.Count; i++)
                 _pool.Release(_active[i]);
             _active.Clear();
+            _visibleEntries.Clear();
 
             if (entries != null)
             {
                 for (int i = 0; i < entries.Count; i++)
                 {
+                    entries[i].isCurrentPlayer = playerRankIndex > 0 && entries[i].rank == playerRankIndex;
                     var item = _pool.Get(itemPrefab, content);
                     item.IsEndlessLeaderboard = isEndlessLeaderboard;
                     item.SetData(entries[i]);
                     _active.Add(item);
+                    _visibleEntries.Add(entries[i]);
                 }
             }
 
@@ -177,10 +189,13 @@ namespace Dark.Scripts.Leaderboard.UI
 
             if (scrollRect != null)
                 scrollRect.verticalNormalizedPosition = 1f;
+
+            Log($"SetEntries complete. activeItems={_active.Count}, playerRankIndex={playerRankIndex}, top1='{(_top1Entry == null ? "" : _top1Entry.playerName)}'.");
         }
 
         private void NavigatePlayer()
         {
+            Log($"NavigatePlayer requested. playerRankIndex={playerRankIndex}.");
             if (playerRankIndex > 0) ScrollToIndex(playerRankIndex, ScrollAlign.Top, 0.5f);
         }
         
@@ -304,14 +319,55 @@ namespace Dark.Scripts.Leaderboard.UI
         {
             if (entry != null)
             {
+                Log($"SetCurrentPlayer. rank={entry.rank}, score={entry.score}, name='{entry.playerName}'.");
                 txtPlayerRank.SetTextLanguageKeepFont("key_leaderboard_current_rank",
                     ("%{value}", $"#{entry.rank}"));
             }
             else
             {
+                Log("SetCurrentPlayer null.");
                 txtPlayerRank.SetTextLanguageKeepFont("key_leaderboard_current_rank",
                     ("%{value}", "##"));   
             }
+        }
+
+        private void ApplyCurrentPlayerFlag(IEnumerable<LeaderboardEntryData> entries)
+        {
+            if (entries == null || playerRankIndex <= 0)
+                return;
+
+            foreach (var entry in entries)
+            {
+                if (entry == null)
+                    continue;
+
+                entry.isCurrentPlayer = entry.rank == playerRankIndex;
+            }
+        }
+
+        private void RefreshCurrentPlayerHighlight()
+        {
+            if (_top1Entry != null)
+            {
+                _top1Entry.isCurrentPlayer = playerRankIndex > 0 && _top1Entry.rank == playerRankIndex;
+                top1Item?.SetCurrentPlayerHighlight(_top1Entry.isCurrentPlayer);
+            }
+
+            for (var i = 0; i < _active.Count; i++)
+            {
+                var entry = i < _visibleEntries.Count ? _visibleEntries[i] : null;
+                _active[i].SetCurrentPlayerHighlight(entry != null && playerRankIndex > 0 && entry.rank == playerRankIndex);
+            }
+
+            Log($"RefreshCurrentPlayerHighlight. playerRankIndex={playerRankIndex}, top1Current={(_top1Entry != null && _top1Entry.isCurrentPlayer)}, visibleCount={_visibleEntries.Count}.");
+        }
+
+        private void Log(string message)
+        {
+            if (!enableDebugLogs)
+                return;
+
+            Debug.Log($"[LeaderboardView:{name}] {message}");
         }
     }
 }

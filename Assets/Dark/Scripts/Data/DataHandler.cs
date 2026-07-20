@@ -16,9 +16,9 @@ namespace Data
         {
             get
             {
-// #if UNITY_EDITOR
-//                 return Application.dataPath + "/_DataTest";
-// #endif
+#if UNITY_EDITOR
+                return Application.dataPath + "/_DataTest";
+#endif
                 string path = Application.persistentDataPath;
                 EnsureDataDirectory(path);
                 return path;

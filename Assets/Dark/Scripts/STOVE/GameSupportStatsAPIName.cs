@@ -1,6 +1,6 @@
-namespace Steamworks.NET
+namespace Dark.Scripts.STOVE
 {
-    public static class SteamStatsAPIName
+    public static class GameSupportStatsAPIName
     {
         public const string TOTAL_KILL = "TOTAL_KILLS";
         public const string TOTAL_RUNS = "TOTAL_RUNS";

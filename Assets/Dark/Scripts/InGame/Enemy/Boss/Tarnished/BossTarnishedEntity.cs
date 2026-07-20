@@ -10,7 +10,7 @@ using InGame.CameraController;
 using InGame.EndlessLevel;
 using InGame.EnemyEffect;
 using InGame.UI;
-using Steamworks.NET;
+using Dark.Scripts.STOVE;
 using UnityEngine;
 
 namespace InGame.Boss
@@ -55,10 +55,10 @@ namespace InGame.Boss
                 yield break;
             }
             
-            SteamStats.Instance.TryClaimAchievement(
+            GameSupportStats.Instance.TryClaimAchievement(
                 LevelManager.Instance.PlayerClass == CharacterClass.CharacterClass.Knight
-                    ? SteamAchievementsAPIName.KNIGHT_KILL_THE_TARNISHED
-                    : SteamAchievementsAPIName.ARCHER_KILL_THE_TARNISHED);
+                    ? GameSupportAchievementsAPIName.KNIGHT_KILL_THE_TARNISHED
+                    : GameSupportAchievementsAPIName.ARCHER_KILL_THE_TARNISHED);
             
             LevelManager.Instance.BlockDamageAllTowers();
             

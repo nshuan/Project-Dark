@@ -1,189 +1,260 @@
 using System;
 using System.Collections;
-using Core;
 using System.Collections.Generic;
+using Dark.Scripts.STOVE;
 using InGame.CharacterClass;
-using Sirenix.OdinInspector;
-using Steamworks;
 using UnityEngine;
-using Random = UnityEngine.Random;
+using static Stove.PCSDK.GameSupport;
 
 namespace Dark.Scripts.Leaderboard
 {
     /// <summary>
-    /// detail[0] dùng để lưu class
+    /// STOVE leaderboard adapter.
+    /// STOVE rankings are backed by stats, so `stoveStatId` is used for score uploads
+    /// and `stoveLeaderboardId` is used for rank queries.
     /// </summary>
     public class GameCompletionLeaderboardManager : MonoBehaviour
     {
+        [Tooltip("Legacy Steam leaderboard name. Used as a STOVE ID fallback to keep existing prefab data valid.")]
         public string leaderboardName;
-        
-        bool leaderboardReady;
+
+        [Header("STOVE")]
+        [SerializeField] private string stoveLeaderboardId;
+        [SerializeField] private string stoveStatId;
+        [SerializeField] private string fallbackPlayerName = "Player";
+        [SerializeField] private bool enableDebugLogs = true;
+
+        [Header("Display")]
+        [SerializeField] private bool useConfiguredClassForEntries;
+        [SerializeField] private CharacterClass configuredClass;
+
+        private bool leaderboardReady;
         private bool initializeStarted;
 
-        SteamLeaderboard_t leaderboard;
+        private readonly List<LeaderboardEntryData> offlineLeaderboard = new List<LeaderboardEntryData>();
 
-        CallResult<LeaderboardFindResult_t> findLeaderboard;
-        CallResult<LeaderboardScoreUploaded_t> uploadResult;
-        CallResult<LeaderboardScoresDownloaded_t> downloadTopResult;
-        CallResult<LeaderboardScoresDownloaded_t> downloadAroundPlayerResult;
-
-        List<LeaderboardEntryData> offlineLeaderboard = new List<LeaderboardEntryData>();
         public event Action<List<LeaderboardEntryData>> OnTopScoresDownloaded;
         public event Action<List<LeaderboardEntryData>> OnPlayerScoresDownloaded;
         public event Action OnPlayerScoreUploaded;
-        
-        // -----------------------------
-        // Initialize
-        // -----------------------------
+
+        private string LeaderboardId => string.IsNullOrWhiteSpace(stoveLeaderboardId)
+            ? leaderboardName
+            : stoveLeaderboardId;
+
+        private string StatId => string.IsNullOrWhiteSpace(stoveStatId)
+            ? leaderboardName
+            : stoveStatId;
+
+        private string DebugName => string.IsNullOrWhiteSpace(name) ? leaderboardName : name;
+
+        public void SetConfiguredClass(CharacterClass characterClass)
+        {
+            configuredClass = characterClass;
+            useConfiguredClassForEntries = true;
+        }
 
         public void Initialize()
         {
             if (initializeStarted) return;
+
             initializeStarted = true;
             leaderboardReady = false;
-            StartCoroutine(IEInitialize(leaderboardName));
+            Log($"Initialize requested. leaderboardName='{leaderboardName}', stoveLeaderboardId='{stoveLeaderboardId}', stoveStatId='{stoveStatId}'.");
+            StartCoroutine(IEInitialize());
         }
 
-        private IEnumerator IEInitialize(string leaderboardName)
+        private IEnumerator IEInitialize()
         {
-            yield return new WaitUntil(() => SteamManager.Initialized);
-            
-            findLeaderboard = CallResult<LeaderboardFindResult_t>.Create(OnLeaderboardFound);
-            uploadResult = CallResult<LeaderboardScoreUploaded_t>.Create(OnScoreUploaded);
-            downloadTopResult = CallResult<LeaderboardScoresDownloaded_t>.Create(OnTopScoresDownloadedInternal);
-            downloadAroundPlayerResult = CallResult<LeaderboardScoresDownloaded_t>.Create(OnPlayerScoresDownloadedInternal);
-            
-            var handle = SteamUserStats.FindLeaderboard(leaderboardName);
-            findLeaderboard.Set(handle);
-        }
-        
-        void OnLeaderboardFound(LeaderboardFindResult_t result, bool failure)
-        {
-            if (!failure)
+            var stoveManager = STOVEPCSDK3Manager.Instance;
+
+            while (stoveManager.IsInitializing)
+                yield return null;
+
+            if (!stoveManager.IsGameSupportInitialized)
             {
-                leaderboard = result.m_hSteamLeaderboard;
-                leaderboardReady = true;
+                Debug.LogWarning($"STOVE leaderboard '{name}' skipped because GameSupport SDK is not initialized.");
+                yield break;
             }
-        }
 
-        // -----------------------------
-        // Upload Score
-        // -----------------------------
+            if (string.IsNullOrWhiteSpace(LeaderboardId) || string.IsNullOrWhiteSpace(StatId))
+            {
+                Debug.LogWarning($"STOVE leaderboard '{name}' skipped because leaderboard/stat ID is missing.");
+                yield break;
+            }
+
+            leaderboardReady = true;
+            Log($"Ready. LeaderboardId='{LeaderboardId}', StatId='{StatId}', configuredClass='{configuredClass}', useConfiguredClassForEntries={useConfiguredClassForEntries}.");
+        }
 
         public void UploadScore(int score, int[] details = null)
         {
-            if (!leaderboardReady) return;
-            if (!SteamManager.Initialized) return;
+            if (!CanUseGameSupport())
+                return;
 
-            var handle = SteamUserStats.UploadLeaderboardScore(
-                leaderboard,
-                ELeaderboardUploadScoreMethod.k_ELeaderboardUploadScoreMethodKeepBest,
-                score,
-                details,
-                details?.Length ?? 0
-            );
+            try
+            {
+                Log($"Uploading score. StatId='{StatId}', score={score}, details=[{FormatDetails(details)}].");
+                GameSupport_ModifyStat(StatId, score, (callbackResult, _) =>
+                {
+                    STOVEPCSDK3Manager.Instance.PrintCallbackResult(callbackResult);
+                    Log($"Upload callback. StatId='{StatId}', score={score}, success={callbackResult.result.IsSuccessful()}, resultCode={callbackResult.result.resultCode}, error='{callbackResult.errorMessage}'.");
 
-            uploadResult.Set(handle);
+                    if (!callbackResult.result.IsSuccessful())
+                        return;
+
+                    OnPlayerScoreUploaded?.Invoke();
+                    OnPlayerScoreUploaded = null;
+                });
+            }
+            catch (Exception exception)
+            {
+                Debug.LogError($"STOVE stat upload failed for '{StatId}': {exception}");
+            }
         }
-
-        void OnScoreUploaded(LeaderboardScoreUploaded_t result, bool failure)
-        {
-            // Optional callback
-            if (failure) return;
-            OnPlayerScoreUploaded?.Invoke();
-            OnPlayerScoreUploaded = null;
-        }
-        
-        // -----------------------------
-        // Download Top
-        // -----------------------------
 
         public void DownloadTop(int count)
         {
-            if (!leaderboardReady) return;
-            if (!SteamManager.Initialized) return;
+            if (!CanUseGameSupport())
+                return;
 
-            var handle = SteamUserStats.DownloadLeaderboardEntries(
-                leaderboard,
-                ELeaderboardDataRequest.k_ELeaderboardDataRequestGlobal,
-                1,
-                count
-            );
-
-            downloadTopResult.Set(handle);
+            Log($"DownloadTop requested. count={count}.");
+            DownloadRankPage(1, Mathf.Max(1, count), includeMyRank: false, OnTopScoresDownloaded);
         }
-
-        // -----------------------------
-        // Download Around Player
-        // -----------------------------
 
         public void DownloadAroundPlayer(int range)
         {
-            if (!leaderboardReady) return;
-            if (!SteamManager.Initialized) return;
+            if (!CanUseGameSupport())
+                return;
 
-            var handle = SteamUserStats.DownloadLeaderboardEntries(
-                leaderboard,
-                ELeaderboardDataRequest.k_ELeaderboardDataRequestGlobalAroundUser,
-                -range,
-                range
-            );
-
-            downloadAroundPlayerResult.Set(handle);
+            // STOVE PC SDK 3 does not expose Steam's global-around-user request.
+            // includeMyRank returns the current user's rank entry, which is all the UI needs here.
+            var pageSize = Mathf.Max(1, (range * 2) + 1);
+            Log($"DownloadAroundPlayer requested. range={range}, pageSize={pageSize}.");
+            DownloadRankPage(1, pageSize, includeMyRank: true, OnPlayerScoresDownloaded);
         }
 
-        void OnTopScoresDownloadedInternal(LeaderboardScoresDownloaded_t result, bool failure)
+        private void DownloadRankPage(int pageIndex, int pageSize, bool includeMyRank,
+            Action<List<LeaderboardEntryData>> onDownloaded)
         {
-            var entries = ConvertScoresDownloadedInternal(result, failure);
-            OnTopScoresDownloaded?.Invoke(entries);
-        }
-
-        void OnPlayerScoresDownloadedInternal(LeaderboardScoresDownloaded_t result, bool failure)
-        {
-            var entries = ConvertScoresDownloadedInternal(result, failure);
-            OnPlayerScoresDownloaded?.Invoke(entries);
-        }
-        
-        List<LeaderboardEntryData> ConvertScoresDownloadedInternal(LeaderboardScoresDownloaded_t result, bool failure)
-        {
-            if (failure) return new List<LeaderboardEntryData>();
-
-            List<LeaderboardEntryData> entries = new List<LeaderboardEntryData>();
-
-            for (int i = 0; i < result.m_cEntryCount; i++)
+            try
             {
-                var details = new int[result.m_cEntryCount];
+                var rankParams = new StovePCRankParams
+                {
+                    leaderboardId = LeaderboardId,
+                    pageIndex = (uint)Mathf.Max(1, pageIndex),
+                    pageSize = (uint)Mathf.Max(1, pageSize),
+                    includeMyRank = includeMyRank
+                };
 
-                SteamUserStats.GetDownloadedLeaderboardEntry(
-                    result.m_hSteamLeaderboardEntries,
-                    i,
-                    out var entry,
-                    details,
-                    result.m_cEntryCount
-                );
-                
+                Log($"Rank request. leaderboardId='{rankParams.leaderboardId}', pageIndex={rankParams.pageIndex}, pageSize={rankParams.pageSize}, includeMyRank={rankParams.includeMyRank}.");
+                GameSupport_Rank(rankParams, (callbackResult, ranks, _) =>
+                {
+                    STOVEPCSDK3Manager.Instance.PrintCallbackResult(callbackResult);
+                    Log($"Rank callback. leaderboardId='{LeaderboardId}', includeMyRank={includeMyRank}, success={callbackResult.result.IsSuccessful()}, resultCode={callbackResult.result.resultCode}, error='{callbackResult.errorMessage}', rawCount={(ranks == null ? 0 : ranks.Length)}.");
+
+                    if (!callbackResult.result.IsSuccessful())
+                    {
+                        onDownloaded?.Invoke(new List<LeaderboardEntryData>());
+                        return;
+                    }
+
+                    var entries = ConvertRanks(ranks, includeMyRank);
+                    LogRankEntries(entries, includeMyRank);
+                    onDownloaded?.Invoke(entries);
+                });
+            }
+            catch (Exception exception)
+            {
+                Debug.LogError($"STOVE rank download failed for '{LeaderboardId}': {exception}");
+                onDownloaded?.Invoke(new List<LeaderboardEntryData>());
+            }
+        }
+
+        private List<LeaderboardEntryData> ConvertRanks(StovePCRank[] ranks, bool firstEntryIsCurrentPlayer)
+        {
+            var entries = new List<LeaderboardEntryData>();
+
+            if (ranks == null)
+                return entries;
+
+            for (var i = 0; i < ranks.Length; i++)
+            {
+                var rank = ranks[i];
                 entries.Add(new LeaderboardEntryData
                 {
-                    steamID = entry.m_steamIDUser,
-                    rank = entry.m_nGlobalRank,
-                    score = entry.m_nScore,
-                    playerName = SteamFriends.GetFriendPersonaName(entry.m_steamIDUser),
-                    classType = (CharacterClass)details[0]
+                    rank = (int)rank.rank,
+                    score = (int)rank.score,
+                    playerName = string.IsNullOrWhiteSpace(rank.nickname) ? fallbackPlayerName : rank.nickname,
+                    classType = useConfiguredClassForEntries ? configuredClass : (CharacterClass)(-1),
+                    isCurrentPlayer = firstEntryIsCurrentPlayer && i == 0
                 });
             }
 
             return entries;
         }
-        
-        // -----------------------------
-        // OFFLINE SYSTEM
-        // -----------------------------
+
+        private bool CanUseGameSupport()
+        {
+            if (!leaderboardReady)
+            {
+                Log($"GameSupport call skipped. Leaderboard is not ready yet. LeaderboardId='{LeaderboardId}', StatId='{StatId}'.");
+                return false;
+            }
+
+            if (!STOVEPCSDK3Manager.Instance.IsGameSupportInitialized)
+            {
+                Log($"GameSupport call skipped. GameSupport SDK is not initialized. LeaderboardId='{LeaderboardId}', StatId='{StatId}'.");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(LeaderboardId) || string.IsNullOrWhiteSpace(StatId))
+            {
+                Log($"GameSupport call skipped. Missing ID. LeaderboardId='{LeaderboardId}', StatId='{StatId}'.");
+                return false;
+            }
+
+            return true;
+        }
+
+        private void LogRankEntries(IReadOnlyList<LeaderboardEntryData> entries, bool includeMyRank)
+        {
+            if (!enableDebugLogs)
+                return;
+
+            Debug.Log($"[STOVE Leaderboard:{DebugName}] Converted rank entries. includeMyRank={includeMyRank}, count={(entries == null ? 0 : entries.Count)}.");
+
+            if (entries == null)
+                return;
+
+            var count = Mathf.Min(entries.Count, 10);
+            for (var i = 0; i < count; i++)
+            {
+                var entry = entries[i];
+                Debug.Log($"[STOVE Leaderboard:{DebugName}] Entry[{i}] rank={entry.rank}, score={entry.score}, name='{entry.playerName}', class={entry.classType}, isCurrentPlayer={entry.isCurrentPlayer}.");
+            }
+        }
+
+        private void Log(string message)
+        {
+            if (!enableDebugLogs)
+                return;
+
+            Debug.Log($"[STOVE Leaderboard:{DebugName}] {message}");
+        }
+
+        private static string FormatDetails(int[] details)
+        {
+            if (details == null || details.Length == 0)
+                return string.Empty;
+
+            return string.Join(",", details);
+        }
 
         void AddOfflineScore(int score)
         {
             offlineLeaderboard.Add(new LeaderboardEntryData
             {
-                playerName = "Player",
+                playerName = fallbackPlayerName,
                 score = score
             });
 
@@ -198,7 +269,7 @@ namespace Dark.Scripts.Leaderboard
             if (offlineLeaderboard.Count == 0)
                 return new List<LeaderboardEntryData>();
 
-            int playerIndex = 0; // assume player is entry 0 for offline
+            int playerIndex = 0;
 
             int start = Mathf.Max(0, playerIndex - range);
             int end = Mathf.Min(offlineLeaderboard.Count - 1, playerIndex + range);

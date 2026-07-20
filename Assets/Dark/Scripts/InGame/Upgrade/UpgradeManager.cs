@@ -9,7 +9,7 @@ using Cheat;
 using Dark.Scripts.OutGame.SaveSlot;
 using InGame.Upgrade.DynamicCost;
 using Sirenix.Utilities;
-using Steamworks.NET;
+using Dark.Scripts.STOVE;
 using UnityEngine;
 
 namespace InGame.Upgrade
@@ -289,7 +289,7 @@ namespace InGame.Upgrade
                 
             Save();
             
-            SetSteamAchievementForSkill(nodeType, nodeId);
+            SetGameSupportAchievementForSkill(nodeType, nodeId);
             
             return true;
         }
@@ -529,7 +529,7 @@ namespace InGame.Upgrade
             }
         }
 
-        private void SetSteamAchievementForSkill(UpgradeNodeType nodeType, int nodeId)
+        private void SetGameSupportAchievementForSkill(UpgradeNodeType nodeType, int nodeId)
         {
             if (nodeType != UpgradeNodeType.NodeSkill && nodeType != UpgradeNodeType.NodeEffect) return;
             
@@ -537,9 +537,9 @@ namespace InGame.Upgrade
             if (nodeId == 2)
             {
                 if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Archer)
-                    SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_ECHOPIERCER);
+                    GameSupportStats.Instance.TryClaimAchievement(GameSupportAchievementsAPIName.UNLOCK_ECHOPIERCER);
                 else if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Knight)
-                    SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_GRAVEN_EDGE);
+                    GameSupportStats.Instance.TryClaimAchievement(GameSupportAchievementsAPIName.UNLOCK_GRAVEN_EDGE);
                 return;
             }
             
@@ -547,9 +547,9 @@ namespace InGame.Upgrade
             if (nodeId == 3)
             {
                 if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Archer)
-                    SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_FRACTURE_VOLLEY);
+                    GameSupportStats.Instance.TryClaimAchievement(GameSupportAchievementsAPIName.UNLOCK_FRACTURE_VOLLEY);
                 else if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Knight)
-                    SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_AFTERSLASH);
+                    GameSupportStats.Instance.TryClaimAchievement(GameSupportAchievementsAPIName.UNLOCK_AFTERSLASH);
                 return;
             }
             
@@ -557,9 +557,9 @@ namespace InGame.Upgrade
             if (nodeId == 4)
             {
                 if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Archer)
-                    SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_SPLITTING_ECHO);
+                    GameSupportStats.Instance.TryClaimAchievement(GameSupportAchievementsAPIName.UNLOCK_SPLITTING_ECHO);
                 else if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Knight)
-                    SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_LAST_STAND);
+                    GameSupportStats.Instance.TryClaimAchievement(GameSupportAchievementsAPIName.UNLOCK_LAST_STAND);
                 return;
             }
             
@@ -567,65 +567,65 @@ namespace InGame.Upgrade
             if (nodeId == 5)
             {
                 if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Archer)
-                    SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_WANDERFANG);
+                    GameSupportStats.Instance.TryClaimAchievement(GameSupportAchievementsAPIName.UNLOCK_WANDERFANG);
                 else if (PlayerDataManager.Instance.Data.Class == CharacterClass.CharacterClass.Knight)
-                    SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_STORMCOIL);
+                    GameSupportStats.Instance.TryClaimAchievement(GameSupportAchievementsAPIName.UNLOCK_STORMCOIL);
                 return;
             }
             
             // Vanguard's Line
             if (nodeId == 6)
             {
-                SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_VANGUARD_LINE);
+                GameSupportStats.Instance.TryClaimAchievement(GameSupportAchievementsAPIName.UNLOCK_VANGUARD_LINE);
                 return;
             }
             
             // Echofall
             if (nodeId == 7)
             {
-                SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_ECHOFALL);
+                GameSupportStats.Instance.TryClaimAchievement(GameSupportAchievementsAPIName.UNLOCK_ECHOFALL);
                 return;
             }
             
             // Vowpierce
             if (nodeId == 8)
             {
-                SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_VOWPIERCE);
+                GameSupportStats.Instance.TryClaimAchievement(GameSupportAchievementsAPIName.UNLOCK_VOWPIERCE);
                 return;
             }
             
             // Trine Severance
             if (nodeId == 9)
             {
-                SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_TRINE_SEVERANCE);
+                GameSupportStats.Instance.TryClaimAchievement(GameSupportAchievementsAPIName.UNLOCK_TRINE_SEVERANCE);
                 return;
             }
             
             // Passive Lightning
             if (nodeId is 10 or 14 or 18 or 22)
             {
-                SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_LIGHTNING_CHAIN);
+                GameSupportStats.Instance.TryClaimAchievement(GameSupportAchievementsAPIName.UNLOCK_LIGHTNING_CHAIN);
                 return;
             }
             
             // Passive Explosion
             if (nodeId is 11 or 15 or 19 or 23)
             {
-                SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_EXPLOSION);
+                GameSupportStats.Instance.TryClaimAchievement(GameSupportAchievementsAPIName.UNLOCK_EXPLOSION);
                 return;
             }
             
             // Passive Burning
             if (nodeId is 12 or 16 or 20 or 24)
             {
-                SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_THUNDER);
+                GameSupportStats.Instance.TryClaimAchievement(GameSupportAchievementsAPIName.UNLOCK_THUNDER);
                 return;
             }
             
             // Passive Lightning
             if (nodeId is 13 or 17 or 21 or 25)
             {
-                SteamStats.Instance.TryClaimAchievement(SteamAchievementsAPIName.UNLOCK_BURNING);
+                GameSupportStats.Instance.TryClaimAchievement(GameSupportAchievementsAPIName.UNLOCK_BURNING);
                 return;
             }
         }

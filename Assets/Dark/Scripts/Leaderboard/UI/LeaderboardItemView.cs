@@ -16,9 +16,12 @@ namespace Dark.Scripts.Leaderboard.UI
         [SerializeField] private Image imgHighlightCurrentPlayer;
         
         public bool IsEndlessLeaderboard { get; set; }
+        private LeaderboardEntryData _data;
 
         public void SetData(LeaderboardEntryData data)
         {
+            _data = data;
+
             if (data == null)
             {
                 if (scoreTitleText)
@@ -35,6 +38,7 @@ namespace Dark.Scripts.Leaderboard.UI
                 {
                     classIcons[i].SetActive(false);
                 }
+                SetCurrentPlayerHighlight(false);
                 return;    
             }
             
@@ -70,7 +74,16 @@ namespace Dark.Scripts.Leaderboard.UI
                 }
             }
             
-            imgHighlightCurrentPlayer.gameObject.SetActive(data.steamID == SteamManager.myId);
+            SetCurrentPlayerHighlight(data.isCurrentPlayer);
+        }
+
+        public void SetCurrentPlayerHighlight(bool isCurrentPlayer)
+        {
+            if (_data != null)
+                _data.isCurrentPlayer = isCurrentPlayer;
+
+            if (imgHighlightCurrentPlayer != null)
+                imgHighlightCurrentPlayer.gameObject.SetActive(isCurrentPlayer);
         }
     }
 }

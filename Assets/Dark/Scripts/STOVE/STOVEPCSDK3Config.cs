@@ -18,7 +18,7 @@ namespace Dark.Scripts.STOVE
         public float callbackIntervalSeconds = 0.1f;
         public bool initializeOwnership = true;
         public bool queryOwnershipOnInitialize = true;
-        public bool initializeGameSupport;
+        public bool initializeGameSupport = true;
 
         public static STOVEPCSDK3Config Load()
         {

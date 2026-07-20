@@ -17,7 +17,7 @@ using InGame.Upgrade;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using Sirenix.Utilities;
-using Steamworks.NET;
+using Dark.Scripts.STOVE;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -229,7 +229,7 @@ namespace InGame
             LevelStarted = true;
             OnLevelLoaded?.Invoke(Level);
             
-            SteamStats.Instance.AddRuns(1, true);
+            GameSupportStats.Instance.AddRuns(1, true);
             
             StartTimer();
         }
@@ -279,14 +279,14 @@ namespace InGame
                 }
             }
             
-            SteamStats.Instance.CompleteDay(Level.level);
-            SteamStats.Instance.SaveStats();
+            GameSupportStats.Instance.CompleteDay(Level.level);
+            GameSupportStats.Instance.SaveStats();
             if (Level.level == LevelManifest.Instance.GetMaxLevel(PlayerClass))
             {
-                SteamStats.Instance.TryClaimAchievement(
+                GameSupportStats.Instance.TryClaimAchievement(
                     PlayerClass == CharacterClass.CharacterClass.Knight
-                        ? SteamAchievementsAPIName.COMPLETE_KNIGHT
-                        : SteamAchievementsAPIName.COMPLETE_ARCHER);
+                        ? GameSupportAchievementsAPIName.COMPLETE_KNIGHT
+                        : GameSupportAchievementsAPIName.COMPLETE_ARCHER);
             }
             
             DebugUtility.LogError($"Level {Level.level + 1} is ended: WIN");
@@ -316,7 +316,7 @@ namespace InGame
             
             WealthManager.Instance.Save();
             
-            SteamStats.Instance.SaveStats();
+            GameSupportStats.Instance.SaveStats();
             
             DebugUtility.LogError($"Level {Level.level} is ended: LOSE");
             IsEndLevel = true;
