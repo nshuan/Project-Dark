@@ -1,7 +1,7 @@
 namespace Dark.Scripts.STOVE
 {
     using System;
-    using System.Collections;
+    using System.Runtime.InteropServices;
     using System.Text;
     using UnityEngine;
     using static Stove.PCSDK.Base;
@@ -11,11 +11,20 @@ namespace Dark.Scripts.STOVE
     public sealed class STOVEPCSDK3Manager : MonoBehaviour
     {
         private const string GameObjectName = "STOVEPCSDK3Manager";
+        private const string LauncherRequiredTitle = "STOVE Launcher Required";
+        private const string LauncherRequiredMessage =
+            "Ash Warden must be started from the STOVE launcher.\n\n" +
+            "If STOVE opened automatically, please launch the game from there.";
+
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+        private const uint MessageBoxOk = 0x00000000;
+        private const uint MessageBoxIconWarning = 0x00000030;
+        private const uint MessageBoxTaskModal = 0x00002000;
+#endif
 
         private static readonly object LockObject = new object();
         private static STOVEPCSDK3Manager _instance;
 
-        private Coroutine _runCallbackCoroutine;
         private STOVEPCSDK3Config _config;
         private bool _isInitializing;
         private bool _isInitialized;
@@ -71,6 +80,14 @@ namespace Dark.Scripts.STOVE
             UnInitialize();
         }
 
+        private void Update()
+        {
+            if (!_isInitializing && !_isInitialized)
+                return;
+
+            Base_RunCallback();
+        }
+
         private void OnDestroy()
         {
             if (_instance == this)
@@ -104,7 +121,6 @@ namespace Dark.Scripts.STOVE
             var initParam = CreateInitializeParam(_config);
 
             _isInitializing = true;
-            StartRunCallbackLoop();
 
             if (!_config.enforceLauncher)
             {
@@ -123,16 +139,13 @@ namespace Dark.Scripts.STOVE
 
                         if (!callbackResult.result.IsSuccessful())
                         {
-                            FailInitialize("STOVE launcher check failed.");
+                            HandleLauncherCheckFailed();
                             return;
                         }
 
                         if (restartAppIfNecessary)
                         {
-                            Debug.LogWarning("STOVE launcher restart required. Quitting this process.");
-                            _isInitializing = false;
-                            StopRunCallbackLoop();
-                            QuitApplication();
+                            HandleLauncherRestartRequired();
                             return;
                         }
 
@@ -198,6 +211,11 @@ namespace Dark.Scripts.STOVE
             return result.IsSuccessful();
         }
 
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        private static extern int MessageBox(IntPtr hWnd, string text, string caption, uint type);
+#endif
+
         public void UnInitialize()
         {
             if (!_isInitialized && !_isInitializing)
@@ -222,8 +240,6 @@ namespace Dark.Scripts.STOVE
                 PrintResult(Base_UnInitialize());
                 _isInitialized = false;
             }
-
-            StopRunCallbackLoop();
         }
 
         public void PrintResult(Result result)
@@ -347,36 +363,32 @@ namespace Dark.Scripts.STOVE
             Debug.LogError(message);
             _isInitializing = false;
             _isInitialized = false;
-            StopRunCallbackLoop();
         }
 
-        private void StartRunCallbackLoop()
+        private void HandleLauncherRestartRequired()
         {
-            if (_runCallbackCoroutine != null)
-                return;
-
-            var interval = Mathf.Max(0.01f, _config?.callbackIntervalSeconds ?? 0.1f);
-            _runCallbackCoroutine = StartCoroutine(RunCallbackCoroutine(interval));
+            Debug.LogWarning("STOVE launcher restart required. Direct-launched process will exit after notifying the user.");
+            _isInitializing = false;
+            ShowLauncherRequiredMessage();
+            QuitApplication();
         }
 
-        private void StopRunCallbackLoop()
+        private void HandleLauncherCheckFailed()
         {
-            if (_runCallbackCoroutine == null)
-                return;
-
-            StopCoroutine(_runCallbackCoroutine);
-            _runCallbackCoroutine = null;
+            Debug.LogError("STOVE launcher check failed. Process will exit after notifying the user.");
+            _isInitializing = false;
+            _isInitialized = false;
+            ShowLauncherRequiredMessage();
+            QuitApplication();
         }
 
-        private IEnumerator RunCallbackCoroutine(float interval)
+        private static void ShowLauncherRequiredMessage()
         {
-            var wait = new WaitForSecondsRealtime(interval);
-
-            while (true)
-            {
-                Base_RunCallback();
-                yield return wait;
-            }
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+            MessageBox(IntPtr.Zero, LauncherRequiredMessage, LauncherRequiredTitle, MessageBoxOk | MessageBoxIconWarning | MessageBoxTaskModal);
+#else
+            Debug.LogWarning($"{LauncherRequiredTitle}: {LauncherRequiredMessage}");
+#endif
         }
 
         private void QuitApplication()

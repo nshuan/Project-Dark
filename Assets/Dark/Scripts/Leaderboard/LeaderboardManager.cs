@@ -26,6 +26,7 @@ namespace Dark.Scripts.Leaderboard
                 }
             }
 
+            fullLeaderboard?.SetMergedClassLeaderboards(leaderboards);
             fullLeaderboard?.Initialize();
             endlessLeaderboard?.Initialize();
         }

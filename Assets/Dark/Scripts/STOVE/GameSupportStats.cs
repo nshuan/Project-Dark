@@ -22,6 +22,7 @@ namespace Dark.Scripts.STOVE
         private bool startupStatsFinalized;
         private readonly List<string> pendingAchievements = new List<string>();
         private readonly HashSet<string> pendingStartupStatIds = new HashSet<string>();
+        private readonly Queue<StartupStatQuery> startupStatQueries = new Queue<StartupStatQuery>();
         [SerializeField] private bool enableDebugLogs = true;
         [SerializeField] private float startupStatQueryTimeoutSeconds = 10f;
 
@@ -70,15 +71,14 @@ namespace Dark.Scripts.STOVE
             }
 
             Log("Querying startup stats.");
-            pendingStatQueries = 3;
             startupStatsFinalized = false;
             pendingStartupStatIds.Clear();
-            pendingStartupStatIds.Add(GameSupportStatsAPIName.TOTAL_KILL);
-            pendingStartupStatIds.Add(GameSupportStatsAPIName.TOTAL_RUNS);
-            pendingStartupStatIds.Add(GameSupportStatsAPIName.HIGHEST_DAY_COMPLETED);
-            QueryStat(GameSupportStatsAPIName.TOTAL_KILL, value => totalKills = value);
-            QueryStat(GameSupportStatsAPIName.TOTAL_RUNS, value => totalRuns = value);
-            QueryStat(GameSupportStatsAPIName.HIGHEST_DAY_COMPLETED, value => highestDayCompleted = value);
+            startupStatQueries.Clear();
+            AddStartupStatQuery(GameSupportStatsAPIName.TOTAL_KILL, value => totalKills = value);
+            AddStartupStatQuery(GameSupportStatsAPIName.TOTAL_RUNS, value => totalRuns = value);
+            AddStartupStatQuery(GameSupportStatsAPIName.HIGHEST_DAY_COMPLETED, value => highestDayCompleted = value);
+            pendingStatQueries = startupStatQueries.Count;
+            QueryNextStartupStat();
             StartCoroutine(IEStartupStatQueryTimeout());
         }
 
@@ -153,57 +153,91 @@ namespace Dark.Scripts.STOVE
                 return;
             }
 
+            var statId = ParseStatIdFromAchievementId(achievementName);
+            
             Log($"TryClaimAchievement. achievementName='{achievementName}'.");
-            try
+            STOVEPCSDK3GameSupportRequestQueue.Enqueue(complete =>
             {
-                GameSupport_Achievement(achievementName, (callbackResult, achievement) =>
+                try
                 {
-                    STOVEPCSDK3Manager.Instance.PrintCallbackResult(callbackResult);
-                    Log($"Achievement callback. achievementName='{achievementName}', success={callbackResult.result.IsSuccessful()}, resultCode={callbackResult.result.resultCode}, error='{callbackResult.errorMessage}', status='{achievement.status}'.");
-
-                    if (callbackResult.result.IsSuccessful() &&
-                        string.Equals(achievement.status, "ACHIEVED", StringComparison.OrdinalIgnoreCase))
+                    GameSupport_Achievement(achievementName, (callbackResult, achievement) =>
                     {
-                        return;
-                    }
+                        STOVEPCSDK3Manager.Instance.PrintCallbackResult(callbackResult);
+                        Log($"Achievement callback. achievementName='{achievementName}', success={callbackResult.result.IsSuccessful()}, resultCode={callbackResult.result.resultCode}, error='{callbackResult.errorMessage}', status='{achievement.status}'.");
 
-                    SetStatValue(achievementName, 1);
-                });
-            }
-            catch (Exception exception)
-            {
-                Debug.LogError($"STOVE achievement query failed for '{achievementName}': {exception}");
-                SetStatValue(achievementName, 1);
-            }
+                        if (callbackResult.result.IsSuccessful() &&
+                            string.Equals(achievement.status, "ACHIEVED", StringComparison.OrdinalIgnoreCase))
+                        {
+                            complete();
+                            return;
+                        }
+
+                        SetStatValue(statId, 1);
+                        complete();
+                    });
+                }
+                catch (Exception exception)
+                {
+                    Debug.LogError($"STOVE achievement query failed for '{achievementName}': {exception}");
+                    SetStatValue(statId, 1);
+                    complete();
+                }
+            });
+        }
+
+        private void AddStartupStatQuery(string statId, Action<int> onValue)
+        {
+            pendingStartupStatIds.Add(statId);
+            startupStatQueries.Enqueue(new StartupStatQuery(statId, onValue));
+        }
+
+        private void QueryNextStartupStat()
+        {
+            if (startupStatsFinalized || startupStatQueries.Count <= 0)
+                return;
+
+            var query = startupStatQueries.Dequeue();
+            QueryStat(query.StatId, query.OnValue);
         }
 
         private void QueryStat(string statId, Action<int> onValue)
         {
-            try
+            STOVEPCSDK3GameSupportRequestQueue.Enqueue(complete =>
             {
-                Log($"QueryStat. statId='{statId}'.");
-                GameSupport_Stat(statId, (callbackResult, stat) =>
+                try
                 {
-                    if (startupStatsFinalized)
+                    Log($"QueryStat. statId='{statId}'.");
+                    GameSupport_Stat(statId, (callbackResult, stat) =>
                     {
-                        Log($"Late stat callback ignored. statId='{statId}', value={stat.currentValue}.");
-                        return;
-                    }
+                        try
+                        {
+                            if (startupStatsFinalized)
+                            {
+                                Log($"Late stat callback ignored. statId='{statId}', value={stat.currentValue}.");
+                                return;
+                            }
 
-                    STOVEPCSDK3Manager.Instance.PrintCallbackResult(callbackResult);
-                    Log($"Stat callback. statId='{statId}', success={callbackResult.result.IsSuccessful()}, resultCode={callbackResult.result.resultCode}, error='{callbackResult.errorMessage}', value={stat.currentValue}.");
+                            STOVEPCSDK3Manager.Instance.PrintCallbackResult(callbackResult);
+                            Log($"Stat callback. statId='{statId}', success={callbackResult.result.IsSuccessful()}, resultCode={callbackResult.result.resultCode}, error='{callbackResult.errorMessage}', value={stat.currentValue}.");
 
-                    if (callbackResult.result.IsSuccessful())
-                        onValue?.Invoke(stat.currentValue);
+                            if (callbackResult.result.IsSuccessful())
+                                onValue?.Invoke(stat.currentValue);
 
+                            CompleteStartupStatQuery(statId);
+                        }
+                        finally
+                        {
+                            complete();
+                        }
+                    });
+                }
+                catch (Exception exception)
+                {
+                    Debug.LogError($"STOVE stat query failed for '{statId}': {exception}");
                     CompleteStartupStatQuery(statId);
-                });
-            }
-            catch (Exception exception)
-            {
-                Debug.LogError($"STOVE stat query failed for '{statId}': {exception}");
-                CompleteStartupStatQuery(statId);
-            }
+                    complete();
+                }
+            });
         }
 
         private void SetStatValue(string statId, int value)
@@ -211,19 +245,24 @@ namespace Dark.Scripts.STOVE
             if (!STOVEPCSDK3Manager.Instance.IsGameSupportInitialized)
                 return;
 
-            try
+            STOVEPCSDK3GameSupportRequestQueue.Enqueue(complete =>
             {
-                Log($"SetStatValue. statId='{statId}', value={value}.");
-                GameSupport_ModifyStat(statId, value, (callbackResult, _) =>
+                try
                 {
-                    STOVEPCSDK3Manager.Instance.PrintCallbackResult(callbackResult);
-                    Log($"SetStatValue callback. statId='{statId}', value={value}, success={callbackResult.result.IsSuccessful()}, resultCode={callbackResult.result.resultCode}, error='{callbackResult.errorMessage}'.");
-                });
-            }
-            catch (Exception exception)
-            {
-                Debug.LogError($"STOVE stat update failed for '{statId}': {exception}");
-            }
+                    Log($"SetStatValue. statId='{statId}', value={value}.");
+                    GameSupport_ModifyStat(statId, value, (callbackResult, _) =>
+                    {
+                        STOVEPCSDK3Manager.Instance.PrintCallbackResult(callbackResult);
+                        Log($"SetStatValue callback. statId='{statId}', value={value}, success={callbackResult.result.IsSuccessful()}, resultCode={callbackResult.result.resultCode}, error='{callbackResult.errorMessage}'.");
+                        complete();
+                    });
+                }
+                catch (Exception exception)
+                {
+                    Debug.LogError($"STOVE stat update failed for '{statId}': {exception}");
+                    complete();
+                }
+            });
         }
 
         private bool CanUseStats()
@@ -263,7 +302,12 @@ namespace Dark.Scripts.STOVE
                 pendingStatQueries--;
 
             if (pendingStatQueries <= 0)
+            {
                 FinalizeStartupStats();
+                return;
+            }
+
+            QueryNextStartupStat();
         }
 
         private void FinalizeStartupStats()
@@ -274,6 +318,7 @@ namespace Dark.Scripts.STOVE
             startupStatsFinalized = true;
             pendingStatQueries = 0;
             pendingStartupStatIds.Clear();
+            startupStatQueries.Clear();
             StatReceived = true;
             FlushPendingCalls();
         }
@@ -339,8 +384,8 @@ namespace Dark.Scripts.STOVE
 
             if (!initializeStarted)
             {
-                Log($"{callName} skipped because startup stats have not been requested.");
-                return false;
+                Log($"{callName} requested before startup stats. Starting startup stat request now.");
+                Initialize();
             }
 
             return true;
@@ -404,6 +449,30 @@ namespace Dark.Scripts.STOVE
                 return;
 
             Debug.Log($"[STOVE Stats] {message}");
+        }
+
+        private readonly struct StartupStatQuery
+        {
+            public StartupStatQuery(string statId, Action<int> onValue)
+            {
+                StatId = statId;
+                OnValue = onValue;
+            }
+
+            public string StatId { get; }
+            public Action<int> OnValue { get; }
+        }
+
+        private string ParseStatIdFromAchievementId(string achievementId)
+        {
+            if (string.IsNullOrEmpty(achievementId))
+                return achievementId;
+
+            var lastSeparatorIndex = achievementId.LastIndexOf('_');
+            if (lastSeparatorIndex < 0)
+                return achievementId;
+
+            return achievementId.Substring(0, lastSeparatorIndex);
         }
     }
 }
