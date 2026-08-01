@@ -16,10 +16,12 @@ namespace Data
         {
             get
             {
+                var path = string.Empty;
 #if UNITY_EDITOR
-                return Application.dataPath + "/_DataTest";
+                path = Application.dataPath + "/_DataTest";
+#else
+                path = Application.persistentDataPath;
 #endif
-                string path = Application.persistentDataPath;
                 EnsureDataDirectory(path);
                 return path;
             }

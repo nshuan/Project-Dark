@@ -63,6 +63,7 @@ namespace Dark.Scripts.Leaderboard.UI
             btnNavigatePlayerRank.onClick.RemoveAllListeners();
             btnNavigatePlayerRank.onClick.AddListener(NavigatePlayer);
             shouldNavigatedPlayer = isNavigateToPlayerOnFirstLoad;
+            SetCurrentPlayer(null);
         }
 
         void OnEnable()
@@ -320,13 +321,13 @@ namespace Dark.Scripts.Leaderboard.UI
             if (entry != null)
             {
                 Log($"SetCurrentPlayer. rank={entry.rank}, score={entry.score}, name='{entry.playerName}'.");
-                txtPlayerRank.SetTextLanguageKeepFont("key_leaderboard_current_rank",
+                txtPlayerRank.SetTextLanguage("key_leaderboard_current_rank",
                     ("%{value}", $"#{entry.rank}"));
             }
             else
             {
                 Log("SetCurrentPlayer null.");
-                txtPlayerRank.SetTextLanguageKeepFont("key_leaderboard_current_rank",
+                txtPlayerRank.SetTextLanguage("key_leaderboard_current_rank",
                     ("%{value}", "##"));   
             }
         }

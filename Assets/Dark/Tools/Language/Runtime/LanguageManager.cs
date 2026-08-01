@@ -84,6 +84,6 @@ namespace Dark.Tools.Language.Runtime
     [Serializable]
     public class LanguageSettings
     {
-        public LanguageType defaultLanguage;
+        public LanguageType defaultLanguage = LanguageType.korean;
     }
 }

@@ -8,5 +8,6 @@ namespace Dark.Tools.Language
         spanish, // "spanish"
         brazilian, // "brazilian"
         german, // "german"
+        korean, // "korean"
     }
 }
