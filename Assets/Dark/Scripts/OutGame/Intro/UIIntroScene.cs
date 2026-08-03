@@ -20,6 +20,7 @@ namespace Dark.Scripts.OutGame.Intro
         [SerializeField] private Button btnShowSkip;
         [SerializeField] private CanvasGroup cvgSkip;
         [SerializeField] private float delayShowBtnSkip = 3f;
+        [SerializeField] private UIIntroSubtitleHandler subtitleHandler;
 
         public static Action OnCompleteIntro { get; set; }
         private Coroutine coroutineIntro;
@@ -35,6 +36,7 @@ namespace Dark.Scripts.OutGame.Intro
                 DOTween.Kill(btnSkip);
                 cvgSkip.alpha = 1f; 
                 if (coroutineIntro != null) StopCoroutine(coroutineIntro);
+                subtitleHandler?.StopSubtitles(true);
                 LoadGame(true);
             });
             btnSkip.gameObject.SetActive(false);
@@ -60,7 +62,9 @@ namespace Dark.Scripts.OutGame.Intro
             
             imgCover.gameObject.SetActive(false);
             videoPlayer.Play();
+            subtitleHandler?.Play();
             yield return new WaitForSeconds((float)videoPlayer.length);
+            subtitleHandler?.StopSubtitles(true);
             LoadGame(false);
         }
         
@@ -140,6 +144,7 @@ namespace Dark.Scripts.OutGame.Intro
         
         private void OnDestroy()
         {
+            subtitleHandler?.StopSubtitles(true);
             OnCompleteIntro = null;
         }
     }
