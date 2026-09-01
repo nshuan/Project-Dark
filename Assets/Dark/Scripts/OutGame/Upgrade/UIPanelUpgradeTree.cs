@@ -18,6 +18,7 @@ namespace Dark.Scripts.OutGame.Upgrade
         [SerializeField] private Button btnBack;
         [SerializeField] private CanvasGroup btnWishlist;
         [SerializeField] private CanvasGroup btnFeedback;
+        [SerializeField] private CanvasGroup btnWishlistNewGame;
         [SerializeField] private Transform treeParent;
         [SerializeField] private UIParticle vfxSpawn;
         [SerializeField] private CanvasGroup groupUIHiddenOnSpawn;
@@ -135,6 +136,31 @@ namespace Dark.Scripts.OutGame.Upgrade
                 {
                     btnWishlist.gameObject.SetActive(false);
                     btnWishlist.transform.localPosition -= offsetOnHideDemoButtons;
+                });
+        }
+        
+        public void ShowWishlistNewGameButtons()
+        {
+            DOTween.Kill(btnWishlistNewGame, true);
+
+            var btnWishlistNewGamePosition = btnWishlistNewGame.transform.localPosition;
+            btnWishlistNewGame.alpha = 0f;
+            btnWishlistNewGame.transform.localPosition = btnWishlistNewGamePosition + offsetOnHideDemoButtons;
+            btnWishlistNewGame.gameObject.SetActive(true);
+            btnWishlistNewGame.DOFade(1f, durationShowEachDemoButtons).SetEase(Ease.OutQuad).SetTarget(btnWishlistNewGame);
+            btnWishlistNewGame.transform.DOLocalMove(btnWishlistNewGamePosition, durationShowEachDemoButtons).SetEase(Ease.OutQuad).SetTarget(btnWishlistNewGame);
+        }
+
+        public void HideWishlistNewGameButtons()
+        {
+            DOTween.Kill(btnWishlistNewGame, true);
+            
+            btnWishlistNewGame.DOFade(0f, durationShowEachDemoButtons).SetEase(Ease.OutQuad).SetTarget(btnWishlistNewGame).SetDelay(delayEachDemoButtons);
+            btnWishlistNewGame.transform.DOLocalMove(btnWishlistNewGame.transform.localPosition + offsetOnHideDemoButtons, durationShowEachDemoButtons).SetEase(Ease.OutQuad).SetTarget(btnWishlistNewGame).SetDelay(delayEachDemoButtons)
+                .OnComplete(() =>
+                {
+                    btnWishlistNewGame.gameObject.SetActive(false);
+                    btnWishlistNewGame.transform.localPosition -= offsetOnHideDemoButtons;
                 });
         }
     }

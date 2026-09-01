@@ -14,6 +14,7 @@ namespace Dark.Scripts.Credits
         [SerializeField] protected RectTransform anchorEnd;
         [SerializeField] protected Button btnClose;
         [SerializeField] private CanvasGroup cvgButtonClose;
+        [SerializeField] private GameObject popupWishlistOurGame;
 
         [Space] [Header("Config")] 
         [SerializeField] protected float movePointPerUpdate = 1;
@@ -70,6 +71,9 @@ namespace Dark.Scripts.Credits
         {
             btnClose.interactable = false;
 
+            if (popupWishlistOurGame)
+                popupWishlistOurGame.SetActive(true);
+            
             DOTween.Kill(this);
             var seq = DOTween.Sequence(this).SetUpdate(true);
             seq.AppendInterval(delay)
